@@ -1,0 +1,27 @@
+<div xmlns:nxthemes="http://nuxeo.org/nxthemes"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax">
+
+	<table class="dataInput">
+		<tbody>
+			<tr>
+				<td class="fieldColumn" style="display:#{nxu:test(securityActions.isVisibleFromLargePublic(), 'none', 'visible')}">
+					<h:commandButton id="rights_add_public_button"
+						value="Rendre public"
+						class="button rightsAddButton"
+						action="#{securityActions.setVisibleFromLargePublic()}" />
+				</td>
+			</tr>
+			<tr>
+				<td class="fieldColumn" style="display:#{nxu:test(!securityActions.isVisibleFromLargePublic(), 'none', 'visible')}">
+					<h:commandButton id="rights_remove_public_button"
+						value="Rendre invisible au public" 
+						class="button rightsAddButton"
+						action="#{securityActions.setNotVisibleFromLargePublic()}" />
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

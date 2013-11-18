@@ -1,0 +1,51 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+    xmlns:nxu="http://nuxeo.org/nxweb/util"
+    xmlns:nxdir="http://nuxeo.org/nxdirectory"
+    xmlns:nxl="http://nuxeo.org/nxforms/layout"
+    id="#{widget.id}">
+    
+    <c:if test="#{widget.mode != 'create' and widget.mode != 'edit'}">
+
+            <nxu:dataList styleClass="standardList" var="subject" value="#{currentDocument.toutatice.keywords}"
+                layout="simple">
+                <h:outputText value="#{subject}" />
+            </nxu:dataList>
+        
+    </c:if>
+    
+    <c:if test="#{widget.mode == 'create' or widget.mode == 'edit'}">
+        
+        <a4j:region id="subjects_edit">
+            <h:panelGroup id="subjects_select">
+	            <div>
+	                <h:inputText id="newSubject" 
+	                    value="#{documentActions.newSubject}" 
+	                    styleClass="dataInputText" />
+	                <a4j:commandButton id="subjects_add"
+	                    action="#{documentActions.addDocumentSubject}" 
+	                	image="/icons/action_add.gif" 
+	                    reRender="subjects_select" />
+	            </div>
+	            <div style="margin-top:5px">
+	                <nxu:dataList id="document_subjects"
+	                    value="#{value.toutatice.keywords}" var="subject">
+	                    <a4j:commandLink id="subjects_delete"
+	                    	action="#{documentActions.removeDocumentSubject}" 
+	                        reRender="subjects_select" >
+	                        <f:param name="subject" value="#{subject}" />
+	                        <h:graphicImage url="/icons/mini_remove.gif" />
+	                    </a4j:commandLink>
+	                    <h:outputText value="#{subject} "/>
+	                </nxu:dataList>
+	                <h:message styleClass="errorMessage" for="newSubject"/>
+	            </div>
+            </h:panelGroup>
+        </a4j:region>
+        
+        
+    </c:if>
+    
+</f:subview>

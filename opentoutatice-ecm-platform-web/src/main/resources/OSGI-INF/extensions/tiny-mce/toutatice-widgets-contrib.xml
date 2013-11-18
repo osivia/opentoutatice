@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.tiny.mce.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
+	<!-- <extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager" 
+		point="widgets"> <widget name="Note" type="richtext_with_mimetype"> <properties 
+		widgetMode="any"> <property name="editorSelector">mceEditorLight</property> 
+		</properties> </widget> </extension> -->
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgettypes">
+
+		<!-- <widgetType name="richtext_with_mimetype">
+			<property name="editorSelector">mceEditorLight</property>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+		</widgetType> -->
+
+	</extension>
+
+</component>

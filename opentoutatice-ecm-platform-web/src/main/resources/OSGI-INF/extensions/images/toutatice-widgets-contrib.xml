@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.theme.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgettypes">
+
+		<widgetType name="acaren_widget_summary_current_document_vignette_type">
+			<configuration>
+				<categories>
+					<category>summary</category>
+				</categories>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/summary/acaren_summary_image_widget.xhtml
+			</property>
+		</widgetType>
+
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+		<widget name="acaren_image_search_path" type="select_path_tree">
+			<labels>
+				<label mode="any">label.relation.search.path</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>img_srch:ecm_path</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="labelOpenPopUp">label.relation.addPath</property>
+				<property name="showAllDomains">true</property>
+			</properties>
+		</widget>
+
+		<widget name="acaren_image_search_fulltext" type="text">
+			<labels>
+				<label mode="any">label.relation.search.all_words</label>
+			</labels>
+			<translated>true</translated>
+			<helpLabels>
+				<label mode="any">label.relation.search.all_words.info</label>
+			</helpLabels>
+			<fields>
+				<field>img_srch:ecm_fulltext</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+			</properties>
+		</widget>
+
+		<widget name="acaren_widget_summary_current_document_vignette"
+			type="acaren_widget_summary_current_document_vignette_type">
+			<fields>
+				<field>ttc:vignette</field>
+				<field>ttc:vignette/filename</field>
+			</fields>
+			<!-- <widgetModes>
+				<mode value="any">#{nxu:test(currentDocument.hasSchema('note') or
+					currentDocument.type == 'File', layout.mode, 'hidden')}
+				</mode>
+			</widgetModes> -->
+		</widget>
+
+		<widget name="add_thumbnail" type="file">
+			<labels>
+				<label mode="any">Vignette</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>ttc:vignette</field>
+				<field>ttc:vignette/filename</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="required">false</property>
+				<property name="iconRendered">true</property>
+			</properties>
+		</widget> 
+
+	</extension>
+
+</component>

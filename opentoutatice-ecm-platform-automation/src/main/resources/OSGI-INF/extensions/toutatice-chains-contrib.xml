@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+
+<component name="toutatice.ecm.plateform.automation.chains">
+
+	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+		point="chains">
+
+		<chain id="setOnLine">
+			<operation id="Context.FetchDocument" />
+			<operation id="Document.SetOnLineOperation" />
+			<operation id="Seam.AddInfoMessage">
+				<param type="string" name="message">expr:Le document en version
+					@{Document.versionLabel} est en ligne
+				</param>
+			</operation>
+		</chain>
+
+		<chain id="setOffLine">
+			<operation id="Context.FetchDocument" />
+			<operation id="Document.RemovePublishedVersions">
+				<param type="document" name="target">expr:Document.parent.doc</param>
+			</operation>
+			<operation id="Audit.Log">
+				<param type="string" name="event">Mise hors ligne</param>
+				<param type="string" name="category">Automation</param>
+			</operation>
+		</chain>
+
+		<chain id="setOffLineOne">
+			<operation id="Context.FetchDocument" />
+			<operation id="Context.RunDocumentOperation">
+				<param type="string" name="id">setOffLine</param>
+				<param type="boolean" name="isolate">false</param>
+			</operation>
+			<operation id="Seam.Refresh" />
+			<operation id="Seam.NavigateTo">
+				<param type="string" name="view">view_documents</param>
+			</operation>
+			<operation id="Seam.AddInfoMessage">
+				<param type="string" name="message">Le document est hors ligne</param>
+			</operation>
+		</chain>
+
+
+		<chain id="setOffLineSelection">
+			<operation id="Context.FetchDocument" />
+			<operation id="Context.RunDocumentOperation">
+				<param type="string" name="id">setOffLine</param>
+				<param type="boolean" name="isolate">false</param>
+			</operation>
+			<operation id="Seam.AddInfoMessage">
+				<param type="string" name="message">La sélection de documents est hors
+					ligne
+				</param>
+			</operation>
+		</chain>
+
+		<chain id="vignette-resizing">
+			<operation id="Context.FetchDocument" />
+			<operation id="ImageResize.Operation">
+				<param type="int" name="img_heidth">100</param>
+				<param type="int" name="img_width">100</param>
+				<param type="string" name="xpath_img_in">ttc:vignette</param>
+				<param type="string" name="xpath_img_out">ttc:vignette</param>
+				<param type="boolean" name="enlarge">true</param>
+			</operation>
+		</chain>
+
+	</extension>
+
+</component>

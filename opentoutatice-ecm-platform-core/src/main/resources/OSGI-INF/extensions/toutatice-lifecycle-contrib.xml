@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="fr.toutatice.ecm.platform.core.lifecycle.contrib">
+
+	<extension target="org.nuxeo.ecm.core.lifecycle.LifeCycleService"
+		point="types">
+		
+		<types>
+			<type name="PortalSite">default</type>
+		</types>
+		<types>
+			<type name="PortalPage">default</type>
+		</types>
+
+	</extension>
+</component>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.theme">
+
+	<require>org.nuxeo.runtime.started</require>
+
+	<extension target="org.nuxeo.theme.styling.service" point="pages">
+		<themePage name="*">
+			<styles append="true">
+				<style>local-publishing</style>
+			</styles>
+		</themePage>
+	</extension>
+
+	<extension target="org.nuxeo.theme.styling.service" point="styles">
+	<!-- 	<style name="images.css">
+			<src>web/nuxeo.war/css/note_content_block.css</src>
+		</style> -->
+		<style name="local-publishing">
+			<src>themes/css/local-publishing.css</src>
+		</style>
+	</extension>
+</component>

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.core.doctypes">
+
+	<require>org.nuxeo.ecm.core.schema.TypeService</require>
+	<require>fr.toutatice.ecm.platform.core.schemas</require>
+
+	<extension target="org.nuxeo.ecm.core.schema.TypeService"
+		point="doctype">
+
+		<facet name="Space" />
+
+		<doctype name="PortalSite" extends="Document">
+			<schema name="common" />
+			<schema name="dublincore" />
+			<schema name="portalsite" />
+			<schema name="toutatice_navigation" />
+			<schema name="webpage" />
+			<facet name="Space" />
+			<facet name="Folderish" />
+			<facet name="Orderable" />
+			<facet name="WebView" />
+			<facet name="SuperSpace" />
+			<prefetch>common.icon, dc:title, dc:description, dc:created,
+				dc:modified,
+				dc:lastContributor, dc:creator
+			</prefetch>
+		</doctype>
+
+		<doctype name="PortalPage" extends="Document">
+			<schema name="common" />
+			<schema name="dublincore" />
+			<schema name="portalpage" />
+			<schema name="toutatice_navigation" />
+			<schema name="webpage" />
+			<facet name="Folderish" />
+			<facet name="Orderable" />
+			<prefetch>common.icon, dc:title, dc:description, dc:created,
+				dc:modified,
+				dc:lastContributor, dc:creator
+			</prefetch>
+		</doctype>
+
+	</extension>
+
+</component>

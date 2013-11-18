@@ -1,0 +1,33 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 1
+Bundle-Name: Plate-forme Toutatice - partie web 
+Bundle-SymbolicName: fr.toutatice.ecm.platform.web;singleton:=true
+Bundle-Version: 2.0.0
+Bundle-Localization: plugin
+Bundle-Vendor: Académie de Rennes 
+Bundle-Category: web
+Nuxeo-Component: OSGI-INF/extensions/toutatice-actions-contrib.xml,
+ OSGI-INF/extensions/toutatice-filters-contrib.xml,
+ OSGI-INF/extensions/toutatice-layouts-contrib.xml,
+ OSGI-INF/extensions/toutatice-widgets-contrib.xml,
+ OSGI-INF/extensions/toutatice-theme-contrib.xml,
+ OSGI-INF/extensions/toutatice-ui-types-contrib.xml,
+ OSGI-INF/extensions/contextualization/toutatice-actions-contrib.xml,
+ OSGI-INF/extensions/order/toutatice-actions-contrib.xml,
+ OSGI-INF/extensions/local-publishing/toutatice-actions-contrib.xml,
+ OSGI-INF/extensions/local-publishing/toutatice-filters-contrib.xml,
+ OSGI-INF/extensions/local-publishing/toutatice-widgets-contrib.xml,
+ OSGI-INF/extensions/local-publishing/toutatice-layouts-contrib.xml,
+ OSGI-INF/extensions/local-publishing/toutatice-contentviews-contrib.xml,
+ OSGI-INF/extensions/local-publishing/toutatice-event-handler-contrib.xml,
+ OSGI-INF/extensions/images/toutatice-actions-contrib.xml,
+ OSGI-INF/extensions/images/toutatice-filters-contrib.xml,
+ OSGI-INF/extensions/images/toutatice-theme-contrib.xml,
+ OSGI-INF/extensions/images/toutatice-contentviews-contrib.xml,
+ OSGI-INF/extensions/images/toutatice-layouts-contrib.xml,
+ OSGI-INF/extensions/images/toutatice-widgets-contrib.xml,
+ OSGI-INF/extensions/images/toutatice-event-handler-contrib.xml,
+ OSGI-INF/extensions/tiny-mce/toutatice-theme-contrib.xml,
+ OSGI-INF/extensions/tiny-mce/toutatice-widgets-contrib.xml,
+ OSGI-INF/extensions/tiny-mce/toutatice-tinymce-contrib.xml,
+ OSGI-INF/extensions/generic-ui-elements/toutatice-generic-ui-types-contrib.xml

@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.actions">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="actions">
+
+		<!-- ^^^ TABS ^^^ -->
+
+		<!-- TODO: à désactiver pour la publi locale -->
+		<action id="TAB_CONTENT" order="1" />
+		<action id="TAB_RIGHTS" enabled="false" />
+
+		<!-- Suppression de la prévisualisation pour les PortalSite et PortalPage -->
+		<action id="TAB_WEBVIEW">
+			<filter id="hasNotPreview">
+				<rule grant="false">
+					<type>PortalSite</type>
+					<type>PortalPage</type>
+				</rule>
+			</filter>
+		</action>
+
+		<!-- Customization de l'onglet Droits (en particulier, copie des ACL sur 
+			les proxies) -->
+		<action id="ATAB_RIGHTS" link="/incl/tabs/acaren_document_rights.xhtml"
+			order="50" label="action.view.rights" icon="/icons/file.gif">
+			<category>TAB_MANAGE_sub_tab</category>
+			<filter-id>non-folderish-rights</filter-id>
+		</action>
+
+		<!-- Vue résumé sur les PortalSiteContainer, PortalSite, PortaPage -->
+		<action id="ATAB_FOLDERISH_VIEW" link="/incl/tabs/document_view.xhtml"
+			order="10" label="action.view.summary" icon="/icons/file.gif">
+			<category>VIEW_ACTION_LIST</category>
+			<filter id="filter@TTC_TAB_FOLDERISH_VIEW">
+				<rule grant="true">
+					<type>PortalSite</type>
+					<type>PortalPage</type>
+				</rule>
+			</filter>
+		</action>
+
+		<!-- ^^^ BOUTONS ^^^ -->
+
+		<!-- Bouton d'ajout de document pour les nouveaux Folderish -->
+		<action id="extendedNewDocument" icon="/icons/action_add.gif"
+			label="action.new.document" link="javascript:Richfaces.showModalPanel('selectDocTypePanel');"
+			append="true">
+			<category>SUBVIEW_UPPER_LIST_HREF</category>
+			<filter id="extendedCreate">
+				<rule grant="true">
+					<permission>AddChildren</permission>
+					<facet>Folderish</facet>
+					<type>Domain</type>
+					<type>WorkspaceRoot</type>
+					<type>PortalSiteContainer</type>
+					<type>PortalSite</type>
+					<type>PortalPage</type>
+					<condition>
+						#{typeManager.getAllowedSubTypes(document.getType(),
+						document).size()
+						&gt; 0}
+					</condition>
+				</rule>
+			</filter>
+		</action>
+
+	</extension>
+
+</component>

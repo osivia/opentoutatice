@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.local.publishing.actions">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="actions">
+
+		<!-- Vue 'Créer': 'Créer et mettre en ligne' -->
+		<action id="CREATE_AND_SET_ONLINE_DOCUMENT" link="#{documentActions.saveNSetOnLineDocument}"
+			order="0" label="command.create.and.setonline">
+			<category>CREATE_DOCUMENT_FORM</category>
+			<filter-id>is_not_creating_form_specific_document</filter-id>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>filter@updateNSetDocumentOnline</filter-id>
+			<!-- <filter id="filter@CREATE_AND_SET_ONLINE_DOCUMENT"> <rule grant="true"> 
+				<permission>validationWorkflow_validation</permission> </rule> </filter> -->
+		</action>
+
+		<!-- Vue 'Modifier': Bouton 'Enregistrer et mettre en ligne' -->
+		<action id="EDIT_AND_SET_ONLINE_CURRENT_DOCUMENT" link="#{documentActions.updateNSetOnLineCurrentDocument}"
+			order="1" label="command.save.and.setonline">
+			<category>EDIT_DOCUMENT_FORM</category>
+			<filter-id>is_not_thread_document</filter-id>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>filter@updateNSetDocumentOnline</filter-id>
+			<!-- <filter id="filter@EDIT_AND_SET_ONLINE_CURRENT_DOCUMENT"> <rule grant="true"> 
+				<permission>validationWorkflow_validation</permission> </rule> </filter> -->
+		</action>
+
+		<!-- Vue 'Résumé': mise en ligne directe -->
+		<action id="setDocumentOnlineDirect" label="command.direct.setonline"
+			enabled="true" order="10" immediate="false" type="widget"
+			link="#{operationActionBean.doOperation('setOnLine')}">
+			<category>SUMMARY_PANEL_TOP</category>
+			<properties>
+				<property name="widgetName">acaren_summary_current_document_actions</property>
+			</properties>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>filter@setDocumentOnline</filter-id>
+		</action>
+
+		<!-- Vue 'Contenu (pour les Folderish)': mise en ligne directe -->
+		<action id="setDocumentOnlineDirectInCV" label="command.direct.setonline"
+			enabled="true" order="100" immediate="false" 
+			link="#{operationActionBean.doOperation('setOnLine')}">
+			<category>SUBVIEW_UPPER_LIST</category>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>filter@setDocumentOnline</filter-id>
+		</action>
+
+		<!-- Vue 'Résumé': mise hors ligne directe -->
+		<action id="setDocumentOfflineDirect" label="command.direct.setoffline"
+			enabled="true" order="10" immediate="false" type="widget"
+			link="#{operationActionBean.doOperation('setOffLineOne')}">
+			<category>SUMMARY_PANEL_TOP</category>
+			<properties>
+				<property name="widgetName">acaren_summary_current_document_actions</property>
+			</properties>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_remote_proxy</filter-id>
+			<filter-id>filter@setDocumentOffline</filter-id>
+		</action>
+
+		<!-- Vue 'Contenu' (pour les Folderish): mise hors ligne directe -->
+		<action id="setDocumentOfflineDirectInCV" label="command.direct.setoffline"
+			enabled="true" order="100" immediate="false" 
+			link="#{operationActionBean.doOperation('setOffLineOne')}">
+			<category>SUBVIEW_UPPER_LIST</category>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>filter@setDocumentOffline</filter-id>
+		</action>
+
+
+		<!-- Cette action appartient à une catégorie "virtuelle" car elle ne sera 
+			jamais présentée à l'IHM. Son rôle est de pouvoir présenter de façon conditionnelle 
+			les actions "PUBLISH/UNPUBLISH_DOCUMENTS_SELECTION" (mettre en ligne / hors 
+			ligne) en fonction du critère "appartien à un espace de publication". (voir 
+			implémentation dans ToutaticeWebActionBean::getUnfiltredActionsList()) -->
+		<action id="VIRTUAL_ACTION_VIEW_IN_PUBLISH_SPACE_ONLY" enabled="true"
+			icon="">
+			<category>VIRTUAL_CATEGORY</category>
+			<filter-id>belong_to_publish_space</filter-id>
+		</action>
+
+		<!-- Vue 'Contenu' (d'un Folderish): mise en ligne d'un élément sélectionné -->
+		<action
+			id="PUBLISH_DOCUMENTS_SELECTION@VIRTUAL_ACTION_VIEW_IN_PUBLISH_SPACE_ONLY"
+			link="#{documentActions.publishDocumentSelection}" enabled="true"
+			label="command.direct.setonline" icon="">
+			<category>CURRENT_SELECTION_LIST</category>
+			<filter-id>canPublishSelection</filter-id>
+		</action>
+
+		<!-- Vue 'Contenu' (d'un Folderish): mise hors ligne d'un élément sélectionné -->
+		<action
+			id="UNPUBLISH_DOCUMENTS_SELECTION@VIRTUAL_ACTION_VIEW_IN_PUBLISH_SPACE_ONLY"
+			link="#{documentActions.unPublishDocumentSelection}" enabled="true"
+			label="command.direct.setoffline" icon="">
+			<category>CURRENT_SELECTION_LIST</category>
+			<filter-id>canUnPublishSelection</filter-id>
+		</action>
+		
+		<!-- Ajout de la version et du status de publication à côté du titre du document -->
+		<!-- NOTE: Restreint pour l'instant aux espaces de publication -->
+		<action
+			id="EXTENDED_TITLE"
+			link="" enabled="true" label="" icon=""
+			type="widget">
+			<category>DOCUMENT_HEADER_ACTIONS_LIST</category>
+			<properties>
+				<property name="widgetName">extended_title</property>
+			</properties>
+			<filter-id>belong_to_publish_space</filter-id>
+		</action>
+
+	</extension>
+
+</component>

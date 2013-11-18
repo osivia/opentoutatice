@@ -1,0 +1,259 @@
+package fr.toutatice.ecm.platform.web.webeditor;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Install;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
+import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
+import org.nuxeo.ecm.core.schema.SchemaManager;
+import org.nuxeo.ecm.platform.types.Type;
+import org.nuxeo.ecm.platform.types.TypeManager;
+import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
+import org.nuxeo.ecm.webapp.action.EditorLinkActionsBean;
+
+import edu.emory.mathcs.backport.java.util.Collections;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeSorterHelper;
+
+@Name("editorLinkActions")
+@Scope(ScopeType.CONVERSATION)
+@Install(precedence = Install.DEPLOYMENT)
+public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
+
+	private static final String TOUT = "TOUT";
+
+	private static final String DOMAIN = "DOMAIN";
+
+	private static final String ESPACE = "ESPACE";
+
+	private static final long serialVersionUID = 1L;
+
+	private static final Log log = LogFactory.getLog(ToutaticeEditorLinkActionsBean.class);
+
+	private String typeDoc = "TOUS";
+	private String scope = ESPACE;
+	private Map<String, Object> types;
+	private Map<String, String> scopes;
+	
+
+	private List<DocumentModel> resultDocuments;
+	private String searchKeywords;
+
+	private boolean hasSearchResults = false;
+
+
+	@In(create = true, required = false)
+	private CoreSession documentManager;
+	
+	@In(create = true, required = false)
+	private SchemaManager schemaManager;
+
+	private String getSpaceName() throws ClientException {
+		String res=null;
+		DocumentModel space;
+		space = navigationContext.getCurrentSuperSpace();
+		if (space != null) {		
+			res = space.getTitle();
+		}
+		return res;
+	}
+	
+	private String getDomaineName() throws ClientException {
+		DocumentModel domain;
+		String res=null;
+		domain = navigationContext.getCurrentDomain();
+		if (domain != null) {			
+			res = domain.getTitle();
+		}
+		return res;
+	}
+	
+	public Map<String,String> getScopes() throws ClientException{
+		scopes = new HashMap<String, String>();
+		scopes.put( getSpaceName(),ESPACE);
+		scopes.put( getDomaineName(),DOMAIN);
+		scopes.put( "Tout nuxeo",TOUT);
+		
+		return scopes;
+	}
+
+	public void setScopes(Map<String, String> scopes) {
+		this.scopes = scopes;
+	}
+
+	public String getScope() {
+		return scope;
+	}
+
+	public void setScope(String scope) {
+		this.scope = scope;
+	}
+	
+
+	public String getTypeDoc() {
+		return typeDoc;
+	}
+
+	public void setTypeDoc(String typeDoc) {
+		this.typeDoc = typeDoc;
+	}
+
+	public List<DocumentModel> getResultDocuments() {
+		return resultDocuments;
+	}
+
+	public void setTypes(Map<String,Object> types) {
+		this.types = types;
+
+	}
+
+	public Map<String,Object> getTypes() throws ClientException {		
+			types = new HashMap<String, Object>();
+			Collection<Type> collectTypes = typeManager.getTypes();
+			if(ESPACE.equals(scope)){
+				collectTypes = typeManager.findAllAllowedSubTypesFrom(navigationContext.getCurrentSuperSpace().getType(),navigationContext.getCurrentSuperSpace());
+			}else if(DOMAIN.equals(scope)){
+				collectTypes = typeManager.findAllAllowedSubTypesFrom(navigationContext.getCurrentDomain().getType(),navigationContext.getCurrentDomain());
+			}else{
+				collectTypes.clear();				
+			}
+			List<Type> lstType = new ArrayList<Type>(collectTypes);
+			Collections.sort(lstType, new ListTypeComparator());
+			types.put("Tous", "TOUS");
+			for (Type type : lstType) {	
+				if("SimpleDocument".equalsIgnoreCase(type.getCategory())){				
+					types.put(type.getLabel(), type.getId());			
+				}
+			}
+			
+		return types;
+	}
+
+	@Override
+	public List<DocumentModel> getSearchDocumentResults() {
+		return resultDocuments;
+	}
+
+	public void setResultDocuments(List<DocumentModel> resultDocuments) {
+		this.resultDocuments = resultDocuments;
+	}
+
+	public String getSearchKeywords() {
+		return searchKeywords;
+	}
+
+	public void setSearchKeywords(String searchKeywords) {
+		this.searchKeywords = searchKeywords;
+	}
+
+	@Override
+	public boolean getHasSearchResults() {
+		return hasSearchResults;
+	}
+
+	@Override
+	public String searchDocuments() throws ClientException {
+		resultDocuments = null;
+		final List<String> constraints = new ArrayList<String>();
+		if (searchKeywords != null) {
+			searchKeywords = searchKeywords.trim();
+			if (searchKeywords.length() > 0) {
+				if (!searchKeywords.equals("*")) {
+					// full text search
+					constraints.add(String.format("ecm:fulltext LIKE '%s%%'", searchKeywords));
+				}
+			}
+		}
+		// no folderish doc nor hidden doc
+		constraints.add("ecm:mixinType != 'HiddenInNavigation'");
+
+		if (typeDoc != null && !"TOUS".equals(typeDoc)) {
+			constraints.add("ecm:primaryType = '" + getTypeDoc()+"'");
+		}
+		if (ESPACE.equals(scope)) {
+			constraints.add("ecm:path STARTSWITH '" + navigationContext.getCurrentSuperSpace().getPathAsString().replace("'", "\\'") + "'");
+		}else if(DOMAIN.equals(scope)){
+			constraints.add("ecm:path STARTSWITH '" + navigationContext.getCurrentDomain().getPathAsString().replace("'", "\\'") + "'");
+		}
+
+		// no archived revisions
+		constraints.add("ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'");
+		// search keywords
+		final String query = String.format("SELECT * FROM Document WHERE %s", StringUtils.join(constraints.toArray(), " AND "));
+		log.info("Query: " + query);
+
+		resultDocuments = documentManager.query(query, 100);
+		hasSearchResults = !resultDocuments.isEmpty();
+		log.info("query result contains: " + resultDocuments.size() + " docs.");
+		return "editor_link_search_document";
+
+	}
+	
+	private class ListTypeComparator extends ToutaticeSorterHelper<Type> {
+
+		@Override
+		public String getComparisionString(Type type) {
+			String stg = "";
+			
+			try {
+				stg = type.getLabel();
+			} catch (Exception e) {
+				log.error("Failed to extract the comparision string to Type, error:" + e.getMessage());
+			}
+			
+			return stg;
+		}
+		
+	}
+	
+	private static class UnrestrictedGetScopeRunner extends UnrestrictedSessionRunner {
+		String documentName;
+		Collection<Type> lstType;
+		String scope;
+		
+		protected UnrestrictedGetScopeRunner(CoreSession session, String scope){
+			super(session);
+			this.scope = scope;
+		}
+		
+		@In(create = true)
+	    protected NavigationContext navigationContext;
+		
+
+		@In(create = true, required = false)
+		private TypeManager typeManager;
+		
+		public String getName(){
+			return documentName;
+		}
+		
+		public Collection<Type> getLstType(){
+			return lstType;
+		}
+		
+		@Override
+		public void run() throws ClientException {
+			
+			documentName = navigationContext.getCurrentDomain().getName();
+			if(ESPACE.equals(scope)){
+				lstType = typeManager.findAllAllowedSubTypesFrom(navigationContext.getCurrentSuperSpace().getType(),navigationContext.getCurrentSuperSpace());
+			}else if(DOMAIN.equals(scope)){
+				lstType = typeManager.findAllAllowedSubTypesFrom(navigationContext.getCurrentDomain().getType(),navigationContext.getCurrentDomain());
+			}
+		}
+		
+	}
+
+}

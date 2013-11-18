@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.local.publishing.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgettypes">
+		
+		<widgetType name="acaren_summary_current_document_cartridge_actions">
+			<configuration>
+				<categories>
+					<category>summary</category>
+				</categories>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/acaren_widget_cartridge_actions_template.xhtml
+			</property>
+		</widgetType>
+		
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+		<widget name="acaren_summary_current_document_actions"
+			type="acaren_summary_current_document_cartridge_actions">
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<translated>false</translated>
+		</widget>
+
+		<!-- Affichage version et status publication à côté titre du document -->
+		<widget name="extended_title" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<helpLabels>
+				<label mode="any" />
+			</helpLabels>
+			<translated>false</translated>
+			<fields>
+				<field>#{navigationContext.getCurrentDocument()}</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">
+					/widgets/title_with_permlink_widget_template.xhtml
+				</property>
+			</properties>
+		</widget>
+
+		<!-- Affiche le status de publication -->
+		<widget name="local_publishing_status" type="template">
+			<labels>
+				<label mode="any">Version en ligne?</label>
+			</labels>
+			<translated>false</translated>
+			<fields />
+			<properties widgetMode="view">
+				<property name="template">/widgets/acaren_widget_document_listing_icon.xhtml
+				</property>
+				<property name="iconPath">img/yes.png</property>
+				<property name="label">En ligne</property>
+			</properties>
+			<properties mode="any">
+				<property name="template">/widgets/acaren_widget_document_listing_icon.xhtml
+				</property>
+				<property name="iconPath">img/yes.png</property>
+				<property name="label">En ligne</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(documentActions.belongToPublishSpace(),
+					layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+	</extension>
+
+</component>

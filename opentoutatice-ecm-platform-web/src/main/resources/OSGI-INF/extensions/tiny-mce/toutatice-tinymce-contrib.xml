@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.web.TinyMce">
+
+	<extension point="plugins"
+		target="org.nuxeo.ecm.platform.ui.web.htmleditor.service.HtmlEditorPluginServiceImpl">
+
+		<htmlEditorPlugin pluginButtonName="nuxeolink"
+			pluginName="nuxeolink" toolbarName="theme_advanced_buttons3_add">
+		</htmlEditorPlugin>
+
+		<htmlEditorPlugin pluginButtonName="nuxeoimageupload"
+			pluginName="nuxeoimageupload" toolbarName="theme_advanced_buttons3_add">
+		</htmlEditorPlugin>
+
+		<htmlEditorPlugin pluginButtonName="fullscreen"
+			pluginName="fullscreen" toolbarName="theme_advanced_buttons3_add">
+		</htmlEditorPlugin>
+
+	</extension>
+
+</component>

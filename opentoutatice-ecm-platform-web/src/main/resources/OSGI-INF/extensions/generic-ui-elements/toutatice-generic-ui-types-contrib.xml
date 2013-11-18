@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.web.append.ui.types">
+
+	<extension target="org.nuxeo.ecm.platform.types.TypeService"
+		point="types">
+
+		<type id="Document">
+			<layouts mode="edit" append="true">
+				<layout>layout@add_thumbnail</layout>
+				<layout>keywords</layout>
+			</layouts>
+		</type>
+
+	</extension>
+
+
+</component>
