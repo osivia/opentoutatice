@@ -74,6 +74,15 @@
 				<condition>#{documentActions.isOnlineWithSameVersion() == true}</condition>
 			</rule>
 		</filter>
+		
+		<filter id="is_either_version_or_proxy">
+			<rule grant="true">
+				<condition>document.isVersion()</condition>
+			</rule>
+			<rule grant="true">
+				<condition>document.isProxy()</condition>
+			</rule>
+		</filter>
 						
 	</extension>
 	
