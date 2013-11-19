@@ -9,6 +9,7 @@
 			<layouts mode="edit" append="true">
 				<layout>layout@add_thumbnail</layout>
 				<layout>keywords</layout>
+				<layout>acaren_showInMenu</layout>
 			</layouts>
 		</type>
 
