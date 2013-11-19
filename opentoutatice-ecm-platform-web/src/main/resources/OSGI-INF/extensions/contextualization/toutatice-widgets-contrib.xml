@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.contextualization.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+	
+		<!-- TODO: rajouter la condition documentActions.belongToWorkspace
+		           lorsque la contextualisation des Workspaces sera mise en place. -->
+		<widget name="acaren_showInMenu_widget" type="template">
+			<labels>
+          		<label mode="any">acaren.label.admin.publication.showInMenu</label>
+        	</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:showInMenu</field>
+			</fields>
+			<labels>
+				<label mode="any" />
+			</labels>
+			<properties mode="any">
+				<property name="template">
+					/widgets/boolean_radio_widget_template.xhtml
+				</property>
+			</properties>
+			<widgetModes>
+				<mode value="view">hidden</mode>
+				<!-- <mode value="any">
+					#{documentActions.showShowInMenu(currentDocument) ?
+					'edit' : 'hidden'}
+				</mode> -->
+				<mode value="any">
+					#{documentActions.belongToPublishSpace() ?
+					'edit' : 'hidden'}
+				</mode>
+			</widgetModes>
+		</widget>
+	</extension>
+
+</component>
