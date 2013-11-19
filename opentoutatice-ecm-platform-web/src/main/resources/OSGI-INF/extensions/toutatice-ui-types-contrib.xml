@@ -72,7 +72,8 @@
 				<layout>layout@PortalSite-edit</layout>
 			</layouts>
 			<layouts mode="view">
-				<layout>layout@PortalSite-view</layout>
+				<layout>ttc_picture</layout>
+				<layout>ttc_content</layout>
 			</layouts>
 			<contentViews category="content">
 				<contentView showInExportView="false">cv_ContentOrderedRnWnWithProxies
@@ -105,7 +106,8 @@
 				<layout>layout@PortalPage-edit</layout>
 			</layouts>
 			<layouts mode="view">
-				<layout>layout@PortalPage-view</layout>
+				<layout>ttc_picture</layout>
+				<layout>ttc_content</layout>
 			</layouts>
 			<contentViews category="content">
 				<contentView showInExportView="false">cv_ContentOrderedRnWnWithProxies
