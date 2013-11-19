@@ -130,8 +130,12 @@
                 FCK.InsertElement(docLink);
               } else if (window.opener.tinyMCE) {
                 var tinyMCE = window.opener.tinyMCE;
+		var linkContent = docLink.childNodes[0].nodeValue;
                 var selectionContent = tinyMCE.activeEditor.selection.getContent();
-				var html = '&lt;a href="' + docLink.href + '"&gt;' + selectionContent + '&lt;/a&gt;';
+		if(selectionContent != ""){
+                  linkContent = selectionContent;
+		}
+		var html = '&lt;a href="' + docLink.href + '"&gt;' + linkContent + '&lt;/a&gt;';
                 tinyMCE.execCommand('mceInsertContent', false, html);
               }
             }
