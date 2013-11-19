@@ -3,7 +3,7 @@
 
 	<extension target="org.nuxeo.ecm.core.lifecycle.LifeCycleService"
 		point="types">
-		
+		<!-- TODO: définir un lifecycle toutatice-default! -->
 		<types>
 			<type name="PortalSite">default</type>
 		</types>
