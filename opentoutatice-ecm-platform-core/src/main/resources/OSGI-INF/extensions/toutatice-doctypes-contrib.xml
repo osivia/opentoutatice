@@ -9,6 +9,7 @@
 		point="doctype">
 
 		<facet name="Space" />
+		<facet name="AttachableImages" />
 
 		<doctype name="PortalSite" extends="Document">
 			<schema name="common" />
@@ -16,11 +17,13 @@
 			<schema name="portalsite" />
 			<schema name="toutatice_navigation" />
 			<schema name="webpage" />
+			<!-- <schema name="files" /> -->
 			<facet name="Space" />
 			<facet name="Folderish" />
 			<facet name="Orderable" />
 			<facet name="WebView" />
 			<facet name="SuperSpace" />
+			<facet name="AttachableImages" />
 			<prefetch>common.icon, dc:title, dc:description, dc:created,
 				dc:modified,
 				dc:lastContributor, dc:creator
@@ -33,8 +36,10 @@
 			<schema name="portalpage" />
 			<schema name="toutatice_navigation" />
 			<schema name="webpage" />
+			<!-- <schema name="files" /> -->
 			<facet name="Folderish" />
 			<facet name="Orderable" />
+			<facet name="AttachableImages" />
 			<prefetch>common.icon, dc:title, dc:description, dc:created,
 				dc:modified,
 				dc:lastContributor, dc:creator
