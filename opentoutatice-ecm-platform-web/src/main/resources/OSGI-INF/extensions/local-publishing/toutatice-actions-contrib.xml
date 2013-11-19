@@ -34,12 +34,9 @@
 
 		<!-- Vue 'Résumé': mise en ligne directe -->
 		<action id="setDocumentOnlineDirect" label="command.direct.setonline"
-			enabled="true" order="10" immediate="false" type="widget"
+			enabled="true" order="10" immediate="false" 
 			link="#{operationActionBean.doOperation('setOnLine')}">
 			<category>SUMMARY_PANEL_TOP</category>
-			<properties>
-				<property name="widgetName">acaren_summary_current_document_actions</property>
-			</properties>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>not_version</filter-id>
@@ -59,12 +56,9 @@
 
 		<!-- Vue 'Résumé': mise hors ligne directe -->
 		<action id="setDocumentOfflineDirect" label="command.direct.setoffline"
-			enabled="true" order="10" immediate="false" type="widget"
+			enabled="true" order="10" immediate="false" 
 			link="#{operationActionBean.doOperation('setOffLineOne')}">
 			<category>SUMMARY_PANEL_TOP</category>
-			<properties>
-				<property name="widgetName">acaren_summary_current_document_actions</property>
-			</properties>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_remote_proxy</filter-id>
 			<filter-id>filter@setDocumentOffline</filter-id>
@@ -78,7 +72,71 @@
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>filter@setDocumentOffline</filter-id>
 		</action>
+		
+		<action id="seeOnlineDocumentVersionFromResumeView" 
+			label="acaren.label.see.nuxeo.online.version"
+			enabled="true" 
+			order="128"
+			immediate="false"
+			link="#{documentActions.viewOnlineVersion()}">			
+			<category>SUMMARY_PANEL_TOP</category>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter id="filter@seeOnlineDocumentVersionFromResumeView">
+				<rule grant="true">
+					<condition>#{documentActions.isSeeOnlineDocumentVersionActionAuthorized() == true}</condition>
+				</rule>
+			</filter>
+			<filter-id>not_proxy</filter-id>
+			<!-- <filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id> -->
+		</action>
+		
+		<action id="seeOnlineDocumentVersionFromContentView" 
+			label="acaren.label.see.nuxeo.online.version"
+			enabled="true" 
+			order="128"
+			immediate="false"
+			link="#{documentActions.viewOnlineVersion()}">			
+			<category>SUBVIEW_UPPER_LIST</category>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter id="filter@seeOnlineDocumentVersionFromResumeView">
+				<rule grant="true">
+					<condition>#{documentActions.isSeeOnlineDocumentVersionActionAuthorized() == true}</condition>
+				</rule>
+			</filter>
+			<filter-id>not_proxy</filter-id>
+			<!-- <filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id> -->
+		</action>
+		
+		<action id="seeLiveDocumentVersionFromResumeView" 
+			label="acaren.label.see.nuxeo.work.version"
+			enabled="true" 
+			order="129" 
+			immediate="false" 
+			link="#{documentActions.viewLiveVersion()}">			
+			<category>SUMMARY_PANEL_TOP</category>
+			<filter id="filter@seeLiveDocumentVersion">
+				<rule grant="true">
+					<condition>#{documentActions.isSeeLiveDocumentVersionActionAuthorized() == true}</condition>
+				</rule>
+			</filter>
+			<filter-id>is_either_version_or_proxy</filter-id>
+		</action>
 
+		<action id="seeLiveDocumentVersionFromContentView" 
+			label="acaren.label.see.nuxeo.work.version"
+			enabled="true" 
+			order="129" 
+			immediate="false" 
+			icon="/img/eye.png"
+			link="#{documentActions.viewLiveVersion()}">		
+			<category>SUBVIEW_UPPER_LIST</category>
+			<filter id="filter@seeLiveDocumentVersion">
+				<rule grant="true">
+					<condition>#{documentActions.isSeeLiveDocumentVersionActionAuthorized() == true}</condition>
+				</rule>
+			</filter>
+			<filter-id>is_either_version_or_proxy</filter-id>
+		</action>
 
 		<!-- Cette action appartient à une catégorie "virtuelle" car elle ne sera 
 			jamais présentée à l'IHM. Son rôle est de pouvoir présenter de façon conditionnelle 
@@ -121,6 +179,8 @@
 			</properties>
 			<filter-id>belong_to_publish_space</filter-id>
 		</action>
+		
+		
 
 	</extension>
 
