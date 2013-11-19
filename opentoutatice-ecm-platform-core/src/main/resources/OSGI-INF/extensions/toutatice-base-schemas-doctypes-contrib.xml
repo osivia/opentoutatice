@@ -15,7 +15,7 @@
 		point="doctype">
 
 		<!-- Surcharge de tous les types -->
-		<doctype name="Document">
+		<doctype name="ToutaticeDocument">
 			<schema name="uid" />
 			<schema name="toutatice" />
 			<facet name="Versionable" />
