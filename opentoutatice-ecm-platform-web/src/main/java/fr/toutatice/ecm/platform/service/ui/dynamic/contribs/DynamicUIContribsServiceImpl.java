@@ -43,7 +43,7 @@ public class DynamicUIContribsServiceImpl extends DefaultComponent implements Dy
 	@Override
 	public void activate(ComponentContext context) throws Exception {
 		super.activate(context);
-		addUIContribs();
+		//addUIContribs();
 	}
 	
 	/**
