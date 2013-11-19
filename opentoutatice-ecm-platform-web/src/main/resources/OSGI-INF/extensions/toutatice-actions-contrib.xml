@@ -42,8 +42,6 @@
 			</filter>
 		</action>
 
-		<!-- ^^^ BOUTONS ^^^ -->
-
 		<!-- Bouton d'ajout de document pour les nouveaux Folderish -->
 		<action id="extendedNewDocument" icon="/icons/action_add.gif"
 			label="action.new.document" link="javascript:Richfaces.showModalPanel('selectDocTypePanel');"
