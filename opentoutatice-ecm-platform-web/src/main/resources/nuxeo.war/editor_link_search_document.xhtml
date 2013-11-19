@@ -13,6 +13,7 @@
 	</ui:define>
 
 	<ui:define name="body">
+		
 		<div style="text-align: center;margin:40px 0px">
 			<h:form>
 				<h:inputText value="#{editorLinkActions.searchKeywords}" size="40"
@@ -89,7 +90,7 @@
 					</nxu:dataTable>
 				</h:selectOneRadio>
 
-				<script language="javascript">
+		<script language="javascript">
           function getSelectedRadio(buttonGroup) {
             if (buttonGroup[0]) {
               for (var i=0; i&lt;buttonGroup.length; i++) {
@@ -129,7 +130,8 @@
                 FCK.InsertElement(docLink);
               } else if (window.opener.tinyMCE) {
                 var tinyMCE = window.opener.tinyMCE;
-                var html = '&lt;a href="' + docLink.href + '"&gt;' + docLink.childNodes[0].nodeValue + '&lt;/a&gt;';
+                var selectionContent = tinyMCE.activeEditor.selection.getContent();
+				var html = '&lt;a href="' + docLink.href + '"&gt;' + selectionContent + '&lt;/a&gt;';
                 tinyMCE.execCommand('mceInsertContent', false, html);
               }
             }
