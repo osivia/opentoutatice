@@ -11,4 +11,5 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-path-segment-contrib.xml,
  OSGI-INF/extensions/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/toutatice-base-schemas-doctypes-contrib.xml,
  OSGI-INF/extensions/toutatice-doctypes-contrib.xml,
- OSGI-INF/extensions/toutatice-lifecycle-contrib.xml
+ OSGI-INF/extensions/toutatice-lifecycle-contrib.xml,
+ OSGI-INF/extensions/images-search/toutatice-doctypes-contrib.xml
