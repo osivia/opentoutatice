@@ -2,11 +2,10 @@
 <component name="fr.toutatice.ecm.platform.web.actions">
 
 	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+	<require>fr.toutatice.ecm.platform.web.filters</require>
 
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
-
-		<!-- ^^^ TABS ^^^ -->
 
 		<!-- TODO: à désactiver pour la publi locale -->
 		<action id="TAB_CONTENT" order="1" />
@@ -38,29 +37,6 @@
 				<rule grant="true">
 					<type>PortalSite</type>
 					<type>PortalPage</type>
-				</rule>
-			</filter>
-		</action>
-
-		<!-- Bouton d'ajout de document pour les nouveaux Folderish -->
-		<action id="extendedNewDocument" icon="/icons/action_add.gif"
-			label="action.new.document" link="javascript:Richfaces.showModalPanel('selectDocTypePanel');"
-			append="true">
-			<category>SUBVIEW_UPPER_LIST_HREF</category>
-			<filter id="extendedCreate">
-				<rule grant="true">
-					<permission>AddChildren</permission>
-					<facet>Folderish</facet>
-					<type>Domain</type>
-					<type>WorkspaceRoot</type>
-					<type>PortalSiteContainer</type>
-					<type>PortalSite</type>
-					<type>PortalPage</type>
-					<condition>
-						#{typeManager.getAllowedSubTypes(document.getType(),
-						document).size()
-						&gt; 0}
-					</condition>
 				</rule>
 			</filter>
 		</action>
