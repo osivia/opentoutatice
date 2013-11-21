@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.service.generic.ui">
+
+	<require>fr.toutatice.ecm.platform.generic.ui.GenericUIService</require>
+
+	<extension target="fr.toutatice.ecm.platform.generic.ui.GenericUIService"
+		point="layouts">
+		<!-- Attention, la numérotation commence par 1;
+		     le placement en dernière position est indexé par 0 -->
+		<layouts mode="edit">
+			<layout name="layout@add_thumbnail">
+				<position>
+					<before>classement</before>
+				</position>
+			</layout>
+			<layout name="keywords">
+				<position>
+					<after>classement</after>
+				</position>
+			</layout>
+			<layout name="acaren_showInMenu">
+				<position>
+					<after>document_edit_form_options</after>
+				</position>
+				<excludedTypes>
+					<type>PortalSite</type>
+				</excludedTypes>
+			</layout>
+		</layouts>
+		
+	</extension>
+
+</component>
