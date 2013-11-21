@@ -42,7 +42,7 @@
 				<layout>heading</layout>
 			</layouts>
 			<contentViews category="content">
-				<contentView showInExportView="false">cv_ContentOrderedRnWnWithProxies
+				<contentView showInExportView="false">cv_ContentOrderedRnWnWithNoLocalProxy
 				</contentView>
 			</contentViews>
 			<contentViews category="trash_content">
@@ -76,7 +76,7 @@
 				<layout>ttc_content</layout>
 			</layouts>
 			<contentViews category="content">
-				<contentView showInExportView="false">cv_ContentOrderedRnWnWithProxies
+				<contentView showInExportView="false">cv_ContentOrderedRnWnWithNoLocalProxy
 				</contentView>
 			</contentViews>
 			<contentViews category="trash_content">
@@ -110,7 +110,7 @@
 				<layout>ttc_content</layout>
 			</layouts>
 			<contentViews category="content">
-				<contentView showInExportView="false">cv_ContentOrderedRnWnWithProxies
+				<contentView showInExportView="false">cv_ContentOrderedRnWnWithNoLocalProxy
 				</contentView>
 			</contentViews>
 			<contentViews category="trash_content">
