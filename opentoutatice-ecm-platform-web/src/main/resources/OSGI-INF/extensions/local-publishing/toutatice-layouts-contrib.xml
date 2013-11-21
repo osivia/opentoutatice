@@ -8,7 +8,7 @@
 		point="layouts">
 		
 		<!-- Layout de présentation d'un PortalSite ou d'une PortalPage -->
-		<layout name="cv_ContentOrderedRnWnWithProxies@cvListingLayout">
+		<layout name="cv_ContentOrderedRnWnWithNoLocalProxy@cvListingLayout">
 			<templates>
 				<template mode="any">/layouts/layout_listing_ajax_template.xhtml</template>
 				<template mode="edit_columns">/layouts/layout_column_selection_template.xhtml</template>
