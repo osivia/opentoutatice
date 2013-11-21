@@ -9,7 +9,6 @@
 
 		<!-- TODO: à désactiver pour la publi locale -->
 		<action id="TAB_CONTENT" order="1" />
-		<action id="TAB_RIGHTS" enabled="false" />
 
 		<!-- Suppression de la prévisualisation pour les PortalSite et PortalPage -->
 		<action id="TAB_WEBVIEW">
@@ -21,13 +20,6 @@
 			</filter>
 		</action>
 
-		<!-- Customization de l'onglet Droits (en particulier, copie des ACL sur 
-			les proxies) -->
-		<action id="ATAB_RIGHTS" link="/incl/tabs/acaren_document_rights.xhtml"
-			order="50" label="action.view.rights" icon="/icons/file.gif">
-			<category>TAB_MANAGE_sub_tab</category>
-			<filter-id>non-folderish-rights</filter-id>
-		</action>
 
 		<!-- Vue résumé sur les PortalSiteContainer, PortalSite, PortaPage -->
 		<action id="ATAB_FOLDERISH_VIEW" link="/incl/tabs/document_view.xhtml"
