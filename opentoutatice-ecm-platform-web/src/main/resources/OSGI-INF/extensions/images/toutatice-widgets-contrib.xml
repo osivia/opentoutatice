@@ -19,7 +19,7 @@
 				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
 			</handler-class>
 			<property name="template">
-				/widgets/summary/acaren_summary_image_widget.xhtml
+				/widgets/summary/acaren_summary_thumbnail_widget.xhtml
 			</property>
 		</widgetType>
 
