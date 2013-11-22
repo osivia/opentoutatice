@@ -21,6 +21,7 @@
 				<property name="disabled">false</property>
 			</properties>
 		</widget>
+
 		<widget name="description" type="textarea">
 			<labels>
 				<label mode="any">Description</label>
@@ -34,6 +35,7 @@
 				<property name="disabled">false</property>
 			</properties>
 		</widget>
+
 		<widget name="picture" type="file">
 			<labels>
 				<label mode="any">Visuel</label>
@@ -44,6 +46,18 @@
 				<field>toutatice_navigation:picture/filename</field>
 			</fields>
 		</widget>
+
+		<widget name="summary_picture" type="summary_picture_type">
+			<labels>
+				<label mode="any">Visuel</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>toutatice_navigation:picture</field>
+				<field>toutatice_navigation:picture/filename</field>
+			</fields>
+		</widget>
+
 		<widget name="content" type="htmltext">
 			<labels>
 				<label mode="any">Contenu</label>
@@ -54,6 +68,21 @@
 			</fields>
 		</widget>
 
+		<widget name="summary_content" type="richtext_with_mimetype">
+			<labels>
+				<label mode="any">Contenu</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>webp:content</field>
+			</fields>
+			<properties mode="view">
+				<property name="translatedHtml">
+					#{noteActions.translateImageLinks(field_0)}
+				</property>
+				<property name="cssClass">note_content_block</property>
+			</properties>
+		</widget>
 
 
 		<widget name="acaren_widget_preload_on_login" type="checkbox">
@@ -125,8 +154,10 @@
 				<property name="required">false</property>
 			</properties>
 			<widgetModes>
-				<mode value="any">#{nxu:test(currentDocument.hasFacet('WebView') and (currentUser.administrator
-					or currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
+				<mode value="any">#{nxu:test(currentDocument.hasFacet('WebView') and
+					(currentUser.administrator
+					or
+					currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
 					'hidden')}
 				</mode>
 			</widgetModes>
@@ -152,8 +183,10 @@
 				<property name="required">false</property>
 			</properties>
 			<widgetModes>
-				<mode value="any">#{nxu:test(currentDocument.hasFacet('WebView') and (currentUser.administrator
-					or currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
+				<mode value="any">#{nxu:test(currentDocument.hasFacet('WebView') and
+					(currentUser.administrator
+					or
+					currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
 					'hidden')}
 				</mode>
 			</widgetModes>
@@ -217,7 +250,7 @@
 				</mode>
 			</widgetModes>
 		</widget>
-		
+
 		<widget name="acaren_widget_tab_order" type="int">
 			<labels>
 				<label mode="any">acaren.toutatice.tab.order</label>
@@ -239,7 +272,8 @@
 				<mode value="any">#{nxu:test(currentDocument.type == 'PortalSite' and
 					(currentUser.administrator or
 					currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
-					'hidden')}</mode>
+					'hidden')}
+				</mode>
 			</widgetModes>
 		</widget>
 
@@ -261,10 +295,33 @@
 				<mode value="any">#{nxu:test(currentDocument.type != 'BlogSite' and
 					(currentUser.administrator or
 					currentNuxeoPrincipal.isMemberOf('Administrators')) ,
-					layout.mode, 'hidden')}
+					layout.mode,
+					'hidden')}
 				</mode>
 			</widgetModes>
 		</widget>
+
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgettypes">
+
+		<widgetType name="summary_picture_type">
+			<configuration>
+				<categories>
+					<category>summary</category>
+				</categories>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/summary/toutatice_summary_image_widget.xhtml
+			</property>
+		</widgetType>
 
 	</extension>
 
