@@ -12,12 +12,7 @@
 
 		<!-- Suppression de la prévisualisation pour les PortalSite et PortalPage -->
 		<action id="TAB_WEBVIEW">
-			<filter id="hasNotPreview">
-				<rule grant="false">
-					<type>PortalSite</type>
-					<type>PortalPage</type>
-				</rule>
-			</filter>
+			<filter-id>hasNotPreview</filter-id>
 		</action>
 
 
@@ -25,12 +20,7 @@
 		<action id="ATAB_FOLDERISH_VIEW" link="/incl/tabs/document_view.xhtml"
 			order="10" label="action.view.summary" icon="/icons/file.gif">
 			<category>VIEW_ACTION_LIST</category>
-			<filter id="filter@TTC_TAB_FOLDERISH_VIEW">
-				<rule grant="true">
-					<type>PortalSite</type>
-					<type>PortalPage</type>
-				</rule>
-			</filter>
+			<filter-id>filter@TTC_TAB_FOLDERISH_VIEW</filter-id>
 		</action>
 
 	</extension>
