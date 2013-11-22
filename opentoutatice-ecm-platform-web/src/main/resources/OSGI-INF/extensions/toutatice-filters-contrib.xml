@@ -61,6 +61,19 @@
 			</rule>
 		</filter>
 
+		<filter id="hasNotPreview">
+			<rule grant="false">
+				<type>PortalSite</type>
+				<type>PortalPage</type>
+			</rule>
+		</filter>
+
+		<filter id="filter@TTC_TAB_FOLDERISH_VIEW">
+			<rule grant="true">
+				<condition>document.hasFacet('FolderishEditable')</condition>
+			</rule>
+		</filter>
+
 		<!-- Filtre pour le bouton "newDocument" -->
 		<filter id="create" append="true">
 			<rule grant="true">
