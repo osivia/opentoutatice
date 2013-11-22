@@ -6,16 +6,6 @@
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
 		
-		<!-- Onglet "Images" -->
-		<!-- <action id="TAB_IMAGES_EDIT" link="/incl/tabs/acaren_document_images_edit.xhtml"
-			order="50" label="acaren.action.view.images">
-			<category>VIEW_ACTION_LIST</category>
-			<filter-id>edit</filter-id>
-			<filter-id>mutable_document</filter-id>
-			<filter-id>hasAttachedImages</filter-id>
-			<filter-id>applyingImagesTabDocTypes</filter-id>
-		</action> -->
-		
 		<!-- Action de recherche d'Images Nuxeo -->
 		<action id="TOUTATICE_IMAGES_SEARCH_FROM_NUXEO" label="toutatice.command.in.nuxeo"
 			type="fancybox">
@@ -27,7 +17,7 @@
 			</properties>
 		</action>
 		
-		<action id="SHOW_THUMBNAIL" type="widget" order="800">
+		<action id="SHOW_THUMBNAIL" type="widget" order="100">
 			<category>SUMMARY_PANEL_LEFT</category>
 			<properties>
 				<property name="widgetName">acaren_widget_summary_current_document_vignette</property>
