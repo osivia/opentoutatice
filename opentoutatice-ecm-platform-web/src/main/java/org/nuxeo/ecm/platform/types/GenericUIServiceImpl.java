@@ -67,6 +67,7 @@ public class GenericUIServiceImpl extends DefaultComponent implements GenericUIS
                     Layouts finalLayouts = new Layouts();
 
                     Map<String, Layouts> layoutsOfTypeMap = type.getLayouts();
+                    finalLayoutsMap.putAll(layoutsOfTypeMap);
                     String mode = genericLayoutsDescriptor.getMode();
                     Layouts layoutsByModeAndType = layoutsOfTypeMap.get(mode);
                     if (layoutsByModeAndType != null) {
@@ -87,7 +88,11 @@ public class GenericUIServiceImpl extends DefaultComponent implements GenericUIS
                                 } else if (afterLayout != null) {
                                     placeLayout(allLayoutsNames, genericLayoutName, afterLayout, true);
                                 } else if (atLayout != PositionLayoutDescriptor.POS_UNDEFINED) {
-                                    allLayoutsNames.add(atLayout - 1, genericLayoutName);
+                                    if(atLayout != LAST_LAYOUT_INDEX){
+                                        allLayoutsNames.add(atLayout - 1, genericLayoutName);
+                                    }else{
+                                        allLayoutsNames.add(allLayoutsNames.size(), genericLayoutName);
+                                    }
                                 } else {
                                     log.error("No defined position for generic layout " + genericLayoutName);
                                 }
