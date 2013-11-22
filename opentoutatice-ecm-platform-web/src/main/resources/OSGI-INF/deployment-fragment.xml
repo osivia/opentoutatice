@@ -26,20 +26,6 @@
 	<install>
 		<unzip from="${bundle.fileName}" to="/">
 			<include>nuxeo.war/**</include>
-		</unzip>
-
-		<!-- <unzip from="${bundle.fileName}" to="/nuxeo.war/" prefix="editor-mce">
-			<include>editor-mce/tiny_mce/**</include>
-		</unzip>
-
-		<unzip from="${bundle.fileName}" to="/nuxeo.war/tiny_mce/"
-			prefix="editor-mce/tinymce_language_pack">
-			<include>editor-mce/tinymce_language_pack/**</include>
-		</unzip> -->
-
-		<unzip from="${bundle.fileName}" to="/nuxeo.war/tiny_mce/"
-			prefix="editor-mce/custom">
-			<include>editor-mce/custom/**</include>
 		</unzip>  
 
 		<!-- append l10n files -->
