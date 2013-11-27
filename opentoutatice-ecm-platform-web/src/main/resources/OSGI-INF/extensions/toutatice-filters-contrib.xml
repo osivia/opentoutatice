@@ -12,6 +12,13 @@
 				</condition>
 			</rule>
 		</filter>
+		
+		<filter id="not_belong_to_publish_space">
+			<rule grant="false">
+				<condition>#{documentActions.belongToPublishSpace() == true}
+				</condition>
+			</rule>
+		</filter>
 
 		<filter id="hasToutaticeSchema">
 			<rule grant="true">
@@ -78,7 +85,6 @@
 		<filter id="create" append="true">
 			<rule grant="true">
 				<type>Domain</type>
-				<type>PortalSiteContainer</type>
 				<type>PortalSite</type>
 				<type>PortalPage</type>
 			</rule>
@@ -88,7 +94,6 @@
 			<rule grant="true">
 				<type>Domain</type>
 				<type>WorkspaceRoot</type>
-				<type>PortalSiteContainer</type>
 				<type>PortalSite</type>
 				<type>PortalPage</type>
 			</rule>
