@@ -27,6 +27,15 @@
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
+		
+		<!-- de type summary pour ne pas avoir un tableau label/field de généré -->
+		<widget name="acaren_content_current_document_actions"
+			type="acaren_summary_current_document_cartridge_actions">
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<translated>false</translated>
+		</widget>
 
 		<widget name="acaren_summary_current_document_actions"
 			type="acaren_summary_current_document_cartridge_actions">
