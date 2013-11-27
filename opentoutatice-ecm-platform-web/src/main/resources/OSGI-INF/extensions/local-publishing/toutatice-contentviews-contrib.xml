@@ -9,7 +9,7 @@
 	<extension target="org.nuxeo.ecm.platform.ui.web.ContentViewService"
 		point="contentViews">
 
-		<contentView name="cv_ContentOrderedRnWnWithNoLocalProxy">
+		<contentView name="cv_ContentOrderedReadNWrite">
 			<coreQueryPageProvider>
 				<property name="coreSession">#{documentManager}</property>
 				<pattern>SELECT * FROM Document WHERE (ecm:mixinType !=
@@ -43,7 +43,7 @@
 			<actions category="CURRENT_SELECTION_LIST" />
 			<actions category="ORDERABLE_CURRENT_SELECTION_LIST" />
 			<resultLayouts>
-				<layout name="cv_ContentOrderedRnWnWithNoLocalProxy@cvListingLayout"
+				<layout name="cv_ContentOrderedReadNWrite@cvListingLayout"
 					title="document_listing" translateTitle="true"
 					iconPath="/icons/document_listing_icon.png" showCSVExport="true" />
 				<layout name="document_virtual_navigation_listing_ajax_compact_2_columns"
