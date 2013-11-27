@@ -47,7 +47,7 @@
 		<action id="setDocumentOnlineDirectInCV" label="command.direct.setonline"
 			enabled="true" order="100" immediate="false" 
 			link="#{operationActionBean.doOperation('setOnLine')}">
-			<category>SUBVIEW_UPPER_LIST</category>
+			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>not_version</filter-id>
@@ -68,7 +68,7 @@
 		<action id="setDocumentOfflineDirectInCV" label="command.direct.setoffline"
 			enabled="true" order="100" immediate="false" 
 			link="#{operationActionBean.doOperation('setOffLineOne')}">
-			<category>SUBVIEW_UPPER_LIST</category>
+			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>filter@setDocumentOffline</filter-id>
 		</action>
@@ -96,7 +96,7 @@
 			order="128"
 			immediate="false"
 			link="#{documentActions.viewOnlineVersion()}">			
-			<category>SUBVIEW_UPPER_LIST</category>
+			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter id="filter@seeOnlineDocumentVersionFromResumeView">
 				<rule grant="true">
@@ -129,7 +129,7 @@
 			immediate="false" 
 			icon="/img/eye.png"
 			link="#{documentActions.viewLiveVersion()}">		
-			<category>SUBVIEW_UPPER_LIST</category>
+			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
 			<filter id="filter@seeLiveDocumentVersion">
 				<rule grant="true">
 					<condition>#{documentActions.isSeeLiveDocumentVersionActionAuthorized() == true}</condition>
