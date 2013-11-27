@@ -5,13 +5,206 @@
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
-	
-		<!-- TODO: rajouter la condition documentActions.belongToWorkspace
-		           lorsque la contextualisation des Workspaces sera mise en place. -->
+
+		<widget name="acaren_widget_tab_order" type="int">
+			<labels>
+				<label mode="any">acaren.toutatice.tab.order</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">
+					Défini l'ordre d'affichage de l'onglet associé à
+					cette page dans la liste des onglets existants
+				</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:tabOrder</field>
+			</fields>
+			<properties widgetMode="any">
+				<property name="required">false</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(currentDocument.type == 'PortalSite' and
+					(currentUser.administrator or
+					currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
+					'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<widget name="acaren_widget_preload_on_login" type="checkbox">
+			<labels>
+				<label mode="any">acaren.toutatice.preload.on.login</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">Une page dynamique sera créée lors de la connexion
+					de l'utilisateur
+				</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:isPreloadedOnLogin</field>
+			</fields>
+			<properties widgetMode="any">
+				<property name="required">false</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test((currentDocument.hasFacet('WebView') or
+					currentDocument.type == 'Workspace') and (currentUser.administrator
+					or currentNuxeoPrincipal.isMemberOf('Administrators')),
+					layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<widget name="acaren_widget_show_in_menu" type="checkbox">
+			<labels>
+				<label mode="any">acaren.toutatice.show.in.menu</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">
+					Permet de définir si ce contenu sera un élément de
+					menu pour la navigation dans le portail.
+				</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:showInMenu</field>
+			</fields>
+			<properties widgetMode="any">
+				<property name="required">false</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(!currentDocument.hasFacet('WebView'),
+					layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<widget name="acaren_widget_contextualize_internal_contents"
+			type="checkbox">
+			<labels>
+				<label mode="any">acaren.toutatice.contextualize.internal.contents
+				</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">
+					Les contenus de l'espace de publication seront
+					publiés automatiquement dans leur rubrique
+				</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:contextualizeInternalContents</field>
+			</fields>
+			<properties widgetMode="any">
+				<property name="required">false</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(currentDocument.hasFacet('WebView') and
+					(currentUser.administrator
+					or
+					currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
+					'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<widget name="acaren_widget_contextualize_external_contents"
+			type="checkbox">
+			<labels>
+				<label mode="any">acaren.toutatice.contextualize.external.contents
+				</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">
+					Les contenus externes à l'espace de publication
+					seront publiés automatiquement dans leur rubrique d'origine
+				</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:contextualizeExternalContents</field>
+			</fields>
+			<properties widgetMode="any">
+				<property name="required">false</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(currentDocument.hasFacet('WebView') and
+					(currentUser.administrator
+					or
+					currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
+					'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<widget name="acaren_widget_page_template" type="text">
+			<labels>
+				<label mode="any">acaren.toutatice.page.template</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">
+					Permet de définir la façon dont seront organisées
+					les boîtes / portlets dans la page.
+				</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:pageTemplate</field>
+			</fields>
+		</widget>
+
+		<!-- template fils -->
+		<widget name="acaren_widget_subpages_template" type="text">
+			<labels>
+				<label mode="any">acaren.toutatice.subpages.template</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">
+					Permet de définir la façon dont seront organisées
+					les boîtes / portlets dans les sous-pages.
+				</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:childrenPageTemplate</field>
+			</fields>
+		</widget>
+
+
+		<widget name="acaren_widget_page_scope" type="selectOneDirectory">
+			<labels>
+				<label mode="any">acaren.toutatice.page.scope</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">
+					Permet de définir un scope d'exécution pour la
+					page.
+				</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:pageScope</field>
+			</fields>
+			<properties widgetMode="any">
+				<property name="directoryName">pageScopes</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(currentUser.administrator or
+					currentNuxeoPrincipal.isMemberOf('Administrators'), layout.mode,
+					'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+
+		<!-- TODO: rajouter la condition documentActions.belongToWorkspace lorsque 
+			la contextualisation des Workspaces sera mise en place. -->
 		<widget name="acaren_showInMenu_widget" type="template">
 			<labels>
-          		<label mode="any">acaren.label.admin.publication.showInMenu</label>
-        	</labels>
+				<label mode="any">acaren.label.admin.publication.showInMenu</label>
+			</labels>
 			<translated>true</translated>
 			<fields>
 				<field>ttc:showInMenu</field>
@@ -26,13 +219,12 @@
 			</properties>
 			<widgetModes>
 				<mode value="view">hidden</mode>
-				<!-- <mode value="any">
-					#{documentActions.showShowInMenu(currentDocument) ?
-					'edit' : 'hidden'}
-				</mode> -->
+				<!-- <mode value="any"> #{documentActions.showShowInMenu(currentDocument) 
+					? 'edit' : 'hidden'} </mode> -->
 				<mode value="any">
 					#{documentActions.belongToPublishSpace() ?
-					'edit' : 'hidden'}
+					'edit' :
+					'hidden'}
 				</mode>
 			</widgetModes>
 		</widget>
