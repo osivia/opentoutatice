@@ -15,7 +15,7 @@
 	</description>
 
 	<properties>
-		<nuxeo.version>5.6.0-HF17</nuxeo.version>
+		<nuxeo.version>5.6.0-HF26</nuxeo.version>
 	</properties>
 
 	<dependencies>
