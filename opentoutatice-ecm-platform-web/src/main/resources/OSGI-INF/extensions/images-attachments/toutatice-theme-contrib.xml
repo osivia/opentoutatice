@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<component name="fr.toutatice.ecm.platform.web.images.theme">
+<component name="fr.toutatice.ecm.platform.web.images.attachments.theme">
 
 	<require>org.nuxeo.theme.services.ThemeService</require>
 	<require>org.nuxeo.theme.styling.service</require>
@@ -16,9 +16,6 @@
 			<view id="/acaren_create_image_search_document_popup.xhtml">
 				<theme>galaxy/popup</theme>
 			</view>
-<!-- 			<view id="/acaren_create_relation_search_document_popup.xhtml">
-				<theme>toutatice/popup</theme>
-			</view> -->
 		</application>
 		
 	</extension>  	

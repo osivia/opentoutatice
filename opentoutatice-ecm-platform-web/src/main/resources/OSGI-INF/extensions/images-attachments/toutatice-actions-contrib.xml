@@ -25,20 +25,6 @@
 				<property name="onclick" />
 			</properties>
 		</action>
-		
-		<!-- Ajout d'image depuis Nuxeo -->
-		<action id="ACAREN_ADD_IMAGE" 
-			enabled="true" label="acaren.action.add.picture" icon="">
-			<category>cv_actions@cv_image_search_popup</category>
-			<permission>Write</permission>
-		</action>
-		
-		<action id="SHOW_THUMBNAIL" type="widget" order="800">
-			<category>SUMMARY_PANEL_LEFT</category>
-			<properties>
-				<property name="widgetName">acaren_widget_summary_current_document_vignette</property>
-			</properties>
-		</action>
 
 	</extension>
 
