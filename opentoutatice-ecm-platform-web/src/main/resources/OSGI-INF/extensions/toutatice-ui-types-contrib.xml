@@ -25,33 +25,6 @@
 			</subtypes>
 		</type>
 
-		<type id="PortalSiteContainer">
-			<label>Conteneur d'espaces de publication</label>
-			<category>SuperDocument</category>
-			<icon>/img/portalsite.png</icon>
-			<bigIcon>/img/portalsite_100.png</bigIcon>
-			<description>Conteneur d'espaces de publication</description>
-			<default-view>view_documents</default-view>
-			<subtypes>
-				<type>PortalSite</type>
-			</subtypes>
-			<layouts mode="any">
-				<layout>heading</layout>
-			</layouts>
-			<layouts mode="edit">
-				<layout>heading</layout>
-			</layouts>
-			<contentViews category="content">
-				<contentView showInExportView="false">cv_ContentOrderedRnWnWithNoLocalProxy
-				</contentView>
-			</contentViews>
-			<contentViews category="trash_content">
-				<contentView showInExportView="false">
-					document_trash_content
-				</contentView>
-			</contentViews>
-		</type>
-
 		<type id="PortalSite">
 			<label>Espace de publication</label>
 			<category>Collaborative</category>
@@ -73,7 +46,7 @@
 			</layouts>
 			<layouts mode="view"/>
 			<contentViews category="content">
-				<contentView showInExportView="false">cv_ContentOrderedRnWnWithNoLocalProxy
+				<contentView showInExportView="false">cv_ContentOrderedReadNWrite
 				</contentView>
 			</contentViews>
 			<contentViews category="trash_content">
@@ -104,7 +77,7 @@
 			</layouts>
 			<layouts mode="view"/>
 			<contentViews category="content">
-				<contentView showInExportView="false">cv_ContentOrderedRnWnWithNoLocalProxy
+				<contentView showInExportView="false">cv_ContentOrderedReadNWrite
 				</contentView>
 			</contentViews>
 			<contentViews category="trash_content">
