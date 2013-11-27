@@ -5,11 +5,6 @@
 	<require>all</require>
 
 	<extension target="faces-config#NAVIGATION">
-		<navigation-case>
-			<from-outcome>editor_link_search_document</from-outcome>
-			<to-view-id>/editor_link_search_document.xhtml</to-view-id>
-			<redirect />
-		</navigation-case>
 	</extension>
 
 	<extension target="pages#PAGES">
