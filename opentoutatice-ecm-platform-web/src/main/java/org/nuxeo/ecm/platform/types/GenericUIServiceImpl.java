@@ -106,7 +106,10 @@ public class GenericUIServiceImpl extends DefaultComponent implements GenericUIS
             }
         }
     }
-
+    
+    /**
+     * Méthode permettant d'insérer un layout selon la donnée "after" ou "before".
+     */
     private void placeLayout(List<String> allLayoutsNames, String genericLayoutName, String layout, boolean after) {
         int layoutPos = findLayoutPosition(allLayoutsNames, layout);
         if(layoutPos != PositionLayoutDescriptor.POS_UNDEFINED){
@@ -122,7 +125,10 @@ public class GenericUIServiceImpl extends DefaultComponent implements GenericUIS
             allLayoutsNames.add(allLayoutsNames.size(), genericLayoutName);
         }
     }
-
+    
+    /**
+     * Méthode permettant de trouver la position d'un layout dans la vue.
+     */
     private int findLayoutPosition(List<String> allLayoutsNames, String layout) {
         int position = PositionLayoutDescriptor.POS_UNDEFINED;
         boolean found = false;
