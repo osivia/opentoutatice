@@ -9,10 +9,6 @@
 				<style>local-publishing</style>
 				<style>images-tab</style>
 			</styles>
-			<resources>
-      			<resource>nuxeo_link_js</resource>
-      			<resource>nuxeo_image_upload_js</resource>
-      		</resources> 
 		</themePage>
 	</extension>
 
@@ -25,12 +21,4 @@
 		</style>
 	</extension>
 
-	<extension target="org.nuxeo.theme.styling.service" point="resources">
-		<resource name="nuxeo_link_js">
-			<path>custom/nuxeolink/editor_plugin.js</path>
-		</resource>
-		<resource name="nuxeo_image_upload_js">
-			<path>custom/nuxeoimageupload/editor_plugin.js</path>
-		</resource>
-	</extension>
 </component>
