@@ -12,24 +12,19 @@
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>hasToutaticeSchema</filter-id>
 			<filter-id>isGlobalAdministrator</filter-id>
-			<filter id="filter@TTC_TAB_ADMIN_PUBLICATION_SPACE">
-				<rule grant="true">
-					<type>PortalSite</type>
-					<type>PortalPage</type>
-				</rule>
-			</filter>
-		</action> 
+			<filter-id>filter@TTC_TAB_ADMIN_PUBLICATION_SPACE</filter-id>
+		</action>
 		
-		<action id="show_in_menu" order="10" type="widget">
-			<category>EDIT_DOCUMENT_FORM</category>
-			<properties>
-				<property name="widgetName">acaren_showInMenu_widget</property>
-			</properties>
-			<filter>
-				<rule grant="false">
-					<type>PortalSite</type>
-				</rule>
-			</filter>
+		<!-- Pour les Workspaces --> 
+		<action id="ATAB_ADMIN_WS_PUBLICATION_SPACE" link="/incl/tabs/acaren_admin_ws_publication_space.xhtml"
+			order="125" label="acaren.action.admin.publication.space" icon="/icons/file.gif">
+			<category>VIEW_ACTION_LIST</category>
+			<filter-id>belong_to_work_space</filter-id>
+			<filter-id>hasToutaticeSchema</filter-id>
+			<filter-id>isGlobalAdministrator</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>filter@TTC_TAB_ADMIN_PUBLICATION_SPACE</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 		
 	</extension>
