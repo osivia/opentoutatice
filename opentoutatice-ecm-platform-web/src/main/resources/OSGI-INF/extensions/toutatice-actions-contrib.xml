@@ -12,11 +12,6 @@
 			<filter-id>not_belong_to_publish_space</filter-id>
 		</action>
 
-		<!-- Suppression de la prévisualisation pour les PortalSite et PortalPage -->
-		<action id="TAB_WEBVIEW">
-			<filter-id>hasNotPreview</filter-id>
-		</action>
-
 
 		<!-- Vue résumé sur les PortalSite, PortaPage -->
 		<action id="ATAB_FOLDERISH_VIEW" link="/incl/tabs/document_view.xhtml"
