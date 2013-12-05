@@ -16,6 +16,10 @@
 	<operation class="fr.toutatice.ecm.platform.automation.RemovePublishedVersions" />
 	<operation class="fr.toutatice.ecm.platform.automation.GetVocabularies" />
 	<operation class="fr.toutatice.ecm.platform.automation.ResizeImageOperation" />
+	<operation class="fr.toutatice.ecm.platform.automation.comments.FetchCommentsOfDocument" />
+	<operation class="fr.toutatice.ecm.platform.automation.comments.AddComment" />
+	<operation class="fr.toutatice.ecm.platform.automation.comments.DeleteComment" />
+	<operation class="fr.toutatice.ecm.platform.automation.comments.CreateChildComment" />
 	
   </extension>
 
