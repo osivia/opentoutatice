@@ -1109,31 +1109,19 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 		return mapSwitchState;
 	}
 
-//	@Observer(value = { EventNames.NEW_DOCUMENT_CREATED })
-//	public void initShowInMenu() throws ClientException {
-//		DocumentModel newDocument = navigationContext.getChangeableDocument();
-//
-//		if (newDocument.hasFacet(NuxeoStudioConst.CST_FACET_SPACE_NAVIGATION_ITEM) || "Folder".equals(newDocument.getType()) || "OrderedFolder".equals(newDocument.getType())) {
-//			newDocument.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_SIM, true);
-//		}
-//	}
-	
-	/**
-	 * Ajout (temporaire) de l'affectation du showInMenu 
-	 * pour les PortalPage uniquement
-	 * Affectation de la contextualisation aux PortaSite
-	 */
-	@Observer(value = { EventNames.NEW_DOCUMENT_CREATED })
-	public void initShowInMenu() throws ClientException {
-		DocumentModel newDocument = navigationContext.getChangeableDocument();
+    @Observer(value = {EventNames.NEW_DOCUMENT_CREATED})
+    public void initShowInMenu() throws ClientException {
+        DocumentModel newDocument = navigationContext.getChangeableDocument();
 
-		if ("PortalPage".equals(newDocument.getType())) {
-			newDocument.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_SIM, true);
-		}
-		if ("PortalSite".equals(newDocument.getType())) {
-			newDocument.setPropertyValue(NuxeoStudioConst.CST_DOC_TOUTATICE_INTERNAL_CONTEXTUALIZATION, true);
-		}
-	}
+        if (newDocument.hasFacet(NuxeoStudioConst.CST_FACET_SPACE_NAVIGATION_ITEM) || "Folder".equals(newDocument.getType())
+                || "OrderedFolder".equals(newDocument.getType())) {
+            newDocument.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_SIM, true);
+            if ("PortalSite".equals(newDocument.getType())) {
+                newDocument.setPropertyValue(NuxeoStudioConst.CST_DOC_TOUTATICE_INTERNAL_CONTEXTUALIZATION, true);
+            }
+        }
+    }
+
 
 	public boolean showShowInMenu() throws ClientException {
 		boolean res = false;
