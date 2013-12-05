@@ -413,7 +413,7 @@ public class ToutaticeDocumentHelper {
 	public static boolean isAPublicationSpaceDocument(DocumentModel document) {
 		boolean status = false;
 
-		if (document.hasFacet(NuxeoStudioConst.CST_DOC_FACET_WEB_VIEW)) {
+		if (document.hasFacet(NuxeoStudioConst.CST_DOC_FACET_TTC_PUBLISH_SPACE)) {
 			status = true;
 		}
 
