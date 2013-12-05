@@ -83,6 +83,12 @@
 				<condition>document.isProxy()</condition>
 			</rule>
 		</filter>
+		
+		<filter id="is_version">
+			<rule grant="true">
+				<condition>document.isVersion()</condition>
+			</rule>
+		</filter>
 						
 	</extension>
 	
