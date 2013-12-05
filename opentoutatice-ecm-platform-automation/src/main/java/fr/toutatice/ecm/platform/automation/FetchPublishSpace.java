@@ -73,7 +73,7 @@ public class FetchPublishSpace {
     		boolean status = false;
 
     		try {
-    			status = document.hasFacet(NuxeoStudioConst.CST_DOC_FACET_WEB_VIEW);
+    			status = document.hasFacet(NuxeoStudioConst.CST_DOC_FACET_TTC_PUBLISH_SPACE);
     			
     			if (true == status) {
     				// vérifier que le folder est en ligne (possède un proxy)
