@@ -49,10 +49,14 @@
 				<property name="required">false</property>
 			</properties>
 			<widgetModes>
-				<mode value="any">#{nxu:test((currentDocument.hasFacet('WebView') or
-					currentDocument.type == 'Workspace') and (currentUser.administrator
-					or currentNuxeoPrincipal.isMemberOf('Administrators')),
-					layout.mode, 'hidden')}
+				<mode value="any">#{nxu:test((currentDocument.hasFacet('TTCPublishSpace')
+					or
+					currentDocument.type == 'Workspace') and
+					(currentUser.administrator
+					or
+					currentNuxeoPrincipal.isMemberOf('Administrators')),
+					layout.mode,
+					'hidden')}
 				</mode>
 			</widgetModes>
 		</widget>
@@ -75,7 +79,7 @@
 				<property name="required">false</property>
 			</properties>
 			<widgetModes>
-				<mode value="any">#{nxu:test(!currentDocument.hasFacet('WebView'),
+				<mode value="any">#{nxu:test(!currentDocument.hasFacet('TTCPublishSpace'),
 					layout.mode, 'hidden')}
 				</mode>
 			</widgetModes>
@@ -101,7 +105,8 @@
 				<property name="required">false</property>
 			</properties>
 			<widgetModes>
-				<mode value="any">#{nxu:test(currentDocument.hasFacet('WebView') and
+				<mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace')
+					and
 					(currentUser.administrator
 					or
 					currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
@@ -130,7 +135,8 @@
 				<property name="required">false</property>
 			</properties>
 			<widgetModes>
-				<mode value="any">#{nxu:test(currentDocument.hasFacet('WebView') and
+				<mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace')
+					and
 					(currentUser.administrator
 					or
 					currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
@@ -219,12 +225,8 @@
 			</properties>
 			<widgetModes>
 				<mode value="view">hidden</mode>
-				<!-- <mode value="any"> #{documentActions.showShowInMenu(currentDocument) 
-					? 'edit' : 'hidden'} </mode> -->
-				<mode value="any">
-					#{documentActions.belongToPublishSpace() ?
-					'edit' :
-					'hidden'}
+				<mode value="any"> #{documentActions.showShowInMenu(currentDocument)
+					? 'edit' : 'hidden'}
 				</mode>
 			</widgetModes>
 		</widget>
