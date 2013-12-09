@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.service.fragments.contrib">
+
+    <extension
+        target="fr.toutatice.ecm.platform.service.fragments.FragmentService"
+        point="fragment">
+
+        <fragment
+            code="fgt.html"
+            class="fr.toutatice.ecm.platform.service.fragments.types.HtmlFragment"
+            title="osivia.fragment.html.title"
+            layout="html_fragment_layout" />
+            
+        <fragment
+            code="fgt.list"
+            class="fr.toutatice.ecm.platform.service.fragments.types.ListFragment"
+            title="osivia.fragment.list.title"
+            layout="list_fragment_layout" />            
+
+        <fragment
+            code="fgt.portlet"
+            class="fr.toutatice.ecm.platform.service.fragments.types.PortletFragment"
+            title="osivia.fragment.portlet.title"
+            layout="portlet_fragment_layout" />  
+    </extension>
+
+</component>
