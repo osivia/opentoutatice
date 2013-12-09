@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<component name="fr.gouv.education.acrennes.ged.directories">
+
+	<extension target="org.nuxeo.ecm.directory.sql.SQLDirectoryFactory"
+		point="directories">
+
+		<directory name="webconfiguration-types">
+			<schema>vocabulary</schema>
+			<dataSource>java:/nxsqldirectory</dataSource>
+			<cacheTimeout>3600</cacheTimeout>
+			<cacheMaxSize>1000</cacheMaxSize>
+			<idField>id</idField>
+			<autoincrementIdField>false</autoincrementIdField>
+			<createTablePolicy>on_missing_columns</createTablePolicy>
+			<table>vocabulary_webconfiguration-types</table>
+			<dataFile>vocabularies/webpage/webconfiguration-types.csv</dataFile>
+		</directory>
+
+	</extension>
+
+</component>

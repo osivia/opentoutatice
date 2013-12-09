@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="fr.toutatice.ecm.platform.core.lifecycle.webpage.contrib">
+
+	<extension target="org.nuxeo.ecm.core.lifecycle.LifeCycleService"
+		point="types">
+		<!-- TODO: définir un lifecycle toutatice-default! -->
+		<types>
+			<type name="WebConfiguration">default</type>
+		</types>
+		<types>
+			<type name="WebConfigurationFolder">default</type>
+		</types>
+
+	</extension>
+</component>
