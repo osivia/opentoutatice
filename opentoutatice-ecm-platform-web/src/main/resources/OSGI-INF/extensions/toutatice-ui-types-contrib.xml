@@ -34,7 +34,6 @@
 			<default-view>view_documents</default-view>
 			<subtypes>
 				<type>PortalPage</type>
-				<type>Zoom</type>
 				<type>File</type>
 				<type>Note</type>
 			</subtypes>
@@ -65,7 +64,6 @@
 			<default-view>view_documents</default-view>
 			<subtypes>
 				<type>PortalPage</type>
-				<type>Zoom</type>
 				<type>File</type>
 				<type>Note</type>
 			</subtypes>

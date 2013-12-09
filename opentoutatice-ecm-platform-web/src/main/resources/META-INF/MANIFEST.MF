@@ -33,4 +33,10 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-actions-contrib.xml,
  OSGI-INF/extensions/thumbnail/toutatice-actions-contrib.xml,
  OSGI-INF/extensions/thumbnail/toutatice-event-handler-contrib.xml,
  OSGI-INF/extensions/thumbnail/toutatice-layouts-contrib.xml,
- OSGI-INF/extensions/thumbnail/toutatice-widgets-contrib.xml
+ OSGI-INF/extensions/thumbnail/toutatice-widgets-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-ui-types-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-layouts-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-widgets-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-filters-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-actions-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-themes-contrib.xml

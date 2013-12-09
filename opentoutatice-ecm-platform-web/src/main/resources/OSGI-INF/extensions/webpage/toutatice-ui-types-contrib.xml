@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.webpage.ui.types">
+
+	<require>org.nuxeo.ecm.platform.types.TypeService</require>
+
+	<extension target="org.nuxeo.ecm.platform.types.TypeService"
+		point="types">
+		
+		<type id="PortalSite">
+            <subtypes>
+                <type>Folder</type>
+                <type>OrderedFolder</type>
+                <type>PictureBook</type>
+            </subtypes>
+        </type>
+        
+        <type id="PortalPage">
+            <subtypes>
+                <type>Folder</type>
+                <type>OrderedFolder</type>
+                <type>PictureBook</type>
+            </subtypes>
+        </type>
+
+		<type id="Domain">
+			<subtypes>
+				<type>WebConfigurationFolder</type>
+			</subtypes>
+		</type>
+
+		<type id="WebConfigurationFolder">
+			<subtypes>
+				<type>WebConfiguration</type>
+			</subtypes>
+		</type>
+
+		<type id="WebConfigurationFolder">
+			<label>Dossier de configuration</label>
+			<icon>/img/configuration_folder.jpg</icon>
+			<bigIcon>/img/configuration_folder.jpg</bigIcon>
+			<description></description>
+			<default-view>view_documents</default-view>
+			<subtypes>
+				<type>WebConfiguration</type>
+				<type>WebConfigurationFolder</type>
+			</subtypes>
+			<layouts mode="create">
+				<layout>heading</layout>
+			</layouts>
+			<layouts mode="edit">
+				<layout>heading</layout>
+			</layouts>
+			<layouts mode="view" />
+			<contentViews category="content">
+				<contentView showInExportView="false">document_content
+				</contentView>
+			</contentViews>
+			<contentViews category="trash_content">
+				<contentView showInExportView="false">document_trash_content
+				</contentView>
+			</contentViews>
+		</type>
+
+		<type id="WebConfiguration">
+			<label>Configuration web</label>
+			<icon>/img/customize.png</icon>
+			<bigIcon>/img/customize.png</bigIcon>
+			<description>Used to define a configuration element consumed by the
+				portal to design a page.
+			</description>
+			<default-view>view_documents</default-view>
+			<layouts mode="create">
+				<layout>layout@WebConfiguration-create</layout>
+			</layouts>
+			<layouts mode="edit">
+				<layout>layout@WebConfiguration-edit</layout>
+			</layouts>
+			<layouts mode="view" />
+		</type>
+
+	</extension>
+
+
+</component>

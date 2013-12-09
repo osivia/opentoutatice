@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.webpage.actions">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+	<!-- <require>org.nuxeo.ecm.platform.actions</require>
+	<require>org.nuxeo.ecm.platform.actions.relations.web</require>
+	<require>org.nuxeo.ecm.platform.comment.actions</require>
+
+	<require>org.nuxeo.ecm.user.center.actions</require>
+	<require>org.nuxeo.ecm.user.center.profile.actions</require>
+	<require>org.nuxeo.ecm.user.center.notification.actions</require> -->
+	
+	<require>fr.toutatice.ecm.platform.webpage.filters</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="actions">
+
+		<!-- =========== onglets nuxeo  : Actions -->
+		<!-- Ajout de l'onglet Fragments sur les éléments possédant du contenu 
+			éditorial -->
+		<action id="TOUTATICE_TAB_FRAGMENTS_MANAGMENT"
+			link="/incl/tabs/toutatice_editorial_fragments_managment.xhtml"
+			order="100" label="toutatice.action.editorial.fragments.managment">
+			<category>VIEW_ACTION_LIST</category>
+			<filter-id>has_fragments_schema</filter-id>
+            <filter-id>isGlobalAdministrator</filter-id>
+		</action>
+
+		
+		<!-- =========== gestion des fragments  : Actions -->
+		
+		<!-- Modification -->
+		<action id="HTML_EDIT_FRAGMENT" link="#{documentActions.updateCurrentDocument('done')}"
+			order="0" label="html.edit.save">
+			<category>HTML_EDIT_FRAGMENT</category>
+			<filter-id>is_not_thread_document</filter-id>
+		</action>
+
+        <!-- =========== gestion de la page : Actions -->
+        
+        <!-- Vue portail : Création d'un document n'exigeant pas d'action de sauvegarde spécifique -->
+        <action id="OSIVIA_CREATE_DOCUMENT_FORM" link="#{documentActions.saveDocument('done')}"
+            order="1" label="command.create">
+            <category>OSIVIA_CREATE_DOCUMENT_FORM</category>
+            <filter-id>is_not_creating_form_specific_document</filter-id>
+        </action>
+        
+        <!-- Vue front office : Edition d'un document n'exigeant pas d'action de sauvegarde spécifique -->
+        <action id="OSIVIA_EDIT_CURRENT_DOCUMENT" link="#{documentActions.updateCurrentDocument('done')}"
+            order="0" label="command.save.draft">
+            <category>OSIVIA_EDIT_DOCUMENT_FORM</category>
+            <filter-id>is_not_thread_document</filter-id>
+        </action>
+        
+	</extension>
+
+</component>

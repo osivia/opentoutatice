@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE facelet-taglib PUBLIC "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN" "facelet-taglib_1_0.dtd">
+<facelet-taglib>
+    <namespace>http://osivia.org/html</namespace>
+    
+    <!-- 
+    Icon selector widget
+    
+    Attributes :
+    - id : unique ID in the page
+    - src : DocumentModelList of configurations, see #{config}
+    - value
+    - ulStyleClass : main css class for this widget, you can define through this the ul, ul/li, and ul/li/img
+    - binding : a backing bean used by the widget, see #{simpleForm}
+    - inputClientId : the JSF clientID of the backing bean used for client scripts
+    - multiSelect : if true, user can select 0-* elements, if false, user can select 1 element
+    
+    Exemple :
+    
+    <oh:icons id="selectTemplate" src="#{config.pageTemplates}" value="#{field_0}"
+        ulStyleClass="iconList" binding="#{simpleForm.simpleComponent}" inputClientId="#{simpleForm.simpleComponentClientId}" 
+        multiSelect="false" />
+    
+     -->
+    <tag>
+        <tag-name>icons</tag-name>
+        <source>components/icons.xhtml</source>
+    </tag>
+</facelet-taglib>

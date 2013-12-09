@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <component name="fr.toutatice.ecm.platform.web.theme">
 
-	<require>org.nuxeo.runtime.started</require>
-
 	<extension target="org.nuxeo.theme.styling.service" point="pages">
 		<themePage name="*">
 			<styles append="true">

@@ -79,10 +79,16 @@
 				<property name="required">false</property>
 			</properties>
 			<widgetModes>
+				<mode value="view">hidden</mode>
+				<mode value="any"> #{documentActions.showShowInMenu(currentDocument)
+					? 'edit' : 'hidden'}
+				</mode>
+			</widgetModes>
+			<!-- <widgetModes>
 				<mode value="any">#{nxu:test(!currentDocument.hasFacet('TTCPublishSpace'),
 					layout.mode, 'hidden')}
 				</mode>
-			</widgetModes>
+			</widgetModes> -->
 		</widget>
 
 		<widget name="acaren_widget_contextualize_internal_contents"
@@ -205,8 +211,6 @@
 		</widget>
 
 
-		<!-- TODO: rajouter la condition documentActions.belongToWorkspace lorsque 
-			la contextualisation des Workspaces sera mise en place. -->
 		<widget name="acaren_showInMenu_widget" type="template">
 			<labels>
 				<label mode="any">acaren.label.admin.publication.showInMenu</label>
