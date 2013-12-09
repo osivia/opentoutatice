@@ -22,6 +22,11 @@
 			<schema name="portalsite" />
 			<schema name="toutatice_navigation" />
 			<schema name="webpage" />
+			<schema name="fragments" />
+            <schema name="html_fragments" />
+            <schema name="list_fragments" />
+            <schema name="portlet_fragments" />
+            <schema name="portlet_properties" />
 			<facet name="Space" />
 			<facet name="Folderish" />
 			<facet name="Orderable" />
@@ -43,6 +48,11 @@
 			<schema name="portalpage" />
 			<schema name="toutatice_navigation" />
 			<schema name="webpage" />
+			<schema name="fragments" />
+            <schema name="html_fragments" />
+            <schema name="list_fragments" />
+            <schema name="portlet_fragments" />
+            <schema name="portlet_properties" />
 			<facet name="Folderish" />
 			<facet name="Orderable" />
 			<facet name="PortalConfigurable" />
