@@ -8,5 +8,9 @@ Bundle-Vendor: Académie de Rennes
 Bundle-Activator: fr.toutatice.ecm.platform.core.components.ToutaticeCoreBundleActivator
 Bundle-Category: stateful
 Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
- OSGI-INF/extensions/toutatice-doctypes-contrib.xml,
- OSGI-INF/extensions/toutatice-lifecycle-contrib.xml
+ OSGI-INF/extensions/toutatice-core-types-contrib.xml,
+ OSGI-INF/extensions/toutatice-lifecycle-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-schemas-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-core-types-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-vocabularies-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-lifecycle-contrib.xml
