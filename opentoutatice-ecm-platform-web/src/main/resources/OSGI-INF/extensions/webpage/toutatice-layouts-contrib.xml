@@ -220,11 +220,11 @@
 				<row>
 					<widget>osivia_widget_picture</widget>
 				</row>
-				<!-- <row>
-					<widget>osivia_widget_show_in_menu</widget>
-				</row> -->
 				<row>
 					<widget>acaren_widget_show_in_menu</widget>
+				</row>
+				<row>
+					<widget>osivia_page_template_widget</widget>
 				</row>
 			</rows>
 		</layout>
