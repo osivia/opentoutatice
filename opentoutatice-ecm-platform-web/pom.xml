@@ -21,11 +21,18 @@
 	</properties>
 
 	<dependencies>
+	
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-platform-services</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-ui-web</artifactId>
