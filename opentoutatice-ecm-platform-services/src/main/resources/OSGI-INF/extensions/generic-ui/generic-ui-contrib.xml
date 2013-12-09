@@ -25,11 +25,19 @@
 				<position>
 					<before>classement</before>
 				</position>
+				<excludedTypes>
+					<type>WebConfigurationFolder</type>
+					<type>WebConfiguration</type>
+				</excludedTypes>
 			</layout>
 			<layout name="keywords">
 				<position>
 					<after>classement</after>
 				</position>
+				<excludedTypes>
+					<type>WebConfigurationFolder</type>
+					<type>WebConfiguration</type>
+				</excludedTypes>
 			</layout>
 			<layout name="acaren_showInMenu">
 				<position>
@@ -37,6 +45,8 @@
 				</position>
 				<excludedTypes>
 					<type>PortalSite</type>
+					<type>WebConfigurationFolder</type>
+					<type>WebConfiguration</type>
 				</excludedTypes>
 			</layout>
 		</layouts>
