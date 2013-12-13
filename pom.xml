@@ -33,7 +33,7 @@
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.2.1</version>
 				 	<configuration>
-						<tagBase>http://projet.toutatice.fr/repos/opentoutatice-ecm/platform/tags</tagBase>
+						<tagBase>http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags</tagBase>
 						<releaseProfiles>unpack,pack</releaseProfiles>
 						<preparationGoals>clean install</preparationGoals>
 						<goals>deploy</goals>
@@ -59,7 +59,7 @@
 	</build>
 
   <scm>
-    <developerConnection>scm:svn:http://projet.toutatice.fr/repos/opentoutatice-ecm/platform/trunk</developerConnection>
+    <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/trunk</developerConnection>
   </scm>
 
 	<distributionManagement>
