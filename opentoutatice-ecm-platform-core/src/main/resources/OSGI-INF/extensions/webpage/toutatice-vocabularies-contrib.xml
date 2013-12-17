@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<component name="fr.gouv.education.acrennes.ged.directories">
+<component name="fr.toutatice.ecm.platform.webpage.directories">
 
 	<extension target="org.nuxeo.ecm.directory.sql.SQLDirectoryFactory"
 		point="directories">
