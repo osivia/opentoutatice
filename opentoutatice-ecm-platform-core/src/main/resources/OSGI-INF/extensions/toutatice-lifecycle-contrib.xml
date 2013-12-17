@@ -1,15 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="fr.toutatice.ecm.platform.core.lifecycle.contrib">
 
+	<require>org.nuxeo.ecm.core.lifecycle.LifeCycleService</require>
+
+	<extension target="org.nuxeo.ecm.core.lifecycle.LifeCycleService"
+		point="lifecycle">
+
+		<documentation>Nuxeo core default life cycle redefinition.
+		</documentation>
+
+		<lifecycle name="default_acaren" defaultInitial="project">
+			<transitions>
+				<transition name="approve" destinationState="approved">
+					<description>Approve the content</description>
+				</transition>
+				<transition name="obsolete" destinationState="obsolete">
+					<description>Content becomes obsolete</description>
+				</transition>
+				<transition name="delete" destinationState="deleted">
+					<description>Move document to trash (temporary delete)
+					</description>
+				</transition>
+				<transition name="delete" destinationState="deleted">
+					<description></description>
+				</transition>
+				<transition name="backToProject" destinationState="project">
+					<description>Recover the document from trash</description>
+				</transition>
+				<transition name="backToProject" destinationState="project">
+					<description></description>
+				</transition>
+				<transition name="delete" destinationState="deleted">
+					<description></description>
+				</transition>
+				<transition name="undelete" destinationState="project">
+					<description></description>
+				</transition>
+				<transition name="waitForPublication" destinationState="waitingForPublication">
+					<description></description>
+				</transition>
+				<transition name="unpublish" destinationState="unpublished">
+					<description></description>
+				</transition>
+				<transition name="unpublish" destinationState="unpublished">
+					<description></description>
+				</transition>
+				<transition name="publish" destinationState="published">
+					<description></description>
+				</transition>
+				<transition name="publish" destinationState="published">
+					<description></description>
+				</transition>
+				<transition name="waitForPublication" destinationState="waitingForPublication">
+					<description></description>
+				</transition>
+			</transitions>
+			<states>
+				<state name="project" description="Default state" initial="true">
+					<transitions>
+						<transition>approve</transition>
+						<transition>obsolete</transition>
+						<transition>delete</transition>
+					</transitions>
+				</state>
+				<state name="approved" description="Content has been validated">
+					<transitions>
+						<transition>delete</transition>
+						<transition>backToProject</transition>
+					</transitions>
+				</state>
+				<state name="obsolete" description="Content is obsolete">
+					<transitions>
+						<transition>delete</transition>
+						<transition>backToProject</transition>
+					</transitions>
+				</state>
+				<state name="deleted" description="Document is deleted">
+					<transitions>
+						<transition>undelete</transition>
+					</transitions>
+				</state>
+				<state name="published" description="Document is or has been published">
+					<transitions>
+						<transition>unpublish</transition>
+						<transition>waitForPublication</transition>
+					</transitions>
+				</state>
+				<state name="waitingForPublication" description="Document is waiting for Publication">
+					<transitions>
+						<transition>unpublish</transition>
+						<transition>publish</transition>
+					</transitions>
+				</state>
+				<state name="unpublished" description="Document is unpublished">
+					<transitions>
+						<transition>publish</transition>
+						<transition>waitForPublication</transition>
+					</transitions>
+				</state>
+			</states>
+		</lifecycle>
+
+	</extension>
+
 	<extension target="org.nuxeo.ecm.core.lifecycle.LifeCycleService"
 		point="types">
-		<!-- TODO: définir un lifecycle toutatice-default! -->
+
+		<documentation>
+			Nuxeo core default document types to life cycles
+			mapping
+		</documentation>
+
 		<types>
-			<type name="PortalSite">default</type>
-		</types>
-		<types>
-			<type name="PortalPage">default</type>
+			<type name="PortalPage">default_acaren</type>
+			<type name="PortalSite">default_acaren</type>
 		</types>
 
 	</extension>
+
 </component>
