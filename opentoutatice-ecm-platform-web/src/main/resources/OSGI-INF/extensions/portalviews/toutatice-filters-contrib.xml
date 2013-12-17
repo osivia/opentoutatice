@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.portalviews.filters">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="filters">
+
+		<filter id="is_not_creating_form_specific_document">
+			<rule grant="false">
+				<condition>#{changeableDocument.type == 'Thread'}</condition>
+				<condition>#{changeableDocument.type == 'Workspace'}</condition>
+				<condition>#{changeableDocument.type == 'PictureBook'}</condition>
+			</rule>
+		</filter>
+
+	</extension>
+
+</component>
