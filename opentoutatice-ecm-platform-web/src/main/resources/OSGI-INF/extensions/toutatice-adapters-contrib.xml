@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.adapters">
+
+	<require>org.nuxeo.ecm.platform.picture.MultiviewPicture</require>
+	<require>org.nuxeo.ecm.core.api.blobholder.BlobHolderAdapterComponent</require>
+	<require>org.nuxeo.ecm.platform.picture.blobholder</require>
+
+	<!--
+		Ce point d'extension a été rendu nécessaire pour le bon fonctionnement de la vue "toutatice_view" sur un document de type "PictureBook".
+		Le ticket Jira suivant identifie le souci: https://jira.nuxeo.com/browse/SUPNXP-7421
+ 	-->	
+	<extension target="org.nuxeo.ecm.core.api.blobholder.BlobHolderAdapterComponent" point="BlobHolderFactory">
+		<blobHolderFactory class="fr.toutatice.ecm.platform.web.adapters.ToutaticePictureBlobHolderFactory" docType="PictureBook" name="pictureBook" />
+		<!-- Déclaration nécessaire pour la création d'un Picture sur l'upload d'un binaire dans un PictureBook (Nuxeo 5.6) -->
+		<blobHolderFactory class="fr.toutatice.ecm.platform.web.adapters.ToutaticePictureBlobHolderFactory" docType="Picture" name="picture"/>
+	</extension>
+
+</component>
