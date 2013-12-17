@@ -2,25 +2,7 @@
 
 <fragment version="1">
 	
-	<require>all</require>
-	
-	<!-- <require>org.nuxeo.ecm.actions</require>
-	<require>org.nuxeo.ecm.platform.audit.web</require>
-	<require>org.nuxeo.ecm.platform.io.web</require>
-	<require>org.nuxeo.ecm.platform.forum</require>
-	<require>org.nuxeo.ecm.platform.forms.layout.client</require>
-	<require>org.nuxeo.ecm.platform.notification.web</require>
-	<require>org.nuxeo.ecm.platform.picture.api</require>
-	<require>org.nuxeo.ecm.platform.publisher.web</require>
-	<require>org.nuxeo.ecm.platform.ui</require>
-	<require>org.nuxeo.ecm.platform.webengine.sites</require>
-	<require>org.nuxeo.ecm.webapp.base</require>
-	<require>org.nuxeo.ecm.webapp.core</require>
-	<require>org.nuxeo.ecm.webapp.ui</require>
-	<require>org.nuxeo.theme.core</require> 
-	<require>org.nuxeo.theme.styling</require>
-	
-	<require>fr.toutatice.ecm.platform.core</require> -->
+	<require>fr.toutatice.ecm.platform.core</require> 
 
 	<extension target="faces-config#NAVIGATION">
 		<!-- Navigation entre ecran creation et ecran edition webpage -->
@@ -28,13 +10,39 @@
             <from-outcome>osivia_create_fragment_2</from-outcome>
             <to-view-id>osivia_edit_fragment.xhtml</to-view-id>
         </navigation-case>    
-    
-		
+    	
 		<!-- Ecran confirmation webpage-->	
 		<navigation-case>
 			<from-outcome>done</from-outcome>
 			<to-view-id>osivia_done.xhtml</to-view-id>
 		</navigation-case>
+		
+		
+		<navigation-case>
+			<from-outcome>toutatice_create</from-outcome>
+			<to-view-id>/toutatice_create_document.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		
+		<navigation-case>
+			<from-outcome>toutatice_edit</from-outcome>
+			<to-view-id>/toutatice_edit_document.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+			
+		<navigation-case>
+			<from-outcome>toutatice_view</from-outcome>
+			<to-view-id>/toutatice_view_documents.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		
+		
+		<navigation-case>
+			<from-outcome>editor_link_search_document</from-outcome>
+			<to-view-id>/editor_link_search_document.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		
 	</extension>
 
 	<extension target="pages#PAGES">
@@ -51,11 +59,13 @@
 	<install>
 		<unzip from="${bundle.fileName}" to="/">
 			<include>nuxeo.war/**</include>
-			<include>nuxeo.war.webpage/**</include>
-		</unzip>  
+		</unzip> 
 		<unzip from="${bundle.fileName}" to="/" prefix="webpage.nuxeo.war">
-			<include>webpage.nuxeo.war/nuxeo.war/**</include>
+			<include>webpage.nuxeo.war/nuxeo.war**</include>
 		</unzip>  
+		<unzip from="${bundle.fileName}" to="/" prefix="portalviews.nuxeo.war">
+			<include>portalviews.nuxeo.war/nuxeo.war/**</include>
+		</unzip>    
 
 		<!-- append l10n files -->
 		<delete path="${bundle.fileName}.tmp" />
