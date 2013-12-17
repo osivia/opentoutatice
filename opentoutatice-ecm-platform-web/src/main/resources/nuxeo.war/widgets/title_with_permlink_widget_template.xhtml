@@ -103,12 +103,14 @@
 
 			<c:if test="#{!empty actions}">
 				<c:forEach var="action" items="#{actions}">
-					<nxh:commandLink action="#{action.getLink()}"
-						onclick="#{action.confirm}" immediate="#{action.immediate}">
-						<h:graphicImage value="#{action.icon}"
-							rendered="#{not empty action.icon}"
-							title="#{messages[action.label]}" />
-					</nxh:commandLink>
+					<c:if test="#{action.id != 'EXTENDED_TITLE'}">
+						<nxh:commandLink action="#{action.getLink()}"
+							onclick="#{action.confirm}" immediate="#{action.immediate}">
+							<h:graphicImage value="#{action.icon}"
+								rendered="#{not empty action.icon}"
+								title="#{messages[action.label]}" />
+						</nxh:commandLink>
+					</c:if>
 				</c:forEach>
 			</c:if>
 		</nxu:set>
