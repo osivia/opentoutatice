@@ -77,12 +77,12 @@
 						<c:otherwise>
 							<h:outputText class="summary_superscript summary_workVersion"
 								value="#{messages['label.toutatice.version.work']}"
-								rendered="#{!documentActions.isOnlineWithSameVersion() and !publishActions.isRemoteProxy()}" />
+								rendered="#{!documentActions.isOnlineWithSameVersion() and !documentActions.isRemoteProxy()}" />
 
 							<h:outputText
 								class="summary_superscript summary_publishedVersion"
 								value="#{messages['label.toutatice.version.published']}"
-								rendered="#{documentActions.isOnlineWithSameVersion() and !publishActions.isRemoteProxy()}" />
+								rendered="#{documentActions.isOnlineWithSameVersion() and !documentActions.isRemoteProxy()}" />
 
 
 						</c:otherwise>
