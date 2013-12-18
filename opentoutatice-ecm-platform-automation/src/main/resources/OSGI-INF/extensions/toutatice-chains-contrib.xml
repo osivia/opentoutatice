@@ -131,6 +131,11 @@
 				<param type="string" name="message">La demande est rejetée</param>
 			</operation>
 		</chain>
+		
+		<chain id="createOrMoveOp">
+			<operation id="Context.FetchDocument" />
+			<operation id="Document.SetSpaceID" />
+		</chain>
 
 		<chain id="vignette-resizing">
 			<operation id="Context.FetchDocument" />
