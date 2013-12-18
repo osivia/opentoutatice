@@ -55,6 +55,83 @@
 			</operation>
 		</chain>
 
+		<chain id="onlineWorkflow_start">
+			<operation id="Context.FetchDocument" />
+			<operation id="Document.GetUsersAndGroups">
+				<param type="string" name="permission">validationWorkflow_validation
+				</param>
+				<param type="string" name="variable name">assignees</param>
+				<param type="boolean" name="ignore groups">false</param>
+				<param type="boolean" name="prefix identifiers">true</param>
+				<param type="boolean" name="resolve groups">false</param>
+			</operation>
+			<operation id="Workflow.CreateProcess">
+				<param type="string" name="task name">choose-participant</param>
+				<param type="string" name="following state">no_transition</param>
+				<param type="string" name="workflow type">acaren_online_approbation</param>
+				<param type="string" name="actors">assignees</param>
+				<param type="string" name="directive">workflowDirectiveValidation</param>
+				<param type="string" name="right">Read</param>
+			</operation>
+			<operation id="Notification.SendEvent">
+				<param type="string" name="name">workflowNewProcessStarted</param>
+			</operation>
+			<operation id="Seam.AddInfoMessage">
+				<param type="string" name="message">La demande de mise en ligne a
+					démarré.
+				</param>
+			</operation>
+			<operation id="Notification.SendTaskNotification">
+				<param type="string" name="event">workflowOnlineTaskAssigned</param>
+				<param type="string" name="actors">assignees</param>
+			</operation>
+		</chain>
+
+		<chain id="onlineWorkflow_validate">
+			<operation id="Context.FetchDocument" />
+			<operation id="Workflow.OperateProcess">
+				<param type="string" name="task name">validate-online</param>
+				<param type="string" name="transition">validate_online</param>
+				<param type="string" name="event">workflowOnlineTaskApproved</param>
+			</operation>
+			<operation id="Context.RunOperation">
+				<param type="string" name="id">setOnLine</param>
+				<param type="boolean" name="isolate">false</param>
+			</operation>
+			<operation id="Notification.SendSeamEvent">
+				<param type="string" name="name">workflowTaskCompleted</param>
+			</operation>
+			<operation id="Notification.SendSeamEvent">
+				<param type="string" name="name">documentChanged</param>
+			</operation>
+			<operation id="Seam.AddInfoMessage">
+				<param type="string" name="message">Le document est mis en ligne</param>
+			</operation>
+		</chain>
+
+		<chain id="onlineWorkflow_rejected">
+			<operation id="Context.FetchDocument" />
+			<operation id="Workflow.OperateProcess">
+				<param type="string" name="task name">validate-online</param>
+				<param type="string" name="transition">reject_online</param>
+				<param type="string" name="event">workflowOnlineTaskRejected</param>
+			</operation>
+			<operation id="Audit.Log">
+				<param type="string" name="event">Rejet de la demande de mise en ligne
+				</param>
+				<param type="string" name="category">Automation</param>
+			</operation>
+			<operation id="Notification.SendSeamEvent">
+				<param type="string" name="name">workflowTaskRejected</param>
+			</operation>
+			<operation id="Notification.SendSeamEvent">
+				<param type="string" name="name">documentChanged</param>
+			</operation>
+			<operation id="Seam.AddInfoMessage">
+				<param type="string" name="message">La demande est rejetée</param>
+			</operation>
+		</chain>
+
 		<chain id="vignette-resizing">
 			<operation id="Context.FetchDocument" />
 			<operation id="ImageResize.Operation">

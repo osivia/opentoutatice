@@ -20,6 +20,11 @@
 	<operation class="fr.toutatice.ecm.platform.automation.comments.AddComment" />
 	<operation class="fr.toutatice.ecm.platform.automation.comments.DeleteComment" />
 	<operation class="fr.toutatice.ecm.platform.automation.comments.CreateChildComment" />
+	<operation class="fr.toutatice.ecm.platform.automation.GetUsersAndGroupsDocument" />
+	<operation class="fr.toutatice.ecm.platform.automation.StartWFProcess" />
+	<operation class="fr.toutatice.ecm.platform.automation.OperateWFProcess" />
+	<operation class="fr.toutatice.ecm.platform.automation.SendTaskNotification" />
+	<operation class="fr.toutatice.ecm.platform.automation.FireSeamEvent" />
 	
   </extension>
 
