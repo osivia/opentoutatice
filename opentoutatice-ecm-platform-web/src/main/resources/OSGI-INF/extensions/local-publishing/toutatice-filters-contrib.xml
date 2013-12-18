@@ -14,7 +14,22 @@
 		
 		<filter id="not_remote_proxy">
 			<rule grant="false">
-				<condition>#{publishActions.isRemoteProxy() == true}</condition>
+				<condition>#{documentActions.isRemoteProxy() == true}</condition>
+			</rule>
+		</filter>
+		
+		<filter id="is_either_version_or_proxy">
+			<rule grant="true">
+				<condition>document.isVersion()</condition>
+			</rule>
+			<rule grant="true">
+				<condition>document.isProxy()</condition>
+			</rule>
+		</filter>
+		
+		<filter id="is_version">
+			<rule grant="true">
+				<condition>document.isVersion()</condition>
 			</rule>
 		</filter>
 		
@@ -58,7 +73,7 @@
 		<filter id="filter@setDocumentOnline">
 			<rule grant="true">
 				<facet>Versionable</facet>
-				<!-- <permission>validationWorkflow_validation</permission> -->
+				<permission>validationWorkflow_validation</permission> 
 			</rule>
 			<rule grant="false">
 				<condition>#{jbpmActions.isProcessRunning() == true}</condition>
@@ -70,23 +85,28 @@
 		<filter id="filter@setDocumentOffline">
 			<rule grant="true">
 				<facet>Versionable</facet>
-				<!-- <permission>validationWorkflow_validation</permission> -->
+				<permission>validationWorkflow_validation</permission>
 				<condition>#{documentActions.isOnlineWithSameVersion() == true}</condition>
 			</rule>
 		</filter>
 		
-		<filter id="is_either_version_or_proxy">
+		<filter id="filter@requestDocumentOnline">
 			<rule grant="true">
-				<condition>document.isVersion()</condition>
+				<facet>Versionable</facet>
+				<permission>Write</permission>
 			</rule>
-			<rule grant="true">
-				<condition>document.isProxy()</condition>
+			<rule grant="false">
+				<type>Root</type>
 			</rule>
-		</filter>
-		
-		<filter id="is_version">
-			<rule grant="true">
-				<condition>document.isVersion()</condition>
+			<rule grant="false">
+				<condition>#{jbpmActions.isProcessRunning() == true}</condition>
+			</rule>
+			<rule grant="false">
+				<condition>#{documentActions.isOnlineWithSameVersion() == true}
+				</condition>
+			</rule>
+			<rule grant="false">
+				<permission>validationWorkflow_validation</permission>
 			</rule>
 		</filter>
 						
