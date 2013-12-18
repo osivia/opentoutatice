@@ -25,6 +25,7 @@
 	<operation class="fr.toutatice.ecm.platform.automation.OperateWFProcess" />
 	<operation class="fr.toutatice.ecm.platform.automation.SendTaskNotification" />
 	<operation class="fr.toutatice.ecm.platform.automation.FireSeamEvent" />
+	<operation class="fr.toutatice.ecm.platform.automation.SetSpaceID" />
 	
   </extension>
 
