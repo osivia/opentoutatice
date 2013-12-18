@@ -1,0 +1,32 @@
+<package type="addon" name="open-toutatice" version="@VERSION@">
+	<title>Open Toutatice</title>
+	<description>
+		<p>This addon implements the opened platform called Toutatice 
+			(which one is based on the Nuxeo DM distribution)</p>
+			
+		Main corrections provided:
+		 * None
+		 
+		Evolutions:
+		 * First marketplace packaging release		  
+	</description>
+	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
+	<vendor>Academie de Rennes - OSIVIA</vendor>
+	<installer restart="true" />
+	<uninstaller restart="true" />
+	<!-- <hotreload-support>false</hotreload-support> -->
+	<!-- <require-terms-and-conditions-acceptance>false</require-terms-and-conditions-acceptance> -->
+	<nuxeo-validation>none</nuxeo-validation>
+	<production-state>production_ready</production-state>
+	<supported>false</supported>
+	<platforms>
+		<platform>cap-@DISTRIB_VERSION@</platform>
+	</platforms>
+	<dependencies>
+		<package>nuxeo-dm:@DISTRIB_VERSION@</package>
+		<!-- Dependance sur le addon jbpm -->
+		<package>nuxeo-platform-jbpm:1.0</package>
+	</dependencies>
+	<license>LGPL 2.1</license>
+	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
+</package>
