@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -25,7 +26,13 @@ import org.nuxeo.ecm.core.api.VersionModel;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.api.impl.LifeCycleFilter;
 import org.nuxeo.ecm.core.api.impl.VersionModelImpl;
+import org.nuxeo.ecm.core.api.security.ACE;
+import org.nuxeo.ecm.core.api.security.ACL;
+import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
+import org.nuxeo.ecm.core.api.security.impl.ACLImpl;
+import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
+import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
 
 import fr.toutatice.ecm.platform.core.constants.GlobalConst;
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
@@ -259,9 +266,9 @@ public class ToutaticeDocumentHelper {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public boolean accept(DocumentModel docModel) {
+			public boolean accept(DocumentModel document) {
 				boolean res = false;
-				if (docModel.hasFacet(NuxeoStudioConst.CST_FACET_SPACE)) {
+				if (isASpaceDocument(document)) {
 					res = true;
 				}
 				return res;
@@ -475,11 +482,11 @@ public class ToutaticeDocumentHelper {
 	}
 
 	private static class UnrestrictedGetParentsListRunner extends UnrestrictedSessionRunner {
-		DocumentModel baseDoc;
-		DocumentModelList parentDocList;
-		Filter filter = null;
-		boolean immediateOnly;
-		boolean thisIncluded;
+		private DocumentModel baseDoc;
+		private DocumentModelList parentDocList;
+		private Filter filter = null;
+		private boolean immediateOnly;
+		private boolean thisIncluded;
 
 		public DocumentModelList getParentList() {
 			return parentDocList;
@@ -527,4 +534,125 @@ public class ToutaticeDocumentHelper {
 		}
 	}
 
+	/**
+	 * Récupérer la liste des documents similaires dans un dossier.
+	 * 
+	 * @param session
+	 *            la session courante de l'utilisateur
+	 * @param document
+	 *            le document pour lequel il faut rechercher les parents
+	 * @param filter
+	 *            un filtre pour ajouter des critères de contrôle supplémentaires
+	 *            
+	 * @return le compte des documents similaires dans le dossier.
+	 */
+	public static int getSameDocsCount(CoreSession session, DocumentModel document, Filter filter) {
+		int count = 0;
+
+		try {
+			UnrestrictedGetSameDocsListRunner runner = new UnrestrictedGetSameDocsListRunner(session, document, filter);
+			runner.runUnrestricted();
+			count = runner.getCount();
+		} catch (ClientException e) {
+			log.error("Failed to get the same document of one folder, error: " + e.getMessage());
+		}
+
+		return count;
+	}
+
+	private static class UnrestrictedGetSameDocsListRunner extends UnrestrictedSessionRunner {
+		private int count;
+		private Filter filter = null;
+		private DocumentModel document;
+
+		public int getCount() {
+			return this.count;
+		}
+
+		protected UnrestrictedGetSameDocsListRunner(CoreSession session, DocumentModel document, Filter filter) {
+			super(session);
+			this.count = 0;
+			this.filter = filter;
+			this.document = document;
+		}
+
+		@Override
+		public void run() throws ClientException {
+			String docTitle = this.document.getTitle();
+			DocumentModel docParent = this.session.getParentDocument(this.document.getRef());
+			DocumentModelList rs = this.session.query("SELECT * FROM " + this.document.getType() + " WHERE ecm:parentId = '" + docParent.getId() + "' " +
+					"AND ecm:mixinType != 'HiddenInNavigation' " +
+					"AND ecm:isCheckedInVersion = 0 " +
+					"AND dc:title LIKE '" + docTitle.replace("'", "\\'") + "%'",
+					this.filter);
+
+			this.count = rs.size();
+		}
+	}
+
+
+	/**
+	 * Copy les permissions dans l'ACL local en excluant les permissions passés en paramétre
+	 * @param session
+	 * @param doc 
+	 * @param permissionsExclude permissions à exclure
+	 * @throws ClientException
+	 */
+	public static void copyPermissionsInLocalACL(CoreSession session, DocumentModel doc,String permissionsExclude) throws ClientException{
+		DocumentRef ref = doc.getRef(); 
+		StringTokenizer st = new StringTokenizer(permissionsExclude,",");
+		List<String> lstPerm = new ArrayList<String>(st.countTokens());
+		while(st.hasMoreTokens()){
+			lstPerm.add(st.nextToken());
+		}  
+		// nettoyer les acls local
+		ACP acp = doc.getACP();
+		acp.removeACL(ACL.LOCAL_ACL);
+		session.setACP(ref, acp, true);
+
+		//récupérer les acls du parent    	
+		DocumentModel parent = session.getParentDocument(ref);
+		ACP acpParent = parent.getACP();
+		for (ACL acl : acpParent.getACLs()) {
+			for (ACE ace : acl.getACEs()) {
+				if (ace.isGranted() && !lstPerm.contains(ace.getPermission())) {
+					// ajouter les permissions au document doc
+					setACE(session, ref,ace);
+				}
+			}
+		}            	
+	}
+	
+	/**
+	 * ajout une ace sur un document
+	 * @param session
+	 * @param ref
+	 * @param ace
+	 * @throws ClientException
+	 */
+	public static void setACE(CoreSession session, DocumentRef ref,ACE ace) throws ClientException {
+		ACPImpl acp = new ACPImpl();
+		ACLImpl acl = new ACLImpl(ACL.LOCAL_ACL);
+		acp.addACL(acl);
+		acl.add(ace);
+
+		session.setACP(ref, acp, false);
+	}
+
+	/**
+	 * @param document le document sur lequel porte le contrôle
+	 * @param viewId l'identifiant de la vue
+	 * @return true si le document porte la vue dont l'identifiant est passé en paramètre
+	 */
+	public static boolean hasView(DocumentModel document, String viewId) {
+		boolean status = false;
+		
+		if (null != document) {
+	        TypeInfo typeInfo = document.getAdapter(TypeInfo.class);
+            String chosenView = typeInfo.getView(viewId);
+            status = (chosenView != null);
+		}
+		
+		return status;
+	}
 }
