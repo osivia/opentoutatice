@@ -6,22 +6,22 @@
 
 	<extension target="org.nuxeo.ecm.platform.types.TypeService"
 		point="types">
-		
+
 		<type id="PortalSite">
-            <subtypes>
-                <type>Folder</type>
-                <type>OrderedFolder</type>
-                <type>PictureBook</type>
-            </subtypes>
-        </type>
-        
-        <type id="PortalPage">
-            <subtypes>
-                <type>Folder</type>
-                <type>OrderedFolder</type>
-                <type>PictureBook</type>
-            </subtypes>
-        </type>
+			<subtypes>
+				<type>Folder</type>
+				<type>OrderedFolder</type>
+				<type>PictureBook</type>
+			</subtypes>
+		</type>
+
+		<type id="PortalPage">
+			<subtypes>
+				<type>Folder</type>
+				<type>OrderedFolder</type>
+				<type>PictureBook</type>
+			</subtypes>
+		</type>
 
 		<type id="Domain">
 			<subtypes>
@@ -76,7 +76,9 @@
 			<layouts mode="edit">
 				<layout>layout@WebConfiguration-edit</layout>
 			</layouts>
-			<layouts mode="view" />
+			<layouts mode="view">
+				<layout>layout@WebConfiguration-view</layout>
+			</layouts>
 		</type>
 
 	</extension>
