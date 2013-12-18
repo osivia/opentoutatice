@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component
+	name="fr.toutatice.ecm.platform.web.event.handler">
+
+	<require>org.nuxeo.ecm.core.operation.OperationServiceComponent
+	</require>
+
+	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+		point="event-handlers">
+
+		<handler chainId="createOrMoveOp">
+			<event>documentCreated</event>
+			<event>documentCreatedByCopy</event>
+			<event>documentMoved</event>
+			<event>documentRestored</event>
+			<filters>
+				<attribute>Mutable Document</attribute>
+				<expression>Document.hasSchema('toutatice') == false</expression>
+			</filters>
+		</handler>
+
+
+	</extension>
+
+</component>
