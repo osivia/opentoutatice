@@ -8,6 +8,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.plexus.util.StringUtils;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -19,7 +20,6 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
-import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
 
 @Operation(id = FetchCommentsOfDocument.ID, category = Constants.CAT_FETCH, label = "FetchCommentsOfDocument", description = "Fetches comments of a (commentable) document")
@@ -61,6 +61,9 @@ public class FetchCommentsOfDocument {
 				jsonCommentRoot.element("canDelete", canDelete);
 				jsonCommentRoot.element("children", getCommentsThread(commentRoot, commentableDoc, new JSONArray()));
 				commentsTree.add(jsonCommentRoot);
+				if (StringUtils.isBlank(author)) {
+					log.warn("Missing comment author on comment ID '" + commentRoot.getId() + "' (content: '" + commentRoot.getProperty("comment", "text") + "')");
+				}
 			}
 		}
 
@@ -88,6 +91,9 @@ public class FetchCommentsOfDocument {
 						getCommentsThread(childComment, commentableDocService, new JSONArray()));
 				threads.add(jsonChildComment);
 
+				if (StringUtils.isBlank(author)) {
+					log.warn("Missing comment author on comment ID '" + childComment.getId() + "' (content: '" + childComment.getProperty("comment", "text") + "')");
+				}
 			}
 			return threads;
 		}
@@ -101,7 +107,7 @@ public class FetchCommentsOfDocument {
 		boolean canDelete = false;
 		Principal user = session.getPrincipal();
 		if (user != null) {
-			boolean isUserAuthor = author.equals(user.getName());
+			boolean isUserAuthor = user.getName().equals(author);
 			boolean isUserAdmin = ((NuxeoPrincipal) user).isAdministrator();
 			canDelete = isUserAuthor || isUserAdmin;
 		}

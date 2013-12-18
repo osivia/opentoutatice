@@ -1,7 +1,5 @@
 package fr.toutatice.ecm.platform.automation.comments;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
@@ -14,8 +12,6 @@ import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
 public class DeleteComment {
 	
 public static final String ID = "Document.DeleteComment";
-	
-	private static final Log log = LogFactory.getLog(AddComment.class);
 
 	@Param(name = "commentableDoc", required = true)
 	protected DocumentModel document;
