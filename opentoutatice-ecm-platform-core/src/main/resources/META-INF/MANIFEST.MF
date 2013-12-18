@@ -10,7 +10,11 @@ Bundle-Category: stateful
 Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/toutatice-core-types-contrib.xml,
  OSGI-INF/extensions/toutatice-lifecycle-contrib.xml,
+ OSGI-INF/extensions/toutatice-directory-contrib.xml,
+ OSGI-INF/extensions/toutatice-jbpm-service-contrib.xml,
+ OSGI-INF/extensions/toutatice-permissions-contrib.xml,
  OSGI-INF/extensions/webpage/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/webpage/toutatice-core-types-contrib.xml,
  OSGI-INF/extensions/webpage/toutatice-vocabularies-contrib.xml,
  OSGI-INF/extensions/webpage/toutatice-lifecycle-contrib.xml
+ 
