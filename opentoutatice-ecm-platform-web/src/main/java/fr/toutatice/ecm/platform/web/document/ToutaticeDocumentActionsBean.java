@@ -129,6 +129,11 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 	public boolean getEveryThingRight() throws ClientException {
 		return documentManager.hasPermission(navigationContext.getCurrentDocument().getRef(), SecurityConstants.EVERYTHING);
 	}
+	
+	public boolean isRemoteProxy(){
+        DocumentModel currentDocument = navigationContext.getCurrentDocument();
+        return currentDocument.isProxy() && !StringUtils.endsWith(currentDocument.getName(), GlobalConst.CST_PROXY_NAME_SUFFIX);
+    }
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public String addDocumentSubject() throws ClientException {
