@@ -125,7 +125,7 @@ public class PublishDocument {
 				String srcDocId = this.newProxy.getSourceId();
 				DocumentModel srcDoc = this.session.getDocument(new IdRef(srcDocId));
 				srcDoc.setPropertyValue("dc:issued", new Date());
-				srcDoc = this.session.saveDocument(this.doc);
+				srcDoc = this.session.saveDocument(srcDoc);
 			} else {
 				throw new ClientException("Failed to get the target document reference");
 			}

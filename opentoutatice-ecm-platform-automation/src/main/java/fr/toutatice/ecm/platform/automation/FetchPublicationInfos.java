@@ -31,6 +31,7 @@ import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.DocumentSecurityException;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
@@ -472,12 +473,18 @@ public class FetchPublicationInfos {
 				/*
 				 * Récupération du spaceID
 				 */
-				if ("Workspace".equals(document.getType())) {
-					this.infosPubli.put("spaceID", document.getId());
-				} else {
-					String spaceID = (String) document.getProperty("toutatice", "spaceID");
+                String spaceID = (String) this.document.getProperty("toutatice", "spaceID");
 					this.infosPubli.put("spaceID", safeString(spaceID));
+                /*
+                 * Récupération du parentSpaceID
+                 */
+                String parentSpaceID = "";
+                DocumentModelList spaceParentList = ToutaticeDocumentHelper.getParentSpaceList(this.session, this.document, true, true);
+                if (spaceParentList != null && spaceParentList.size() > 0) {
+                    DocumentModel parentSpace = (DocumentModel) spaceParentList.get(0);
+                    parentSpaceID = (String) parentSpace.getProperty("toutatice", "spaceID");
 				}
+                this.infosPubli.put("parentSpaceID", safeString(parentSpaceID));
 
 				/*
 				 * Récupération du contexte propre à l'appel d'autres opérations
@@ -530,15 +537,8 @@ public class FetchPublicationInfos {
 					workspaceRes = callOperation(automation, ctx, "Document.FetchWorkspaceOfDocument", parameters);
 					DocumentModel workspace = (DocumentModel) workspaceRes;
 					this.infosPubli.element("workspacePath", URLEncoder.encode(workspace.getPathAsString(), "UTF-8"));
-					/*
-					 * Récupération du parentSpaceID (il peut ne pas exister si
-					 * ws non inclus dans autre ws)
-					 */
-					String parentSpaceID = (String) workspace.getProperty("toutatice", "spaceID");
-					this.infosPubli.put("parentSpaceID", safeString(parentSpaceID));
 					try {
-						this.infosPubli.element("workspaceDisplayName",
-								URLEncoder.encode(workspace.getTitle(), "UTF-8"));
+                        this.infosPubli.element("workspaceDisplayName", URLEncoder.encode(workspace.getTitle(), "UTF-8"));
 					} catch (ClientException e) {
 						this.errorsCodes = manageException(errorsCodes, workspace, e, ERROR_WORKSPACE_FORBIDDEN,
 								"fetch workspace name or contextualization property for workspace");
@@ -547,7 +547,6 @@ public class FetchPublicationInfos {
 					/* Cas d'erreur */
 					this.infosPubli.element("workspaceInContextualization", Boolean.FALSE);
 					this.infosPubli.element("workspacePath", "");
-					this.infosPubli.put("parentSpaceID", "");
 					this.infosPubli.element("workspaceDisplayName", "");
 					this.errorsCodes.add(getErrorCode(e, ERROR_WORKSPACE_NOT_FOUND, ERROR_WORKSPACE_FORBIDDEN));
 				}
@@ -572,19 +571,11 @@ public class FetchPublicationInfos {
 					this.infosPubli.element("published", Boolean.FALSE);
 				}
 
-				/*
-				 * Test sur le caractère anonyme (publique) du document s'il est
-				 * publié; récupération du type de l'espace de publication
-				 */
-				if (publishedDoc != null) {
-					Object isAnonymousRes = isAnonymous(this.session, this.userManager, this.document, this.infosPubli);
-					if (isError(isAnonymousRes)) {
-						this.infosPubli = (JSONObject) isAnonymousRes;
-					} else {
-						this.infosPubli.element("anonymouslyReadable", isAnonymousRes);
-					}
+				Object isAnonymousRes = isAnonymous(this.session, this.userManager, this.document, this.infosPubli);
+				if (isError(isAnonymousRes)) {
+					this.infosPubli = (JSONObject) isAnonymousRes;
 				} else {
-					this.infosPubli.element("anonymouslyReadable", Boolean.FALSE);
+					this.infosPubli.element("anonymouslyReadable", isAnonymousRes);
 				}
 
 			} catch (Exception e) {

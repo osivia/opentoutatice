@@ -31,7 +31,8 @@ public class FetchLiveDocument {
 	@Param(name = "value", required = true)
 	protected DocumentModel value;
 
-	@Param(name = "permission", required = false, values = {SecurityConstants.READ, SecurityConstants.READ_WRITE, SecurityConstants.WRITE})
+	@Param(name = "permission", required = false, values = { SecurityConstants.READ, SecurityConstants.READ_WRITE,
+			SecurityConstants.WRITE })
 	protected String permission = SecurityConstants.WRITE;
 	
 	@Param(name= "operation", required = false, values = {OR,AND})

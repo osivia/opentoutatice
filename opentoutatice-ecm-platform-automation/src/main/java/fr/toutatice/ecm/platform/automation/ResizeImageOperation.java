@@ -109,7 +109,7 @@ public class ResizeImageOperation {
 		
 		if (null != imageBlob) {
 			
-			ImageInfo info = service.getImageInfo(imageBlob);
+			ImageInfo info = getImageService().getImageInfo(imageBlob);
 			int width = info.getWidth();
 			int height = info.getHeight();
 			float wScale = (float) img_width / width;
@@ -117,7 +117,7 @@ public class ResizeImageOperation {
 			float scale = Math.min(wScale, hscale);
 	
 			if (roundToOne(scale) < 1 || (roundToOne(scale) > 1) && enlarge) {
-				imageBlob = service.resize(imageBlob, 
+				imageBlob = getImageService().resize(imageBlob, 
 						"jpg", 
 						(int) (width * scale),
 						(int) (height * scale), 
