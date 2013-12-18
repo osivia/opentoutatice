@@ -35,7 +35,6 @@ import org.nuxeo.ecm.webapp.helpers.EventNames;
 import fr.toutatice.ecm.platform.core.constants.GlobalConst;
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
-import fr.toutatice.ecm.platform.web.publication.ToutaticeCoreProxyWithWorkflowFactory;
 
 @Name("jbpmActions")
 @Scope(ScopeType.CONVERSATION)
@@ -45,6 +44,8 @@ public class ToutaticeJbpmActionsBean extends JbpmActionsBean {
 	private static final long serialVersionUID = 1L;
 	
 	private static final Log log = LogFactory.getLog(ToutaticeJbpmActionsBean.class);
+	
+	public static final String ACAREN_TASK_NAME = "org.nuxeo.ecm.platform.publisher.jbpm.CoreProxyWithWorkflowFactory";
 	
     @In(required = false, create = true)
     protected transient DocumentsListsManager documentsListsManager;
@@ -289,7 +290,7 @@ public class ToutaticeJbpmActionsBean extends JbpmActionsBean {
     	if (lstProcess != null && !lstProcess.isEmpty()) {
     		ProcessDefinition pDef = lstProcess.get(0).getProcessDefinition();
     		pName = pDef.getName();
-    	} else if (isTaskPending(document, ToutaticeCoreProxyWithWorkflowFactory.ACAREN_TASK_NAME)) {
+    	} else if (isTaskPending(document, ACAREN_TASK_NAME)) {
     		pName = "remote_publication_process";
     	}
     	
