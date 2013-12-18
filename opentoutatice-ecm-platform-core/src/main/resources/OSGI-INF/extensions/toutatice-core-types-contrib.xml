@@ -15,6 +15,7 @@
 		<facet name="PortalConfigurable" />
 		<facet name="SpaceContent"/>
 		<facet name="SpaceNavigationItem" />
+		<facet name="MasterPublishSpace" />
 
 		<doctype name="PortalSite" extends="Document">
 			<schema name="common" />
@@ -36,6 +37,7 @@
 			<facet name="AttachableImages" />
 			<facet name="FolderishEditable" />
 			<facet name="SpaceNavigationItem" />
+			<facet name="MasterPublishSpace" />
 			<prefetch>common.icon, dc:title, dc:description, dc:created,
 				dc:modified,
 				dc:lastContributor, dc:creator
@@ -60,6 +62,7 @@
 			<facet name="FolderishEditable" />
 			<facet name="SpaceContent"/>
 			<facet name="SpaceNavigationItem" />
+			<facet name="PublishSpace" />
 			<prefetch>common.icon, dc:title, dc:description, dc:created,
 				dc:modified,
 				dc:lastContributor, dc:creator
