@@ -7,7 +7,7 @@
 		point="widgets">
 
 		<!-- Widget permettant d'afficher lae layout en mode vue d'un document -->
-		<widget name="summary_current_document_view" type="custom_summary_current_document_view" />
+		<widget name="summary_current_document_view" type="summary_current_document_view" />
 
 		<!-- PostalSite, PortalPage widgets -->
 		<widget name="title" type="text">
@@ -117,7 +117,7 @@
 		point="widgettypes">
 
 
-		<widgetType name="custom_summary_current_document_view">
+		<!-- <widgetType name="custom_summary_current_document_view">
 			<configuration>
 				<sinceVersion>5.3.1</sinceVersion>
 				<title>View layout</title>
@@ -127,7 +127,7 @@
 				<supportedModes>
 					<mode>view</mode>
 				</supportedModes>
-				<!-- no configurable properties -->
+				no configurable properties
 			</configuration>
 			<handler-class>
 				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
@@ -135,7 +135,7 @@
 			<property name="template">
 				/widgets/summary/toutatice_metadata_custom_widget_template.xhtml
 			</property>
-		</widgetType>
+		</widgetType> -->
 
 		<widgetType name="summary_picture_type">
 			<configuration>
