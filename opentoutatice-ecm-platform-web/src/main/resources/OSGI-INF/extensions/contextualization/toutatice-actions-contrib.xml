@@ -23,7 +23,7 @@
 			<filter-id>hasToutaticeSchema</filter-id>
 			<filter-id>isGlobalAdministrator</filter-id>
 			<filter-id>not_version</filter-id>
-			<filter-id>filter@TTC_TAB_ADMIN_PUBLICATION_SPACE</filter-id>
+			<filter-id>filter@TTC_TAB_WS_ADMIN_PUBLICATION_SPACE</filter-id>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 		
