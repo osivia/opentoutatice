@@ -117,6 +117,8 @@
 				<rule grant="true">
 					<condition>#{changeableDocument.type == 'PictureBook'}</condition>
 				</rule>
+			</filter>
+			<filter id="filter@CAN_CREATE_AND_SET_ONLINE_PICTUREBOOK_DOCUMENT">
 				<rule grant="true">
 					<permission>validationWorkflow_validation</permission>
 				</rule>
@@ -136,6 +138,8 @@
 				<rule grant="true">
 					<condition>#{changeableDocument.type == 'PictureBook'}</condition>
 				</rule>
+			</filter>
+			<filter id="filter@CAN_NOT_CREATE_AND_SET_ONLINE_PICTUREBOOK_DOCUMENT">
 				<rule grant="false">
 					<permission>validationWorkflow_validation</permission>
 				</rule>
