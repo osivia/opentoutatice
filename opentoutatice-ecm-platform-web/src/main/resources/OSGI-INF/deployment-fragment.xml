@@ -61,7 +61,7 @@
 			<include>nuxeo.war/**</include>
 		</unzip> 
 		<unzip from="${bundle.fileName}" to="/" prefix="webpage.nuxeo.war">
-			<include>webpage.nuxeo.war/nuxeo.war**</include>
+			<include>webpage.nuxeo.war/nuxeo.war/**</include>
 		</unzip>  
 		<unzip from="${bundle.fileName}" to="/" prefix="portalviews.nuxeo.war">
 			<include>portalviews.nuxeo.war/nuxeo.war/**</include>
