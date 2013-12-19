@@ -11,6 +11,12 @@
 				<condition>document.hasFacet('PortalConfigurable')</condition>
 			</rule>
 		</filter>
+		
+		<filter id="filter@TTC_TAB_WS_ADMIN_PUBLICATION_SPACE">
+			<rule grant="true">
+				<type>Workspace</type>
+			</rule>
+		</filter>
 
 	</extension>
 
