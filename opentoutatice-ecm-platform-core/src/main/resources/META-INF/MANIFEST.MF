@@ -17,5 +17,6 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/webpage/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/webpage/toutatice-core-types-contrib.xml,
  OSGI-INF/extensions/webpage/toutatice-vocabularies-contrib.xml,
- OSGI-INF/extensions/webpage/toutatice-lifecycle-contrib.xml
+ OSGI-INF/extensions/webpage/toutatice-lifecycle-contrib.xml,
+ OSGI-INF/extensions/images-search/toutatice-doctypes-contrib.xml
  
