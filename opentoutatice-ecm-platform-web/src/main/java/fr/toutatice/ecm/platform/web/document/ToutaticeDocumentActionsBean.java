@@ -94,6 +94,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 	String source;
 	Map<String, Boolean> mapSwitchState = null;
 
+	/* FIXME à supprimer!! */
 	// varaiable pour stocker la liste des types de documents utilisés par la
 	// DAGE
 	private List<String> dageDocTypesList;
