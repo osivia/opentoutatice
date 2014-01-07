@@ -28,7 +28,7 @@ public class FetchPublishedDocument {
 	protected DocumentModel value;
 
 	@OperationMethod
-	public Object run() throws Exception {
+	public DocumentModel run() throws Exception {
 
 		// un document est publié quand il possède un proxy (publication locale)
 		DocumentModel publishedDocument = ToutaticeDocumentHelper.getProxy(session, value, SecurityConstants.READ);

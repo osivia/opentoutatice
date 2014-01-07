@@ -60,7 +60,7 @@ public class FetchPublicationInfos {
 	 * Id Nuxeo de l'opération (s'applique à un Document).
 	 */
 	public static final String ID = "Document.FetchPublicationInfos";
-	
+
 	/**
 	 * Codes d'erreur
 	 */
@@ -73,7 +73,7 @@ public class FetchPublicationInfos {
 	public static final int SERVER_ERROR = 500;
 	public static final String INTERNAL_PROCESSING_ERROR_RESPONSE = "InternalProcessingErrorResponse";
 	private static final String TOUTATICE_PUBLI_SUFFIX = ".proxy";
-	
+
 	/**
 	 * Suufixe du nom des proxies.
 	 */
@@ -180,7 +180,7 @@ public class FetchPublicationInfos {
 				infosPubli.put("subTypes", subTypes);
 			}
 		}
-		
+
 		/*
 		 * Récupération du "droit" de commenter.
 		 */
@@ -192,7 +192,7 @@ public class FetchPublicationInfos {
 		}
 		boolean userNotAnonymous = !((NuxeoPrincipal) user).isAnonymous();
 		infosPubli.put("isCommentableByUser", docCommentable && docMutable && userNotAnonymous);
-		
+
 		UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession,
 				document, 
 				infosPubli, 
@@ -276,7 +276,7 @@ public class FetchPublicationInfos {
 			List<DocumentModel> docs = new ArrayList<DocumentModel>();
 			docs.add(liveDoc);
 			canBeDelete = trash.canDelete(docs , coreSession.getPrincipal(), false);
-			
+
 			/* Règle de gestion liée au droit de validation et à l'existence de proxy local:
 			 * Un document dans l'état validé ou bien qui est publié peut être supprimé seulement
 			 * si l'usager connecté possède le droit de validation. 
@@ -298,7 +298,7 @@ public class FetchPublicationInfos {
 				throw new ServeurException(e);
 			}
 		}
-		
+
 		return canBeDelete;
 	}
 
@@ -413,7 +413,7 @@ public class FetchPublicationInfos {
 	private static boolean isError(Object operationRes) {
 		return (!(operationRes instanceof DocumentModel) && !(operationRes instanceof Boolean));
 	}
-	
+
 	/**
 	 * Classe permettant de "tracer" une erreur serveur.
 	 */
@@ -466,25 +466,25 @@ public class FetchPublicationInfos {
 			this.errorsCodes = errorsCodes;
 			this.userManager = userManager;
 		}
-
+		
 		@Override
 		public void run() throws ClientException {
 			try {
 				/*
 				 * Récupération du spaceID
 				 */
-                String spaceID = (String) this.document.getProperty("toutatice", "spaceID");
-					this.infosPubli.put("spaceID", safeString(spaceID));
-                /*
-                 * Récupération du parentSpaceID
-                 */
-                String parentSpaceID = "";
-                DocumentModelList spaceParentList = ToutaticeDocumentHelper.getParentSpaceList(this.session, this.document, true, true);
-                if (spaceParentList != null && spaceParentList.size() > 0) {
-                    DocumentModel parentSpace = (DocumentModel) spaceParentList.get(0);
-                    parentSpaceID = (String) parentSpace.getProperty("toutatice", "spaceID");
+				this.infosPubli.put("spaceID", getSpaceID(this.document));
+
+				/*
+				 * Récupération du parentSpaceID
+				 */
+				String parentSpaceID = "";
+				DocumentModelList spaceParentList = ToutaticeDocumentHelper.getParentSpaceList(this.session, this.document, true, true);
+				if (spaceParentList != null && spaceParentList.size() > 0) {
+					DocumentModel parentSpace = (DocumentModel) spaceParentList.get(0);
+					parentSpaceID = getSpaceID(parentSpace);
 				}
-                this.infosPubli.put("parentSpaceID", safeString(parentSpaceID));
+				this.infosPubli.put("parentSpaceID", parentSpaceID);				
 
 				/*
 				 * Récupération du contexte propre à l'appel d'autres opérations
@@ -538,11 +538,12 @@ public class FetchPublicationInfos {
 					DocumentModel workspace = (DocumentModel) workspaceRes;
 					this.infosPubli.element("workspacePath", URLEncoder.encode(workspace.getPathAsString(), "UTF-8"));
 					try {
-                        this.infosPubli.element("workspaceDisplayName", URLEncoder.encode(workspace.getTitle(), "UTF-8"));
+						this.infosPubli.element("workspaceDisplayName", URLEncoder.encode(workspace.getTitle(), "UTF-8"));
 					} catch (ClientException e) {
 						this.errorsCodes = manageException(errorsCodes, workspace, e, ERROR_WORKSPACE_FORBIDDEN,
 								"fetch workspace name or contextualization property for workspace");
 					}
+
 				} catch (Exception e) {
 					/* Cas d'erreur */
 					this.infosPubli.element("workspaceInContextualization", Boolean.FALSE);
@@ -562,10 +563,8 @@ public class FetchPublicationInfos {
 				parameters.put("value", document);
 
 				DocumentModel publishedDoc = null;
-				Object fetchPublishDocRes = null;
 				try {
-					fetchPublishDocRes = callOperation(automation, ctx, "Document.FetchPublished", parameters);
-					publishedDoc = (DocumentModel) fetchPublishDocRes;
+					publishedDoc = (DocumentModel) callOperation(automation, ctx, "Document.FetchPublished", parameters);
 					this.infosPubli.element("published", Boolean.TRUE);
 				} catch (Exception e) {
 					this.infosPubli.element("published", Boolean.FALSE);
@@ -645,7 +644,7 @@ public class FetchPublicationInfos {
 		 */
 		private Object isAnonymous(CoreSession session, UserManager userManager, DocumentModel doc, JSONObject infos) throws ServeurException {
 			boolean isAnonymous = false;
-			
+
 			try {
 				ACP acp = this.document.getACP();
 				String anonymousId = userManager.getAnonymousUserId();
@@ -660,7 +659,7 @@ public class FetchPublicationInfos {
 					throw new ServeurException(e);
 				}
 			}
-			
+
 			return isAnonymous;
 		}
 
@@ -675,7 +674,7 @@ public class FetchPublicationInfos {
 		 * @throws ClientException
 		 */
 		private BooleanProperty getInContextualizationProperty(DocumentModel doc) throws PropertyException,
-				ClientException {
+		ClientException {
 			BooleanProperty property = (BooleanProperty) doc.getProperty(IN_CONTEXTUALIZATON_PROPERTY);
 			return property;
 		}
@@ -705,6 +704,23 @@ public class FetchPublicationInfos {
 				throw new ServeurException(ce);
 			}
 			return errorsCodes;
+		}
+
+		// Règle de gestion de récupération du spaceID d'un document
+		private String getSpaceID(DocumentModel document) {
+			String spaceID = "";
+
+			try {
+				if (ToutaticeDocumentHelper.isASpaceDocument(document)) {
+					spaceID = document.getId();
+				} else {
+					spaceID = safeString((String) document.getProperty("toutatice", "spaceID"));
+				}
+			} catch (ClientException e) {
+				log.error("Failed to read the ttc:spaceID meta-data, error:" + e.getMessage());
+			}
+
+			return spaceID;
 		}
 
 	}

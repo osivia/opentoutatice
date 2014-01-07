@@ -24,8 +24,8 @@ public class FetchLiveDocument {
 	public static final String ID = "Document.FetchLiveDocument";
 
 	private static final Log log = LogFactory.getLog(FetchLiveDocument.class);
-	
-    @Context
+
+	@Context
 	protected CoreSession session;
 
 	@Param(name = "value", required = true)
@@ -34,10 +34,10 @@ public class FetchLiveDocument {
 	@Param(name = "permission", required = false, values = { SecurityConstants.READ, SecurityConstants.READ_WRITE,
 			SecurityConstants.WRITE })
 	protected String permission = SecurityConstants.WRITE;
-	
-	@Param(name= "operation", required = false, values = {OR,AND})
+
+	@Param(name = "operation", required = false, values = { OR, AND })
 	protected String operation = OR;
-	
+
 	@OperationMethod
 	public Object run() throws Exception {
 
