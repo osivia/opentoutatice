@@ -16,5 +16,14 @@
 		</doctype>
 		
 	</extension>
+	
+	<extension target="fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService"
+		point="doctype">
+		
+		<doctype name="Workspace">
+			<facet name="Space" />
+		</doctype>
+		
+	</extension>
 
 </component>
