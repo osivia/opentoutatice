@@ -2,6 +2,8 @@
 <component name="fr.toutatice.ecm.platform.web.contextualization.actions">
 
 	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+	<require>fr.toutatice.ecm.platform.web.filters</require>
+	<require>fr.toutatice.ecm.platform.web.contextualization.filters</require>
 
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
@@ -24,7 +26,6 @@
 			<filter-id>isGlobalAdministrator</filter-id>
 			<filter-id>not_version</filter-id>
 			<filter-id>filter@TTC_TAB_WS_ADMIN_PUBLICATION_SPACE</filter-id>
-			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 		
 	</extension>
