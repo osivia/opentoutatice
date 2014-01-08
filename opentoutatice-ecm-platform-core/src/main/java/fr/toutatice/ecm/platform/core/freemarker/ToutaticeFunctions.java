@@ -14,11 +14,14 @@ import org.nuxeo.ecm.platform.ui.web.tag.fn.DocumentModelFunctions;
 import org.nuxeo.ecm.webengine.WebException;
 import org.nuxeo.runtime.api.Framework;
 
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.service.publication.PublicationService;
+
 public class ToutaticeFunctions extends PlatformFunctions {
-	// private static final Log log = LogFactory.getLog(AcarenFunctions.class);
+	// private static final Log log = LogFactory.getLog(ToutaticeFunctions.class);
 	private static CommentManager commentManager;
 
-    // private static PublicationService publicationService;
+	private static PublicationService publicationService;
 
 	/**
 	 * @param doc
@@ -39,31 +42,31 @@ public class ToutaticeFunctions extends PlatformFunctions {
 		return url;
 	}
 
-    // /**
-    // * @param le document
-    // * @return permalink pour visualiser le document depuis le portail, si le document n'est pas visualisable la méthode retourne ""
-    // * @throws PropertyException
-    // * @throws ClientException
-    // */
-    // public String getPermalink(DocumentModel doc) throws PropertyException, ClientException {
-    // String url = "";
-    // // verification : le document doit pouvoir être visible dans toutatice
-    // if (ToutaticeDocumentHelper.isVisibleInPortal(doc, doc.getCoreSession())) {
-    //
-    // // si oui recherche du permalink
-    // if (null == publicationService) {
-    // try {
-    // publicationService = Framework.getService(PublicationService.class);
-    // } catch (Exception e) {
-    // throw new WebException("Unable to get publicationService");
-    // }
-    // }
-    //
-    // url = publicationService.getPermalink(doc);
-    // }
-    // // sinon return null
-    // return url;
-    // }
+	/**
+	 * @param le document
+	 * @return permalink pour visualiser le document depuis le portail, si le document n'est pas visualisable la méthode retourne ""
+	 * @throws PropertyException
+	 * @throws ClientException
+	 */
+	public String getPermalink(DocumentModel doc) throws PropertyException, ClientException {
+		String url = "";
+		// verification : le document doit pouvoir être visible dans toutatice
+		if (ToutaticeDocumentHelper.isVisibleInPortal(doc, doc.getCoreSession())) {
+
+			// si oui recherche du permalink
+			if (null == publicationService) {
+				try {
+					publicationService = Framework.getService(PublicationService.class);
+				} catch (Exception e) {
+					throw new WebException("Unable to get publicationService");
+				}
+			}
+
+			url = publicationService.getPermalink(doc);
+		}
+		// sinon return null
+		return url;
+	}
 
 	/**
 	 * Récupére un commentaire sur le document.

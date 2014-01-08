@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -7,14 +7,14 @@
 	   <artifactId>opentoutatice-ecm-platform-parent</artifactId>
 	   <version>1.0.2-RC5-SNAPSHOT</version>
 	</parent>
-
-	<artifactId>opentoutatice-ecm-platform-automation</artifactId>
-	<name>Toutatice Automation</name>
-	<description>Partie automation de la plate-forme toutatice
-	</description>
+    
+	<artifactId>opentoutatice-ecm-platform-maintenance</artifactId>
+	<packaging>jar</packaging>
+	<name>Partie maintenance de la plate-forme opentoutatice</name>
 
 	<properties>
 		<nuxeo.version>5.6.0-HF26</nuxeo.version>
+		<common-lang-version>2.6</common-lang-version>
 	</properties>
 
 	<dependencies>
@@ -24,72 +24,24 @@
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.nuxeo.ecm.automation</groupId>
-			<artifactId>nuxeo-automation-core</artifactId>
-			<version>${nuxeo.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.nuxeo.ecm.automation</groupId>
-			<artifactId>nuxeo-automation-server</artifactId>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-platform-ui-web</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-jbpm-api</artifactId>
+			<artifactId>nuxeo-platform-webapp-core</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-jbpm-automation</artifactId>
-			<version>${nuxeo.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-publisher-task</artifactId>
-			<version>${nuxeo.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-directory-api</artifactId>
-			<version>${nuxeo.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>opentoutatice-ecm.platform</groupId>
-			<artifactId>opentoutatice-ecm-platform-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>opentoutatice-ecm.platform</groupId>
-			<artifactId>opentoutatice-ecm-platform-maintenance</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.pdfbox</groupId>
-			<artifactId>pdfbox-app</artifactId>
-			<version>1.7.1</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.json-lib</groupId>
-			<artifactId>json-lib</artifactId>
-            <version>2.4</version>
-			<classifier>jdk15</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.nuxeo.ecm.automation</groupId>
-			<artifactId>nuxeo-automation-jsf</artifactId>
+			<artifactId>nuxeo-platform-forms-layout-client</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
 
 	</dependencies>
-
-    <profiles>
+	
+	<profiles>
         <profile>
             <id>deploy-toutatice-ecm-modules</id>
             <build>

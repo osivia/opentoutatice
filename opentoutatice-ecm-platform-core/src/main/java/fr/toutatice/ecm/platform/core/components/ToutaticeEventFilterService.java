@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.runtime.api.DefaultServiceProvider;
 import org.nuxeo.runtime.api.Framework;
@@ -100,6 +101,8 @@ public class ToutaticeEventFilterService implements ServiceProvider {
 			T srvObject = nextProvider != null ? nextProvider.getService(srvClass) : Framework.getRuntime().getService(srvClass);
 			if (srvObject instanceof EventService) {
 				return newProxy(srvObject, srvClass);
+			} else if (srvObject instanceof AutomationService) {
+				return newASProxy(srvObject, srvClass);
 			} else {
 				return srvObject;
 			}
@@ -108,6 +111,11 @@ public class ToutaticeEventFilterService implements ServiceProvider {
 		protected T newProxy(T object, Class<T> clazz) {
 			return ToutaticeEventFilterHandler.newProxy(object, clazz);
 		}
+		
+		protected T newASProxy(T object, Class<T> clazz) {
+			return ToutaticeAutomationServiceHandler.newProxy(object, clazz);
+		}
+
 	}
 
 }

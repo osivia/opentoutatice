@@ -12,8 +12,8 @@
 	<modules>
 	   <module>opentoutatice-ecm-platform-core</module>
 	   <module>opentoutatice-ecm-platform-web</module>
-       <module>opentoutatice-ecm-platform-automation</module>
-       <module>opentoutatice-ecm-platform-services</module>
+           <module>opentoutatice-ecm-platform-automation</module>
+           <module>opentoutatice-ecm-platform-services</module>
        <!-- <module>opentoutatice-ecm-platform-marketplace</module> -->
 	</modules>
 

@@ -4,7 +4,7 @@ Bundle-Name: Plate-forme Toutatice - partie core
 Bundle-SymbolicName: fr.toutatice.ecm.platform.core;singleton:=true
 Bundle-Version: 2.0.0
 Bundle-Localization: plugin
-Bundle-Vendor: Académie de Rennes 
+Bundle-Vendor: Open Toutatice 
 Bundle-Activator: fr.toutatice.ecm.platform.core.components.ToutaticeCoreBundleActivator
 Bundle-Category: stateful
 Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
@@ -22,6 +22,10 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/faq/schemas-contrib.xml,
  OSGI-INF/extensions/faq/core-types-contrib.xml,
  OSGI-INF/extensions/faq/lifecycle-contrib.xml,
- OSGI-INF/extensions/faq/permissions-contrib.xml
- 
+ OSGI-INF/extensions/faq/permissions-contrib.xml,
+ OSGI-INF/extensions/maintenance/toutatice-core-services-contrib.xml,
+ OSGI-INF/extensions/maintenance/toutatice-core-types-contrib.xml,
+ OSGI-INF/extensions/maintenance/toutatice-lifecycle-contrib.xml,
+ OSGI-INF/extensions/maintenance/toutatice-schemas-contrib.xml,
+ OSGI-INF/extensions/maintenance/toutatice-core-versioning-contrib.xml
  

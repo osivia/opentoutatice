@@ -34,7 +34,6 @@ import org.nuxeo.ecm.core.api.security.impl.ACLImpl;
 import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
 import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
 
-import fr.toutatice.ecm.platform.core.constants.GlobalConst;
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
 
 public class ToutaticeDocumentHelper {
@@ -339,26 +338,43 @@ public class ToutaticeDocumentHelper {
 	}
 
 	/**
-	 * Retourne le proxy d'un document s'il existe. Si une permission est
-	 * précisée en paramètre elle sera contrôlée.
+	 * Retourne le proxy d'un document s'il existe DANS UN MODE UNRESTRICTED. 
+	 * Si une permission est précisée en paramètre elle sera contrôlée.
 	 * 
-	 * @param session
-	 *            la session utilisateur connecté courant
-	 * @param document
-	 *            le document pour lequel la recherche est faite
+	 * @param session la session utilisateur connecté courant
+	 * @param document le document pour lequel la recherche est faite
 	 * @return le proxy associé ou null si aucun proxy existe ou une exception
 	 *         de sécurité si les droits sont insuffisants.
 	 * @throws ClientException
 	 */
 	public static DocumentModel getProxy(CoreSession session, DocumentModel document, String permission) throws ClientException {
+		return getProxy(session, document, permission, true);
+	}
+
+	/**
+	 * Retourne le proxy d'un document s'il existe. 
+	 * Si une permission est précisée en paramètre elle sera contrôlée.
+	 * 
+	 * @param session la session utilisateur connecté courant
+	 * @param document le document pour lequel la recherche est faite
+	 * @param unrestricted true si le proxy doit être récupéré en mode unrestricted. False s'il doit être récupéré avec la session utilisateur courante
+	 * @return le proxy associé ou null si aucun proxy existe ou une exception
+	 *         de sécurité si les droits sont insuffisants.
+	 * @throws ClientException
+	 */
+	public static DocumentModel getProxy(CoreSession session, DocumentModel document, String permission, boolean unrestricted) throws ClientException {
 		DocumentModel proxy = null;
 
 		if (document.isProxy()) {
 			proxy = document;
 		} else {
 			UnrestrictedGetProxyRunner runner = new UnrestrictedGetProxyRunner(session, document);
-			runner.runUnrestricted();
-			proxy = runner.getProxy();			
+			if (unrestricted) {
+				runner.runUnrestricted();
+			} else {
+				runner.run();
+			}
+			proxy = runner.getProxy();
 		}
 
 		if (null != proxy) {

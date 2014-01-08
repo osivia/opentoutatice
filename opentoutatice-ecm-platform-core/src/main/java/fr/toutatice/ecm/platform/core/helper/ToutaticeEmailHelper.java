@@ -28,6 +28,7 @@ import org.nuxeo.ecm.platform.rendering.RenderingService;
 import org.nuxeo.ecm.platform.rendering.impl.DocumentRenderingContext;
 import org.nuxeo.runtime.api.Framework;
 
+import fr.toutatice.ecm.platform.core.freemarker.ToutaticeFunctions;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -61,10 +62,13 @@ public class ToutaticeEmailHelper extends EmailHelper {
         DocumentRenderingContext context = new DocumentRenderingContext();
         context.remove("doc");
         context.putAll(mail);
-        context.setDocument((DocumentModel) mail.get("document"));
+        DocumentModel doc = (DocumentModel) mail.get("document");
+		context.setDocument(doc);
         
-        // String link = (new ToutaticeFunctions()).getPermalink((DocumentModel)mail.get("document"));
-        // context.put("docPermalink", link);
+        String link = (new ToutaticeFunctions()).getPermalink(doc);       
+        context.put("docPermalink", link);   
+        
+        context.put("creator",doc.getPropertyValue("dc:creator"));
         
         String customSubjectTemplate = (String) mail.get(NotificationConstants.SUBJECT_TEMPLATE_KEY);
         if (customSubjectTemplate == null) {

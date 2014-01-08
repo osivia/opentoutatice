@@ -1,0 +1,11 @@
+<component name="fr.toutatice.ecm.platform.service.publication">
+	<service>
+		<provide
+			interface="fr.toutatice.ecm.platform.service.publication.PublicationService" />
+	</service>
+	<implementation
+		class="fr.toutatice.ecm.platform.service.publication.PublicationServiceImpl" />
+	<extension-point name="permalinks">
+		<object class="fr.toutatice.ecm.platform.service.publication.PermalinkDescriptor" />
+	</extension-point>
+</component>

@@ -1123,7 +1123,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
                 || "OrderedFolder".equals(newDocument.getType())) {
             newDocument.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_SIM, true);
             if ("PortalSite".equals(newDocument.getType())) {
-                newDocument.setPropertyValue(NuxeoStudioConst.CST_DOC_TOUTATICE_INTERNAL_CONTEXTUALIZATION, true);
+                newDocument.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_INTERNAL_CONTEXTUALIZATION, true);
             }
         }
     }

@@ -1,0 +1,6 @@
+<component name="fr.toutatice.ecm.platform.core.maintenance.services">
+	<service>
+		<provide interface="fr.toutatice.ecm.platform.core.services.ToutaticeMaintenanceService" />
+	</service>
+	<implementation	class="fr.toutatice.ecm.platform.core.services.ToutaticeMaintenanceServiceImpl" />
+</component>

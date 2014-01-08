@@ -27,6 +27,7 @@
 	<operation class="fr.toutatice.ecm.platform.automation.FireSeamEvent" />
 	<operation class="fr.toutatice.ecm.platform.automation.SetSpaceID" />
 	<operation class="fr.toutatice.ecm.platform.automation.TextExtraction" />
+	<operation class="fr.toutatice.ecm.platform.automation.ReloadMntCfg" />
 	
   </extension>
 
