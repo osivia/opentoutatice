@@ -131,7 +131,7 @@
 				<param type="string" name="message">La demande est rejetée</param>
 			</operation>
 		</chain>
-		
+
 		<chain id="createOrMoveOp">
 			<operation id="Context.FetchDocument" />
 			<operation id="Document.SetSpaceID" />
@@ -145,6 +145,24 @@
 				<param type="string" name="xpath_img_in">ttc:vignette</param>
 				<param type="string" name="xpath_img_out">ttc:vignette</param>
 				<param type="boolean" name="enlarge">true</param>
+			</operation>
+		</chain>
+
+		<chain id="qr-add-op">
+			<operation id="Context.FetchDocument" />
+			<operation id="Seam.CreateDocumentForm">
+				<param type="string" name="type">Question</param>
+			</operation>
+		</chain>
+		
+		<chain id="question-update">
+			<operation id="Context.FetchDocument" />
+			<operation id="TextExtraction.Operation">
+				<param type="int" name="nb_chars_out">300</param>
+				<param type="string" name="xpath_in">note:note</param>
+				<param type="string" name="xpath_out">dc:description</param>
+				<param type="string" name="format_in">html</param>
+				<param type="boolean" name="override">true</param>
 			</operation>
 		</chain>
 
