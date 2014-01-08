@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.web.ui.faq.types">
+
+	<require>org.nuxeo.ecm.platform.types.TypeService</require>
+
+	<extension target="org.nuxeo.ecm.platform.types.TypeService"
+		point="types">
+
+		<type id="PortalSite">
+			<subtypes>
+				<type>FaqFolder</type>
+			</subtypes>
+		</type>
+
+		<type id="PortalPage">
+			<subtypes>
+				<type>FaqFolder</type>
+			</subtypes>
+		</type>
+
+		<type id="Workspace">
+			<subtypes>
+				<type>FaqFolder</type>
+			</subtypes>
+		</type>
+
+		<type id="Folder">
+			<subtypes>
+				<type>FaqFolder</type>
+			</subtypes>
+		</type>
+
+		<type id="OrderedFolder">
+			<subtypes>
+				<type>FaqFolder</type>
+			</subtypes>
+		</type>
+
+		<type id="FaqFolder">
+			<label>FAQ</label>
+			<category>Collaborative</category>
+			<icon>/img/faq-folder-16.png</icon>
+			<bigIcon>/img/faq-folder-100.png</bigIcon>
+			<description>Foire aux questions</description>
+			<default-view>view_documents</default-view>
+			<subtypes>
+				<type>Question</type>
+			</subtypes>
+			<layouts mode="create">
+				<layout>layout@FaqFolder-create</layout>
+			</layouts>
+			<layouts mode="edit">
+				<layout>layout@FaqFolder-edit</layout>
+			</layouts>
+			<layouts mode="view" />
+			<contentViews category="content">
+				<contentView showInExportView="false">cv_ContentOrderedReadNWrite
+				</contentView>
+			</contentViews>
+			<contentViews category="trash_content">
+				<contentView showInExportView="false">document_trash_content
+				</contentView>
+			</contentViews>
+		</type>
+
+		<type id="Question">
+			<label>Question - réponse</label>
+			<category>SimpleDocument</category>
+			<icon>/img/question-16.png</icon>
+			<bigIcon>/img/question-100.png</bigIcon>
+			<description></description>
+			<default-view>view_documents</default-view>
+			<layouts mode="create">
+				<layout>layout@Question</layout>
+			</layouts>
+			<layouts mode="edit">
+				<layout>layout@Question</layout>
+			</layouts>
+			<layouts mode="view">
+				<layout>layout@Question</layout>
+			</layouts>
+		</type>
+
+	</extension>
+
+
+</component>

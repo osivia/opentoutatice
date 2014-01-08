@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.faq.actions">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="actions">
+
+		<action id="qr-add-action" label="Ajouter une question/réponse"
+			enabled="true" order="30" type="link" immediate="false"
+			link="#{operationActionBean.doOperation('qr-add-op')}">
+			<category>SUBVIEW_UPPER_LIST</category>
+			<filter id="filter@qr-add-action">
+				<rule grant="true">
+					<permission>AddChildren</permission>
+					<type>FaqFolder</type>
+				</rule>
+			</filter>
+		</action>
+
+	</extension>
+
+</component>

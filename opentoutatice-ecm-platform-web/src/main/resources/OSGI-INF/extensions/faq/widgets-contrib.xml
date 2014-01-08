@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.faq.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+		<widget name="title_faq" type="text">
+			<labels>
+				<label mode="any">Nom de la FAQ</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>dc:title</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">true</property>
+				<property name="disabled">false</property>
+			</properties>
+		</widget>
+
+		<widget name="description" type="textarea">
+			<labels>
+				<label mode="any">Description</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>dc:description</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="required">false</property>
+				<property name="disabled">false</property>
+			</properties>
+		</widget>
+
+		<widget name="title_q" type="text">
+			<labels>
+				<label mode="any">Question</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>dc:title</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">true</property>
+				<property name="disabled">false</property>
+			</properties>
+			<properties widgetMode="view">
+				<property name="localize">false</property>
+				<property name="styleClass">dataInputText</property>
+				<property name="escape">false</property>
+			</properties>
+		</widget>
+
+
+		<widget name="content_question" type="richtext_with_mimetype">
+			<labels>
+				<label mode="any">Réponse</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>note:note</field>
+				<field>note:mime_type</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="cssClass">note_content_block</property>
+				<property name="translatedHtml">#{noteActions.translateImageLinks(field_0)}
+				</property>
+			</properties>
+			<properties widgetMode="view">
+				<property name="cssClass">note_content_block</property>
+				<property name="translatedHtml">#{noteActions.translateImageLinks(field_0)}
+				</property>
+			</properties>
+		</widget>
+
+	</extension>
+
+</component>
