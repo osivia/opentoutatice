@@ -32,13 +32,18 @@ import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.api.security.impl.ACLImpl;
 import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
+import org.nuxeo.ecm.platform.types.Type;
+import org.nuxeo.ecm.platform.types.TypeManager;
 import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
 
 public class ToutaticeDocumentHelper {
 
 	private static final Log log = LogFactory.getLog(ToutaticeDocumentHelper.class);
+	
+    private static final String CONTENT_CATEGORY = "content";
 
 	private ToutaticeDocumentHelper() {
 		// static class, cannot be instantiated
@@ -671,4 +676,23 @@ public class ToutaticeDocumentHelper {
 		
 		return status;
 	}
+	
+	public static boolean hasContentView(DocumentModel document) {
+        boolean status = false;
+        
+        if (null != document) {
+            TypeManager typeManager;
+            try {
+                typeManager = Framework.getService(TypeManager.class);
+                Type type = typeManager.getType(document.getType());
+                String[] typeContentViews = type.getContentViews(CONTENT_CATEGORY);
+                status = typeContentViews != null && typeContentViews.length > 0;
+            } catch (Exception e) {
+                status = false;
+            }
+        }
+        
+        return status;
+    }
+	
 }
