@@ -81,7 +81,8 @@ public class GlobalConst {
 	// Others
 	public final static String CST_PROXY_NAME_SUFFIX = ".proxy";
 	public final static String CST_REMOTE_PROXY_NAME_SUFFIX = ".remote.proxy";
-	public final static String CST_REMOTE_PROXY_PENDING_NAME_SUFFIX = ".remote.proxy.pending";
+//	public final static String CST_REMOTE_PROXY_PENDING_NAME_SUFFIX = ".remote.proxy.pending";
+	public final static String CST_REMOTE_PROXY_PENDING_NAME_SUFFIX = ".pending";
 	
 	/**
 	 * Cette définition est utilisée pour la gestion du cache (cf: AcarenNavigationContext.java) pour distinguer le cas
