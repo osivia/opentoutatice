@@ -80,4 +80,7 @@ public class NuxeoStudioConst {
 	// operations constants
 	public final static String CST_OPERATION_PARAM_NO_TRANSITION = "no_transition";
 	
+	// others
+	public final static String CHILDREN_DOCUMENT_LIST = "CHILDREN_DOCUMENT_LIST";
+	
 }
