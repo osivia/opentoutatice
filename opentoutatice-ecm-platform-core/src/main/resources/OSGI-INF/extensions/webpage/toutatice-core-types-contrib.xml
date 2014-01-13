@@ -22,5 +22,22 @@
 		</doctype>
 
 	</extension>
+	
+	<extension target="org.nuxeo.ecm.platform.types.TypeService"
+		point="types">
+
+		<type id="Domain">
+			<subtypes>
+				<type>WebConfigurationFolder</type>
+			</subtypes>
+		</type>
+
+		<type id="WebConfigurationFolder">
+			<subtypes>
+				<type>WebConfiguration</type>
+			</subtypes>
+		</type>
+		
+	</extension>
 
 </component>
