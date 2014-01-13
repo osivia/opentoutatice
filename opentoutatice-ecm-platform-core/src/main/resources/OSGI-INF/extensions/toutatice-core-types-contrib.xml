@@ -70,5 +70,48 @@
 		</doctype>
 
 	</extension>
+	
+	<extension target="org.nuxeo.ecm.platform.types.TypeService"
+		point="types">
+		
+		<type id="Domain">
+			<subtypes>
+				<type>PortalSite</type>
+			</subtypes>
+		</type>
+		<type id="WorkspaceRoot">
+			<subtypes>
+				<type>PortalSite</type>
+			</subtypes>
+		</type>
+		<type id="Workspace">
+			<subtypes>
+				<type>PortalSite</type>
+			</subtypes>
+		</type>
+		
+		<type id="PortalSite">
+			<subtypes>
+				<type>PortalPage</type>
+				<type>Folder</type>
+				<type>OrderedFolder</type>
+				<type>PictureBook</type>
+				<type>File</type>
+				<type>Note</type>
+			</subtypes>
+		</type>
+		
+		<type id="PortalPage">
+			<subtypes>
+				<type>PortalPage</type>
+				<type>Folder</type>
+				<type>OrderedFolder</type>
+				<type>PictureBook</type>
+				<type>File</type>
+				<type>Note</type>
+			</subtypes>
+		</type>
+		
+	</extension>
 
 </component>
