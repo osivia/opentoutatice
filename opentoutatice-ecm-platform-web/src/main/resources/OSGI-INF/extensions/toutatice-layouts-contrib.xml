@@ -149,7 +149,7 @@
 			</templates>
 			<rows>
 				<row>
-					<widget>acaren_widget_subjects</widget>
+					<widget>toutatice_keywords_widget</widget>
 				</row>
 			</rows>
 		</layout>

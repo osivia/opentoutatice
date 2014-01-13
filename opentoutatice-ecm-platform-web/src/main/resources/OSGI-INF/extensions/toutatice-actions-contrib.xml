@@ -27,6 +27,7 @@
 			<filter-id>view_content</filter-id>
 			<filter-id>outSection</filter-id>
 			<filter-id>belong_to_publish_space</filter-id>
+			<!-- <filter-id>has_content_view</filter-id> -->
 			<filter id="filter@ATAB_CONTENT_IN_PUBLISHING_SPACE">
 				<rule grant="false">
 					<type>Root</type>

@@ -12,7 +12,7 @@
 				</condition>
 			</rule>
 		</filter>
-		
+
 		<filter id="not_belong_to_publish_space">
 			<rule grant="false">
 				<condition>#{documentActions.belongToPublishSpace() == true}
@@ -80,6 +80,10 @@
 				<type>Domain</type>
 				<type>PortalSite</type>
 				<type>PortalPage</type>
+				<type>BlogSite</type>
+				<condition>!document.isImmutable()</condition>
+				<condition>#{typeManager.getAllowedSubTypes(document.getType(),
+					document).size() &gt; 0}</condition>
 			</rule>
 		</filter>
 
@@ -89,6 +93,13 @@
 				<type>WorkspaceRoot</type>
 				<type>PortalSite</type>
 				<type>PortalPage</type>
+			</rule>
+		</filter>
+		
+		<filter id="has_content_view">
+			<rule grant="true">
+				<condition>#{documentActions.hasContentView() == true}
+				</condition>
 			</rule>
 		</filter>
 

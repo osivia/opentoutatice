@@ -7,24 +7,6 @@
 	<extension target="org.nuxeo.ecm.platform.types.TypeService"
 		point="types">
 
-		<type id="Domain">
-			<subtypes>
-				<type>PortalSite</type>
-			</subtypes>
-		</type>
-
-		<type id="WorkspaceRoot">
-			<subtypes>
-				<type>PortalSite</type>
-			</subtypes>
-		</type>
-
-		<type id="Workspace">
-			<subtypes>
-				<type>PortalSite</type>
-			</subtypes>
-		</type>
-
 		<type id="PortalSite">
 			<label>Espace de publication</label>
 			<category>Collaborative</category>

@@ -87,7 +87,30 @@
 			</properties>
 		</widget>
 
-		<!-- Widget "Mots-clés" -->
+		<!-- Widgets "Mots-clés" -->
+		<widget name="toutatice_keywords_widget" type="template">
+			<labels>
+				<label mode="any">Mots-clés</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>ttc:keywords</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">
+					/widgets/toutatice_keyword_widget.xhtml
+				</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(currentDocument.type != 'BlogSite' and
+					(currentUser.administrator or
+					currentNuxeoPrincipal.isMemberOf('Administrators')) ,
+					layout.mode,
+					'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+		<!-- FIXME: à supprimer? -cf ToutaticeDocumentActions aussi -->
 		<widget name="acaren_widget_subjects" type="template">
 			<labels>
 				<label mode="any">Mots-clés</label>
@@ -111,31 +134,41 @@
 			</widgetModes>
 		</widget>
 
+		<widget name="files" type="filesList">
+			<labels>
+				<label mode="any">Pièces jointes</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>files:files</field>
+			</fields>
+			<subWidgets>
+				<widget name="sub0" type="file">
+					<labels>
+						<label mode="any"></label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>file</field>
+						<field>filename</field>
+					</fields>
+				</widget>
+			</subWidgets>
+		</widget>
+
 	</extension>
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgettypes">
 
 
-		<!-- <widgetType name="custom_summary_current_document_view">
-			<configuration>
-				<sinceVersion>5.3.1</sinceVersion>
-				<title>View layout</title>
-				<categories>
-					<category>summary</category>
-				</categories>
-				<supportedModes>
-					<mode>view</mode>
-				</supportedModes>
-				no configurable properties
-			</configuration>
-			<handler-class>
-				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
-			</handler-class>
-			<property name="template">
-				/widgets/summary/toutatice_metadata_custom_widget_template.xhtml
-			</property>
-		</widgetType> -->
+		<!-- <widgetType name="custom_summary_current_document_view"> <configuration> 
+			<sinceVersion>5.3.1</sinceVersion> <title>View layout</title> <categories> 
+			<category>summary</category> </categories> <supportedModes> <mode>view</mode> 
+			</supportedModes> no configurable properties </configuration> <handler-class> 
+			org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler 
+			</handler-class> <property name="template"> /widgets/summary/toutatice_metadata_custom_widget_template.xhtml 
+			</property> </widgetType> -->
 
 		<widgetType name="summary_picture_type">
 			<configuration>
