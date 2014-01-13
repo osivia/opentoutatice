@@ -37,9 +37,9 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeImageCollectionHelper;
 @Name("ImageManagerActions")
 @Scope(ScopeType.EVENT)
 @Install(precedence = Install.FRAMEWORK)
-public class ImageManagerActionsBean extends FileManageActionsBean {
+public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
 	
-	private static final Log log = LogFactory.getLog(ImageManagerActionsBean.class);
+	private static final Log log = LogFactory.getLog(ToutaticeImageManagerActionsBean.class);
 	
     @Override
     @SuppressWarnings("unchecked")
@@ -142,37 +142,6 @@ public class ImageManagerActionsBean extends FileManageActionsBean {
         }
     }
     
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public void createHeadImage(ActionEvent event) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        ExternalContext eContext = context.getExternalContext();
-        String index = eContext.getRequestParameterMap().get("index");
-        
-        try {
-            DocumentModel currentDocument = navigationContext.getCurrentDocument();
-            if (!currentDocument.hasSchema(NuxeoStudioConst.CST_DOC_SCHEMA_ANNONCE)) {
-                return;
-            }
-            
-            // la génération de l'image de tête se fera automatiquement via l'event listener "OnHeadImageDocumentUpdate" (Nuxeo Studio)
-            Collection files = (Collection) currentDocument.getPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
-			Map<String, Object> file = (Map<String, Object>) CollectionUtils.get(files, new Integer(index));
-            currentDocument.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_HEAD_IMAGE, (Serializable) file.get("file"));
-            
-            // sauvegarder la modification (et déclencher le resizing de l'image de tête)
-            documentManager.saveDocument(currentDocument);
-
-            // notifier la fin de l'opération
-			facesMessages.add(StatusMessage.Severity.INFO,
-					resourcesAccessor.getMessages().get("acaren.fileImporter.create.success.image"));
-			
-            // some changes (versioning) happened server-side, fetch new one
-			fetchCurrentDocument(currentDocument);			
-        } catch (Exception e) {
-            log.error("Failed to generate the head image, error: " + e.getMessage());
-        }
-    }
-    
     private String formatParamsToString(List<String>  params) {
     	String toString = null;
     	
@@ -187,7 +156,7 @@ public class ImageManagerActionsBean extends FileManageActionsBean {
     	return toString;
     }
 
-    private void fetchCurrentDocument(DocumentModel document) throws ClientException {
+    public void fetchCurrentDocument(DocumentModel document) throws ClientException {
         navigationContext.invalidateCurrentDocument();
 //		EventManager.raiseEventsOnDocumentChange(currentDocument);    	
     }
