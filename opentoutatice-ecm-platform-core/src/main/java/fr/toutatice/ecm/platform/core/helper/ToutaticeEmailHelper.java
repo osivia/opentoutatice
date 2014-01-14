@@ -64,9 +64,11 @@ public class ToutaticeEmailHelper extends EmailHelper {
         context.putAll(mail);
         DocumentModel doc = (DocumentModel) mail.get("document");
 		context.setDocument(doc);
-        
-        String link = (new ToutaticeFunctions()).getPermalink(doc);       
-        context.put("docPermalink", link);   
+       
+		/* DCH: désactivation temporaire avant mise en place service permaLink */
+//        String link = (new ToutaticeFunctions()).getPermalink(doc);       
+//        
+		context.put("docPermalink", "");   
         
         context.put("creator",doc.getPropertyValue("dc:creator"));
         
