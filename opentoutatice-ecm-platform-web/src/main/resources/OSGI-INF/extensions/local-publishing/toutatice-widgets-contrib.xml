@@ -5,7 +5,7 @@
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgettypes">
-		
+
 		<widgetType name="acaren_summary_current_document_cartridge_actions">
 			<configuration>
 				<categories>
@@ -22,12 +22,12 @@
 				/widgets/acaren_widget_cartridge_actions_template.xhtml
 			</property>
 		</widgetType>
-		
+
 	</extension>
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
-		
+
 		<!-- de type summary pour ne pas avoir un tableau label/field de généré -->
 		<widget name="acaren_content_current_document_actions"
 			type="acaren_summary_current_document_cartridge_actions">
@@ -89,6 +89,16 @@
 				</mode>
 			</widgetModes>
 		</widget>
+
+		<!-- Sucharge pour ne pas apparaître pour la publication locale -->
+		<widget name="summary_current_document_single_tasks" type="summary_current_document_single_tasks">
+			<widgetModes>
+				<mode value="view">#{nxu:test(jbpmActions.isPending(navigationContext.getCurrentDocument(),
+					'acaren_online_approbation') == false, layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
 
 	</extension>
 
