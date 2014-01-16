@@ -20,7 +20,7 @@ import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
  * 
  * @author mberhaut1
  */
-public class ToutaticeDeleteEventListner implements EventListener {
+public class ToutaticeDeleteEventListener implements EventListener {
 	
 	private static String CST_QUERY_DOCUMENT_HAVING_A_SECTION_REFERENCE = "SELECT * FROM Document WHERE ecm:mixinType = 'Folderish' AND ecm:mixinType != 'HiddenInNavigation' AND ecm:isCheckedInVersion = 0 AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0 AND publish:sections IN ('%s')";
 
