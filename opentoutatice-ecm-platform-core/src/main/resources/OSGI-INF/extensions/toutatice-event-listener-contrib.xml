@@ -6,7 +6,7 @@
 		point="listener">
 
 		<listener name="toutaticeDeletelistener" async="false" postCommit="false"
-			class="fr.toutatice.ecm.platform.core.listener.ToutaticeDeleteEventListner"
+			class="fr.toutatice.ecm.platform.core.listener.ToutaticeDeleteEventListener"
 			priority="120">
 			<event>aboutToRemove</event>
 			<event>aboutToRemoveVersion</event>
