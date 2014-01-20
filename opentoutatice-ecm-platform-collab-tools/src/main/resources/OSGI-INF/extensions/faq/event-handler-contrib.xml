@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="fr.toutatice.ecm.platform.web.faq.event.handler">
+
+	<require>org.nuxeo.ecm.core.operation.OperationServiceComponent
+	</require>
+
+	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+		point="event-handlers">
+
+		<handler chainId="question-update">
+			<event>aboutToCreate</event>
+			<event>beforeDocumentModification</event>
+			<filters>
+				<doctype>Question</doctype>
+			</filters>
+		</handler> 
+
+	</extension>
+
+</component>

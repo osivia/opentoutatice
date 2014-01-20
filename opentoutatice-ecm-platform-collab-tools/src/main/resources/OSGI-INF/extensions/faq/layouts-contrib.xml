@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<component
+	name="fr.toutatice.ecm.platform.web.document.forms.layouts.faq.webapp">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+	<require>fr.toutatice.ecm.platform.web.faq.widgets</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="layouts">
+
+		<layout name="layout@FaqFolder">
+			<templates>
+				<template mode="create">/layouts/layout_default_template.xhtml
+				</template>
+				<template mode="edit">/layouts/layout_default_template.xhtml
+				</template>
+				<template mode="view">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>title_faq</widget>
+				</row>
+				<row>
+					<widget>description</widget>
+				</row>
+			</rows>
+		</layout>
+		
+		<layout name="layout@Question">
+			<templates>
+				<template mode="create">/layouts/layout_default_template.xhtml
+				</template>
+				<template mode="edit">/layouts/layout_default_template.xhtml
+				</template>
+				<template mode="view">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>title_q</widget>
+				</row>
+				<row>
+					<widget>content_question</widget>
+				</row>
+			</rows>
+		</layout>
+
+	</extension>
+
+</component>
