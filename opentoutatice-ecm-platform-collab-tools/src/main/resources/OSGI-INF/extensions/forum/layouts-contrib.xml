@@ -1,0 +1,381 @@
+<?xml version="1.0"?>
+<component
+	name="fr.toutatice.ecm.platform.web.document.forms.layouts.forum.webapp">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+	<require>fr.toutatice.ecm.platform.web.blog.widgets</require>
+	<require>fr.toutatice.ecm.platform.web.widgets</require>
+	<require>fr.toutatice.ecm.platform.web.forum.widgets</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="layouts">
+
+		<layout name="layout@Forum">
+			<templates>
+				<template mode="create">/layouts/layout_default_template.xhtml
+				</template>
+				<template mode="edit">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>forum_title</widget>
+				</row>
+				<row>
+					<widget>description</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<layout name="cv_ContentForum@cvListingLayout">
+			<templates>
+				<template mode="any">/layouts/layout_listing_ajax_template.xhtml
+				</template>
+				<template mode="edit_columns">/layouts/layout_column_selection_template.xhtml
+				</template>
+				<template mode="edit_sort_infos">/layouts/layout_sort_infos_template.xhtml
+				</template>
+				<template mode="edit_sort_infos_map">/layouts/layout_sort_infos_template.xhtml
+				</template>
+				<template mode="csv">/layouts/layout_listing_csv_template.xhtml
+				</template>
+				<template mode="pdf">/layouts/layout_listing_pdf_template.xhtml
+				</template>
+			</templates>
+			<properties mode="any">
+				<property name="showListingHeader">true</property>
+				<property name="showRowEvenOddClass">true</property>
+			</properties>
+			<properties mode="edit_columns">
+				<property name="availableElementsLabel">label.selection.availableColumns</property>
+				<property name="selectedElementsLabel">label.selection.selectedColumns</property>
+				<property name="selectedElementsHelp"></property>
+				<property name="selectSize">10</property>
+				<property name="displayAlwaysSelectedColumns">false</property>
+			</properties>
+			<properties mode="edit_sort_infos">
+				<property name="newSortInfoTemplate">#{documentSearchActions.newSortInfo}
+				</property>
+				<property name="required">false</property>
+			</properties>
+			<properties mode="edit_sort_infos">
+				<property name="newSortInfoTemplate">#{documentSearchActions.newSortInfoMap}
+				</property>
+				<property name="required">false</property>
+			</properties>
+			<columns>
+				<column name="selection" alwaysSelected="true">
+					<properties mode="any">
+						<property name="isListingSelectionBox">true</property>
+						<property name="useFirstWidgetLabelAsColumnHeader">false</property>
+						<property name="columnStyleClass">iconColumn</property>
+					</properties>
+					<properties mode="csv">
+						<property name="isHidden">true</property>
+					</properties>
+					<properties mode="pdf">
+						<property name="isHidden">true</property>
+					</properties>
+					<widget>listing_ajax_selection_box</widget>
+				</column>
+				<column name="listing_icon_type">
+					<properties mode="any">
+						<property name="useFirstWidgetLabelAsColumnHeader">true</property>
+						<property name="columnStyleClass">iconColumn</property>
+						<property name="label"></property>
+						<property name="sortPropertyName"></property>
+					</properties>
+					<properties mode="edit_sort_infos">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<properties mode="edit_sort_infos_map">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<widget>listing_icon_type</widget>
+				</column>
+				<column name="listing_title_link">
+					<properties mode="any">
+						<property name="useFirstWidgetLabelAsColumnHeader">true</property>
+						<property name="columnStyleClass"></property>
+						<property name="label"></property>
+						<property name="sortPropertyName">dc:title</property>
+					</properties>
+					<properties mode="edit_sort_infos">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<properties mode="edit_sort_infos_map">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<widget>listing_title_link</widget>
+				</column>
+				<column name="template">
+					<properties mode="any">
+						<property name="useFirstWidgetLabelAsColumnHeader">true</property>
+						<property name="columnStyleClass"></property>
+						<property name="label"></property>
+						<property name="sortPropertyName"></property>
+					</properties>
+					<properties mode="edit_sort_infos">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<properties mode="edit_sort_infos_map">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<widget>template</widget>
+				</column>
+				<column name="template_1">
+					<properties mode="any">
+						<property name="useFirstWidgetLabelAsColumnHeader">true</property>
+						<property name="columnStyleClass"></property>
+						<property name="label"></property>
+						<property name="sortPropertyName"></property>
+					</properties>
+					<properties mode="edit_sort_infos">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<properties mode="edit_sort_infos_map">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<widget>template_1</widget>
+				</column>
+				<column name="template_2">
+					<properties mode="any">
+						<property name="useFirstWidgetLabelAsColumnHeader">true</property>
+						<property name="columnStyleClass"></property>
+						<property name="label"></property>
+						<property name="sortPropertyName"></property>
+					</properties>
+					<properties mode="edit_sort_infos">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<properties mode="edit_sort_infos_map">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<widget>template_2</widget>
+				</column>
+				<column name="moderated">
+					<properties mode="any">
+						<property name="useFirstWidgetLabelAsColumnHeader">true</property>
+						<property name="columnStyleClass"></property>
+						<property name="label"></property>
+						<property name="sortPropertyName">thread:moderated</property>
+					</properties>
+					<properties mode="edit_sort_infos">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<properties mode="edit_sort_infos_map">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<widget>moderated</widget>
+				</column>
+				<column name="nxl_unknown_col" selectedByDefault="false">
+					<properties mode="any">
+						<property name="useFirstWidgetLabelAsColumnHeader">true</property>
+						<property name="columnStyleClass"></property>
+						<property name="label"></property>
+						<property name="sortPropertyName"></property>
+					</properties>
+					<properties mode="edit_sort_infos">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<properties mode="edit_sort_infos_map">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+				</column>
+				<column name="nxl_unknown_col_1" selectedByDefault="false">
+					<properties mode="any">
+						<property name="useFirstWidgetLabelAsColumnHeader">true</property>
+						<property name="columnStyleClass"></property>
+						<property name="label"></property>
+						<property name="sortPropertyName"></property>
+					</properties>
+					<properties mode="edit_sort_infos">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<properties mode="edit_sort_infos_map">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+				</column>
+				<column name="nxl_unknown_col_2" selectedByDefault="false">
+					<properties mode="any">
+						<property name="useFirstWidgetLabelAsColumnHeader">true</property>
+						<property name="columnStyleClass"></property>
+						<property name="label"></property>
+						<property name="sortPropertyName"></property>
+					</properties>
+					<properties mode="edit_sort_infos">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<properties mode="edit_sort_infos_map">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+				</column>
+				<column name="nxl_unknown_col_3" selectedByDefault="false">
+					<properties mode="any">
+						<property name="useFirstWidgetLabelAsColumnHeader">true</property>
+						<property name="columnStyleClass"></property>
+						<property name="label"></property>
+						<property name="sortPropertyName"></property>
+					</properties>
+					<properties mode="edit_sort_infos">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<properties mode="edit_sort_infos_map">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+				</column>
+				<column name="nxl_unknown_col_4" selectedByDefault="false">
+					<properties mode="any">
+						<property name="useFirstWidgetLabelAsColumnHeader">true</property>
+						<property name="columnStyleClass"></property>
+						<property name="label"></property>
+						<property name="sortPropertyName"></property>
+					</properties>
+					<properties mode="edit_sort_infos">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+					<properties mode="edit_sort_infos_map">
+						<property name="showInSortInfoSelection">true</property>
+					</properties>
+				</column>
+			</columns>
+			<widget name="listing_icon_type" type="listing_icon_type">
+				<labels>
+					<label mode="any"></label>
+				</labels>
+				<translated>false</translated>
+				<fields>
+					<field>data</field>
+					<field>data.ref</field>
+					<field>data.type</field>
+					<field>data.folder</field>
+				</fields>
+			</widget>
+			<widget name="listing_title_link" type="listing_title_link">
+				<labels>
+					<label mode="any">label.forum.content.header.thread</label>
+				</labels>
+				<translated>true</translated>
+				<fields>
+					<field>data</field>
+					<field>data.ref</field>
+					<field>data.dc.description</field>
+					<field>data.file.content</field>
+					<field>data.file.content.filename</field>
+				</fields>
+			</widget>
+			<widget name="template" type="template">
+				<labels>
+					<label mode="any">label.forum.content.header.last_added</label>
+				</labels>
+				<translated>true</translated>
+				<fields>
+					<field></field>
+				</fields>
+				<properties widgetMode="view">
+					<property name="template">/widgets/acaren_widget_forum_last_post_template.xhtml
+					</property>
+				</properties>
+				<properties mode="any">
+					<property name="template">/widgets/acaren_widget_forum_last_post_template.xhtml
+					</property>
+				</properties>
+			</widget>
+			<widget name="template_1" type="template">
+				<labels>
+					<label mode="any">label.forum.content.header.nb_published_posts
+					</label>
+				</labels>
+				<translated>true</translated>
+				<fields>
+					<field></field>
+				</fields>
+				<properties widgetMode="view">
+					<property name="template">/widgets/acaren_widget_forum_published_post_template.xhtml
+					</property>
+				</properties>
+				<properties mode="any">
+					<property name="template">/widgets/acaren_widget_forum_published_post_template.xhtml
+					</property>
+				</properties>
+			</widget>
+			<widget name="template_2" type="template">
+				<labels>
+					<label mode="any">label.forum.content.header.nb_pending_posts
+					</label>
+				</labels>
+				<translated>true</translated>
+				<fields>
+					<field></field>
+				</fields>
+				<properties widgetMode="view">
+					<property name="template">/widgets/acaren_widget_forum_pending_posts_template.xhtml
+					</property>
+				</properties>
+				<properties mode="any">
+					<property name="template">/widgets/acaren_widget_forum_pending_posts_template.xhtml
+					</property>
+				</properties>
+				<subWidgets />
+			</widget>
+			<widget name="moderated" type="checkbox">
+				<labels>
+					<label mode="any">label.forum.content.header.moderated</label>
+				</labels>
+				<translated>true</translated>
+				<fields>
+					<field>data['thread']['moderated']</field>
+				</fields>
+			</widget>
+		</layout>
+
+
+
+		<layout name="layout@Thread">
+			<templates>
+				<template mode="create">/layouts/layout_default_template.xhtml
+				</template>
+				<template mode="edit">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>thread_title</widget>
+				</row>
+				<row>
+					<widget>description</widget>
+				</row>
+				<row>
+					<widget>moderator_layout</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<layout name="layout@Thread-view">
+			<templates>
+				<template mode="any">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>moderator_layout</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<layout name="acaren_metadata_moderator">
+			<templates>
+				<template mode="any">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>acaren_widget_moderators</widget>
+				</row>
+			</rows>
+		</layout>
+
+	</extension>
+
+</component>

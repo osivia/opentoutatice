@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.forum.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+		<widget name="forum_title" type="text">
+			<labels>
+				<label mode="any">Nom du forum</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>dc:title</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">true</property>
+				<property name="disabled">false</property>
+			</properties>
+		</widget>
+
+		<widget name="thread_title" type="text">
+			<labels>
+				<label mode="any">Nom du fil de discussion</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>dc:title</field>
+			</fields>
+			<properties widgetMode="create">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">true</property>
+				<property name="disabled">false</property>
+			</properties>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">true</property>
+				<property name="disabled">false</property>
+			</properties>
+		</widget>
+
+		<widget name="moderator_layout" type="layout">
+			<labels>
+				<label mode="any">Gestion de la modération</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field></field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="name">acaren_metadata_moderator</property>
+				<property name="mode">create</property>
+			</properties>
+			<properties widgetMode="view">
+				<property name="name">acaren_metadata_moderator</property>
+				<property name="mode">view</property>
+			</properties>
+		</widget>
+
+		<widget name="acaren_widget_moderators" type="template">
+			<labels>
+				<label mode="any">Modérateur</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>thread:moderators</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">/widgets/acaren_moderators_widget.xhtml
+				</property>
+			</properties>
+		</widget>
+
+	</extension>
+
+</component>

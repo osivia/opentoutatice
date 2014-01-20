@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.core.forum.jbpm">
+
+	<require>org.nuxeo.ecm.platform.jbpm.core.JbpmService</require>
+	<require>org.nuxeo.ecm.platform.jbpm.defaultContribs</require>
+	<require>fr.toutatice.ecm.platform.core.jbpm</require>
+
+	<extension target="org.nuxeo.ecm.platform.jbpm.core.JbpmService"
+		point="typeFilter">
+
+		<!-- FIXME: inutile? -->
+		<type name="Forum">
+			<processDefinition>review_parallel</processDefinition>
+			<processDefinition>review_approbation</processDefinition>
+		</type>
+		<type name="Thread">
+			<processDefinition>review_parallel</processDefinition>
+			<processDefinition>review_approbation</processDefinition>
+		</type>
+
+	</extension>
+
+</component>

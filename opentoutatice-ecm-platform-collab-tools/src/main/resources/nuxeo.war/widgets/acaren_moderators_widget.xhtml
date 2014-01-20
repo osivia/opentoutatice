@@ -1,0 +1,56 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxdir="http://nuxeo.org/nxdirectory"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout" id="#{widget.id}">
+
+	<c:set var="widgetMode" value="#{layout.mode}" />
+
+	<c:if test="#{widgetMode != 'create' and widgetMode != 'edit'}">
+	
+		<tr>
+			<td class="labelColumn">
+				<h:outputText value="Modérateur(s)" />
+			</td>
+			<td class="fieldColumn">
+				<nxu:dataList styleClass="standardList"
+					var="moderator" 
+					value="#{currentDocument.thread.moderators}"
+					layout="simple">
+					<h:outputText value="#{moderator}" />
+					<br />
+				</nxu:dataList>
+			</td>
+		</tr>
+		
+	</c:if>
+
+	<c:if test="#{widgetMode == 'create' or widgetMode == 'edit'}">
+
+		<a4j:region renderRegionOnly="false">
+			<h:selectOneRadio value="#{threadAction.moderated}" layout="pageDirection">
+				<f:selectItem
+					itemLabel="#{messages['label.forum.thread.moderated.yes']}"
+					itemValue="true" />
+				<f:selectItem
+					itemLabel="#{messages['label.forum.thread.moderated.no']}"
+					itemValue="false" />
+				<a4j:support ajaxSingle="true" 
+					event="onchange"
+					reRender="ajaxModeratorPanel" />
+			</h:selectOneRadio>
+			
+			<a4j:outputPanel id="ajaxModeratorPanel">
+				<c:if test="#{threadAction.moderated == true}">
+					<nxl:layout name="user_group_prefixed_suggestion" 
+						mode="create"
+						value="#{threadAction.selectedModerators}" />
+				</c:if>
+			</a4j:outputPanel>
+		</a4j:region>
+
+	</c:if>
+
+</f:subview>

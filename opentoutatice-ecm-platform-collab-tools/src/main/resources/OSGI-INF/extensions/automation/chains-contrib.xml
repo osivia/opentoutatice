@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<component name="toutatice.ecm.plateform.automation.collab.tools.chains">
+
+	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+		point="chains">
+
+		<chain id="qr-add-op">
+			<operation id="Context.FetchDocument" />
+			<operation id="Seam.CreateDocumentForm">
+				<param type="string" name="type">Question</param>
+			</operation>
+		</chain>
+
+		<chain id="question-update">
+			<operation id="Context.FetchDocument" />
+			<operation id="TextExtraction.Operation">
+				<param type="int" name="nb_chars_out">300</param>
+				<param type="string" name="xpath_in">note:note</param>
+				<param type="string" name="xpath_out">dc:description</param>
+				<param type="string" name="format_in">html</param>
+				<param type="boolean" name="override">true</param>
+			</operation>
+		</chain>
+
+		<chain id="logo-resizing">
+			<operation id="Context.FetchDocument" />
+			<operation id="ImageResize.Operation">
+				<param type="int" name="img_heidth">150</param>
+				<param type="int" name="img_width">150</param>
+				<param type="string" name="xpath_img_in">webc:logo</param>
+				<param type="string" name="xpath_img_out">webc:logo</param>
+				<param type="boolean" name="enlarge">false</param>
+			</operation>
+		</chain>
+
+	</extension>
+
+</component>

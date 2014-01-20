@@ -1,0 +1,43 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 1
+Bundle-Name: OpenToutatice collaboratives tools 
+Bundle-SymbolicName: fr.toutatice.ecm.platform.collab.tools;singleton:=true
+Bundle-Localization: plugin
+Bundle-Category: stateful
+Nuxeo-Component: OSGI-INF/extensions/faq/schemas-contrib.xml,
+ OSGI-INF/extensions/faq/core-types-contrib.xml,
+ OSGI-INF/extensions/faq/lifecycle-contrib.xml,
+ OSGI-INF/extensions/faq/permissions-contrib.xml,
+ OSGI-INF/extensions/faq/toutatice-core-versioning-contrib.xml,
+ OSGI-INF/extensions/faq/ui-types-contrib.xml,
+ OSGI-INF/extensions/faq/actions-contrib.xml,
+ OSGI-INF/extensions/faq/layouts-contrib.xml,
+ OSGI-INF/extensions/faq/widgets-contrib.xml,
+ OSGI-INF/extensions/faq/event-handler-contrib.xml,
+ OSGI-INF/extensions/picturebook/ui-types-contrib.xml,
+ OSGI-INF/extensions/blog/core-types-contrib.xml,
+ OSGI-INF/extensions/blog/lifecycle-contrib.xml,
+ OSGI-INF/extensions/blog/permissions-contrib.xml,
+ OSGI-INF/extensions/blog/schemas-contrib.xml,
+ OSGI-INF/extensions/blog/core-versioning-contrib.xml,
+ OSGI-INF/extensions/blog/jbpm-service-contrib.xml,
+ OSGI-INF/extensions/blog/event-handler-contrib.xml,
+ OSGI-INF/extensions/blog/layouts-contrib.xml,
+ OSGI-INF/extensions/blog/ui-types-contrib.xml,
+ OSGI-INF/extensions/blog/widgets-contrib.xml,
+ OSGI-INF/extensions/blog/actions-contrib.xml,
+ OSGI-INF/extensions/blog/filters-contrib.xml,
+ OSGI-INF/extensions/forum/contentviews-contrib.xml,
+ OSGI-INF/extensions/forum/core-types-contrib.xml,
+ OSGI-INF/extensions/forum/core-versioning-contrib.xml,
+ OSGI-INF/extensions/forum/filters-contrib.xml,
+ OSGI-INF/extensions/forum/jbpm-service-contrib.xml,
+ OSGI-INF/extensions/forum/layouts-contrib.xml,
+ OSGI-INF/extensions/forum/lifecycle-contrib.xml,
+ OSGI-INF/extensions/forum/schemas-contrib.xml,
+ OSGI-INF/extensions/forum/ui-types-contrib.xml,
+ OSGI-INF/extensions/forum/widgets-contrib.xml,
+ OSGI-INF/extensions/forum/actions-contrib.xml,
+ OSGI-INF/extensions/automation/chains-contrib.xml
+ 
+ 

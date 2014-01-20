@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.web.ui.forum.types">
+
+	<require>org.nuxeo.ecm.platform.types.TypeService</require>
+
+	<extension target="org.nuxeo.ecm.platform.types.TypeService"
+		point="types">
+
+		<type id="Forum">
+			<label>Forum</label>
+			<category>Collaborative</category>
+			<icon>/img/forum.gif</icon>
+			<bigIcon>/img/forum_100.png</bigIcon>
+			<description></description>
+			<default-view>view_documents</default-view>
+			<subtypes>
+				<type>Thread</type>
+			</subtypes>
+			<layouts mode="create">
+				<layout>layout@Forum</layout>
+			</layouts>
+			<layouts mode="edit">
+				<layout>layout@Forum</layout>
+			</layouts>
+			<layouts mode="view" />
+			<contentViews category="content">
+				<contentView showInExportView="false">cv_ContentForum
+				</contentView>
+			</contentViews>
+			<contentViews category="trash_content">
+				<contentView showInExportView="false">document_trash_content
+				</contentView>
+			</contentViews>
+		</type>
+
+		<type id="Thread">
+			<label>Fil de discussion</label>
+			<category>SimpleDocument</category>
+			<icon>/img/forum_thread.gif</icon>
+			<bigIcon>/img/forum_thread.gif</bigIcon>
+			<description></description>
+			<default-view>view_documents</default-view>
+			<layouts mode="create">
+				<layout>layout@Thread</layout>
+			</layouts>
+			<layouts mode="edit">
+				<layout>layout@Thread</layout>
+			</layouts>
+			<layouts mode="view">
+				<layout>layout@Thread-view</layout>
+			</layouts>
+		</type>
+
+	</extension>
+
+
+</component>

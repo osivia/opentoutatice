@@ -1,0 +1,22 @@
+<f:subview xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout">
+
+	<c:if test="#{nxl:isLikeViewMode(widget.mode)}">
+		<nxu:methodResult name="threadAdapter" value="#{threadAction.getAdapter(row.data)}">
+
+			<nxu:methodResult name="lastPost" value="#{threadAdapter.getLastPublishedPost()}">
+				<h:outputText value="#{lastPost.post.creationDate}"	rendered="#{lastPost != null}">
+					<f:convertDateTime pattern="#{nxu:basicDateAndTimeFormater()}" timeZone="#{timeZone}" />
+				</h:outputText>
+				<h:outputText value=" #{messages['label.forum.post.by']} " rendered="#{lastPost != null}" />
+				<h:outputText value="#{lastPost.post.author}" rendered="#{lastPost != null}" />
+			</nxu:methodResult>
+			
+		</nxu:methodResult>
+	</c:if>
+
+</f:subview>
