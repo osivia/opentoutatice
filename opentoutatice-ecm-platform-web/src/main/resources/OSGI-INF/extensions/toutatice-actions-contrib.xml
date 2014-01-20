@@ -20,7 +20,7 @@
 			<filter-id>filter@TTC_TAB_FOLDERISH_VIEW</filter-id>
 		</action>
 		
-		<!-- Vue contenu pour élémntents sous PortalSite -->
+		<!-- Vue contenu pour éléments sous PortalSite -->
 		<action id="ATAB_CONTENT_IN_PUBLISHING_SPACE" link="/incl/tabs/toutatice_document_content.xhtml"
 			order="10" label="action.view.content" icon="/icons/file.gif">
 			<category>VIEW_ACTION_LIST</category>
