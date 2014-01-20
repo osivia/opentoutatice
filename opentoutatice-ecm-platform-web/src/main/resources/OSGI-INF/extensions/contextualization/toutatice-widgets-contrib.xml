@@ -60,7 +60,8 @@
 				</mode>
 			</widgetModes>
 		</widget>
-
+		
+		<!-- Widget de l'onglet "Configuration Portail" -->
 		<widget name="acaren_widget_show_in_menu" type="checkbox">
 			<labels>
 				<label mode="any">acaren.toutatice.show.in.menu</label>
@@ -79,9 +80,12 @@
 				<property name="required">false</property>
 			</properties>
 			<widgetModes>
-				<mode value="view">hidden</mode>
+				<!-- <mode value="view">hidden</mode>
 				<mode value="any"> #{documentActions.showShowInMenu(currentDocument)
 					? 'edit' : 'hidden'}
+				</mode> -->
+				<mode value="any">#{nxu:test(!currentDocument.hasFacet('TTCPublishSpace'),
+					layout.mode, 'hidden')}
 				</mode>
 			</widgetModes>
 		</widget>
@@ -205,7 +209,7 @@
 			</widgetModes>
 		</widget>
 
-
+		<!-- Widget en vue Modifier (ou Créer) -->
 		<widget name="acaren_showInMenu_widget" type="template">
 			<labels>
 				<label mode="any">acaren.label.admin.publication.showInMenu</label>
@@ -224,7 +228,7 @@
 			</properties>
 			<widgetModes>
 				<mode value="view">hidden</mode>
-				<mode value="any"> #{documentActions.showShowInMenu(currentDocument)
+				<mode value="any"> #{documentActions.showShowInMenu()
 					? 'edit' : 'hidden'}
 				</mode>
 			</widgetModes>
