@@ -23,7 +23,7 @@
 		<layouts mode="edit">
 			<layout name="layout@add_thumbnail">
 				<position>
-					<before>classement</before>
+					<at>0</at>
 				</position>
 				<excludedTypes>
 					<type>WebConfigurationFolder</type>
@@ -32,7 +32,7 @@
 			</layout>
 			<layout name="keywords">
 				<position>
-					<after>classement</after>
+					<at>0</at>
 				</position>
 				<excludedTypes>
 					<type>WebConfigurationFolder</type>
@@ -41,7 +41,7 @@
 			</layout>
 			<layout name="acaren_showInMenu">
 				<position>
-					<after>document_edit_form_options</after>
+					<at>0</at>
 				</position>
 				<excludedTypes>
 					<type>PortalSite</type>
