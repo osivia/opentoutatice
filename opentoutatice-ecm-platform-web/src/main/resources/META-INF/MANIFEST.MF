@@ -45,4 +45,5 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-actions-contrib.xml,
  OSGI-INF/extensions/portalviews/toutatice-actions-contrib.xml,
  OSGI-INF/extensions/portalviews/toutatice-theme-contrib.xml,
  OSGI-INF/extensions/portalviews/toutatice-filters-contrib.xml,
- OSGI-INF/extensions/picturebook/actions-contrib.xml
+ OSGI-INF/extensions/picturebook/actions-contrib.xml,
+ OSGI-INF/extensions/rights/toutatice-filters-contrib.xml
