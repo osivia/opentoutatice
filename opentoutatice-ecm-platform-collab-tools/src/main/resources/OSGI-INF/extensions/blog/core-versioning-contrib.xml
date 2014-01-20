@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.core.blog.versioning">
+
+	<require>org.nuxeo.ecm.core.versioning.VersioningService</require>
+
+	<extension target="org.nuxeo.ecm.core.versioning.VersioningService"
+		point="versioningRules">
+
+		<versioningRule typeName="BlogSite">
+			<initialState major="0" minor="0" />
+			<options lifeCycleState="*">
+				<none default="true" />
+				<minor />
+				<major />
+			</options>
+		</versioningRule>
+
+		<versioningRule typeName="BlogPost">
+			<initialState major="0" minor="0" />
+			<options lifeCycleState="*">
+				<none default="true" />
+				<minor />
+				<major />
+			</options>
+		</versioningRule>
+
+	</extension>
+
+</component>

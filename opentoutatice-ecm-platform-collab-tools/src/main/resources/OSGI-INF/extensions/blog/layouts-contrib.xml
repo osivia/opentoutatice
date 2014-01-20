@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<component
+	name="fr.toutatice.ecm.platform.web.document.forms.layouts.blog.webapp">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+	<require>fr.toutatice.ecm.platform.web.blog.widgets</require>
+	<require>fr.toutatice.ecm.platform.web.widgets</require>
+	<require>fr.toutatice.ecm.platform.web.blog.widgets</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="layouts">
+
+		<layout name="layout@BlogSite">
+			<templates>
+				<template mode="create">/layouts/layout_default_template.xhtml
+				</template>
+				<template mode="edit">/layouts/layout_default_template.xhtml
+				</template>
+				<template mode="view">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>blogcontainer</widget>
+				</row>
+				<row>
+					<widget>files</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<layout name="acaren_blogcontainer">
+			<templates>
+				<template mode="any">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>blog_name</widget>
+				</row>
+				<row>
+					<widget>blog_url</widget>
+				</row>
+				<row>
+					<widget>baseline</widget>
+				</row>
+				<row>
+					<widget>email</widget>
+				</row>
+				<row>
+					<widget>acaren_logo</widget>
+				</row>
+				<row>
+					<widget>welcomeText</widget>
+				</row>
+				<row>
+					<widget>welcomeMedia</widget>
+				</row>
+				<row>
+					<widget>useCaptcha</widget>
+				</row>
+				<row>
+					<widget>moderationType</widget>
+				</row>
+			</rows>
+
+		</layout>
+
+		<layout name="layout@BlogPost">
+			<templates>
+				<template mode="any">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>blogpost_title</widget>
+				</row>
+				<row>
+					<widget>description</widget>
+				</row>
+				<row>
+					<widget>blogpost_content</widget>
+				</row>
+				<row>
+					<widget>files</widget>
+				</row>
+			</rows>
+		</layout>
+		<layout name="layout@BlogPost-view">
+			<templates>
+				<template mode="any">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>blogpost_view</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<layout name="acaren_webpage">
+			<templates>
+				<template mode="any">/layouts/acaren_nolabel_layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>contentWiki</widget>
+				</row>
+				<row>
+					<widget>contentRich</widget>
+				</row>
+
+			</rows>
+		</layout>
+
+	</extension>
+
+</component>

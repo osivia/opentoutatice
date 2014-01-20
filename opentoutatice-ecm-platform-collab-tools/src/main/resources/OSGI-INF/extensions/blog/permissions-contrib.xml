@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.plateform.core.blog.permissions">
+
+	<require>org.nuxeo.ecm.core.security.SecurityService</require>
+	<require>org.nuxeo.ecm.core.security.defaultPermissions</require>
+	<require>fr.toutatice.ecm.plateform.core.permissions</require>
+
+
+	<extension target="org.nuxeo.ecm.core.security.SecurityService"
+		point="permissionsVisibility">
+
+		<visibility type="BlogSite">
+			<item order="1000" show="true">validationWorkflow_validation</item>
+		</visibility>
+		<visibility type="BlogPost">
+			<item order="1000" show="true">validationWorkflow_validation</item>
+		</visibility>
+
+	</extension>
+
+</component>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.core.blog.filters">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+	<require>fr.toutatice.ecm.platform.web.filters</require>
+	<require>fr.toutatice.ecm.platform.web.local.publishing.filters</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="filters">
+
+		<filter id="auto-setOnLine" append="true">
+			<rule grant="true">
+				<type>BlogSite</type>
+			</rule>
+		</filter>
+		
+		<filter id="create" append="true">
+			<rule grant="true">
+				<type>BlogSite</type>
+			</rule>
+		</filter>
+
+	</extension>
+
+</component>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.blog.actions">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="actions">
+
+		<action id="TAB_FILES_EDIT">
+			<filter id="blogpost.deny.tab_files_edit">
+				<rule grant="false">
+					<type>BlogPost</type>
+				</rule>
+			</filter>
+		</action>
+
+	</extension>
+
+</component>
