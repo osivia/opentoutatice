@@ -136,6 +136,17 @@
 			<operation id="Context.FetchDocument" />
 			<operation id="Document.SetSpaceID" />
 		</chain>
+		
+		<chain id="images-resizing">
+			<operation id="Context.FetchDocument" />
+			<operation id="ImageResize.Operation">
+				<param type="int" name="img_heidth">800</param>
+				<param type="int" name="img_width">688</param>
+				<param type="string" name="xpath_img_in">ttc:images/*</param>
+				<param type="string" name="xpath_img_out">ttc:images</param>
+				<param type="boolean" name="enlarge">false</param>
+			</operation>
+		</chain>
 
 		<chain id="vignette-resizing">
 			<operation id="Context.FetchDocument" />
@@ -145,35 +156,6 @@
 				<param type="string" name="xpath_img_in">ttc:vignette</param>
 				<param type="string" name="xpath_img_out">ttc:vignette</param>
 				<param type="boolean" name="enlarge">true</param>
-			</operation>
-		</chain>
-
-		<chain id="qr-add-op">
-			<operation id="Context.FetchDocument" />
-			<operation id="Seam.CreateDocumentForm">
-				<param type="string" name="type">Question</param>
-			</operation>
-		</chain>
-
-		<chain id="question-update">
-			<operation id="Context.FetchDocument" />
-			<operation id="TextExtraction.Operation">
-				<param type="int" name="nb_chars_out">300</param>
-				<param type="string" name="xpath_in">note:note</param>
-				<param type="string" name="xpath_out">dc:description</param>
-				<param type="string" name="format_in">html</param>
-				<param type="boolean" name="override">true</param>
-			</operation>
-		</chain>
-
-		<chain id="logo-resizing">
-			<operation id="Context.FetchDocument" />
-			<operation id="ImageResize.Operation">
-				<param type="int" name="img_heidth">150</param>
-				<param type="int" name="img_width">150</param>
-				<param type="string" name="xpath_img_in">webc:logo</param>
-				<param type="string" name="xpath_img_out">webc:logo</param>
-				<param type="boolean" name="enlarge">false</param>
 			</operation>
 		</chain>
 
