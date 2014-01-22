@@ -17,9 +17,6 @@
 				<permission>AddChildren</permission>
 				<type>WebConfigurationFolder</type>
 			</rule>
-		</filter>
-		
-		<filter id="create" append="true">
 			<rule grant="false">
 				<type>WebConfiguration</type>
 			</rule>

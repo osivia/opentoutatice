@@ -4,7 +4,7 @@
 	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
 	<require>fr.toutatice.ecm.platform.web.filters</require>
 	<require>fr.toutatice.ecm.platform.web.widgets</require>
-	<require>fr.toutatice.ecm.platform.web.portalviews.filters</require>
+	<require>fr.toutatice.ecm.platform.web.local.publishing.filters</require>
 
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
@@ -72,7 +72,7 @@
 			</filter>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
-
+		
 		<action id="TOUTATICE_EDIT_AND_SET_ONLINE_CURRENT_DOCUMENT_REQUEST"
 			link="#{documentActions.updateNSetOnLineCurrentDocument('toutatice_view')}"
 			order="1" label="command.save.and.setonline.request">
@@ -145,6 +145,15 @@
 				</rule>
 			</filter>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<!-- Vue portail : Création d'un Workspace
+			(l'action de création solicité par la vue Nuxeo est définie par Nuxeo lui-même) 
+		-->
+		<action id="TOUTATICE_CREATE_WORKSPACE_DOCUMENT" link="#{documentTemplatesActions.createDocumentFromTemplate('toutatice_view')}"
+			order="1" label="command.create">
+			<category>TOUTATICE_CREATE_DOCUMENT_FORM</category>
+			<filter-id>is_creating_workspace</filter-id>
 		</action>
 
 	</extension>

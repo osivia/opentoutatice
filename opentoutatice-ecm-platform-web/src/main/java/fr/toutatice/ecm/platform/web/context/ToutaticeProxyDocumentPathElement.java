@@ -6,7 +6,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.ui.web.pathelements.PathElement;
 import org.nuxeo.ecm.platform.ui.web.util.ComponentUtils;
 
-public class ProxyDocumentPathElement implements PathElement {
+public class ToutaticeProxyDocumentPathElement implements PathElement {
 
 	/**
 	 * Olivier Adam, Rectorat de Rennes, le 26/10/11
@@ -15,7 +15,7 @@ public class ProxyDocumentPathElement implements PathElement {
 	private final DocumentModel docModel;
     public static final String TYPE = "ProxyPathElement";
     
-	public ProxyDocumentPathElement(DocumentModel docModel) {
+	public ToutaticeProxyDocumentPathElement(DocumentModel docModel) {
         this.docModel = docModel;
 	}
 	

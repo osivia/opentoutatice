@@ -8,7 +8,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -20,20 +19,17 @@ import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.webapp.contentbrowser.OrderableDocumentActions;
 
 import edu.emory.mathcs.backport.java.util.Collections;
+import fr.toutatice.ecm.platform.web.annotations.Install;
 
 @Name("orderableDocumentActions")
 @Scope(ScopeType.CONVERSATION)
-@Install(precedence = Install.DEPLOYMENT)
+@Install(precedence = Install.TOUTATICE)
 public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions {
 
 	private static final long serialVersionUID = 1L;
 	
 	private static final Log log = LogFactory.getLog(ToutaticeOrderableDocumentActions.class);
 
-	//public static final String QUERY_DOC_ORDERED_CHILDREN_QM = "SELECT * FROM Document WHERE ecm:parentId = '%s' AND ecm:isCheckedInVersion = 0 AND ecm:mixinType != 'HiddenInNavigation' AND ecm:currentLifeCycleState != 'deleted' AND (ecm:isProxy = 0 OR (ecm:isProxy = 1 AND ecm:name LIKE '%%.remote.proxy%%')) ORDER BY ecm:pos";
-	/*
-	 * DCH: modif requête suite à non renommage des proxies distants
-	 */
 	public static final String QUERY_DOC_ORDERED_CHILDREN_QM = "SELECT * FROM Document WHERE ecm:parentId = '%s' AND ecm:isCheckedInVersion = 0 AND ecm:mixinType != 'HiddenInNavigation' AND ecm:currentLifeCycleState != 'deleted' AND (ecm:name NOT LIKE '%%.proxy') ORDER BY ecm:pos";
 	public static final int CST_MAX_RESULT_SET_SIZE = 10000;
 

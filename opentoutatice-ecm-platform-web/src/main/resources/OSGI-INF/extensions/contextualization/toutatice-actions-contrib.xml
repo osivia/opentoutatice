@@ -8,16 +8,26 @@
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
 		
+		<!-- Ajout de l'onglet de gestion de l'espace de publication -->
+		
+		<!-- Dans un document appartenant à un espace de publication -->
 		<action id="ATAB_ADMIN_PUBLICATION_SPACE" link="/incl/tabs/acaren_admin_publication_space.xhtml"
 			order="120" label="acaren.action.admin.publication.space" icon="/icons/file.gif">
 			<category>VIEW_ACTION_LIST</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>hasToutaticeSchema</filter-id>
 			<filter-id>isGlobalAdministrator</filter-id>
-			<filter-id>filter@TTC_TAB_ADMIN_PUBLICATION_SPACE</filter-id>
+			<filter-id>version</filter-id>
+			<filter id="filter@ATAB_ADMIN_PUBLICATION_SPACE">
+				<rule grant="false">
+					<type>Section</type>
+					<type>SectionRoot</type>
+				</rule>
+			</filter>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
-		
-		<!-- Pour les Workspaces --> 
+
+		<!-- Dans un document appartenant à un espace de travail -->
 		<action id="ATAB_ADMIN_WS_PUBLICATION_SPACE" link="/incl/tabs/acaren_admin_ws_publication_space.xhtml"
 			order="125" label="acaren.action.admin.publication.space" icon="/icons/file.gif">
 			<category>VIEW_ACTION_LIST</category>
@@ -25,7 +35,13 @@
 			<filter-id>hasToutaticeSchema</filter-id>
 			<filter-id>isGlobalAdministrator</filter-id>
 			<filter-id>not_version</filter-id>
-			<filter-id>filter@TTC_TAB_WS_ADMIN_PUBLICATION_SPACE</filter-id>
+			<filter id="filter@ATAB_ADMIN_WS_PUBLICATION_SPACE">
+				<rule grant="false">
+					<type>Section</type>
+					<type>SectionRoot</type>
+				</rule>
+			</filter>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 		
 	</extension>

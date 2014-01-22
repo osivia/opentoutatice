@@ -6,7 +6,9 @@
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
 
-		<!-- Vue 'Créer': 'Créer et mettre en ligne' -->
+		<!-- Création et mise en ligne d'un document n'exigeant pas d'action de sauvegarde spécifique
+			(pas de workflow de demande)
+		-->
 		<action id="CREATE_AND_SET_ONLINE_DOCUMENT" link="#{documentActions.saveNSetOnLineDocument}"
 			order="0" label="command.create.and.setonline">
 			<category>CREATE_DOCUMENT_FORM</category>
@@ -20,9 +22,12 @@
 					<permission>validationWorkflow_validation</permission>
 				</rule>
 			</filter>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>			
 		</action>
 
-		<!-- Vue 'Modifier': Bouton 'Enregistrer et mettre en ligne' -->
+		<!-- Édition et mise en ligne d'un document n'exigeant pas d'action de sauvegarde spécifique
+			(pas de workflow de demande) 
+		-->
 		<action id="EDIT_AND_SET_ONLINE_CURRENT_DOCUMENT" link="#{documentActions.updateNSetOnLineCurrentDocument}"
 			order="1" label="command.save.and.setonline">
 			<category>EDIT_DOCUMENT_FORM</category>
@@ -36,6 +41,7 @@
 					<permission>validationWorkflow_validation</permission>
 				</rule>
 			</filter>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>			
 		</action>
 
 		<!-- Vue 'Résumé': mise en ligne directe -->
@@ -43,21 +49,12 @@
 			enabled="true" order="10" immediate="false"
 			link="#{operationActionBean.doOperation('setOnLine')}">
 			<category>SUMMARY_PANEL_TOP</category>
+			<category>SUBVIEW_UPPER_LIST</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>not_version</filter-id>
 			<filter-id>filter@setDocumentOnline</filter-id>
-		</action>
-
-		<!-- Vue 'Contenu (pour les Folderish)': mise en ligne directe -->
-		<action id="setDocumentOnlineDirectInCV" label="command.direct.setonline"
-			enabled="true" order="100" immediate="false"
-			link="#{operationActionBean.doOperation('setOnLine')}">
-			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
-			<filter-id>belong_to_publish_space</filter-id>
-			<filter-id>not_proxy</filter-id>
-			<filter-id>not_version</filter-id>
-			<filter-id>filter@setDocumentOnline</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 
 		<!-- Vue 'Résumé': mise hors ligne directe -->
@@ -65,20 +62,12 @@
 			enabled="true" order="10" immediate="false"
 			link="#{operationActionBean.doOperation('setOffLineOne')}">
 			<category>SUMMARY_PANEL_TOP</category>
+			<category>SUBVIEW_UPPER_LIST</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_remote_proxy</filter-id>
 			<filter-id>filter@setDocumentOffline</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
-
-		<!-- Vue 'Contenu' (pour les Folderish): mise hors ligne directe -->
-		<action id="setDocumentOfflineDirectInCV" label="command.direct.setoffline"
-			enabled="true" order="100" immediate="false"
-			link="#{operationActionBean.doOperation('setOffLineOne')}">
-			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
-			<filter-id>belong_to_publish_space</filter-id>
-			<filter-id>filter@setDocumentOffline</filter-id>
-		</action>
-
 
 		<action id="setDocumentVersionOnlineDirect" label="command.direct.setonline"
 			enabled="true" order="6" immediate="false"
@@ -88,12 +77,12 @@
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>is_version</filter-id>
 			<filter-id>filter@setDocumentOnline</filter-id>
-			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 			<filter id="filter@setDocumentVersionOnlineDirect">
 				<rule grant="true">
 					<condition>document.currentLifeCycleState == "approved"</condition>
 				</rule>
 			</filter>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 
 		<!-- WORKFLOWS -->
@@ -131,27 +120,11 @@
 		</action>
 		
 		
-		<action id="workflow_online_demand_in_summary" label="Demander la mise en ligne"
-			enabled="true" order="0" immediate="false"
-			link="#{operationActionBean.doOperation('onlineWorkflow_start')}">
-			<category>SUMMARY_PANEL_TOP</category>
-			<filter-id>belong_to_publish_space</filter-id>
-			<filter-id>not_version</filter-id>
-			<filter-id>not_proxy</filter-id>
-			<filter-id>filter@requestDocumentOnline</filter-id>
-			<filter id="filter@workflow_online_demand">
-				<rule grant="true">
-					<condition>document.currentLifeCycleState == "project"</condition>
-					<condition>document.currentLifeCycleState == "approved"</condition>
-				</rule>
-			</filter>
-			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
-		</action>
-		
 		<action id="workflow_online_demand" label="Demander la mise en ligne"
-			enabled="true" order="0" immediate="false" icon="/img/at.png"
+			enabled="true" order="0" immediate="false"
 			link="#{operationActionBean.doOperation('onlineWorkflow_start')}">
-			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
+			<category>SUMMARY_PANEL_TOP</category>
+			<category>SUBVIEW_UPPER_LIST</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_version</filter-id>
 			<filter-id>not_proxy</filter-id>
@@ -165,69 +138,29 @@
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 		
-		<action id="workflow_online_demand_version_in_summary" label="Demander la mise en ligne"
+		<action id="workflow_online_demand_version" label="Demander la mise en ligne"
 			enabled="true" order="0" immediate="false"
 			confirm="if( !confirmSetDocumentVersionOnline() ) return false;"
 			link="#{operationActionBean.doOperation('onlineWorkflow_start')}">
 			<category>SUMMARY_PANEL_TOP</category>
+			<category>SUBVIEW_UPPER_LIST</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>is_version</filter-id>
 			<filter-id>filter@requestDocumentOnline</filter-id>
 			<filter id="filter@workflow_online_demand_version">
 				<rule grant="true">
 					<condition>document.currentLifeCycleState == "approved"</condition>
-				</rule>
-			</filter>
-			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
-		</action>
-
-		<action id="workflow_online_demand_version" label="Demander la mise en ligne"
-			enabled="true" order="0" immediate="false" icon="/img/at.png"
-			confirm="if( !confirmSetDocumentVersionOnline() ) return false;"
-			link="#{operationActionBean.doOperation('onlineWorkflow_start')}">
-			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
-			<filter-id>belong_to_publish_space</filter-id>
-			<filter-id>is_version</filter-id>
-			<filter-id>filter@requestDocumentOnline</filter-id>
-			<filter id="filter@workflow_online_demand_version">
-				<rule grant="true">
-					<condition>document.currentLifeCycleState == "approved"</condition>
-				</rule>
-			</filter>
-			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
-		</action>
-		
-		<action id="workflow_online_cancel_in_summary" label="Annuler la demande de mise en ligne"
-			enabled="true" order="1" immediate="false"
-			confirm="if( !confirmOnlineWorkflow_cancel() ) return false;"
-			link="#{jbpmActions.cancelCurrentProcess('workflowOnlineTaskCanceled')}">
-			<category>SUMMARY_PANEL_TOP</category>
-			<filter-id>belong_to_publish_space</filter-id>
-			<filter-id>not_proxy</filter-id>
-			<filter id="filter@workflow_online_cancel">
-				<rule grant="true">
-					<facet>Versionable</facet>
-					<permission>Write</permission>
-				</rule>
-				<rule grant="false">
-					<type>Root</type>
-				</rule>
-				<rule grant="false">
-					<condition>#{jbpmActions.isCancelOnlineActionAuthorized() == false}
-					</condition>
-				</rule>
-				<rule grant="false">
-					<permission>validationWorkflow_validation</permission>
 				</rule>
 			</filter>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 
 		<action id="workflow_online_cancel" label="Annuler la demande de mise en ligne"
-			enabled="true" order="1" immediate="false" icon="/img/cancel.png"
+			enabled="true" order="1" immediate="false"
 			confirm="if( !confirmOnlineWorkflow_cancel() ) return false;"
 			link="#{jbpmActions.cancelCurrentProcess('workflowOnlineTaskCanceled')}">
-			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
+			<category>SUMMARY_PANEL_TOP</category>
+			<category>SUBVIEW_UPPER_LIST</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter id="filter@workflow_online_cancel">
@@ -248,11 +181,12 @@
 			</filter>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
-		
-		<action id="workflow_online_accept_in_summary" label="Accepter la demande de mise en ligne"
+
+		<action id="workflow_online_accept" label="Accepter la demande de mise en ligne"
 			enabled="true" order="2" immediate="false"
 			link="#{operationActionBean.doOperation('onlineWorkflow_validate')}">
 			<category>SUMMARY_PANEL_TOP</category>
+			<category>SUBVIEW_UPPER_LIST</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter id="filter@workflow_online_accept">
@@ -260,45 +194,7 @@
 					<permission>validationWorkflow_validation</permission>
 				</rule>
 				<rule grant="false">
-					<condition>#{jbpmActions.isValidateOnlineActionAuthorized() ==
-						false}
-					</condition>
-				</rule>
-			</filter>
-			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
-		</action>
-
-		<action id="workflow_online_accept" label="Accepter la demande de mise en ligne"
-			enabled="true" order="2" immediate="false" icon="/img/yes.png"
-			link="#{operationActionBean.doOperation('onlineWorkflow_validate')}">
-			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
-			<filter-id>belong_to_publish_space</filter-id>
-			<filter-id>not_proxy</filter-id>
-			<filter id="filter@workflow_online_accept">
-				<rule grant="true">
-					<permission>validationWorkflow_validation</permission>
-				</rule>
-				<rule grant="false">
-					<condition>#{jbpmActions.isValidateOnlineActionAuthorized() ==
-						false}
-					</condition>
-				</rule>
-			</filter>
-			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
-		</action>
-		
-		<action id="workflow_online_reject_in_summary" label="Rejeter la demande de mise en ligne"
-			enabled="true" order="3" immediate="false"
-			link="#{operationActionBean.doOperation('onlineWorkflow_rejected')}">
-			<category>SUMMARY_PANEL_TOP</category>
-			<filter-id>belong_to_publish_space</filter-id>
-			<filter-id>not_proxy</filter-id>
-			<filter id="filter@workflow_online_reject">
-				<rule grant="true">
-					<permission>validationWorkflow_validation</permission>
-				</rule>
-				<rule grant="false">
-					<condition>#{jbpmActions.isRejectOnlineActionAuthorized() == false}
+					<condition>#{jbpmActions.isValidateOnlineActionAuthorized() == false}
 					</condition>
 				</rule>
 			</filter>
@@ -306,9 +202,10 @@
 		</action>
 
 		<action id="workflow_online_reject" label="Rejeter la demande de mise en ligne"
-			enabled="true" order="3" immediate="false" icon="/img/warning.png"
+			enabled="true" order="3" immediate="false"
 			link="#{operationActionBean.doOperation('onlineWorkflow_rejected')}">
-			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
+			<category>SUMMARY_PANEL_TOP</category>
+			<category>SUBVIEW_UPPER_LIST</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter id="filter@workflow_online_reject">
@@ -323,61 +220,27 @@
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 
-
-
-
-
-		<action id="seeOnlineDocumentVersionFromResumeView" label="acaren.label.see.nuxeo.online.version"
+		<action id="seeOnlineDocumentVersion" label="acaren.label.see.nuxeo.online.version"
 			enabled="true" order="128" immediate="false"
 			link="#{documentActions.viewOnlineVersion()}">
 			<category>SUMMARY_PANEL_TOP</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter id="filter@seeOnlineDocumentVersionFromResumeView">
 				<rule grant="true">
-					<condition>#{documentActions.isSeeOnlineDocumentVersionActionAuthorized()
-						== true}</condition>
+					<condition>#{documentActions.isSeeOnlineDocumentVersionActionAuthorized() == true}</condition>
 				</rule>
 			</filter>
 			<filter-id>not_proxy</filter-id>
-			<!-- <filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id> -->
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 
-		<action id="seeOnlineDocumentVersionFromContentView" label="acaren.label.see.nuxeo.online.version"
-			enabled="true" order="128" immediate="false"
-			link="#{documentActions.viewOnlineVersion()}">
-			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
-			<filter-id>belong_to_publish_space</filter-id>
-			<filter id="filter@seeOnlineDocumentVersionFromResumeView">
-				<rule grant="true">
-					<condition>#{documentActions.isSeeOnlineDocumentVersionActionAuthorized()
-						== true}</condition>
-				</rule>
-			</filter>
-			<filter-id>not_proxy</filter-id>
-			<!-- <filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id> -->
-		</action>
-
-		<action id="seeLiveDocumentVersionFromResumeView" label="acaren.label.see.nuxeo.work.version"
+		<action id="seeLiveDocumentVersion" label="acaren.label.see.nuxeo.work.version"
 			enabled="true" order="129" immediate="false"
 			link="#{documentActions.viewLiveVersion()}">
 			<category>SUMMARY_PANEL_TOP</category>
 			<filter id="filter@seeLiveDocumentVersion">
 				<rule grant="true">
-					<condition>#{documentActions.isSeeLiveDocumentVersionActionAuthorized()
-						== true}</condition>
-				</rule>
-			</filter>
-			<filter-id>is_either_version_or_proxy</filter-id>
-		</action>
-
-		<action id="seeLiveDocumentVersionFromContentView" label="acaren.label.see.nuxeo.work.version"
-			enabled="true" order="129" immediate="false" icon="/img/eye.png"
-			link="#{documentActions.viewLiveVersion()}">
-			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
-			<filter id="filter@seeLiveDocumentVersion">
-				<rule grant="true">
-					<condition>#{documentActions.isSeeLiveDocumentVersionActionAuthorized()
-						== true}</condition>
+					<condition>#{documentActions.isSeeLiveDocumentVersionActionAuthorized() == true}</condition>
 				</rule>
 			</filter>
 			<filter-id>is_either_version_or_proxy</filter-id>
@@ -386,12 +249,13 @@
 		<!-- Cette action appartient à une catégorie "virtuelle" car elle ne sera 
 			jamais présentée à l'IHM. Son rôle est de pouvoir présenter de façon conditionnelle 
 			les actions "PUBLISH/UNPUBLISH_DOCUMENTS_SELECTION" (mettre en ligne / hors 
-			ligne) en fonction du critère "appartien à un espace de publication". (voir 
+			ligne) en fonction du critère "appartient à un espace de publication". (voir 
 			implémentation dans ToutaticeWebActionBean::getUnfiltredActionsList()) -->
 		<action id="VIRTUAL_ACTION_VIEW_IN_PUBLISH_SPACE_ONLY" enabled="true"
 			icon="">
 			<category>VIRTUAL_CATEGORY</category>
 			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 
 		<!-- Vue 'Contenu' (d'un Folderish): mise en ligne d'un élément sélectionné -->
@@ -421,9 +285,8 @@
 				<property name="widgetName">extended_title</property>
 			</properties>
 			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
-
-
 
 	</extension>
 

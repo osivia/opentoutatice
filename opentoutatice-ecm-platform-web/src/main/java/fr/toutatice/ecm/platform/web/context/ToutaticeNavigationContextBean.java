@@ -9,8 +9,6 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Factory;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
@@ -348,7 +346,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
 				parents.add(index, new DocumentPathElement(liveDoc));
 				index++;
 			}
-			parents.add(index, new ProxyDocumentPathElement(this.baseDoc));
+			parents.add(index, new ToutaticeProxyDocumentPathElement(this.baseDoc));
 		}
 
 	}
@@ -360,32 +358,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
 		}
 		return parents;
 	}
-
-	@Factory(value = "menuAvailableDomains", scope = ScopeType.EVENT)
-	public DocumentModelList getMenuDocuments() throws ClientException {
-		final String logPrefix = "<toutaticeResetCurrentPath> ";
-		if (null == documentManager) {
-			log.error(logPrefix + "documentManager not initialized");
-			return new DocumentModelListImpl();
-		}
-		return documentManager.query("SELECT * from document where ecm:primaryType='Domain' and ecm:currentLifeCycleState <> 'deleted' and ecm:isProxy = 0 order by dc:title");
-	}
-
-	@Factory(value = "isShowingAcarenPersonalWorkspace", scope = ScopeType.EVENT)
-	public boolean isShowingAcarenPersonalWorkspace() {
-		DocumentModel currentDoc = getCurrentDocument();
-
-		if (currentDoc == null || currentDoc.getPath().segmentCount() < 2) {
-			return false;
-		}
-
-		String domain = currentDoc.getPath().segment(0);
-
-		boolean showingPersonalWorkspace = domain.equalsIgnoreCase("home") || domain.equalsIgnoreCase("userworkspace-domain");
-
-		return showingPersonalWorkspace;
-	}
-
+	
 	@Observer(value = { EventNames.DOCUMENT_SELECTION_CHANGED, 
 			EventNames.DOMAIN_SELECTION_CHANGED,
 			EventNames.CONTENT_ROOT_SELECTION_CHANGED,

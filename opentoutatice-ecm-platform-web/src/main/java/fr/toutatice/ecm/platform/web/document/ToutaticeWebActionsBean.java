@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
@@ -22,10 +21,11 @@ import org.nuxeo.ecm.webapp.action.WebActionsBean;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
 
 import fr.toutatice.ecm.platform.core.constants.GlobalConst;
+import fr.toutatice.ecm.platform.web.annotations.Install;
 
 @Name("webActions")
 @Scope(ScopeType.CONVERSATION)
-@Install(precedence = Install.DEPLOYMENT)
+@Install(precedence = Install.TOUTATICE)
 public class ToutaticeWebActionsBean extends WebActionsBean {
 
 	private static final long serialVersionUID = 1L;
@@ -40,8 +40,6 @@ public class ToutaticeWebActionsBean extends WebActionsBean {
 		DISABLED
 	};
 	
-
-		
 	// cache pour éviter les traitements identiques multiples et préserver les performances
 	private Map<String, ACTION_STATUS> conditionalActionsStatusMap = null;
 	

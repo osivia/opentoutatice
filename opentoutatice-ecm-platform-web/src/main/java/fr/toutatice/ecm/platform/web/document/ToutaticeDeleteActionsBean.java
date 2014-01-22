@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -22,12 +21,11 @@ import org.nuxeo.ecm.webapp.action.DeleteActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeOperationHelper;
-
-
+import fr.toutatice.ecm.platform.web.annotations.Install;
 
 @Name("deleteActions")
 @Scope(ScopeType.EVENT)
-@Install(precedence = Install.DEPLOYMENT)
+@Install(precedence = Install.TOUTATICE)
 public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 
 	private static final long serialVersionUID = 1L;
@@ -146,18 +144,15 @@ public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 				for (DocumentModel doc : docs) {
 					DocumentModelList proxies = documentManager.getProxies(doc.getRef(), doc.getParentRef());
 
-					/*
-					 * Suppression (définitive?) du test sur la permission de validation.
-					 */
-//					boolean isApproved = NuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(doc.getCurrentLifeCycleState());
-//					boolean hasProxy = (null != proxies && !proxies.isEmpty());
-//					
-//					if (isApproved || hasProxy) {
-//						if (!documentManager.hasPermission(doc.getRef(), NuxeoStudioConst.CST_PERM_VALIDATE)) {
-//							status = false;
-//							break;
-//						}
-//					}
+					boolean isApproved = NuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(doc.getCurrentLifeCycleState());
+					boolean hasProxy = (null != proxies && !proxies.isEmpty());
+					
+					if (isApproved || hasProxy) {
+						if (!documentManager.hasPermission(doc.getRef(), NuxeoStudioConst.CST_PERM_VALIDATE)) {
+							status = false;
+							break;
+						}
+					}
 				}
 			} catch (ClientException e) {
 	            log.error("Cannot check delete permission", e);

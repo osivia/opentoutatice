@@ -13,7 +13,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.annotations.In;
-import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.common.utils.StringUtils;
@@ -30,10 +29,11 @@ import org.nuxeo.ecm.webapp.note.EditorImageActionsBean;
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeFileHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeImageCollectionHelper;
+import fr.toutatice.ecm.platform.web.annotations.Install;
 
 @Name("editorImageActions")
 @Scope(CONVERSATION)
-@Install(precedence = Install.DEPLOYMENT)
+@Install(precedence = Install.TOUTATICE)
 public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 
 	private static final long serialVersionUID = 1L;
@@ -43,10 +43,6 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
     protected transient DocumentsListsManager documentsListsManager;
     
     private static final String SEARCH_QUERY = "SELECT * FROM Document WHERE %s";
-    private static final String FILES_SCHEMA = "files";
-    private static final String TTC_SCHEMA = "toutatice";
-    private static final String IMAGES_PROPERTY = "images";
-    private static final String ATTACH_IMAGES = "AttachableImages";
 
     @In(create = true, required = false)
     private transient CoreSession documentManager;
@@ -125,7 +121,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
         if (doc.getId() == null) {
             return true;
         } else {
-            return !doc.hasSchema(TTC_SCHEMA);
+            return !doc.hasSchema(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE);
         }
     }
 
@@ -137,6 +133,8 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 
         resultDocuments = null;
         final List<String> constraints = new ArrayList<String>();
+        
+        // add keywords
         if (searchKeywords != null) {
             searchKeywords = searchKeywords.trim();
             if (searchKeywords.length() > 0) {
@@ -146,8 +144,10 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
                 }
             }
         }
+        
+        // restrict to space if required
         if (searchInSpace) {
-        	constraints.add("ecm:path STARTSWITH '"+navigationContext.getCurrentSuperSpace().getPathAsString().replace("'", "\\'")+"'");
+        	constraints.add("ecm:path STARTSWITH '" + navigationContext.getCurrentSuperSpace().getPathAsString().replace("'", "\\'")+"'");
         }	
 
         constraints.add("ecm:primaryType = 'Picture'");
@@ -157,8 +157,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
                 constraints, " AND "));
         resultDocuments = documentManager.query(query, 100);
         hasSearchResults = !resultDocuments.isEmpty();
-        log.debug("query result contains: " + resultDocuments.size()
-                + " docs.");
+        log.debug("query result contains: " + resultDocuments.size() + " docs.");
         return "editor_image_upload";
     }
 
@@ -190,9 +189,6 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
     @Override
     @SuppressWarnings("unchecked")
     public String uploadImage() throws ClientException {
-        isImage = true;
-        String XPATH_FILES = NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES;
-
         InputStream uploadedImage = getUploadedImage();
         String uploadedImageName = getUploadedImageName();
         if (uploadedImage == null || uploadedImageName == null) {
@@ -205,32 +201,26 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
         Blob uploadedImageBlob = FileUtils.createSerializableBlob(uploadedImage, uploadedImageName, null);
         boolean isImage = ToutaticeFileHelper.instance().isImageTypeFile(uploadedImageName, uploadedImageBlob);
 
-        if (!isImage) {
-            // Associer le fichier uploadé à la méta-donnée "files:files" s'il ne s'agit pas d'une image
-            // XPATH_FILES = NuxeoStudioConst.CST_DOC_XPATH_NUXEO_FILES;
-            /* DCH */
-            this.isImage = false;
-            return "editor_image_upload";
+        if (isImage) {
+        	List<Map<String, Object>> files = (List<Map<String, Object>>) doc.getPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
+        	
+        	final Map<String, Object> item = new HashMap<String, Object>();
+        	item.put("filename", uploadedImageName);
+        	item.put("file", uploadedImageBlob);
+        	
+        	ToutaticeImageCollectionHelper.instance().add(files, item);
+        	doc.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, (Serializable) files);
+        	
+        	documentManager.saveDocument(doc);
+        	documentManager.save();
+        	
+        	imageUrlAttr = DocumentModelFunctions.complexFileUrl("downloadFile", doc, NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, files.indexOf(item), LiveEditConstants.DEFAULT_SUB_BLOB_FIELD,
+        			uploadedImageName);
+        	isImageUploadedAttr = true;
+        } else {
+        	// Le document que l'on cherche à uploader n'a pas le bon type mime. Abandon + message d'erreur (dans page JSF)
+        	this.isImage = false;
         }
-
-        List<Map<String, Object>> files = (List<Map<String, Object>>) doc.getPropertyValue(XPATH_FILES);
-
-        final Map<String, Object> item = new HashMap<String, Object>();
-        item.put("filename", uploadedImageName);
-        item.put("file", uploadedImageBlob);
-
-        if (!doc.hasFacet(ATTACH_IMAGES) && doc.hasSchema(FILES_SCHEMA)) {
-            XPATH_FILES = NuxeoStudioConst.CST_DOC_XPATH_NUXEO_FILES;
-        }
-        ToutaticeImageCollectionHelper.instance().add(files, item);
-        doc.setPropertyValue(XPATH_FILES, (Serializable) files);
-
-        documentManager.saveDocument(doc);
-        documentManager.save();
-
-        imageUrlAttr = DocumentModelFunctions.complexFileUrl("downloadFile", doc, XPATH_FILES, files.indexOf(item), LiveEditConstants.DEFAULT_SUB_BLOB_FIELD,
-                uploadedImageName);
-        isImageUploadedAttr = true;
 
         return "editor_image_upload";
     }

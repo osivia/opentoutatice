@@ -6,15 +6,9 @@
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="filters">
 		
-		<filter id="hasAttachedFiles">
-			 <rule grant="true">
-				<schema>files</schema>
-			</rule>
-		</filter>
-
 		<filter id="canAttachImages">
 			<rule grant="true">
-				<facet>AttachableImages</facet>
+				<facet>TTCAttachableImages</facet>
 			</rule>
 		</filter>
 						
