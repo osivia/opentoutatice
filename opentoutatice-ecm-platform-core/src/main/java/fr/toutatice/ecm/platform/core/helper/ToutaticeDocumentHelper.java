@@ -677,22 +677,4 @@ public class ToutaticeDocumentHelper {
 		return status;
 	}
 	
-	public static boolean hasContentView(DocumentModel document) {
-        boolean status = false;
-        
-        if (null != document) {
-            TypeManager typeManager;
-            try {
-                typeManager = Framework.getService(TypeManager.class);
-                Type type = typeManager.getType(document.getType());
-                String[] typeContentViews = type.getContentViews(CONTENT_CATEGORY);
-                status = typeContentViews != null && typeContentViews.length > 0;
-            } catch (Exception e) {
-                status = false;
-            }
-        }
-        
-        return status;
-    }
-	
 }

@@ -16,7 +16,7 @@ import org.nuxeo.runtime.model.ComponentContext;
 import org.nuxeo.runtime.model.DefaultComponent;
 
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
-import fr.toutatice.ecm.platform.core.helper.ToutaticeMngtHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeUserMngtHelper;
 
 public class ToutaticeMaintenanceServiceImpl extends DefaultComponent implements ToutaticeMaintenanceService {
 
@@ -96,7 +96,7 @@ public class ToutaticeMaintenanceServiceImpl extends DefaultComponent implements
 		@Override
 		public void run() throws ClientException {
 
-			List<String> administrators = ToutaticeMngtHelper.instance().getSuperAdministrators();
+			List<String> administrators = ToutaticeUserMngtHelper.instance().getSuperAdministrators();
 			if (0 < administrators.size()) {
 				UserWorkspaceService userWorkspaceService = Framework.getLocalService(UserWorkspaceService.class);
 				if (null != userWorkspaceService) {

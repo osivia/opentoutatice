@@ -10,18 +10,18 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 import org.nuxeo.runtime.api.Framework;
 
-public class ToutaticeMngtHelper {
-	private static final Log log = LogFactory.getLog(ToutaticeMngtHelper.class);
+public class ToutaticeUserMngtHelper {
+	private static final Log log = LogFactory.getLog(ToutaticeUserMngtHelper.class);
 
-	private static ToutaticeMngtHelper instance;
+	private static ToutaticeUserMngtHelper instance;
 	private static UserManager userManager;
 
-	private ToutaticeMngtHelper() {
+	private ToutaticeUserMngtHelper() {
 	}
 
-	public static ToutaticeMngtHelper instance() {
+	public static ToutaticeUserMngtHelper instance() {
 		if (null == instance) {
-			instance = new ToutaticeMngtHelper();
+			instance = new ToutaticeUserMngtHelper();
 		}
 		return instance;
 	}
@@ -43,7 +43,7 @@ public class ToutaticeMngtHelper {
 		String propertyValue = "";
 
 		try {
-			propertyValue = (String) (userManager.getUserModel(principalName)).getPropertyValue(propertyName);
+			propertyValue = (String) (getUserManager().getUserModel(principalName)).getPropertyValue(propertyName);
 		} catch (Exception e) {
 			log.error("Failed to get the user property '" + propertyName + "' from the user '" + principalName + "', error: " + e.getMessage());
 		}
@@ -51,16 +51,22 @@ public class ToutaticeMngtHelper {
 		return propertyValue;
 	}	
 
-	public static List<String> getPublicUsers() throws ClientException {
+	public List<String> getPublicUsers() throws ClientException {
 			List<String> publicUsers = new ArrayList<String>();
 			
 			publicUsers = new ArrayList<String>();
-			getUserManager();
-			String anonymous = userManager.getAnonymousUserId();
+			
+			// add anonymous user (as configured in template)
+			String anonymous = getUserManager().getAnonymousUserId();
 			if (StringUtils.isNotBlank(anonymous)) {
 				publicUsers.add(anonymous);
-			}			
-			publicUsers.add("members");
+			}
+			
+			// add members (any connected user) (as configured in template)
+			String members = getUserManager().getDefaultGroup();
+			if (StringUtils.isNotBlank(members)) {
+				publicUsers.add(members);
+			}
 			
 			return publicUsers;
 	}
@@ -72,17 +78,17 @@ public class ToutaticeMngtHelper {
 	/**
 	 * Initialize the service attribute
 	 */
-	private static UserManager getUserManager() throws ClientException {
-		try {
-			if (null == userManager) {
-				userManager = (UserManager) Framework.getService(UserManager.class);
-			}
-		} catch (Exception e) {
-			log.error("Failed to get the user manager service, exception message: " + e.getMessage());
-			throw new ClientException("Failed to get the user manager service, exception message: " + e.getMessage());
-		}
-		
-		return userManager;
-	}
+	 private static UserManager getUserManager() throws ClientException {
+		 try {
+			 if (null == userManager) {
+				 userManager = (UserManager) Framework.getService(UserManager.class);
+			 }
+		 } catch (Exception e) {
+			 log.error("Failed to get the user manager service, exception message: " + e.getMessage());
+			 throw new ClientException("Failed to get the user manager service, exception message: " + e.getMessage());
+		 }
+		 
+		 return userManager;
+	 }
 
 }
