@@ -94,13 +94,6 @@
 				<type>PortalPage</type>
 			</rule>
 		</filter>
-		
-		<filter id="has_content_view">
-			<rule grant="true">
-				<condition>#{documentActions.hasContentView() == true}
-				</condition>
-			</rule>
-		</filter>
 
 	</extension>
 
