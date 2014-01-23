@@ -47,6 +47,15 @@
 				<row>
 					<widget>content</widget>
 				</row>
+				<row>
+					<widget>add_thumbnail</widget>
+				</row>
+				<row>
+					<widget>toutatice_keywords_widget</widget>
+				</row>
+				<row>
+					<widget>acaren_showInMenu_widget</widget>
+				</row>
 			</rows>
 		</layout>
 
@@ -87,6 +96,15 @@
 				</row>
 				<row>
 					<widget>content</widget>
+				</row>
+				<row>
+					<widget>add_thumbnail</widget>
+				</row>
+				<row>
+					<widget>toutatice_keywords_widget</widget>
+				</row>
+				<row>
+					<widget>acaren_showInMenu_widget</widget>
 				</row>
 			</rows>
 		</layout>
