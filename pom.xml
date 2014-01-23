@@ -5,15 +5,16 @@
 
 	<groupId>opentoutatice-ecm.platform</groupId>
 	<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-	<version>1.0.2.1-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>open toutatice plate-forme</name>
 
 	<modules>
 	   <module>opentoutatice-ecm-platform-core</module>
 	   <module>opentoutatice-ecm-platform-web</module>
-           <module>opentoutatice-ecm-platform-automation</module>
-           <module>opentoutatice-ecm-platform-services</module>
+       <module>opentoutatice-ecm-platform-automation</module>
+       <module>opentoutatice-ecm-platform-services</module>
+       <module>opentoutatice-ecm-platform-generic-ui-service</module>
        <!-- <module>opentoutatice-ecm-platform-marketplace</module> -->
 	</modules>
 
