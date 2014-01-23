@@ -5,9 +5,7 @@ Bundle-SymbolicName: fr.toutatice.ecm.platform.services;singleton:=true
 Bundle-Version: 2.0.0
 Bundle-Localization: plugin
 Bundle-Category: stateful
-Nuxeo-Component:  OSGI-INF/extensions/generic-ui/generic-ui-service.xml,
- OSGI-INF/extensions/generic-ui/generic-ui-contrib.xml,
- OSGI-INF/extensions/customize-types/customize-types-service.xml,
+Nuxeo-Component: OSGI-INF/extensions/customize-types/customize-types-service.xml,
  OSGI-INF/extensions/customize-ui/cutomize-ui-service.xml,
  OSGI-INF/extensions/customize-types/customize-types-service.xml,
  OSGI-INF/extensions/customize-types/customize-base-types-contrib.xml,
