@@ -18,6 +18,8 @@
 			<facet name="SpaceNavigationItem" />
 		</doctype>
 
+<!-- TODO: À CONSERVER? (déjà présent dans ACRENNES) -->
+
 		<doctype name="Question" extends="Document">
 			<schema name="question" />
 			<schema name="dublincore" />

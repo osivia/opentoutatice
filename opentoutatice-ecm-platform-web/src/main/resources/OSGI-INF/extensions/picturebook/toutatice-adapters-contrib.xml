@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<component name="fr.toutatice.ecm.platform.web.adapters">
+<component name="fr.toutatice.ecm.platform.web.picturebook.adapters">
 
 	<require>org.nuxeo.ecm.platform.picture.MultiviewPicture</require>
 	<require>org.nuxeo.ecm.core.api.blobholder.BlobHolderAdapterComponent</require>
