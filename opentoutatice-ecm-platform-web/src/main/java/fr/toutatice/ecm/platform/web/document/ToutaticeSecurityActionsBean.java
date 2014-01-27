@@ -4,6 +4,7 @@ import static org.jboss.seam.ScopeType.CONVERSATION;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -13,8 +14,8 @@ import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
 import org.nuxeo.ecm.webapp.security.SecurityActionsBean;
 
+import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
-import fr.toutatice.ecm.platform.web.annotations.Install;
 
 /**
  * Custom version of the security related methods.
@@ -23,7 +24,7 @@ import fr.toutatice.ecm.platform.web.annotations.Install;
  */
 @Name("securityActions")
 @Scope(CONVERSATION)
-@Install(precedence = Install.TOUTATICE)
+@Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeSecurityActionsBean extends SecurityActionsBean {
 
 	private static final Log log = LogFactory.getLog(ToutaticeSecurityActionsBean.class);
