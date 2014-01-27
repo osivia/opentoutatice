@@ -32,6 +32,7 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Destroy;
 import org.jboss.seam.annotations.Factory;
 import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
@@ -61,11 +62,11 @@ import org.nuxeo.ecm.webapp.documentsLists.DocumentsListsManager;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
 import org.nuxeo.ecm.webapp.pagination.ResultsProvidersCache;
 
+import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.GlobalConst;
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeOperationHelper;
-import fr.toutatice.ecm.platform.web.annotations.Install;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
 
 /**
@@ -74,7 +75,7 @@ import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
  */
 @Name("documentActions")
 @Scope(CONVERSATION)
-@Install(precedence = Install.TOUTATICE)
+@Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements ToutaticeDocumentActions, Serializable {
 
 	private static final long serialVersionUID = -2085111938280655851L;
