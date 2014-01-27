@@ -7,12 +7,13 @@ import java.util.Date;
 import java.util.Map;
 
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.webapp.edit.lock.LockActionsBean;
 
-import fr.toutatice.ecm.platform.web.annotations.Install;
+import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 
 /**
  * Cette classe a été implémentée pour pallier un problème de gestion des verroux.
@@ -27,7 +28,7 @@ import fr.toutatice.ecm.platform.web.annotations.Install;
  */
 @Name("lockActions")
 @Scope(ScopeType.EVENT)
-@Install(precedence = Install.TOUTATICE)
+@Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeLockActionsBean extends LockActionsBean {
 
 	private static final long serialVersionUID = 1L;
