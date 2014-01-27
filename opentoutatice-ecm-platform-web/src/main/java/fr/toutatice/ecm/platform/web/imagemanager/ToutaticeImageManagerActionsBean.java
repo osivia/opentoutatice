@@ -18,6 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
@@ -29,14 +30,14 @@ import org.nuxeo.ecm.platform.ui.web.util.files.FileUtils;
 import org.nuxeo.ecm.webapp.filemanager.FileManageActionsBean;
 import org.richfaces.model.UploadItem;
 
+import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeFileHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeImageCollectionHelper;
-import fr.toutatice.ecm.platform.web.annotations.Install;
 
 @Name("ImageManagerActions")
 @Scope(ScopeType.EVENT)
-@Install(precedence = Install.TOUTATICE)
+@Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
 	
 	private static final Log log = LogFactory.getLog(ToutaticeImageManagerActionsBean.class);
