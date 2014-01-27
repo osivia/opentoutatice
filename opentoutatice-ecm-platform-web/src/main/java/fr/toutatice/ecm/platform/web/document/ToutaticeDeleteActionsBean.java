@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -19,13 +20,13 @@ import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.webapp.action.DeleteActionsBean;
 
+import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeOperationHelper;
-import fr.toutatice.ecm.platform.web.annotations.Install;
 
 @Name("deleteActions")
 @Scope(ScopeType.EVENT)
-@Install(precedence = Install.TOUTATICE)
+@Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 
 	private static final long serialVersionUID = 1L;
