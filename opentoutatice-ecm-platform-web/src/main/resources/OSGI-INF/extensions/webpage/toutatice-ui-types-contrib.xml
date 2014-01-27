@@ -9,8 +9,8 @@
 
 		<type id="WebConfigurationFolder">
 			<label>Dossier de configuration</label>
-			<icon>/img/configuration_folder.jpg</icon>
-			<bigIcon>/img/configuration_folder.jpg</bigIcon>
+			<icon>/img/configuration_folder.gif</icon>
+			<bigIcon>/img/configuration_folder.gif</bigIcon>
 			<description></description>
 			<default-view>view_documents</default-view>
 			<subtypes>

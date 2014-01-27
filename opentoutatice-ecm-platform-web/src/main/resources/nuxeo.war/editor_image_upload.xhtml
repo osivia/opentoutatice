@@ -22,27 +22,39 @@
 				<ul>
 					<li
 						class="#{nxu:test(editorImageActions.selectedTab == 'SEARCH', 'selected', '')}">
-						<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=SEARCH">#{messages['label.imageUpload.searchTab']}</a>
+						<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=SEARCH">#{messages['acaren.label.imageUpload.searchTab']}</a>
 					</li>
-					<li
-						class="#{nxu:test(editorImageActions.selectedTab == 'UPLOAD', 'selected', '')}">
-						<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=UPLOAD">#{messages['acaren.label.imageUpload.uploadTab']}</a>
-					</li>
-					<c:if test="#{currentDocument.hasFacet('TTCAttachableImages')}">
-						<li
-							class="#{nxu:test(editorImageActions.selectedTab == 'ENCLOSED', 'selected', '')}">
-							<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=ENCLOSED">#{messages['acaren.label.imageUpload.enclosedTab']}</a>
-						</li>
-					</c:if>
+					<c:choose>
+						<c:when test="#{currentDocument.hasFacet('TTCAttachableImages')}">
+							<li class="#{nxu:test(editorImageActions.selectedTab == 'UPLOAD', 'selected', '')}">
+								<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=UPLOAD">#{messages['acaren.label.imageUpload.attachableImagesTab']}</a>
+							</li>
+						</c:when>
+						<c:otherwise>
+							<li class="#{nxu:test(editorImageActions.selectedTab == 'UPLOAD', 'selected', '')}">
+								<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=UPLOAD">#{messages['acaren.label.imageUpload.uploadTab']}</a>
+							</li>						
+						</c:otherwise>
+					</c:choose>
+
 				</ul>
 			</div>
 
 			<div style="clear: both"></div>
 			<div class="tabsContent">
 
-				<f:subview rendered="#{editorImageActions.selectedTab == 'ENCLOSED'}">
+				<f:subview rendered="#{editorImageActions.selectedTab == 'UPLOAD'}">
 
-					<f:subview rendered="#{!editorImageActions.inToutaticeCreationMode and currentDocument.hasSchema('toutatice') and not empty currentDocument.toutatice.images}">
+
+					<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
+		
+						<h3>
+							<h:outputText styleClass="errorMessage" value="#{messages['label.imageUpload.unableToUpload']}" />
+						</h3>
+		
+					</f:subview>
+					
+					<f:subview rendered="#{!editorImageActions.inToutaticeCreationMode and currentDocument.hasFacet('TTCAttachableImages') and not empty currentDocument.toutatice.images}">
 
 						<script type="text/javascript">
 							function getSelectedRadio(buttonGroup) {
@@ -109,19 +121,7 @@
 						</a4j:region>
 						
 					</f:subview>
-
-					<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
-		
-						<h3>
-							<h:outputText styleClass="errorMessage"
-								value="#{messages['label.imageUpload.unableToUpload']}" />
-						</h3>
-		
-					</f:subview>
-				</f:subview>
-
-				<f:subview rendered="#{editorImageActions.selectedTab == 'UPLOAD'}">
-
+			
 					<f:subview rendered="#{!editorImageActions.inToutaticeCreationMode}">
 
 						<f:subview rendered="#{editorImageActions.isImageUploaded}">
@@ -142,26 +142,14 @@
 						<h:form enctype="multipart/form-data" 
 							id="uploadForm"
 							rendered="#{!editorImageActions.isImageUploaded}">
-							<table>
-								<tbody>
-									<tr>
-										<td><h:outputText
-												value="#{messages['label.imageUpload.image']}" />
-										</td>
-										<td><s:fileUpload
-												data="#{editorImageActions.uploadedImage}"
-												fileName="#{editorImageActions.uploadedImageName}" />
-										</td>
-									</tr>
-									<tr>
-										<td></td>
-										<td><h:commandButton
-												value="#{messages['command.imageUpload.send']}"
+
+							<h:outputText value="#{messages['label.imageUpload.image']}" />
+							<s:fileUpload data="#{editorImageActions.uploadedImage}"
+								fileName="#{editorImageActions.uploadedImageName}" />
+								<br />
+							<h:commandButton value="#{messages['command.imageUpload.send']}"
 												action="#{editorImageActions.uploadImage}" class="button" />
-										</td>
-									</tr>
-								</tbody>
-							</table>
+
 						</h:form>
 						<c:if test="#{!editorImageActions.isImage}">
 							<h3>
@@ -169,16 +157,13 @@
 						</h3>
 						</c:if>
 
-					</f:subview>
-
-					<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
-		
-						<h3>
-							<h:outputText styleClass="errorMessage" value="#{messages['label.imageUpload.unableToUpload']}" />
-						</h3>
-		
-					</f:subview>
+					</f:subview>			
+			
 				</f:subview>
+				
+				
+				
+				
 			
 				<f:subview rendered="#{editorImageActions.selectedTab == 'SEARCH'}">
 
@@ -228,7 +213,7 @@
 				
 					<div>
 						<h3>
-							<h:outputText value="#{messages['label.search.form.simple']}" />
+							<h:outputText value="#{messages['acaren.label.imageUpload.search']}" />
 						</h3>
 						<h:form>
 							<h:inputText value="#{editorImageActions.searchKeywords}"
@@ -238,15 +223,18 @@
 							<h:commandButton value="#{messages['command.search']}"
 								action="#{editorImageActions.searchImages}" class="button" />
 							<br />
-							<h:selectBooleanCheckbox
-								value="#{editorImageActions.searchInSpace}"
-								rendered="#{editorImageActions.spaceName!=null}" />
+							
+								
 							<h:outputText value="Rechercher des images dans l'espace " />
-							<h:outputText style="color: blue"
-								value="#{editorImageActions.spaceName}" />
-							<h:outputText
-								value=" ?  (à décocher pour rechercher dans tout Nuxeo)" />
-	
+							
+							<h:selectOneRadio value="#{editorImageActions.searchInSpace}">
+								<c:if test="#{editorImageActions.mediaSpaceName != null}">
+									<f:selectItem itemLabel="Médiathèque : #{editorImageActions.mediaSpaceName}" itemValue="0" rendered="#{editorImageActions.mediaSpaceName != null}" />
+								</c:if>
+								<f:selectItem itemLabel="Espace : #{editorImageActions.spaceName}" itemValue="1" />
+								<f:selectItem itemLabel="Tout Nuxeo" itemValue="2" />
+							</h:selectOneRadio>
+								
 						</h:form>
 					</div>
 	

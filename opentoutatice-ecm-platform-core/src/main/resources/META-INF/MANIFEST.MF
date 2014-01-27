@@ -29,5 +29,7 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/maintenance/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/maintenance/toutatice-core-versioning-contrib.xml,
  OSGI-INF/extensions/picturebook/query-model-contrib.xml,
- OSGI-INF/extensions/picturebook/results-provider-contrib.xml
+ OSGI-INF/extensions/picturebook/results-provider-contrib.xml,
+ OSGI-INF/extensions/medialibrary/toutatice-core-types-contrib.xml,
+ OSGI-INF/extensions/medialibrary/toutatice-lifecycle-contrib.xml
  

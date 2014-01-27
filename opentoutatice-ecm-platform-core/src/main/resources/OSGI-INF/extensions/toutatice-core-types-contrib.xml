@@ -73,7 +73,7 @@
 				dc:lastContributor, dc:creator
 			</prefetch>
 		</doctype>
-
+		
 	</extension>
 	
 	<extension target="org.nuxeo.ecm.platform.types.TypeService"
@@ -82,6 +82,8 @@
 		<type id="Domain">
 			<subtypes>
 				<type>PortalSite</type>
+                <type>WebConfigurationFolder</type>
+                <type>MediaLibrary</type>
 			</subtypes>
 		</type>
 		<type id="WorkspaceRoot">

@@ -9,7 +9,7 @@
 		point="actions">
 
 <!-- 
-		<action id="TAB_CONTENT" order="1">
+		<action id="TAB_CONTENT" order="2">
 			<filter-id>not_belong_to_publish_space</filter-id>
 		</action>
 

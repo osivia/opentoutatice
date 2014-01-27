@@ -13,27 +13,30 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.web.RequestParameter;
 import org.nuxeo.common.utils.StringUtils;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.platform.ui.web.tag.fn.DocumentModelFunctions;
 import org.nuxeo.ecm.platform.ui.web.tag.fn.LiveEditConstants;
 import org.nuxeo.ecm.platform.ui.web.util.files.FileUtils;
 import org.nuxeo.ecm.webapp.documentsLists.DocumentsListsManager;
 import org.nuxeo.ecm.webapp.note.EditorImageActionsBean;
 
+import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeFileHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeImageCollectionHelper;
-import fr.toutatice.ecm.platform.web.annotations.Install;
 
 @Name("editorImageActions")
 @Scope(CONVERSATION)
-@Install(precedence = Install.TOUTATICE)
+@Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 
 	private static final long serialVersionUID = 1L;
@@ -43,19 +46,32 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
     protected transient DocumentsListsManager documentsListsManager;
     
     private static final String SEARCH_QUERY = "SELECT * FROM Document WHERE %s";
+    private static final String MEDIALIB = "MediaLibrary";
 
     @In(create = true, required = false)
     private transient CoreSession documentManager;
 
     private List<DocumentModel> resultDocuments;
     private boolean hasSearchResults = false;
-    private boolean searchInSpace = true;
+
+
+    private static final int SEARCH_IN_MEDIA = 0;
+    private static final int SEARCH_IN_SPACE = 1;
+    private static final int SEARCH_IN_ALL_NUXEO = 2;
+    private int searchInSpace = 0;
+
+
 	private String selectedSize = "Medium";
     private String imageUrlAttr;
     private boolean isImageUploadedAttr = false;
     /* DCH */
     private boolean isImage = true;
     
+    @RequestParameter
+    private String selectedTab;
+
+    private String oldSelectedTab;
+
 	public String getImageUrlAttr() {
 		return imageUrlAttr;
 	}
@@ -84,21 +100,58 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 		return isImageUploadedAttr;
 	}
 
-	public String getSpaceName() throws ClientException{
-		DocumentModel space;
-		space = navigationContext.getCurrentSuperSpace();
-		if(null!=space) {
-			return space.getTitle();
-		}
-		searchInSpace = false;
-		return null;
+    private DocumentModel mediaSpace;
+
+    private DocumentModel getMediaSpace() throws ClientException {
+
+
+        DocumentModel currentDomain = navigationContext.getCurrentDomain();
+        String searchMediaLibraries = "ecm:primaryType = '" + MEDIALIB + "' and ecm:path startswith '" + currentDomain.getPathAsString()
+                + "' and ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'";
+
+        String queryMediaLibraries = String.format(SEARCH_QUERY, searchMediaLibraries);
+
+        DocumentModelList query = documentManager.query(queryMediaLibraries);
+
+        if (query.size() < 1 || query.size() > 1) {
+            mediaSpace = null;
+        } else
+            mediaSpace = query.get(0);
+
+
+        return mediaSpace;
+    }
+
+    public String getMediaSpaceName() throws ClientException {
+
+        if (getMediaSpace() != null) {
+            return getMediaSpace().getTitle();
+        } else
+            return null;
+
 	}
 
-	public boolean isSearchInSpace() {
+    public String getSpaceName() throws ClientException {
+        DocumentModel space = navigationContext.getCurrentSuperSpace();
+        if (null != space) {
+            return space.getTitle();
+        }
+        searchInSpace = 2;
+        return null;
+    }
+
+    public int getSearchInSpace() throws ClientException {
+
+        // Si pas de médiathèque, l'option n'est pas disponible
+        if (searchInSpace == 0) {
+            if (getMediaSpace() == null) {
+                searchInSpace = 1;
+            }
+        }
 		return searchInSpace;
 	}
 
-	public void setSearchInSpace(boolean searchInSpace) {
+    public void setSearchInSpace(int searchInSpace) {
 		this.searchInSpace = searchInSpace;
 	}
 	
@@ -146,9 +199,11 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
         }
         
         // restrict to space if required
-        if (searchInSpace) {
-        	constraints.add("ecm:path STARTSWITH '" + navigationContext.getCurrentSuperSpace().getPathAsString().replace("'", "\\'")+"'");
-        }	
+        if (searchInSpace == SEARCH_IN_MEDIA && getMediaSpace() != null) {
+            constraints.add("ecm:path STARTSWITH '" + getMediaSpace().getPathAsString().replace("'", "\\'") + "'");
+        } else if (searchInSpace == SEARCH_IN_SPACE) {
+            constraints.add("ecm:path STARTSWITH '" + navigationContext.getCurrentSuperSpace().getPathAsString().replace("'", "\\'") + "'");
+        }
 
         constraints.add("ecm:primaryType = 'Picture'");
         constraints.add("ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'");
@@ -179,6 +234,16 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
         this.selectedSize = selectedSize;
     }
     
+    @Override
+    public String getSelectedTab() {
+        if (selectedTab != null) {
+            oldSelectedTab = selectedTab;
+        } else if (oldSelectedTab == null) {
+            oldSelectedTab = "SEARCH";
+        }
+        return oldSelectedTab;
+    }
+
     /*
      * Modif DCH
      */

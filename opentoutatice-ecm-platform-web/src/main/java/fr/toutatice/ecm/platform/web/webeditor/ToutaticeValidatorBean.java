@@ -6,22 +6,24 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.platform.ui.web.util.ComponentUtils;
 
-import fr.toutatice.ecm.platform.web.annotations.Install;
+import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
+
 
 @Name("widgetValidator")
 @Scope(ScopeType.SESSION)
-@Install(precedence = Install.TOUTATICE)
+@Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeValidatorBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -21,12 +22,12 @@ import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.webapp.action.EditorLinkActionsBean;
 
 import edu.emory.mathcs.backport.java.util.Collections;
+import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSorterHelper;
-import fr.toutatice.ecm.platform.web.annotations.Install;
 
 @Name("editorLinkActions")
 @Scope(ScopeType.CONVERSATION)
-@Install(precedence = Install.TOUTATICE)
+@Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
 
 	private static final String TOUT = "TOUT";
