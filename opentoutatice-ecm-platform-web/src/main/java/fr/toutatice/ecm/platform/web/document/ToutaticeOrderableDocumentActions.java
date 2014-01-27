@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -19,11 +20,11 @@ import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.webapp.contentbrowser.OrderableDocumentActions;
 
 import edu.emory.mathcs.backport.java.util.Collections;
-import fr.toutatice.ecm.platform.web.annotations.Install;
+import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 
 @Name("orderableDocumentActions")
 @Scope(ScopeType.CONVERSATION)
-@Install(precedence = Install.TOUTATICE)
+@Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions {
 
 	private static final long serialVersionUID = 1L;
