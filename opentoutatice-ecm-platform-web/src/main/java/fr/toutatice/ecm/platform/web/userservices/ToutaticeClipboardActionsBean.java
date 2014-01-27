@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.international.StatusMessage;
@@ -22,12 +23,12 @@ import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.platform.jbpm.JbpmService;
 import org.nuxeo.ecm.webapp.clipboard.ClipboardActionsBean;
 
+import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
-import fr.toutatice.ecm.platform.web.annotations.Install;
 
 @Name("clipboardActions")
 @Scope(ScopeType.SESSION)
-@Install(precedence = Install.TOUTATICE)
+@Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeClipboardActionsBean extends ClipboardActionsBean {
 
 	private static final long serialVersionUID = 7075230311269912496L;
