@@ -71,7 +71,7 @@
 			</fields>
 		</widget>
 
-		<widget name="summary_content" type="richtext_with_mimetype">
+		<widget name="summary_content" type="summary_content_type">
 			<labels>
 				<label mode="any">Contenu</label>
 			</labels>
@@ -162,13 +162,30 @@
 		point="widgettypes">
 
 
-		<!-- <widgetType name="custom_summary_current_document_view"> <configuration> 
+		<!-- Layout se basant sur le layout en mode view <widgetType name="custom_summary_current_document_view"> <configuration> 
 			<sinceVersion>5.3.1</sinceVersion> <title>View layout</title> <categories> 
 			<category>summary</category> </categories> <supportedModes> <mode>view</mode> 
 			</supportedModes> no configurable properties </configuration> <handler-class> 
 			org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler 
 			</handler-class> <property name="template"> /widgets/summary/toutatice_metadata_custom_widget_template.xhtml 
-			</property> </widgetType> -->
+			</property> </widgetType> -->	
+			
+		<widgetType name="summary_content_type">
+			<configuration>
+				<categories>
+					<category>summary</category>
+				</categories>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/summary/toutatice_summary_content_widget.xhtml
+			</property>
+		</widgetType>
 
 		<widgetType name="summary_picture_type">
 			<configuration>
