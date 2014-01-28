@@ -9,7 +9,7 @@
 		point="actions">
 
 <!-- 
-		<action id="TAB_CONTENT" order="2">
+		<action id="TAB_CONTENT" order="1">
 			<filter-id>not_belong_to_publish_space</filter-id>
 		</action>
 
@@ -31,7 +31,7 @@
 
 		<!-- Vue résumé sur les PortalSite, PortaPage -->
 		<action id="ATAB_FOLDERISH_VIEW" link="/incl/tabs/document_view.xhtml"
-			order="10" label="action.view.summary" icon="/icons/file.gif">
+			order="20" label="action.view.summary" icon="/icons/file.gif">
 			<category>VIEW_ACTION_LIST</category>
 			<filter-id>filter@TTC_TAB_FOLDERISH_VIEW</filter-id>
 		</action>
