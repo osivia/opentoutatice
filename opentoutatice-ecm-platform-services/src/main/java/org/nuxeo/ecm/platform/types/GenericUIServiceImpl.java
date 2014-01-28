@@ -30,8 +30,8 @@ public class GenericUIServiceImpl extends DefaultComponent implements GenericUIS
     private static final Log log = LogFactory.getLog(GenericUIServiceImpl.class);
 
     private static final String LAYOUTS_PT_EXT = "layouts";
-    private static final int LAST_LAYOUT_INDEX = 0;
     private static final String BASE_TYPE = "Document";
+    private static final String ALL_TYPES = "*";
 
     private TypeManager typeManager;
     private List<GenericLayoutsDescriptor> allGenericLayoutsDescriptor = new ArrayList<GenericLayoutsDescriptor>();
@@ -172,27 +172,32 @@ public class GenericUIServiceImpl extends DefaultComponent implements GenericUIS
                         for (GenericLayoutDescriptor genericLayout : genericLayouts) {
                             String genericLayoutName = genericLayout.getName();
                             String[] excludedTypes = genericLayout.getExcludedTypes();
-                            if (!ArrayUtils.contains(excludedTypes, docType)) {
-                                PositionLayoutDescriptor positionLayout = genericLayout.getPositionLayoutDescriptor();
-                                if (positionLayout != null) {
-                                    String beforeLayout = positionLayout.getBeforeLayout();
-                                    String afterLayout = positionLayout.getAfterLayout();
-                                    int atLayout = positionLayout.getPositionLayout();
-                                    if (beforeLayout != null) {
-                                        placeLayout(allLayoutsNames, genericLayoutName, beforeLayout, false);
-                                    } else if (afterLayout != null) {
-                                        placeLayout(allLayoutsNames, genericLayoutName, afterLayout, true);
-                                    } else if (atLayout != PositionLayoutDescriptor.POS_UNDEFINED) {
-                                        if (atLayout != LAST_LAYOUT_INDEX) {
-                                            allLayoutsNames.add(atLayout - 1, genericLayoutName);
+                            if (excludedTypes != null && excludedTypes.length > 0 && !excludedTypes[0].equals(ALL_TYPES)) {
+                                if (!ArrayUtils.contains(excludedTypes, docType)) {
+                                    PositionLayoutDescriptor positionLayout = genericLayout.getPositionLayoutDescriptor();
+                                    if (positionLayout != null) {
+                                        String beforeLayout = positionLayout.getBeforeLayout();
+                                        String afterLayout = positionLayout.getAfterLayout();
+                                        String atLayout = positionLayout.getPositionLayout();
+                                        if (beforeLayout != null) {
+                                            placeLayout(allLayoutsNames, genericLayoutName, beforeLayout, false);
+                                        } else if (afterLayout != null) {
+                                            placeLayout(allLayoutsNames, genericLayoutName, afterLayout, true);
                                         } else {
-                                            allLayoutsNames.add(allLayoutsNames.size(), genericLayoutName);
+                                            if (!atLayout.equals(PositionLayoutDescriptor.LAST_POSITION)) {
+                                                int atPos = Integer.valueOf(atLayout);
+                                                if (atPos != PositionLayoutDescriptor.POS_UNDEFINED) {
+                                                    allLayoutsNames.add(atPos - 1, genericLayoutName);
+                                                } else {
+                                                    log.error("No defined position for generic layout " + genericLayoutName);
+                                                }
+                                            } else {
+                                                allLayoutsNames.add(allLayoutsNames.size(), genericLayoutName);
+                                            }
                                         }
                                     } else {
                                         log.error("No defined position for generic layout " + genericLayoutName);
                                     }
-                                }else {
-                                    log.error("No defined position for generic layout " + genericLayoutName);
                                 }
                             }
                         }
