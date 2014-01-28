@@ -12,7 +12,7 @@
 		<facet name="TTCPublishSpace" />
 		<facet name="TTCAttachableImages" />
 		<facet name="FolderishEditable" />
-		<facet name="PortalConfigurable" />
+		<facet name="TTCPortalConfigurable" />
 		<facet name="SpaceContent"/>
 		<facet name="SpaceNavigationItem" />
 		<facet name="MasterPublishSpace" />
@@ -38,7 +38,7 @@
 			<facet name="Orderable" />
 			<facet name="TTCPublishSpace" />
 			<facet name="SuperSpace" />
-			<facet name="PortalConfigurable" />
+			<facet name="TTCPortalConfigurable" />
 			<facet name="TTCAttachableImages" />
 			<facet name="FolderishEditable" />
 			<facet name="SpaceNavigationItem" />
@@ -62,7 +62,7 @@
             <schema name="portlet_properties" />
 			<facet name="Folderish" />
 			<facet name="Orderable" />
-			<facet name="PortalConfigurable" />
+			<facet name="TTCPortalConfigurable" />
 			<facet name="TTCAttachableImages" />
 			<facet name="FolderishEditable" />
 			<facet name="SpaceContent"/>
