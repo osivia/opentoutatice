@@ -9,6 +9,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.el.ELException;
+import javax.faces.context.FacesContext;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.SortInfo;
 import org.nuxeo.ecm.platform.contentview.jsf.ContentView;
 import org.nuxeo.ecm.platform.contentview.jsf.ContentViewLayout;
@@ -20,9 +25,9 @@ import org.nuxeo.ecm.platform.forms.layout.service.WebLayoutManager;
 import org.nuxeo.ecm.platform.query.api.PageProvider;
 import org.nuxeo.ecm.platform.query.api.PageProviderDefinition;
 import org.nuxeo.ecm.platform.query.api.WhereClauseDefinition;
-import org.nuxeo.ecm.platform.types.GenericLayoutsDescriptor;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.platform.types.TypeManager;
+import org.nuxeo.ecm.platform.ui.web.jsf.MockFacesContext;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.model.ComponentContext;
 import org.nuxeo.runtime.model.ComponentInstance;
@@ -36,6 +41,7 @@ import org.nuxeo.runtime.model.DefaultComponent;
 public class CustomizeUIServiceImpl extends DefaultComponent implements CustomizeUIService {
 
     private static final long serialVersionUID = 6462426331447513648L;
+    private static final Log log = LogFactory.getLog(CustomizeUIServiceImpl.class);
 
     private static final String QUERY_WITH_NO_PROXY = "AND ((ecm:name NOT LIKE '%.proxy') OR (ecm:name LIKE '%.remote.proxy'))";
     private static final String CONTENT_CATEGORY = "content";
@@ -86,12 +92,14 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
      */
     @Override
     public void adaptContentViews() throws Exception {
-        Collection<Type> types = typeManager.getTypes();
-        for (Type type : types) {
-            if (allowedTypesUnderPortalSite.contains(type)) {
-                addPublishWidgetToResultLayout(type);
+        if (allowedTypesUnderPortalSite != null) {
+            Collection<Type> types = typeManager.getTypes();
+            for (Type type : types) {
+                if (allowedTypesUnderPortalSite.contains(type)) {
+                    addPublishWidgetToResultLayout(type);
+                }
+                setNoProxyQueryToContentViews(type);
             }
-            setNoProxyQueryToContentViews(type);
         }
     }
 
@@ -109,19 +117,19 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
             for (LayoutDescriptor layoutToOverride : layoutsToOverride) {
                 String layoutNameToOverride = layoutToOverride.getName();
                 TemplateDescriptor[] templatesDescriptor = layoutToOverride.getTemplates();
-                
-                for(TemplateDescriptor templateDescriptor : templatesDescriptor){
-                String overrideTemplateName = templateDescriptor.getName();
-                String mode = templateDescriptor.getMode();
 
-                LayoutDefinition layoutToOverrideDef = webLayoutManager.getLayoutDefinition(layoutNameToOverride);
-                Map<String, String> templatesByMode = layoutToOverrideDef.getTemplates();
+                for (TemplateDescriptor templateDescriptor : templatesDescriptor) {
+                    String overrideTemplateName = templateDescriptor.getName();
+                    String mode = templateDescriptor.getMode();
 
-                //for (String mode : modes) {
+                    LayoutDefinition layoutToOverrideDef = webLayoutManager.getLayoutDefinition(layoutNameToOverride);
+                    Map<String, String> templatesByMode = layoutToOverrideDef.getTemplates();
+
+                    // for (String mode : modes) {
                     templatesByMode.put(mode, overrideTemplateName);
-                //}
-                layoutToOverrideDef.setTemplates(templatesByMode);
-            }
+                    // }
+                    layoutToOverrideDef.setTemplates(templatesByMode);
+                }
             }
         }
 
@@ -137,18 +145,22 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
         if (typeContentViewNames != null && typeContentViewNames.length > 0) {
             for (String typeContentViewName : typeContentViewNames) {
                 ContentView contentView = contentViewService.getContentView(typeContentViewName);
-                ContentViewLayout currentResultLayout = contentView.getCurrentResultLayout();
-                String layoutName = currentResultLayout.getName();
-                if (!modifiedContentViewsLayouts.contains(layoutName) && !PORTAL_LAYOUT.equals(layoutName)) {
-                    modifiedContentViewsLayouts.add(layoutName);
-                    LayoutDefinition layoutDefinition = webLayoutManager.getLayoutDefinition(layoutName);
+                if (contentView != null) {
+                    ContentViewLayout currentResultLayout = contentView.getCurrentResultLayout();
+                    String layoutName = currentResultLayout.getName();
+                    if (!modifiedContentViewsLayouts.contains(layoutName) && !PORTAL_LAYOUT.equals(layoutName)) {
+                        modifiedContentViewsLayouts.add(layoutName);
+                        LayoutDefinition layoutDefinition = webLayoutManager.getLayoutDefinition(layoutName);
 
-                    LayoutRowDefinition[] rows = layoutDefinition.getRows();
-                    LayoutRowDefinitionImpl layoutRowDefinitionImpl = new LayoutRowDefinitionImpl("Version en ligne?", "local_publishing_status");
-                    LayoutRowDefinition[] modifiedRows = (LayoutRowDefinition[]) Arrays.copyOf(rows, rows.length + 1);
-                    modifiedRows[rows.length] = layoutRowDefinitionImpl;
+                        LayoutRowDefinition[] rows = layoutDefinition.getRows();
+                        LayoutRowDefinitionImpl layoutRowDefinitionImpl = new LayoutRowDefinitionImpl("Version en ligne?", "local_publishing_status");
+                        LayoutRowDefinition[] modifiedRows = (LayoutRowDefinition[]) Arrays.copyOf(rows, rows.length + 1);
+                        modifiedRows[rows.length] = layoutRowDefinitionImpl;
 
-                    layoutDefinition.setRows(modifiedRows);
+                        layoutDefinition.setRows(modifiedRows);
+                    }
+                } else {
+                    log.error(typeContentViewName + " not defined for type " + type.getLabel());
                 }
             }
         }
@@ -159,45 +171,51 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
      * des requêtes de toutes les contentViews
      */
     private void setNoProxyQueryToContentViews(Type type) throws Exception {
-        // MockFacesContext mockFacesContext = new MockFacesContext() {
-        //
-        // @Override
-        // public Object evaluateExpressionGet(FacesContext context, String expression, Class expectedType) throws ELException {
-        // if (expression.startsWith("#{")) {
-        // return "";
-        // }
-        // return null;
-        // }
-        // };
-        // mockFacesContext.setCurrent();
-
+        
+        /*
+         * Pour éviter les logs d'erreur "FacesContext null" au démarrage
+         * de Nuxeo.
+         */       
+        MockFacesContext mockFacesContext = new MockFacesContext() {
+            @Override
+            public Object evaluateExpressionGet(FacesContext context, String expression, Class expectedType) throws ELException {
+                if (expression.startsWith("#{")) {
+                    return "";
+                }
+                return null;
+            }
+        };
+        mockFacesContext.setCurrent();
+        
         String[] typeContentViewNames = type.getContentViews(CONTENT_CATEGORY);
 
         if (typeContentViewNames != null && typeContentViewNames.length > 0) {
             for (String typeContentViewName : typeContentViewNames) {
                 ContentView contentView = contentViewService.getContentView(typeContentViewName);
-                /*
-                 * Passage d'une liste et de paramètres vides pour éviter une portaie
-                 * des logs d'erreur au démarrage de Nuxeo (FacesContext null -evidemment...-)
-                 */;
-                PageProvider<?> pageProvider = contentView.getPageProvider(null, new ArrayList<SortInfo>(), null, null, new Object[0]);
-                PageProviderDefinition pageProviderDefinition = pageProvider.getDefinition();
-                String pattern = pageProviderDefinition.getPattern();
-                if (pattern != null) {
-                    pattern += QUERY_WITH_NO_PROXY;
-                    pageProviderDefinition.setPattern(pattern);
-                } else {
-                    WhereClauseDefinition whereClause = pageProviderDefinition.getWhereClause();
-                    if (whereClause != null) {
-                        String query = whereClause.getFixedPart();
-                        query += QUERY_WITH_NO_PROXY;
-                        whereClause.setFixedPart(query);
+                if (contentView != null) {
+                    /*
+                     * Passage d'une liste et de paramètres vides pour éviter une portaie
+                     * des logs d'erreur au démarrage de Nuxeo (FacesContext null -evidemment...-)
+                     */
+                    PageProvider<?> pageProvider = contentView.getPageProvider(null, new ArrayList<SortInfo>(), null, null, new Object[0]);
+                    PageProviderDefinition pageProviderDefinition = pageProvider.getDefinition();
+                    String pattern = pageProviderDefinition.getPattern();
+                    if (pattern != null) {
+                        pattern += QUERY_WITH_NO_PROXY;
+                        pageProviderDefinition.setPattern(pattern);
+                    } else {
+                        WhereClauseDefinition whereClause = pageProviderDefinition.getWhereClause();
+                        if (whereClause != null) {
+                            String query = whereClause.getFixedPart();
+                            query += QUERY_WITH_NO_PROXY;
+                            whereClause.setFixedPart(query);
+                        }
                     }
+                    pageProviderDefinition.setEnabled(true);
                 }
-                pageProviderDefinition.setEnabled(true);
             }
         }
-        // mockFacesContext.release();
+        mockFacesContext.relieveCurrent();
     }
 
     /**
