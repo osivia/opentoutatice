@@ -13,7 +13,7 @@
 			notre layout à ajouter doit être placé), le tag "after" (où on indique la layout après 
 			lequel notre layout à ajouter doit être placé) et la tag "at" qui indique la position 
 			du layout à ajouter dans la liste des layouts présents; attention, la numérotation commence
-			à 1 et 0 indique qu'on place notre layout à la fin de la liste;
+			à 1 et "end" indique qu'on place notre layout à la fin de la liste;
 			Par défaut, si les layouts indiqués dans les balises "before" ou "after" ne sont pas trouvés,
 			le layout est placé en fin de liste.
 			En outre, il est possible d'exclure des types pour lesquels on ne veut pas que le layout soit
@@ -23,7 +23,7 @@
 		<layouts mode="edit">
 			<layout name="layout@add_thumbnail">
 				<position>
-					<at>0</at>
+					<at>end</at>
 				</position>
 				<excludedTypes>
 					<type>WebConfigurationFolder</type>
@@ -32,16 +32,17 @@
 			</layout>
 			<layout name="keywords">
 				<position>
-					<at>0</at>
+					<at>end</at>
 				</position>
 				<excludedTypes>
-					<type>WebConfigurationFolder</type>
-					<type>WebConfiguration</type>
+					<type>*</type>
+					<!-- <type>WebConfigurationFolder</type>
+					<type>WebConfiguration</type> -->
 				</excludedTypes>
 			</layout>
 			<layout name="acaren_showInMenu">
 				<position>
-					<at>0</at>
+					<at>end</at>
 				</position>
 				<excludedTypes>
 					<type>PortalSite</type>
