@@ -7,6 +7,7 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="layouts">	
 		
+		<!-- Used for generic layouts -->
 		<layout name="layout@add_thumbnail">
 			<templates>
 				<template mode="view">/layouts/layout_default_template.xhtml
@@ -22,6 +23,18 @@
 				</row>
 			</rows>
 		</layout>
+
+	</extension>
+	
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="actions">
+		
+		<action id="SHOW_THUMBNAIL" type="widget" order="100">
+			<category>SUMMARY_PANEL_LEFT</category>
+			<properties>
+				<property name="widgetName">acaren_widget_summary_current_document_vignette</property>
+			</properties>
+		</action>
 
 	</extension>
 
