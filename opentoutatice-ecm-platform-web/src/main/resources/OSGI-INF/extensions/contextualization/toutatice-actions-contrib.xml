@@ -18,6 +18,7 @@
 			<filter-id>hasToutaticeSchema</filter-id>
 			<filter-id>isGlobalAdministrator</filter-id>
 			<filter-id>version</filter-id>
+			<filter-id>isPortalConfigurable</filter-id>
 			<filter id="filter@ATAB_ADMIN_PUBLICATION_SPACE">
 				<rule grant="false">
 					<type>Section</type>
@@ -35,6 +36,7 @@
 			<filter-id>hasToutaticeSchema</filter-id>
 			<filter-id>isGlobalAdministrator</filter-id>
 			<filter-id>not_version</filter-id>
+			<filter-id>isPortalConfigurable</filter-id>
 			<filter id="filter@ATAB_ADMIN_WS_PUBLICATION_SPACE">
 				<rule grant="false">
 					<type>Section</type>
