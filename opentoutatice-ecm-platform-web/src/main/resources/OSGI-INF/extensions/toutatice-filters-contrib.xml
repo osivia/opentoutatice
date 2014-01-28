@@ -13,6 +13,13 @@
 			</rule>
 		</filter>
 
+		<filter id="dont_belong_to_publish_space">
+			<rule grant="true">
+				<condition>#{documentActions.belongToPublishSpace() == false}
+				</condition>
+			</rule>
+		</filter>
+
 		<filter id="not_belong_to_publish_space">
 			<rule grant="false">
 				<condition>#{documentActions.belongToPublishSpace() == true}
