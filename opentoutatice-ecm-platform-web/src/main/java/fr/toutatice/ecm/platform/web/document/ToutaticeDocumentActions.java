@@ -14,4 +14,6 @@ public interface ToutaticeDocumentActions extends DocumentActions {
 	 public boolean belongToPublishSpace();
 	 public boolean belongToWorkSpace();
 	 
+	 public String getDocumentPermalink();
+	 
 }

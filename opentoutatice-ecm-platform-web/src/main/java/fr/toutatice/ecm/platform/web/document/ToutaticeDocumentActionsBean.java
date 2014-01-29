@@ -67,12 +67,14 @@ import org.nuxeo.ecm.webapp.contentbrowser.DocumentActionsBean;
 import org.nuxeo.ecm.webapp.documentsLists.DocumentsListsManager;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
 import org.nuxeo.ecm.webapp.pagination.ResultsProvidersCache;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.GlobalConst;
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeOperationHelper;
+import fr.toutatice.ecm.platform.service.permalink.PermaLinkService;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
 
 /**
@@ -93,6 +95,8 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     @In(create = true)
     protected transient PictureBookManager pictureBookManager;
+    
+    protected transient PermaLinkService publicationService;
 
     @RequestParameter("type")
     protected String typeName;
@@ -1113,6 +1117,41 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
             currentDoc.setProperty("toutatice", "keywords", subjects);
         }
         return null;
+    }
+    
+    /*
+     * Service de calcul de permalien vers le portail.
+     */
+    public PermaLinkService getPublicationService() throws Exception{
+        if(publicationService == null){
+            publicationService = Framework.getService(PermaLinkService.class);
+        }
+        return publicationService;
+    }   
+    
+    @Override
+    public String getDocumentPermalink() {
+        log.debug("--> getDocumentPermalink");      
+
+        DocumentModel currentDoc = navigationContext.getCurrentDocument();
+        return getDocumentPermalink(currentDoc);
+
+    }
+    
+    public String getDocumentPermalink(DocumentModel doc){
+        log.debug("--> getDocumentPermalink");  
+        String res = null;
+         try {
+             if (null == publicationService) {
+                 publicationService = Framework.getService(PermaLinkService.class);
+             }
+         } catch (Exception e) {
+             log.error("Failed to get the publication service, exception message: " + e.getMessage());
+         }
+        res = publicationService.getPermalink(doc);     
+        
+        log.debug("<-- getDocumentPermalink : "+res+".");
+        return res;
     }
 
 }
