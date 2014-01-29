@@ -1,4 +1,4 @@
-package fr.toutatice.ecm.platform.service.publication;
+package fr.toutatice.ecm.platform.service.permalink;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,8 +11,8 @@ import org.nuxeo.runtime.model.ComponentInstance;
 import org.nuxeo.runtime.model.ComponentName;
 import org.nuxeo.runtime.model.DefaultComponent;
 
-public class PublicationServiceImpl extends DefaultComponent implements
-		PublicationService {
+public class PermaLinkServiceImpl extends DefaultComponent implements
+		PermaLinkService {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -21,13 +21,13 @@ public class PublicationServiceImpl extends DefaultComponent implements
 	public static final String PERMALINKS_EXTENSION_POINTS = "permalinks";
 
 	private static final Log log = LogFactory
-			.getLog(PublicationServiceImpl.class);
+			.getLog(PermaLinkServiceImpl.class);
 
 	protected final Map<String, PermalinkDescriptor> descriptors;
 	protected final Map<String, Permalink> permalinkImpls;
 	private String defaultPermalinkName;
 
-	public PublicationServiceImpl() {
+	public PermaLinkServiceImpl() {
 		log.info(" PublicationServiceImpl");
 		this.descriptors = new HashMap<String, PermalinkDescriptor>();
 		this.permalinkImpls = new HashMap<String, Permalink>();

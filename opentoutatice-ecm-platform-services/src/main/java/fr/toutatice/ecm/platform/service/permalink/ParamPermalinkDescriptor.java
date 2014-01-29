@@ -1,5 +1,5 @@
 
-package fr.toutatice.ecm.platform.service.publication;
+package fr.toutatice.ecm.platform.service.permalink;
 
 import org.nuxeo.common.xmap.annotation.XContent;
 import org.nuxeo.common.xmap.annotation.XNode;

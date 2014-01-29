@@ -15,13 +15,13 @@ import org.nuxeo.ecm.webengine.WebException;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
-import fr.toutatice.ecm.platform.service.publication.PublicationService;
+import fr.toutatice.ecm.platform.service.permalink.PermaLinkService;
 
 public class ToutaticeFunctions extends PlatformFunctions {
 	// private static final Log log = LogFactory.getLog(ToutaticeFunctions.class);
 	private static CommentManager commentManager;
 
-	private static PublicationService publicationService;
+	private static PermaLinkService publicationService;
 
 	/**
 	 * @param doc
@@ -56,7 +56,7 @@ public class ToutaticeFunctions extends PlatformFunctions {
 			// si oui recherche du permalink
 			if (null == publicationService) {
 				try {
-					publicationService = Framework.getService(PublicationService.class);
+					publicationService = Framework.getService(PermaLinkService.class);
 				} catch (Exception e) {
 					throw new WebException("Unable to get publicationService");
 				}

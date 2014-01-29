@@ -1,5 +1,5 @@
 
-package fr.toutatice.ecm.platform.service.publication;
+package fr.toutatice.ecm.platform.service.permalink;
 
 import java.util.Map;
 
