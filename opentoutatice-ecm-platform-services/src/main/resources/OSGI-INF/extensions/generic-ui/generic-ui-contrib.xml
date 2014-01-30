@@ -17,7 +17,7 @@
 			Par défaut, si les layouts indiqués dans les balises "before" ou "after" ne sont pas trouvés,
 			le layout est placé en fin de liste.
 			En outre, il est possible d'exclure des types pour lesquels on ne veut pas que le layout soit
-			inséré: tag "excudedTypes/type".
+			inséré: tag "excludedTypes/type".
 		</documentation>
 		
 		<layouts mode="edit">
@@ -46,6 +46,7 @@
 				</position>
 				<excludedTypes>
 					<type>PortalSite</type>
+					<type>PortalPage</type>
 					<type>WebConfigurationFolder</type>
 					<type>WebConfiguration</type>
 				</excludedTypes>
