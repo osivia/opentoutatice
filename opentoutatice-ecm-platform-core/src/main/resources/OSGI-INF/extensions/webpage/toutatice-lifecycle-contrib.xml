@@ -5,10 +5,10 @@
 		point="types">
 		<!-- TODO: définir un lifecycle toutatice-default! -->
 		<types>
-			<type name="WebConfiguration">default_acaren</type>
+			<type name="WebConfiguration">default_toutatice</type>
 		</types>
 		<types>
-			<type name="WebConfigurationFolder">default_acaren</type>
+			<type name="WebConfigurationFolder">default_toutatice</type>
 		</types>
 
 	</extension>

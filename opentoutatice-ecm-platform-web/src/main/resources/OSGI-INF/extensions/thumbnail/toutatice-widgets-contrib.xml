@@ -6,7 +6,7 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgettypes">
 
-		<widgetType name="acaren_widget_summary_current_document_vignette_type">
+		<widgetType name="toutatice_widget_summary_current_document_vignette_type">
 			<configuration>
 				<categories>
 					<category>summary</category>
@@ -19,7 +19,7 @@
 				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
 			</handler-class>
 			<property name="template">
-				/widgets/summary/acaren_summary_thumbnail_widget.xhtml
+				/widgets/summary/toutatice_summary_thumbnail_widget.xhtml
 			</property>
 		</widgetType>
 
@@ -28,17 +28,12 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
 
-		<widget name="acaren_widget_summary_current_document_vignette"
-			type="acaren_widget_summary_current_document_vignette_type">
+		<widget name="toutatice_widget_summary_current_document_vignette"
+			type="toutatice_widget_summary_current_document_vignette_type">
 			<fields>
 				<field>ttc:vignette</field>
 				<field>ttc:vignette/filename</field>
 			</fields>
-			<!-- <widgetModes>
-				<mode value="any">#{nxu:test(currentDocument.hasSchema('note') or
-					currentDocument.type == 'File', layout.mode, 'hidden')}
-				</mode>
-			</widgetModes> -->
 		</widget>
 
 		<widget name="add_thumbnail" type="file">

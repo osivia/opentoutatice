@@ -8,15 +8,15 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="layouts">
 		
-		<!-- layout summary pour ne pas avoir un tableau label/field de généré -->
-		<layout name="acaren_header_cartridge_content_actions_layout">
+		<!-- cartridge summary layout: pour ne pas avoir un tableau label/field de généré -->
+		<layout name="toutatice_header_cartridge_summary_actions_layout">
 			<templates>
 				<template mode="any">/layouts/layout_summary_template.xhtml
 				</template>
 			</templates>
 			<rows>
 				<row>
-					<widget>acaren_content_current_document_actions</widget>
+					<widget>toutatice_summary_current_document_actions</widget>
 				</row>
 			</rows>
 		</layout>
@@ -376,13 +376,8 @@
 				</labels>
 				<translated>false</translated>
 				<fields />
-				<properties widgetMode="view">
-					<property name="template">/widgets/acaren_widget_document_listing_icon.xhtml</property>
-					<property name="iconPath">img/yes.png</property>
-					<property name="label">En ligne</property>
-				</properties>
 				<properties mode="any">
-					<property name="template">/widgets/acaren_widget_document_listing_icon.xhtml</property>
+					<property name="template">/widgets/toutatice_widget_document_listing_icon.xhtml</property>
 					<property name="iconPath">img/yes.png</property>
 					<property name="label">En ligne</property>
 				</properties>

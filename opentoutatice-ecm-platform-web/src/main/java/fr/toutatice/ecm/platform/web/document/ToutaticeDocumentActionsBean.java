@@ -26,7 +26,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.classic.Lifecycle;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
@@ -51,10 +50,6 @@ import org.nuxeo.ecm.core.api.VersioningOption;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
-import org.nuxeo.ecm.core.lifecycle.LifeCycle;
-import org.nuxeo.ecm.core.lifecycle.LifeCycleState;
-import org.nuxeo.ecm.core.lifecycle.extensions.LifeCycleStateConfiguration;
-import org.nuxeo.ecm.core.lifecycle.impl.LifeCycleStateImpl;
 import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.forms.layout.api.FieldDefinition;
 import org.nuxeo.ecm.platform.picture.web.PictureBookManager;
@@ -96,7 +91,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     @In(create = true)
     protected transient PictureBookManager pictureBookManager;
     
-    protected transient PermaLinkService publicationService;
+    protected transient PermaLinkService permaLinkService;
 
     @RequestParameter("type")
     protected String typeName;
@@ -485,8 +480,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     }
 
     /**
-     * Determine si l'action "seeLiveDocumentVersion" (fichier
-     * 'acaren-actions-contrib.xml') de la vue 'summary' doit être présentée.
+     * Determine si l'action "seeLiveDocumentVersion" de la vue 'summary' doit être présentée.
      * 
      * <h4>Conditions</h4> <li>le document visualisé ne doit pas être la version live</li> <li>l'usager connecté doit avoir au minima un droit de lecture sur le
      * doucment source</li>
@@ -531,7 +525,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
             }
         } catch (ClientException e) {
             log.info("The proxy document (' " + currentDoc.getName() + "') has lost its reference to the version document");
-            facesMessages.add(StatusMessage.Severity.INFO, resourcesAccessor.getMessages().get("label.acaren.viewlive.reference.lost"));
+            facesMessages.add(StatusMessage.Severity.INFO, resourcesAccessor.getMessages().get("label.toutatice.viewlive.reference.lost"));
         }
 
         return output;
@@ -877,8 +871,8 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         } else {
             try {
                 ResultsProvidersCache resultsProvidersCache = (ResultsProvidersCache) Component.getInstance("resultsProvidersCache");
-                resultsProvidersCache.invalidate("ACAREN_CURRENT_PICTUREBOOK_CHILDREN");
-                PagedDocumentsProvider resultsProvider = resultsProvidersCache.get("ACAREN_CURRENT_PICTUREBOOK_CHILDREN");
+                resultsProvidersCache.invalidate("TOUTATICE_CURRENT_PICTUREBOOK_CHILDREN");
+                PagedDocumentsProvider resultsProvider = resultsProvidersCache.get("TOUTATICE_CURRENT_PICTUREBOOK_CHILDREN");
                 currentDocumentChildren = resultsProvider.getCurrentPage();
             } catch (Throwable t) {
                 log.error("Failed to get the list of images within picture book, error: " + t.getMessage());
@@ -1122,36 +1116,27 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     /*
      * Service de calcul de permalien vers le portail.
      */
-    public PermaLinkService getPublicationService() throws Exception{
-        if(publicationService == null){
-            publicationService = Framework.getService(PermaLinkService.class);
-        }
-        return publicationService;
-    }   
+    public PermaLinkService getPermaLinkService() throws ClientException {
+    	try {
+    		if(permaLinkService == null){
+    			permaLinkService = Framework.getService(PermaLinkService.class);
+    		}
+    	} catch (Exception e) {
+            log.error("Failed to get the publication service, exception message: " + e.getMessage());
+            throw new ClientException("Failed to get the publication service, exception message: " + e.getMessage());
+    	}
+        return permaLinkService;
+    }
     
     @Override
-    public String getDocumentPermalink() {
-        log.debug("--> getDocumentPermalink");      
-
+    public String getDocumentPermalink() throws ClientException {
         DocumentModel currentDoc = navigationContext.getCurrentDocument();
         return getDocumentPermalink(currentDoc);
 
     }
     
-    public String getDocumentPermalink(DocumentModel doc){
-        log.debug("--> getDocumentPermalink");  
-        String res = null;
-         try {
-             if (null == publicationService) {
-                 publicationService = Framework.getService(PermaLinkService.class);
-             }
-         } catch (Exception e) {
-             log.error("Failed to get the publication service, exception message: " + e.getMessage());
-         }
-        res = publicationService.getPermalink(doc);     
-        
-        log.debug("<-- getDocumentPermalink : "+res+".");
-        return res;
+    public String getDocumentPermalink(DocumentModel doc) throws ClientException {
+        return getPermaLinkService().getPermalink(doc);     
     }
 
 }

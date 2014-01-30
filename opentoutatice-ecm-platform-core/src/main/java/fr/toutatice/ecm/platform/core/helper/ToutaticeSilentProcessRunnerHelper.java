@@ -34,8 +34,8 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
     		 * d'un traitement.
     		 * 
     		 * Quand un utilisateur est de type "administrateur" (c'est à dire appartenant au groupe des administrateurs déclaré par le 
-    		 * fichier "acaren-usermanager-config.xml" via le tag "<administratorsGroup>SuperAdministrators</administratorsGroup>") le 
-    		 * mode unrestricted est déjà actif. Donc l'usager n'est pas reloggé en "system". 
+    		 * fichier "usermanager-config.xml" via le tag "<administratorsGroup>...</administratorsGroup>") le  mode unrestricted est 
+    		 * déjà actif. Donc l'usager n'est pas reloggé en "system". 
     		 */
     		userName = SecurityConstants.SYSTEM_USERNAME;
     	}

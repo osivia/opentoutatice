@@ -6,7 +6,7 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgettypes">
 
-		<widgetType name="acaren_summary_current_document_cartridge_actions">
+		<widgetType name="toutatice_summary_current_document_cartridge_actions">
 			<configuration>
 				<categories>
 					<category>summary</category>
@@ -19,7 +19,7 @@
 				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
 			</handler-class>
 			<property name="template">
-				/widgets/acaren_widget_cartridge_actions_template.xhtml
+				/widgets/toutatice_widget_cartridge_actions_template.xhtml
 			</property>
 		</widgetType>
 
@@ -28,17 +28,16 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
 
-		<!-- de type summary pour ne pas avoir un tableau label/field de généré -->
-		<widget name="acaren_content_current_document_actions"
-			type="acaren_summary_current_document_cartridge_actions">
+		<widget name=toutatice_summary_current_document_actions
+			type="toutatice_summary_current_document_cartridge_actions">
 			<labels>
 				<label mode="any"></label>
 			</labels>
 			<translated>false</translated>
 		</widget>
 
-		<widget name="acaren_summary_current_document_actions"
-			type="acaren_summary_current_document_cartridge_actions">
+		<widget name="toutatice_summary_current_document_actions"
+			type="toutatice_summary_current_document_cartridge_actions">
 			<labels>
 				<label mode="any"></label>
 			</labels>
@@ -59,7 +58,7 @@
 			</fields>
 			<properties mode="any">
 				<property name="template">
-					/widgets/title_with_permlink_widget_template.xhtml
+					/widgets/toutatice_title_with_permlink_widget_template.xhtml
 				</property>
 			</properties>
 		</widget>
@@ -71,31 +70,21 @@
 			</labels>
 			<translated>false</translated>
 			<fields />
-			<properties widgetMode="view">
-				<property name="template">/widgets/acaren_widget_document_listing_icon.xhtml
-				</property>
-				<property name="iconPath">img/yes.png</property>
-				<property name="label">En ligne</property>
-			</properties>
 			<properties mode="any">
-				<property name="template">/widgets/acaren_widget_document_listing_icon.xhtml
+				<property name="template">/widgets/toutatice_widget_document_listing_icon.xhtml
 				</property>
 				<property name="iconPath">img/yes.png</property>
 				<property name="label">En ligne</property>
 			</properties>
 			<widgetModes>
-				<mode value="any">#{nxu:test(documentActions.belongToPublishSpace(),
-					layout.mode, 'hidden')}
-				</mode>
+				<mode value="any">#{nxu:test(documentActions.belongToPublishSpace(), layout.mode, 'hidden')}</mode>
 			</widgetModes>
 		</widget>
 
 		<!-- Sucharge pour ne pas apparaître pour la publication locale -->
 		<widget name="summary_current_document_single_tasks" type="summary_current_document_single_tasks">
 			<widgetModes>
-				<mode value="view">#{nxu:test(jbpmActions.isPending(navigationContext.getCurrentDocument(),
-					'acaren_online_approbation') == false, layout.mode, 'hidden')}
-				</mode>
+				<mode value="view">#{nxu:test(jbpmActions.isPending(navigationContext.getCurrentDocument(), 'toutatice_online_approbation') == false, layout.mode, 'hidden')}</mode>
 			</widgetModes>
 		</widget>
 

@@ -19,13 +19,13 @@
 			<coreQueryPageProvider>
 				<parameter>#{currentDocument.id}</parameter>
 				<property name="coreSession">#{documentManager}</property>
-				<whereClause docType="doc_acaren_image_search">
+				<whereClause docType="doc_toutatice_image_search">
 					<predicate parameter="ecm:path" operator="STARTSWITH">
-						<field schema="sch_acaren_image_search" name="ecm_path" />
+						<field schema="sch_toutatice_image_search" name="ecm_path" />
 					</predicate>
 
 					<predicate parameter="ecm:fulltext" operator="LIKE">
-						<field schema="sch_acaren_image_search" name="ecm_fulltext" />
+						<field schema="sch_toutatice_image_search" name="ecm_fulltext" />
 					</predicate>
 
 					<fixedPart>
@@ -41,7 +41,7 @@
 				<pageSize>20</pageSize>
 			</coreQueryPageProvider>
 
-			<searchLayout name="acaren_image_search_layout" />
+			<searchLayout name="toutatice_image_search_layout" />
 
 			<showPageSizeSelector>true</showPageSizeSelector>
 			<useGlobalPageSize>true</useGlobalPageSize>
@@ -54,7 +54,7 @@
 			<selectionList>CURRENT_SELECTION</selectionList>
 			<actions category="cv_actions@cv_image_search_popup" />
 			<resultLayouts>
-				<layout name="acaren_image_search_result_layout" title="document_listing"
+				<layout name="toutatice_image_search_result_layout" title="document_listing"
 					translateTitle="true" iconPath="/icons/document_listing_icon.png" />
 			</resultLayouts>
 

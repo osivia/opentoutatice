@@ -34,19 +34,18 @@
 		</filter>
 
 		<!-- Administreur "global", peut-être: - un administrateur au sens Nuxeo 
-			(appartient au groupe 'SuperAdministrators' configuré dans le fichier 'acaren-usermanager-config.xml' 
+			(appartient au groupe 'SuperAdministrators' configuré dans le fichier 'usermanager-config.xml' 
 			ou bien le user name = 'system') - ou bien un usager qui possède la permission 
 			'Everything' -->
 		<filter id="isGlobalAdministrator">
 			<!-- Administrateur système défini comme appartenant au groupe 'SuperAdministrators' 
-				défini dans 'acaren-usermanager-config.xml' -->
+				défini dans 'usermanager-config.xml' -->
 			<rule grant="true">
 				<condition>#{userSession.administrator}</condition>
 			</rule>
 			<!-- Simple appartenance au groupe 'Administrators' -->
 			<rule grant="true">
-				<condition>#{currentNuxeoPrincipal.isMemberOf('Administrators')}
-				</condition>
+				<condition>#{currentNuxeoPrincipal.isMemberOf('Administrators')}</condition>
 			</rule>
 		</filter>
 

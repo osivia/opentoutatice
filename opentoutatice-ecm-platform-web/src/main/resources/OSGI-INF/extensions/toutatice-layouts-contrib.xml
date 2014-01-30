@@ -11,8 +11,7 @@
 
 		<layout name="layout@PortalSite-create">
 			<templates>
-				<template mode="any">/layouts/layout_default_template.xhtml
-				</template>
+				<template mode="any">/layouts/toutatice_layout_default_template.xhtml</template>
 			</templates>
 			<rows>
 				<row>
@@ -31,8 +30,7 @@
 		</layout>
 		<layout name="layout@PortalSite-edit">
 			<templates>
-				<template mode="any">/layouts/layout_default_template.xhtml
-				</template>
+				<template mode="any">/layouts/toutatice_layout_default_template.xhtml</template>
 			</templates>
 			<rows>
 				<row>
@@ -52,8 +50,7 @@
 
 		<layout name="layout@PortalPage-create">
 			<templates>
-				<template mode="any">/layouts/layout_default_template.xhtml
-				</template>
+				<template mode="any">/layouts/toutatice_layout_default_template.xhtml</template>
 			</templates>
 			<rows>
 				<row>
@@ -72,8 +69,7 @@
 		</layout>
 		<layout name="layout@PortalPage-edit">
 			<templates>
-				<template mode="any">/layouts/layout_default_template.xhtml
-				</template>
+				<template mode="any">/layouts/toutatice_layout_default_template.xhtml</template>
 			</templates>
 			<rows>
 				<row>
@@ -92,59 +88,59 @@
 		</layout>
 
 		<!-- Onglet "Configuration portail" -->
-		<layout name="acaren_metadata_portal_site_management">
+		<layout name="toutatice_metadata_portal_site_management">
 			<templates>
-				<template mode="any">/layouts/acaren_layout_default_template.xhtml
-				</template>
+				<template mode="any">/layouts/toutatice_layout_default_template.xhtml</template>
 			</templates>
 			<rows>
 				<row>
-					<widget>acaren_widget_preload_on_login</widget>
+					<widget>toutatice_widget_preload_on_login</widget>
 				</row>
 				<row>
-					<widget>acaren_widget_tab_order</widget>
+					<widget>toutatice_widget_tab_order</widget>
 				</row>
 				<row>
-					<widget>acaren_widget_show_in_menu</widget>
+					<widget>toutatice_widget_show_in_menu</widget>
 				</row>
 				<row>
-					<widget>acaren_widget_page_template</widget>
+					<widget>toutatice_widget_page_template</widget>
 				</row>
 				<row>
-					<widget>acaren_widget_subpages_template</widget>
-				</row>
-				<!-- <row> <widget>acaren_widget_page_scope</widget> </row> -->
-				<row>
-					<widget>acaren_widget_contextualize_internal_contents</widget>
+					<widget>toutatice_widget_subpages_template</widget>
 				</row>
 				<row>
-					<widget>acaren_widget_contextualize_external_contents</widget>
+					<widget>toutatice_widget_page_scope</widget>
+				</row>
+				<row>
+					<widget>toutatice_widget_contextualize_internal_contents</widget>
+				</row>
+				<row>
+					<widget>toutatice_widget_contextualize_external_contents</widget>
 				</row>
 			</rows>
 		</layout>
 
 		<!-- layout : méta données espace de travail -->
-		<layout name="acaren_ws_metadata_portal_site_management">
+		<layout name="toutatice_ws_metadata_portal_site_management">
 			<templates>
-				<template mode="any">/layouts/acaren_layout_default_template.xhtml
-				</template>
+				<template mode="any">/layouts/toutatice_layout_default_template.xhtml</template>
 			</templates>
 			<rows>
 				<row>
-					<widget>acaren_widget_preload_on_login</widget>
+					<widget>toutatice_widget_preload_on_login</widget>
 				</row>
 				<row>
-					<widget>acaren_widget_page_template</widget>
+					<widget>toutatice_widget_page_template</widget>
 				</row>
 				<row>
-					<widget>acaren_widget_show_in_menu</widget>
+					<widget>toutatice_widget_show_in_menu</widget>
 				</row>
 			</rows>
 		</layout>
 
 		<layout name="keywords">
 			<templates>
-				<template mode="any">/layouts/layout_default_template.xhtml
+				<template mode="any">/layouts/toutatice_layout_default_template.xhtml
 				</template>
 			</templates>
 			<rows>
@@ -185,7 +181,6 @@
 				</rule>
 			</filter>
 		</action>
-
 		
 	</extension>
 	

@@ -40,7 +40,7 @@
 					<type>WebConfiguration</type> -->
 				</excludedTypes>
 			</layout>
-			<layout name="acaren_showInMenu">
+			<layout name="toutatice_showInMenu">
 				<position>
 					<at>end</at>
 				</position>

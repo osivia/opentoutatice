@@ -213,7 +213,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
         resultDocuments = documentManager.query(query, 100);
         hasSearchResults = !resultDocuments.isEmpty();
         log.debug("query result contains: " + resultDocuments.size() + " docs.");
-        return "editor_image_upload";
+        return "toutatice_editor_image_upload";
     }
 
 	@Override
@@ -287,7 +287,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
         	this.isImage = false;
         }
 
-        return "editor_image_upload";
+        return "toutatice_editor_image_upload";
     }
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

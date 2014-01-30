@@ -10,7 +10,7 @@ import org.nuxeo.ecm.core.event.Event;
 
 public class ToutaticeEventFilterHandler<T> implements InvocationHandler {
 
-//	private static final Log log = LogFactory.getLog(AcarenEventFilterHandler.class);
+//	private static final Log log = LogFactory.getLog(ToutaticeEventFilterHandler.class);
 
 	protected final T object;
 

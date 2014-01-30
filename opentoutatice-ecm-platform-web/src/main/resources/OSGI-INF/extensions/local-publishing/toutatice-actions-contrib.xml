@@ -73,7 +73,7 @@
 			enabled="true" order="6" immediate="false"
 			confirm="if( !confirmSetDocumentVersionOnline() ) return false;"
 			link="#{operationActionBean.doOperation('setOnLine')}">
-			<category>ACAREN_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
+			<category>TOUTATICE_DOCUMENT_SUMMARY_CUSTOM_ACTIONS</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>is_version</filter-id>
 			<filter-id>filter@setDocumentOnline</filter-id>
@@ -220,7 +220,7 @@
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 
-		<action id="seeOnlineDocumentVersion" label="acaren.label.see.nuxeo.online.version"
+		<action id="seeOnlineDocumentVersion" label="toutatice.label.see.nuxeo.online.version"
 			enabled="true" order="128" immediate="false"
 			link="#{documentActions.viewOnlineVersion()}">
 			<category>SUMMARY_PANEL_TOP</category>
@@ -234,7 +234,7 @@
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 
-		<action id="seeLiveDocumentVersion" label="acaren.label.see.nuxeo.work.version"
+		<action id="seeLiveDocumentVersion" label="toutatice.label.see.nuxeo.work.version"
 			enabled="true" order="129" immediate="false"
 			link="#{documentActions.viewLiveVersion()}">
 			<category>SUMMARY_PANEL_TOP</category>

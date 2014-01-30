@@ -21,7 +21,7 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeEmailHelper;
  * documents sans modifier les méta-données de ceux-ci pour autant (dublincore, ...).
  * 
  * La méthode start() sera appelé au démarrage lors du déploiement du bundle et installera le service
- * AcarenEventFilterService. Ainsi, lorsque le framework sera sollicité pour obtenir une 
+ * ToutaticeEventFilterService. Ainsi, lorsque le framework sera sollicité pour obtenir une 
  * instance du service EventService, il obtiendra un proxy sur ce dernier.
  *  
  * @author mberhaut1
@@ -39,7 +39,7 @@ public class ToutaticeCoreBundleActivator implements BundleActivator {
 		// instancier le nouvel Fn
 		ToutaticeFunctions localFn = new ToutaticeFunctions();
 		Functions.setInstance(localFn);
-		//initialiser le mailHelper spécifique Acaren		
+		// initialiser le mailHelper spécifique Toutatice (pour gestion du permalien portail) 
 		installEmailHelper();
 	}
 
@@ -50,7 +50,7 @@ public class ToutaticeCoreBundleActivator implements BundleActivator {
 		Functions.setInstance(currentFninstance);
 	}
 
-	private void installEmailHelper() throws Exception{
+	private void installEmailHelper() throws Exception {
 		ToutaticeEmailHelper toutaticeEmailHelper = new ToutaticeEmailHelper();
 		
 		// récupération du service de notification

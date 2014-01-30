@@ -39,7 +39,7 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 public class ToutaticeNavigationContextBean extends NavigationContextBean implements ToutaticeNavigationContext {
 
 	/**
-	 * Olivier Adam, REctorat de Rennes
+	 * Olivier Adam, Rectorat de Rennes
 	 * Ce bean permet de récupérer le domaine de métadonnée du domaine ouvert dans le contexte de navigation
 	 */
 	private static final long serialVersionUID = -2641552800368018402L;
@@ -52,15 +52,6 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
 	private Map<String, DocumentModel> sectionPublicationAreaMap = null;
 	private Map<String, DocumentModel> documentDomainMap = null;
 	private List<PathElement> parents;
-
-	public String getMetadataDomain() throws ClientException{
-		DocumentModel domain = getCurrentDomain();
-
-		if (domain==null){
-			return "none";
-		}
-		return (String) domain.getProperty("acaren", "commutateur");
-	}
 
 	public String getCurrentLifeCycleState() throws ClientException {
 		try {

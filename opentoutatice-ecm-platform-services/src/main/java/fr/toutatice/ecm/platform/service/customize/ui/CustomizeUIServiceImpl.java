@@ -176,16 +176,16 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
          * Pour éviter les logs d'erreur "FacesContext null" au démarrage
          * de Nuxeo.
          */       
-        MockFacesContext mockFacesContext = new MockFacesContext() {
-            @Override
-            public Object evaluateExpressionGet(FacesContext context, String expression, Class expectedType) throws ELException {
-                if (expression.startsWith("#{")) {
-                    return "";
-                }
-                return null;
-            }
-        };
-        mockFacesContext.setCurrent();
+//        MockFacesContext mockFacesContext = new MockFacesContext() {
+//            @Override
+//            public Object evaluateExpressionGet(FacesContext context, String expression, Class expectedType) throws ELException {
+//                if (expression.startsWith("#{")) {
+//                    return "";
+//                }
+//                return null;
+//            }
+//        };
+//        mockFacesContext.setCurrent();
         
         String[] typeContentViewNames = type.getContentViews(CONTENT_CATEGORY);
 
@@ -215,7 +215,7 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
                 }
             }
         }
-        mockFacesContext.relieveCurrent();
+//        mockFacesContext.relieveCurrent();
     }
 
     /**

@@ -1,12 +1,12 @@
 /* MODE VIEW */
 
-span.acarenButtonLikeLinkPos {
+span.toutaticeButtonLikeLinkPos {
 	display: block;
     margin-bottom: 8px;
     padding-right: 10px;
 }
 
-a.acarenButtonLikeLink {
+a.toutaticeButtonLikeLink {
   background-color: "button (COLLECTION background)";
   border: 1px solid;
   border-color: "button (COLLECTION border)";
@@ -177,11 +177,11 @@ div.savePanelAction.input {
     display: none;
 }
 
-a.acarenButtonLikeLink {
+a.toutaticeButtonLikeLink {
 	display:none;
 }
 
-a.acarenButtonLikeLink:hover {
+a.toutaticeButtonLikeLink:hover {
 	background: none #cfecff;
 }
 

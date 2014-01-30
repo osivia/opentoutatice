@@ -8,8 +8,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jstl/core">
 	
-	<!-- TODO: optimiser pour enlever js popup -->
-
 	<script type="text/javascript" src="#{baseURL}scripts/contextKeeper.js"></script>
 	<script type="text/javascript">
 		document.NXContextKeeper = new InputContextKeeper();
@@ -27,83 +25,74 @@
 		}
 	</script>
 
-  <script type="text/javascript">
-
-    function popupSearch(createFormId, url) {
-      popup = window.open(url, '_blank', 'toolbar=0, scrollbars=1, location=0, statusbar=0, menubar=0, resizable=1, dependent=1, width=712, height=480');
-      if(!popup.opener) {
-        popup.opener = window;
-      }
-      return false;
-    }
-
-    function selectObjectType(index) {
-      document.getElementsByName('createForm:objectType')[index].checked = true;
-    }
-
-    function showPopUpSearch() {
-      // hide all trees
-      hideAllRelationPopUps();
-
-      var popUp = jQuery("#imageSearchPopUp");
-      popUp.css('top', 0.1 * getDocumentHeight() + getScrollTop());
-      popUp.css('left', 0.15 * getDocumentWidth());
-
-      var popUpheader = jQuery("#closePopUpHeader");
-
-      var content = jQuery("#popUpContent");
-      content.css('height', popUp.height() - popUpheader.height() - 40);
-
-      popUp.show();
-    }
-
-    function hideAllRelationPopUps() {
-      jQuery('.imageSearchPopUp').each(function () {
-        jQuery(this).hide();
-      });
-    }
-
-    function hidePopUp() {
-      jQuery("#imageSearchPopUp").hide();
-    }
-
-    function getDocumentHeight() {
-      return jQuery(document).height();
-    }
-
-    function getDocumentWidth() {
-      return jQuery(document).width();
-    }
-
-    function getScrollTop() {
-      var scrollTop  = document.body.scrollTop  || document.documentElement.scrollTop;
-      return scrollTop;
-    }
-
-    jQuery(document).keydown(function(event) {
-      // escape
-      if (event.keyCode == '27') {
-        hideAllRelationPopUps();
-        event.preventDefault();
-      }
-    });
-
-    jQuery(document).click(function(event) {
-      var element = jQuery(event.target);
-      if (!(element.is('.imageSearchPopUp') || element.parents().is('.imageSearchPopUp')) &amp;&amp; !(element.is('.labelTool') || element.parents().is('.labelTool'))) {
-        hideAllRelationPopUps();
-      }
-    });
-  </script>
-
-	<div style="display: none">
-		<span id="js-acaren.label.images.confirm.stamp.creation">
-			<h:outputText value="#{messages['acaren.label.images.confirm.stamp.creation']}" />
-		</span>
-		<span id="js-acaren.label.images.confirm.head.creation"> 
-			<h:outputText value="#{messages['acaren.label.images.confirm.head.creation']}" />
-		</span>
-	</div>
+	<script type="text/javascript">
+	
+	  function popupSearch(createFormId, url) {
+	    popup = window.open(url, '_blank', 'toolbar=0, scrollbars=1, location=0, statusbar=0, menubar=0, resizable=1, dependent=1, width=712, height=480');
+	    if(!popup.opener) {
+	      popup.opener = window;
+	    }
+	    return false;
+	  }
+	
+	  function selectObjectType(index) {
+	    document.getElementsByName('createForm:objectType')[index].checked = true;
+	  }
+	
+	  function showPopUpSearch() {
+	    // hide all trees
+	    hideAllRelationPopUps();
+	
+	    var popUp = jQuery("#imageSearchPopUp");
+	    popUp.css('top', 0.1 * getDocumentHeight() + getScrollTop());
+	    popUp.css('left', 0.15 * getDocumentWidth());
+	
+	    var popUpheader = jQuery("#closePopUpHeader");
+	
+	    var content = jQuery("#popUpContent");
+	    content.css('height', popUp.height() - popUpheader.height() - 40);
+	
+	    popUp.show();
+	  }
+	
+	  function hideAllRelationPopUps() {
+	    jQuery('.imageSearchPopUp').each(function () {
+	      jQuery(this).hide();
+	    });
+	  }
+	
+	  function hidePopUp() {
+	    jQuery("#imageSearchPopUp").hide();
+	  }
+	
+	  function getDocumentHeight() {
+	    return jQuery(document).height();
+	  }
+	
+	  function getDocumentWidth() {
+	    return jQuery(document).width();
+	  }
+	
+	  function getScrollTop() {
+	    var scrollTop  = document.body.scrollTop  || document.documentElement.scrollTop;
+	    return scrollTop;
+	  }
+	
+	  jQuery(document).keydown(function(event) {
+	    // escape
+	    if (event.keyCode == '27') {
+	      hideAllRelationPopUps();
+	      event.preventDefault();
+	    }
+	  });
+	
+	  jQuery(document).click(function(event) {
+	    var element = jQuery(event.target);
+	    if (!(element.is('.imageSearchPopUp') || element.parents().is('.imageSearchPopUp')) &amp;&amp; !(element.is('.labelTool') || element.parents().is('.labelTool'))) {
+	      hideAllRelationPopUps();
+	    }
+	  });
+	</script>
 
 	<h:form enctype="multipart/form-data" id="document_images_edit" rendered="#{currentDocument.hasSchema('toutatice')}">
 
@@ -111,9 +100,9 @@
 
 			<table>
 				<tr>
-					<td class="acaren_image_tab_cell_download">
+					<td class="toutatice_image_tab_cell_download">
 						<h3>
-							<h:outputLabel value="#{messages['acaren.label.upload.images.download']}" />
+							<h:outputLabel value="#{messages['toutatice.label.upload.images.download']}" />
 						</h3>
 
 						<rich:fileUpload id="images_upload"
@@ -127,38 +116,19 @@
 						</rich:fileUpload>
 
 						<p class="buttonsGadget">
-							<h:commandButton value="#{messages['acaren.command.add.images']}"
+							<h:commandButton value="#{messages['toutatice.command.add.images']}"
 								styleClass="button"
 								action="#{ImageManagerActions.validateMultiplesUpload}" />
 						</p>
 					</td>
-					<td class="acaren_image_tab_cell_search">
+					<td class="toutatice_image_tab_cell_search">
 						<h3>
-							<h:outputLabel value="#{messages['acaren.label.upload.images.search']}" />
+							<h:outputLabel value="#{messages['toutatice.label.upload.images.search']}" />
 						</h3>
-
-						<!-- <nxu:set var="url" value="#{contextPath}/create_relation_search_document_popup.faces">
-							<nxu:set var="urlWithConversation"
-								value="#{restHelper.addCurrentConversationParameters(url)}">
-								<input type="button" 
-									value="#{messages['acaren.command.search']}"
-									class="button" 
-									onclick="javascript:showPopUpSearch();" />
-							</nxu:set>
-						</nxu:set> -->
-						<!-- <nxu:set var="actions" value="#{webActions.getActionsList('TOUTATICE_IMAGES_SEARCH_FROM_NUXEO')}" cache="true">
-							<c:forEach var="action" items="#{actions}">
-								<div class="savePanelAction">
-									<nxh:commandButton 
-										immediate="#{action.immediate}" 
-										id="mg_nuxeo_search_#{action.id}" 
-										value="#{messages[action.label]}"
-										class="button" />
-								</div>
-							</c:forEach>
-						</nxu:set> -->
+						
 						<nxu:set var="actions"
-							  value="#{webActions.getActionsList('TOUTATICE_IMAGES_SEARCH_FROM_NUXEO')}" cache="true">
+							  value="#{webActions.getActionsList('TOUTATICE_IMAGES_SEARCH_FROM_NUXEO')}" 
+							  cache="true">
 							  <c:forEach var="action" items="#{actions}" varStatus="status">
 							    <ui:decorate template="/incl/action/generic_action_template.xhtml" />
 							    <!--<c:if test="#{not status.last}">
@@ -171,8 +141,7 @@
 			</table>
 
 		</div>
-
-
+		
 		<div >
 			<a4j:region renderRegionOnly="true" id="images_region">
 
@@ -217,22 +186,22 @@
 									</td>
 									<td>
 										<nxh:commandLink id="create_image_stamp"
-											styleClass="acarenUploadImageGadget" 
+											styleClass="toutaticeUploadImageGadget" 
 											immediate="true"
 											onclick="if( !confirmImageStampCreation() ) return false;"
 											actionListener="#{ImageManagerActions.createImageStamp}">
-											<h:outputText value=" #{messages['acaren.label.images.create.stamp']}" />
+											<h:outputText value=" #{messages['toutatice.label.images.create.stamp']}" />
 											<f:param name="index" value="#{model.rowIndex}" />
 											
 										</nxh:commandLink> 
 										<nxh:commandLink id="create_image_head"
-											styleClass="acarenUploadImageGadget" 
+											styleClass="toutaticeUploadImageGadget" 
 											immediate="true"
 											rendered="#{currentDocument.hasSchema('annonce')}"
 											onclick="if( !confirmImageHeadCreation() ) return false;"
 											actionListener="#{ImageManagerActions.createHeadImage}">
 											<h:outputText
-												value=" #{messages['acaren.label.images.create.head']}" />
+												value=" #{messages['toutatice.label.images.create.head']}" />
 											<f:param name="index" value="#{model.rowIndex}" />
 										</nxh:commandLink>
 									</td>
@@ -248,17 +217,5 @@
 		</div>
 
 	</h:form>
-
-	<!-- Search document popUp -->
-	<!-- <div id="imageSearchPopUp" class="genericPopUp bigPopUp">
-		<div class="closePopUpHeader" id="closePopUpHeader">
-			<span class="popUpTitle"> 
-				<h:outputText value="#{messages['label.relation.search.popup.title']}" />
-			</span> 
-			<span class="closePopUp" onclick="hidePopUp('#imageSearchPopUp');">Fermer</span>
-			<div style="clear: both;"></div>
-		</div>
-		<ui:include src="/acaren_create_image_search_document_popup.xhtml" />
-	</div> -->
 
 </div>

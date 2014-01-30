@@ -73,7 +73,7 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
             
             if (!msg_params.isEmpty()) {
 				facesMessages.add(StatusMessage.Severity.WARN,
-						resourcesAccessor.getMessages().get("acaren.fileImporter.error.mimetype.image"),
+						resourcesAccessor.getMessages().get("toutatice.fileImporter.error.mimetype.image"),
 						formatParamsToString(msg_params));
             }
             
@@ -134,7 +134,7 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
 
             // notifier la fin de l'opération
 			facesMessages.add(StatusMessage.Severity.INFO,
-					resourcesAccessor.getMessages().get("acaren.fileImporter.create.success.stamp"));
+					resourcesAccessor.getMessages().get("toutatice.fileImporter.create.success.stamp"));
 			
             // some changes (versioning) happened server-side, fetch new one
 			fetchCurrentDocument(currentDocument);

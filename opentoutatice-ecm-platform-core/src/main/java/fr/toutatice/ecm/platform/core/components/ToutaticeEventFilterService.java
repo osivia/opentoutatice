@@ -19,13 +19,13 @@ import org.nuxeo.runtime.api.ServiceProvider;
  * 
  * Lorsque le framework sera sollicité (session::getLocalService()) pour obtenir une instance 
  * du service EventService, il obtiendra un proxy sur ce dernier (implémenté par la classe 
- * AcarenEventFilterHandler. Le filtrage est nomminatif pour un utilisateur connecté.
+ * ToutaticeEventFilterHandler. Le filtrage est nomminatif pour un utilisateur connecté.
  * 
  * @author mberhaut1
  */
 public class ToutaticeEventFilterService implements ServiceProvider {
 
-//	private static final Log log = LogFactory.getLog(AcarenEventFilterService.class);
+//	private static final Log log = LogFactory.getLog(ToutaticeEventFilterService.class);
 	
 	private boolean installed;
 	private ServiceProvider nextProvider;
@@ -108,10 +108,16 @@ public class ToutaticeEventFilterService implements ServiceProvider {
 			}
 		}
 
+//		@SuppressWarnings("unchecked")
+//		protected T newProxy(T object, Class<T> clazz) throws SecurityException, NoSuchMethodException, ClassNotFoundException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+//			Method m = Class.forName("ToutaticeEventFilterHandler").getMethod("newProxy", object.getClass(), clazz);
+//			return (T) m.invoke(object, clazz);
+//		}
+
 		protected T newProxy(T object, Class<T> clazz) {
 			return ToutaticeEventFilterHandler.newProxy(object, clazz);
 		}
-		
+
 		protected T newASProxy(T object, Class<T> clazz) {
 			return ToutaticeAutomationServiceHandler.newProxy(object, clazz);
 		}

@@ -6,7 +6,7 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
 
-		<widget name="acaren_image_search_path" type="select_path_tree">
+		<widget name="toutatice_image_search_path" type="select_path_tree">
 			<labels>
 				<label mode="any">label.relation.search.path</label>
 			</labels>
@@ -21,7 +21,7 @@
 			</properties>
 		</widget>
 
-		<widget name="acaren_image_search_fulltext" type="text">
+		<widget name="toutatice_image_search_fulltext" type="text">
 			<labels>
 				<label mode="any">label.relation.search.all_words</label>
 			</labels>

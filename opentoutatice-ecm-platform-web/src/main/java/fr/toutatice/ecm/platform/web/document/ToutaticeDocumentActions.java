@@ -13,7 +13,6 @@ public interface ToutaticeDocumentActions extends DocumentActions {
 	 public DocumentModel getProxy(DocumentModel document) throws ClientException;
 	 public boolean belongToPublishSpace();
 	 public boolean belongToWorkSpace();
-	 
-	 public String getDocumentPermalink();
+	 public String getDocumentPermalink() throws ClientException;
 	 
 }

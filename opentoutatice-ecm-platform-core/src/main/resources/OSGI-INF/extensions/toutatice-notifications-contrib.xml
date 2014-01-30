@@ -36,28 +36,28 @@
 
 		<!-- Notifications associées au workflow de mise en ligne (publication 
 			interne) -->
-		<notification name="Acaren online task assigned" channel="email"
+		<notification name="Toutatice online task assigned" channel="email"
 			enabled="true" availableIn="PortalSite" autoSubscribed="true"
 			template="onlineWorkflow" subject="Demande de mise en ligne du document: ${docTitle}"
 			label="label.nuxeo.notifications.publication">
 			<event name="workflowOnlineTaskAssigned" />
 		</notification>
 
-		<notification name="Acaren online task canceled" channel="email"
+		<notification name="Toutatice online task canceled" channel="email"
 			enabled="true" availableIn="PortalSite" autoSubscribed="true"
 			template="onlineWorkflow" subject="Annulation de la demande de mise en ligne de: ${docTitle}"
 			label="label.nuxeo.notifications.publication">
 			<event name="workflowOnlineTaskCanceled" />
 		</notification>
 
-		<notification name="Acaren online task rejected" channel="email"
+		<notification name="Toutatice online task rejected" channel="email"
 			enabled="true" availableIn="PortalSite" autoSubscribed="true"
 			template="onlineWorkflow" subject="Rejet de la demande de mise en ligne de: ${docTitle}"
 			label="label.nuxeo.notifications.publication">
 			<event name="workflowOnlineTaskRejected" />
 		</notification>
 
-		<notification name="Acaren online task approved" channel="email"
+		<notification name="Toutatice online task approved" channel="email"
 			enabled="true" availableIn="PortalSite" autoSubscribed="true"
 			template="onlineWorkflow" subject="Document mis en ligne: ${docTitle}"
 			label="label.nuxeo.notifications.publication">

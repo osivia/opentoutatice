@@ -1,6 +1,6 @@
 <!-- Ce fichier vient en remplacement du fichier Nuxeo "nuxeo-platform-webapp/src/main/resources/web/nuxeo.war/incl/document_actions.xhtml"
 	pour pallier l'impossibilité d'ajouter un écran de confirmation sur une action qui ne soit pas une action de catégorie d'un content view.
-	(voir #4399)
+	(voir https://jira.nuxeo.com/browse/SUPNXP-4399)
 -->
 <div xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:nxh="http://nuxeo.org/nxweb/html"
@@ -15,7 +15,7 @@
 
 	<h:form id="documentActionSubviewUpperListForm">
 
-		<nxl:layout	name="acaren_header_cartridge_content_actions_layout" mode="#{view}" value="#{currentDocument}" />
+		<nxl:layout	name="toutatice_header_cartridge_summary_actions_layout" mode="#{view}" value="#{currentDocument}" />
 		
 		<nxu:set var="actions"
 			value="#{webActions.getActionsList('SUBVIEW_UPPER_LIST')}"

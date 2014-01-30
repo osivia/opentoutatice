@@ -1,4 +1,4 @@
-<process-definition name="acaren_online_approbation">
+<process-definition name="toutatice_online_approbation">
 	<swimlane name="initiator" />
 
 	<start-state>

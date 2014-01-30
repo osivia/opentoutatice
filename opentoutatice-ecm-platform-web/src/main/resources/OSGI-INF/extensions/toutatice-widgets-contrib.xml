@@ -6,9 +6,6 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
 
-		<!-- Widget permettant d'afficher lae layout en mode vue d'un document -->
-		<widget name="summary_current_document_view" type="summary_current_document_view" />
-
 		<!-- PostalSite, PortalPage widgets -->
 		<widget name="title" type="text">
 			<labels>
@@ -110,29 +107,6 @@
 				</mode>
 			</widgetModes>
 		</widget>
-		<!-- FIXME: à supprimer? -cf ToutaticeDocumentActions aussi -->
-		<widget name="acaren_widget_subjects" type="template">
-			<labels>
-				<label mode="any">Mots-clés</label>
-			</labels>
-			<translated>false</translated>
-			<fields>
-				<field>ttc:keywords</field>
-			</fields>
-			<properties mode="any">
-				<property name="template">
-					/widgets/acaren_subjects_widget.xhtml
-				</property>
-			</properties>
-			<widgetModes>
-				<mode value="any">#{nxu:test(currentDocument.type != 'BlogSite' and
-					(currentUser.administrator or
-					currentNuxeoPrincipal.isMemberOf('Administrators')) ,
-					layout.mode,
-					'hidden')}
-				</mode>
-			</widgetModes>
-		</widget>
 
 		<widget name="files" type="filesList">
 			<labels>
@@ -160,7 +134,6 @@
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgettypes">
-
 
 		<!-- Layout se basant sur le layout en mode view <widgetType name="custom_summary_current_document_view"> <configuration> 
 			<sinceVersion>5.3.1</sinceVersion> <title>View layout</title> <categories> 

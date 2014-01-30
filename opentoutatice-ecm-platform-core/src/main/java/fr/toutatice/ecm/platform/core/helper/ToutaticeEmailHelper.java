@@ -40,6 +40,7 @@ public class ToutaticeEmailHelper extends EmailHelper {
 	
 	@Override
 	 public void sendmail(Map<String, Object> mail) throws Exception {
+		
         Session session = getSession();
         if (javaMailNotAvailable || session == null) {
             log.warn("Not sending email since JavaMail is not configured");
@@ -64,11 +65,9 @@ public class ToutaticeEmailHelper extends EmailHelper {
         context.putAll(mail);
         DocumentModel doc = (DocumentModel) mail.get("document");
 		context.setDocument(doc);
-       
-		/* DCH: désactivation temporaire avant mise en place service permaLink */
-//        String link = (new ToutaticeFunctions()).getPermalink(doc);       
-//        
-		context.put("docPermalink", "");   
+        
+		String link = (new ToutaticeFunctions()).getPermalink(doc);       
+		context.put("docPermalink", link);   
         
         context.put("creator",doc.getPropertyValue("dc:creator"));
         
@@ -84,8 +83,7 @@ public class ToutaticeEmailHelper extends EmailHelper {
 
             msg.setSubject(out.toString(), "UTF-8");
         } else {
-            rs.registerEngine(new NotificationsRenderingEngine(
-                    customSubjectTemplate));
+            rs.registerEngine(new NotificationsRenderingEngine(customSubjectTemplate));
 
             LoginContext lc = Framework.login();
 
@@ -104,8 +102,7 @@ public class ToutaticeEmailHelper extends EmailHelper {
 
         msg.setSentDate(new Date());
 
-        rs.registerEngine(new NotificationsRenderingEngine(
-                (String) mail.get(NotificationConstants.TEMPLATE_KEY)));
+        rs.registerEngine(new NotificationsRenderingEngine((String) mail.get(NotificationConstants.TEMPLATE_KEY)));
 
         LoginContext lc = Framework.login();
 

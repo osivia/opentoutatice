@@ -1,5 +1,5 @@
 /* Onglet Images */
-td.acaren_image_tab_cell_download {
+td.toutatice_image_tab_cell_download {
 	border-color: grey;
 	border-style: solid;
 	border-width: thin;
@@ -7,7 +7,7 @@ td.acaren_image_tab_cell_download {
 	width: 50%;
 }
 
-td.acaren_image_tab_cell_search {
+td.toutatice_image_tab_cell_search {
 	border-color: grey;
 	border-style: solid;
 	border-width: thin;
@@ -33,7 +33,7 @@ span.actionLabel {
 	text-shadow: 1px 1px 0 #ffffff;
 }
 
-a.acarenUploadImageGadget {
+a.toutaticeUploadImageGadget {
 	background-color: "button (COLLECTION background)";
 	border: 1px solid;
 	border-color: "button (COLLECTION border)";

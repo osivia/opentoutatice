@@ -15,14 +15,18 @@
 	<c:if test="#{nxl:isLikeViewMode(widget.mode)}">
 		<div class="AlignIcon" styleClass="#{widget.properties.styleClass}">
 		
-			<c:set var="isOnlineRequestRunning" value="#{jbpmActions.isPending(document,'acaren_online_approbation')}"/>
-			<c:set var="helpLabel" value="#{nxu:test(isOnlineRequestRunning, messages['acaren.label.pending.online'], '')}"/>
-	
+			<c:set var="isOnlineRequestRunning" value="#{jbpmActions.isPending(document,'toutatice_online_approbation')}"/>
+			<c:set var="helpLabel" value="#{nxu:test(isOnlineRequestRunning, messages['toutatice.label.pending.online'], '')}"/>
+			
+			<!-- TODO: à déplacer dans acrennes 
 			<c:set var="isValidationRequestRunning" value="#{jbpmActions.isPending(document,'acaren_validation_approbation')}"/>
 			<c:set var="helpLabel" value="#{nxu:test(isValidationRequestRunning, messages['acaren.label.pending.validation'], helpLabel)}"/>
+			-->	
 
+			<!-- TODO: à déplacer dans le addon publication distante
 			<c:set var="isPublishRequestRunning" value="#{jbpmActions.isTaskPending(document,'org.nuxeo.ecm.platform.publisher.jbpm.CoreProxyWithWorkflowFactory')}"/>
-			<c:set var="helpLabel" value="#{nxu:test(isPublishRequestRunning, messages['acaren.label.pending.publication'], helpLabel)}"/>
+			 -->
+			<c:set var="helpLabel" value="#{nxu:test(isPublishRequestRunning, messages['toutatice.label.pending.publication'], helpLabel)}"/>
 
 			<c:choose>
 				<c:when test="#{isOnlineRequestRunning or isValidationRequestRunning or isPublishRequestRunning}">
@@ -36,8 +40,8 @@
 						action="#{documentActions.viewOnlineVersion(document)}"
 						rendered="#{!empty widget.properties.iconPath and documentActions.isOnlineDocument(document)}">
 						<nxu:graphicImage value="#{widget.properties.iconPath}"
-							alt="#{messages['acaren.command.see.version']} #{documentActions.getProxyVersion(document)}"
-							title="#{messages['acaren.command.see.version']} #{documentActions.getProxyVersion(document)}"
+							alt="#{messages['toutatice.command.see.version']} #{documentActions.getProxyVersion(document)}"
+							title="#{messages['toutatice.command.see.version']} #{documentActions.getProxyVersion(document)}"
 							styleClass="smallIcon" />
 					</nxh:commandLink>
 				</c:otherwise>

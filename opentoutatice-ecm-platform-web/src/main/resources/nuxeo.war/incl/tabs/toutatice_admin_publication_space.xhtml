@@ -10,22 +10,22 @@
 	<c:choose>
 		<c:when test="#{currentDocument.immutable}">
 			<div class="ttcInput">
-				<nxl:layout value="#{currentDocument}" name="acaren_ws_metadata_portal_site_management" mode="view" />
+				<nxl:layout value="#{currentDocument}" name="toutatice_metadata_portal_site_management" mode="view" />
 			</div>
 		</c:when>
 		<c:otherwise>
-			<h:form enctype="multipart/form-data" id="admin_ws_publication_space_form">
-
+			<h:form enctype="multipart/form-data" id="admin_publication_space_form">
+		
 				<div class="ttcInput">
-					<nxl:layout value="#{currentDocument}" name="acaren_ws_metadata_portal_site_management" mode="edit" />
+					<nxl:layout value="#{currentDocument}" name="toutatice_metadata_portal_site_management" mode="edit" />
 				</div>
 
-				<ui:include src="acaren_savepanel_template.xhtml" >
+				<ui:include src="toutatice_savepanel_template.xhtml" >
 					<ui:param name="prefix" value="footer" />
 				</ui:include>
-			
+
 			</h:form>
 		</c:otherwise>
 	</c:choose>
-	
+
 </div>

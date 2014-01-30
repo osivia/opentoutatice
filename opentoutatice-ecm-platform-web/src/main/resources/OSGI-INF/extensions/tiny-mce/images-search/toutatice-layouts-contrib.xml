@@ -7,23 +7,22 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="layouts">	
 
-		<layout name="acaren_image_search_layout">
+		<layout name="toutatice_image_search_layout">
 			<templates>
 				<template mode="any">/layouts/layout_default_template.xhtml
 				</template>
 			</templates>
 			<rows>
 				<row>
-					<widget>acaren_image_search_path</widget>
+					<widget>toutatice_image_search_path</widget>
 				</row>
 				<row>
-					<widget>acaren_image_search_fulltext</widget>
+					<widget>toutatice_image_search_fulltext</widget>
 				</row>
 			</rows>
 		</layout>
 
-
-		<layout name="acaren_image_search_result_layout">
+		<layout name="toutatice_image_search_result_layout">
 			<templates>
 				<template mode="any">/layouts/layout_listing_ajax_template.xhtml
 				</template>
@@ -130,9 +129,9 @@
 					<field>data.dc.modified</field>
 				</fields>
 				<properties widgetMode="view">
-					<property name="template">/widgets/acaren_widget_document_listing_picture.xhtml
+					<property name="template">/widgets/toutatice_widget_document_listing_picture.xhtml
 					</property>
-					<property name="styleClass">acaren_picture_list</property>
+					<property name="styleClass">toutatice_picture_list</property>
 				</properties>
 				<properties mode="any" />
 			</widget>

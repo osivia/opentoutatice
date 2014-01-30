@@ -7,8 +7,8 @@
 		point="actions">
 		
 		<!-- Bouton d'ajout d'image dans la popup de recherche -->
-		<action id="ACAREN_ADD_IMAGE" 
-			enabled="true" label="acaren.action.add.picture" icon="">
+		<action id="TOUTATICE_ADD_IMAGE" 
+			enabled="true" label="toutatice.action.add.picture" icon="">
 			<category>cv_actions@cv_image_search_popup</category>
 			<permission>Write</permission>
 		</action>

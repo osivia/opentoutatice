@@ -93,47 +93,10 @@ public class ToutaticeJbpmActionsBean extends JbpmActionsBean {
 	}
 
     /**
-     * Determine si l'action "workflow_validation_cancel" (fichier 'acaren-actions-contrib.xml') de la vue 'summary' doit être présentée.
+     * Determine si l'action "workflow_online_cancel" de la vue 'summary' doit être présentée.
      * 
      * <h4>Conditions</h4>
-     * <li>Un process de demande de validation doit exister</li>
-     * <li>l'utilisateur courant doit être l'initateur de ce processus</li>
-     *  
-     * @return true si l'action doit être présentée. false sinon.
-     * @throws ClientException
-     */
-    public boolean isCancelActionAuthorized() throws ClientException {
-    	boolean doProcessExist = false;
-    	boolean isUserInitiator = false;
-    	String cLCS = null;
-		
-		try {
-			cLCS = ((ToutaticeNavigationContext) navigationContext).getCurrentLifeCycleState();
-			
-			ProcessInstance runningProcess = getCurrentProcess();
-			if (null != runningProcess) {
-				String name = runningProcess.getProcessDefinition().getName();
-				if ( (GlobalConst.CST_WORKFLOW_PROCESS_VALIDATION_APPROBATION.equals(name))
-				  || (GlobalConst.CST_WORKFLOW_PROCESS_LEGACY_VALIDATION_APPROBATION.equals(name))
-				  || (GlobalConst.CST_WORKFLOW_PROCESS_VALIDATION_PARALLEL.equals(name)) ) {
-					doProcessExist = true;
-				}
-
-				NuxeoPrincipal pal = currentUser;
-				isUserInitiator =  pal.getName().equals(getCurrentProcessInitiator());
-			}
-		} catch (Exception e) {
-			log.debug("Failed to execute 'isCancelActionAuthorized()', error: " + e.getMessage());
-		}
-		
-		return (NuxeoStudioConst.CST_DOC_STATE_PROJECT.equals(cLCS)) ? doProcessExist && isUserInitiator : false;
-    }
-
-    /**
-     * Determine si l'action "workflow_online_cancel" (fichier 'acaren-actions-contrib.xml') de la vue 'summary' doit être présentée.
-     * 
-     * <h4>Conditions</h4>
-     * <li>Un process de demande de validation doit exister</li>
+     * <li>Un process de demande de m doit exister</li>
      * <li>l'utilisateur courant doit être l'initateur de ce processus</li>
      *  
      * @return true si l'action doit être présentée. false sinon.
@@ -162,30 +125,7 @@ public class ToutaticeJbpmActionsBean extends JbpmActionsBean {
     }
 
 	/**
-     * Determine si les actions "workflow_validation_accept/workflow_validation_reject" (fichier 'acaren-actions-contrib.xml') de la vue 'summary' doivent être présentées.
-     *  
-     * @return true si l'action doit être présentée. false sinon.
-	 * @throws ClientException
-	 */
-	public boolean isRejectOrValidateActionAuthorized() throws ClientException {
-		String[] taskNames = new String[] {GlobalConst.CST_WORKFLOW_TASK_VALIDATE, GlobalConst.CST_WORKFLOW_TASK_LEGACY_VALIDATE};
-		
-		String cLCS = ((ToutaticeNavigationContext) navigationContext).getCurrentLifeCycleState();
-		
-		List<TaskInstance> taskList = getCurrentTasks(taskNames);
-		if ((null != taskList) && (0 < taskList.size())) {
-			for (TaskInstance task : taskList) {
-				if (getCanEndTask(task)) {
-					return (NuxeoStudioConst.CST_DOC_STATE_PROJECT.equals(cLCS)) ? true : false;
-				}
-			}
-		}
-		
-		return false;
-	 }
-
-	/**
-     * Determine si l'action "workflow_online_reject" (fichier 'acaren-actions-contrib.xml') de la vue 'summary' doit être présentée.
+     * Determine si l'action "workflow_online_reject" de la vue 'summary' doit être présentée.
      *  
      * @return true si l'action doit être présentée. false sinon.
 	 * @throws ClientException
@@ -206,7 +146,7 @@ public class ToutaticeJbpmActionsBean extends JbpmActionsBean {
 	 }
 
 	/**
-     * Determine si l'action "workflow_online_accept" (fichier 'acaren-actions-contrib.xml') de la vue 'summary' doit être présentée.
+     * Determine si l'action "workflow_online_accept" de la vue 'summary' doit être présentée.
      *  
      * @return true si l'action doit être présentée. false sinon.
 	 * @throws ClientException
@@ -225,33 +165,6 @@ public class ToutaticeJbpmActionsBean extends JbpmActionsBean {
 		
 		return false;
 	 }
-
-	/**
-     * Determine si l'action "direct_validation" (fichier 'acaren-actions-contrib.xml') de la vue 'summary' doit être présentée.
-     * 
-     * <h4>Conditions</h4>
-     * <li>le document doit être dans l'état 'projet'</li> 
-     * <li>l'utilisateur courant doit avoir la permission de validation (rôle de validateur)</li>
-     * <li>le document ne doit pas déjà être dans un processus de validation/mise en ligne (quels que soient les utilisateurs en charge de faire la validation)</li> 
-     *  
-     * @return true si l'action doit être présentée. false sinon.
-     * @throws ClientException
-	 */
-	public boolean isValidationActionAuthorized() throws ClientException {
-		String cLCS = null;
-		
-    	try {
-    		cLCS = ((ToutaticeNavigationContext) navigationContext).getCurrentLifeCycleState();
-    		ProcessInstance runningProcess = getCurrentProcess();
-    		if (null != runningProcess) {
-    			return false;
-    		}
-    	} catch (Exception e) {
-    		log.debug("Failed to execute 'isValidationActionAuthorized()', error: " + e.getMessage());
-    	}
-		
-		return (NuxeoStudioConst.CST_DOC_STATE_PROJECT.equals(cLCS)) ? true : false;
-	}
 	
 	/**
 	 * Détermine si un processus, déterminé par le nom du "workflow", est en cours pour un document.
@@ -298,7 +211,7 @@ public class ToutaticeJbpmActionsBean extends JbpmActionsBean {
     }
 
 	/**
-     * Determine si l'action "direct_online" (fichier 'acaren-actions-contrib.xml') de la vue 'summary' doit être présentée.
+     * Determine si l'action "direct_online" de la vue 'summary' doit être présentée.
      * 
      * <h4>Conditions</h4>
      * <li>l'utilisateur courant doit avoir la permission de validation (rôle de validateur)</li>
@@ -309,7 +222,19 @@ public class ToutaticeJbpmActionsBean extends JbpmActionsBean {
      * @throws ClientException
 	 */
 	public boolean isDirectSetOnlineActionAuthorized() throws ClientException {
-		return isValidationActionAuthorized();
+		String cLCS = null;
+		
+    	try {
+    		cLCS = ((ToutaticeNavigationContext) navigationContext).getCurrentLifeCycleState();
+    		ProcessInstance runningProcess = getCurrentProcess();
+    		if (null != runningProcess) {
+    			return false;
+    		}
+    	} catch (Exception e) {
+    		log.debug("Failed to execute 'isValidationActionAuthorized()', error: " + e.getMessage());
+    	}
+		
+		return (NuxeoStudioConst.CST_DOC_STATE_PROJECT.equals(cLCS)) ? true : false;
 	}
 
 	/**

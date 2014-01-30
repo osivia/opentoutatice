@@ -41,11 +41,8 @@ public class ToutaticeValidatorBean implements Serializable {
 			Pattern p = Pattern.compile(CST_PATTERN_URL);
 			Matcher m = p.matcher(url);
 			if (!m.matches()) {
-				String msg = ComponentUtils.translate(context,
-						"label.acaren.validator.bad.url.format");
-
-				FacesMessage message = new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, msg, null);
+				String msg = ComponentUtils.translate(context, "label.toutatice.validator.bad.url.format");
+				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
 				throw new ValidatorException(message);
 			}
 		} catch (PatternSyntaxException pse) {
@@ -66,11 +63,8 @@ public class ToutaticeValidatorBean implements Serializable {
 					Pattern p = Pattern.compile(CST_PATTERN_EMAIL);
 					Matcher m = p.matcher(email);
 					if (!m.matches()) {
-						String msg = ComponentUtils.translate(context,
-								"label.acaren.validator.bad.email.format");
-
-						FacesMessage message = new FacesMessage(
-								FacesMessage.SEVERITY_ERROR, msg, null);
+						String msg = ComponentUtils.translate(context, "label.toutatice.validator.bad.email.format");
+						FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
 						throw new ValidatorException(message);
 					}
 
@@ -88,11 +82,8 @@ public class ToutaticeValidatorBean implements Serializable {
 			Pattern p = Pattern.compile(CST_PATTERN_TEL);
 			Matcher m = p.matcher(url);
 			if (!m.matches()) {
-				String msg = ComponentUtils.translate(context,
-						"label.acaren.validator.bad.tel.format");
-
-				FacesMessage message = new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, msg, null);
+				String msg = ComponentUtils.translate(context, "label.toutatice.validator.bad.tel.format");
+				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
 				throw new ValidatorException(message);
 			}
 		} catch (PatternSyntaxException pse) {

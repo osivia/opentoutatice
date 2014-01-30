@@ -77,7 +77,7 @@ public class SetOnLine {
 	}
 	
 	/*
-	 * AcarenOperationHelper n'est pas utilisé car la chaîne doit être enregistrée
+	 * ToutaticeOperationHelper n'est pas utilisé car la chaîne doit être enregistrée
 	 * pour référencement par id.
 	 */
 	private static void runChain(CoreSession session, DocumentModel doc, OperationChain logChain) throws Exception,

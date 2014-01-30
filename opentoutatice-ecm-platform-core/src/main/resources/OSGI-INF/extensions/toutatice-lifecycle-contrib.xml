@@ -9,7 +9,7 @@
 		<documentation>Nuxeo core default life cycle redefinition.
 		</documentation>
 
-		<lifecycle name="default_acaren" defaultInitial="project">
+		<lifecycle name="default_toutatice" defaultInitial="project">
 			<transitions>
 				<transition name="approve" destinationState="approved">
 					<description>Approve the content</description>
@@ -112,8 +112,8 @@
 		</documentation>
 
 		<types>
-			<type name="PortalPage">default_acaren</type>
-			<type name="PortalSite">default_acaren</type>
+			<type name="PortalPage">default_toutatice</type>
+			<type name="PortalSite">default_toutatice</type>
 		</types>
 
 	</extension>

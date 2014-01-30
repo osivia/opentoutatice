@@ -32,7 +32,7 @@
 		<action id="SHOW_THUMBNAIL" type="widget" order="100">
 			<category>SUMMARY_PANEL_LEFT</category>
 			<properties>
-				<property name="widgetName">acaren_widget_summary_current_document_vignette</property>
+				<property name="widgetName">toutatice_widget_summary_current_document_vignette</property>
 			</properties>
 		</action>
 

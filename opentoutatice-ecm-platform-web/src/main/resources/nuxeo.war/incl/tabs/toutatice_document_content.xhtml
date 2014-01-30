@@ -6,26 +6,13 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:nxu="http://nuxeo.org/nxweb/util">
-
-	<div style="display: none">
-		<span id="js-label.documents.confirm.orderFolderAlphabetically">
-			<h:outputText
-				value="#{messages['label.documents.confirm.orderFolderAlphabetically']}" />
-		</span> 
-		<span id="js-label.documents.confirm.setDocumentVersionOnline">
-			<h:outputText
-				value="#{messages['label.documents.confirm.setDocumentVersionOnline']}" />
-		</span>
-
-	</div>
-
+	
 	<c:if test="#{currentDocument.currentLifeCycleState != 'deleted'}">
 
 		<ui:include src="/incl/toutatice_document_actions.xhtml" />
 
 		<c:choose>
-			<c:when
-				test="#{documentContentViewActions.hasContentViewSupport(currentDocument, 'content')}">
+			<c:when test="#{documentContentViewActions.hasContentViewSupport(currentDocument, 'content')}">
 
 				<ui:include src="/incl/document_content_view.xhtml">
 					<ui:param name="contentViewCategory" value="content" />
@@ -37,7 +24,9 @@
 				<nxu:set var="provider"
 					value="#{resultsProvidersCache.get('CURRENT_DOC_CHILDREN')}"
 					cache="true">
-					<nxu:set var="layoutName" value="#{currentListingLayoutName}"
+					
+					<nxu:set var="layoutName" 
+						value="#{currentListingLayoutName}"
 						cache="true">
 
 						<ui:decorate template="/incl/documents_layout_table.xhtml">
@@ -48,7 +37,9 @@
 								<ui:include src="/incl/clipboard.xhtml" />
 							</ui:define>
 						</ui:decorate>
+						
 					</nxu:set>
+					
 				</nxu:set>
 
 			</c:otherwise>

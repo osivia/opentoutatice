@@ -68,7 +68,7 @@
 			<operation id="Workflow.CreateProcess">
 				<param type="string" name="task name">choose-participant</param>
 				<param type="string" name="following state">no_transition</param>
-				<param type="string" name="workflow type">acaren_online_approbation</param>
+				<param type="string" name="workflow type">toutatice_online_approbation</param>
 				<param type="string" name="actors">assignees</param>
 				<param type="string" name="directive">workflowDirectiveValidation</param>
 				<param type="string" name="right">Read</param>

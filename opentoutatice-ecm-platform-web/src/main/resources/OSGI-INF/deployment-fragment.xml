@@ -33,10 +33,9 @@
 			<to-view-id>/toutatice_view_documents.xhtml</to-view-id>
 		</navigation-case>
 		
-		
 		<navigation-case>
-			<from-outcome>editor_link_search_document</from-outcome>
-			<to-view-id>/editor_link_search_document.xhtml</to-view-id>
+			<from-outcome>toutatice_editor_link_search_document</from-outcome>
+			<to-view-id>/toutatice_editor_link_search_document.xhtml</to-view-id>
 		</navigation-case>
 		
 	</extension>
