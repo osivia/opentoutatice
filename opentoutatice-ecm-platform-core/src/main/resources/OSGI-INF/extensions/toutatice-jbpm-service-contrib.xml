@@ -23,16 +23,15 @@
 	<extension target="org.nuxeo.ecm.platform.jbpm.core.JbpmService"
 		point="typeFilter">
 
-		<type name="PortalSite">
-			<!-- FIXME: inutile? -->
+		<!-- FIXME: inutile? -->
+		<!-- <type name="PortalSite">
 			<processDefinition>review_parallel</processDefinition>
 			<processDefinition>review_approbation</processDefinition>
 		</type>
 		<type name="PortalPage">
-			<!-- FIXME: inutile? -->
 			<processDefinition>review_parallel</processDefinition>
 			<processDefinition>review_approbation</processDefinition>
-		</type>
+		</type> -->
 
 	</extension>
 
