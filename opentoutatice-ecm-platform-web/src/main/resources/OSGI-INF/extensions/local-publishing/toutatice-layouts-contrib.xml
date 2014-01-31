@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<component name="fr.toutatice.ecm.platform.web.local.publishing.layouts.">
+<component name="fr.toutatice.ecm.platform.web.local.publishing.layouts">
 
 	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
 	<require>fr.toutatice.ecm.platform.web.widgets</require>
