@@ -135,14 +135,92 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgettypes">
 
-		<!-- Layout se basant sur le layout en mode view <widgetType name="custom_summary_current_document_view"> <configuration> 
-			<sinceVersion>5.3.1</sinceVersion> <title>View layout</title> <categories> 
-			<category>summary</category> </categories> <supportedModes> <mode>view</mode> 
-			</supportedModes> no configurable properties </configuration> <handler-class> 
-			org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler 
+		<widgetType name="filesList">
+			<configuration>
+				<title>Files</title>
+				<description>
+					<p>
+						The Files displays an editable list of files, using javascript
+						to
+						keep the uploaded file path when adding several files in a row.
+					</p>
+					<p>Items are defined using sub wigdets configuration.</p>
+					<p>
+						This is actually a template widget type whose template uses a
+						&lt;nxu:inputList /&gt; tag in edit or create mode, and a table
+						iterating over items in other modes.
+					</p>
+				</description>
+				<categories>
+					<category>document</category>
+					<category>studio</category>
+				</categories>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<acceptingSubWidgets>true</acceptingSubWidgets>
+				<fields>
+					<list>true</list>
+					<complex>false</complex>
+					<supportedTypes>
+						<type>blob</type>
+					</supportedTypes>
+					<defaultTypes>
+						<type>blob</type>
+					</defaultTypes>
+				</fields>
+				<properties>
+					<layouts mode="edit">
+						<layout name="list_widget_type_properties_edit">
+							<rows>
+								<row>
+									<widget>required</widget>
+								</row>
+								<row>
+									<widget>diff</widget>
+								</row>
+							</rows>
+							<widget name="required" type="checkbox">
+								<labels>
+									<label mode="any">Required</label>
+								</labels>
+								<fields>
+									<field>required</field>
+								</fields>
+							</widget>
+							<widget name="diff" type="checkbox">
+								<labels>
+									<label mode="any">Diff</label>
+								</labels>
+								<fields>
+									<field>diff</field>
+								</fields>
+							</widget>
+						</layout>
+					</layouts>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">/widgets/files_list_widget_template.xhtml
+			</property>
+		</widgetType>
+
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgettypes">
+
+		<!-- Layout se basant sur le layout en mode view <widgetType name="custom_summary_current_document_view"> 
+			<configuration> <sinceVersion>5.3.1</sinceVersion> <title>View layout</title> 
+			<categories> <category>summary</category> </categories> <supportedModes> 
+			<mode>view</mode> </supportedModes> no configurable properties </configuration> 
+			<handler-class> org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler 
 			</handler-class> <property name="template"> /widgets/summary/toutatice_metadata_custom_widget_template.xhtml 
-			</property> </widgetType> -->	
-			
+			</property> </widgetType> -->
+
 		<widgetType name="summary_content_type">
 			<configuration>
 				<categories>
