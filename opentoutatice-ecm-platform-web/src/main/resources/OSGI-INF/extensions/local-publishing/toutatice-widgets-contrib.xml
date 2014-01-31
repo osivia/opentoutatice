@@ -28,7 +28,7 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
 
-		<widget name=toutatice_summary_current_document_actions
+		<widget name="toutatice_summary_current_document_actions"
 			type="toutatice_summary_current_document_cartridge_actions">
 			<labels>
 				<label mode="any"></label>
