@@ -89,7 +89,7 @@
 					<widget>content</widget>
 				</row>
 				<row>
-					<widget>acaren_showInMenu_widget</widget>
+					<widget>toutatice_showInMenu_widget</widget>
 				</row>
 			</rows>
 		</layout>
@@ -97,7 +97,7 @@
 		<!-- Onglet "Configuration portail" -->
 		<layout name="toutatice_metadata_portal_site_management">
 			<templates>
-				<template mode="any">/layouts/acaren_layout_default_template.xhtml
+				<template mode="any">/layouts/toutatice_layout_default_template.xhtml
 				</template>
 			</templates>
 			<rows>
@@ -131,7 +131,7 @@
 		<!-- layout : méta données espace de travail -->
 		<layout name="toutatice_ws_metadata_portal_site_management">
 			<templates>
-				<template mode="any">/layouts/acaren_layout_default_template.xhtml
+				<template mode="any">/layouts/toutatice_layout_default_template.xhtml
 				</template>
 			</templates>
 			<rows>
