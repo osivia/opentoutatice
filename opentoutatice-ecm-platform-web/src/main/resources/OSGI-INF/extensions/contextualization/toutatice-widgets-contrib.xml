@@ -115,7 +115,7 @@
 			</widgetModes>
 		</widget>
 
-		<widget name="toutatice_widget_contextualize_internal_contents"
+		<widget name="toutatice_widget_contextualize_external_contents"
 			type="checkbox">
 			<labels>
 				<label mode="any">toutatice.contextualize.external.contents
