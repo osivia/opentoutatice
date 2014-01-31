@@ -2,6 +2,8 @@
 <component name="fr.toutatice.ecm.platform.web.local.publishing.actions">
 
 	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+	<require>fr.toutatice.ecm.platform.web.local.publishing.filters</require>
+	<require>fr.toutatice.ecm.platform.web.local.publishing.widgets</require>
 
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
