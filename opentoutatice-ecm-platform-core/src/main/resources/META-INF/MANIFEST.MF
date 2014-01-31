@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 1
-Bundle-Name: Plate-forme Toutatice - partie core 
+Bundle-Name: Plate-forme Open Toutatice - partie core 
 Bundle-SymbolicName: fr.toutatice.ecm.platform.core;singleton:=true
 Bundle-Version: 2.0.0
 Bundle-Localization: plugin
