@@ -58,12 +58,12 @@
 			</fields>
 			<properties mode="any">
 				<property name="template">
-					/widgets/toutatice_title_with_permlink_widget_template.xhtml
+					/widgets/title_with_permlink_widget_template.xhtml
 				</property>
 			</properties>
 		</widget>
 
-		<!-- Affiche le status de publication -->
+		<!-- Affiche le status de publication dans une contentView -->
 		<widget name="local_publishing_status" type="template">
 			<labels>
 				<label mode="any">Version en ligne?</label>
