@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.web.picturebook.types">
+
+	<require>org.nuxeo.ecm.core.schema.TypeService</require>
+
+	<extension target="org.nuxeo.ecm.platform.types.TypeService"
+		point="types">
+
+		<type coretype="PictureBook" id="PictureBook">
+			<label>PictureBook</label>
+			<icon>/icons/picturebook.gif</icon>
+			<bigIcon>/icons/picturebook_100.png</bigIcon>
+			<description>PictureBook.description</description>
+			<category>Collaborative</category>
+			<default-view>view_documents</default-view>
+			<create-view>create_picturebook</create-view>
+			<layouts mode="any">
+				<layout>heading</layout>
+				<layout>picturebook</layout>
+			</layouts>
+			<contentViews category="content">
+				<contentView showInExportView="false">cv_ContentOrderedReadNWrite
+				</contentView>
+			</contentViews>
+			<contentViews category="trash_content">
+				<contentView showInExportView="false">document_trash_content
+				</contentView>
+			</contentViews>
+		</type>
+
+	</extension>
+
+</component>
