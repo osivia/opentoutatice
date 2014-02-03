@@ -30,6 +30,9 @@
 
 		<widget name="toutatice_widget_summary_current_document_vignette"
 			type="toutatice_widget_summary_current_document_vignette_type">
+			<labels>
+				<label mode="any">Vignette</label>
+			</labels>
 			<fields>
 				<field>ttc:vignette</field>
 				<field>ttc:vignette/filename</field>
