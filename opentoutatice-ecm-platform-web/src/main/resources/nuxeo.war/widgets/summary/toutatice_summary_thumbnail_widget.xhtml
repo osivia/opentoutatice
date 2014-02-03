@@ -5,22 +5,10 @@
 	id="#{widget.id}">
 
 	<c:if test="#{widget.mode != 'create' and widget.mode != 'edit' and field_0 != null}">
+		<h3>
+			<h:outputText value="#{widget.label}" />
+		</h3>
 		<h:graphicImage	value="#{nxd:fileUrl('downloadFile', value, widget.fieldDefinitions[0].propertyName, field_1)}" />
-	</c:if>
-
-	<c:if test="#{widget.mode == 'create' or widget.mode == 'edit'}">
-
-		<nxu:inputFile id="#{widget.id}_file" 
-			value="#{field_0}"
-			filename="#{field_1}" 
-			required="#{widget.required}"
-			editFilename="false" 
-			onclick="#{widgetProperty_onclick}"
-			onchange="#{widgetProperty_onchange}" />
-		<h:message styleClass="errorMessage" 
-			for="#{widget.id}_file"
-			id="#{widget.id}_message" />
-
 	</c:if>
 
 </f:subview>
