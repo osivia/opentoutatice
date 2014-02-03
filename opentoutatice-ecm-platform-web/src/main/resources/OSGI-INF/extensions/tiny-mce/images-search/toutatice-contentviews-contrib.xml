@@ -35,6 +35,7 @@
 						ecm:isCheckedInVersion =
 						0 AND
 						ecm:currentLifeCycleState != 'deleted'
+						AND ecm:isProxy = 0
 	          		</fixedPart>
 				</whereClause>
 				<sort column="dc:title" ascending="true" />
