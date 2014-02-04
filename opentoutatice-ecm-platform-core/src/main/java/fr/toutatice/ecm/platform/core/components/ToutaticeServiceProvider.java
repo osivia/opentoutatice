@@ -16,13 +16,10 @@ import org.nuxeo.runtime.api.ServiceProvider;
 import fr.toutatice.ecm.platform.core.services.proxyfactory.ProxyFactoryCfgService;
 
 /**
- * Cette classe permet de filtrer les événements qui sont produits/levés par les différents 
- * traitements et ainsi d'implémenter le mode "silencieux" où les données type dublincore
- * d'un document ne doivent pas être modifiées.
- * 
  * Lorsque le framework sera sollicité (session::getLocalService()) pour obtenir une instance 
- * du service EventService, il obtiendra un proxy sur ce dernier (implémenté par la classe 
- * ToutaticeEventFilterHandler. Le filtrage est nomminatif pour un utilisateur connecté.
+ * d'un service, il obtiendra un proxy sur ce dernier (implémenté par une classe qui étend
+ * la classe abstraite "ToutaticeAbstractServiceHandler". 
+ * Le filtrage peut être nomminatif pour un utilisateur connecté.
  * 
  * @author mberhaut1
  */
@@ -141,7 +138,7 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 				Class<?> handler = pfs.getServiceHandler(srvClass);
 				if (null != handler) {
 					Object ho = handler.newInstance();
-					Method themethod = handler.getDeclaredMethod("newProxy", Object.class, srvClass.getClass());
+					Method themethod = handler.getMethod("newProxy", Object.class, srvClass.getClass());
 					return (T) themethod.invoke(ho, srvObject, srvClass);
 				}
 			} catch (Exception e) {

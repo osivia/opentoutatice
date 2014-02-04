@@ -12,20 +12,12 @@ public class ToutaticeEventFilterHandler<T> extends ToutaticeAbstractServiceHand
 
 //	private static final Log log = LogFactory.getLog(ToutaticeEventFilterHandler.class);
 
-//	public ToutaticeEventFilterHandler() {
-//		super();
-//	}
-//	
-//	public ToutaticeEventFilterHandler(T object) {
-//		super(object);
-//	}
-	
 	@Override
 	public T newProxy(T object, Class<T> itf) {
 		setObject(object);
 		return itf.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class<?>[] { itf }, this));
 	}
-	
+
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		try {

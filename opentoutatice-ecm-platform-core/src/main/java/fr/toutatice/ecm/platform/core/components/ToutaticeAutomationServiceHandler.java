@@ -24,14 +24,6 @@ public class ToutaticeAutomationServiceHandler<T> extends ToutaticeAbstractServi
 	private static final Log log = LogFactory.getLog(ToutaticeAutomationServiceHandler.class);
 	private ToutaticeMaintenanceService mntService;
 
-//	protected ToutaticeAutomationServiceHandler() {
-//		super();
-//	}
-//	
-//	protected ToutaticeAutomationServiceHandler(T object) {
-//		super(object);
-//	}
-	
 	@Override
 	public T newProxy(T object, Class<T> itf) {
 		setObject(object);
