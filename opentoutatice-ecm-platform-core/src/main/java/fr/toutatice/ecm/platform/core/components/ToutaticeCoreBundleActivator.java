@@ -32,8 +32,6 @@ public class ToutaticeCoreBundleActivator implements BundleActivator {
 	
 	@Override
 	public void start(BundleContext context) throws Exception {
-		// install the service to filter events
-		ToutaticeEventFilterService.instance().install();	
 		// sauvegarde de l'ancienne instance Fn
 		currentFninstance = Functions.getInstance();
 		// instancier le nouvel Fn
@@ -45,7 +43,6 @@ public class ToutaticeCoreBundleActivator implements BundleActivator {
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		ToutaticeEventFilterService.instance().uninstall();
 		// restauration de l'ancienne instance Fn 
 		Functions.setInstance(currentFninstance);
 	}

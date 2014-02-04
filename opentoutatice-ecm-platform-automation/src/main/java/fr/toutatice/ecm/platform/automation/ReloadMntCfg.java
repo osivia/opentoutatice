@@ -5,7 +5,7 @@ import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 
-import fr.toutatice.ecm.platform.core.services.ToutaticeMaintenanceService;
+import fr.toutatice.ecm.platform.core.services.maintenance.ToutaticeMaintenanceService;
 
 @Operation(id = ReloadMntCfg.ID, 
 	category = Constants.CAT_SERVICES, 

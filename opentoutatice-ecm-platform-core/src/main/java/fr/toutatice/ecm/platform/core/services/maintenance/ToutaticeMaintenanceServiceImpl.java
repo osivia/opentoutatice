@@ -1,4 +1,4 @@
-package fr.toutatice.ecm.platform.core.services;
+package fr.toutatice.ecm.platform.core.services.maintenance;
 
 import java.util.List;
 

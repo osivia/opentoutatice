@@ -16,22 +16,19 @@ public class PermaLinkServiceImpl extends DefaultComponent implements
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final ComponentName ID = new ComponentName("fr.toutatice.ecm.platform.PublicationService");
+	public static final ComponentName ID = new ComponentName("fr.toutatice.ecm.platform.service.permalink.PublicationService");
 
 	public static final String PERMALINKS_EXTENSION_POINTS = "permalinks";
 
-	private static final Log log = LogFactory
-			.getLog(PermaLinkServiceImpl.class);
+	private static final Log log = LogFactory.getLog(PermaLinkServiceImpl.class);
 
 	protected final Map<String, PermalinkDescriptor> descriptors;
 	protected final Map<String, Permalink> permalinkImpls;
 	private String defaultPermalinkName;
 
 	public PermaLinkServiceImpl() {
-		log.info(" PublicationServiceImpl");
 		this.descriptors = new HashMap<String, PermalinkDescriptor>();
 		this.permalinkImpls = new HashMap<String, Permalink>();
-		
 	}
 
 	@Override
@@ -95,7 +92,7 @@ public class PermaLinkServiceImpl extends DefaultComponent implements
 			String extensionPoint, ComponentInstance contributor)
 			throws Exception {
 		log.info("--> PublicationServiceImpl.registerContribution");
-		if ("permalinks".equals(extensionPoint)) {
+		if (PERMALINKS_EXTENSION_POINTS.equals(extensionPoint)) {
 			PermalinkDescriptor desc = (PermalinkDescriptor) contribution;
 			String permalinkName = desc.getName();
 			descriptors.put(permalinkName, desc);
@@ -113,7 +110,7 @@ public class PermaLinkServiceImpl extends DefaultComponent implements
 			String extensionPoint, ComponentInstance contributor)
 			throws Exception {
 		log.info("--> PublicationServiceImpl.unregisterContribution");
-		if ("permalinks".equals(extensionPoint)) {
+		if (PERMALINKS_EXTENSION_POINTS.equals(extensionPoint)) {
 			PermalinkDescriptor desc = (PermalinkDescriptor) contribution;
 			String permalinkName = desc.getName();
 			descriptors.remove(permalinkName);

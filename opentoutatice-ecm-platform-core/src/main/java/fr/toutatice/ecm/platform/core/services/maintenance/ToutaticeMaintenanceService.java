@@ -1,4 +1,4 @@
-package fr.toutatice.ecm.platform.core.services;
+package fr.toutatice.ecm.platform.core.services.maintenance;
 
 import org.nuxeo.ecm.core.api.CoreSession;
 
