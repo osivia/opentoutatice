@@ -202,7 +202,7 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
 		resultDocuments = documentManager.query(query, 100);
 		hasSearchResults = !resultDocuments.isEmpty();
 		log.debug("query result contains: " + resultDocuments.size() + " docs.");
-		return "toutatice_editor_link_search_document";
+        return "editor_link_search_document";
 	}
 	
 	private class ListTypeComparator extends ToutaticeSorterHelper<Type> {
