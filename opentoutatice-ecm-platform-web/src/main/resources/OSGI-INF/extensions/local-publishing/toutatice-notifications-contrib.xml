@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.local.publishing.notifications">
+
+	<require>org.nuxeo.ecm.platform.notification.service.NotificationContrib
+	</require>
+
+	<extension
+		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
+		point="notifications">
+
+		<!-- Désactivation Notifications associées à un abonnement sur les workflow (généraliste) -->
+		<notification name="Workflow Change" channel="email"
+			enabled="false" availableIn="PortalSite" autoSubscribed="false"
+			template="workflow" subject="Workflow 
+			event" label="label.nuxeo.notifications.workflow">
+			<event name="workflowNewProcessStarted" />
+			<event name="workflowProcessEnded" />
+			<event name="workflowProcessCanceled" />
+			<event name="workflowAbandoned" />
+			<event name="workflowTaskCompleted" />
+			<event name="workflowTaskRejected" />
+			<event name="workflowTaskAssigned" />
+		</notification>
+
+		<notification enabled="false" name="Task assigned">
+			<event name="workflowTaskAssigned" />
+		</notification>
+		<notification autoSubscribed="true" availableIn="PortalSite"
+			channel="email" enabled="false" label="label.nuxeo.notifications.appReviewStarted"
+			name="Task assigned" subject="Task Assigned for ${docTitle}"
+			template="workflowTaskAssigned"
+			templateExpr="NotificationContext['taskInstance'].getVariable('taskNotificationTemplate')">
+			<event name="workflowTaskAssigned" />
+		</notification>
+
+		<!-- Notifications associées au workflow de mise en ligne (publication 
+			interne) -->
+		<notification name="Toutatice online task assigned" channel="email"
+			enabled="true" availableIn="PortalSite" autoSubscribed="true"
+			template="onlineWorkflow" subject="Demande de mise en ligne du document: ${docTitle}"
+			label="label.nuxeo.notifications.publication">
+			<event name="workflowOnlineTaskAssigned" />
+		</notification>
+
+		<notification name="Toutatice online task canceled" channel="email"
+			enabled="true" availableIn="PortalSite" autoSubscribed="true"
+			template="onlineWorkflow" subject="Annulation de la demande de mise en ligne de: ${docTitle}"
+			label="label.nuxeo.notifications.publication">
+			<event name="workflowOnlineTaskCanceled" />
+		</notification>
+
+		<notification name="Toutatice online task rejected" channel="email"
+			enabled="true" availableIn="PortalSite" autoSubscribed="true"
+			template="onlineWorkflow" subject="Rejet de la demande de mise en ligne de: ${docTitle}"
+			label="label.nuxeo.notifications.publication">
+			<event name="workflowOnlineTaskRejected" />
+		</notification>
+
+		<notification name="Toutatice online task approved" channel="email"
+			enabled="true" availableIn="PortalSite" autoSubscribed="true"
+			template="onlineWorkflow" subject="Document mis en ligne: ${docTitle}"
+			label="label.nuxeo.notifications.publication">
+			<event name="workflowOnlineTaskApproved" />
+		</notification>
+
+	</extension>
+
+	<extension
+		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
+		point="templates">
+
+		<template name="workflow" src="templates/workflow_fr.ftl" />
+		<template name="onlineWorkflow" src="templates/onlineWorkflow_fr.ftl" />
+
+	</extension>
+
+</component>
