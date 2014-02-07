@@ -13,6 +13,10 @@ import fr.toutatice.ecm.platform.core.publish.ToutaticeNullPublishedDocument;
  */
 public class GlobalConst {
     
+    public final static String CST_DOC_STATE_PROJECT = "project";
+    public final static String CST_DOC_STATE_APPROVED = "approved";
+    public final static String CST_DOC_STATE_DELETED = "deleted";
+    
     public static final String CST_CONTENT_VIEW_RELATION_SEARCH = "relation_search";
     public static final String CST_ADVANCED_SEARCH_XPATH_PATH = "advanced_search:searchpath";
     public static final String CST_FACETED_SEARCH_XPATH_PATH = "faceted_search_default:ecm_path";
@@ -42,6 +46,7 @@ public class GlobalConst {
 	// Events
 	public final static String CST_EVENT_SUB_TAB_SELECTION_CHANGED = "subTabSelectionChanged";
 	public final static String CST_EVENT_PROPAGATE_SECTIONS = "propagateSections";
+	/* TODO: delete */
 	public final static String CST_EVENT_PROPAGATE_ORGANISATION_SOURCE = "propagateOrganisationSource";
 	public final static String CST_EVENT_SECTION_MODIFICATION = "sectionModified";
 
