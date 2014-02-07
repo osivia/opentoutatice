@@ -34,11 +34,10 @@
 			<artifactId>nuxeo-platform-forms-layout-client</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
-		
 		<dependency>
-			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-ui-web-test</artifactId>
-			 <version>${nuxeo.version}</version>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-platform-core</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 	</dependencies>
