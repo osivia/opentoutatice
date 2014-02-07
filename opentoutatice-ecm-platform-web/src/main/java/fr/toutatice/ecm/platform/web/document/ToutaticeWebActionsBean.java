@@ -119,49 +119,10 @@ public class ToutaticeWebActionsBean extends WebActionsBean {
 		return name;
 	}
 	
-	public String getLabeltoActionId(String actionId,DocumentModel doc){
-		String res;
-		
-		if("SAVE_AND_MINOR_UPGRADE_CURRENT_DOCUMENT".equals(actionId)){
-			res = getNextMinorversion(doc);
-		}else if("SAVE_AND_MAJOR_UPGRADE_CURRENT_DOCUMENT".equals(actionId)){
-			res = getNextMajorversion(doc);
-		}else{			
-			res="";
-		}
-		return	res;	
-	}
-	
-	private String getNextMinorversion(DocumentModel doc){
-		StringBuilder res= new StringBuilder();
-		
-		String versionLabel = doc.getVersionLabel();
-		versionLabel=versionLabel.replaceAll("\\+", "");
-		String [] tab = versionLabel.split("\\.");
-		res.append(tab[0]);
-		res.append(".");
-		res.append(new Integer(tab[1]).intValue()+1);
-		
-		return res.toString();
-	}
-	
-	private String getNextMajorversion(DocumentModel doc){
-		StringBuilder res= new StringBuilder();
-		
-		String versionLabel = doc.getVersionLabel();
-		
-		String [] tab = versionLabel.split("\\.");
-		res.append(new Integer(tab[0]).intValue()+1);
-		res.append(".");
-		res.append("0");
-		
-		return res.toString();
-	}
-	
     @Observer(value = { EventNames.DOCUMENT_SELECTION_CHANGED, 
     		EventNames.DOMAIN_SELECTION_CHANGED,
     		EventNames.CONTENT_ROOT_SELECTION_CHANGED,
-    		/*EventNames.DOCUMENT_CHANGED,*/
+    		/*EventNames.DOCUMENT_CHANGED, */
     		EventNames.GO_HOME}, create = false)
 	public void resetActionContext() {
     	if (null != this.conditionalActionsStatusMap) {
