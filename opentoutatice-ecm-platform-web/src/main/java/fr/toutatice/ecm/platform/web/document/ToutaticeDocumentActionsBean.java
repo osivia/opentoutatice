@@ -69,7 +69,7 @@ import fr.toutatice.ecm.platform.core.constants.GlobalConst;
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeOperationHelper;
-import fr.toutatice.ecm.platform.service.permalink.PermaLinkService;
+import fr.toutatice.ecm.platform.services.permalink.PermaLinkService;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
 
 /**
@@ -112,7 +112,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     public void initialize() throws Exception {
         log.debug("Initializing...");
     }
-
+   
     @Destroy
     @Remove
     @PermitAll
