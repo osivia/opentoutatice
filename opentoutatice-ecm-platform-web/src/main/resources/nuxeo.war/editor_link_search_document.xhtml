@@ -13,22 +13,22 @@
 	</ui:define>
 
 	<ui:define name="body">
-		
-		<div style="text-align: center;margin:40px 0px">
+
+		<div style="text-align: center; margin: 40px 0px">
 			<h:form>
 				<h:inputText value="#{editorLinkActions.searchKeywords}" size="40"
 					class="searchField"
 					onkeydown="if (event.keyCode == 13) {this.nextSibling.click()} else return true" />
 				<h:commandButton value="#{messages['command.search']}"
 					action="#{editorLinkActions.searchDocuments}" class="button" />
-				<div style="margin-top:20px">
+				<div style="margin-top: 20px">
 					<h:outputText value="Rechercher dans " />
 					<h:selectOneListbox value="#{editorLinkActions.scope}" size="1">
 						<f:selectItems value="#{editorLinkActions.scopes}" />
 						<a4j:support event="onchange" reRender="selecttype" />
 					</h:selectOneListbox>
 				</div>
-				<div style="margin-top:0px">
+				<div style="margin-top: 0px">
 					<h:outputText value="Filtrer suivant le type " />
 					<h:selectOneListbox value="#{editorLinkActions.typeDoc}" size="1"
 						id="selecttype">
@@ -90,7 +90,7 @@
 					</nxu:dataTable>
 				</h:selectOneRadio>
 
-		<script language="javascript">
+				<script language="javascript">
           function getSelectedRadio(buttonGroup) {
             if (buttonGroup[0]) {
               for (var i=0; i&lt;buttonGroup.length; i++) {
