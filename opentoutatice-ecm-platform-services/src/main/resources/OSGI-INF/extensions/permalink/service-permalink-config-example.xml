@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
-<component name="fr.toutatice.ecm.platform.service.permalink.config.example">
+<component name="fr.toutatice.ecm.platform.services.permalink.config.example">
 
-	<extension target="fr.toutatice.ecm.platform.service.permalink.PermaLinkService"
+	<extension target="fr.toutatice.ecm.platform.services.permalink.PermaLinkService"
 		point="permalinks">
 
-		<permalink name="permalinkByPath" classpath="fr.toutatice.ecm.platform.service.permalink.PermalinkByPathDoc"
+		<permalink name="permalinkByPath" classpath="fr.toutatice.ecm.platform.services.permalink.PermalinkByPathDoc"
 			default="true" enabled="true">
 			<host>www.toutatice.fr</host>
 			<parameters>
