@@ -24,6 +24,7 @@ import org.nuxeo.ecm.platform.publisher.web.PublishActionsBean;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.GlobalConst;
 import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
 
 
 @Name("publishActions")
@@ -84,13 +85,13 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
 
     public boolean canUnpublishProxy(DocumentModel proxy) throws ClientException {
         boolean status = false;
-        
+
         /* Proxy non distant */
-		if(!isRemoteProxy(proxy)){
-			status = documentManager.hasPermission(proxy.getRef(), NuxeoStudioConst.CST_PERM_VALIDATE);			
+        if (!isRemoteProxy(proxy)) {
+            status = documentManager.hasPermission(proxy.getRef(), NuxeoStudioConst.CST_PERM_VALIDATE);
         } else {
-        	 PublishedDocument publishedDocument = new SimpleCorePublishedDocument(proxy);
-             status = super.canUnpublish(publishedDocument);
+            PublishedDocument publishedDocument = new SimpleCorePublishedDocument(proxy);
+            status = super.canUnpublish(publishedDocument);
         }
         return status;
     }
@@ -151,9 +152,29 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
 
         return status;
     }
-    
-    public boolean isRemoteProxy(DocumentModel proxy){
-		return proxy.isProxy() && !StringUtils.endsWith(proxy.getName(), GlobalConst.CST_PROXY_NAME_SUFFIX);
-	}
+
+    public boolean isRemoteProxy(DocumentModel proxy) {
+        return proxy.isProxy() && !StringUtils.endsWith(proxy.getName(), GlobalConst.CST_PROXY_NAME_SUFFIX);
+    }
+
+    @Override
+    protected void getPathFragments(DocumentModel document, List<String> pathFragments) throws ClientException {
+        // ajouter le nom du document courant
+        pathFragments.add(document.getTitle());
+
+        // récupération du SectionRoot
+        DocumentModel sectionRoot = ((ToutaticeNavigationContext) navigationContext).getSectionPublicationArea(document);
+        if (!sectionRoot.equals(document)) {
+            pathFragments.add(sectionRoot.getTitle());
+        }
+
+        // récupérer le nom du domaine associé au document
+        DocumentModel domain = ((ToutaticeNavigationContext) navigationContext).getDocumentDomain(document);
+        pathFragments.add(domain.getTitle());
+    }
+
+    public boolean getTrue() {
+        return true;
+    }
 
 }
