@@ -16,7 +16,7 @@
 		point="securityPolicy">
 
 		<securityPolicy class="org.nuxeo.ecm.platform.jbpm.core.service.DefaultJbpmSecurityPolicy"
-			for="touatice_online_approbation" />
+			for="toutatice_online_approbation" />
 
 	</extension>
 
