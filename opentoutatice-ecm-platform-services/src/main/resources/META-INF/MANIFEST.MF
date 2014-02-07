@@ -12,7 +12,5 @@ Nuxeo-Component:  OSGI-INF/extensions/generic-ui/generic-ui-service.xml,
  OSGI-INF/extensions/customize-types/customize-types-service.xml,
  OSGI-INF/extensions/customize-types/customize-base-types-contrib.xml,
  OSGI-INF/extensions/webpage/toutatice-fragment-service.xml,
- OSGI-INF/extensions/webpage/toutatice-fragments-contrib.xml,
- OSGI-INF/extensions/permalink/service-permalink.xml
- 
+ OSGI-INF/extensions/webpage/toutatice-fragments-contrib.xml 
  
