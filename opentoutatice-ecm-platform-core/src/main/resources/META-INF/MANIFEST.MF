@@ -17,7 +17,6 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/toutatice-core-versioning-contrib.xml,
  OSGI-INF/extensions/toutatice-event-listener-contrib.xml,
  OSGI-INF/extensions/toutatice-audit-events-contrib.xml,
- OSGI-INF/extensions/toutatice-notifications-contrib.xml,
  OSGI-INF/extensions/webpage/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/webpage/toutatice-core-types-contrib.xml,
  OSGI-INF/extensions/webpage/toutatice-vocabularies-contrib.xml,
@@ -33,5 +32,6 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/medialibrary/toutatice-core-types-contrib.xml,
  OSGI-INF/extensions/medialibrary/toutatice-lifecycle-contrib.xml,
  OSGI-INF/extensions/proxyfactory/toutatice-services-proxyfactory-contrib.xml,
- OSGI-INF/extensions/proxyfactory/toutatice-core-services-contrib.xml
+ OSGI-INF/extensions/proxyfactory/toutatice-core-services-contrib.xml,
+ OSGI-INF/extensions/permalink/service-permalink.xml
  
