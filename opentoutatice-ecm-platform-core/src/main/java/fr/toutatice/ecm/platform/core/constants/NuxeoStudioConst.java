@@ -26,6 +26,7 @@ public class NuxeoStudioConst {
 	public final static String CST_DOC_SCHEMA_TOUTATICE = "toutatice";
 	public final static String CST_DOC_SCHEMA_TOUTATICE_PREFIX = "ttc";
 	public final static String CST_DOC_SCHEMA_TOUTATICE_SPACEID = "ttc:spaceID";
+    public final static String CST_DOC_SCHEMA_TOUTATICE_WEBURL = "ttc:weburl";
 	public final static String CST_DOC_SCHEMA_PUBLISHING = "publishing";
 	public final static String CST_DOC_SCHEMA_NUXEO_PUBLISH_PREFIX = "publish";
 	public static final String CST_DOC_SCHEMA_NUXEO_MAIL_PREFIX = "mail";

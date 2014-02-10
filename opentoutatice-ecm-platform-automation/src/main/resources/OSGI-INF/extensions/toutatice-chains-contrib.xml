@@ -136,6 +136,23 @@
 			<operation id="Context.FetchDocument" />
 			<operation id="Document.SetSpaceID" />
 		</chain>
+        
+        <!-- Chaines pour les weburl -->
+        <chain id="createOrCopyOp">
+            <operation id="Document.SetWebUrl">
+                <param type="String" name="chainSource">createOrCopyOp</param>
+            </operation>
+        </chain>
+        <chain id="movedOrRestoredOp">
+            <operation id="Document.SetWebUrl">
+                <param type="String" name="chainSource">movedOrRestoredOp</param>
+            </operation>
+        </chain>
+        <chain id="beforeModificationOp">
+            <operation id="Document.SetWebUrl">
+                <param type="String" name="chainSource">beforeModificationOp</param>
+            </operation>
+        </chain>
 		
 		<chain id="images-resizing">
 			<operation id="Context.FetchDocument" />
