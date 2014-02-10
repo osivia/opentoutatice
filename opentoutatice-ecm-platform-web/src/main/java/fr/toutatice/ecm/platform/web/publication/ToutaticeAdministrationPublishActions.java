@@ -21,12 +21,13 @@ import org.nuxeo.ecm.webapp.tree.DocumentTreeNode;
 import org.nuxeo.ecm.webapp.tree.DocumentTreeNodeImpl;
 
 import edu.emory.mathcs.backport.java.util.Collections;
+import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSorterHelper;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
 
 @Name("adminPublishActions")
 @Scope(ScopeType.CONVERSATION)
-@Install(precedence = Install.DEPLOYMENT)
+@Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeAdministrationPublishActions extends AdministrationPublishActions implements Serializable {
 
     private static final long serialVersionUID = 1L;
