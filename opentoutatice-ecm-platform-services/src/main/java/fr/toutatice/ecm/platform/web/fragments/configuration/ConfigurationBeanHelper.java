@@ -16,12 +16,14 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 
+import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
+
 /**
  * Bean for getting configuration informations
  */
 @Name("config")
 @Scope(ScopeType.CONVERSATION)
-@Install(precedence = Install.DEPLOYMENT)
+@Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ConfigurationBeanHelper {
 
 
