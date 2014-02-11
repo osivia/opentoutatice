@@ -145,7 +145,7 @@
 			</widgetModes>
 		</widget>
 
-		<widget name="toutatice_widget_page_template" type="text">
+		<widget name="toutatice_widget_page_template" type="template">
 			<labels>
 				<label mode="any">toutatice.page.template</label>
 			</labels>
@@ -159,10 +159,15 @@
 			<fields>
 				<field>ttc:pageTemplate</field>
 			</fields>
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_page_config_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
 		</widget>
 
 		<!-- template fils -->
-		<widget name="toutatice_widget_subpages_template" type="text">
+		<widget name="toutatice_widget_subpages_template" type="template">
 			<labels>
 				<label mode="any">toutatice.subpages.template</label>
 			</labels>
@@ -176,6 +181,11 @@
 			<fields>
 				<field>ttc:childrenPageTemplate</field>
 			</fields>
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_subpages_config_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
 		</widget>
 
 		<widget name="toutatice_widget_page_scope" type="selectOneDirectory">
