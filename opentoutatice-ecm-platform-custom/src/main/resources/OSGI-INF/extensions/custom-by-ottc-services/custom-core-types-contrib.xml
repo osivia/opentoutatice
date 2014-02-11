@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.custom.types">
+
+	<documentation>
+		Cette contribution permet d'ajouter des schémas ou facets openToutatice à des objets client
+		(TODO: lien Wiki pour liste schémas, facets openToutatice).
+		Inversement, des schémas ou facets client peuvent être posés sur les objets openToutatice
+		(TODO: lien Wiki pour liste objets openToutatice); un <code><require></code> vers la contribution
+		les définissant est alors nécessaire.
+	</documentation>
+
+	<require>fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService</require>
+	<require>fr.toutatice.ecm.platform.core.doctypes</require>
+	
+	<!-- <require>contribution client</require>-->
+
+	<extension target="fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService"
+		point="doctype">
+		
+	</extension>
+
+</component>
