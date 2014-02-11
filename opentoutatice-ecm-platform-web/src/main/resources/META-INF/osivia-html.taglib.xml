@@ -26,4 +26,9 @@
         <tag-name>icons</tag-name>
         <source>components/icons.xhtml</source>
     </tag>
+    
+    <tag>
+        <tag-name>ottcicons</tag-name>
+        <source>components/ottc-icons.xhtml</source>
+    </tag>
 </facelet-taglib>
