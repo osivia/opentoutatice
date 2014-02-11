@@ -7,10 +7,6 @@
 		point="layouts">
 		
 		<layout name="toutatice_showInMenu">
-			<!-- <templates>
-				<template mode="any">/layouts/toutatice_nolabel_layout_default_template.xhtml
-				</template>
-			</templates> -->
 			<templates>
 				<template mode="any">/layouts/layout_default_template.xhtml
 				</template>
