@@ -8,6 +8,8 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 
+import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
+
 /**
  * SimpleForm is used for configuration icon selector to hold an UIComponent
  * the clientId of this component is used by the js scripts
@@ -15,7 +17,7 @@ import org.jboss.seam.annotations.Scope;
  */
 @Name("simpleForm")
 @Scope(ScopeType.SESSION)
-@Install(precedence = Install.DEPLOYMENT)
+@Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class SimpleFormBean {
 
     private UIComponent simpleComponent;
