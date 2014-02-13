@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.web.contentviews">
+
+	<require>org.nuxeo.ecm.webapp.contentview.contrib</require>
+	<require>org.nuxeo.ecm.platform.ui.web.ContentViewService</require>
+	
+	<!-- Possible CV not used in openToutatice "core" for the moment -->
+
+	<extension target="org.nuxeo.ecm.platform.ui.web.ContentViewService"
+		point="contentViews">
+
+		<contentView name="cv_ContentReadNWrite">
+			<coreQueryPageProvider>
+				<property name="coreSession">#{documentManager}</property>
+				<pattern>SELECT * FROM Document WHERE (ecm:mixinType !=
+					'HiddenInNavigation' AND ecm:isCheckedInVersion = 0 AND
+					ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0 AND
+					ecm:parentId = ?)
+				</pattern>
+				<parameter>#{currentDocument.id}</parameter>
+				<sort column="dc:title" ascending="true" />
+				<pageSize>40</pageSize>
+			</coreQueryPageProvider>
+			<useGlobalPageSize>true</useGlobalPageSize>
+			<refresh>
+				<event>documentChanged</event>
+				<event>documentChildrenChanged</event>
+			</refresh>
+			<cacheKey>#{currentDocument.id}</cacheKey>
+			<cacheSize>10</cacheSize>
+			<selectionList>CURRENT_SELECTION</selectionList>
+			<showTitle>false</showTitle>
+			<showFilterForm>false</showFilterForm>
+			<showPageSizeSelector>true</showPageSizeSelector>
+			<showRefreshCommand>true</showRefreshCommand>
+			<actions category="CURRENT_SELECTION_LIST" />
+			<resultLayouts>
+				<layout name="cv_ContentReadNWrite@cvListingLayout" title="document_listing"
+					translateTitle="true" iconPath="/icons/document_listing_icon.png"
+					showCSVExport="true" />
+				<layout name="document_virtual_navigation_listing_ajax_compact_2_columns"
+					title="document_listing_compact_2_columns" translateTitle="true"
+					iconPath="/icons/document_listing_compact_2_columns_icon.png" />
+				<layout name="document_virtual_navigation_listing_ajax_icon_2_columns"
+					title="document_listing_icon_2_columns" translateTitle="true"
+					iconPath="/icons/document_listing_icon_2_columns_icon.png" />
+			</resultLayouts>
+			<flags>
+				<flag>DOCUMENT_CONTENT</flag>
+			</flags>
+		</contentView>
+
+
+		<contentView name="cv_ContentReadNWrite_NIPS">
+			<coreQueryPageProvider>
+				<property name="coreSession">#{documentManager}</property>
+				<pattern>SELECT * FROM Document WHERE (ecm:mixinType !=
+					'HiddenInNavigation' AND ecm:isCheckedInVersion = 0 AND
+					ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0 AND
+					ecm:parentId = ?)
+				</pattern>
+				<parameter>#{currentDocument.id}</parameter>
+				<sort column="dc:title" ascending="true" />
+				<pageSize>40</pageSize>
+			</coreQueryPageProvider>
+			<useGlobalPageSize>true</useGlobalPageSize>
+			<refresh>
+				<event>documentChanged</event>
+				<event>documentChildrenChanged</event>
+			</refresh>
+			<cacheKey>#{currentDocument.id}</cacheKey>
+			<cacheSize>10</cacheSize>
+			<selectionList>CURRENT_SELECTION</selectionList>
+			<showTitle>false</showTitle>
+			<showFilterForm>false</showFilterForm>
+			<showPageSizeSelector>true</showPageSizeSelector>
+			<showRefreshCommand>true</showRefreshCommand>
+			<actions category="CURRENT_SELECTION_LIST" />
+			<resultLayouts>
+				<layout name="cv_ContentReadNWrite_NIPS@cvListingLayout"
+					title="document_listing" translateTitle="true"
+					iconPath="/icons/document_listing_icon.png" showCSVExport="true" />
+				<layout name="document_virtual_navigation_listing_ajax_compact_2_columns"
+					title="document_listing_compact_2_columns" translateTitle="true"
+					iconPath="/icons/document_listing_compact_2_columns_icon.png" />
+				<layout name="document_virtual_navigation_listing_ajax_icon_2_columns"
+					title="document_listing_icon_2_columns" translateTitle="true"
+					iconPath="/icons/document_listing_icon_2_columns_icon.png" />
+			</resultLayouts>
+			<flags>
+				<flag>DOCUMENT_CONTENT</flag>
+			</flags>
+		</contentView>
+
+		<contentView name="cv_ContentOrderedReadNWrite_NIPS">
+			<coreQueryPageProvider>
+				<property name="coreSession">#{documentManager}</property>
+				<pattern>SELECT * FROM Document WHERE (ecm:mixinType !=
+					'HiddenInNavigation' AND ecm:isCheckedInVersion = 0 AND
+					ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0 AND
+					ecm:parentId = ?)
+				</pattern>
+				<parameter>#{currentDocument.id}</parameter>
+				<sort column="ecm:pos" ascending="true" />
+				<pageSize>40</pageSize>
+			</coreQueryPageProvider>
+			<useGlobalPageSize>true</useGlobalPageSize>
+			<refresh>
+				<event>documentChanged</event>
+				<event>documentChildrenChanged</event>
+			</refresh>
+			<cacheKey>#{currentDocument.id}</cacheKey>
+			<cacheSize>10</cacheSize>
+			<selectionList>CURRENT_SELECTION</selectionList>
+			<actions category="CURRENT_SELECTION_LIST" />
+			<actions category="ORDERABLE_CURRENT_SELECTION_LIST" />
+			<resultLayouts>
+				<layout name="cv_ContentOrderedReadNWrite_NIPS@cvListingLayout"
+					title="document_listing" translateTitle="true"
+					iconPath="/icons/document_listing_icon.png" showCSVExport="true" />
+				<layout name="document_virtual_navigation_listing_ajax_compact_2_columns"
+					title="document_listing_compact_2_columns" translateTitle="true"
+					iconPath="/icons/document_listing_compact_2_columns_icon.png" />
+				<layout name="document_virtual_navigation_listing_ajax_icon_2_columns"
+					title="document_listing_icon_2_columns" translateTitle="true"
+					iconPath="/icons/document_listing_icon_2_columns_icon.png" />
+			</resultLayouts>
+			<flags>
+				<flag>DOCUMENT_CONTENT</flag>
+			</flags>
+		</contentView>
+
+	</extension>
+
+</component>
