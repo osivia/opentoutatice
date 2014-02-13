@@ -41,13 +41,8 @@ public class PermaLinkServiceImpl extends DefaultComponent implements
 		String permalinkName = getDefaultPermalinkName();
 		Permalink permalinkImpl = (Permalink) permalinkImpls.get(permalinkName);
 		
-		PermalinkDescriptor desc = (PermalinkDescriptor) descriptors
-				.get(permalinkName);
+		PermalinkDescriptor desc = (PermalinkDescriptor) descriptors.get(permalinkName);
 		
-		/* FIXME: DCH: check with Marc */
-//		if (desc == null)
-//			throw new IllegalArgumentException(String.format(
-//					"Unknown permalink implementation '%s'", permalinkName));	
 		if (desc == null){
 		    log.warn("No permaLink contribution");
 		    return "";
@@ -59,12 +54,9 @@ public class PermaLinkServiceImpl extends DefaultComponent implements
 				throw new IllegalArgumentException(String.format(
 						"Unknown classpath for '%s'", permalinkName));
 			try {
-				permalinkImpl = (Permalink) Permalink.class
-						.getClassLoader().loadClass(classPathImpl)
-						.newInstance();
+				permalinkImpl = (Permalink) Permalink.class.getClassLoader().loadClass(classPathImpl).newInstance();
 			} catch (Exception e) {
-				String msg = String
-						.format("Caught error when instantiating permalink '%s' with class '%s' ",
+				String msg = String.format("Caught error when instantiating permalink '%s' with class '%s' ",
 								permalinkName, classPathImpl);
 				throw new IllegalArgumentException(msg, e);
 			}

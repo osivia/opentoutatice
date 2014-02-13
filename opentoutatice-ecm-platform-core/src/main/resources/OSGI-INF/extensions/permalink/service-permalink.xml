@@ -1,10 +1,10 @@
-<component name="fr.toutatice.ecm.platform.service.permalink">
+<component name="fr.toutatice.ecm.platform.core.services.permalink">
 	<service>
-		<provide
-			interface="fr.toutatice.ecm.platform.services.permalink.PermaLinkService" />
+		<provide interface="fr.toutatice.ecm.platform.services.permalink.PermaLinkService" />
 	</service>
-	<implementation
-		class="fr.toutatice.ecm.platform.services.permalink.PermaLinkServiceImpl" />
+	
+	<implementation class="fr.toutatice.ecm.platform.services.permalink.PermaLinkServiceImpl" />
+	
 	<extension-point name="permalinks">
 		<object class="fr.toutatice.ecm.platform.services.permalink.PermalinkDescriptor" />
 	</extension-point>

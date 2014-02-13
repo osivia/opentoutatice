@@ -2,7 +2,9 @@
 
 <component name="fr.toutatice.ecm.platform.services.permalink.config.example">
 
-	<extension target="fr.toutatice.ecm.platform.services.permalink.PermaLinkService"
+	<require>fr.toutatice.ecm.platform.core.services.permalink</require>
+
+	<extension target="fr.toutatice.ecm.platform.core.services.permalink"
 		point="permalinks">
 
 		<permalink name="permalinkByPath" classpath="fr.toutatice.ecm.platform.services.permalink.PermalinkByPathDoc"
