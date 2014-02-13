@@ -21,7 +21,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 
-import fr.toutatice.ecm.platform.core.utils.helper.DirectoryMngtHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDirectoryMngtHelper;
 
 
 @Operation(id = GetVocabularies.ID, 
