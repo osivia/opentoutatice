@@ -2,6 +2,7 @@
 <component name="fr.toutatice.ecm.platform.web.local.publishing.widgets">
 
 	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+	<require>org.nuxeo.ecm.platform.forms.layouts.webapp.summary</require>
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgettypes">
@@ -28,6 +29,17 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
 
+		<widget name="toutatice_summary_panel_top_widget" type="summary_current_document_custom_actions">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<properties widgetMode="any">
+				<property name="display">buttons</property>
+				<property name="category">TOUTATICE_SUMMARY_PANEL_TOP</property>
+			</properties>
+		</widget>
+		
 		<widget name="toutatice_summary_current_document_actions"
 			type="toutatice_summary_current_document_cartridge_actions">
 			<labels>
@@ -36,33 +48,67 @@
 			<translated>false</translated>
 		</widget>
 
-		<widget name="toutatice_summary_current_document_actions"
-			type="toutatice_summary_current_document_cartridge_actions">
+		<!-- Barre de titre: installation des actions toutatice -->
+		<widget name="toutatice_extended_title_widget" type="summary_current_document_custom_actions">
+			<handlingLabels>true</handlingLabels>
 			<labels>
 				<label mode="any"></label>
 			</labels>
-			<translated>false</translated>
+			<fields/>			
+			<properties widgetMode="any">
+				<property name="display">buttons</property>
+				<property name="category">TOUTATICE_SUMMARY_PANEL_TOP</property>
+			</properties>
 		</widget>
-
-		<!-- Affichage version et status publication à côté titre du document -->
-		<widget name="extended_title" type="template">
+		
+		<!-- Barre de titre: affichage du titre du document -->
+		<widget name="toutatice_extended_title_title_widget" type="template">
+			<handlingLabels>true</handlingLabels>
 			<labels>
-				<label mode="any" />
+				<label mode="any"></label>
 			</labels>
-			<helpLabels>
-				<label mode="any" />
-			</helpLabels>
-			<translated>false</translated>
-			<fields>
-				<field>#{navigationContext.getCurrentDocument()}</field>
-			</fields>
+			<fields/>
 			<properties mode="any">
-				<property name="template">
-					/widgets/title_with_permlink_widget_template.xhtml
-				</property>
+				<property name="template">/widgets/toutatice_widget_document_title.xhtml</property>
 			</properties>
 		</widget>
 
+		<!-- Barre de titre: affichage de la version du document -->
+		<widget name="toutatice_extended_title_version_widget" type="template">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<fields/>
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_widget_document_version.xhtml</property>
+			</properties>
+		</widget>
+		
+		<!-- Barre de titre: affichache des vignettes de workflow en cours -->
+		<widget name="toutatice_extended_title_workflow_widget" type="template">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<fields/>
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_widget_document_workflow.xhtml</property>
+			</properties>
+		</widget>
+
+		<!-- Barre de titre: affichache des vignettes de workflow en cours -->
+		<widget name="toutatice_extended_title_lock_widget" type="template">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<fields/>
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_widget_document_lock.xhtml</property>
+			</properties>
+		</widget>
+		
 		<!-- Affiche le status de publication dans une contentView -->
 		<widget name="local_publishing_status" type="template">
 			<labels>
@@ -71,8 +117,7 @@
 			<translated>false</translated>
 			<fields />
 			<properties mode="any">
-				<property name="template">/widgets/toutatice_widget_document_listing_icon.xhtml
-				</property>
+				<property name="template">/widgets/toutatice_widget_document_listing_icon.xhtml</property>
 				<property name="iconPath">img/yes.png</property>
 				<property name="label">En ligne</property>
 			</properties>
@@ -80,7 +125,7 @@
 				<mode value="any">#{nxu:test(documentActions.belongToPublishSpace(), layout.mode, 'hidden')}</mode>
 			</widgetModes>
 		</widget>
-
+		
 		<!-- Sucharge pour ne pas apparaître pour la publication locale -->
 		<widget name="summary_current_document_single_tasks" type="summary_current_document_single_tasks">
 			<widgetModes>

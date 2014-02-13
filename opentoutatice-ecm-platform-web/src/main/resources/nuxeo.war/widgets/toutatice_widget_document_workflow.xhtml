@@ -1,0 +1,40 @@
+<f:subview xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+  	xmlns:c="http://java.sun.com/jstl/core">
+
+	<c:if test="#{!documentActions.belongToPublishSpace()}">
+		<nxu:set var="pendingProcess" value="#{jbpmActions.getPendingProcessName(currentDocument)}">
+			<c:if test="#{not empty pendingProcess}">
+				<c:set var="pendingLabel" value="label.toutatice.version.pending.#{pendingProcess}" />
+				<h:outputText class="summary_superscript summary_pendingVersion" value="#{messages[pendingLabel]}" />
+			</c:if>
+		</nxu:set>
+	</c:if>
+	<c:if test="#{documentActions.belongToPublishSpace()}">
+		<nxu:set var="pendingProcess" value="#{jbpmActions.getPendingProcessName(currentDocument)}">
+			<c:choose>
+				<c:when test="#{not empty pendingProcess}">
+					<c:set var="pendingLabel"
+						value="label.toutatice.version.pending.#{pendingProcess}" />
+					<h:outputText class="summary_superscript summary_pendingVersion"
+						value="#{messages[pendingLabel]}" />
+				</c:when>
+				<c:otherwise>
+					<h:outputText class="summary_superscript summary_workVersion"
+						value="#{messages['label.toutatice.version.work']}"
+						rendered="#{!documentActions.isOnlineWithSameVersion()}" />
+
+					<h:outputText
+						class="summary_superscript summary_publishedVersion"
+						value="#{messages['label.toutatice.version.published']}"
+						rendered="#{documentActions.isOnlineWithSameVersion()}" />
+
+
+				</c:otherwise>
+			</c:choose>
+		</nxu:set>
+	</c:if>
+
+</f:subview>
+

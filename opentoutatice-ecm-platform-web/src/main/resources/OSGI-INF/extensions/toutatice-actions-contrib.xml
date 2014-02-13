@@ -7,28 +7,7 @@
 
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
-
-<!-- 
-		<action id="TAB_CONTENT" order="1">
-			<filter-id>not_belong_to_publish_space</filter-id>
-		</action>
-
-		<action id="ATAB_CONTENT_IN_PUBLISHING_SPACE" link="/incl/tabs/toutatice_document_content.xhtml"
-			order="10" label="action.view.content" icon="/icons/file.gif">
-			<category>VIEW_ACTION_LIST</category>
-			<filter-id>view_content</filter-id>
-			<filter-id>outSection</filter-id>
-			<filter-id>belong_to_publish_space</filter-id>
-			<filter id="filter@ATAB_CONTENT_IN_PUBLISHING_SPACE">
-				<rule grant="false">
-					<type>Root</type>
-					<type>Forum</type>
-				</rule>
-			</filter>
-			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
-		</action>
- -->
-
+		
 		<!-- Vue résumé sur les PortalSite, PortaPage -->
 		<action id="ATAB_FOLDERISH_VIEW" link="/incl/tabs/document_view.xhtml"
 			order="20" label="action.view.summary" icon="/icons/file.gif">

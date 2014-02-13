@@ -1,4 +1,4 @@
-package fr.toutatice.ecm.platform.core.utils.helper;
+package fr.toutatice.ecm.platform.core.helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,22 +15,22 @@ import org.nuxeo.ecm.directory.Session;
 import org.nuxeo.ecm.directory.api.DirectoryService;
 import org.nuxeo.runtime.api.Framework;
 
-import fr.toutatice.ecm.platform.core.utils.constants.UtilsConst;
+import fr.toutatice.ecm.platform.core.constants.UtilsConst;
 import fr.toutatice.ecm.platform.core.utils.exception.ToutaticeException;
 
-public class DirectoryMngtHelper {
-	private static final Log log = LogFactory.getLog(DirectoryMngtHelper.class);
+public class ToutaticeDirectoryMngtHelper {
+	private static final Log log = LogFactory.getLog(ToutaticeDirectoryMngtHelper.class);
 	
-	private static DirectoryMngtHelper instance;
+	private static ToutaticeDirectoryMngtHelper instance;
 	private DirectoryService service;
 
-	private DirectoryMngtHelper() {
+	private ToutaticeDirectoryMngtHelper() {
 		// singleton
 	}
 
-    public static DirectoryMngtHelper instance() throws ToutaticeException {
+    public static ToutaticeDirectoryMngtHelper instance() throws ToutaticeException {
         if (null == instance) {
-            instance = new DirectoryMngtHelper();
+            instance = new ToutaticeDirectoryMngtHelper();
         }
         return instance;
     }

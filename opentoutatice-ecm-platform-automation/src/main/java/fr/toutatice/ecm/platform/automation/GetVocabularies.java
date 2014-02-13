@@ -77,12 +77,12 @@ public class GetVocabularies
         {
         	voc = parVocToken.nextToken();
         	indexVoc.add(voc);
-        	entries = DirectoryMngtHelper.instance().getEntries(voc);
+        	entries = ToutaticeDirectoryMngtHelper.instance().getEntries(voc);
         	
         	listValVoc = new ArrayList<String>();
         	for (DocumentModel entry : entries) 
             {
-				String localizedEntryLabel = DirectoryMngtHelper.instance().getDirectoryEntryLocalizedLabel(voc, entry.getId(), localeChoisie);
+				String localizedEntryLabel = ToutaticeDirectoryMngtHelper.instance().getDirectoryEntryLocalizedLabel(voc, entry.getId(), localeChoisie);
         		listValVoc.add(URLEncoder.encode(entry.getTitle(),"UTF-8")+";"+URLEncoder.encode(localizedEntryLabel,"UTF-8")+";"+entry.getProperty("xvocabulary", "parent"));
             }
         	listVoc.put(voc, listValVoc);
