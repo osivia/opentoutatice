@@ -26,23 +26,23 @@
 			</div>
 
 			<div class="toutatice_view_content_class">
-			
-				<nxl:documentLayout documentMode="header" 
-					mode="view"
-					value="#{currentDocument}" 
-					defaultLayout="document_header"
-					includeAnyMode="false" />
-				
+
+				<h:form id="document_header_layout_form" class="titleBlock">
+					<nxl:documentLayout documentMode="header" mode="view"
+						value="#{currentDocument}" defaultLayout="document_header"
+						includeAnyMode="false" />
+				</h:form>
+
+
 				<div style="clear: both"></div>
 
 				<h:form id="document_view">
 					<a4j:region id="documentViewRegion">
 						<a4j:outputPanel id="documentViewPanel">
 
-							<nxl:layout value="#{currentDocument}"
-								mode="view"
-								name="#{currentDocumentSummaryLayout}"
-								template="/layouts/toutatice_layout_summary_template.xhtml" />
+							<nxl:documentLayout documentMode="summary" mode="view"
+								value="#{currentDocument}" defaultLayout="grid_summary_layout"
+								includeAnyMode="false" />
 
 						</a4j:outputPanel>
 					</a4j:region>
