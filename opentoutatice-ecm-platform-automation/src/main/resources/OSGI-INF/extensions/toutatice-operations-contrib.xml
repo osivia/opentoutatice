@@ -30,6 +30,7 @@
 	<operation class="fr.toutatice.ecm.platform.automation.TextExtraction" />
 	<operation class="fr.toutatice.ecm.platform.automation.ReloadMntCfg" />
 	<operation class="fr.toutatice.ecm.platform.automation.PutDocumentInTrash" />
+	<operation class="fr.toutatice.ecm.platform.automation.QueryDocumentBaseOperation" />
 	
   </extension>
 
