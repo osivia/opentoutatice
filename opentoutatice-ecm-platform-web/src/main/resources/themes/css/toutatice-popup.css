@@ -6,7 +6,7 @@ span.toutaticeButtonLikeLinkPos {
     padding-right: 10px;
 }
 
-a.toutaticeButtonLikeLink {
+/*a.toutaticeButtonLikeLink {
   background-color: "button (COLLECTION background)";
   border: 1px solid;
   border-color: "button (COLLECTION border)";
@@ -21,7 +21,7 @@ a.toutaticeButtonLikeLink {
   border-radius: 3px;
   box-shadow: none;
   text-shadow: 1px 1px 0 #ffffff;
-}
+}*/
 
 .savePanelAction input.button {
     box-shadow: none;
@@ -80,11 +80,15 @@ td.themeCellFrame.content {
 	background-color: #808080;
 }
 
-div.summary_div_0 {
+div.widgetPanel.actionsWidgetPanel {
+    padding: 7px 0;
+}
+
+div.gridBox.gridStyle7{
 	width: 100%;
 }
 
-div.summary_div_1 {
+div.gridBox.gridStyle5 {
 	width: 100%;
 }
 
