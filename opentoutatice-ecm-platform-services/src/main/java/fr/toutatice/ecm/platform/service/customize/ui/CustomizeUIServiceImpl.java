@@ -201,8 +201,8 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
                 ContentView contentView = contentViewService.getContentView(typeContentViewName);
                 if (contentView != null) {
                     /*
-                     * Passage d'une liste et de paramètres vides pour éviter une portaie
-                     * des logs d'erreur au démarrage de Nuxeo (FacesContext null -evidemment...-)
+                     * Passage d'une liste et de paramètres vides pour éviter une partie
+                     * des logs d'erreur au démarrage de Nuxeo.
                      */
                     PageProvider<?> pageProvider = contentView.getPageProvider(null, new ArrayList<SortInfo>(), null, null, new Object[0]);
                     PageProviderDefinition pageProviderDefinition = pageProvider.getDefinition();
