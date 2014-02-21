@@ -20,7 +20,7 @@ public class GlobalConst {
     public static final String CST_CONTENT_VIEW_RELATION_SEARCH = "relation_search";
     public static final String CST_ADVANCED_SEARCH_XPATH_PATH = "advanced_search:searchpath";
     public static final String CST_FACETED_SEARCH_XPATH_PATH = "faceted_search_default:ecm_path";
-    public static final String CST_RELATION_SEARCH_XPATH_PATH = "relation_search:ecm";
+    public static final String CST_RELATION_SEARCH_XPATH_PATH = "relation_search:ecm_path";
 	
 	// Workflow tasks - mise en ligne
 	public final static String CST_WORKFLOW_TASK_CHOOSE_PARTICIPANT = "choose-participant";
