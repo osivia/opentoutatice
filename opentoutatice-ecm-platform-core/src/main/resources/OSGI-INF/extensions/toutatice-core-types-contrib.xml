@@ -25,6 +25,7 @@
 		<doctype name="PortalSite" extends="Document">
 			<schema name="common" />
 			<schema name="dublincore" />
+			<schema name="files" />
 			<schema name="portalsite" />
 			<schema name="toutatice_navigation" />
 			<schema name="webpage" />
@@ -52,6 +53,7 @@
 		<doctype name="PortalPage" extends="Document">
 			<schema name="common" />
 			<schema name="dublincore" />
+			<schema name="files" />
 			<schema name="portalpage" />
 			<schema name="toutatice_navigation" />
 			<schema name="webpage" />
