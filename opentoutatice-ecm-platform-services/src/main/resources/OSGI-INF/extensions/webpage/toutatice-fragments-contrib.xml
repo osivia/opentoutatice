@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <component name="fr.toutatice.ecm.platform.service.fragments.contrib">
 
+	<require>fr.toutatice.ecm.platform.service.fragments.FragmentService</require>
+
     <extension
         target="fr.toutatice.ecm.platform.service.fragments.FragmentService"
         point="fragment">
