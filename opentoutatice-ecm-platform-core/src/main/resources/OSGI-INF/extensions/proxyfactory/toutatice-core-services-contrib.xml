@@ -14,10 +14,6 @@
 			serviceClass="org.nuxeo.ecm.automation.AutomationService"
 			handlerClass="fr.toutatice.ecm.platform.core.components.ToutaticeAutomationServiceHandler" />
 			
-		<handler enabled="true"
-			serviceClass="org.nuxeo.ecm.platform.contentview.jsf.ContentViewService"
-			handlerClass="fr.toutatice.ecm.platform.core.components.ToutaticeContentViewServiceHandler" />
-			
 	</extension>
 	
 </component>
