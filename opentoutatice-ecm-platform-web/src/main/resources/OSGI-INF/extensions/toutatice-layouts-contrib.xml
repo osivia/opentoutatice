@@ -161,7 +161,7 @@
 
 	</extension>
 	
-	<!-- Gestion de la vue Summary pour Folderish l'acceptant-->
+	<!-- Gestion de la vue Summary pour les Folderish l'acceptant-->
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
 		
