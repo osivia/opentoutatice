@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.generic.ui.GenericUIService">
+	
+	<implementation
+		class="org.nuxeo.ecm.platform.types.GenericUIServiceImpl" />
+
+	<service>
+		<provide interface="org.nuxeo.ecm.platform.types.GenericUIService" />
+	</service>
+		
+	<extension-point name="layouts">
+		<object class="org.nuxeo.ecm.platform.types.GenericLayoutsDescriptor" />
+  	</extension-point>
+
+</component>
