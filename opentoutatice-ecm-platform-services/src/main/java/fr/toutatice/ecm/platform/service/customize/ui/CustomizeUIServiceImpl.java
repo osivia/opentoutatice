@@ -9,13 +9,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.el.ELException;
+import javax.faces.context.FacesContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.SortInfo;
 import org.nuxeo.ecm.platform.contentview.jsf.ContentView;
 import org.nuxeo.ecm.platform.contentview.jsf.ContentViewLayout;
 import org.nuxeo.ecm.platform.contentview.jsf.ContentViewService;
-import org.nuxeo.ecm.platform.contentview.jsf.ContentViewServiceImpl;
 import org.nuxeo.ecm.platform.forms.layout.api.LayoutDefinition;
 import org.nuxeo.ecm.platform.forms.layout.api.LayoutRowDefinition;
 import org.nuxeo.ecm.platform.forms.layout.api.impl.LayoutRowDefinitionImpl;
@@ -25,12 +27,11 @@ import org.nuxeo.ecm.platform.query.api.PageProviderDefinition;
 import org.nuxeo.ecm.platform.query.api.WhereClauseDefinition;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.platform.types.TypeManager;
+import org.nuxeo.ecm.platform.ui.web.jsf.MockFacesContext;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.model.ComponentContext;
 import org.nuxeo.runtime.model.ComponentInstance;
 import org.nuxeo.runtime.model.DefaultComponent;
-
-import fr.toutatice.ecm.platform.core.components.ToutaticeServiceProvider;
 
 
 /**
@@ -48,8 +49,6 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
     private static final String PORTAL_SITE = "PortalSite";
 
     private static final String LAYOUTS_PT_EXT = "layouts";
-    
-    private static final String VIRTUAL_PRINCIPAL = "VT_nx_principal";
 
     private TypeManager typeManager;
     private ContentViewService contentViewService;
@@ -94,11 +93,7 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
     @Override
     public void adaptContentViews() throws Exception {
         
-        if (allowedTypesUnderPortalSite != null) {
-            
-            /* Pour éviter les logs d'erreur "FacesContext null" au démarrage de Nuxeo. */
-            ToutaticeServiceProvider.instance().register(ContentViewService.class, VIRTUAL_PRINCIPAL);
-            
+        if (allowedTypesUnderPortalSite != null) {           
             Collection<Type> types = typeManager.getTypes();
             for (Type type : types) {
                 if (allowedTypesUnderPortalSite.contains(type)) {
@@ -106,7 +101,6 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
                 }
                 setNoProxyQueryToContentViews(type);
             }
-            ToutaticeServiceProvider.instance().unregister(ContentViewService.class, VIRTUAL_PRINCIPAL);
         }
     }
 
@@ -183,16 +177,16 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
          * Pour éviter les logs d'erreur "FacesContext null" au démarrage
          * de Nuxeo.
          */       
-//        MockFacesContext mockFacesContext = new MockFacesContext() {
-//            @Override
-//            public Object evaluateExpressionGet(FacesContext context, String expression, Class expectedType) throws ELException {
-//                if (expression.startsWith("#{")) {
-//                    return "";
-//                }
-//                return null;
-//            }
-//        };
-//        mockFacesContext.setCurrent();
+        ToutaticeMockFacesContext mockFacesContext = new ToutaticeMockFacesContext() {
+            @Override
+            public Object evaluateExpressionGet(FacesContext context, String expression, Class expectedType) throws ELException {
+                if (expression.startsWith("#{")) {
+                    return "";
+                }
+                return null;
+            }
+        };
+        mockFacesContext.setCurrent();
         
         String[] typeContentViewNames = type.getContentViews(CONTENT_CATEGORY);
 
@@ -222,7 +216,7 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
                 }
             }
         }
-//        mockFacesContext.relieveCurrent();
+        mockFacesContext.relieveCurrent();
     }
 
     /**
