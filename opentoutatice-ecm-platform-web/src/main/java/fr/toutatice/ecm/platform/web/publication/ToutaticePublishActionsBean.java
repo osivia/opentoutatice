@@ -15,10 +15,13 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
+import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.platform.publisher.api.PublicationNode;
 import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
 import org.nuxeo.ecm.platform.publisher.impl.core.SimpleCorePublishedDocument;
+import org.nuxeo.ecm.platform.publisher.impl.service.ProxyNode;
+import org.nuxeo.ecm.platform.publisher.impl.service.ProxyTree;
 import org.nuxeo.ecm.platform.publisher.web.PublishActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
@@ -171,6 +174,20 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
         // récupérer le nom du domaine associé au document
         DocumentModel domain = ((ToutaticeNavigationContext) navigationContext).getDocumentDomain(document);
         pathFragments.add(domain.getTitle());
+    }
+
+    public String getIconPath(Object node) throws ClientException {
+        String iconPath = "";
+        if (node instanceof ProxyNode) {
+            String path = ((ProxyNode) node).getPath();
+            PathRef pathRef = new PathRef(path);
+            DocumentModel document = documentManager.getDocument(pathRef);
+            iconPath = (String) document.getProperty("common", "icon");
+        }
+        if(node instanceof ProxyTree){
+            iconPath = "/icons/domain.gif";
+        }
+        return iconPath;
     }
 
     public boolean getTrue() {
