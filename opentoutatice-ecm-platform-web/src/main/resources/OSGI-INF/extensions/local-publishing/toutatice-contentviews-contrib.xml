@@ -34,7 +34,6 @@
 			<refresh>
 				<event>documentChanged</event>
 				<event>documentChildrenChanged</event>
-				<!-- A laisser? -->
 				<event>documentPublicationEvent</event>
 			</refresh>
 			<cacheKey>#{currentDocument.id}</cacheKey>
