@@ -9,7 +9,7 @@
 	<!-- Utilisé pour l'arbre de publication d'une feuille basé sur l'arbre 
 		de configuration des sections d'un Workspace -->
 		
-	<extension
+	<!-- <extension
 		target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
 		point="factory">
 
@@ -17,7 +17,7 @@
 			class="fr.toutatice.ecm.platform.web.publication.ToutaticeCoreProxyWithWorkflowFactory"
 			validatorsRule="CoreValidatorsRule" />
 
-	</extension>
+	</extension> -->
 		
 	<extension
 		target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
@@ -28,12 +28,29 @@
 
 	</extension>
 
-	<extension
+	<!-- <extension
 		target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
 		point="treeInstance">
 
 		<publicationTreeConfig name="DefaultSectionsTree"
 			tree="RootSectionsCoreTree" factory="ToutaticeCoreProxyWithWorkflow"
+			localSectionTree="true" title="Sections de publication distantes">
+			<parameters>
+				<parameter name="RelativeRootPath">/</parameter>
+				<parameter name="enableSnapshot">true</parameter>
+				<parameter name="iconExpanded"></parameter>
+				<parameter name="iconCollapsed"></parameter>
+			</parameters>
+		</publicationTreeConfig>
+
+	</extension> -->
+	
+	<extension
+		target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
+		point="treeInstance">
+
+		<publicationTreeConfig name="DefaultSectionsTree"
+			tree="RootSectionsCoreTree" factory="CoreProxyWithWorkflow"
 			localSectionTree="true" title="Sections de publication distantes">
 			<parameters>
 				<parameter name="RelativeRootPath">/</parameter>
