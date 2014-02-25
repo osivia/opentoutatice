@@ -10,7 +10,7 @@
     
 	<artifactId>opentoutatice-ecm-platform-generic-ui-service</artifactId>
 	<packaging>jar</packaging>
-	<name>Partie service de la plate-forme opentoutatice</name>
+	<name>Service d'injection de widgets génériques</name>
 
 	<properties>
 		<nuxeo.version>5.6.0-HF26</nuxeo.version>
