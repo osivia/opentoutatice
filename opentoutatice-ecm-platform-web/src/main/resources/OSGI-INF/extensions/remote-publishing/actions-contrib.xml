@@ -7,7 +7,10 @@
 		point="actions">
 		
 		<action id="TAB_PUBLISH" label="action.publish.content" icon="/icons/file.gif" 
-			link="/incl/tabs/toutatice_document_publish_template.xhtml" enabled="true" />
+			link="/incl/tabs/toutatice_document_publish_template.xhtml" enabled="true" 
+			append="true">
+			<filter-id>dont_belong_to_publish_space</filter-id>
+		</action>
 
 		<action id="TAB_ADMIN_PUBLICATION_TREES" icon="/icons/file.gif"
 			label="action.admin.publication.tree" link="/incl/tabs/toutatice_admin_publication_trees.xhtml"
