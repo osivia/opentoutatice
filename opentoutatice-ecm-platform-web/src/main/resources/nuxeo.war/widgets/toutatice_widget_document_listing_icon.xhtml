@@ -18,18 +18,11 @@
 			<c:set var="isOnlineRequestRunning" value="#{jbpmActions.isPending(document,'toutatice_online_approbation')}"/>
 			<c:set var="helpLabel" value="#{nxu:test(isOnlineRequestRunning, messages['toutatice.label.pending.online'], '')}"/>
 			
-			<!-- TODO: à déplacer dans acrennes 
-			<c:set var="isValidationRequestRunning" value="#{jbpmActions.isPending(document,'acaren_validation_approbation')}"/>
-			<c:set var="helpLabel" value="#{nxu:test(isValidationRequestRunning, messages['acaren.label.pending.validation'], helpLabel)}"/>
-			-->	
-
-			<!-- TODO: à déplacer dans le addon publication distante
-			<c:set var="isPublishRequestRunning" value="#{jbpmActions.isTaskPending(document,'org.nuxeo.ecm.platform.publisher.jbpm.CoreProxyWithWorkflowFactory')}"/>
-			 -->
+			<c:set var="isPublishRequestRunning" value="#{taskActions.isPendingPublishTask(document)}"/>
 			<c:set var="helpLabel" value="#{nxu:test(isPublishRequestRunning, messages['toutatice.label.pending.publication'], helpLabel)}"/>
 
 			<c:choose>
-				<c:when test="#{isOnlineRequestRunning or isValidationRequestRunning or isPublishRequestRunning}">
+				<c:when test="#{isOnlineRequestRunning or isPublishRequestRunning}">
 					<nxu:graphicImage value="/icons/review_pending.gif"
 						alt="#{helpLabel}" 
 						title="#{helpLabel}"
