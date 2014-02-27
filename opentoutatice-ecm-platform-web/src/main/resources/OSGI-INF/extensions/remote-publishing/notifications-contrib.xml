@@ -24,7 +24,7 @@
 			autoSubscribed="true" template="publish"
 			subject="Demande de publication du document: ${docTitle}" label="label.nuxeo.notifications.publication">
 			<event name="documentWaitingPublication" />
-			<event name="workflowTaskAssigned" />
+			<!-- <event name="workflowTaskAssigned" /> -->
 		</notification>
 
 	</extension>
