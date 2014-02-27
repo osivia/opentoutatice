@@ -25,6 +25,10 @@ public class ToutaticeCoreFolderPublicationNode extends CoreFolderPublicationNod
         super(doc, treeConfigName, sid, parent, factory);
     }
 
+    public ToutaticeCoreFolderPublicationNode(DocumentModel document, String configName, String sessionId, PublishedDocumentFactory factory) throws ClientException {
+        super(document, configName, sessionId, factory);
+    }
+
     @Override
     protected String buildChildrenWhereClause(boolean queryDocuments) {
         StringBuffer clause = new StringBuffer();
