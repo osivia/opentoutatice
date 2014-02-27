@@ -26,7 +26,7 @@ public class ToutaticeRootSectionsPublicationTree extends RootSectionsPublicatio
 
     private static final long serialVersionUID = 6953076925201018520L;
     
-    /* FIXME: fork... */
+    /* FIXME: Fork to use ToutaticeCoreFolderPublicationNode */
     @Override
     public List<PublicationNode> getChildrenNodes() throws ClientException {
         if (currentDocument != null && useRootSections) {
@@ -45,6 +45,44 @@ public class ToutaticeRootSectionsPublicationTree extends RootSectionsPublicatio
             return publicationNodes;
         }
         return super.getChildrenNodes();
+    }
+    
+    /* FIXME: Fork to use getToutaticeNodeByPath */
+    @Override
+    public PublicationNode getNodeByPath(String path) throws ClientException {
+        if (!useRootSections) {
+            return super.getNodeByPath(path);
+        }
+        // if we ask for the root path of this tree, returns this because
+        // of the custom implementations of some methods (getChildrenNodes)
+        if (path.equals(rootPath)) {
+            return this;
+        } else {
+            // if we ask for a section root, returns a correct PublicationNode
+            // (with parent set to this tree)
+            List<PublicationNode> children = getChildrenNodes();
+            for (PublicationNode child : children) {
+                if (child.getPath().equals(path)) {
+                    return child;
+                }
+            }
+            return getToutaticeNodeByPath(path);
+        }
+    }
+    
+    /* FIXME: Fork of SectionPublicationTree méthod to use ToutaticeCoreFolderPublicationNode */
+    public PublicationNode getToutaticeNodeByPath(String path) throws ClientException {
+        DocumentRef docRef = new PathRef(path);
+        if (coreSession.hasPermission(docRef, SecurityConstants.READ)) {
+            return new ToutaticeCoreFolderPublicationNode(
+                    coreSession.getDocument(new PathRef(path)),
+                    getConfigName(), getSessionId(), factory);
+        } else {
+            return new VirtualCoreFolderPublicationNode(
+                    coreSession.getSessionId(), path, getConfigName(), sid,
+                    factory);
+        }
+
     }
 
 }
