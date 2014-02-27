@@ -3,9 +3,11 @@
  */
 package fr.toutatice.ecm.platform.service.customize.ui;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +22,9 @@ import org.nuxeo.ecm.platform.contentview.jsf.ContentViewLayout;
 import org.nuxeo.ecm.platform.contentview.jsf.ContentViewService;
 import org.nuxeo.ecm.platform.forms.layout.api.LayoutDefinition;
 import org.nuxeo.ecm.platform.forms.layout.api.LayoutRowDefinition;
+import org.nuxeo.ecm.platform.forms.layout.api.WidgetReference;
 import org.nuxeo.ecm.platform.forms.layout.api.impl.LayoutRowDefinitionImpl;
+import org.nuxeo.ecm.platform.forms.layout.api.impl.WidgetReferenceImpl;
 import org.nuxeo.ecm.platform.forms.layout.service.WebLayoutManager;
 import org.nuxeo.ecm.platform.query.api.PageProvider;
 import org.nuxeo.ecm.platform.query.api.PageProviderDefinition;
@@ -153,7 +157,17 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
                         LayoutDefinition layoutDefinition = webLayoutManager.getLayoutDefinition(layoutName);
 
                         LayoutRowDefinition[] rows = layoutDefinition.getRows();
-                        LayoutRowDefinitionImpl layoutRowDefinitionImpl = new LayoutRowDefinitionImpl("Version en ligne?", "local_publishing_status");
+                        
+                        List<WidgetReference> widgets = new ArrayList<WidgetReference>(1);
+                        WidgetReference widgetRef = new WidgetReferenceImpl("publishing_status");
+                        widgets.add(widgetRef);
+                        
+                        Map<String, Map<String, Serializable>> properties = new HashMap<String, Map<String,Serializable>>(1);
+                        Map<String, Serializable> labelProperty = new HashMap<String, Serializable>(1);
+                        labelProperty.put("label", "Version en ligne?");
+                        properties.put("any", labelProperty);
+                        
+                        LayoutRowDefinitionImpl layoutRowDefinitionImpl = new LayoutRowDefinitionImpl("publishing_status", properties, widgets, true, true);
                         LayoutRowDefinition[] modifiedRows = (LayoutRowDefinition[]) Arrays.copyOf(rows, rows.length + 1);
                         modifiedRows[rows.length] = layoutRowDefinitionImpl;
 
