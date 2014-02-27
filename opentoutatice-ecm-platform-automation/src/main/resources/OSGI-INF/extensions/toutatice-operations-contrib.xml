@@ -31,6 +31,7 @@
 	<operation class="fr.toutatice.ecm.platform.automation.ReloadMntCfg" />
 	<operation class="fr.toutatice.ecm.platform.automation.PutDocumentInTrash" />
 	<operation class="fr.toutatice.ecm.platform.automation.QueryDocumentBaseOperation" />
+	<operation class="fr.toutatice.ecm.platform.automation.FetchPublishingStatusChildren" />
 	
   </extension>
 
