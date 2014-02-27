@@ -185,13 +185,12 @@ public class FetchPublicationInfos {
 		 * Récupération du "droit" de commenter.
 		 */
 		boolean docCommentable = document.hasFacet("Commentable");
-		boolean docMutable = !document.isImmutable();
 		Principal user = coreSession.getPrincipal();
 		if (user == null) {
 			throw new ClientException("Current user not found.");
 		}
 		boolean userNotAnonymous = !((NuxeoPrincipal) user).isAnonymous();
-		infosPubli.put("isCommentableByUser", docCommentable && docMutable && userNotAnonymous);
+		infosPubli.put("isCommentableByUser", docCommentable && userNotAnonymous);
 
 		UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession,
 				document, 
