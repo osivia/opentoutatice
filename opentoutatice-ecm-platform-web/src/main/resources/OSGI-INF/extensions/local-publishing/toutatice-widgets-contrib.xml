@@ -110,7 +110,7 @@
 		</widget>
 		
 		<!-- Affiche le status de publication dans une contentView -->
-		<widget name="local_publishing_status" type="template">
+		<widget name="publishing_status" type="template">
 			<labels>
 				<label mode="any">Version en ligne?</label>
 			</labels>
