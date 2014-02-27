@@ -5,6 +5,7 @@
 	<require>fr.toutatice.ecm.platform.core</require> 
 	<require>org.nuxeo.ecm.webapp.core</require>
 	<require>org.nuxeo.ecm.webapp.ui</require>
+	<require>org.nuxeo.ecm.platform.notification.core</require>
 
 	<extension target="faces-config#NAVIGATION">
 		<!-- Navigation entre ecran creation et ecran edition webpage -->
