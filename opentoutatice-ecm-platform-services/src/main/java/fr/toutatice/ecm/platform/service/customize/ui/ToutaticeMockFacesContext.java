@@ -34,6 +34,7 @@ import javax.faces.validator.Validator;
 
 /**
  * @author David Chevrier
+ * Just copy of org.nuxeo.ecm.platform.ui.web.jsf.MockFacesContext
  */
 public abstract class ToutaticeMockFacesContext extends FacesContext {
 
