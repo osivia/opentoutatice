@@ -31,7 +31,7 @@ public static final String ID = "Document.CreateChildComment";
 	public Object run() throws ClientException {
 
 		CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
-		DocumentModel childComment = AddComment.createComment(session, childCommentContent);
+		DocumentModel childComment = AddComment.createComment(document.getType(), session, childCommentContent);
 		commentableDoc.addComment(comment, childComment);
 		return document;
 

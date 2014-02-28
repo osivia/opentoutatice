@@ -17,7 +17,10 @@ import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
 public class AddComment {
 
 	public static final String ID = "Document.AddComment";
+	
 	public static final String COMMENT_TYPE = "Comment";
+	public static final String THREAD_TYPE = "Thread";
+	public static final String POST_TYPE = "Post";
 	
 	@Context
 	protected CoreSession session;
@@ -32,21 +35,31 @@ public class AddComment {
 	public Object run() throws Exception {
 
 		CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
-		DocumentModel comment = createComment(session, commentContent);
+		DocumentModel comment = createComment(document.getType(), session, commentContent);
 		commentableDoc.addComment(comment);
 		return document;
 
 	}
 	
-	public static DocumentModel createComment(CoreSession session, String commentContent) throws ClientException{
-		DocumentModel comment = session.createDocumentModel(COMMENT_TYPE);
+	public static DocumentModel createComment(String docType, CoreSession session, String commentContent) throws ClientException{
+	    String commentType = COMMENT_TYPE;
+	    String schemaPrefix = "comment";
+	    if(THREAD_TYPE.equals(docType)){
+	        commentType = POST_TYPE;
+	        schemaPrefix = "post";
+	    }
+		DocumentModel comment = session.createDocumentModel(commentType);
 		Principal user = session.getPrincipal();
 		if(user == null){
 			throw new ClientException("No author for comment.");
 		}
-        comment.setProperty("comment", "author", user.getName());
-        comment.setProperty("comment", "text", commentContent);
-        comment.setProperty("comment", "creationDate", Calendar.getInstance());
+        comment.setProperty(schemaPrefix, "author", user.getName());
+        comment.setProperty(schemaPrefix, "text", commentContent);
+        comment.setProperty(schemaPrefix, "creationDate", Calendar.getInstance());
+//        if(THREAD_TYPE.equals(docType)){
+//            comment.setProperty("comment", "creationDate", Calendar.getInstance());
+//            comment.setProperty("comment", "creationDate", Calendar.getInstance());
+//        }
         return comment;
 	}
 	
