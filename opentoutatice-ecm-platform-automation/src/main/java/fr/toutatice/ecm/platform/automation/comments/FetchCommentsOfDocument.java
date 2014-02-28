@@ -21,7 +21,6 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
-import org.nuxeo.ecm.platform.forum.web.api.ThreadAdapter;
 
 @Operation(id = FetchCommentsOfDocument.ID, category = Constants.CAT_FETCH, label = "FetchCommentsOfDocument", description = "Fetches comments of a (commentable) document")
 public class FetchCommentsOfDocument {
@@ -29,6 +28,9 @@ public class FetchCommentsOfDocument {
 	public static final String ID = "Fetch.DocumentComments";
 
 	private static final Log log = LogFactory.getLog(FetchCommentsOfDocument.class);
+	
+	private static final String COMMENT_SCHEMA = "comment";
+	private static final String POST_SCHEMA = "post";
 
 	@Context
 	CoreSession session;
@@ -77,10 +79,7 @@ public class FetchCommentsOfDocument {
 
 	private JSONArray getCommentsThread(DocumentModel comment, CommentableDocument commentableDocService,
 			JSONArray threads) throws ClientException {
-	    String schemaPrefix = "comment";
-        if(AddComment.THREAD_TYPE.equals(document.getType())){
-            schemaPrefix = "post";
-        }
+	    String schemaPrefix = getSchema(document.getType());
 		List<DocumentModel> childrenComments = commentableDocService.getComments(comment);
 		if (childrenComments == null || childrenComments.isEmpty()) {
 			return threads;
@@ -120,6 +119,14 @@ public class FetchCommentsOfDocument {
 			canDelete = isUserAuthor || isUserAdmin;
 		}
 		return canDelete;
+	}
+	
+	protected static String getSchema(String documentType){
+	    String schemaPrefix = FetchCommentsOfDocument.COMMENT_SCHEMA;
+        if(AddComment.THREAD_TYPE.equals(documentType)){
+            schemaPrefix = FetchCommentsOfDocument.POST_SCHEMA;
+        }
+        return schemaPrefix;
 	}
 
 }

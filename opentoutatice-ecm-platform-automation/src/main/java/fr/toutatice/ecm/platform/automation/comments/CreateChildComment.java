@@ -31,8 +31,14 @@ public static final String ID = "Document.CreateChildComment";
 	public Object run() throws ClientException {
 
 		CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
-		DocumentModel childComment = AddComment.createComment(document.getType(), session, childCommentContent);
-		commentableDoc.addComment(comment, childComment);
+		DocumentModel childComment = AddComment.createComment(document.getRef(), document.getType(), session, childCommentContent);
+		DocumentModel commentDoc = commentableDoc.addComment(comment, childComment);
+		if(AddComment.THREAD_TYPE.equals(document.getType())){
+            Boolean isModerated = (Boolean) document.getProperty("thread", "moderated");
+            if(!isModerated){
+                session.followTransition(commentDoc.getRef(), AddComment.PUBLISHED_TRANSITION);
+            }
+        }
 		return document;
 
 	}
