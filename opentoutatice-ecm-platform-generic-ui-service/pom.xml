@@ -13,8 +13,7 @@
 	<name>Service d'injection de widgets génériques</name>
 
 	<properties>
-		<nuxeo.version>5.6.0-HF26</nuxeo.version>
-		<common-lang-version>2.6</common-lang-version>
+		<nuxeo.version>5.6.0-HF29</nuxeo.version>
 	</properties>
 
 	<dependencies>
