@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-marketplace</artifactId>
-	<version>1.1.0-RC2</version>
+	<version>1.1.0-RC3-SNAPSHOT</version>
 	<packaging>zip</packaging>
 	<name>Marketplace package - Open Toutatice platform</name>
 
@@ -26,31 +26,31 @@
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
-			<version>1.1.0-RC2</version>
+			<version>1.1.0-RC3-SNAPSHOT</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-automation</artifactId>
-			<version>1.1.0-RC2</version>
+			<version>1.1.0-RC3-SNAPSHOT</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-services</artifactId>
-			<version>1.1.0-RC2</version>
+			<version>1.1.0-RC3-SNAPSHOT</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-web</artifactId>
-			<version>1.1.0-RC2</version>
+			<version>1.1.0-RC3-SNAPSHOT</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-generic-ui-service</artifactId>
-			<version>1.1.0-RC2</version>
+			<version>1.1.0-RC3-SNAPSHOT</version>
 			<type>jar</type>
 		</dependency>
 		<!-- 
@@ -316,10 +316,4 @@
 			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
-
-  <scm>
-    <connection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.1.0-RC2/opentoutatice-ecm-platform-marketplace</connection>
-    <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.1.0-RC2/opentoutatice-ecm-platform-marketplace</developerConnection>
-    <url>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.1.0-RC2/opentoutatice-ecm-platform-marketplace</url>
-  </scm>
 </project>
