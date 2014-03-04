@@ -1,4 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
@@ -6,14 +7,12 @@
 		<version>1.1.0-RC2-SNAPSHOT</version>
 	</parent>
 
-	<modelVersion>4.0.0</modelVersion>
 	<artifactId>opentoutatice-ecm-platform-core</artifactId>
 	<packaging>jar</packaging>
 	<name>Partie core de la plate-forme toutatice</name>
 
 	<properties>
 		<nuxeo.version>5.6.0-HF29</nuxeo.version>
-		<nuxeo.test.version>5.6.0-HF17</nuxeo.test.version>
 	</properties>
 
 	<dependencies>
@@ -93,10 +92,6 @@
 			<version>2.3.11</version>
 		</dependency>
 		
-		<!-- <dependency> <groupId>commons-logging</groupId> <artifactId>commons-logging</artifactId> 
-			<version>1.1.1</version> </dependency> <dependency> <groupId>commons-lang</groupId> 
-			<artifactId>commons-lang</artifactId> </dependency> -->
-
 		<!-- For test purpose only -->
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
@@ -107,13 +102,13 @@
 		<dependency>
 			<groupId>org.nuxeo.runtime</groupId>
 			<artifactId>nuxeo-runtime-test</artifactId>
-			<version>${nuxeo.test.version}</version>
+			<version>${nuxeo.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.ecm.core</groupId>
 			<artifactId>nuxeo-core-test</artifactId>
-			<version>${nuxeo.test.version}</version>
+			<version>${nuxeo.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

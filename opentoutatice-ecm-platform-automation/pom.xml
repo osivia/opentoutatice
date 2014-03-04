@@ -9,12 +9,12 @@
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-automation</artifactId>
+	<packaging>jar</packaging>
 	<name>Toutatice Automation</name>
-	<description>Partie automation de la plate-forme toutatice
-	</description>
+	<description>Partie automation de la plate-forme toutatice</description>
 
 	<properties>
-		<nuxeo.version>5.6.0-HF26</nuxeo.version>
+		<nuxeo.version>5.6.0-HF29</nuxeo.version>
 	</properties>
 
 	<dependencies>
