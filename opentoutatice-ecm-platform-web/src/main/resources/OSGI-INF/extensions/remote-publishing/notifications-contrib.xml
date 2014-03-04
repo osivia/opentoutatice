@@ -2,10 +2,8 @@
 
 <component name="fr.toutatice.ecm.platform.remote.publishing.notifications">
 
-	<require>org.nuxeo.ecm.platform.notification.service.NotificationContrib
-	</require>
-	<require>fr.toutatice.ecm.platform.local.publishing.notifications
-	</require>
+	<require>org.nuxeo.ecm.platform.notification.service.NotificationContrib</require>
+	<require>fr.toutatice.ecm.platform.local.publishing.notifications</require>
 
 	<extension
 		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
