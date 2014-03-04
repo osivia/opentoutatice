@@ -12,57 +12,66 @@ import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.platform.publisher.impl.finder.DefaultRootSectionsFinder;
 
 public class ToutaticeRootSectionsFinder extends DefaultRootSectionsFinder {
-	
-	private static final Log log = LogFactory.getLog(ToutaticeRootSectionsFinder.class);
 
-	private static String CST_QUERY_LIST_PUBLISH_SPACES = "SELECT * FROM %s WHERE ecm:mixinType != 'HiddenInNavigation' AND ecm:isCheckedInVersion = 0 AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0";
+    private static final Log log = LogFactory.getLog(ToutaticeRootSectionsFinder.class);
 
-	public ToutaticeRootSectionsFinder(CoreSession userSession) {
-		super(userSession);
-	}
+    private static String CST_QUERY_LIST_PUBLISH_SPACES = "SELECT * FROM %s WHERE ecm:mixinType != 'HiddenInNavigation' AND ecm:isCheckedInVersion = 0 AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0";
 
-	@Override
-	protected DocumentModelList getDefaultSectionRoots(CoreSession session) throws ClientException {
-		DocumentModelList sectionRoots = new DocumentModelListImpl();
+    public ToutaticeRootSectionsFinder(CoreSession userSession) {
+        super(userSession);
+    }
 
-		for (String sectionRootType : getSectionRootTypes()) {
-			DocumentModelList list = session.query(String.format(CST_QUERY_LIST_PUBLISH_SPACES, sectionRootType));
+    /* To refresh sections roots list */
+    public void refreshRootSections() {
+        if (unrestrictedDefaultSectionRoot != null) {
+            unrestrictedDefaultSectionRoot.clear();
+        }
+    }
 
-			/* filtrer les 'section roots' dont le parent est également un 'section root' afin que ceux-ci ne soient pas présentés dans
-			 * l'IHM de configuration des sections de publication d'un espace de travail. 
-			 * Seul le section root parent sera présenté. Le section root fils sera visible néanmoins via la présentation des sections 
-			 * sous forme d'arbre par le widget.  
-			 */
-			UnrestrictedSessionRunner filter = new UnrestrictedFilterSectionRootsRunner(session, list, sectionRoots);
-			filter.runUnrestricted();
-		}
+    @Override
+    protected DocumentModelList getDefaultSectionRoots(CoreSession session) throws ClientException {
+        DocumentModelList sectionRoots = new DocumentModelListImpl();
 
-		return sectionRoots;
-	}
-	
-	private static class UnrestrictedFilterSectionRootsRunner extends UnrestrictedSessionRunner {
-		DocumentModelList list;
-		DocumentModelList sectionRoots;
+        for (String sectionRootType : getSectionRootTypes()) {
+            DocumentModelList list = session.query(String.format(CST_QUERY_LIST_PUBLISH_SPACES, sectionRootType));
 
-		protected UnrestrictedFilterSectionRootsRunner(CoreSession session, DocumentModelList list, DocumentModelList sectionRoots) {
-			super(session);
-			this.list = list;
-			this.sectionRoots = sectionRoots;
-		}
-		
-		@Override
-		public void run() throws ClientException {
-			for (DocumentModel sectionRoot : list) {
-				try {
-					DocumentModel sectionRootParent = session.getParentDocument(sectionRoot.getRef());
-					if (!sectionRootParent.hasFacet(FacetNames.MASTER_PUBLISH_SPACE)) {
-						this.sectionRoots.add(sectionRoot);
-					}
-				} catch (Exception e) {
-					log.warn("Failed to filter the section roots, error: " + e.getMessage());
-				}
-			}
-		}
-	}
-		
+            /*
+             * filtrer les 'section roots' dont le parent est également un 'section root' afin que ceux-ci ne soient pas présentés dans
+             * l'IHM de configuration des sections de publication d'un espace de travail.
+             * Seul le section root parent sera présenté. Le section root fils sera visible néanmoins via la présentation des sections
+             * sous forme d'arbre par le widget.
+             */
+            UnrestrictedSessionRunner filter = new UnrestrictedFilterSectionRootsRunner(session, list, sectionRoots);
+            filter.runUnrestricted();
+        }
+
+        return sectionRoots;
+    }
+
+    private static class UnrestrictedFilterSectionRootsRunner extends UnrestrictedSessionRunner {
+
+        DocumentModelList list;
+        DocumentModelList sectionRoots;
+
+        protected UnrestrictedFilterSectionRootsRunner(CoreSession session, DocumentModelList list, DocumentModelList sectionRoots) {
+            super(session);
+            this.list = list;
+            this.sectionRoots = sectionRoots;
+        }
+
+        @Override
+        public void run() throws ClientException {
+            for (DocumentModel sectionRoot : list) {
+                try {
+                    DocumentModel sectionRootParent = session.getParentDocument(sectionRoot.getRef());
+                    if (!sectionRootParent.hasFacet(FacetNames.MASTER_PUBLISH_SPACE)) {
+                        this.sectionRoots.add(sectionRoot);
+                    }
+                } catch (Exception e) {
+                    log.warn("Failed to filter the section roots, error: " + e.getMessage());
+                }
+            }
+        }
+    }
+
 }
