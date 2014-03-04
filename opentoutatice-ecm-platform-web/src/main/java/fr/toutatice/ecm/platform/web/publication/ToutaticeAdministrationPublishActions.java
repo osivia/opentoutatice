@@ -24,6 +24,7 @@ import edu.emory.mathcs.backport.java.util.Collections;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSorterHelper;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
+import fr.toutatice.ecm.platform.web.publication.finder.ToutaticeRootSectionsFinder;
 
 @Name("adminPublishActions")
 @Scope(ScopeType.CONVERSATION)
@@ -46,7 +47,9 @@ public class ToutaticeAdministrationPublishActions extends AdministrationPublish
      */
     @Factory(value = "defaultPublishingRoots", scope = ScopeType.EVENT)
     public DocumentModelList getSectionRoots() throws ClientException {
-        DocumentModelList sectionRoots = getRootFinder().getDefaultSectionRoots(false, true);
+        ToutaticeRootSectionsFinder rootFinder = (ToutaticeRootSectionsFinder) getRootFinder();
+        rootFinder.refreshRootSections();
+        DocumentModelList sectionRoots = rootFinder.getDefaultSectionRoots(false, true);
         Collections.sort(sectionRoots, new SectionRootsComparator());
         return sectionRoots;
     }
