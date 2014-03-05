@@ -42,7 +42,7 @@ public class ToutaticeSecurityActionsBean extends SecurityActionsBean {
 		 DocumentModel currentDoc = navigationContext.getCurrentDocument();
 		 DocumentModel proxyDoc = ToutaticeDocumentHelper.getProxy(documentManager, currentDoc, null);
 		 if (proxyDoc != null) {
-			 log.info("Le document a un proxy; mise à jour des ACL sur ce proxy"); 
+			 log.debug("Le document a un proxy; mise à jour des ACL sur ce proxy"); 
 			//recuperation des ACls du document courant
 				ACP srcACP = documentManager.getACP(currentDoc.getRef());
 			//copie les ACLs

@@ -10,17 +10,25 @@
 		point="notifications">
 
 		<notification name="Publication" channel="email"
-			enabled="true" availableIn="Section,PortalSite" autoSubscribed="true"
-			template="publish" subject="Document publi\u00E9" label="label.nuxeo.notifications.publication">
+			enabled="true" 
+			availableIn="Section,PortalSite" 
+			autoSubscribed="true"
+			template="publish" 
+			subject="Document publi\u00E9" 
+			label="label.nuxeo.notifications.publication">
 			<event name="documentPublicationApproved" />
 			<event name="documentPublicationRejected" />
 			<event name="documentPublished" />
 		</notification>
 
 		<notification name="Remote publication task assigned"
-			channel="email" enabled="true" availableIn="Section,PortalSite"
-			autoSubscribed="true" template="publish"
-			subject="Demande de publication du document: ${docTitle}" label="label.nuxeo.notifications.publication">
+			channel="email" 
+			enabled="true" 
+			availableIn="Section,PortalSite"
+			autoSubscribed="true" 
+			template="publish"
+			subject="Demande de publication du document: ${docTitle}" 
+			label="label.nuxeo.notifications.publication">
 			<event name="documentWaitingPublication" />
 			<!-- <event name="workflowTaskAssigned" /> -->
 		</notification>

@@ -2,15 +2,13 @@
 
 <component name="fr.toutatice.ecm.platform.publishing.publisher.jbpm">
 
-	<require>org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl
-	</require>
+	<require>org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl</require>
 	<require>org.nuxeo.ecm.platform.publisher.task.contrib</require>
 
 	<!-- Utilisé pour l'arbre de publication d'une feuille basé sur l'arbre 
 		de configuration des sections d'un Workspace -->
 		
-	<extension
-		target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
+	<extension target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
 		point="factory">
 
 		<publishedDocumentFactory name="ToutaticeCoreProxyWithWorkflow"
@@ -19,8 +17,7 @@
 
 	</extension>
 		
-	<extension
-		target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
+	<extension target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
 		point="tree">
 
 		<publicationTree name="RootSectionsCoreTree"
@@ -28,8 +25,7 @@
 
 	</extension>
 
-	<extension
-		target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
+	<extension target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
 		point="treeInstance">
 
 		<publicationTreeConfig name="DefaultSectionsTree"
