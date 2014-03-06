@@ -18,6 +18,8 @@
  */
 package fr.toutatice.ecm.platform.automation.comments;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.security.Principal;
 import java.util.List;
 
@@ -47,8 +49,8 @@ public class FetchCommentsOfDocument {
 
 	private static final Log log = LogFactory.getLog(FetchCommentsOfDocument.class);
 	
-	private static final String COMMENT_SCHEMA = "comment";
-	private static final String POST_SCHEMA = "post";
+	public static final String COMMENT_SCHEMA = "comment";
+	public static final String POST_SCHEMA = "post";
 
 	@Context
 	CoreSession session;
@@ -57,7 +59,7 @@ public class FetchCommentsOfDocument {
 	protected DocumentModel document;
 
 	@OperationMethod
-	public Object run() throws ClientException {
+	public Object run() throws ClientException, IOException {
 
 		JSONArray commentsTree = new JSONArray();
 		/*
@@ -76,6 +78,7 @@ public class FetchCommentsOfDocument {
 			for (DocumentModel commentRoot : commentsRoots) {
 				JSONObject jsonCommentRoot = new JSONObject();
 				jsonCommentRoot.element("id", commentRoot.getId());
+				jsonCommentRoot.element("path", commentRoot.getPathAsString());
 				String author = (String) commentRoot.getProperty(schemaPrefix, "author");
 				jsonCommentRoot.element("author", author);
 				jsonCommentRoot.element("creationDate", commentRoot.getProperty(schemaPrefix, "creationDate"));
@@ -83,6 +86,10 @@ public class FetchCommentsOfDocument {
 				jsonCommentRoot.element("modifiedDate", commentRoot.getProperty("dublincore", "modified"));
 				boolean canDelete = canDeleteComment(author);
 				jsonCommentRoot.element("canDelete", canDelete);
+				if(AddComment.THREAD_TYPE.equals(document.getType())){
+				    jsonCommentRoot.element("title", commentRoot.getProperty(schemaPrefix, "title"));
+				    jsonCommentRoot.element("filename", commentRoot.getProperty(schemaPrefix, "filename"));
+				}
 				jsonCommentRoot.element("children", getCommentsThread(commentRoot, commentableDoc, new JSONArray()));
 				commentsTree.add(jsonCommentRoot);
 				if (StringUtils.isBlank(author)) {
@@ -105,6 +112,7 @@ public class FetchCommentsOfDocument {
 			for (DocumentModel childComment : childrenComments) {
 				JSONObject jsonChildComment = new JSONObject();
 				jsonChildComment.element("id", childComment.getId());
+				jsonChildComment.element("path", childComment.getPathAsString());
 				String author = (String) childComment.getProperty(schemaPrefix, "author");
 				jsonChildComment.element("author", author);
 				jsonChildComment.element("creationDate", childComment.getProperty(schemaPrefix, "creationDate"));
@@ -112,6 +120,10 @@ public class FetchCommentsOfDocument {
 				jsonChildComment.element("modifiedDate", childComment.getProperty("dublincore", "modified"));
 				boolean canDelete = canDeleteComment(author);
 				jsonChildComment.element("canDelete", canDelete);
+				if(AddComment.THREAD_TYPE.equals(document.getType())){
+				    jsonChildComment.element("title", childComment.getProperty(schemaPrefix, "title"));
+				    jsonChildComment.element("filename", childComment.getProperty(schemaPrefix, "filename"));
+                }
 				jsonChildComment.element("children",
 						getCommentsThread(childComment, commentableDocService, new JSONArray()));
 				threads.add(jsonChildComment);

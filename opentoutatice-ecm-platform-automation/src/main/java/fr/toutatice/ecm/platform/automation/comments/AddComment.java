@@ -21,11 +21,13 @@ package fr.toutatice.ecm.platform.automation.comments;
 import java.security.Principal;
 import java.util.Calendar;
 
+import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
+import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -40,7 +42,7 @@ public class AddComment {
     public static final String COMMENT_TYPE = "Comment";
     public static final String THREAD_TYPE = "Thread";
     public static final String POST_TYPE = "Post";
-    
+
     public static final String PUBLISHED_TRANSITION = "moderation_publish";
 
     @Context
@@ -52,11 +54,17 @@ public class AddComment {
     @Param(name = "comment", required = true)
     protected String commentContent;
 
+    @Param(name = "title", required = false)
+    protected String commentTitle;
+
+    @Param(name = "fileName", required = false)
+    protected String fileName;
+
     @OperationMethod
-    public Object run() throws Exception {
+    public Object run(Blob file) throws Exception {
 
         CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
-        DocumentModel comment = createComment(document.getRef(), document.getType(), session, commentContent);
+        DocumentModel comment = createComment(document.getRef(), document.getType(), session, commentContent, commentTitle, fileName, file);
         DocumentModel commentDoc = commentableDoc.addComment(comment);
         if(THREAD_TYPE.equals(document.getType())){
             Boolean isModerated = (Boolean) document.getProperty("thread", "moderated");
@@ -68,20 +76,29 @@ public class AddComment {
 
     }
 
-    public static DocumentModel createComment(DocumentRef commentRef, String docType, CoreSession session, String commentContent) throws ClientException {
-	    String commentType = getType(docType);
-	    String schemaPrefix = FetchCommentsOfDocument.getSchema(docType);
+    public static DocumentModel createComment(DocumentRef commentRef, String docType, CoreSession session, String commentContent, String commentTitle,
+            String fileName, Blob file)
+            throws ClientException {
+        String commentType = getType(docType);
+        String schemaPrefix = FetchCommentsOfDocument.getSchema(docType);
 
-		DocumentModel comment = session.createDocumentModel(commentType);
-		Principal user = session.getPrincipal();
-		if(user == null){
-			throw new ClientException("No author for comment.");
-		}
+        DocumentModel comment = session.createDocumentModel(commentType);
+        Principal user = session.getPrincipal();
+        if (user == null) {
+            throw new ClientException("No author for comment.");
+        }
         comment.setProperty(schemaPrefix, "author", user.getName());
         comment.setProperty(schemaPrefix, "text", commentContent);
         comment.setProperty(schemaPrefix, "creationDate", Calendar.getInstance());
+        if (POST_TYPE.equals(commentType)) {
+            comment.setProperty(schemaPrefix, "title", commentTitle);
+            if(StringUtils.isNotEmpty(fileName) && file != null){
+                comment.setProperty(FetchCommentsOfDocument.POST_SCHEMA, "filename", fileName);
+                comment.setProperty(FetchCommentsOfDocument.POST_SCHEMA, "fileContent", file);
+            }
+        }
         return comment;
-	}
+    }
 
     protected static String getType(String documentType) {
         String type = COMMENT_TYPE;
