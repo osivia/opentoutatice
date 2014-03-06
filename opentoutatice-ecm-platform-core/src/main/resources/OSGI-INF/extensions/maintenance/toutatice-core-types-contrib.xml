@@ -14,16 +14,5 @@
 		</doctype>
 
 	</extension>
-
-	<extension target="org.nuxeo.ecm.platform.types.TypeService"
-		point="types">
-		
-		<type id="UserWorkspace">
-			<subtypes>
-				<type>MaintenanceConfiguration</type>
-			</subtypes>
-		</type>
-		
-	</extension>
     
 </component>
