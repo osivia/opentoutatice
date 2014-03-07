@@ -26,6 +26,7 @@ import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
 
 @Operation(id = CreateChildComment.ID, category = Constants.CAT_DOCUMENT, label = "CreateChildCommentOfDocument",
@@ -53,10 +54,10 @@ public class CreateChildComment {
     protected String fileName;
 
     @OperationMethod
-    public Object run(Blob file) throws Exception {
+    public Object run() throws Exception {
         boolean isPost = AddComment.THREAD_TYPE.equals(document.getType());
         CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
-        DocumentModel childComment = AddComment.createComment(document.getRef(), document.getType(), session, childCommentContent, childCommentTitle, fileName, file);
+        DocumentModel childComment = AddComment.createComment(document.getRef(), document.getType(), session, childCommentContent, childCommentTitle, fileName);
         DocumentModel commentDoc = commentableDoc.addComment(comment, childComment);
         if (isPost) {
             Boolean isModerated = (Boolean) document.getProperty("thread", "moderated");
@@ -64,7 +65,7 @@ public class CreateChildComment {
                 session.followTransition(commentDoc.getRef(), AddComment.PUBLISHED_TRANSITION);
             }
         }
-        return document;
+        return new StringBlob(commentDoc.getId());
 
     }
 

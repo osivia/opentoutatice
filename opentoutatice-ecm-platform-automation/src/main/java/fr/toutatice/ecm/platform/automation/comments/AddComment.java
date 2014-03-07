@@ -32,6 +32,7 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
+import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
 
 @Operation(id = AddComment.ID, category = Constants.CAT_DOCUMENT, label = "AddCommentToDocument", description = "Add a comment to a (commentable) document")
@@ -61,10 +62,10 @@ public class AddComment {
     protected String fileName;
 
     @OperationMethod
-    public Object run(Blob file) throws Exception {
+    public Object run() throws Exception {
 
         CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
-        DocumentModel comment = createComment(document.getRef(), document.getType(), session, commentContent, commentTitle, fileName, file);
+        DocumentModel comment = createComment(document.getRef(), document.getType(), session, commentContent, commentTitle, fileName);
         DocumentModel commentDoc = commentableDoc.addComment(comment);
         if(THREAD_TYPE.equals(document.getType())){
             Boolean isModerated = (Boolean) document.getProperty("thread", "moderated");
@@ -72,12 +73,12 @@ public class AddComment {
                 session.followTransition(commentDoc.getRef(), PUBLISHED_TRANSITION);
             }
         }
-        return document;
+        return new StringBlob(commentDoc.getId());
 
     }
 
     public static DocumentModel createComment(DocumentRef commentRef, String docType, CoreSession session, String commentContent, String commentTitle,
-            String fileName, Blob file)
+            String fileName)
             throws ClientException {
         String commentType = getType(docType);
         String schemaPrefix = FetchCommentsOfDocument.getSchema(docType);
@@ -92,9 +93,8 @@ public class AddComment {
         comment.setProperty(schemaPrefix, "creationDate", Calendar.getInstance());
         if (POST_TYPE.equals(commentType)) {
             comment.setProperty(schemaPrefix, "title", commentTitle);
-            if(StringUtils.isNotEmpty(fileName) && file != null){
+            if(StringUtils.isNotEmpty(fileName)){
                 comment.setProperty(FetchCommentsOfDocument.POST_SCHEMA, "filename", fileName);
-                comment.setProperty(FetchCommentsOfDocument.POST_SCHEMA, "fileContent", file);
             }
         }
         return comment;
