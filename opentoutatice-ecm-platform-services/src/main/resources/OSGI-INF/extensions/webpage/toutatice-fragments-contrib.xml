@@ -14,6 +14,12 @@
             layout="html_fragment_layout" />
             
         <fragment
+            code="fgt.zoom"
+            class="fr.toutatice.ecm.platform.service.fragments.types.ZoomFragment"
+            title="osivia.fragment.zoom.title"
+            layout="zoom_fragment_layout" />            
+            
+        <fragment
             code="fgt.list"
             class="fr.toutatice.ecm.platform.service.fragments.types.ListFragment"
             title="osivia.fragment.list.title"

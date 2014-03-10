@@ -31,6 +31,8 @@
 			<schema name="webpage" />
 			<schema name="fragments" />
             <schema name="html_fragments" />
+            <schema name="zoom_fragments" />
+            <schema name="zoom_links" />
             <schema name="list_fragments" />
             <schema name="portlet_fragments" />
             <schema name="portlet_properties" />
@@ -59,6 +61,8 @@
 			<schema name="webpage" />
 			<schema name="fragments" />
             <schema name="html_fragments" />
+            <schema name="zoom_fragments" />
+            <schema name="zoom_links" />
             <schema name="list_fragments" />
             <schema name="portlet_fragments" />
             <schema name="portlet_properties" />

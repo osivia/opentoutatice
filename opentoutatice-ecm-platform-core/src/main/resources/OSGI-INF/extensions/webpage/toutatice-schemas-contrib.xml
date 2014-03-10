@@ -23,7 +23,10 @@
 			src="schemas/webpage/portlet_fragments.xsd" />
 		<schema name="portlet_properties" prefix="ptlprops"
 			src="schemas/webpage/portlet_properties.xsd" />
-
+        <schema name="zoom_fragments" prefix="zfgt"
+            src="schemas/webpage/zoom_fragments.xsd" />
+        <schema name="zoom_links" prefix="zl"
+            src="schemas/webpage/zoom_links.xsd" />            
 	</extension>
 
 </component>

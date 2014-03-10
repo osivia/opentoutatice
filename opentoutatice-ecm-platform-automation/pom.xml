@@ -5,13 +5,13 @@
 	<parent>
 	   <groupId>opentoutatice-ecm.platform</groupId>
 	   <artifactId>opentoutatice-ecm-platform-parent</artifactId>
-	   <version>1.1.0-RC4-SNAPSHOT</version>
+	   <version>1.1.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-automation</artifactId>
-	<packaging>jar</packaging>
 	<name>Toutatice Automation</name>
-	<description>Partie automation de la plate-forme toutatice</description>
+	<description>Partie automation de la plate-forme toutatice
+	</description>
 
 	<properties>
 		<nuxeo.version>5.6.0-HF29</nuxeo.version>
