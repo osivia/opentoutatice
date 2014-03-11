@@ -472,32 +472,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     }
 
     /**
-     * Determine si l'action "seeLatestValidDocumentVersion" doit être présentée.
-     * 
-     * <h4>Conditions</h4> <li>le document doit posséder une version valide</li> <li>le document ne doit pas être la version valide</li>
-     * 
-     * @return true si l'action doit être présentée. false sinon.
-     */
-    public boolean isSeeLatestValidDocumentVersionActionAuthorized() {
-        boolean status = false;
-        DocumentModel currentDoc = null;
-
-        // Récupérer la dernière version validée
-        try {
-            currentDoc = navigationContext.getCurrentDocument();
-            DocumentModel validDocument = ToutaticeDocumentHelper.getLatestDocumentVersion(currentDoc, documentManager);
-            if (null != validDocument) {
-                status = !currentDoc.getVersionLabel().equals(validDocument.getVersionLabel());
-            }
-        } catch (Exception e) {
-            String docName = (null != currentDoc) ? currentDoc.getName() : "unknown";
-            log.debug("Failed to get the latest valid version of document '" + docName + "', error: " + e.getMessage());
-        }
-
-        return status;
-    }
-
-    /**
      * Determine si l'action "seeLiveDocumentVersion" de la vue 'summary' doit être présentée.
      * 
      * <h4>Conditions</h4> <li>le document visualisé ne doit pas être la version live</li> <li>l'usager connecté doit avoir au minima un droit de lecture sur le
@@ -544,25 +518,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         } catch (ClientException e) {
             log.info("The proxy document (' " + currentDoc.getName() + "') has lost its reference to the version document");
             facesMessages.add(StatusMessage.Severity.INFO, resourcesAccessor.getMessages().get("label.toutatice.viewlive.reference.lost"));
-        }
-
-        return output;
-    }
-
-    public String viewArchivedVersion() throws ClientException {
-        return viewArchivedVersion(navigationContext.getCurrentDocument());
-    }
-
-    public String viewArchivedVersion(DocumentModel document) throws ClientException {
-        String output = "";
-
-        try {
-            DocumentModel archivedDocument = ToutaticeDocumentHelper.getLatestDocumentVersion(document, documentManager);
-            if (null != archivedDocument) {
-                output = navigationContext.navigateToDocument(document, ToutaticeDocumentHelper.getVersionModel(archivedDocument));
-            }
-        } catch (DocumentException e) {
-            throw new ClientException(e);
         }
 
         return output;
