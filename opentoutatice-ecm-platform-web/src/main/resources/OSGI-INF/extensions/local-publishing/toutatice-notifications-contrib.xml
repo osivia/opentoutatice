@@ -23,9 +23,10 @@
 			<event name="workflowTaskAssigned" />
 		</notification>
 
-		<notification enabled="false" name="Task assigned">
+		<!-- <notification enabled="false" name="Task assigned">
 			<event name="workflowTaskAssigned" />
-		</notification>
+		</notification> -->
+		
 		<notification autoSubscribed="true" availableIn="PortalSite"
 			channel="email" enabled="false" label="label.nuxeo.notifications.appReviewStarted"
 			name="Task assigned" subject="Task Assigned for ${docTitle}"
