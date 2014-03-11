@@ -7,7 +7,7 @@
 
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
-		
+
 		<!-- Vue résumé sur les PortalSite, PortaPage -->
 		<action id="ATAB_FOLDERISH_VIEW" link="/incl/tabs/document_view.xhtml"
 			order="20" label="action.view.summary" icon="/icons/file.gif">
@@ -15,6 +15,16 @@
 			<filter-id>filter@TTC_TAB_FOLDERISH_VIEW</filter-id>
 		</action>
 		
+		<!-- Bouton de recherche de l'onglet TAB_RELATIONS -->
+		<action id="search_relations" label="Recherche" type="fancybox">
+			<category>TOUTATICE_SEARCH_RELATIONS</category>
+			<properties>
+				<property name="iframe">#{baseURL}toutatice_create_relation_search_document_popup.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}
+				</property>
+				<property name="onclick" />
+			</properties>
+		</action>
+
 	</extension>
 
 </component>
