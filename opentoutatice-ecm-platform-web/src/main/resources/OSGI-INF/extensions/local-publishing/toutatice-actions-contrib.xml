@@ -285,6 +285,7 @@
 			order="128" 
 			immediate="false"
 			link="#{documentActions.viewOnlineVersion()}">
+			<category>SUBVIEW_UPPER_LIST</category>
 			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter id="filter@seeOnlineDocumentVersionFromResumeView">
@@ -303,6 +304,7 @@
 			order="129" 
 			immediate="false"
 			link="#{documentActions.viewLiveVersion()}">
+			<category>SUBVIEW_UPPER_LIST</category>
 			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
 			<filter id="filter@seeLiveDocumentVersion">
 				<rule grant="true">
