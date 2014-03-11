@@ -45,7 +45,8 @@
 			</rule>
 			<!-- Simple appartenance au groupe 'Administrators' -->
 			<rule grant="true">
-				<condition>#{currentNuxeoPrincipal.isMemberOf('Administrators')}</condition>
+				<condition>#{currentNuxeoPrincipal.isMemberOf('Administrators')}
+				</condition>
 			</rule>
 		</filter>
 
