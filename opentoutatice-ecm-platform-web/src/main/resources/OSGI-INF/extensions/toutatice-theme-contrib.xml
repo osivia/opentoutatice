@@ -18,5 +18,19 @@
 			<src>themes/css/images-tab.css</src>
 		</style>
 	</extension>
+	
+	<extension target="org.nuxeo.theme.services.ThemeService" point="applications">	
+		<application root="${org.nuxeo.ecm.contextPath}" template-engine="jsf-facelets">
+			<negotiation>
+				<strategy>nuxeo5</strategy>
+				<default-engine>default</default-engine>
+				<default-theme>galaxy/default</default-theme>
+				<default-perspective>default</default-perspective>
+			</negotiation>
+			<view id="/toutatice_create_relation_search_document_popup.xhtml">
+				<theme>galaxy/popup</theme>
+			</view>
+		</application>
+	</extension>
 
 </component>
