@@ -43,11 +43,7 @@
 			template="publish"
 			subject="Demande de publication du document: ${docTitle}" 
 			label="label.nuxeo.notifications.publish">
-			<!-- l'évènement documentWaitingPublication n'est pas levé ...
-			     on le remplace par workflowTaskAssigned car seul le workflow 
-			     de publication existe dans les Section et PortalSite-->
 			<event name="documentWaitingPublication" />
-			<event name="workflowTaskAssigned" />
 		</notification>
 
 	</extension>
