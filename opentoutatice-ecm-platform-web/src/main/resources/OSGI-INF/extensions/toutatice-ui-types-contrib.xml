@@ -14,11 +14,6 @@
 			<bigIcon>/img/portalsite_100.png</bigIcon>
 			<description>Espace de publication</description>
 			<default-view>view_documents</default-view>
-			<subtypes>
-				<type>PortalPage</type>
-				<type>File</type>
-				<type>Note</type>
-			</subtypes>
 			<layouts mode="create">
 				<layout>layout@PortalSite-create</layout>
 			</layouts>
@@ -44,11 +39,6 @@
 			<description>Rubrique de l'espace de publication Toutatice
 			</description>
 			<default-view>view_documents</default-view>
-			<subtypes>
-				<type>PortalPage</type>
-				<type>File</type>
-				<type>Note</type>
-			</subtypes>
 			<layouts mode="create">
 				<layout>layout@PortalPage-create</layout>
 			</layouts>
