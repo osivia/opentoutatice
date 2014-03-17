@@ -165,22 +165,23 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
             for (String typeContentViewName : typeContentViewNames) {
                 ContentView contentView = contentViewService.getContentView(typeContentViewName);
                 if (contentView != null) {
-                    ContentViewLayout currentResultLayout = contentView.getCurrentResultLayout();
+                    ContentViewLayout currentResultLayout = contentView.getCurrentResultLayout();              
                     String layoutName = currentResultLayout.getName();
                     if (!modifiedContentViewsLayouts.contains(layoutName) && !PORTAL_LAYOUT.equals(layoutName)) {
                         modifiedContentViewsLayouts.add(layoutName);
-                        LayoutDefinition layoutDefinition = webLayoutManager.getLayoutDefinition(layoutName);
-
+                        
+                        LayoutDefinition layoutDefinition = webLayoutManager.getLayoutDefinition(layoutName);   
                         LayoutRowDefinition[] rows = layoutDefinition.getRows();
                         
                         List<WidgetReference> widgets = new ArrayList<WidgetReference>(1);
                         WidgetReference widgetRef = new WidgetReferenceImpl("publishing_status");
                         widgets.add(widgetRef);
                         
-                        Map<String, Map<String, Serializable>> properties = new HashMap<String, Map<String,Serializable>>(1);
-                        Map<String, Serializable> labelProperty = new HashMap<String, Serializable>(1);
-                        labelProperty.put("label", "Version en ligne?");
-                        properties.put("any", labelProperty);
+                        Map<String, Map<String, Serializable>> properties = new HashMap<String, Map<String, Serializable>>();
+                        Map<String, Serializable> property = new HashMap<String, Serializable>();
+                        property.put("useFirstWidgetLabelAsColumnHeader", true);
+                        property.put("columnStyleClass", "iconColumn");
+                        properties.put("any", property);
                         
                         LayoutRowDefinitionImpl layoutRowDefinitionImpl = new LayoutRowDefinitionImpl("publishing_status", properties, widgets, true, true);
                         LayoutRowDefinition[] modifiedRows = (LayoutRowDefinition[]) Arrays.copyOf(rows, rows.length + 1);
