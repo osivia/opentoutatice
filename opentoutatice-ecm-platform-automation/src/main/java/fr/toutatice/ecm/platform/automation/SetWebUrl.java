@@ -75,20 +75,20 @@ public class SetWebUrl {
         }
 
         // en création ou copie la weburl est déduite du path initialisé par nuxeo
-        String weburl = null;
+        String webid = null;
         if (CREATE_OR_COPY.equals(chainSource)) {
 
             String[] arrayPath = doc.getPathAsString().split("/");
-            weburl = arrayPath[arrayPath.length - 1];
+            webid = arrayPath[arrayPath.length - 1];
             hasToBeUpdated = true;
         }
         // dans les autres modes, on prend la valeur déjà paramétrée
         else {
-            if (doc.getPropertyValue(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBURL) != null) {
-                weburl = doc.getPropertyValue(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBURL).toString();
+            if (doc.getPropertyValue(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID) != null) {
+                webid = doc.getPropertyValue(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID).toString();
 
                 // Nettoyage espaces, accents, chaine trop longue.
-                weburl = IdUtils.generateId(weburl, "-", true, 24);
+                webid = IdUtils.generateId(webid, "-", true, 24);
             }
         }
 
@@ -100,32 +100,32 @@ public class SetWebUrl {
         }
 
         // si weburl évalué et domain renseigné
-        if ((weburl != null && weburl.length() > 0) && domain != null) {
+        if ((webid != null && webid.length() > 0) && domain != null) {
             
 
             // En moficiation, on notifie l'utilisateur que la weburl est déjà prise
             if (MODIFY.equals(chainSource)) {
 
                 String searchDuplicatedWebUrl = "ecm:path startswith '" + domain + "' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'"
-                        + " AND ttc:weburl = '" + weburl + "' AND ecm:path <>'" + doc.getPathAsString() + "'";
+                        + " AND ttc:webid = '" + webid + "' AND ecm:path <>'" + doc.getPathAsString() + "'";
 
                 String queryStr = String.format(SEARCH_QUERY, searchDuplicatedWebUrl);
 
                 DocumentModelList query = coreSession.query(queryStr);
                 
                 if (query.size() > 0) {
-                    throw new OperationException("L'identifiant weburl est déjà attribué à un autre contenu dans ce domaine.");
+                    throw new OperationException("L'identifiant webId est déjà attribué à un autre contenu dans ce domaine.");
                 }
             } else {
 
                 // Pour les autres opérations, on vérifie l'unicité sans déclencher d'exception, la weburl est suffixée par un nombre
                 boolean unicity = true;
                 Integer suffix = null;
-                String weburlconcat = weburl;
+                String webidconcat = webid;
                 do {
 
                     String searchDuplicatedWebUrl = "ecm:path startswith '" + domain + "' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'"
-                            + " AND ttc:weburl = '" + weburlconcat + "' AND ecm:path <> '" + doc.getPathAsString() + "'";
+                            + " AND ttc:webid = '" + webidconcat + "' AND ecm:path <> '" + doc.getPathAsString() + "'";
 
                     String queryStr = String.format(SEARCH_QUERY, searchDuplicatedWebUrl);
 
@@ -137,12 +137,12 @@ public class SetWebUrl {
                             suffix = 1;
                         else
                             suffix = suffix + 1;
-                        weburlconcat = weburl.concat(".").concat(suffix.toString());
+                        webidconcat = webid.concat(".").concat(suffix.toString());
                     } else {
                         unicity = true;
 
-                        if (!weburl.equals(weburlconcat)) {
-                            weburl = weburlconcat;
+                        if (!webid.equals(webidconcat)) {
+                            webid = webidconcat;
                             hasToBeUpdated = true;
                         }
                     }
@@ -150,7 +150,7 @@ public class SetWebUrl {
 
                 // save weburl
                 if (hasToBeUpdated) {
-                    doc.setPropertyValue(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBURL, weburl);
+                    doc.setPropertyValue(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, webid);
                     this.coreSession.saveDocument(doc);
                 }
 

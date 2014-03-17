@@ -111,9 +111,9 @@
         <!-- Widget en vue Modifier (ou Créer) -->
         <widget name="toutatice_webId_widget" type="text">
             <labels>
-                <label mode="any">toutatice.label.admin.publication.webid</label>
+                <label mode="any">Web Id</label>
             </labels>
-            <translated>true</translated>
+            <translated>false</translated>
             <fields>
                 <field>ttc:webid</field>
             </fields>

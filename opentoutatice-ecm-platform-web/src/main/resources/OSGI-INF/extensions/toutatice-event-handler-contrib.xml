@@ -19,10 +19,11 @@
             </filters>
         </handler>
 
-		<!-- WebURL
+		<!-- WebURL -->
         <handler chainId="createOrCopyOp">
             <event>documentCreated</event>
             <event>documentCreatedByCopy</event>
+            <event>documentImported</event>
             <filters>
                 <attribute>Mutable Document</attribute>
                 <expression>Document.hasSchema('toutatice') == false</expression>
@@ -42,7 +43,6 @@
                 <expression>Document.hasSchema('toutatice') == false</expression>
             </filters>
         </handler>
-		-->
 
     </extension>
 

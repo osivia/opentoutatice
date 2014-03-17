@@ -18,11 +18,13 @@
  */
 package fr.toutatice.ecm.platform.web.urlservice;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.nuxeo.common.utils.URIUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentLocation;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -36,6 +38,11 @@ import org.nuxeo.ecm.platform.url.service.AbstractDocumentViewCodec;
 
 
 public class WebUrlCodec extends AbstractDocumentViewCodec {
+
+    private static final Log log = LogFactory.getLog(WebUrlCodec.class);
+
+
+    private static final String DEFAULT_REPO = "default";
 
     public static final String PREFIX = "nxurl";
 
@@ -58,6 +65,10 @@ public class WebUrlCodec extends AbstractDocumentViewCodec {
             // "(/([a-zA-Z_0-9/:\\-\\.\\]\\[]*))+" +
             // "(/([^\\?]*))" +
             "+(\\?)?(.*)?";
+
+
+    public static final String simpleURLPattern = "/" + "([a-zA-Z_0-9\\-]+)" + // weburl
+            "+(\\?)?(.*)?"; // options
 
 
     public WebUrlCodec() {
@@ -86,45 +97,51 @@ public class WebUrlCodec extends AbstractDocumentViewCodec {
 
     @Override
     public DocumentView getDocumentViewFromUrl(String url) {
-        final Pattern pattern = Pattern.compile(getPrefix() + URLPattern);
+        final Pattern pattern = Pattern.compile(getPrefix() + simpleURLPattern);
         Matcher m = pattern.matcher(url);
         if (m.matches()) {
 
-            final String server = m.group(1);
-            String domain = m.group(2);
-            String weburl = m.group(3);
-            if (domain != null) {
-                // add leading slash to make it absolute if it's not the root
-                domain = "/" + URIUtils.unquoteURIPathComponent(domain);
-            } else {
-                domain = "/";
-            }
-
-            DocumentModelList docs = null;
-            try {
-                WebUrlSearch webUrlSearch = new WebUrlSearch(server, "SELECT * FROM Document where ecm:path startswith '" + domain + "'"
-                        + " and ttc:weburl = '" + weburl + "'");
-                webUrlSearch.runUnrestricted();
-
-                docs = webUrlSearch.getDocumentPath();
-            } catch (ClientException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            // final String server = m.group(1);
+            // String domain = m.group(2);
+            String webid = m.group(1);
+            // if (domain != null) {
+            // // add leading slash to make it absolute if it's not the root
+            // domain = "/" + URIUtils.unquoteURIPathComponent(domain);
+            // } else {
+            // domain = "/";
+            // }
 
 
-            if (docs.size() >= 1) {
-                final DocumentRef docRef = new PathRef(docs.get(0).getPathAsString());
-                final String viewId = m.group(3);
+            log.warn("webid : " + webid);
+
+            // DocumentModelList docs = null;
+            // try {
+            // // WebUrlSearch webUrlSearch = new WebUrlSearch("default", "SELECT * FROM Document where ecm:path startswith '" + domain + "'"
+            // // + " and ttc:weburl = '" + weburl + "'");
+            // WebUrlSearch webUrlSearch = new WebUrlSearch(DEFAULT_REPO, "SELECT * FROM Document where ttc:webid = '" + webid + "'");
+            // webUrlSearch.runUnrestricted();
+            //
+            // docs = webUrlSearch.getDocumentPath();
+            // } catch (ClientException e) {
+            // log.error("Impossible de déterminer la weburl " + e);
+            // }
+
+
+            // if (docs.size() >= 1) {
+            final DocumentRef docRef = new PathRef(webid);
+                // final String viewId = m.group(3);
 
                 // get other parameters
-                String query = m.group(4);
-                Map<String, String> params = URIUtils.getRequestParameters(query);
+                // String query = m.group(4);
+                // Map<String, String> params = URIUtils.getRequestParameters(query);
 
-                final DocumentLocation docLoc = new DocumentLocationImpl(server, docRef);
+                final DocumentLocation docLoc = new DocumentLocationImpl(DEFAULT_REPO, docRef);
 
-                return new DocumentViewImpl(docLoc, null, null);
-            }
+                Map<String, String> params = new HashMap<String, String>();
+                DocumentViewImpl documentViewImpl = new DocumentViewImpl(docLoc, null, params);
+                log.warn("fin méthode webid");
+                return documentViewImpl;
+            // }
         }
 
         return null;
@@ -132,7 +149,8 @@ public class WebUrlCodec extends AbstractDocumentViewCodec {
 
     @Override
     public String getUrlFromDocumentView(DocumentView docView) {
-        // TODO Auto-generated method stub
+        log.error("getUrlFromDocumentView non implémenté ");
+
         return null;
     }
     
