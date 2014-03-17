@@ -117,12 +117,6 @@
             <fields>
                 <field>ttc:webid</field>
             </fields>
-            <labels>
-                <label mode="any" />
-            </labels>
-            <properties mode="any">
-
-            </properties>
         </widget>        
 
 		<widget name="files" type="filesList">
