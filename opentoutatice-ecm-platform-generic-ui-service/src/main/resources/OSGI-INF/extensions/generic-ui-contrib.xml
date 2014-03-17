@@ -60,8 +60,7 @@
 					<type>WebConfigurationFolder</type>
 					<type>WebConfiguration</type>
 				</excludedTypes>
-			</layout>
-            
+			</layout>          
             <layout name="toutatice_webId">
                 <position>
                     <at>end</at>
