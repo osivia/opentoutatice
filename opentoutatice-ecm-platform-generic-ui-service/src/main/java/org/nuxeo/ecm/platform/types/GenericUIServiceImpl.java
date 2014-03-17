@@ -1,20 +1,19 @@
 /*
  * (C) Copyright 2014 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- *
+ * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- *
+ * 
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
- *
+ * 
+ * 
  * Contributors:
- *   mberhaut1
- *    
+ * mberhaut1
  */
 package org.nuxeo.ecm.platform.types;
 
@@ -186,8 +185,13 @@ public class GenericUIServiceImpl extends DefaultComponent implements GenericUIS
 
                         for (GenericLayoutDescriptor genericLayout : genericLayouts) {
                             String genericLayoutName = genericLayout.getName();
-                            String[] excludedTypes = genericLayout.getExcludedTypes();
-                            if (excludedTypes != null && excludedTypes.length > 0 && !excludedTypes[0].equals(ALL_TYPES)) {
+                            String[] contribExcludedTypes = genericLayout.getExcludedTypes();
+                            boolean allTypesExcluded = false;
+                            if(contribExcludedTypes != null && contribExcludedTypes.length > 0){
+                                allTypesExcluded = contribExcludedTypes[0].equals(ALL_TYPES);
+                            }
+                            String[] excludedTypes = (String[]) ArrayUtils.addAll(new String[1], contribExcludedTypes);
+                            if (!allTypesExcluded) {
                                 if (!ArrayUtils.contains(excludedTypes, docType)) {
                                     PositionLayoutDescriptor positionLayout = genericLayout.getPositionLayoutDescriptor();
                                     if (positionLayout != null) {
