@@ -107,6 +107,23 @@
 				</mode>
 			</widgetModes>
 		</widget>
+        
+        <!-- Widget en vue Modifier (ou Créer) -->
+        <widget name="toutatice_webId_widget" type="text">
+            <labels>
+                <label mode="any">toutatice.label.admin.publication.webid</label>
+            </labels>
+            <translated>true</translated>
+            <fields>
+                <field>ttc:webid</field>
+            </fields>
+            <labels>
+                <label mode="any" />
+            </labels>
+            <properties mode="any">
+
+            </properties>
+        </widget>        
 
 		<widget name="files" type="filesList">
 			<labels>

@@ -159,6 +159,17 @@
 			</rows>
 		</layout>
 
+        <layout name="toutatice_webId">
+            <templates>
+                <template mode="any">/layouts/layout_default_template.xhtml
+                </template>
+            </templates>
+            <rows>
+                <row>
+                    <widget>toutatice_webId_widget</widget>
+                </row>
+            </rows>
+        </layout>
 	</extension>
 	
 	<!-- Gestion de la vue Summary pour les Folderish l'acceptant-->
