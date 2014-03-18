@@ -7,7 +7,7 @@
     <require>org.nuxeo.ecm.platform.ui.web.rest.URLService
     </require>
         
-        <!-- WebURLs -->
+    <!-- WebURLs -->
     <extension point="codecs" target="org.nuxeo.ecm.platform.url.service.DocumentViewCodecService">
     <documentation>
       The docid codec uses the document uid to resolve the context. Urls are of
@@ -36,13 +36,10 @@
       <needRedirectFilter>true</needRedirectFilter>
       <needFilterPreprocessing>true</needFilterPreprocessing>
       <codecName>nxurl</codecName>
-      <actionBinding>#{restHelper.findWebId}</actionBinding>
-      <documentViewBindingApplies>
-        #{mainTabsActions.isOnMainTab('collaboration')}
-      </documentViewBindingApplies>
+      <actionBinding>#{restHelper.initContextFromRestRequest}</actionBinding>
       <documentViewBinding>#{restHelper.documentView}</documentViewBinding>
       <newDocumentViewBinding>
-        #{restHelper.getNewDocumentView(null)}
+        #{restHelper.newDocumentView}
       </newDocumentViewBinding>
       <bindings>
         <binding callGetter="false" name="tabId">
@@ -51,9 +48,12 @@
         <binding callGetter="false" name="subTabId">
           #{webActions.currentSubTabId}
         </binding>
-        <binding name="tabIds">#{socialWorkspaceActions.collaborationMainTab}</binding>
+        <binding name="tabIds">#{webActions.currentTabIds}</binding>
         <binding callGetter="false" name="language">
           #{restHelper.localeString}
+        </binding>
+        <binding callGetter="false" name="mainTabId">
+          #{webActions.currentTabIds}
         </binding>
       </bindings>
     </urlPattern>
