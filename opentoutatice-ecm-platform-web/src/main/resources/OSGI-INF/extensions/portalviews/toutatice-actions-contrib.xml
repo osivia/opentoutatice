@@ -55,8 +55,9 @@
 			<category>TOUTATICE_EDIT_DOCUMENT_FORM</category>
 			<filter-id>is_not_thread_document</filter-id>
 		</action>
-
-		<action id="TOUTATICE_EDIT_AND_SET_ONLINE_CURRENT_DOCUMENT"
+		
+		<!-- Désactivation temporaire ? -->
+		<!-- <action id="TOUTATICE_EDIT_AND_SET_ONLINE_CURRENT_DOCUMENT"
 			link="#{documentActions.updateNSetOnLineCurrentDocument('toutatice_view')}"
 			order="1" label="toutatice.command.save.and.setonline">
 			<category>TOUTATICE_EDIT_DOCUMENT_FORM</category>
@@ -89,7 +90,7 @@
 				</rule>
 			</filter>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
-		</action>
+		</action> -->
 
 
 		<!-- Docs spécifiques -->
