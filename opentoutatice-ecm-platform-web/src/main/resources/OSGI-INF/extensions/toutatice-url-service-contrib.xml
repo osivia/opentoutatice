@@ -7,7 +7,7 @@
     <require>org.nuxeo.ecm.platform.ui.web.rest.URLService
     </require>
         
-    <!-- WebURLs -->
+    <!-- WebURLs 
     <extension point="codecs" target="org.nuxeo.ecm.platform.url.service.DocumentViewCodecService">
     <documentation>
       The docid codec uses the document uid to resolve the context. Urls are of
@@ -57,6 +57,6 @@
         </binding>
       </bindings>
     </urlPattern>
-  </extension>
+  </extension> -->
   
 </component>
