@@ -61,11 +61,11 @@
 					<type>WebConfiguration</type>
 				</excludedTypes>
 			</layout>          
-            <layout name="toutatice_webId">
+            <!-- <layout name="toutatice_webId">
                 <position>
                     <at>end</at>
                 </position>
-            </layout>            
+            </layout>  -->           
 		</layouts>
 
 	</extension>
