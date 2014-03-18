@@ -80,6 +80,7 @@ public class NuxeoStudioConst {
 	public final static String CST_DOC_XPATH_NUXEO_DC_ISSUED = CST_DOC_SCHEMA_DC_PREFIX + ":issued";
 	public final static String CST_DOC_XPATH_MNT_AUTOMATION_LOGS_STATUS = CST_DOC_SCHEMA_MNT_PREFIX + ":automationLogsStatus";
 	public final static String CST_DOC_XPATH_MNT_AUTOMATION_LOGS_THRESHOLD = CST_DOC_SCHEMA_MNT_PREFIX + ":automationLogsThreshold";
+	public static final String CST_DOC_SCHEMA_TOUTATICE_WEBID = CST_DOC_SCHEMA_TOUTATICE_PREFIX + ":webid";
 	
 	// life cycle states
 	public final static String CST_DOC_STATE_PROJECT = "project";
