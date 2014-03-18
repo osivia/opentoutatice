@@ -1,20 +1,19 @@
 /*
  * (C) Copyright 2014 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- *
+ * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- *
+ * 
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
- *
+ * 
+ * 
  * Contributors:
- *   mberhaut1
- *    
+ * mberhaut1
  */
 package fr.toutatice.ecm.platform.web.urlservice;
 
@@ -25,22 +24,26 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.nuxeo.common.utils.URIUtils;
 import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentLocation;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
-import org.nuxeo.ecm.core.api.PathRef;
-import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
+import org.nuxeo.ecm.core.api.repository.Repository;
+import org.nuxeo.ecm.core.api.repository.RepositoryManager;
 import org.nuxeo.ecm.platform.url.DocumentViewImpl;
 import org.nuxeo.ecm.platform.url.api.DocumentView;
 import org.nuxeo.ecm.platform.url.service.AbstractDocumentViewCodec;
+import org.nuxeo.runtime.api.Framework;
 
 
 public class WebUrlCodec extends AbstractDocumentViewCodec {
 
     private static final Log log = LogFactory.getLog(WebUrlCodec.class);
 
+    private CoreSession documentManager;
 
     private static final String DEFAULT_REPO = "default";
 
@@ -49,10 +52,8 @@ public class WebUrlCodec extends AbstractDocumentViewCodec {
     // nxurl/server/domain/weburl@view_id?requestParams
     public static final String URL_PATTERN = "/" // slash
             + "([\\w\\.]+)" // server name (group 1)
-            + "/"
-            + "([\\w\\.]+)" // domain name (group 2)
-            + "/"
-            + "([\\w\\.]+)" // weburl name (group 3)
+            + "/" + "([\\w\\.]+)" // domain name (group 2)
+            + "/" + "([\\w\\.]+)" // weburl name (group 3)
             + "@([\\w\\-\\.]+)" // view id (group 4)
             + "/?" // final slash (optional)
             + "(?:\\?(.*)?)?"; // query (group 5) (optional)
@@ -72,18 +73,16 @@ public class WebUrlCodec extends AbstractDocumentViewCodec {
 
 
     public WebUrlCodec() {
-
-
-        // try {
-        // LoginContext loginContext = Framework.login();
-        // RepositoryManager mgr = Framework.getService(RepositoryManager.class);
-        // Repository repository = mgr.getDefaultRepository();
-        // if (repository != null) {
-        // documentManager = repository.open();
-        // }
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // }
+        try {
+            Framework.login();
+            RepositoryManager mgr = Framework.getService(RepositoryManager.class);
+            Repository repository = mgr.getDefaultRepository();
+            if (repository != null) {
+                documentManager = repository.open();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -101,47 +100,42 @@ public class WebUrlCodec extends AbstractDocumentViewCodec {
         Matcher m = pattern.matcher(url);
         if (m.matches()) {
 
-            // final String server = m.group(1);
-            // String domain = m.group(2);
             String webid = m.group(1);
-            // if (domain != null) {
-            // // add leading slash to make it absolute if it's not the root
-            // domain = "/" + URIUtils.unquoteURIPathComponent(domain);
-            // } else {
-            // domain = "/";
-            // }
-
 
             log.warn("webid : " + webid);
 
-            // DocumentModelList docs = null;
-            // try {
-            // // WebUrlSearch webUrlSearch = new WebUrlSearch("default", "SELECT * FROM Document where ecm:path startswith '" + domain + "'"
-            // // + " and ttc:weburl = '" + weburl + "'");
-            // WebUrlSearch webUrlSearch = new WebUrlSearch(DEFAULT_REPO, "SELECT * FROM Document where ttc:webid = '" + webid + "'");
-            // webUrlSearch.runUnrestricted();
-            //
-            // docs = webUrlSearch.getDocumentPath();
-            // } catch (ClientException e) {
-            // log.error("Impossible de déterminer la weburl " + e);
-            // }
+            DocumentModelList docs = null;
+            try {
+
+                docs = documentManager.query("SELECT * FROM Document where ttc:webid = '" + webid + "'");
+
+            } catch (ClientException e) {
+                log.error("Impossible de déterminer la weburl " + e);
+            }
 
 
-            // if (docs.size() >= 1) {
-            final DocumentRef docRef = new PathRef(webid);
-                // final String viewId = m.group(3);
+            if (docs.size() == 1 && docs.get(0) != null) {
 
+                DocumentRef docRef = docs.get(0).getRef();
+                String viewId = m.group(3);
+                if (viewId.length() > 1) {
+                    viewId = viewId.substring(1);
+                }
+                Map<String, String> params = new HashMap<String, String>();
                 // get other parameters
-                // String query = m.group(4);
-                // Map<String, String> params = URIUtils.getRequestParameters(query);
-
+                if (m.groupCount() > 3) {
+                    String parameters = m.group(4);
+                    params = URIUtils.getRequestParameters(parameters);
+                }
                 final DocumentLocation docLoc = new DocumentLocationImpl(DEFAULT_REPO, docRef);
 
-                Map<String, String> params = new HashMap<String, String>();
-                DocumentViewImpl documentViewImpl = new DocumentViewImpl(docLoc, null, params);
+                DocumentViewImpl documentViewImpl = new DocumentViewImpl(docLoc, viewId, params);
                 log.warn("fin méthode webid");
                 return documentViewImpl;
-            // }
+
+            } else {
+                log.error("More than one document with webid: " + webid);
+            }
         }
 
         return null;
@@ -153,28 +147,5 @@ public class WebUrlCodec extends AbstractDocumentViewCodec {
 
         return null;
     }
-    
-    class WebUrlSearch extends UnrestrictedSessionRunner {
 
-        DocumentModelList query2;
-        String weburl;
-
-        public WebUrlSearch(String repositoryName, String weburl) {
-            super(repositoryName);
-
-            this.weburl = weburl;
-        }
-        
-
-        @Override
-        public void run() throws ClientException {
-            
-            query2 = session.query(weburl);
-        }
-        
-        public DocumentModelList getDocumentPath() throws ClientException {
-            
-            return query2;
-        }
-    }
 }
