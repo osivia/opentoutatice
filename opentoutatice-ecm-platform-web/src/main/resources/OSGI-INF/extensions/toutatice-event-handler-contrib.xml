@@ -20,7 +20,7 @@
         </handler>
 
 		<!-- WebURL -->
-        <handler chainId="createOrCopyOp">
+        <!-- <handler chainId="createOrCopyOp">
             <event>documentCreated</event>
             <event>documentCreatedByCopy</event>
             <event>documentImported</event>
@@ -42,7 +42,7 @@
                 <attribute>Mutable Document</attribute>
                 <expression>Document.hasSchema('toutatice') == false</expression>
             </filters>
-        </handler>
+        </handler> -->
 
     </extension>
 
