@@ -1111,5 +1111,12 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     public String getDocumentPermalink(DocumentModel doc) throws ClientException {
         return getPermaLinkService().getPermalink(doc);     
     }
+    
+	public boolean hasChildrenWithType(String type) throws ClientException{
+		
+		DocumentModelList docLst = documentManager.getChildren(navigationContext.getCurrentDocument().getRef(), type);
+		
+		return (docLst!=null && !docLst.isEmpty());
+	}
 
 }
