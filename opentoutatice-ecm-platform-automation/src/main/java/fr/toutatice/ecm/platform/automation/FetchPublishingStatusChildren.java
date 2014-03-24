@@ -73,11 +73,11 @@ public class FetchPublishingStatusChildren {
             if (liveStatus && !child.isProxy() && !isDeleted) {
                 // Live children
                 JSONObject childWithStatus = new JSONObject();
-                DocumentModel publishedChild = ToutaticeDocumentHelper.getProxy(documentManager, child, SecurityConstants.READ);
-                boolean isPublished = publishedChild != null;
+                String publishedChildVersionLabel = ToutaticeDocumentHelper.getProxyVersion(documentManager, child);
+                boolean isPublished = publishedChildVersionLabel != null;
                 childWithStatus.element("isPublished", isPublished);
                 if (isPublished) {
-                    boolean isLiveModifiedFromProxy = !child.getVersionLabel().equals(publishedChild.getVersionLabel());
+                    boolean isLiveModifiedFromProxy = !child.getVersionLabel().equals(publishedChildVersionLabel);
                     childWithStatus.element("isLiveModifiedFromProxy", isLiveModifiedFromProxy);
                 } else {
                     childWithStatus.element("isLiveModifiedFromProxy", false);
