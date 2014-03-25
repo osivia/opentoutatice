@@ -1119,4 +1119,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 		return (docLst!=null && !docLst.isEmpty());
 	}
 
+	public boolean hasView(String viewId) {
+		return ToutaticeDocumentHelper.hasView(navigationContext.getCurrentDocument(), viewId);
+	}
 }
