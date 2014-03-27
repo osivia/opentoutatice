@@ -51,8 +51,8 @@ import org.nuxeo.ecm.webapp.documentsLists.DocumentsListsManager;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
-import fr.toutatice.ecm.platform.core.constants.GlobalConst;
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
 
 @Name("jbpmActions")
@@ -128,7 +128,7 @@ public class ToutaticeJbpmActionsBean extends JbpmActionsBean {
     		ProcessInstance runningProcess = getCurrentProcess();
     		if (null != runningProcess) {
     			String name = runningProcess.getProcessDefinition().getName();
-    			if (GlobalConst.CST_WORKFLOW_PROCESS_ONLINE.equals(name)) {
+    			if (ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE.equals(name)) {
     				doProcessExist = true;
     			}
     		}
@@ -149,7 +149,7 @@ public class ToutaticeJbpmActionsBean extends JbpmActionsBean {
 	 * @throws ClientException
 	 */
 	public boolean isRejectOnlineActionAuthorized() throws ClientException {
-		String[] taskNames = new String[] {GlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE};
+		String[] taskNames = new String[] {ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE};
 		
 		List<TaskInstance> taskList = getCurrentTasks(taskNames);
 		if ((null != taskList) && (0 < taskList.size())) {
@@ -170,7 +170,7 @@ public class ToutaticeJbpmActionsBean extends JbpmActionsBean {
 	 * @throws ClientException
 	 */
 	public boolean isValidateOnlineActionAuthorized() throws ClientException {
-		String[] taskNames = new String[] {GlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE};
+		String[] taskNames = new String[] {ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE};
 		
 		List<TaskInstance> taskList = getCurrentTasks(taskNames);
 		if ((null != taskList) && (0 < taskList.size())) {
@@ -252,7 +252,7 @@ public class ToutaticeJbpmActionsBean extends JbpmActionsBean {
     		log.debug("Failed to execute 'isValidationActionAuthorized()', error: " + e.getMessage());
     	}
 		
-		return (NuxeoStudioConst.CST_DOC_STATE_PROJECT.equals(cLCS)) ? true : false;
+		return (ToutaticeNuxeoStudioConst.CST_DOC_STATE_PROJECT.equals(cLCS)) ? true : false;
 	}
 
 	/**

@@ -42,7 +42,7 @@ import org.nuxeo.ecm.platform.jbpm.JbpmService;
 import org.nuxeo.ecm.webapp.clipboard.ClipboardActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
 @Name("clipboardActions")
 @Scope(ScopeType.SESSION)
@@ -165,7 +165,7 @@ public class ToutaticeClipboardActionsBean extends ClipboardActionsBean {
 		for (DocumentModel newDoc : newDocs) {
 			// faire passer dans l'état "en projet" les documents validés (pas de conservation de l'historique)
 			newDoc.refresh(DocumentModel.REFRESH_STATE, null);
-			if (NuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(newDoc.getCurrentLifeCycleState())) {
+			if (ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(newDoc.getCurrentLifeCycleState())) {
 				if (!newDoc.isCheckedOut()) {
 					newDoc.checkOut();
 				}

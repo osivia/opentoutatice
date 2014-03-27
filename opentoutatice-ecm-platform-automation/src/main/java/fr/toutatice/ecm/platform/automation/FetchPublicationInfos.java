@@ -64,7 +64,7 @@ import org.nuxeo.ecm.platform.types.TypeManager;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 import org.nuxeo.runtime.api.Framework;
 
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 @Operation(id = FetchPublicationInfos.ID, category = Constants.CAT_FETCH, label = "Fetch publish space informations", description = "Fetch informations about the publish space, worksapce, proxy status, ... of a given document.")
@@ -298,9 +298,9 @@ public class FetchPublicationInfos {
 			if (canBeDelete) {
 				DocumentModel proxy = ToutaticeDocumentHelper.getProxy(coreSession, liveDoc, null);
 				boolean hasProxy = (null != proxy);
-				boolean isApproved = NuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(liveDoc.getCurrentLifeCycleState());
+				boolean isApproved = ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(liveDoc.getCurrentLifeCycleState());
 				if (isApproved || hasProxy) {
-					boolean canValidate = coreSession.hasPermission(liveDoc.getRef(), NuxeoStudioConst.CST_PERM_VALIDATE);
+					boolean canValidate = coreSession.hasPermission(liveDoc.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE);
 					canBeDelete = Boolean.valueOf(canValidate);
 				}
 			}

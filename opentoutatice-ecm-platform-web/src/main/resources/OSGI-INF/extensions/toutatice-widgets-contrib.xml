@@ -68,6 +68,55 @@
 			</fields>
 		</widget>
 
+		<widget name="layout" type="layout">
+			<labels>
+				<label mode="any">acaren.label.metadata.common</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field></field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="name">acaren_metadata_modify_common_part3</property>
+				<property name="mode">create</property>
+			</properties>
+		</widget>
+		
+		<widget name="layout_1" type="layout">
+			<labels>
+				<label mode="any">acaren.label.metadata.specific</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field></field>
+			</fields>
+			<widgetModes>
+				<mode value="create">#{nxu:test(not empty navigationContext.metadataDomain,layout.mode,'hidden')}</mode>
+			</widgetModes>
+			<properties widgetMode="edit">
+				<property name="name">acaren_metadata_specific</property>
+				<property name="mode">create</property>
+			</properties>
+			<properties widgetMode="view">
+				<property name="name">acaren_metadata_specific</property>
+				<property name="mode">view</property>
+			</properties>
+		</widget>
+		
+		<widget name="layout_2" type="layout">
+			<labels>
+				<label mode="any">acaren.label.admin.publication.showInMenu</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field></field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="name">acaren_showInMenu</property>
+				<property name="mode">edit</property>
+			</properties>
+		</widget>
+
 		<widget name="summary_content" type="summary_content_type">
 			<labels>
 				<label mode="any">Contenu</label>

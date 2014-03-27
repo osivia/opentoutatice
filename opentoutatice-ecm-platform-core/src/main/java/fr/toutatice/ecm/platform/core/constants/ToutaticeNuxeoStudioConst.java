@@ -24,7 +24,7 @@ package fr.toutatice.ecm.platform.core.constants;
  * 
  * @author mberhaut1
  */
-public class NuxeoStudioConst {
+public class ToutaticeNuxeoStudioConst {
 	// document types
 	public final static String CST_DOC_TYPE_MAINTENANCE = "MaintenanceConfiguration";
 	public final static String CST_DOC_TYPE_WORKSPACE = "Workspace";
@@ -41,6 +41,7 @@ public class NuxeoStudioConst {
 	public final static String CST_DOC_SCHEMA_NUXEO_FILES_PREFIX = "files";
 	public final static String CST_DOC_SCHEMA_USER_PREFIX = "user";
 	public final static String CST_DOC_SCHEMA_DC_PREFIX = "dc";
+	public final static String CST_DOC_SCHEMA_DUBLINCORE = "dublincore";
 	public final static String CST_DOC_SCHEMA_TOUTATICE = "toutatice";
 	public final static String CST_DOC_SCHEMA_TOUTATICE_PREFIX = "ttc";
 	public final static String CST_DOC_SCHEMA_TOUTATICE_SPACEID = "ttc:spaceID";
@@ -77,6 +78,7 @@ public class NuxeoStudioConst {
 	public static final String CST_DOC_XPATH_NUXEO_PICTURE_BOOK_TEMPLATES = CST_DOC_SCHEMA_PICTURE_BOOK_PREFIX + ":picturetemplates";
 	public static final String CST_DOC_XPATH_NUXEO_FILES = CST_DOC_SCHEMA_NUXEO_FILES_PREFIX + ":files";
 	public static final String CST_DOC_XPATH_DC_KEYWORDS = CST_DOC_SCHEMA_DC_PREFIX + ":subjects";
+	public final static String CST_DOC_XPATH_DC_PUBLISHER = CST_DOC_SCHEMA_DC_PREFIX + ":publisher";
 	public final static String CST_DOC_XPATH_NUXEO_DC_ISSUED = CST_DOC_SCHEMA_DC_PREFIX + ":issued";
 	public final static String CST_DOC_XPATH_MNT_AUTOMATION_LOGS_STATUS = CST_DOC_SCHEMA_MNT_PREFIX + ":automationLogsStatus";
 	public final static String CST_DOC_XPATH_MNT_AUTOMATION_LOGS_THRESHOLD = CST_DOC_SCHEMA_MNT_PREFIX + ":automationLogsThreshold";

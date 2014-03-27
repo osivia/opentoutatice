@@ -48,7 +48,7 @@ import org.nuxeo.ecm.webapp.documentsLists.DocumentsListsManager;
 import org.nuxeo.ecm.webapp.note.EditorImageActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeFileHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeImageCollectionHelper;
 
@@ -192,7 +192,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
         if (doc.getId() == null) {
             return true;
         } else {
-            return !doc.hasSchema(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE);
+            return !doc.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE);
         }
     }
 
@@ -285,19 +285,19 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
         boolean isImage = ToutaticeFileHelper.instance().isImageTypeFile(uploadedImageName, uploadedImageBlob);
 
         if (isImage) {
-        	List<Map<String, Object>> files = (List<Map<String, Object>>) doc.getPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
+        	List<Map<String, Object>> files = (List<Map<String, Object>>) doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
         	
         	final Map<String, Object> item = new HashMap<String, Object>();
         	item.put("filename", uploadedImageName);
         	item.put("file", uploadedImageBlob);
         	
         	ToutaticeImageCollectionHelper.instance().add(files, item);
-        	doc.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, (Serializable) files);
+        	doc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, (Serializable) files);
         	
         	documentManager.saveDocument(doc);
         	documentManager.save();
         	
-        	imageUrlAttr = DocumentModelFunctions.complexFileUrl("downloadFile", doc, NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, files.indexOf(item), LiveEditConstants.DEFAULT_SUB_BLOB_FIELD,
+        	imageUrlAttr = DocumentModelFunctions.complexFileUrl("downloadFile", doc, ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, files.indexOf(item), LiveEditConstants.DEFAULT_SUB_BLOB_FIELD,
         			uploadedImageName);
         	isImageUploadedAttr = true;
         } else {
@@ -315,7 +315,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
         List<DocumentModel> selectedDocumentList = documentsListsManager.getWorkingList(CURRENT_DOCUMENT_SELECTION);
         
         if (null != selectedDocumentList && 0 < selectedDocumentList.size()) {
-        	List<Map<String, Object>> files = (List<Map<String, Object>>) currentDoc.getPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
+        	List<Map<String, Object>> files = (List<Map<String, Object>>) currentDoc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
         	
         	for (DocumentModel selectedDocument : selectedDocumentList) {
         		Map<String, Object> picture = selectedDocument.getProperties("picture");
@@ -339,7 +339,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
         	documentsListsManager.resetWorkingList(CURRENT_DOCUMENT_SELECTION);
         	
         	// sauvegarder les modifications
-        	currentDoc.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, (Serializable) files);
+        	currentDoc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, (Serializable) files);
         	documentManager.saveDocument(currentDoc);
         	documentManager.save();
         	// Rafraîchir la liste des images

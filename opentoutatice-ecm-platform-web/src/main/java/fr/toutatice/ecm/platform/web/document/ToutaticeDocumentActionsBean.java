@@ -83,8 +83,8 @@ import org.nuxeo.ecm.webapp.pagination.ResultsProvidersCache;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
-import fr.toutatice.ecm.platform.core.constants.GlobalConst;
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeOperationHelper;
 import fr.toutatice.ecm.platform.services.permalink.PermaLinkService;
@@ -154,7 +154,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public boolean isRemoteProxy() {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
-        return currentDocument.isProxy() && !StringUtils.endsWith(currentDocument.getName(), GlobalConst.CST_PROXY_NAME_SUFFIX);
+        return currentDocument.isProxy() && !StringUtils.endsWith(currentDocument.getName(), ToutaticeGlobalConst.CST_PROXY_NAME_SUFFIX);
     }
 
     public String saveDocument() throws ClientException {
@@ -446,7 +446,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     /**
      * Determine si l'action "seeOnlineDocumentVersion" doit être présentée.
      * 
-     * <h4>Conditions</h4> <li>le document doit posséder un proxy local (publication local pour mise en ligne)</li> <li>le document ne doit pas être la version
+     * <h4>Conditions</h4> <li>le document doit posséder un proxy local (publication locale pour mise en ligne)</li> <li>le document ne doit pas être la version
      * valide</li>
      * 
      * @return true si l'action doit être présentée. false sinon.
@@ -548,10 +548,10 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         try {
             String proxyVersionLabel = getProxyVersion(document);
             if (!document.getVersionLabel().equals(proxyVersionLabel)) {
-                if (documentManager.hasPermission(document.getRef(), NuxeoStudioConst.CST_PERM_VALIDATE)) {
-                    ToutaticeOperationHelper.runOperationChain(documentManager, NuxeoStudioConst.CST_OPERATION_DOCUMENT_PUBLISH_ONLY, document);
+                if (documentManager.hasPermission(document.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE)) {
+                    ToutaticeOperationHelper.runOperationChain(documentManager, ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_PUBLISH_ONLY, document);
                 } else {
-                    ToutaticeOperationHelper.runOperationChain(documentManager, NuxeoStudioConst.CST_OPERATION_DOCUMENT_PUBLISH_REQUEST, document);
+                    ToutaticeOperationHelper.runOperationChain(documentManager, ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_PUBLISH_REQUEST, document);
                 }
             }
         } catch (Exception e) {
@@ -598,7 +598,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         }
 
         try {
-            ToutaticeOperationHelper.runOperationChain(documentManager, NuxeoStudioConst.CST_OPERATION_DOCUMENT_UNPUBLISH_SELECTION, new DocumentModelListImpl(
+            ToutaticeOperationHelper.runOperationChain(documentManager, ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_UNPUBLISH_SELECTION, new DocumentModelListImpl(
                     currentDocumentSelection));
         } catch (Exception e) {
             log.error("Failed to set offline the selection from the document: '" + currentFolder.getTitle() + "', error: " + e.getMessage());
@@ -631,7 +631,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      *         'false' sinon.
      */
     public boolean belongToPublishSpace() {
-        return (!GlobalConst.NULL_DOCUMENT_MODEL.getType().equals(((ToutaticeNavigationContext) navigationContext).getCurrentPublicationArea().getType()));
+        return (!ToutaticeGlobalConst.NULL_DOCUMENT_MODEL.getType().equals(((ToutaticeNavigationContext) navigationContext).getCurrentPublicationArea().getType()));
     }
 
     /**
@@ -652,7 +652,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      *         sinon.
      */
     public boolean belongToWorkSpace() {
-        return (!GlobalConst.NULL_DOCUMENT_MODEL.getType().equals(((ToutaticeNavigationContext) navigationContext).getCurrentWorkspaceArea().getType()));
+        return (!ToutaticeGlobalConst.NULL_DOCUMENT_MODEL.getType().equals(((ToutaticeNavigationContext) navigationContext).getCurrentWorkspaceArea().getType()));
     }
 
     /**
@@ -672,7 +672,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         List<String> list = new ArrayList<String>();
 
         try {
-            if ((null != referenceDoc && document.getId().equals(referenceDoc.getId())) || (NuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(document.getType()))) {
+            if ((null != referenceDoc && document.getId().equals(referenceDoc.getId())) || (ToutaticeNuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(document.getType()))) {
                 return list;
             }
 
@@ -730,7 +730,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     private String getSpacePath(DocumentModel document) {
         String path = CST_DEFAULT_PUBLICATON_AREA_PATH;
         DocumentModel space = ((ToutaticeNavigationContext) navigationContext).getPublicationArea(document);
-        if (GlobalConst.NULL_DOCUMENT_MODEL.getType().equals(space.getType())) {
+        if (ToutaticeGlobalConst.NULL_DOCUMENT_MODEL.getType().equals(space.getType())) {
             space = navigationContext.getCurrentWorkspace();
         }
         if (null != space) {
@@ -743,7 +743,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         String name = CST_DEFAULT_PUBLICATON_AREA_TITLE;
 
         DocumentModel area = ((ToutaticeNavigationContext) navigationContext).getPublicationArea(document);
-        if (!GlobalConst.NULL_DOCUMENT_MODEL.getType().equals(area.getType())) {
+        if (!ToutaticeGlobalConst.NULL_DOCUMENT_MODEL.getType().equals(area.getType())) {
             try {
                 name = area.getTitle();
             } catch (ClientException e) {
@@ -830,7 +830,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     public SelectDataModel getPictureBookChildrenSelectModel() throws ClientException {
         DocumentModelList documents = getCurrentPictureBookChildrenPage();
         List<DocumentModel> selectedDocuments = documentsListsManager.getWorkingList(DocumentsListsManager.CURRENT_DOCUMENT_SELECTION);
-        SelectDataModel model = new SelectDataModelImpl(NuxeoStudioConst.CHILDREN_DOCUMENT_LIST, documents, selectedDocuments);
+        SelectDataModel model = new SelectDataModelImpl(ToutaticeNuxeoStudioConst.CHILDREN_DOCUMENT_LIST, documents, selectedDocuments);
         model.addSelectModelListener(this);
         return model;
     }
@@ -966,11 +966,11 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     public void initShowInMenu() throws ClientException {
         DocumentModel newDocument = navigationContext.getChangeableDocument();
 
-        if (newDocument.hasFacet(NuxeoStudioConst.CST_FACET_SPACE_NAVIGATION_ITEM) || "Folder".equals(newDocument.getType())
+        if (newDocument.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_SPACE_NAVIGATION_ITEM) || "Folder".equals(newDocument.getType())
                 || "OrderedFolder".equals(newDocument.getType())) {
-            newDocument.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_SIM, true);
+            newDocument.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_SIM, true);
             if ("PortalSite".equals(newDocument.getType())) {
-                newDocument.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_INTERNAL_CONTEXTUALIZATION, true);
+                newDocument.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_INTERNAL_CONTEXTUALIZATION, true);
             }
         }
     }
@@ -983,7 +983,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
             newDocument = navigationContext.getCurrentDocument();
         }
 
-        if (newDocument.hasFacet(NuxeoStudioConst.CST_FACET_SPACE_CONTENT) || "Folder".equals(newDocument.getType())
+        if (newDocument.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_SPACE_CONTENT) || "Folder".equals(newDocument.getType())
                 || "OrderedFolder".equals(newDocument.getType())) {
             res = true;
         }
@@ -1113,9 +1113,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     }
     
 	public boolean hasChildrenWithType(String type) throws ClientException{
-		
 		DocumentModelList docLst = documentManager.getChildren(navigationContext.getCurrentDocument().getRef(), type);
-		
 		return (docLst!=null && !docLst.isEmpty());
 	}
 

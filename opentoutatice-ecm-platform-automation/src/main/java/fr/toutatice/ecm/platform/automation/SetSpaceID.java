@@ -28,7 +28,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
 
@@ -44,7 +44,7 @@ public class SetSpaceID {
 
 	@OperationMethod()
 	public DocumentModel run(DocumentModel doc) throws Exception {
-		if (!doc.hasSchema(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
+		if (!doc.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
 			return doc;
 		}
 		
@@ -63,7 +63,7 @@ public class SetSpaceID {
 		String spaceId;
 		
 		// si UserWorspace => spaceId = dc:title (conversion en minuscule afin de pouvoir utiliser l'indexation sur cette méta-donnée)
-		if (NuxeoStudioConst.CST_DOC_TYPE_USER_WORKSPACE.equals(doc.getType())) {
+		if (ToutaticeNuxeoStudioConst.CST_DOC_TYPE_USER_WORKSPACE.equals(doc.getType())) {
 			spaceId = doc.getTitle().toLowerCase();
 		} else {
 
@@ -78,7 +78,7 @@ public class SetSpaceID {
 				// prendre le 1er parent de type space rencontré
 				DocumentModel space = spaceParentList.get(0);
 
-				if (NuxeoStudioConst.CST_DOC_TYPE_USER_WORKSPACE.equals(space.getType())) {
+				if (ToutaticeNuxeoStudioConst.CST_DOC_TYPE_USER_WORKSPACE.equals(space.getType())) {
 					// si le type de ce space est UserWorkspace => spaceID = dc:title
 					spaceId = space.getTitle().toLowerCase();
 				} else {
@@ -113,10 +113,10 @@ public class SetSpaceID {
 		
 		private void updateDoc(DocumentModel doc, String spaceId) throws  ClientException, PropertyException {
 			// si ce n'est pas un space, mise à jour du spaceID sur le document courant en mode silencieux
-			doc.setPropertyValue(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_SPACEID, spaceId);
+			doc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_SPACEID, spaceId);
 			this.session.saveDocument(doc);
 				
-			if (!doc.hasFacet(NuxeoStudioConst.CST_FACET_SPACE) && doc.isFolder()) {
+			if (!doc.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_SPACE) && doc.isFolder()) {
 				// récupération de ces enfants
 				StringBuilder query = new StringBuilder();
 				query.append("select * from Document where ecm:mixinType != 'HiddenInNavigation' AND ecm:isCheckedInVersion = 0 AND " );

@@ -87,11 +87,13 @@ public class ProxyFactoryCfgServiceImpl<T> extends DefaultComponent implements P
 		Class<?> t = null;
 		String handlerClassName = clazz.getName();
 		
-		// look among contributions whether a service proxy is configured
+		// look among contributions whether a service proxy is configured (and enabled)
 		if (this.descriptors.containsKey(clazz.getName())) {
 			ProxyFactoryCfgDescriptor handlerDescriptor = this.descriptors.get(clazz.getName());
-			handlerClassName = handlerDescriptor.getHandlerClass();
-			t = Class.forName(handlerClassName);
+			if (handlerDescriptor.isEnabled()) {
+				handlerClassName = handlerDescriptor.getHandlerClass();
+				t = Class.forName(handlerClassName);
+			}
 		}
 		
 		return t;

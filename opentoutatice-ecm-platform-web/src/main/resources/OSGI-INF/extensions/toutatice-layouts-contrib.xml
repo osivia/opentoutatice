@@ -68,6 +68,15 @@
 				<row>
 					<widget>content</widget>
 				</row>
+				<row>
+					<widget>layout</widget>
+				</row>
+				<row>
+					<widget>layout_1</widget>
+				</row>
+				<row>
+					<widget>layout_2</widget>
+				</row>
 			</rows>
 		</layout>
 		<layout name="layout@PortalPage-edit">
@@ -89,7 +98,16 @@
 					<widget>content</widget>
 				</row>
 				<row>
-					<widget>toutatice_showInMenu_widget</widget>
+					<widget>layout</widget>
+				</row>
+				<row>
+					<widget>layout_1</widget>
+				</row>
+				<row>
+					<properties mode="any">
+						<property name="nxl_colspan_0">1</property>
+					</properties>
+					<widget>layout_2</widget>
 				</row>
 			</rows>
 		</layout>

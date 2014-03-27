@@ -40,8 +40,8 @@ import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.impl.VersionModelImpl;
 
-import fr.toutatice.ecm.platform.core.constants.GlobalConst;
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeCommentsHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
 
@@ -99,7 +99,7 @@ public class PublishDocument {
             /** gestion du cycle de vie du document à publier */
             if (!this.doc.isVersion()) {
                 // si le document est en projet: le valider
-                if (NuxeoStudioConst.CST_DOC_STATE_PROJECT.equals(this.doc.getCurrentLifeCycleState())) {
+                if (ToutaticeNuxeoStudioConst.CST_DOC_STATE_PROJECT.equals(this.doc.getCurrentLifeCycleState())) {
                     this.doc.setPropertyValue("dc:valid", new Date());
                     this.session.saveDocument(this.doc);
                     this.session.followTransition(doc.getRef(), "approve");
@@ -113,7 +113,7 @@ public class PublishDocument {
                     VersionModelImpl vm = new VersionModelImpl();
                     vm.setLabel(label);
                     DocumentModel vdoc = this.session.getDocumentWithVersion(this.doc.getRef(), vm);
-                    if (null != vdoc && NuxeoStudioConst.CST_DOC_STATE_PROJECT.equals(vdoc.getCurrentLifeCycleState())) {
+                    if (null != vdoc && ToutaticeNuxeoStudioConst.CST_DOC_STATE_PROJECT.equals(vdoc.getCurrentLifeCycleState())) {
                         this.session.followTransition(vdoc.getRef(), "approve");
                     }
                 }
@@ -154,8 +154,8 @@ public class PublishDocument {
                 this.session.saveDocument(this.newProxy);
 
                 /** conservation d'URL: renommer le proxy (mise à jour de la propriété système "ecm:name") */
-                if (!this.newProxy.getName().matches(".*\\" + GlobalConst.CST_PROXY_NAME_SUFFIX + "$")) {
-                    String newProxyName = this.doc.getName() + GlobalConst.CST_PROXY_NAME_SUFFIX;
+                if (!this.newProxy.getName().matches(".*\\" + ToutaticeGlobalConst.CST_PROXY_NAME_SUFFIX + "$")) {
+                    String newProxyName = this.doc.getName() + ToutaticeGlobalConst.CST_PROXY_NAME_SUFFIX;
                     if (StringUtils.isNotBlank(formerProxyName)) {
                         newProxyName = formerProxyName;
                     }

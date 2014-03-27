@@ -33,7 +33,7 @@ import org.nuxeo.ecm.directory.Session;
 import org.nuxeo.ecm.directory.api.DirectoryService;
 import org.nuxeo.runtime.api.Framework;
 
-import fr.toutatice.ecm.platform.core.constants.UtilsConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeUtilsConst;
 import fr.toutatice.ecm.platform.core.utils.exception.ToutaticeException;
 
 public class ToutaticeDirectoryMngtHelper {
@@ -153,7 +153,7 @@ public class ToutaticeDirectoryMngtHelper {
 	public List<String> getDirectoryEntriesLocalizedLabelList(String[] directories, String rawKeys, Locale locale) {
 		List<String> list = new ArrayList<String>();
 		
-		String[] keysList = rawKeys.split(UtilsConst.CST_DEFAULT_DIRECTORIES_SEPARATE_CHARACTER);
+		String[] keysList = rawKeys.split(ToutaticeUtilsConst.CST_DEFAULT_DIRECTORIES_SEPARATE_CHARACTER);
 		if (keysList.length > directories.length) {
 			log.warn("The list of directories ('" + directories + "') cannot be smaller than the keys list ('" + keysList + "')");
 			return list;
@@ -173,7 +173,7 @@ public class ToutaticeDirectoryMngtHelper {
 	private static String translate(String label, Locale locale) {
 		String localizedLabel = label;
 		if (null != locale) {
-			label = I18NUtils.getMessageString(UtilsConst.CST_DEFAULT_BUNDLE_NAME, label, null, locale);
+			label = I18NUtils.getMessageString(ToutaticeUtilsConst.CST_DEFAULT_BUNDLE_NAME, label, null, locale);
 		}
         return localizedLabel;
 		

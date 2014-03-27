@@ -59,12 +59,12 @@ public class ToutaticeNuxeoArchiveReader extends NuxeoArchiveReader {
 						expDoc = read();
 					}
 					
-					// Filtrer les document Immutable et Hidden in navigation
+					// Filtrer les documents Immutable (proxy, version...)
 					Iterator<?> itr = system.elementIterator(ExportConstants.FACET_TAG);
 					while (null != itr && itr.hasNext()) {
 						DefaultElement facet = (DefaultElement) itr.next();
 						String value = facet.getTextTrim();
-						if (FacetNames.IMMUTABLE.equals(value) || FacetNames.HIDDEN_IN_NAVIGATION.equals(value)) {
+						if (FacetNames.IMMUTABLE.equals(value)) {
 							// Lire le document suivant
 							expDoc = read();
 							break;

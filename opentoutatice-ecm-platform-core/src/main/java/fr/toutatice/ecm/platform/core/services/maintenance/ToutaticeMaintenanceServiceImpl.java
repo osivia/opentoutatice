@@ -33,7 +33,7 @@ import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.model.ComponentContext;
 import org.nuxeo.runtime.model.DefaultComponent;
 
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeUserMngtHelper;
 
 public class ToutaticeMaintenanceServiceImpl extends DefaultComponent implements ToutaticeMaintenanceService {
@@ -60,7 +60,7 @@ public class ToutaticeMaintenanceServiceImpl extends DefaultComponent implements
 		try {
 			DocumentModel mntDoc = getOrCreateMntDocument(session);
 			if (null != mntDoc) {
-				threshold =  (Long) mntDoc.getPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_MNT_AUTOMATION_LOGS_THRESHOLD);
+				threshold =  (Long) mntDoc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_MNT_AUTOMATION_LOGS_THRESHOLD);
 			}
 		} catch (Exception e) {
 			log.error("Failed to check the automation logs threshold, error: " + e.getMessage());
@@ -76,7 +76,7 @@ public class ToutaticeMaintenanceServiceImpl extends DefaultComponent implements
 		try {
 			DocumentModel mntDoc = getOrCreateMntDocument(session);
 			if (null != mntDoc) {
-				Boolean prop = (Boolean) mntDoc.getPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_MNT_AUTOMATION_LOGS_STATUS);
+				Boolean prop = (Boolean) mntDoc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_MNT_AUTOMATION_LOGS_STATUS);
 				status = prop.booleanValue();
 			}
 		} catch (Exception e) {
@@ -120,7 +120,7 @@ public class ToutaticeMaintenanceServiceImpl extends DefaultComponent implements
 				if (null != userWorkspaceService) {
 					DocumentModel adminUserWorkspace = userWorkspaceService.getUserPersonalWorkspace(administrators.get(0), this.session.getRootDocument());
 					String query = "SELECT * FROM "
-							+ NuxeoStudioConst.CST_DOC_TYPE_MAINTENANCE
+							+ ToutaticeNuxeoStudioConst.CST_DOC_TYPE_MAINTENANCE
 							+ " WHERE"
 							+ " ecm:parentId = '" + adminUserWorkspace.getId() + "' "
 							+ " AND ecm:isProxy = 0"
@@ -133,8 +133,8 @@ public class ToutaticeMaintenanceServiceImpl extends DefaultComponent implements
 						this.mntDocument = this.session.getDocument(mntDocRef); 
 					} else {
 						DocumentModel changeableDocument = this.session.createDocumentModel(adminUserWorkspace.getPathAsString(),
-								NuxeoStudioConst.CST_DOC_TYPE_MAINTENANCE + "." + String.valueOf(System.currentTimeMillis()),
-								NuxeoStudioConst.CST_DOC_TYPE_MAINTENANCE);
+								ToutaticeNuxeoStudioConst.CST_DOC_TYPE_MAINTENANCE + "." + String.valueOf(System.currentTimeMillis()),
+								ToutaticeNuxeoStudioConst.CST_DOC_TYPE_MAINTENANCE);
 						this.mntDocument = this.session.createDocument(changeableDocument);
 						this.session.save();
 					}
@@ -151,49 +151,5 @@ public class ToutaticeMaintenanceServiceImpl extends DefaultComponent implements
 		}
 
 	}
-
-//	@Override
-//	public void enableAutomationServerLogs(CoreSession session) {
-//		try {
-//			DocumentModel mntDoc = getOrCreateMntDocument(session);
-//			mntDoc.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_MNT_AUTOMATION_LOGS_STATUS, Boolean.TRUE);
-//			updateMntDocument(session, mntDoc);
-//		} catch (Exception e) {
-//			log.error("Failed to enable the automation logs. error: " + e.getMessage());
-//		}
-//	}
-//	
-//	@Override
-//	public void disableAutomationServerLogs(CoreSession session) {
-//		try {
-//			DocumentModel mntDoc = getOrCreateMntDocument(session);
-//			mntDoc.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_MNT_AUTOMATION_LOGS_STATUS, Boolean.FALSE);
-//			updateMntDocument(session, mntDoc);
-//		} catch (Exception e) {
-//			log.error("Failed to enable the automation logs. error: " + e.getMessage());
-//		}
-//	}
-//	
-//	private void updateMntDocument(CoreSession session, DocumentModel document) throws ClientException  {
-//		UnrestrictedSessionRunner runner = new MntDocumentUpdater(session, document);
-//		runner.runUnrestricted();
-//		this.maintenanceDocument = null;
-//	}
-//	
-//	private class MntDocumentUpdater extends UnrestrictedSessionRunner {
-//		private DocumentModel mntDocument;
-//
-//		public MntDocumentUpdater(CoreSession session, DocumentModel document) {
-//			super(session);
-//			this.mntDocument = document;
-//		}
-//		
-//		@Override
-//		public void run() throws ClientException {
-//			this.session.saveDocument(this.mntDocument);
-//			this.session.save();
-//		}
-//
-//	}
 
 }

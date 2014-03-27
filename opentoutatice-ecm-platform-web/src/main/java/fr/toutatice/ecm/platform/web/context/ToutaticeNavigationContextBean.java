@@ -61,8 +61,8 @@ import org.nuxeo.ecm.webapp.helpers.EventNames;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
-import fr.toutatice.ecm.platform.core.constants.GlobalConst;
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 @Name("navigationContext")
@@ -125,7 +125,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
             DocumentModelList currentParentsList = getCurrentDocumentParentsList(this.session, this.baseDoc);
             if ((null != currentParentsList) && (0 < currentParentsList.size())) {
                 for (DocumentModel parent : currentParentsList) {
-                    if (NuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(parent.getType())) {
+                    if (ToutaticeNuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(parent.getType())) {
                         documentDomainMap.put(this.baseDoc.getId(), parent);
                         break;
                     }
@@ -140,12 +140,12 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
     }
 
     public DocumentModel getPublicationArea(DocumentModel document) {
-        DocumentModel area = GlobalConst.NULL_DOCUMENT_MODEL;
+        DocumentModel area = ToutaticeGlobalConst.NULL_DOCUMENT_MODEL;
 
         if (null != document) {
             area = getSpaceDoc(document);
             if (!ToutaticeDocumentHelper.isAPublicationSpaceDocument(area)) {
-                area = GlobalConst.NULL_DOCUMENT_MODEL;
+                area = ToutaticeGlobalConst.NULL_DOCUMENT_MODEL;
             }
         } else {
             log.warn("Failed to get the publication area: null current document.");
@@ -154,12 +154,15 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
         return area;
     }
 
+    public boolean isASpaceDocument(DocumentModel document) {
+		return (null != document) ? ToutaticeDocumentHelper.isASpaceDocument(document) : false;
+	}
     public DocumentModel getCurrentWorkspaceArea() {
         return getWorkspaceArea(getCurrentDocument());
     }
 
     public DocumentModel getWorkspaceArea(DocumentModel document) {
-        DocumentModel area = GlobalConst.NULL_DOCUMENT_MODEL;
+        DocumentModel area = ToutaticeGlobalConst.NULL_DOCUMENT_MODEL;
 
         if (null != document) {
             DocumentModel space = getSpaceDoc(document);
@@ -180,7 +183,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
     public DocumentModel getSpaceDoc(DocumentModel document) {
         if (null == document) {
             log.warn("Failed to get the space doc: null current document.");
-            return GlobalConst.NULL_DOCUMENT_MODEL;
+            return ToutaticeGlobalConst.NULL_DOCUMENT_MODEL;
         }
 
         if (null == spaceDocMap) {
@@ -189,7 +192,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
 
         if (null == spaceDocMap.get(document.getId())) {
             // initialiser le cache avec: recherche déjà effectuée mais pas de résultat
-            spaceDocMap.put(document.getId(), GlobalConst.NULL_DOCUMENT_MODEL);
+            spaceDocMap.put(document.getId(), ToutaticeGlobalConst.NULL_DOCUMENT_MODEL);
 
             try {
                 DocumentModelList spaceDocsList = ToutaticeDocumentHelper.getParentSpaceList(documentManager, document, true, true, true);
@@ -239,7 +242,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
         @Override
         public void run() throws ClientException {
             // initialiser le cache avec: recherche déjà effectuée mais pas de résultat
-            sectionPublicationAreaMap.put(this.baseDoc.getId(), GlobalConst.NULL_DOCUMENT_MODEL);
+            sectionPublicationAreaMap.put(this.baseDoc.getId(), ToutaticeGlobalConst.NULL_DOCUMENT_MODEL);
 
             // rechercher
             DocumentModelList currentParentsList = getCurrentDocumentParentsList(this.session, this.baseDoc);
@@ -325,7 +328,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
                     parents.add(getDocumentPathElement(docModel));
                 }
                 // Spécificité de Toutatice : un document Live
-                if (currentDocument.isProxy() && NuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(currentDocument.getCurrentLifeCycleState())) {
+                if (currentDocument.isProxy() && ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(currentDocument.getCurrentLifeCycleState())) {
                     UnrestrictedGetParentsInfoRunner runner = new UnrestrictedGetParentsInfoRunner(documentManager, currentDocument);
                     runner.runUnrestricted();
                 }

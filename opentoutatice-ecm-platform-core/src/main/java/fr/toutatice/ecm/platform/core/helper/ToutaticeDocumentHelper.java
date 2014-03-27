@@ -44,25 +44,21 @@ import org.nuxeo.ecm.core.api.VersionModel;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.api.impl.LifeCycleFilter;
 import org.nuxeo.ecm.core.api.impl.VersionModelImpl;
+import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.core.api.security.ACE;
 import org.nuxeo.ecm.core.api.security.ACL;
 import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.api.security.impl.ACLImpl;
 import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
-import org.nuxeo.ecm.platform.types.Type;
-import org.nuxeo.ecm.platform.types.TypeManager;
 import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
-import org.nuxeo.runtime.api.Framework;
 
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
 public class ToutaticeDocumentHelper {
 
 	private static final Log log = LogFactory.getLog(ToutaticeDocumentHelper.class);
 	
-    private static final String CONTENT_CATEGORY = "content";
-
 	private ToutaticeDocumentHelper() {
 		// static class, cannot be instantiated
 	}
@@ -79,7 +75,7 @@ public class ToutaticeDocumentHelper {
 
 		if ((null != document) && (null != session)) {
 			try {
-				if (NuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(document.getCurrentLifeCycleState())) {
+				if (ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(document.getCurrentLifeCycleState())) {
 					latestDoc = document;
 				} else {
 					List<DocumentModel> versionDocList;
@@ -88,7 +84,7 @@ public class ToutaticeDocumentHelper {
 
 					for (int i = 0; i < versionDocList.size(); i++) {
 						DocumentModel versionDoc = versionDocList.get(i);
-						if (NuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(versionDoc.getCurrentLifeCycleState())) {
+						if (ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(versionDoc.getCurrentLifeCycleState())) {
 							latestDoc = versionDoc;
 							break;
 						}
@@ -301,6 +297,75 @@ public class ToutaticeDocumentHelper {
 	}
 
 	/**
+	 * 
+	 * @param session
+	 * @param document
+	 * @return
+	 * @throws ClientException
+	 * @throws PropertyException
+	 */
+	public static String getSpaceID(CoreSession session, DocumentModel document, boolean runInUnrestrictedMode) throws ClientException, PropertyException {
+		String spaceId = ""; // le document courant n'appartient pas à un space
+
+		// si UserWorspace => spaceId = dc:title (conversion en minuscule afin de pouvoir utiliser l'indexation sur cette méta-donnée)
+		if (ToutaticeNuxeoStudioConst.CST_DOC_TYPE_USER_WORKSPACE.equals(document.getType())) {
+			spaceId = document.getTitle().toLowerCase();
+		} else {
+			// sinon récupérer la liste des spaceParents
+			DocumentModelList spaceParentList = getParentSpaceList(session, document, runInUnrestrictedMode, true);
+
+			if (spaceParentList != null && !spaceParentList.isEmpty()) {
+				// prendre le 1er parent de type space rencontré
+				DocumentModel space = spaceParentList.get(0);
+
+				if (ToutaticeNuxeoStudioConst.CST_DOC_TYPE_USER_WORKSPACE.equals(space.getType())) {
+					// si le type de ce space est UserWorkspace => spaceID = dc:title
+					spaceId = space.getTitle().toLowerCase();
+				} else {
+					// sinon spaceID = space.getId
+					spaceId = space.getId();
+				}
+			}
+		}
+		
+		return spaceId;
+	}
+
+	/**
+	 * @param session
+	 *            la session courante de l'utilisateur
+	 * @param document
+	 *            le document pour lequel il faut rechercher les parents
+	 * @param runInUnrestrictedMode
+	 *            Est-ce que cette opération de recherche des parents doit être
+	 *            exécutée en mode unrestricted (session System) ou bien avec la
+	 *            session de l'utilisateur courant?
+	 * @return le domain parent du document courant
+	 * @throws ClientException
+	 */
+	public static DocumentModel getDomain(CoreSession session, DocumentModel document, boolean runInUnrestrictedMode) throws ClientException {
+		DocumentModel domain = null;
+
+		// sinon récupérer la liste des spaceParents
+		@SuppressWarnings("serial")
+		DocumentModelList DomainList = getParentList(session, document, new Filter() {
+
+			@Override
+			public boolean accept(DocumentModel docModel) {
+				return ToutaticeNuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(docModel.getType());
+			}
+		}, runInUnrestrictedMode, true, true);
+
+		if (null != DomainList && !DomainList.isEmpty()) {
+			domain = DomainList.get(0);
+		} else {
+			log.warn("Cannot find the parent domain of the document '" + document.getTitle() + "'");
+		}
+
+		return domain;
+	}
+	
+	/**
 	 * Récupérer la liste des "espaces de publication (locale)" parents d'un
 	 * document.
 	 * 
@@ -453,13 +518,13 @@ public class ToutaticeDocumentHelper {
 	}
 
 	public static boolean isASpaceDocument(DocumentModel document) {
-		return document.hasFacet(NuxeoStudioConst.CST_FACET_SPACE);
+		return document.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_SPACE);
 	}
 
 	public static boolean isAPublicationSpaceDocument(DocumentModel document) {
 		boolean status = false;
 
-		if (document.hasFacet(NuxeoStudioConst.CST_DOC_FACET_TTC_PUBLISH_SPACE)) {
+		if (document.hasFacet(ToutaticeNuxeoStudioConst.CST_DOC_FACET_TTC_PUBLISH_SPACE)) {
 			status = true;
 		}
 
@@ -469,7 +534,7 @@ public class ToutaticeDocumentHelper {
 	public static boolean isAWorkSpaceDocument(DocumentModel document) {
 		boolean status = false;
 
-		if (NuxeoStudioConst.CST_DOC_TYPE_WORKSPACE.equals(document.getType()) || NuxeoStudioConst.CST_DOC_TYPE_USER_WORKSPACE.equals(document.getType())) {
+		if (ToutaticeNuxeoStudioConst.CST_DOC_TYPE_WORKSPACE.equals(document.getType()) || ToutaticeNuxeoStudioConst.CST_DOC_TYPE_USER_WORKSPACE.equals(document.getType())) {
 			status = true;
 		}
 

@@ -31,7 +31,7 @@ import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
 
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
 /**
  * Cet event listener permet de réaliser les opérations non effectuées par défaut par le framework Nuxeo sur la suppression d'un document 
@@ -53,14 +53,14 @@ public class ToutaticeDeleteEventListener implements EventListener {
 			/*
 			 * Retirer des documents les références à la section en cours de suppression
 			 */
-			if (NuxeoStudioConst.CST_DOC_TYPE_SECTION.equals(document.getType())) {
+			if (ToutaticeNuxeoStudioConst.CST_DOC_TYPE_SECTION.equals(document.getType())) {
 				// Rechercher les documents qui font référence à cette section
 				DocumentModelList list = session.query(String.format(CST_QUERY_DOCUMENT_HAVING_A_SECTION_REFERENCE, document.getId()));
 				
 				// Mettre à jour ces documents
 				for (DocumentModel docToUpdate : list) {
 					if (session.hasPermission(docToUpdate.getRef(), SecurityConstants.WRITE)) {
-						String[] currentSectionIdsList = (String[]) docToUpdate.getPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_NUXEO_SECTIONS_PROPERTY_NAME);
+						String[] currentSectionIdsList = (String[]) docToUpdate.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_NUXEO_SECTIONS_PROPERTY_NAME);
 
 						List<String> newSectionIdsList = new ArrayList<String>();
 						if (currentSectionIdsList != null) {
@@ -71,7 +71,7 @@ public class ToutaticeDeleteEventListener implements EventListener {
 							}
 						}
 
-						docToUpdate.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_NUXEO_SECTIONS_PROPERTY_NAME, newSectionIdsList.toArray(new String[newSectionIdsList.size()]));
+						docToUpdate.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_NUXEO_SECTIONS_PROPERTY_NAME, newSectionIdsList.toArray(new String[newSectionIdsList.size()]));
 						session.saveDocument(docToUpdate);
 					}
 				}

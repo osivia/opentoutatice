@@ -43,8 +43,8 @@ import org.nuxeo.ecm.platform.publisher.impl.service.ProxyTree;
 import org.nuxeo.ecm.platform.publisher.web.PublishActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
-import fr.toutatice.ecm.platform.core.constants.GlobalConst;
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
 
 
@@ -109,7 +109,7 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
 
         /* Proxy non distant */
         if (!isRemoteProxy(proxy)) {
-            status = documentManager.hasPermission(proxy.getRef(), NuxeoStudioConst.CST_PERM_VALIDATE);
+            status = documentManager.hasPermission(proxy.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE);
         } else {
             PublishedDocument publishedDocument = new SimpleCorePublishedDocument(proxy);
             status = super.canUnpublish(publishedDocument);
@@ -175,7 +175,7 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
     }
 
     public boolean isRemoteProxy(DocumentModel proxy) {
-        return proxy.isProxy() && !StringUtils.endsWith(proxy.getName(), GlobalConst.CST_PROXY_NAME_SUFFIX);
+        return proxy.isProxy() && !StringUtils.endsWith(proxy.getName(), ToutaticeGlobalConst.CST_PROXY_NAME_SUFFIX);
     }
 
     @Override

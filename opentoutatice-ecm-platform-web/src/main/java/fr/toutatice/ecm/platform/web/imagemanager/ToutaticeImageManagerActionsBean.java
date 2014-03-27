@@ -49,7 +49,7 @@ import org.nuxeo.ecm.webapp.filemanager.FileManageActionsBean;
 import org.richfaces.model.UploadItem;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeFileHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeImageCollectionHelper;
 
@@ -65,12 +65,12 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
     public void validateMultipleUploadForDocument(DocumentModel current) throws ClientException, FileNotFoundException {
     	List<String>  msg_params = new ArrayList<String>();
     	
-        if (!current.hasSchema(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
+        if (!current.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
             return;
         }
         
         try {
-        	List<Map<String, Object>> files = (List<Map<String, Object>>) current.getPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
+        	List<Map<String, Object>> files = (List<Map<String, Object>>) current.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
             for (UploadItem uploadItem : getUploadedFiles()) {
                 String filename = FileUtils.getCleanFileName(uploadItem.getFileName());
                 Blob blob = FileUtils.createSerializableBlob(new FileInputStream(uploadItem.getFile()), filename, null);
@@ -95,7 +95,7 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
 						formatParamsToString(msg_params));
             }
             
-            current.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, (Serializable) files);
+            current.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, (Serializable) files);
             documentManager.saveDocument(current);
             documentManager.save();
         } finally {
@@ -115,14 +115,14 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
 
         try {
             DocumentModel current = navigationContext.getCurrentDocument();
-            if (!current.hasSchema(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
+            if (!current.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
                 return;
             }
             
-            List<Map<String, Object>> files = (List<Map<String, Object>>) current.getPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
+            List<Map<String, Object>> files = (List<Map<String, Object>>) current.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
             Object file = CollectionUtils.get(files, new Integer(index));
             ToutaticeImageCollectionHelper.instance().remove(files, file);
-            current.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, (Serializable) files);
+            current.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, (Serializable) files);
             documentManager.saveDocument(current);
             documentManager.save();
         } catch (Exception e) {
@@ -138,14 +138,14 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
         
         try {
             DocumentModel currentDocument = navigationContext.getCurrentDocument();
-            if (!currentDocument.hasSchema(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
+            if (!currentDocument.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
                 return;
             }
             
             // la génération de la vignette se fera automatiquement via l'event listener "OnVignetteDocumentUpdate" (Nuxeo Studio)
-			Collection files = (Collection) currentDocument.getPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
+			Collection files = (Collection) currentDocument.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
 			Map<String, Object> file = (Map<String, Object>) CollectionUtils.get(files, new Integer(index));
-            currentDocument.setPropertyValue(NuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_STAMP, (Serializable) file.get("file"));
+            currentDocument.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_STAMP, (Serializable) file.get("file"));
             
             // sauvegarder la modification (et déclencher le resizing de la vignette)
             documentManager.saveDocument(currentDocument);

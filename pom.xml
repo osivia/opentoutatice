@@ -5,7 +5,7 @@
 
 	<groupId>opentoutatice-ecm.platform</groupId>
 	<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-	<version>1.1.2-SNAPSHOT</version>
+	<version>1.1.2-RC1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>open toutatice plate-forme</name>
 
@@ -16,7 +16,7 @@
        <module>opentoutatice-ecm-platform-services</module>
        <module>opentoutatice-ecm-platform-generic-ui-service</module>
        <!--module>opentoutatice-ecm-platform-custom</module-->
-       <!--<module>opentoutatice-ecm-platform-marketplace</module>-->
+       <module>opentoutatice-ecm-platform-marketplace</module>
 	</modules>
 
 	<build>

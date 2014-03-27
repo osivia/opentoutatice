@@ -33,7 +33,7 @@ import org.nuxeo.ecm.core.api.Filter;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 @Operation(id = FetchPublishSpace.ID, category = Constants.CAT_FETCH, label = "Fetch the plubish space", description = "Find among the parents list the publish space document. Return the parent publish space document or null if no-one is found or if this one is not online")
@@ -91,7 +91,7 @@ public class FetchPublishSpace {
 			boolean status = false;
 
     		try {
-    			status = document.hasFacet(NuxeoStudioConst.CST_DOC_FACET_TTC_PUBLISH_SPACE);
+    			status = document.hasFacet(ToutaticeNuxeoStudioConst.CST_DOC_FACET_TTC_PUBLISH_SPACE);
     			
     			if (true == status) {
     				// vérifier que le folder est en ligne (possède un proxy)

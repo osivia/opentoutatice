@@ -29,7 +29,7 @@ import fr.toutatice.ecm.platform.core.publish.ToutaticeNullPublishedDocument;
  * 
  * @author mberhaut1
  */
-public class GlobalConst {
+public class ToutaticeGlobalConst {
     
     public final static String CST_DOC_STATE_PROJECT = "project";
     public final static String CST_DOC_STATE_APPROVED = "approved";

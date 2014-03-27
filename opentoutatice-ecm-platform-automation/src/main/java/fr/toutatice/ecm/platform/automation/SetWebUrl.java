@@ -32,7 +32,7 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.Filter;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 @Operation(id = SetWebUrl.ID, category = Constants.CAT_DOCUMENT, label = "Set weburl.",
@@ -70,7 +70,7 @@ public class SetWebUrl {
 
         boolean hasToBeUpdated = false;
 
-        if (!doc.hasSchema(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
+        if (!doc.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
             return doc;
         }
 
@@ -84,8 +84,8 @@ public class SetWebUrl {
         }
         // dans les autres modes, on prend la valeur déjà paramétrée
         else {
-            if (doc.getPropertyValue(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID) != null) {
-                webid = doc.getPropertyValue(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID).toString();
+            if (doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID) != null) {
+                webid = doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID).toString();
 
                 // Nettoyage espaces, accents, chaine trop longue.
                 webid = IdUtils.generateId(webid, "-", true, 24);
@@ -150,7 +150,7 @@ public class SetWebUrl {
 
                 // save weburl
                 if (hasToBeUpdated) {
-                    doc.setPropertyValue(NuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, webid);
+                    doc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, webid);
                     this.coreSession.saveDocument(doc);
                 }
 

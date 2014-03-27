@@ -21,7 +21,7 @@ package fr.toutatice.ecm.platform.core.helper;
 import org.jbpm.graph.exe.ExecutionContext;
 import org.nuxeo.ecm.platform.jbpm.core.helper.LifecycleTransitionActionHandler;
 
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
 public class ToutaticeLifecycleTransitionActionHandler extends LifecycleTransitionActionHandler {
 
@@ -32,7 +32,7 @@ public class ToutaticeLifecycleTransitionActionHandler extends LifecycleTransiti
         this.executionContext = executionContext;
         if (nuxeoHasStarted()) {
         	String endLifecycle = getEndLifecycleTransition();
-        	if (!NuxeoStudioConst.CST_OPERATION_PARAM_NO_TRANSITION.equals(endLifecycle)) {
+        	if (!ToutaticeNuxeoStudioConst.CST_OPERATION_PARAM_NO_TRANSITION.equals(endLifecycle)) {
         		super.execute(executionContext);
         	} else {
         		executionContext.getToken().signal();

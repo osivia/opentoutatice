@@ -39,7 +39,7 @@ import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.webapp.action.DeleteActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
-import fr.toutatice.ecm.platform.core.constants.NuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeOperationHelper;
 
 @Name("deleteActions")
@@ -95,7 +95,7 @@ public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 
 		if (!proxiedDocsList.isEmpty()) {
 			try {
-				ToutaticeOperationHelper.runOperationChain(documentManager, NuxeoStudioConst.CST_OPERATION_DOCUMENT_UNPUBLISH_SELECTION, new DocumentModelListImpl(proxiedDocsList));
+				ToutaticeOperationHelper.runOperationChain(documentManager, ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_UNPUBLISH_SELECTION, new DocumentModelListImpl(proxiedDocsList));
 			} catch (Exception e) {
 				log.error("Failed to set offline the selection from the document: '" + currentFolder.getTitle() + "', error: " + e.getMessage());
 			}
@@ -116,7 +116,7 @@ public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 
 		if (!proxiedDocsList.isEmpty()) {
 			try {
-				ToutaticeOperationHelper.runOperationChain(documentManager, NuxeoStudioConst.CST_OPERATION_DOCUMENT_UNPUBLISH_SELECTION, new DocumentModelListImpl(proxiedDocsList));
+				ToutaticeOperationHelper.runOperationChain(documentManager, ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_UNPUBLISH_SELECTION, new DocumentModelListImpl(proxiedDocsList));
 			} catch (Exception e) {
 				log.error("Failed to set offline the selection from the document: '" + currentFolder.getTitle() + "', error: " + e.getMessage());
 			}
@@ -163,11 +163,11 @@ public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 				for (DocumentModel doc : docs) {
 					DocumentModelList proxies = documentManager.getProxies(doc.getRef(), doc.getParentRef());
 
-					boolean isApproved = NuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(doc.getCurrentLifeCycleState());
+					boolean isApproved = ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(doc.getCurrentLifeCycleState());
 					boolean hasProxy = (null != proxies && !proxies.isEmpty());
 					
 					if (isApproved || hasProxy) {
-						if (!documentManager.hasPermission(doc.getRef(), NuxeoStudioConst.CST_PERM_VALIDATE)) {
+						if (!documentManager.hasPermission(doc.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE)) {
 							status = false;
 							break;
 						}

@@ -40,7 +40,7 @@ import org.nuxeo.ecm.webapp.action.WebActionsBean;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
-import fr.toutatice.ecm.platform.core.constants.GlobalConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 
 @Name("webActions")
 @Scope(ScopeType.CONVERSATION)
@@ -66,7 +66,7 @@ public class ToutaticeWebActionsBean extends WebActionsBean {
 	 * Permet de bien gérer le rafraîchissement de l'IHM lors de la circulation entre les sous-onglets
 	 */
 	public void notifySubTabSelectionChanged() {
-		Events.instance().raiseEvent(GlobalConst.CST_EVENT_SUB_TAB_SELECTION_CHANGED, "");
+		Events.instance().raiseEvent(ToutaticeGlobalConst.CST_EVENT_SUB_TAB_SELECTION_CHANGED, "");
 	}
 
 	/**
