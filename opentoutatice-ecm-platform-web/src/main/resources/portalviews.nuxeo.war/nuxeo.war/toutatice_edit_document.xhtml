@@ -41,16 +41,7 @@
 
 				<div class="toutatice_edit_form_class">
 					<div class="ttcInput">
-					    <!-- Pour suppression temporaire du widget de modération -->
-						<c:choose>
-							<c:when test="#{currentDocument.type != 'Thread'}">
-								<nxl:documentLayout mode="edit" value="#{currentDocument}" />
-							</c:when>
-							<c:otherwise>
-									<nxl:documentLayout documentMode="portalView" mode="edit"
-									value="#{currentDocument}" />
-							</c:otherwise>
-						</c:choose>
+						<nxl:documentLayout mode="edit" value="#{currentDocument}" />
 					</div>
 				</div>
 
