@@ -7,8 +7,8 @@
 	<nxu:set var="hasSpecificFields"
 		value="#{!empty nxd:typeInfo(layoutValue).getLayouts('view', 'any')}"
 		cache="true">
-
-		<c:if test="#{currentDocument.type != 'Thread' and hasSpecificFields}">
+		
+		<c:if test="#{hasSpecificFields}">
 			<h3 class="summaryTitle">
 				<h:outputText value="#{messages['action.view.metadata.specific']}" />
 			</h3>

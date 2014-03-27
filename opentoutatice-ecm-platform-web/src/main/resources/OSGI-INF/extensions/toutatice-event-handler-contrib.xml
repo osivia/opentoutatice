@@ -18,6 +18,15 @@
                 <expression>Document.hasSchema('toutatice') == false</expression>
             </filters>
         </handler>
+        
+        <handler chainId="updateDomain">
+            <event>documentModified</event>
+            <filters>
+                <attribute>Mutable Document</attribute>
+                <expression>Document.hasSchema('toutatice') == false</expression>
+                <expression>Document.type == 'Domain'</expression>
+            </filters>
+        </handler>
 
 		<!-- WebURL -->
         <!-- <handler chainId="createOrCopyOp">

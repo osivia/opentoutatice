@@ -6,6 +6,39 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
 
+		<!-- Domaind ID -->
+		<widget name="domainId" type="text">
+			<labels>
+				<label mode="any">toutatice.label.domain.id</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:domainID</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">false</property>
+				<property name="validator">#{toutaticeValidator.validateDomainIdUnicity}
+				</property>
+			</properties>
+		</widget>
+		
+		<widget name="domainIdRequired" type="text">
+			<labels>
+				<label mode="any">toutatice.label.domain.id</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:domainID</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">true</property>
+				<property name="validator">#{toutaticeValidator.validateDomainIdUnicity}
+				</property>
+			</properties>
+		</widget>
+
 		<!-- PostalSite, PortalPage widgets -->
 		<widget name="title" type="text">
 			<labels>
@@ -107,17 +140,17 @@
 				</mode>
 			</widgetModes>
 		</widget>
-        
-        <!-- Widget en vue Modifier (ou Créer) -->
-        <widget name="toutatice_webId_widget" type="text">
-            <labels>
-                <label mode="any">Web Id</label>
-            </labels>
-            <translated>false</translated>
-            <fields>
-                <field>ttc:webid</field>
-            </fields>
-        </widget>        
+
+		<!-- Widget en vue Modifier (ou Créer) -->
+		<widget name="toutatice_webId_widget" type="text">
+			<labels>
+				<label mode="any">Web Id</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>ttc:webid</field>
+			</fields>
+		</widget>
 
 		<widget name="files" type="filesList">
 			<labels>
