@@ -59,4 +59,5 @@
   <xs:element name="vignette" type="nxs:content"/>
   <xs:element name="keywords" type="nxs:stringList"/>
   <xs:element name="webid" type="xs:string"/>
+  <xs:element name="domainID" type="xs:string"/>
 </xs:schema>

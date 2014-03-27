@@ -47,7 +47,7 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements Custo
     private static final String BASE_TYPE_EXT_POINT = "basettc";
     private static final String DOC_TYPE_EXT_POINT = "doctype";
 
-    private static final String[] excludedTypes = {"AdministrativeStatus"};
+    private static final String[] excludedTypes = {"AdministrativeStatus", "TaskDoc", "PublicationRelation"};
 
     private SchemaManager schemaManager;
 

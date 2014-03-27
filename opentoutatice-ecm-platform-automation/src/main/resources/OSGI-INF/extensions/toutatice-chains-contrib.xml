@@ -135,6 +135,12 @@
 		<chain id="createOrMoveOp">
 			<operation id="Context.FetchDocument" />
 			<operation id="Document.SetSpaceID" />
+			<operation id="Document.SetDomainID" />
+		</chain>
+		
+		<chain id="updateDomain">
+			<operation id="Context.FetchDocument" />
+			<operation id="Document.SetDomainID" />
 		</chain>
         
         <!-- Chaines pour les weburl -->
