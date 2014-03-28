@@ -33,6 +33,8 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements Custo
     private static final String BASE_TYPE_EXT_POINT = "basettc";
     private static final String DOC_TYPE_EXT_POINT = "doctype";
 
+    private static final String[] excludedTypes = {"AdministrativeStatus"};
+
     private SchemaManager schemaManager;
 
     @Override
@@ -67,31 +69,58 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements Custo
         DocumentType[] types = schemaManager.getDocumentTypes();
         for (DocumentType type : types) {
 
-            if (schemas != null && schemas.size() > 0) {
-                for (String schemaName : schemas) {
-                    Schema schema = schemaManager.getSchema(schemaName);
-                    type.addSchema(schema);
-                }
-            }
+            if (!ArrayUtils.contains(excludedTypes, type.getName())) {
 
-            if (facetsToAddTab != null && facetsToAddTab.length > 0) {
-                List<String> facetsToAdd = Arrays.asList(facetsToAddTab);
-                List<String> allFacets = new ArrayList<String>(1);
-                allFacets.addAll(facetsToAdd);
-                String[] allFacetsTab = (String[]) facetsToAdd.toArray(new String[TTC_NB_FACETS]);
-                Set<String> facets = type.getFacets();
-                if (facets != null && facets.size() > 0) {
-                    allFacets.addAll(facets);
-                    allFacetsTab = (String[]) allFacets.toArray(new String[allFacets.size()]);
+                if (schemas != null && schemas.size() > 0) {
+                    for (String schemaName : schemas) {
+                        if (!type.hasSchema(schemaName)) {
+                            Schema schema = schemaManager.getSchema(schemaName);
+                            type.addSchema(schema);
+                        }
+                    }
                 }
-                type.setDeclaredFacets(allFacetsTab);
+
+                if (facetsToAddTab != null && facetsToAddTab.length > 0) {
+
+                    List<String> facetsToAdd = Arrays.asList(facetsToAddTab);
+                    List<String> allFacets = new ArrayList<String>();
+
+                    String[] allFacetsTab = (String[]) facetsToAdd.toArray(new String[TTC_NB_FACETS]);
+
+                    Set<String> facetsOfType = type.getFacets();
+                    facetsToAdd = clearFacetsList(facetsToAdd, facetsOfType);
+
+                    if (facetsToAdd.size() > 0) {
+                        allFacets.addAll(facetsToAdd);
+                    }
+                    if (facetsOfType != null && facetsOfType.size() > 0) {
+                        allFacets.addAll(facetsOfType);
+                    }
+                    allFacetsTab = (String[]) allFacets.toArray(new String[allFacets.size()]);
+                    type.setDeclaredFacets(allFacetsTab);
+
+                }
+                schemaManager.registerDocumentType(type);
             }
-            schemaManager.registerDocumentType(type);
         }
     }
-    
+
+    private List<String> clearFacetsList(List<String> facetsToAdd, Set<String> facetsOfType) {
+        List<String> clearedFacets = new ArrayList<String>(facetsToAdd.size());
+        clearedFacets.addAll(facetsToAdd);
+        for (String facetToAdd : facetsToAdd) {
+            for (String facetOfType : facetsOfType) {
+                if (facetToAdd.equals(facetOfType)) {
+                    clearedFacets.remove(facetToAdd);
+                }
+            }
+        }
+        return clearedFacets;
+    }
+
     /*
      * (non-Javadoc)
+     * 
      * @see fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService#addDocTypeContrib(org.nuxeo.ecm.core.schema.DocumentTypeDescriptor)
      */
     @Override
