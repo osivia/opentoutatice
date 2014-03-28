@@ -3,19 +3,28 @@
  */
 package fr.toutatice.ecm.platform.service.customize.ui;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.el.ELException;
+import javax.faces.context.FacesContext;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.SortInfo;
 import org.nuxeo.ecm.platform.contentview.jsf.ContentView;
 import org.nuxeo.ecm.platform.contentview.jsf.ContentViewLayout;
 import org.nuxeo.ecm.platform.contentview.jsf.ContentViewService;
 import org.nuxeo.ecm.platform.forms.layout.api.LayoutDefinition;
 import org.nuxeo.ecm.platform.forms.layout.api.LayoutRowDefinition;
+import org.nuxeo.ecm.platform.forms.layout.api.WidgetReference;
 import org.nuxeo.ecm.platform.forms.layout.api.impl.LayoutRowDefinitionImpl;
+import org.nuxeo.ecm.platform.forms.layout.api.impl.WidgetReferenceImpl;
 import org.nuxeo.ecm.platform.forms.layout.service.WebLayoutManager;
 import org.nuxeo.ecm.platform.query.api.PageProvider;
 import org.nuxeo.ecm.platform.query.api.PageProviderDefinition;
@@ -35,6 +44,8 @@ import org.nuxeo.runtime.model.DefaultComponent;
 public class CustomizeUIServiceImpl extends DefaultComponent implements CustomizeUIService {
 
     private static final long serialVersionUID = 6462426331447513648L;
+    
+    private static final Log log = LogFactory.getLog(CustomizeUIServiceImpl.class);
 
     private static final String QUERY_WITH_NO_PROXY = "AND ((ecm:name NOT LIKE '%.proxy') OR (ecm:name LIKE '%.remote.proxy'))";
     private static final String CONTENT_CATEGORY = "content";
