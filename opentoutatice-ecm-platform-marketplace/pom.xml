@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>toutatice-ecm-platform-marketplace</artifactId>
-	<version>1.0.2-RC2-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<packaging>zip</packaging>
 	<name>Marketplace package - Open Toutatice platform</name>
 
