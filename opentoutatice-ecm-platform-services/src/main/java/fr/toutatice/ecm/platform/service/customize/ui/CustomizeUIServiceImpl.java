@@ -85,12 +85,15 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
      */
     @Override
     public void adaptContentViews() throws Exception {
-        Collection<Type> types = typeManager.getTypes();
-        for (Type type : types) {
-            if (allowedTypesUnderPortalSite.contains(type)) {
-                addPublishWidgetToResultLayout(type);
+        
+        if (allowedTypesUnderPortalSite != null) {           
+            Collection<Type> types = typeManager.getTypes();
+            for (Type type : types) {
+                if (allowedTypesUnderPortalSite.contains(type)) {
+                    addPublishWidgetToResultLayout(type);
+                }
+                setNoProxyQueryToContentViews(type);
             }
-            setNoProxyQueryToContentViews(type);
         }
     }
 
@@ -108,19 +111,19 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
             for (LayoutDescriptor layoutToOverride : layoutsToOverride) {
                 String layoutNameToOverride = layoutToOverride.getName();
                 TemplateDescriptor[] templatesDescriptor = layoutToOverride.getTemplates();
-                
-                for(TemplateDescriptor templateDescriptor : templatesDescriptor){
-                String overrideTemplateName = templateDescriptor.getName();
-                String mode = templateDescriptor.getMode();
 
-                LayoutDefinition layoutToOverrideDef = webLayoutManager.getLayoutDefinition(layoutNameToOverride);
-                Map<String, String> templatesByMode = layoutToOverrideDef.getTemplates();
+                for (TemplateDescriptor templateDescriptor : templatesDescriptor) {
+                    String overrideTemplateName = templateDescriptor.getName();
+                    String mode = templateDescriptor.getMode();
 
-                //for (String mode : modes) {
+                    LayoutDefinition layoutToOverrideDef = webLayoutManager.getLayoutDefinition(layoutNameToOverride);
+                    Map<String, String> templatesByMode = layoutToOverrideDef.getTemplates();
+
+                    // for (String mode : modes) {
                     templatesByMode.put(mode, overrideTemplateName);
-                //}
-                layoutToOverrideDef.setTemplates(templatesByMode);
-            }
+                    // }
+                    layoutToOverrideDef.setTemplates(templatesByMode);
+                }
             }
         }
 
@@ -136,18 +139,32 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
         if (typeContentViewNames != null && typeContentViewNames.length > 0) {
             for (String typeContentViewName : typeContentViewNames) {
                 ContentView contentView = contentViewService.getContentView(typeContentViewName);
-                ContentViewLayout currentResultLayout = contentView.getCurrentResultLayout();
-                String layoutName = currentResultLayout.getName();
-                if (!modifiedContentViewsLayouts.contains(layoutName) && !PORTAL_LAYOUT.equals(layoutName)) {
-                    modifiedContentViewsLayouts.add(layoutName);
-                    LayoutDefinition layoutDefinition = webLayoutManager.getLayoutDefinition(layoutName);
+                if (contentView != null) {
+                    ContentViewLayout currentResultLayout = contentView.getCurrentResultLayout();
+                    String layoutName = currentResultLayout.getName();
+                    if (!modifiedContentViewsLayouts.contains(layoutName) && !PORTAL_LAYOUT.equals(layoutName)) {
+                        modifiedContentViewsLayouts.add(layoutName);
+                        LayoutDefinition layoutDefinition = webLayoutManager.getLayoutDefinition(layoutName);
 
-                    LayoutRowDefinition[] rows = layoutDefinition.getRows();
-                    LayoutRowDefinitionImpl layoutRowDefinitionImpl = new LayoutRowDefinitionImpl("Version en ligne?", "local_publishing_status");
-                    LayoutRowDefinition[] modifiedRows = (LayoutRowDefinition[]) Arrays.copyOf(rows, rows.length + 1);
-                    modifiedRows[rows.length] = layoutRowDefinitionImpl;
+                        LayoutRowDefinition[] rows = layoutDefinition.getRows();
+                        
+                        List<WidgetReference> widgets = new ArrayList<WidgetReference>(1);
+                        WidgetReference widgetRef = new WidgetReferenceImpl("publishing_status");
+                        widgets.add(widgetRef);
+                        
+                        Map<String, Map<String, Serializable>> properties = new HashMap<String, Map<String,Serializable>>(1);
+                        Map<String, Serializable> labelProperty = new HashMap<String, Serializable>(1);
+                        labelProperty.put("label", "Version en ligne?");
+                        properties.put("any", labelProperty);
+                        
+                        LayoutRowDefinitionImpl layoutRowDefinitionImpl = new LayoutRowDefinitionImpl("publishing_status", properties, widgets, true, true);
+                        LayoutRowDefinition[] modifiedRows = (LayoutRowDefinition[]) Arrays.copyOf(rows, rows.length + 1);
+                        modifiedRows[rows.length] = layoutRowDefinitionImpl;
 
-                    layoutDefinition.setRows(modifiedRows);
+                        layoutDefinition.setRows(modifiedRows);
+                    }
+                } else {
+                    log.error(typeContentViewName + " not defined for type " + type.getLabel());
                 }
             }
         }
@@ -158,45 +175,51 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
      * des requêtes de toutes les contentViews
      */
     private void setNoProxyQueryToContentViews(Type type) throws Exception {
-        // MockFacesContext mockFacesContext = new MockFacesContext() {
-        //
-        // @Override
-        // public Object evaluateExpressionGet(FacesContext context, String expression, Class expectedType) throws ELException {
-        // if (expression.startsWith("#{")) {
-        // return "";
-        // }
-        // return null;
-        // }
-        // };
-        // mockFacesContext.setCurrent();
-
+        
+        /*
+         * Pour éviter les logs d'erreur "FacesContext null" au démarrage
+         * de Nuxeo.
+         */       
+        ToutaticeMockFacesContext mockFacesContext = new ToutaticeMockFacesContext() {
+            @Override
+            public Object evaluateExpressionGet(FacesContext context, String expression, Class expectedType) throws ELException {
+                if (expression.startsWith("#{")) {
+                    return "";
+                }
+                return null;
+            }
+        };
+        mockFacesContext.setCurrent();
+        
         String[] typeContentViewNames = type.getContentViews(CONTENT_CATEGORY);
 
         if (typeContentViewNames != null && typeContentViewNames.length > 0) {
             for (String typeContentViewName : typeContentViewNames) {
                 ContentView contentView = contentViewService.getContentView(typeContentViewName);
-                /*
-                 * Passage d'une liste et de paramètres vides pour éviter une portaie
-                 * des logs d'erreur au démarrage de Nuxeo (FacesContext null -evidemment...-)
-                 */;
-                PageProvider<?> pageProvider = contentView.getPageProvider(null, new ArrayList<SortInfo>(), null, null, new Object[0]);
-                PageProviderDefinition pageProviderDefinition = pageProvider.getDefinition();
-                String pattern = pageProviderDefinition.getPattern();
-                if (pattern != null) {
-                    pattern += QUERY_WITH_NO_PROXY;
-                    pageProviderDefinition.setPattern(pattern);
-                } else {
-                    WhereClauseDefinition whereClause = pageProviderDefinition.getWhereClause();
-                    if (whereClause != null) {
-                        String query = whereClause.getFixedPart();
-                        query += QUERY_WITH_NO_PROXY;
-                        whereClause.setFixedPart(query);
+                if (contentView != null) {
+                    /*
+                     * Passage d'une liste et de paramètres vides pour éviter une partie
+                     * des logs d'erreur au démarrage de Nuxeo.
+                     */
+                    PageProvider<?> pageProvider = contentView.getPageProvider(null, new ArrayList<SortInfo>(), null, null, new Object[0]);
+                    PageProviderDefinition pageProviderDefinition = pageProvider.getDefinition();
+                    String pattern = pageProviderDefinition.getPattern();
+                    if (pattern != null) {
+                        pattern += QUERY_WITH_NO_PROXY;
+                        pageProviderDefinition.setPattern(pattern);
+                    } else {
+                        WhereClauseDefinition whereClause = pageProviderDefinition.getWhereClause();
+                        if (whereClause != null) {
+                            String query = whereClause.getFixedPart();
+                            query += QUERY_WITH_NO_PROXY;
+                            whereClause.setFixedPart(query);
+                        }
                     }
+                    pageProviderDefinition.setEnabled(true);
                 }
-                pageProviderDefinition.setEnabled(true);
             }
         }
-        // mockFacesContext.release();
+        mockFacesContext.relieveCurrent();
     }
 
     /**
