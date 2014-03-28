@@ -28,31 +28,6 @@
             </filters>
         </handler>
 
-		<!-- WebURL -->
-        <!-- <handler chainId="createOrCopyOp">
-            <event>documentCreated</event>
-            <event>documentCreatedByCopy</event>
-            <event>documentImported</event>
-            <filters>
-                <attribute>Mutable Document</attribute>
-                <expression>Document.hasSchema('toutatice') == false</expression>
-            </filters>
-        </handler>
-        <handler chainId="movedOrRestoredOp">
-            <event>aboutToMove</event>
-            <event>beforeRestoringDocument</event>
-            <filters>
-                <expression>Document.hasSchema('toutatice') == false</expression>
-            </filters>
-        </handler>
-        <handler chainId="beforeModificationOp">
-            <event>beforeDocumentModification</event>
-            <filters>
-                <attribute>Mutable Document</attribute>
-                <expression>Document.hasSchema('toutatice') == false</expression>
-            </filters>
-        </handler> -->
-
     </extension>
 
 </component>

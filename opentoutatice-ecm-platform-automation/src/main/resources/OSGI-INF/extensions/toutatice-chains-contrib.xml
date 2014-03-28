@@ -41,7 +41,6 @@
 			</operation>
 		</chain>
 
-
 		<chain id="setOffLineSelection">
 			<operation id="Context.FetchDocument" />
 			<operation id="Context.RunDocumentOperation">

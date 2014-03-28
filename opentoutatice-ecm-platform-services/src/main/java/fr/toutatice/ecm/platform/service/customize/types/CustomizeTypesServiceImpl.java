@@ -83,7 +83,7 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements Custo
         DocumentType[] types = schemaManager.getDocumentTypes();
         for (DocumentType type : types) {
 
-            if (!ArrayUtils.contains(excludedTypes, type.getName())) {
+            if (!ArrayUtils.contains(excludedTypes, type.getName()) /* && !type.hasFacet(FacetNames.SYSTEM_DOCUMENT) */) {
 
                 if (schemas != null && schemas.size() > 0) {
                     for (String schemaName : schemas) {

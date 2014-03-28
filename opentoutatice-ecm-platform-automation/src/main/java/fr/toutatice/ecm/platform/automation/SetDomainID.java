@@ -65,9 +65,7 @@ public class SetDomainID {
             InnerSilentModeUpdateDomainID runner = new InnerSilentModeUpdateDomainID(coreSession, doc, domainID);
             runner.silentRun(true);
             doc = runner.getDocument();
-        } else {
-            log.error("Document " + doc.getPathAsString() + " has domainID null: property can not be set");
-        }
+        } // else, ignore
 
         return doc;
     }
@@ -101,10 +99,10 @@ public class SetDomainID {
                 domainID = (String) domain.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID);
                 this.domainName = domain.getName();
             } else {
-                log.error("Document " + doc.getPathAsString() + " has Domain null: domainId can not be set");
+                log.warn("Document " + doc.getPathAsString() + " has Domain null: domainId can not be set");
             }
         } else {
-            log.error("Document " + doc.getPathAsString() + " has more than one or no Domain: domainId can not be set");
+            log.warn("Document " + doc.getPathAsString() + " has more than one or no Domain: domainId can not be set");
         }
 
         return domainID;
