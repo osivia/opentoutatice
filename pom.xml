@@ -14,8 +14,8 @@
 	   <module>opentoutatice-ecm-platform-web</module>
        <module>opentoutatice-ecm-platform-automation</module>
        <module>opentoutatice-ecm-platform-services</module>
-       <module>opentoutatice-ecm-platform-generic-ui-service</module>
-       <!-- <module>opentoutatice-ecm-platform-marketplace</module> -->
+       <!-- <module>opentoutatice-ecm-platform-generic-ui-service</module> -->
+       <module>opentoutatice-ecm-platform-marketplace</module>
 	</modules>
 
 	<build>
@@ -61,7 +61,7 @@
 	</build>
 
   <scm>
-    <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/branches/1.0.2-RC7-maintenance</developerConnection>
+    <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/branches/1.0.2</developerConnection>
   </scm>
 
 	<distributionManagement>
