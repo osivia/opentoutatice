@@ -39,7 +39,6 @@ public class ToutaticeNuxeoArchiveReader extends NuxeoArchiveReader {
 
 		/* Filtrer les documents:
 		* - Immutable documents
-		* - Hidden in navigation
 		* - Deleted
 		* 
 		*  Re-positionner les documents dans l'état initial (project)
