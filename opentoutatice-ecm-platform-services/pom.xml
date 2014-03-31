@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>1.1.0-RC5</version>
+		<version>1.1.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-services</artifactId>
@@ -14,6 +14,7 @@
 
 	<properties>
 		<nuxeo.version>5.6.0-HF29</nuxeo.version>
+		<opentoutatice.version>1.1.0-SNAPSHOT</opentoutatice.version>
 	</properties>
 
 	<dependencies>
@@ -35,7 +36,7 @@
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
-			<version>${project.version}</version>
+			<version>${opentoutatice.version}</version>
 		</dependency>
 
 	</dependencies>

@@ -148,11 +148,10 @@
 
 		<!-- Build the property that lists the templates to install -->
 		<var name="install.templates" value="" />
-		<!-- TODO a mettre en place après une qualification approfondie avant déploiement
 		<if>
 			<available file="${outdir}/marketplace/install/templates" />
 			<then>
-				// remove any former acrennes template
+				<!-- remove any former acrennes template -->
 				<loadfile property="profiles" srcfile="src/main/resources/profiles.txt" />
 				<for param="profile" list="${profiles}" delimiter="${line.separator}">
 					<sequential>
@@ -162,7 +161,7 @@
 					</sequential>
 				</for>
 				
-				// install the selected profile's template
+				<!-- install the selected profile's template -->
 				<var name="install.templates"
 					 value="${line.separator}
 						&lt;copy dir=&quot;${package.root}/install/templates&quot; todir=&quot;${env.templates}&quot; overwrite=&quot;true&quot; /&gt;${line.separator}
@@ -170,7 +169,7 @@
 						&lt;config addtemplate=&quot;DEV_opentoutatice&quot; /&gt;${line.separator}" />
 			</then>
 		</if>
-		-->
+		
 		
 		<!-- Update the install.xml file from properties -->
 		<copy file="src/main/resources/install.xml"
