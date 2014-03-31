@@ -24,8 +24,10 @@
 	</platforms>
 	<dependencies>
 		<package>nuxeo-dm:@DISTRIB_VERSION@</package>
-		<!-- Dependance sur le addon jbpm -->
+		<!-- Dépendance sur le addon jbpm -->
 		<package>nuxeo-platform-jbpm:1.0</package>
+		<!-- Dépendance sur les hotfixes -->
+		<package>nuxeo-5.6.0-HF29:1.0.0</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
