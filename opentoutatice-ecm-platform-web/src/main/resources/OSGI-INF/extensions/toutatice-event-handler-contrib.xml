@@ -8,25 +8,30 @@
     <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
         point="event-handlers">
 
-        <handler chainId="createOrMoveOp">
+		<!-- WebURL -->
+        <!-- <handler chainId="createOrCopyOp">
             <event>documentCreated</event>
             <event>documentCreatedByCopy</event>
-            <event>documentMoved</event>
-            <event>documentRestored</event>
+            <event>documentImported</event>
             <filters>
                 <attribute>Mutable Document</attribute>
                 <expression>Document.hasSchema('toutatice') == false</expression>
             </filters>
         </handler>
-        
-        <handler chainId="updateDomain">
-            <event>documentModified</event>
+        <handler chainId="movedOrRestoredOp">
+            <event>aboutToMove</event>
+            <event>beforeRestoringDocument</event>
+            <filters>
+                <expression>Document.hasSchema('toutatice') == false</expression>
+            </filters>
+        </handler>
+        <handler chainId="beforeModificationOp">
+            <event>beforeDocumentModification</event>
             <filters>
                 <attribute>Mutable Document</attribute>
                 <expression>Document.hasSchema('toutatice') == false</expression>
-                <expression>Document.type == 'Domain'</expression>
             </filters>
-        </handler>
+        </handler> -->
 
     </extension>
 

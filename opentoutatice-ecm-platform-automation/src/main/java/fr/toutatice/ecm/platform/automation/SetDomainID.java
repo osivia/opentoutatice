@@ -48,8 +48,6 @@ public class SetDomainID {
     public static final String ID = "Document.SetDomainID";
 
     private static final Log log = LogFactory.getLog(SetDomainID.class);
-    
-    private String domainName;
 
     @Context
     protected CoreSession coreSession;
@@ -60,9 +58,11 @@ public class SetDomainID {
             return doc;
         }
 
-        String domainID = getDomainID(doc);
-        if (domainID != null) {
-            InnerSilentModeUpdateDomainID runner = new InnerSilentModeUpdateDomainID(coreSession, doc, domainID);
+        DocumentModel domain = getDomain(doc);
+        if (domain != null) {
+            String domainID = (String) domain.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID);
+            String defaultValue = domain.getName();
+            InnerSilentModeUpdateDomainID runner = new InnerSilentModeUpdateDomainID(coreSession, doc, domainID, defaultValue);
             runner.silentRun(true);
             doc = runner.getDocument();
         } // else, ignore
@@ -70,8 +70,8 @@ public class SetDomainID {
         return doc;
     }
 
-    private String getDomainID(DocumentModel doc) throws Exception {
-        String domainID = null;
+    private DocumentModel getDomain(DocumentModel doc) throws Exception {
+        DocumentModel domain = null;
 
         Filter domainFilter = new Filter() {
 
@@ -94,29 +94,28 @@ public class SetDomainID {
         DocumentModelList domainList = ToutaticeDocumentHelper.getParentList(coreSession, doc, domainFilter, true, false, true);
 
         if (domainList.size() == 1) {
-            DocumentModel domain = domainList.get(0);
-            if (domain != null) {
-                domainID = (String) domain.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID);
-                this.domainName = domain.getName();
-            } else {
+            domain = domainList.get(0);
+            if (domain == null) {
                 log.warn("Document " + doc.getPathAsString() + " has Domain null: domainId can not be set");
             }
         } else {
             log.warn("Document " + doc.getPathAsString() + " has more than one or no Domain: domainId can not be set");
         }
 
-        return domainID;
+        return domain;
     }
 
     private class InnerSilentModeUpdateDomainID extends ToutaticeSilentProcessRunnerHelper {
 
         private DocumentModel document;
         private String domainID;
+        private String defaulValue;
 
-        public InnerSilentModeUpdateDomainID(CoreSession session, DocumentModel document, String domainID) {
+        public InnerSilentModeUpdateDomainID(CoreSession session, DocumentModel document, String domainID, String defaulValue) {
             super(session);
             this.document = document;
             this.domainID = domainID;
+            this.defaulValue = defaulValue;
         }
 
         public DocumentModel getDocument() {
@@ -125,13 +124,13 @@ public class SetDomainID {
 
         @Override
         public void run() throws ClientException {
-            updateDoc(this.document, this.domainID);
+            updateDoc(this.document, this.domainID, this.defaulValue);
         }
 
-        private void updateDoc(DocumentModel document, String domainID) throws PropertyException, ClientException {
+        private void updateDoc(DocumentModel document, String domainID, String defaultValue) throws PropertyException, ClientException {
             /* Set domainId on created document */
             if(StringUtils.isBlank(domainID)){
-                domainID = domainName;
+                domainID = defaultValue;
             }
             document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID, domainID);
             this.session.saveDocument(document);
@@ -148,7 +147,7 @@ public class SetDomainID {
 
                 if (children != null && !children.isEmpty()) {
                     for (DocumentModel child : children) {
-                        updateDoc(child, domainID);
+                        updateDoc(child, domainID, defaultValue);
                     }
                 }
             }

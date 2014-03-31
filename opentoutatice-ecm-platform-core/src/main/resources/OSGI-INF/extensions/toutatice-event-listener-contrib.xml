@@ -4,6 +4,16 @@
 
 	<extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
 		point="listener">
+		
+		<listener name="toutaticeAsynchronousUpdateListener" async="true" postCommit="false"
+			class="fr.toutatice.ecm.platform.core.listener.ToutaticeAsynchronousUpdateListener"
+			priority="100">
+			<event>documentCreated</event>
+            <event>documentCreatedByCopy</event>
+            <event>documentMoved</event>
+            <event>documentRestored</event>
+            <event>documentModified</event>
+		</listener>
 
 		<listener name="toutaticeDeletelistener" async="false" postCommit="false"
 			class="fr.toutatice.ecm.platform.core.listener.ToutaticeDeleteEventListener"
@@ -15,6 +25,12 @@
 		<listener name="toutaticeDocumentMoved" async="true" postCommit="false"
 			class="fr.toutatice.ecm.platform.core.listener.ToutaticeDocumentMoved"
 			priority="123">
+			<event>documentMoved</event>
+		</listener>
+		
+		<listener name="toutaticeDocumentMoved" async="true" postCommit="false"
+			class="fr.toutatice.ecm.platform.core.listener.ToutaticeDocumentMoved"
+			priority="100">
 			<event>documentMoved</event>
 		</listener>
 
