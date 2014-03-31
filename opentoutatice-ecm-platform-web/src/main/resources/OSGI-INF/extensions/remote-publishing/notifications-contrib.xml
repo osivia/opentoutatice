@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.remote.publishing.notifications">
+
+	<require>org.nuxeo.ecm.platform.notification.service.NotificationContrib</require>
+	<require>fr.toutatice.ecm.platform.local.publishing.notifications</require>
+
+	<extension
+		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
+		point="notifications">
+
+		<!-- Désactivation Notification par défaut -->
+		<notification name="Publication" channel="email" 
+			enabled="false"
+			availableIn="Section" 
+			autoSubscribed="true" 
+			template="publish"
+			subject="Document Publié" 
+			label="label.nuxeo.notifications.publication">
+			<event name="documentPublicationApproved" />
+			<event name="documentPublicationRejected" />
+			<event name="documentPublished" />
+		</notification>
+		
+		<!-- Notification Custom -->
+		<notification name="ToutaticePublication" channel="email" 
+			enabled="true"
+			availableIn="Section,PortalSite" 
+			autoSubscribed="false" 
+			template="publish"
+			subject="Document Publié" 
+			label="label.nuxeo.notifications.publish">
+			<event name="documentPublicationApproved" />
+			<event name="documentPublicationRejected" />
+			<event name="documentPublished" />
+		</notification>
+
+		<notification name="Toutatice Remote publication task assigned"
+			channel="email" 
+			enabled="true" 
+			availableIn="Section,PortalSite"
+			autoSubscribed="true" 
+			template="publish"
+			subject="Demande de publication du document: ${docTitle}" 
+			label="label.nuxeo.notifications.publish">
+			<event name="documentWaitingPublication" />
+		</notification>
+
+	</extension>
+
+	<extension
+		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
+		point="templates">
+
+		<template name="publish" src="templates/publish_fr.ftl" />
+		<template name="workflowTaskAssigned" src="templates/workflowTaskAssigned_fr.ftl" />
+
+	</extension>
+
+</component>

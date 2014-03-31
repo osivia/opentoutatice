@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component
+	name="fr.toutatice.ecm.platform.web.local.publishing.event.handler">
+
+	<require>org.nuxeo.ecm.core.operation.OperationServiceComponent
+	</require>
+
+	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+		point="event-handlers">
+
+		<handler chainId="setOnLine">
+			<event>documentCreated</event>
+			<filters>
+				<doctype>PortalSite</doctype>
+			</filters>
+		</handler>
+
+	</extension>
+
+</component>

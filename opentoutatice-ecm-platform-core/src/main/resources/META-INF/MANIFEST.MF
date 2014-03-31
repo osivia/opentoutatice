@@ -1,0 +1,37 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 1
+Bundle-Name: Plate-forme Open Toutatice - partie core 
+Bundle-SymbolicName: fr.toutatice.ecm.platform.core;singleton:=true
+Bundle-Version: 2.0.0
+Bundle-Localization: plugin
+Bundle-Vendor: Open Toutatice 
+Bundle-Activator: fr.toutatice.ecm.platform.core.components.ToutaticeCoreBundleActivator
+Bundle-Category: stateful
+Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
+ OSGI-INF/extensions/toutatice-core-types-contrib.xml,
+ OSGI-INF/extensions/toutatice-lifecycle-contrib.xml,
+ OSGI-INF/extensions/toutatice-directory-contrib.xml,
+ OSGI-INF/extensions/toutatice-jbpm-service-contrib.xml,
+ OSGI-INF/extensions/toutatice-permissions-contrib.xml,
+ OSGI-INF/extensions/toutatice-path-segment-contrib.xml,
+ OSGI-INF/extensions/toutatice-core-versioning-contrib.xml,
+ OSGI-INF/extensions/toutatice-event-listener-contrib.xml,
+ OSGI-INF/extensions/toutatice-audit-events-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-schemas-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-core-types-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-vocabularies-contrib.xml,
+ OSGI-INF/extensions/webpage/toutatice-lifecycle-contrib.xml,
+ OSGI-INF/extensions/images-search/toutatice-doctypes-contrib.xml,
+ OSGI-INF/extensions/maintenance/toutatice-core-services-contrib.xml,
+ OSGI-INF/extensions/maintenance/toutatice-core-types-contrib.xml,
+ OSGI-INF/extensions/maintenance/toutatice-lifecycle-contrib.xml,
+ OSGI-INF/extensions/maintenance/toutatice-schemas-contrib.xml,
+ OSGI-INF/extensions/maintenance/toutatice-core-versioning-contrib.xml,
+ OSGI-INF/extensions/picturebook/query-model-contrib.xml,
+ OSGI-INF/extensions/picturebook/results-provider-contrib.xml,
+ OSGI-INF/extensions/medialibrary/toutatice-core-types-contrib.xml,
+ OSGI-INF/extensions/medialibrary/toutatice-lifecycle-contrib.xml,
+ OSGI-INF/extensions/proxyfactory/toutatice-services-proxyfactory-contrib.xml,
+ OSGI-INF/extensions/proxyfactory/toutatice-core-services-contrib.xml,
+ OSGI-INF/extensions/permalink/service-permalink.xml
+ 

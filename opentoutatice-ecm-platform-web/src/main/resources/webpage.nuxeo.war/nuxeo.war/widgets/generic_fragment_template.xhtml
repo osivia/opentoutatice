@@ -1,0 +1,53 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxdir="http://nuxeo.org/nxdirectory"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
+	xmlns:oh="http://osivia.org/html" id="#{widget.id}">
+
+
+	<c:set var="mode" value="#{layout.mode}" />
+
+	<div class="titre2">
+		<img src="theme/images/icone_fragment.gif" /><span>Options du
+			contenu</span>
+	</div>
+
+	<nxu:dataList id="fgts" value="#{currentDocument.fgts.fragments}"
+		var="fgt">
+
+		<s:div rendered="#{fgt.uri eq fragmentBean.uri}">
+
+			<table>
+
+				<tr>
+					<td><h:outputLabel value="Titre : " for="title" /></td>
+					<td><nxl:widgetType id="title" name="text" size="50"
+							onchange="setHideTitle(this)" mode="edit" value="#{fgt.title}" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><span class="note">Laisser ce champ
+							vide pour qu'aucun titre ne s'affiche.</span></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="Style : " for="style" /></td>
+					<td><oh:icons id="selectStyle" src="#{config.windowStyles}"
+							value="#{fgt.style}" ulStyleClass="cssStyleList"
+							binding="#{simpleForm.simpleComponent}"
+							inputClientId="#{simpleForm.simpleComponentClientId}"
+							multiSelect="true" /></td>
+				</tr>
+
+			</table>
+
+			<h:inputHidden id="hideTitle" value="#{fgt.hideTitle}" />
+
+		</s:div>
+
+
+	</nxu:dataList>
+</f:subview>
