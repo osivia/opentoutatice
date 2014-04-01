@@ -35,6 +35,7 @@ import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.schema.SchemaManager;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.webapp.action.EditorLinkActionsBean;
@@ -54,9 +55,13 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
 
 	private static final String ESPACE = "ESPACE";
 
+    private static final String MEDIALIBRARY = "MEDIALIBRARY";
+
 	private static final long serialVersionUID = 1L;
 
 	private static final Log log = LogFactory.getLog(ToutaticeEditorLinkActionsBean.class);
+
+    private static final String SEARCH_QUERY = "SELECT * FROM Document WHERE %s";
 
 	private String typeDoc = "TOUS";
 	private String scope = ESPACE;
@@ -69,12 +74,43 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
 
 	private boolean hasSearchResults = false;
 
+    private DocumentModel mediaSpace;
 
 	@In(create = true, required = false)
 	private CoreSession documentManager;
 	
 	@In(create = true, required = false)
 	private SchemaManager schemaManager;
+
+
+    public String getMediaSpaceName() throws ClientException {
+
+        if (getMediaSpace() != null) {
+            return getMediaSpace().getTitle();
+        } else
+            return null;
+
+    }
+
+
+    private DocumentModel getMediaSpace() throws ClientException {
+
+        DocumentModel currentDomain = navigationContext.getCurrentDomain();
+        String searchMediaLibraries = "ecm:primaryType = 'MediaLibrary' and ecm:path startswith '" + currentDomain.getPathAsString()
+                + "' and ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'";
+
+        String queryMediaLibraries = String.format(SEARCH_QUERY, searchMediaLibraries);
+
+        DocumentModelList query = documentManager.query(queryMediaLibraries);
+
+        if (query.size() < 1 || query.size() > 1) {
+            mediaSpace = null;
+        } else
+            mediaSpace = query.get(0);
+
+
+        return mediaSpace;
+    }
 
 	private String getSpaceName() throws ClientException {
 		String res=null;
@@ -98,6 +134,9 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
 	
 	public Map<String,String> getScopes() throws ClientException{
 		scopes = new HashMap<String, String>();
+        if (getMediaSpace() != null) {
+            scopes.put(getMediaSpaceName(), MEDIALIBRARY);
+        }
 		scopes.put( getSpaceName(),ESPACE);
 		scopes.put( getDomaineName(),DOMAIN);
 		scopes.put( "Tout nuxeo",TOUT);
@@ -136,24 +175,26 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
 	}
 
 	public Map<String,Object> getTypes() throws ClientException {		
-			types = new HashMap<String, Object>();
-			Collection<Type> collectTypes = typeManager.getTypes();
-			if(ESPACE.equals(scope)){
-				collectTypes = typeManager.findAllAllowedSubTypesFrom(navigationContext.getCurrentSuperSpace().getType(),navigationContext.getCurrentSuperSpace());
-			}else if(DOMAIN.equals(scope)){
-				collectTypes = typeManager.findAllAllowedSubTypesFrom(navigationContext.getCurrentDomain().getType(),navigationContext.getCurrentDomain());
-			}else{
-				collectTypes.clear();				
-			}
-			List<Type> lstType = new ArrayList<Type>(collectTypes);
-			Collections.sort(lstType, new ListTypeComparator());
-			types.put("Tous", "TOUS");
-			for (Type type : lstType) {	
-				if("SimpleDocument".equalsIgnoreCase(type.getCategory())){				
-					types.put(type.getLabel(), type.getId());			
-				}
-			}
-			
+        types = new HashMap<String, Object>();
+        Collection<Type> collectTypes = typeManager.getTypes();
+        if (MEDIALIBRARY.equals(scope)) {
+            collectTypes = typeManager.findAllAllowedSubTypesFrom(getMediaSpace().getType(), getMediaSpace());
+        } else if (ESPACE.equals(scope)) {
+            collectTypes = typeManager.findAllAllowedSubTypesFrom(navigationContext.getCurrentSuperSpace().getType(), navigationContext.getCurrentSuperSpace());
+        } else if (DOMAIN.equals(scope)) {
+            collectTypes = typeManager.findAllAllowedSubTypesFrom(navigationContext.getCurrentDomain().getType(), navigationContext.getCurrentDomain());
+        } else {
+            collectTypes.clear();
+        }
+        List<Type> lstType = new ArrayList<Type>(collectTypes);
+        Collections.sort(lstType, new ListTypeComparator());
+        types.put("Tous", "TOUS");
+        for (Type type : lstType) {
+            if ("SimpleDocument".equalsIgnoreCase(type.getCategory())) {
+                types.put(type.getLabel(), type.getId());
+            }
+        }
+
 		return types;
 	}
 
@@ -185,6 +226,9 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
 		final List<String> constraints = new ArrayList<String>();
 		
 		// filter: path
+        if (MEDIALIBRARY.equals(scope)) {
+            constraints.add("ecm:path STARTSWITH '" + getMediaSpace().getPathAsString().replace("'", "\\'") + "'");
+        }
 		if (ESPACE.equals(scope)) {
 			constraints.add("ecm:path STARTSWITH '" + navigationContext.getCurrentSuperSpace().getPathAsString().replace("'", "\\'") + "'");
 		} else if(DOMAIN.equals(scope)) {

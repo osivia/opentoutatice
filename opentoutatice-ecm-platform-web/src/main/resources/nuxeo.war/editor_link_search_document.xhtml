@@ -5,7 +5,8 @@
 	xmlns:nxthemes="http://nuxeo.org/nxthemes"
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
-	xmlns:nxd="http://nuxeo.org/nxweb/document">
+	xmlns:nxd="http://nuxeo.org/nxweb/document"
+	xmlns:oh="http://osivia.org/html">
 
 	<ui:define name="page title">
 		<h:outputText
@@ -68,10 +69,16 @@
 							<f:facet name="header">
 								<h:outputText value="#{messages['label.content.header.title']}" />
 							</f:facet>
-							<nxd:restDocumentLink document="#{document}"
+
+							<h:outputLink value="#{oh:preferredLinkUrl(document)}" target="_blank" rendered="#{oh:hasWebId(document) eq true}">
+								<h:outputText value="#{nxd:titleOrId(document)}" />
+							</h:outputLink>
+							
+							<nxd:restDocumentLink document="#{document}"  rendered="#{oh:hasWebId(document) eq false}"
 								newConversation="true" target="_blank">
 								<h:outputText value="#{nxd:titleOrId(document)}" />
 							</nxd:restDocumentLink>
+
 						</nxu:column>
 						<!--  Author -->
 						<h:column>
@@ -85,7 +92,7 @@
 							<f:facet name="header">
 								<h:outputText value="#{messages['label.content.header.path']}" />
 							</f:facet>
-							<h:outputText value="#{messages[document.pathAsString]}" />
+							<h:outputText value="#{oh:preferredLinkUrl(document)}" />
 						</h:column>
 					</nxu:dataTable>
 				</h:selectOneRadio>
@@ -124,6 +131,8 @@
           function updateEditor(form) {
             var button = getSelectedRadio(form.elements.selection);
             var docLink = getDocumentLink(button);
+
+            
             if (docLink != null) {
               if (window.opener.FCK) {
                 var FCK = window.opener.FCK;
@@ -136,7 +145,7 @@
 		                  linkContent = selectionContent;
 				}
 				var html = '&lt;a href="' + docLink.href + '"&gt;' + linkContent + '&lt;/a&gt;';
-		                tinyMCE.execCommand('mceInsertContent', false, html);
+				tinyMCE.execCommand('mceInsertContent', false, html);
               }
             }
             self.close();

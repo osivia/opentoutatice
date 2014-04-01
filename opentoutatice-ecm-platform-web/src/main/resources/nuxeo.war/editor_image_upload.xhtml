@@ -8,7 +8,9 @@
 	xmlns:nxd="http://nuxeo.org/nxweb/document"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:nxh="http://nuxeo.org/nxweb/html"
-	xmlns:c="http://java.sun.com/jstl/core">
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:oh="http://osivia.org/html">
+	
 
 	<ui:define name="page title">
 		<h:outputText value="#{messages['title.imageUpload.form']}" />
@@ -281,7 +283,7 @@
 													value="#{document.id}" />
 												<div style="display: none;" id="#{document.id}">
 													<h:graphicImage
-														value="#{nxd:fileUrl('downloadPicture', document, imageSizePpty, currentDocument.dublincore.modified)}" />
+														value="#{oh:preferredImgUrl('downloadPicture', document, imageSizePpty, currentDocument.dublincore.modified)}" />
 												</div>
 											</nxu:column>
 											<!-- Icon + Type -->
@@ -303,7 +305,7 @@
 													<h:outputText value="#{messages['label.imageUpload.image']}" />
 												</f:facet>
 												<h:graphicImage
-													value="#{nxd:fileUrl('downloadPicture', document, 'Thumbnail:content', currentDocument.dublincore.modified)}" />
+													value="#{oh:preferredImgUrl('downloadPicture', document, 'Thumbnail:content', currentDocument.dublincore.modified)}" />
 											</h:column>
 										</nxu:dataTable>
 									</h:selectOneRadio>

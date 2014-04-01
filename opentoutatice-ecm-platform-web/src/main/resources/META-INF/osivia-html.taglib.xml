@@ -2,33 +2,38 @@
 <!DOCTYPE facelet-taglib PUBLIC "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN" "facelet-taglib_1_0.dtd">
 <facelet-taglib>
     <namespace>http://osivia.org/html</namespace>
-    
-    <!-- 
-    Icon selector widget
-    
-    Attributes :
-    - id : unique ID in the page
-    - src : DocumentModelList of configurations, see #{config}
-    - value
-    - ulStyleClass : main css class for this widget, you can define through this the ul, ul/li, and ul/li/img
-    - binding : a backing bean used by the widget, see #{simpleForm}
-    - inputClientId : the JSF clientID of the backing bean used for client scripts
-    - multiSelect : if true, user can select 0-* elements, if false, user can select 1 element
-    
-    Exemple :
-    
-    <oh:icons id="selectTemplate" src="#{config.pageTemplates}" value="#{field_0}"
-        ulStyleClass="iconList" binding="#{simpleForm.simpleComponent}" inputClientId="#{simpleForm.simpleComponentClientId}" 
-        multiSelect="false" />
-    
-     -->
+
+    <!-- Icon selector widget Attributes : - id : unique ID in the page - src : DocumentModelList of configurations, see #{config} - value - ulStyleClass : main 
+        css class for this widget, you can define through this the ul, ul/li, and ul/li/img - binding : a backing bean used by the widget, see #{simpleForm} - inputClientId 
+        : the JSF clientID of the backing bean used for client scripts - multiSelect : if true, user can select 0-* elements, if false, user can select 1 element Exemple 
+        : <oh:icons id="selectTemplate" src="#{config.pageTemplates}" value="#{field_0}" ulStyleClass="iconList" binding="#{simpleForm.simpleComponent}" inputClientId="#{simpleForm.simpleComponentClientId}" 
+        multiSelect="false" /> -->
     <tag>
         <tag-name>icons</tag-name>
         <source>components/icons.xhtml</source>
     </tag>
-    
     <tag>
         <tag-name>ottcicons</tag-name>
         <source>components/ottc-icons.xhtml</source>
     </tag>
+    <function>
+        <function-name>preferredImgUrl</function-name>
+        <function-class>
+            fr.toutatice.ecm.platform.web.fn.WebIdFunctions
+        </function-class>
+        <function-signature>java.lang.String getPreferredImgUrl(java.lang.String, org.nuxeo.ecm.core.api.DocumentModel, java.lang.String, java.lang.String)</function-signature>
+    </function>
+    
+    <function>
+        <function-name>preferredLinkUrl</function-name>
+        <function-class>fr.toutatice.ecm.platform.web.fn.WebIdFunctions</function-class>
+        <function-signature>java.lang.String getPreferredLinkUrl(org.nuxeo.ecm.core.api.DocumentModel)</function-signature>
+    </function>
+    
+    <function>
+        <function-name>hasWebId</function-name>
+        <function-class>fr.toutatice.ecm.platform.web.fn.WebIdFunctions</function-class>
+        <function-signature>boolean hasWebId(org.nuxeo.ecm.core.api.DocumentModel)</function-signature>
+    </function>
+
 </facelet-taglib>

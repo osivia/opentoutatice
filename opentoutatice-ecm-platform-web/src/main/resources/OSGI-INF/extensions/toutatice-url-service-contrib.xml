@@ -7,7 +7,7 @@
     <require>org.nuxeo.ecm.platform.ui.web.rest.URLService
     </require>
         
-    <!-- WebURLs 
+    <!-- WebURLs -->
     <extension point="codecs" target="org.nuxeo.ecm.platform.url.service.DocumentViewCodecService">
     <documentation>
       The docid codec uses the document uid to resolve the context. Urls are of
@@ -24,19 +24,19 @@
       (nxfile, nxeditfile,...) so that we can define several url patterns,
       performing different actions, but still using the same syntax.
     </documentation>
-    <documentViewCodec class="fr.toutatice.ecm.platform.web.urlservice.WebUrlCodec" default="false" enabled="true" name="nxurl" prefix="nxurl"/>
+    <documentViewCodec class="fr.toutatice.ecm.platform.web.urlservice.WebIdCodec" default="false" enabled="true" name="webid" prefix="web"/>
   </extension>
     
     
     <extension point="urlpatterns" target="org.nuxeo.ecm.platform.ui.web.rest.URLService">
 
-    <urlPattern enabled="true" name="nxurlpattern">
+    <urlPattern enabled="true" name="webidpattern">
       <defaultURLPolicy>false</defaultURLPolicy>
       <needBaseURL>true</needBaseURL>
       <needRedirectFilter>true</needRedirectFilter>
       <needFilterPreprocessing>true</needFilterPreprocessing>
-      <codecName>nxurl</codecName>
-      <actionBinding>#{restHelper.initContextFromRestRequest}</actionBinding>
+      <codecName>webid</codecName>
+       <actionBinding>#{restHelper.findWebId}</actionBinding>  
       <documentViewBinding>#{restHelper.documentView}</documentViewBinding>
       <newDocumentViewBinding>
         #{restHelper.newDocumentView}
@@ -57,6 +57,6 @@
         </binding>
       </bindings>
     </urlPattern>
-  </extension> -->
+  </extension>
   
 </component>
