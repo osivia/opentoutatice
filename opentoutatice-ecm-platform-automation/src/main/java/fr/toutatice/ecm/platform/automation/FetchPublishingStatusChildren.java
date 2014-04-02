@@ -45,6 +45,8 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
         description = "Fetch children of document with publishing infos.")
 public class FetchPublishingStatusChildren {
 
+    private static final String DELETED_STATE = "deleted";
+
     public static final String ID = "Fetch.PublishingStatusChildren";
 
     private static final Log log = LogFactory.getLog(FetchPublishingStatusChildren.class);
@@ -67,14 +69,15 @@ public class FetchPublishingStatusChildren {
         }
         DocumentModelList children = documentManager.getChildren(document.getRef());
         for (DocumentModel child : children) {
-            if (liveStatus && !child.isProxy()) {
+            boolean isDeleted = DELETED_STATE.equals(child.getCurrentLifeCycleState());
+            if (liveStatus && !child.isProxy() && !isDeleted) {
                 // Live children
                 JSONObject childWithStatus = new JSONObject();
-                DocumentModel publishedChild = ToutaticeDocumentHelper.getProxy(documentManager, child, SecurityConstants.READ);
-                boolean isPublished = publishedChild != null;
+                String publishedChildVersionLabel = ToutaticeDocumentHelper.getProxyVersion(documentManager, child);
+                boolean isPublished = publishedChildVersionLabel != null;
                 childWithStatus.element("isPublished", isPublished);
                 if (isPublished) {
-                    boolean isLiveModifiedFromProxy = !child.getVersionLabel().equals(publishedChild.getVersionLabel());
+                    boolean isLiveModifiedFromProxy = !child.getVersionLabel().equals(publishedChildVersionLabel);
                     childWithStatus.element("isLiveModifiedFromProxy", isLiveModifiedFromProxy);
                 } else {
                     childWithStatus.element("isLiveModifiedFromProxy", false);
@@ -86,7 +89,7 @@ public class FetchPublishingStatusChildren {
                 boolean isFolderish = child.getFacets().contains("Folderish");
                 childWithStatus.element("isFolderish", isFolderish);
                 childrenWithStatus.add(childWithStatus);
-            } else if (!liveStatus && child.isProxy()) {
+            } else if (!liveStatus && child.isProxy() && !isDeleted) {
                 // Proxies children
                 JSONObject childWithStatus = new JSONObject();
                 childWithStatus.element("isPublished", true);

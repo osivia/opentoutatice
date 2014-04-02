@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<component name="opentoutatice.usermanager.config">
+
+
+	<!-- Add an Anonymous user -->
+	<extension target="org.nuxeo.ecm.platform.usermanager.UserService"
+		point="userManager">
+		<userManager>
+			<defaultAdministratorId>admin</defaultAdministratorId>
+
+			<users>
+				<directory>userLdapDirectory</directory>
+
+				<!--Accès anonyme -->
+				<anonymousUser id="utilisateur-invité">
+					<property name="firstName">Utilisateur</property>
+					<property name="lastName">Invité (compte anonyme)</property>
+				</anonymousUser>
+				<virtualUser id="ssoadmin" searchable="false">
+					<property name="firstName">ssoadmin</property>
+					<property name="lastName">ssoadmin</property>
+					<group>administrators</group>
+					<group>members</group>
+				</virtualUser>
+				<virtualUser id="ssomember" searchable="false">
+					<property name="firstName">ssomember</property>
+					<property name="lastName">ssomember</property>
+					<group>members</group>
+				</virtualUser>
+				<virtualUser id="ssoagent" searchable="false">
+					<property name="firstName">ssoagent</property>
+					<property name="lastName">ssoagent</property>
+					<group>agents</group>
+					<group>members</group>
+				</virtualUser>
+			</users>
+			<groups>
+				<directory>groupLdapDirectory</directory>
+			</groups>
+			<defaultGroup>members</defaultGroup>
+			<groupSortField>groupname</groupSortField>
+			<userSortField>lastName</userSortField>
+		</userManager>
+	</extension>
+
+
+</component>

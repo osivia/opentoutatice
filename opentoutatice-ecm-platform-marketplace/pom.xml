@@ -5,22 +5,23 @@
 	<parent>
 		<groupId>org.nuxeo.ecm.distribution</groupId>
 		<artifactId>nuxeo-distribution</artifactId>
-		<version>5.6.0-HF29</version>
+		<version>5.6</version>
 	</parent>
  
 	<artifactId>opentoutatice-ecm-platform-marketplace</artifactId>
-	<version>1.1.0-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<packaging>zip</packaging>
 	<name>Marketplace package - Open Toutatice platform</name>
 
-	<properties />
+	<properties>
+		<opentoutatice.version>1.1.0</opentoutatice.version>
+	</properties>
 
 	<dependencies>
 		<!-- Base distribution(s) for the MP -->
 		<dependency>
 			<groupId>org.nuxeo.ecm.distribution</groupId>
 			<artifactId>nuxeo-distribution-dm</artifactId>
-            <version>5.6.0-HF29</version>
 			<type>pom</type>
 		</dependency>
 
@@ -28,35 +29,39 @@
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
-			<version>${project.version}</version>
+			<version>${opentoutatice.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-automation</artifactId>
-			<version>${project.version}</version>
+			<version>${opentoutatice.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-services</artifactId>
-			<version>${project.version}</version>
+			<version>${opentoutatice.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-web</artifactId>
-			<version>${project.version}</version>
+			<version>${opentoutatice.version}</version>
+			<type>jar</type>
+		</dependency> 
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-platform-generic-ui-service</artifactId>
+			<version>${opentoutatice.version}</version>
 			<type>jar</type>
 		</dependency>
-		<!-- 
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-custom</artifactId>
-			<version>1.1.0-RC2-SNAPSHOT</version>
+			<version>${opentoutatice.version}</version>
 			<type>jar</type>
 		</dependency>
-		 -->
 	</dependencies>
 	
 	<profiles>
@@ -312,4 +317,10 @@
 			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
+
+  <scm>
+    <connection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.1.0/opentoutatice-ecm-platform-marketplace</connection>
+    <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.1.0/opentoutatice-ecm-platform-marketplace</developerConnection>
+    <url>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.1.0/opentoutatice-ecm-platform-marketplace</url>
+  </scm>
 </project>

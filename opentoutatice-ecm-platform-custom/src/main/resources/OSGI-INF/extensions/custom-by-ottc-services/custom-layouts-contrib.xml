@@ -5,7 +5,6 @@
 	<documentation>
 		Cette contribution permet de surcharger les layouts de présentation
 		openToutatice
-		(TODO: lien Wiki pour liste layouts)
 		en redéfinissant leurs templates.
 		Exemple:
 		<code>

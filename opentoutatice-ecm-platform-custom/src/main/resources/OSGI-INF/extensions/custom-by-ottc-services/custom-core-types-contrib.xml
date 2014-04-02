@@ -4,13 +4,9 @@
 
 	<documentation>
 		Cette contribution permet d'ajouter des schémas ou facets
-		openToutatice à des objets client
-		(TODO: lien Wiki pour liste schémas,
-		facets openToutatice).
+		openToutatice à des objets client.
 		Inversement, des schémas ou facets client
-		peuvent être posés sur les objets openToutatice
-		(TODO: lien Wiki pour
-		liste objets openToutatice); un &lt;require&gt; vers la contribution
+		peuvent être posés sur les objets openToutatice; un &lt;require&gt; vers la contribution
 		les définissant est alors nécessaire.
 		Exemple:
 		<code>

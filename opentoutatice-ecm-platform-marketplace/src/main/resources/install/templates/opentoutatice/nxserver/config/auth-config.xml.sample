@@ -1,0 +1,50 @@
+<component name="opentoutatice.authenticator.sso.config">
+
+	<require>org.nuxeo.ecm.platform.ui.web.auth.defaultConfig</require>
+	<require>org.nuxeo.ecm.platform.login.Portal</require>
+	<require>org.nuxeo.ecm.automation.server.auth.config</require>
+	<require>org.nuxeo.ecm.platform.oauth.auth.defaultConfig</require>
+
+	<extension
+		target="org.nuxeo.ecm.platform.ui.web.auth.service.PluggableAuthenticationService"
+		point="authenticators">
+		<authenticationPlugin name="PORTAL_AUTH">
+			<loginModulePlugin>Trusting_LM</loginModulePlugin>
+			<stateful>true</stateful>
+			<parameters>
+				<parameter name="secret">${nuxeo.secretkey}</parameter>
+				<parameter name="maxAge">3600</parameter>
+			</parameters>
+		</authenticationPlugin>
+	</extension>
+
+	<!-- Include Portal SSO Auth into authentication chain -->
+	<extension
+		target="org.nuxeo.ecm.platform.ui.web.auth.service.PluggableAuthenticationService"
+		point="specificChains">
+
+		<specificAuthenticationChain name="Automation">
+			<urlPatterns>
+				<url>(.*)/automation.*</url>
+			</urlPatterns>
+			<replacementChain>
+				<plugin>AUTOMATION_BASIC_AUTH</plugin>
+				<plugin>PORTAL_AUTH</plugin>
+				<plugin>ANONYMOUS_AUTH</plugin>
+			</replacementChain>
+		</specificAuthenticationChain>
+	</extension>
+
+	<extension
+		target="org.nuxeo.ecm.platform.ui.web.auth.service.PluggableAuthenticationService"
+		point="chain">
+		<authenticationChain>
+			<plugins>
+				<plugin>BASIC_AUTH</plugin>
+				<plugin>PORTAL_AUTH</plugin>
+				<plugin>FORM_AUTH</plugin>
+				<plugin>ANONYMOUS_AUTH</plugin>
+			</plugins>
+		</authenticationChain>
+	</extension>
+</component>

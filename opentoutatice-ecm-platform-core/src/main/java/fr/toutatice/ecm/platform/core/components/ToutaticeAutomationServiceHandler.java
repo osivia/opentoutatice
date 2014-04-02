@@ -118,11 +118,21 @@ public class ToutaticeAutomationServiceHandler<T> extends ToutaticeAbstractServi
 	}
 	
 	private long getLogThreshold(CoreSession session) {
-		return getMntService().getAutomationLogsThreshold(session);
+		mntService=getMntService();
+		if(mntService==null){
+			return 1000;
+		}else{
+			return mntService.getAutomationLogsThreshold(session);
+		}
 	}
 
 	private boolean isLogEnabled(CoreSession session) {
-		return getMntService().isAutomationLogsEnabled(session);
+		boolean res = false;
+		mntService=getMntService();
+		if(mntService!=null){			
+			res = mntService.isAutomationLogsEnabled(session);
+		}
+		return res;
 	}
 
 	private ToutaticeMaintenanceService getMntService() {
