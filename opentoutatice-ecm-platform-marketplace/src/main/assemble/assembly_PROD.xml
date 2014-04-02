@@ -1,10 +1,7 @@
-<project name="nuxeo-assembly"
-         default="build"
-         xmlns:nx="urn:nuxeo-build"
-         xmlns:artifact="urn:nuxeo-artifact">
-  <taskdef resource="org/nuxeo/build/antlib.xml" uri="urn:nuxeo-build" />
-  <taskdef resource="org/nuxeo/build/artifact/antlib.xml" uri="urn:nuxeo-artifact" />
-  <taskdef resource="net/sf/antcontrib/antlib.xml" />
+<project name="nuxeo-assembly" default="build" xmlns:nx="urn:nuxeo-build" xmlns:artifact="urn:nuxeo-artifact">
+	<taskdef resource="org/nuxeo/build/antlib.xml" uri="urn:nuxeo-build" />
+	<taskdef resource="org/nuxeo/build/artifact/antlib.xml" uri="urn:nuxeo-artifact" />
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
 
 	<target name="init" unless="init.done">
 		<property name="outdir" value="${maven.project.build.directory}" />
@@ -15,13 +12,11 @@
 	<target name="expand">
 		<!-- Include your artifacts in the graph adding your groupId to groupPrefixes -->
 		<artifact:nuxeo-expand includeTestScope="true" groupPrefixes="org.nuxeo,com.nuxeo" />
-		
+
 		<!-- For Nuxeo IDE being able to use that distribution as a SDK -->
 		<artifact:print output="${outdir}/artifacts-opentoutatice.properties" mode="sdk" />
-		<artifact:print output="${outdir}/test-artifacts-opentoutatice.properties"
-		                mode="sdk"
-		                scopes="test" />
-		
+		<artifact:print output="${outdir}/test-artifacts-opentoutatice.properties" mode="sdk" scopes="test" />
+
 		<!-- Prints the graph for debugging purpose -->
 		<artifact:print output="${outdir}/dependency-tree.log" />
 	</target>
@@ -41,12 +36,12 @@
 		</copy>
 		<copy file="${outdir}/artifacts-opentoutatice.properties" todir="${outdir}/marketplace/install" />
 		<copy file="${outdir}/test-artifacts-opentoutatice.properties" todir="${outdir}/marketplace/install" />
-		
+
 		<!-- Base distribution NXR -->
 		<copy todir="${outdir}">
 			<artifact:resolveFile key="org.nuxeo.ecm.distribution:nuxeo-distribution-dm::zip" />
 		</copy>
-		
+
 		<!-- Nuxeo bundles -->
 		<copy todir="${outdir}/nxr/bundles" overwrite="true">
 			<artifact:set>
@@ -66,7 +61,7 @@
 			<artifact:resolveFile key="org.nuxeo.ecm.platform:nuxeo-platform-login-portal-sso:5.6.0-HF20:jar" />
 		</copy>
 		<nx:rmdups dir="${outdir}/nxr/bundles" />
-		
+
 		<!-- Third-party libraries -->
 		<copy todir="${outdir}/nxr/lib" overwrite="true">
 			<artifact:set>
@@ -79,8 +74,8 @@
 					<!-- Filter out the JBPM relative artifacts	since it must be defined as a package requirement
 						(must be installed via its own addon markplace package)
 					-->
-					<artifact groupId="org.jbpm.*" />					
-					<artifact groupId="bsh*" />					
+					<artifact groupId="org.jbpm.*" />
+					<artifact groupId="bsh*" />
 				</excludes>
 			</artifact:set>
 		</copy>
@@ -91,29 +86,23 @@
 			</fileset>
 		</move>
 		<nx:rmdups dir="${outdir}/nxr/lib" />
-		
+
 		<!-- Temporary ZIP Nuxeo NXR to compare with base distribution NXR -->
 		<zip destfile="${outdir}/nxr-${maven.project.version}.zip" basedir="${outdir}/nxr" />
-		
+
 		<!-- Your MP only needs to include files not already provided by the base distribution -->
-		<nx:zipdiff file1="${outdir}/nxr-${maven.project.version}.zip"
-				file2="${outdir}/nuxeo-distribution-dm-${nuxeo.distribution.version}.zip"
-				includesfile="${outdir}/includes"
-				excludesfile="${outdir}/excludesfile"
-				patternsetid="opentoutatice.versus.dm"
-				ignoreContent="true">
+		<nx:zipdiff file1="${outdir}/nxr-${maven.project.version}.zip" file2="${outdir}/nuxeo-distribution-dm-${nuxeo.distribution.version}.zip" includesfile="${outdir}/includes" excludesfile="${outdir}/excludesfile" patternsetid="opentoutatice.versus.dm" ignoreContent="true">
 		</nx:zipdiff>
 		<unzip src="${outdir}/nxr-${maven.project.version}.zip" dest="${outdir}/marketplace/install">
 			<patternset refid="opentoutatice.versus.dm" />
 		</unzip>
-		
+
 		<!-- Build the property that lists the bundles to include -->
 		<var name="install.bundles" value="" />
 		<if>
 			<available file="${outdir}/marketplace/install/bundles" />
 			<then>
-				<var name="install.bundles" 
-					 value="${line.separator}
+				<var name="install.bundles" value="${line.separator}
 						&lt;update file=&quot;${package.root}/install/bundles&quot; todir=&quot;${env.server.home}/nxserver/plugins&quot; /&gt;" />
 			</then>
 		</if>
@@ -123,12 +112,11 @@
 		<if>
 			<available file="${outdir}/marketplace/install/lib" />
 			<then>
-				<var name="install.libs"
-					 value="${line.separator}
+				<var name="install.libs" value="${line.separator}
 						&lt;update file=&quot;${package.root}/install/lib&quot; todir=&quot;${env.lib}&quot; /&gt;" />
 			</then>
-		</if>		
-		
+		</if>
+
 		<!-- NXP-12166: filter out conflicting JARs -->
 		<var name="install.excludes" value="" />
 		<loadfile property="jars" srcfile="${outdir}/excludesfile" />
@@ -138,43 +126,38 @@
 					<matches pattern=".*\.jar" string="@{line}" />
 					<then>
 						<echo>Excluding @{line}</echo>
-						<var name="install.excludes"
-							 value="${install.excludes} &lt;delete file=&quot;${env.home}/@{line}&quot; /&gt;${line.separator}" />
+						<var name="install.excludes" value="${install.excludes} &lt;delete file=&quot;${env.home}/@{line}&quot; /&gt;${line.separator}" />
 					</then>
 				</if>
 			</sequential>
 		</for>
-		
+
 		<!-- No SDK property files -->
 		<var name="install.properties" value="" />
 
 		<!-- Build the property that lists the templates to install -->
 		<var name="install.templates" value="" />
-		<!--<if>
+		<if>
 			<available file="${outdir}/marketplace/install/templates" />
 			<then>
-				// remove any former acrennes template 
+				<!-- remove any former acrennes template -->
 				<loadfile property="profiles" srcfile="src/main/resources/profiles.txt" />
 				<for param="profile" list="${profiles}" delimiter="${line.separator}">
 					<sequential>
 						<echo>Excluding profile @{profile}</echo>
-						<var name="install.templates"
-							 value="${install.templates}&lt;config rmtemplate=&quot;@{profile}&quot; /&gt;${line.separator}" />
+						<var name="install.templates" value="${install.templates}&lt;config rmtemplate=&quot;@{profile}&quot; /&gt;${line.separator}" />
 					</sequential>
 				</for>
 				
-				// install the selected profile's template
-				<var name="install.templates"
-					 value="${line.separator}
+				<!-- install the selected profile's template -->
+				<var name="install.templates" value="${line.separator}
 						&lt;copy dir=&quot;${package.root}/install/templates&quot; todir=&quot;${env.templates}&quot; overwrite=&quot;true&quot; /&gt;" />
 			</then>
-		</if> -->
-		
-		
+		</if>
+
+
 		<!-- Update the install.xml file from properties -->
-		<copy file="src/main/resources/install.xml"
-			todir="${outdir}/marketplace"
-			overwrite="true">
+		<copy file="src/main/resources/install.xml" todir="${outdir}/marketplace" overwrite="true">
 			<filterset>
 				<filter token="BUNDLES" value="${install.bundles}" />
 				<filter token="EXCLUDES" value="${install.excludes}" />
@@ -183,12 +166,9 @@
 				<filter token="TEMPLATES" value="${install.templates}" />
 			</filterset>
 		</copy>
-		
-		<zip destfile="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip"
-			basedir="${outdir}/marketplace" />
-		<artifact:attach file="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip"
-			target="${maven.project.groupId}:${maven.project.artifactId}"
-			type="zip" />
+
+		<zip destfile="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip" basedir="${outdir}/marketplace" />
+		<artifact:attach file="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip" target="${maven.project.groupId}:${maven.project.artifactId}" type="zip" />
 	</target>
 
 </project>
