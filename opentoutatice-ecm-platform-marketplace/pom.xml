@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.nuxeo.ecm.distribution</groupId>
 		<artifactId>nuxeo-distribution</artifactId>
-		<version>5.6.0-HF29</version>
+		<version>5.6</version>
 	</parent>
  
 	<artifactId>opentoutatice-ecm-platform-marketplace</artifactId>
@@ -22,7 +22,6 @@
 		<dependency>
 			<groupId>org.nuxeo.ecm.distribution</groupId>
 			<artifactId>nuxeo-distribution-dm</artifactId>
-            <version>5.6.0-HF29</version>
 			<type>pom</type>
 		</dependency>
 
@@ -51,6 +50,12 @@
 			<version>${opentoutatice.version}</version>
 			<type>jar</type>
 		</dependency> 
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-platform-generic-ui-service</artifactId>
+			<version>${opentoutatice.version}</version>
+			<type>jar</type>
+		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-custom</artifactId>
