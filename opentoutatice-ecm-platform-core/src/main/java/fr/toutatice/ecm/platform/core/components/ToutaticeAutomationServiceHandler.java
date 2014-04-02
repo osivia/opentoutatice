@@ -33,6 +33,7 @@ import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.OperationParameters;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.services.maintenance.ToutaticeMaintenanceService;
@@ -52,6 +53,8 @@ public class ToutaticeAutomationServiceHandler<T> extends ToutaticeAbstractServi
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		String ops = "";
 		String inputStg = "";
+		String uid = "";
+		String type = "";
 		String principalStg = "";
 		CoreSession session = null;
 
@@ -73,6 +76,15 @@ public class ToutaticeAutomationServiceHandler<T> extends ToutaticeAbstractServi
 									Object value = params.get(pk);
 									if (value instanceof String) {
 										ops = ops + pk + ":" + (String) params.get(pk) + " ";
+										if (null != session && ("path".equals(pk) || ("value".equals(pk)))) {
+											try {
+												DocumentModel doc = session.getDocument(new PathRef((String) value));
+												uid = doc.getId();
+												type = doc.getType();
+											} catch (Exception e) {
+												log.debug("might have no permission to fetch the document with the user session or not found");
+											}
+										}
 									}
 								}
 							}
@@ -86,25 +98,27 @@ public class ToutaticeAutomationServiceHandler<T> extends ToutaticeAbstractServi
 						if (input instanceof DocumentModel) {
 							if (null != input) {
 								inputStg = ((DocumentModel) input).getPathAsString();
+								uid = ((DocumentModel) input).getId();
+								type = ((DocumentModel) input).getType();
 							}
 						}
-						
+
 						Principal principal = oc.getPrincipal();
 						if (null != principal) {
 							principalStg = principal.getName();
 						}
 					}
 				}
-				
+
 				if (isLogEnabled(session)) {
 					long startTime = System.currentTimeMillis();
 					Object result = method.invoke(object, args);
 					long stopTime = System.currentTimeMillis();
-					
+
 					if ((stopTime - startTime) > getLogThreshold(session)) {
-						log.debug(String.format("Duration:%d ms - %s [input:%s, principal:%s]", (stopTime - startTime), ops, inputStg, principalStg));
+						log.debug(String.format("Duration:%d ms - %s [input:%s, uid:%s, type:%s, principal:%s]", (stopTime - startTime), ops, inputStg, uid, type, principalStg));
 					}
-					
+
 					return result;
 				} else {
 					return method.invoke(object, args);
@@ -116,7 +130,7 @@ public class ToutaticeAutomationServiceHandler<T> extends ToutaticeAbstractServi
 			throw e.getCause();
 		}
 	}
-	
+
 	private long getLogThreshold(CoreSession session) {
 		mntService=getMntService();
 		if(mntService==null){
@@ -141,5 +155,5 @@ public class ToutaticeAutomationServiceHandler<T> extends ToutaticeAbstractServi
 		}
 		return this.mntService;
 	}
-	
+
 }
