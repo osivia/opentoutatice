@@ -1,20 +1,25 @@
 <package type="addon" name="opentoutatice" version="@VERSION@">
 	<title>Open Toutatice</title>
 	<description>
-		<p>This addon implements the opened platform called Toutatice 
-			(which one is based on the Nuxeo DM distribution)</p>
+		<p>OpenToutatice is an addon for managing the publication of documents in dedicated spaces, 
+		it is designed to interact with Osivia Portal.</p>
 			
 		Main features:
          * Local publishing
          * Extended Remote publishing
-         * WebPage mode for Osivia Portal
+         * Osivia Portal integration
+         * Objects and fragments used in CMS context
          * Portal views
          * Attached pictures
 		 
 		Evolutions:
          * First marketplace packaging release
+         
+	    Documentation:
+	      * See http://www.osivia.org
 	</description>
-	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
+	<!-- <home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page> -->
+	<home-page>http://www.osivia.org/portal/cms/default-domain/community-ws/documentation</home-page>
 	<vendor>Academie de Rennes - OSIVIA</vendor>
 	<installer restart="true" />
 	<uninstaller restart="true" />
