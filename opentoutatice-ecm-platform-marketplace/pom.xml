@@ -9,12 +9,12 @@
 	</parent>
  
 	<artifactId>opentoutatice-ecm-platform-marketplace</artifactId>
-	<version>1.1.0-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<packaging>zip</packaging>
 	<name>Marketplace package - Open Toutatice platform</name>
 
 	<properties>
-		<opentoutatice.version>1.1.0-SNAPSHOT</opentoutatice.version>
+		<opentoutatice.version>1.1.0</opentoutatice.version>
 	</properties>
 
 	<dependencies>
@@ -317,4 +317,10 @@
 			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
+
+  <scm>
+    <connection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.1.0/opentoutatice-ecm-platform-marketplace</connection>
+    <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.1.0/opentoutatice-ecm-platform-marketplace</developerConnection>
+    <url>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.1.0/opentoutatice-ecm-platform-marketplace</url>
+  </scm>
 </project>

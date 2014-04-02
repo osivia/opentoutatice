@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>1.1.0</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-web</artifactId>
@@ -17,7 +17,7 @@
 		<jboss.j2ee.version>4.2.3.GA</jboss.j2ee.version>
 		<jboss.ejb.version>3.0-RC8</jboss.ejb.version>
 		<jboss.seam.version>2.1.0.SP1</jboss.seam.version>
-		<opentoutatice.version>1.1.0-SNAPSHOT</opentoutatice.version>
+		<opentoutatice.version>1.1.0</opentoutatice.version>
 	</properties>
 
 	<dependencies>
