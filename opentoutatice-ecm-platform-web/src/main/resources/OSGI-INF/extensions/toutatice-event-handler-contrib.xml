@@ -7,6 +7,14 @@
 
     <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
         point="event-handlers">
+        
+         <handler chainId="createOp">
+            <event>documentCreated</event>
+            <filters>
+                <attribute>Mutable Document</attribute>
+                <expression>Document.hasSchema('toutatice') == false</expression>
+            </filters>
+        </handler>
 
 		<!-- WebURL -->
         <!-- <handler chainId="createOrCopyOp">
