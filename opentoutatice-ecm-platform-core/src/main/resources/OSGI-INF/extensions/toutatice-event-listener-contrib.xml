@@ -8,7 +8,6 @@
 		<listener name="toutaticeAsynchronousUpdateListener" async="true" postCommit="false"
 			class="fr.toutatice.ecm.platform.core.listener.ToutaticeAsynchronousUpdateListener"
 			priority="100">
-			<event>documentCreated</event>
             <event>documentCreatedByCopy</event>
             <event>documentMoved</event>
             <event>documentRestored</event>
