@@ -46,8 +46,8 @@ import fr.toutatice.ecm.platform.core.utils.exception.ToutaticeException;
 public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListener {
 
     private static final String UPDATE_DOMAIN_CHAIN = "updateDomain";
-    private static final String CREATE_OR_MOVE_OP_CHAIN = "createOrMoveOp";
-    
+    private static final String CREATE_OR_MOVE_OP_CHAIN = "moveOp";
+
     private static final String DOCUMENT_MODIFIED = "documentModified";
 
     private static final String[] SELECTED_EVENTS = {"documentCreated", "documentCreatedByCopy", "documentMoved", "documentRestored"};
@@ -67,7 +67,7 @@ public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListe
                     } catch (ToutaticeException e) {
                         throw new ClientException(e);
                     }
-                } else if(ArrayUtils.contains(SELECTED_EVENTS, event.getName())) {
+                } else if (ArrayUtils.contains(SELECTED_EVENTS, event.getName())) {
                     try {
                         ToutaticeOperationHelper.runOperationChain(session, CREATE_OR_MOVE_OP_CHAIN, document);
                     } catch (ToutaticeException e) {
