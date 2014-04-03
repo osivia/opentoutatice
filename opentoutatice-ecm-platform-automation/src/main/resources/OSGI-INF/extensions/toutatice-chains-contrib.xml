@@ -146,19 +146,19 @@
 			<operation id="Document.SetDomainID" />
 		</chain>
         
-        <!-- Chaines pour les weburl -->
+        <!-- Chaines pour les webid -->
         <chain id="createOrCopyOp">
-            <operation id="Document.SetWebUrl">
+            <operation id="Document.SetWebId">
                 <param type="String" name="chainSource">createOrCopyOp</param>
             </operation>
         </chain>
         <chain id="movedOrRestoredOp">
-            <operation id="Document.SetWebUrl">
+            <operation id="Document.SetWebId">
                 <param type="String" name="chainSource">movedOrRestoredOp</param>
             </operation>
         </chain>
         <chain id="beforeModificationOp">
-            <operation id="Document.SetWebUrl">
+            <operation id="Document.SetWebId">
                 <param type="String" name="chainSource">beforeModificationOp</param>
             </operation>
         </chain>

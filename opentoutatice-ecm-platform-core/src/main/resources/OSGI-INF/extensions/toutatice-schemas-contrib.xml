@@ -10,6 +10,7 @@
 		<schema name="portalpage" prefix="portalpage" src="schemas/portalpage.xsd" />
 		<schema name="portalsite" prefix="portalsite" src="schemas/portalsite.xsd" />
 		<schema name="toutatice"  prefix="ttc" src="schemas/toutatice.xsd" />
+        <schema name="toutatice_space"  prefix="ttcs" src="schemas/toutatice-space.xsd" />
 		<schema name="toutatice_navigation" prefix="ttcn" src="schemas/toutatice-ecm-platform-core-schema.xsd" />
 
 	</extension>

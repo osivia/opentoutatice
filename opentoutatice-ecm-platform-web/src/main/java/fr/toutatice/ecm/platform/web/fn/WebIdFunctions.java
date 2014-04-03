@@ -145,8 +145,10 @@ public class WebIdFunctions {
             Map<String, String> params = new HashMap<String, String>();
 
             String webid = doc.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID).getValue().toString();
+            String domainID = doc.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID).getValue().toString();
 
             params.put(WebIdCodec.WEBID_KEY, webid.toString());
+            params.put(WebIdCodec.DOMAINID_KEY, domainID.toString());
 
             if (blobPropertyName != null) {
                 params.put(WebIdCodec.FILE_PROPERTY_PATH_KEY, blobPropertyName);

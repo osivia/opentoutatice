@@ -17,7 +17,7 @@
         </handler>
 
 		<!-- WebURL -->
-        <!-- <handler chainId="createOrCopyOp">
+        <handler chainId="createOrCopyOp">
             <event>documentCreated</event>
             <event>documentCreatedByCopy</event>
             <event>documentImported</event>
@@ -36,10 +36,10 @@
         <handler chainId="beforeModificationOp">
             <event>beforeDocumentModification</event>
             <filters>
-                <attribute>Mutable Document</attribute>
+                <!--<attribute>Mutable Document</attribute>-->
                 <expression>Document.hasSchema('toutatice') == false</expression>
             </filters>
-        </handler> -->
+        </handler>
 
     </extension>
 

@@ -52,6 +52,7 @@ import org.nuxeo.runtime.api.Framework;
 public class WebIdCodec extends AbstractDocumentViewCodec {
 
     public static final String WEBID_KEY = "WEBID";
+    public static final String DOMAINID_KEY = "DOMAINID";
 
     public static final String PREFIX = "web";
 
@@ -67,13 +68,15 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
     // /web/domain-id/resource-name
     public static final String URLPattern = "/" +
             "([a-zA-Z_0-9\\-]+)/" + // domain
-            "([a-zA-Z_0-9\\-]+)" + // weburl
+            "([a-zA-Z_0-9\\-\\.]+)" + // weburl
             "(/)?" + "(.*)?"; // params
 
 
     public static final String DOC_TYPE = "DOC_TYPE";
     public static final String FILE_PROPERTY_PATH_KEY = "FILE_PROPERTY_PATH";
     public static final String FILENAME_KEY = "FILENAME";
+
+
 
 
     public WebIdCodec() {
@@ -105,8 +108,7 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
         Matcher m = pattern.matcher(url);
         if (m.matches()) {
 
-
-            String domainName = m.group(1);
+            String domainID = m.group(1);
 
             String webid = m.group(2);
 
@@ -115,7 +117,7 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
             DocumentModelList docs = null;
             try {
 
-                docs = documentManager.query("SELECT * FROM Document where ttc:webid = '" + webid + "' AND ecm:path STARTSWITH '/" + domainName + "'"
+                docs = documentManager.query("SELECT * FROM Document where ttc:webid = '" + webid + "' AND ttc:domainID = '" + domainID + "'"
                         + " AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0");
 
             } catch (ClientException e) {
@@ -127,7 +129,6 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
 
                 DocumentModel doc = docs.get(0);
                 DocumentRef docRef = doc.getRef(); // get the doc who matches the webid
-                String typeOfDoc = doc.getType();
 
                 final DocumentLocation docLoc = new DocumentLocationImpl(DEFAULT_REPO, docRef);
 
@@ -166,18 +167,15 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
     @Override
     public String getUrlFromDocumentView(DocumentView docView) {
 
-        DocumentLocation docLoc = docView.getDocumentLocation();
-
         String webid = docView.getParameter(WEBID_KEY);
+        String domainID = docView.getParameter(DOMAINID_KEY);
 
-        if (docLoc != null && webid != null) {
+        if (domainID != null && webid != null) {
             List<String> items = new ArrayList<String>();
-
-            String[] split = docLoc.getPathRef().toString().split("/");
 
 
             items.add(getPrefix()); // /web
-            items.add(split[1]); // /domain
+            items.add(domainID); // /domainID
             items.add(webid); // /resource
 
             if (docView.getParameter(FILE_PROPERTY_PATH_KEY) != null) {

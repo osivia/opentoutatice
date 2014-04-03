@@ -152,6 +152,21 @@
 			</fields>
 		</widget>
 
+        <!-- Widget en vue Modifier (ou Créer) -->
+        <widget name="toutatice_space_enable_webId_widget" type="checkbox">
+            <labels>
+                <label mode="any">Activer les Web Id</label>
+            </labels>
+            <translated>false</translated>
+            <fields>
+                <field>ttcs:hasWebIdEnabled</field>
+            </fields>
+            <widgetModes>
+                <mode value="any">#{nxu:test(currentDocument.hasFacet('Space'),
+                    layout.mode, 'hidden')}</mode>
+            </widgetModes>            
+        </widget>
+
 		<widget name="files" type="filesList">
 			<labels>
 				<label mode="any">Pièces jointes</label>
