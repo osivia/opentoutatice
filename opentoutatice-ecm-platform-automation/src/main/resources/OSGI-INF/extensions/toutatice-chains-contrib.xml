@@ -130,8 +130,14 @@
 				<param type="string" name="message">La demande est rejetée</param>
 			</operation>
 		</chain>
+		
+		<chain id="createOp">
+			<operation id="Context.FetchDocument" />
+			<operation id="Document.SetSpaceID" />
+			<operation id="Document.SetDomainID" />
+		</chain>
 
-		<chain id="createOrMoveOp">
+		<chain id="moveOp">
 			<operation id="Document.SetSpaceID" />
 			<operation id="Document.SetDomainID" />
 		</chain>
