@@ -168,6 +168,10 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         saveDocument();
         return viewId;
     }
+    
+    public String updateDocument(DocumentModel doc) throws ClientException{
+    	return super.updateDocument(doc);
+    }
 
     public String createMajorDocument() throws ClientException {
         String viewId = saveDocument();
@@ -321,7 +325,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      * @throws PropertyException
      * @throws ClientException
      */
-    private void updateDocWithMapSwitch(DocumentModel document) throws PropertyException, ClientException {
+    public void updateDocWithMapSwitch(DocumentModel document) throws PropertyException, ClientException {
         if (null == mapSwitchState) {
             return;
         }

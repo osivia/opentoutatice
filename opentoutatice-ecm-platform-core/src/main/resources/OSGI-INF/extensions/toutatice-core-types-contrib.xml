@@ -10,8 +10,10 @@
 
 		<facet name="Space">
             <schema name="toutatice_space" />
-        </facet>
-		<facet name="TTCPublishSpace" />
+        </facet>			
+		<facet name="TTCPublishSpace" >
+			<schema name="toutatice_space"/>
+		</facet>
 		<facet name="TTCAttachableImages" />
 		<facet name="FolderishEditable" />
 		<facet name="TTCPortalConfigurable" />

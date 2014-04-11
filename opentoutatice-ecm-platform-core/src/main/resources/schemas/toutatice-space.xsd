@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nxs="http://www.nuxeo.org/ecm/project/schemas/ACRENNES2/toutatice" targetNamespace="http://www.nuxeo.org/ecm/project/schemas/ACRENNES2/toutatice-space">  
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nxs="http://www.nuxeo.org/ecm/project/schemas/ACRENNES2/toutatice-space" 
+targetNamespace="http://www.nuxeo.org/ecm/project/schemas/ACRENNES2/toutatice-space">  
   <!-- helper XSD definitions for list types -->  
   <xs:complexType name="content"> 
     <xs:sequence> 
@@ -28,4 +29,29 @@
     <xs:list itemType="xs:boolean"/> 
   </xs:simpleType>  
   <xs:element name="hasWebIdEnabled" type="xs:boolean" default="true"/>
+  
+  <xs:element name="lstPublicAuth" type="nxs:lstPublicAuthtype"/>
+		
+  	<xs:complexType name="lstPublicAuthtype">
+  		<xs:sequence> 
+      		<xs:element name="item" type="nxs:publicCible" minOccurs="0" maxOccurs="unbounded"/> 
+    	</xs:sequence>
+  	</xs:complexType>
+
+	<xs:complexType name="publicCible">
+		<xs:sequence>
+			<xs:element name="pcid" type="xs:string" />
+			<xs:element name="pclabel" type="xs:string" />
+			<xs:element name="pcorder" type="xs:integer" />
+			<xs:element name="pccategory" type="nxs:category" />			
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="category">
+		<xs:sequence>
+			<xs:element name="cid" type="xs:string" />
+			<xs:element name="clabel" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+  
 </xs:schema>
