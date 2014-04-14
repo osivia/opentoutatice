@@ -17,6 +17,7 @@
  */
 package fr.toutatice.ecm.platform.web.fn;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -150,8 +151,18 @@ public class WebIdFunctions {
             params.put(WebIdCodec.WEBID_KEY, webid.toString());
             params.put(WebIdCodec.DOMAINID_KEY, domainID.toString());
 
+
+            Serializable explicitUrl = doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXPLICIT_URL);
+            if (explicitUrl != null) {
+                params.put(WebIdCodec.EXPLICIT_KEY, explicitUrl.toString());
+            }
+            Serializable extensionUrl = doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXTENSION_URL);
+            if (extensionUrl != null) {
+                params.put(WebIdCodec.EXT_KEY, extensionUrl.toString());
+            }
+
             if (blobPropertyName != null) {
-                params.put(WebIdCodec.FILE_PROPERTY_PATH_KEY, blobPropertyName);
+                params.put(WebIdCodec.CONTENT_PARAM, StringUtils.replace(blobPropertyName, ":content", ""));
             }
 
             DocumentView docView = new DocumentViewImpl(docLoc, null, params);

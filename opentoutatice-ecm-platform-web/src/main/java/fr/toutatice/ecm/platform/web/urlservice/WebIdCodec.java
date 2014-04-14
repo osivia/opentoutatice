@@ -21,12 +21,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.common.utils.StringUtils;
 import org.nuxeo.common.utils.URIUtils;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -53,8 +51,12 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
 
     public static final String WEBID_KEY = "WEBID";
     public static final String DOMAINID_KEY = "DOMAINID";
+    public static final String EXPLICIT_KEY = "EXPLICIT";
+    public static final String EXT_KEY = "EXT";
 
-    public static final String PREFIX = "web";
+    public static final String CONTENT_PARAM = "content";
+
+    public static final String PREFIX = "web/";
 
     private static final Log log = LogFactory.getLog(WebIdCodec.class);
 
@@ -66,10 +68,12 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
 
 
     // /web/domain-id/resource-name
-    public static final String URLPattern = "/" +
-            "([a-zA-Z_0-9\\-]+)/" + // domain
-            "([a-zA-Z_0-9\\-\\.]+)" + // weburl
-            "(/)?" + "(.*)?"; // params
+    // public static final String URLPattern = "/" +
+    // "([a-zA-Z_0-9\\-]+)/" + // domain
+    // "([a-zA-Z_0-9\\-\\.]+)" + // weburl
+    // "(/)?" + "(.*)?"; // params
+
+    // web/domain-id/path/or/string/explicit/webid{.extension}{?param=value}
 
 
     public static final String DOC_TYPE = "DOC_TYPE";
@@ -104,62 +108,114 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
 
     @Override
     public DocumentView getDocumentViewFromUrl(String url) {
-        final Pattern pattern = Pattern.compile(getPrefix() + URLPattern);
-        Matcher m = pattern.matcher(url);
-        if (m.matches()) {
-
-            String domainID = m.group(1);
-
-            String webid = m.group(2);
-
-            log.debug("webid : " + webid);
-
-            DocumentModelList docs = null;
-            try {
-
-                docs = documentManager.query("SELECT * FROM Document where ttc:webid = '" + webid + "' AND ttc:domainID = '" + domainID + "'"
-                        + " AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0");
-
-            } catch (ClientException e) {
-                log.error("Impossible de déterminer la weburl " + e);
-            }
 
 
-            if (docs.size() == 1 && docs.get(0) != null) {
+        // Pattern : web/domain-id/path/or/string/explicit/webid{.extension}{?param=value}
+        if (url.startsWith(PREFIX)) {
+            url = url.substring(PREFIX.length());
 
-                DocumentModel doc = docs.get(0);
-                DocumentRef docRef = doc.getRef(); // get the doc who matches the webid
+            String[] segments = url.split("/");
+            if (segments.length >= 2) {
+                String domainID = segments[0];
+                String lastSegment = segments[segments.length - 1];
+                String webid;
 
-                final DocumentLocation docLoc = new DocumentLocationImpl(DEFAULT_REPO, docRef);
+                int extMarker = StringUtils.indexOf(lastSegment, ".");
+                int paramMarker = StringUtils.indexOf(lastSegment, "?");
 
-                Map<String, String> params = new HashMap<String, String>();
-                params.put(DOC_TYPE, doc.getType());
-
-                String view = null;
-                if (doc.getType().equals("Picture")) {
-
-                    if (m.group(4) != null) {
-                        params.put(FILE_PROPERTY_PATH_KEY, m.group(4));
-                    } else {
-                        params.put(FILE_PROPERTY_PATH_KEY, "Original:content");
-                    }
-
-                    params.put(FILENAME_KEY, webid);
-                } else if (doc.getType().equals("File")) {
-                    params.put(FILE_PROPERTY_PATH_KEY, "file:content"); // TODO type de vue à intégrer dans le pattern weburl
-                    params.put(FILENAME_KEY, webid);
+                if (extMarker > -1) {
+                    webid = StringUtils.substring(lastSegment, 0, extMarker);
+                } else if (paramMarker > -1) {
+                    webid = StringUtils.substring(lastSegment, 0, paramMarker);
                 } else {
-                    view = "view_documents";
+                    webid = lastSegment;
+                }
+
+                Map<String, String> params = null;
+                if (paramMarker > -1) {
+
+                    params = new HashMap<String, String>();
+                    String paramsStr = StringUtils.substringAfter(lastSegment, "?");
+                    String[] paramsArr = StringUtils.split(paramsStr, "&");
+
+                    for (int i = 0; i < paramsArr.length; i++) {
+                        String[] pair = paramsArr[i].split("=");
+
+                        if (pair.length == 2) {
+                            params.put(pair[0], pair[1]);
+                        }
+                    }
+                }
+
+                DocumentModelList docs = null;
+                try {
+
+                    docs = documentManager.query("SELECT * FROM Document where ttc:webid = '" + webid + "' AND ttc:domainID = '" + domainID + "'"
+                            + " AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0");
+
+                } catch (ClientException e) {
+                    log.error("Impossible de déterminer le webID " + e);
                 }
 
 
-                DocumentViewImpl documentViewImpl = new DocumentViewImpl(docLoc, view, params);
-                return documentViewImpl;
+                if (docs.size() == 1 && docs.get(0) != null) {
 
-            } else {
-                log.error("More than one document with webid: " + webid);
+                    DocumentModel doc = docs.get(0);
+                    DocumentRef docRef = doc.getRef(); // get the doc who matches the webid
+
+                    final DocumentLocation docLoc = new DocumentLocationImpl(DEFAULT_REPO, docRef);
+
+                    Map<String, String> parameters = new HashMap<String, String>();
+                    parameters.put(DOC_TYPE, doc.getType());
+
+                    String view = null;
+                    if (doc.getType().equals("Picture")) {
+
+                        if (params != null) {
+                            String content = params.get("content");
+                            if (content != null) {
+                                parameters.put(FILE_PROPERTY_PATH_KEY, content.concat(":content"));
+                            } else {
+                                parameters.put(FILE_PROPERTY_PATH_KEY, "Original:content");
+                            }
+                        } else {
+                            parameters.put(FILE_PROPERTY_PATH_KEY, "Original:content");
+                        }
+
+                        parameters.put(FILENAME_KEY, webid);
+                    } else if (doc.getType().equals("File")) {
+                        parameters.put(FILE_PROPERTY_PATH_KEY, "file:content");
+                        parameters.put(FILENAME_KEY, webid);
+                    } else {
+                        view = "view_documents";
+                    }
+
+                    if (params != null) {
+                        parameters.putAll(params);
+                    }
+
+                    DocumentViewImpl documentViewImpl = new DocumentViewImpl(docLoc, view, parameters);
+                    return documentViewImpl;
+
+                } else {
+                    log.error("More than one document with webid: " + webid);
+                }
+
+
             }
         }
+
+
+        // final Pattern pattern = Pattern.compile(getPrefix() + URLPattern);
+        // Matcher m = pattern.matcher(url);
+        // if (m.matches()) {
+        //
+        // String domainID = m.group(1);
+        //
+        // String webid = m.group(2);
+        //
+        // log.debug("webid : " + webid);
+        // }
 
         return null;
     }
@@ -169,26 +225,45 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
 
         String webid = docView.getParameter(WEBID_KEY);
         String domainID = docView.getParameter(DOMAINID_KEY);
+        String explicit = docView.getParameter(EXPLICIT_KEY);
+        String ext = docView.getParameter(EXT_KEY);
 
         if (domainID != null && webid != null) {
             List<String> items = new ArrayList<String>();
 
+            Map<String, String> requestParams = new HashMap<String, String>(docView.getParameters());
+            requestParams.remove(WEBID_KEY);
+            requestParams.remove(DOMAINID_KEY);
 
             items.add(getPrefix()); // /web
             items.add(domainID); // /domainID
-            items.add(webid); // /resource
 
-            if (docView.getParameter(FILE_PROPERTY_PATH_KEY) != null) {
-                items.add(docView.getParameter(FILE_PROPERTY_PATH_KEY)); // /viewed property (optionnal)
-
+            if (explicit != null) {
+                items.add(explicit); // /path/explicit
+                requestParams.remove(EXPLICIT_KEY);
             }
+
+            items.add(webid); // /webid
 
             String uri = StringUtils.join(items, "/");
 
-            Map<String, String> requestParams = new HashMap<String, String>();
+            if (ext != null) {
+                uri = uri.concat(".").concat(ext); // extension
+                requestParams.remove(EXT_KEY);
+            }
 
 
-            return URIUtils.addParametersToURIQuery(uri, requestParams);
+            // if (docView.getParameter(FILE_PROPERTY_PATH_KEY) != null) {
+            // items.add(docView.getParameter(FILE_PROPERTY_PATH_KEY)); // /viewed property (optionnal)
+            //
+            // }
+
+
+            docView.getParameters();
+
+            String ret = URIUtils.addParametersToURIQuery(uri, requestParams);
+            log.error(ret);
+            return ret;
         }
 
 

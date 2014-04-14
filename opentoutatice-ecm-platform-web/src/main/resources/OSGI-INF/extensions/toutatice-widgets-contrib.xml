@@ -150,7 +150,26 @@
 			<fields>
 				<field>ttc:webid</field>
 			</fields>
+            <properties widgetMode="edit">
+                <property name="validator">#{toutaticeValidator.validateWebId}
+                </property>
+                <property name="disabled">#{!toutaticeValidator.spaceSupportsWebId}</property>
+            </properties>
 		</widget>
+        <widget name="toutatice_explicitUrl_widget" type="text">
+            <labels>
+                <label mode="any">URL explicite</label>
+            </labels>
+            <translated>false</translated>
+            <fields>
+                <field>ttc:explicitUrl</field>
+            </fields>
+            <properties widgetMode="edit">
+                <property name="validator">#{toutaticeValidator.validateExplicitUrl}
+                </property>
+                <property name="disabled">#{!toutaticeValidator.spaceSupportsWebId}</property>
+            </properties>            
+        </widget>
 
         <!-- Widget en vue Modifier (ou Créer) -->
         <widget name="toutatice_space_enable_webId_widget" type="checkbox">

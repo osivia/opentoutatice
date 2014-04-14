@@ -18,9 +18,10 @@
 package fr.toutatice.ecm.platform.automation;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.annotations.In;
 import org.nuxeo.common.utils.IdUtils;
-import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -49,6 +50,8 @@ public class SetWebID {
 
     /** Op ID */
     public static final String ID = "Document.SetWebId";
+    
+    private static final Log log = LogFactory.getLog(SetWebID.class);
 
     private static final String SEARCH_QUERY = "SELECT * FROM Document WHERE %s";
 
@@ -66,6 +69,20 @@ public class SetWebID {
     @Param(name = "chainSource", required = true)
     protected String chainSource;
 
+    // private IdGeneratorService service;
+    //
+    // private IdGeneratorService getIdGeneratorService() {
+    //
+    // if (service == null) {
+    // try {
+    // service = Framework.getService(IdGeneratorService.class);
+    // } catch (Exception e) {
+    // log.warn("unable to load generator service."));
+    // }
+    // }
+    //
+    // return service;
+    // }
 
     /**
      * Main method
@@ -99,6 +116,7 @@ public class SetWebID {
                 }
             }
         }
+
 
 
         // [Creation mode] get the segment path and put it in the webid field
@@ -138,19 +156,19 @@ public class SetWebID {
 
             if (StringUtils.isNotEmpty(domainID.toString())) {
                 // [modification mode] throw an exception : the user has set a wrong id
-                if (MODIFY.equals(chainSource)) {
-
-                    String searchDuplicatedWebUrl = "ttc:domainID = '" + domainID.toString() + "' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'"
-                            + " AND ttc:webid = '" + webid + "' AND ecm:path <>'" + doc.getPathAsString() + "'";
-
-                    String queryStr = String.format(SEARCH_QUERY, searchDuplicatedWebUrl);
-
-                    DocumentModelList query = coreSession.query(queryStr);
-
-                    if (query.size() > 0) {
-                        throw new OperationException("L'identifiant webId est déjà attribué à un autre contenu dans ce domaine.");
-                    }
-                } else {
+//                if (MODIFY.equals(chainSource)) {
+//
+//                    String searchDuplicatedWebUrl = "ttc:domainID = '" + domainID.toString() + "' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'"
+//                            + " AND ttc:webid = '" + webid + "' AND ecm:path <>'" + doc.getPathAsString() + "'";
+//
+//                    String queryStr = String.format(SEARCH_QUERY, searchDuplicatedWebUrl);
+//
+//                    DocumentModelList query = coreSession.query(queryStr);
+//
+//                    if (query.size() > 0) {
+//                        throw new OperationException("L'identifiant webId " + webid + " est déjà attribué à un autre contenu dans ce domaine.");
+//                    }
+//                } else {
 
                     // [others ops like move, restore, ...] don't throw an exception, put a suffix after the id
                     boolean unicity = true;
@@ -172,7 +190,7 @@ public class SetWebID {
                                 suffix = 1;
                             else
                                 suffix = suffix + 1;
-                            webidconcat = webid.concat(".").concat(suffix.toString());
+                            webidconcat = webid.concat(suffix.toString());
                         } else {
                             unicity = true;
 
@@ -185,18 +203,19 @@ public class SetWebID {
 
                     // save weburl
                     if (hasToBeUpdated) {
+                        log.warn("Id relocated to "+webid+" for document "+doc.getPathAsString());
                         doc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, webid);
                         this.coreSession.saveDocument(doc);
                     }
 
-                }
+                // }
             }
         }
 
         return doc;
     }
 
-    /**
+    /**Z
      * Get the parent space and look at the property "ttcs:hasWebIdEnabled"
      * 
      * @param doc

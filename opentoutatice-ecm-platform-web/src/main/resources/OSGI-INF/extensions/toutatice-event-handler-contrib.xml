@@ -10,6 +10,7 @@
         
          <handler chainId="createOp">
             <event>documentCreated</event>
+            <event>documentImported</event>
             <filters>
                 <attribute>Mutable Document</attribute>
                 <expression>Document.hasSchema('toutatice') == false</expression>
@@ -30,13 +31,6 @@
             <event>aboutToMove</event>
             <event>beforeRestoringDocument</event>
             <filters>
-                <expression>Document.hasSchema('toutatice') == false</expression>
-            </filters>
-        </handler>
-        <handler chainId="beforeModificationOp">
-            <event>beforeDocumentModification</event>
-            <filters>
-                <!--<attribute>Mutable Document</attribute>-->
                 <expression>Document.hasSchema('toutatice') == false</expression>
             </filters>
         </handler>

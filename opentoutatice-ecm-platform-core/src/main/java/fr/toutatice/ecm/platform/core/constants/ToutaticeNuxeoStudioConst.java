@@ -68,6 +68,8 @@ public class ToutaticeNuxeoStudioConst {
 	public final static String CST_DOC_XPATH_TOUTATICE_STAMP = CST_DOC_SCHEMA_TOUTATICE_PREFIX + ":vignette";
 	public final static String CST_DOC_XPATH_TOUTATICE_SIM = CST_DOC_SCHEMA_TOUTATICE_PREFIX + ":showInMenu";
 	public final static String CST_DOC_XPATH_TOUTATICE_DOMAIN_ID = CST_DOC_SCHEMA_TOUTATICE_PREFIX + ":domainID";
+    public final static String CST_DOC_XPATH_TOUTATICE_EXPLICIT_URL = CST_DOC_SCHEMA_TOUTATICE_PREFIX + ":explicitUrl";
+    public final static String CST_DOC_XPATH_TOUTATICE_EXTENSION_URL = CST_DOC_SCHEMA_TOUTATICE_PREFIX + ":extensionUrl";
 	public static final String CST_DOC_XPATH_TOUTATICE_INTERNAL_CONTEXTUALIZATION = CST_DOC_SCHEMA_TOUTATICE_PREFIX + ":contextualizeInternalContents";
 	public final static String CST_DOC_XPATH_NUXEO_DC_CREATOR = CST_DOC_SCHEMA_DC_PREFIX + ":creator";
 	public final static String CST_DOC_XPATH_NUXEO_DC_TITLE = CST_DOC_SCHEMA_DC_PREFIX + ":title";
