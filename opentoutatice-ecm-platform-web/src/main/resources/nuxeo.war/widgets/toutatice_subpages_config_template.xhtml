@@ -1,0 +1,10 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:oh="http://osivia.org/html" 
+	xmlns:c="http://java.sun.com/jstl/core" id="#{widget.id}">
+	
+	<c:set var="componentId" value="#{widget.id}" />
+
+	<oh:ottcicons id="selectTemplate-#{componentId}" src="#{config.pageTemplates}" value="#{field_0}" multiSelect="false" iconsGroup="#{componentId}"
+		ulStyleClass="iconList" binding="#{iconsForm.hiddenFieldComponent}" inputClientId="#{iconsForm.hiddenFieldComponentClientId}" />
+	
+</f:subview>

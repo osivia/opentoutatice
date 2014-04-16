@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>opentoutatice-ecm.platform</groupId>
+	<artifactId>opentoutatice-ecm-platform-parent</artifactId>
+	<version>1.2.0-RC1</version>
+	<packaging>pom</packaging>
+	<name>open toutatice plate-forme</name>
+
+	<modules>
+	   <module>opentoutatice-ecm-platform-core</module>
+	   <module>opentoutatice-ecm-platform-web</module>
+       <module>opentoutatice-ecm-platform-automation</module>
+       <module>opentoutatice-ecm-platform-services</module>
+       <!--module>opentoutatice-ecm-platform-custom</module-->
+       <!-- <module>opentoutatice-ecm-platform-marketplace</module> -->
+	</modules>
+
+	<build>
+			<plugins>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<encoding>UTF-8</encoding>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.2.1</version>
+				 	<configuration>
+						<tagBase>http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags</tagBase>
+						<releaseProfiles>unpack,pack</releaseProfiles>
+						<preparationGoals>clean install</preparationGoals>
+						<goals>deploy</goals>
+				      	</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.3</version>
+					<configuration>
+						<archive>
+							<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+							<manifestEntries>
+								<Bundle-Version>${eclipseVersion}-t${buildNumber}</Bundle-Version>
+								<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+							</manifestEntries>
+						</archive>
+					</configuration>
+				</plugin>
+				
+			</plugins>			
+
+	</build>
+
+  <scm>
+    <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.2.0-RC1</developerConnection>
+  </scm>
+
+	<distributionManagement>
+		<repository>
+			<id>toutatice-releases</id>
+			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>toutatice-snapshots</id>
+			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.web.ui.types">
+
+	<require>org.nuxeo.ecm.platform.types.TypeService</require>
+
+	<extension target="org.nuxeo.ecm.platform.types.TypeService"
+		point="types">
+
+		<!-- Redéfinition pour ajout du widget "domainID" FIXME: trouver méthode 
+			plus "légère" ... -->
+		<type id="Domain">
+			<label>Domain</label>
+			<icon>/icons/domain.gif</icon>
+			<bigIcon>/icons/domain.gif</bigIcon>
+			<category>SuperDocument</category>
+			<description>Domain.description</description>
+			<default-view>view_documents</default-view>
+			<create-view>create_domain</create-view>
+			<views>
+				<view id="user_dashboard" value="user_dashboard" />
+				<view id="opensocial_dashboard" value="opensocial_dashboard" />
+			</views>
+			<subtypes>
+				<type hidden="create">WorkspaceRoot</type>
+				<type hidden="create">SectionRoot</type>
+				<type hidden="create">TemplateRoot</type>
+			</subtypes>
+			<layouts mode="any">
+				<layout>heading</layout>
+			</layouts>
+			<layouts mode="create">
+				<layout>heading</layout>
+				<layout>domainIdLayout</layout>
+			</layouts>
+			<layouts mode="edit">
+				<layout>heading</layout>
+				<layout>domainIdLayoutRequired</layout>
+				<layout>dublincore</layout>
+			</layouts>
+			<contentViews category="content">
+				<contentView>document_content</contentView>
+			</contentViews>
+			<contentViews category="trash_content">
+				<contentView showInExportView="false">
+					document_trash_content
+				</contentView>
+			</contentViews>
+		</type>
+
+		<type id="PortalSite">
+			<label>Espace de publication</label>
+			<category>Collaborative</category>
+			<icon>/img/portalsite.png</icon>
+			<bigIcon>/img/portalsite_100.png</bigIcon>
+			<description>Espace de publication</description>
+			<default-view>view_documents</default-view>
+			<layouts mode="create">
+				<layout>layout@PortalSite-create</layout>
+			</layouts>
+			<layouts mode="edit">
+				<layout>layout@PortalSite-edit</layout>
+			</layouts>
+			<layouts mode="view" />
+			<contentViews category="content">
+				<contentView showInExportView="false">cv_ContentOrderedReadNWrite
+				</contentView>
+			</contentViews>
+			<contentViews category="trash_content">
+				<contentView showInExportView="false">document_trash_content
+				</contentView>
+			</contentViews>
+		</type>
+
+		<type id="PortalPage">
+			<label>Page</label>
+			<category>SimpleDocument</category>
+			<icon>/img/PortalPage.png</icon>
+			<bigIcon>/img/PortalPage_100.png</bigIcon>
+			<description>Rubrique de l'espace de publication Toutatice
+			</description>
+			<default-view>view_documents</default-view>
+			<layouts mode="create">
+				<layout>layout@PortalPage-create</layout>
+			</layouts>
+			<layouts mode="edit">
+				<layout>layout@PortalPage-edit</layout>
+			</layouts>
+			<layouts mode="view" />
+			<contentViews category="content">
+				<contentView showInExportView="false">cv_ContentOrderedReadNWrite
+				</contentView>
+			</contentViews>
+			<contentViews category="trash_content">
+				<contentView showInExportView="false">document_trash_content
+				</contentView>
+			</contentViews>
+		</type>
+
+	</extension>
+
+
+</component>
