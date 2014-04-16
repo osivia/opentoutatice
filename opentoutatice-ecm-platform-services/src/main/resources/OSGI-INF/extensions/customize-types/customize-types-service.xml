@@ -15,6 +15,10 @@
 		<object class="fr.toutatice.ecm.platform.service.customize.types.BaseTypeDescriptor" />
   	</extension-point>
   	
+  	<extension-point name="excludedrules">
+		<object class="fr.toutatice.ecm.platform.service.customize.types.RulesDescriptor" />
+  	</extension-point>
+  	
   	<extension-point name="doctype">
 		<object class="org.nuxeo.ecm.core.schema.DocumentTypeDescriptor" />
   	</extension-point>
