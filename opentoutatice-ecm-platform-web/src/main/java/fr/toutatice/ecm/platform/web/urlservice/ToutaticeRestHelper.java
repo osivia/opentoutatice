@@ -17,6 +17,8 @@
  */
 package fr.toutatice.ecm.platform.web.urlservice;
 
+import static org.jboss.seam.ScopeType.EVENT;
+
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
@@ -34,7 +36,7 @@ import org.nuxeo.ecm.webapp.contentbrowser.DocumentActions;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 
 @Name("restHelper")
-@Scope(ScopeType.CONVERSATION)
+@Scope(EVENT)
 @Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeRestHelper extends RestHelper {
 
