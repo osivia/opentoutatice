@@ -10,17 +10,7 @@
 		point="notifications">
 
 		<!-- Désactivation Notification par défaut -->
-		<notification name="Publication" channel="email" 
-			enabled="false"
-			availableIn="Section" 
-			autoSubscribed="true" 
-			template="publish"
-			subject="Document Publié" 
-			label="label.nuxeo.notifications.publication">
-			<event name="documentPublicationApproved" />
-			<event name="documentPublicationRejected" />
-			<event name="documentPublished" />
-		</notification>
+		<notification name="Publication" enabled="false" />
 		
 		<!-- Notification Custom -->
 		<notification name="ToutaticePublication" channel="email" 
@@ -28,22 +18,10 @@
 			availableIn="Section,PortalSite" 
 			autoSubscribed="false" 
 			template="publish"
-			subject="Document Publié" 
+			subject="Document Publié ${docTitle}" 
 			label="label.nuxeo.notifications.publish">
 			<event name="documentPublicationApproved" />
-			<event name="documentPublicationRejected" />
 			<event name="documentPublished" />
-		</notification>
-
-		<notification name="Toutatice Remote publication task assigned"
-			channel="email" 
-			enabled="true" 
-			availableIn="Section,PortalSite"
-			autoSubscribed="true" 
-			template="publish"
-			subject="Demande de publication du document: ${docTitle}" 
-			label="label.nuxeo.notifications.publish">
-			<event name="documentWaitingPublication" />
 		</notification>
 
 	</extension>
