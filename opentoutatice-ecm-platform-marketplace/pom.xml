@@ -12,7 +12,9 @@
 	<packaging>zip</packaging>
 	<name>Marketplace package - Open Toutatice platform</name>
 
-	<properties />
+	<properties>
+		<opentoutatice.version>1.2.0-RC1</opentoutatice.version>
+	</properties>
 
 	<dependencies>
 		<!-- Base distribution(s) for the MP -->
@@ -26,25 +28,25 @@
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
-			<version>${project.version}</version>
+			<version>${opentoutatice.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-automation</artifactId>
-			<version>${project.version}</version>
+			<version>${opentoutatice.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-services</artifactId>
-			<version>${project.version}</version>
+			<version>${opentoutatice.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-web</artifactId>
-			<version>${project.version}</version>
+			<version>${opentoutatice.version}</version>
 			<type>jar</type>
 		</dependency>
 	</dependencies>
