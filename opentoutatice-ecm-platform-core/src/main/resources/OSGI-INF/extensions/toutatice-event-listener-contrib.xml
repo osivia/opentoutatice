@@ -26,12 +26,6 @@
 			priority="123">
 			<event>documentMoved</event>
 		</listener>
-		
-		<listener name="toutaticeDocumentMoved" async="true" postCommit="false"
-			class="fr.toutatice.ecm.platform.core.listener.ToutaticeDocumentMoved"
-			priority="100">
-			<event>documentMoved</event>
-		</listener>
 
 	</extension>
 
