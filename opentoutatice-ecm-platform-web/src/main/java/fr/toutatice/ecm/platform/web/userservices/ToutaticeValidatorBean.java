@@ -47,6 +47,7 @@ import org.nuxeo.ecm.platform.ui.web.util.ComponentUtils;
 import org.nuxeo.ecm.webapp.contentbrowser.DocumentActions;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.web.document.ToutaticeDocumentActionsBean;
 
@@ -222,7 +223,7 @@ public class ToutaticeValidatorBean {
         if (spaces.size() > 0) {
 
             DocumentModel space = spaces.get(0);
-            Property hasWebIdEnabled = space.getProperty("ttcs:hasWebIdEnabled");
+            Property hasWebIdEnabled = space.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICESPACE_WEBID_ENABLED);
 
             if (hasWebIdEnabled != null) {
                 if (hasWebIdEnabled.getValue(Boolean.class) == false) {

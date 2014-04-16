@@ -151,7 +151,7 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
                 try {
 
                     docs = documentManager.query("SELECT * FROM Document where ttc:webid = '" + webid + "' AND ttc:domainID = '" + domainID + "'"
-                            + " AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0");
+                            + " AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0 AND ecm:isCheckedInVersion = 0");
 
                 } catch (ClientException e) {
                     log.error("Impossible de déterminer le webID " + e);
@@ -205,18 +205,6 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
             }
         }
 
-
-        // final Pattern pattern = Pattern.compile(getPrefix() + URLPattern);
-        // Matcher m = pattern.matcher(url);
-        // if (m.matches()) {
-        //
-        // String domainID = m.group(1);
-        //
-        // String webid = m.group(2);
-        //
-        // log.debug("webid : " + webid);
-        // }
-
         return null;
     }
 
@@ -251,12 +239,6 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
                 uri = uri.concat(".").concat(ext); // extension
                 requestParams.remove(EXT_KEY);
             }
-
-
-            // if (docView.getParameter(FILE_PROPERTY_PATH_KEY) != null) {
-            // items.add(docView.getParameter(FILE_PROPERTY_PATH_KEY)); // /viewed property (optionnal)
-            //
-            // }
 
 
             docView.getParameters();

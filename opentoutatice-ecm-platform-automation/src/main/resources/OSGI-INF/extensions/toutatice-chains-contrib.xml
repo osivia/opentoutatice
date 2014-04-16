@@ -135,6 +135,9 @@
 			<operation id="Context.FetchDocument" />
 			<operation id="Document.SetSpaceID" />
 			<operation id="Document.SetDomainID" />
+            <operation id="Document.SetWebId">
+                <param type="String" name="chainSource">createOrCopyOp</param>
+            </operation>            
 		</chain>
 
 		<chain id="moveOp">
@@ -157,12 +160,7 @@
                 <param type="String" name="chainSource">movedOrRestoredOp</param>
             </operation>
         </chain>
-        <chain id="beforeModificationOp">
-            <operation id="Document.SetWebId">
-                <param type="String" name="chainSource">beforeModificationOp</param>
-            </operation>
-        </chain>
-		
+
 		<chain id="images-resizing">
 			<operation id="Context.FetchDocument" />
 			<operation id="ImageResize.Operation">

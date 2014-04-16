@@ -19,9 +19,9 @@
 
 		<!-- WebURL -->
         <handler chainId="createOrCopyOp">
-            <event>documentCreated</event>
-            <event>documentCreatedByCopy</event>
-            <event>documentImported</event>
+            <!-- <event>documentCreated</event>-->
+            <event>documentCreatedByCopy</event>  
+            <!-- <event>documentImported</event>-->
             <filters>
                 <attribute>Mutable Document</attribute>
                 <expression>Document.hasSchema('toutatice') == false</expression>

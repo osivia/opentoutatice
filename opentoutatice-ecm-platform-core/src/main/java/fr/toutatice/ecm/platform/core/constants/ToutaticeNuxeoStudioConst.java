@@ -44,6 +44,7 @@ public class ToutaticeNuxeoStudioConst {
 	public final static String CST_DOC_SCHEMA_DUBLINCORE = "dublincore";
 	public final static String CST_DOC_SCHEMA_TOUTATICE = "toutatice";
 	public final static String CST_DOC_SCHEMA_TOUTATICE_PREFIX = "ttc";
+    public final static String CST_DOC_SCHEMA_TOUTATICE_SPACE_PREFIX = "ttcs";
 	public final static String CST_DOC_SCHEMA_TOUTATICE_SPACEID = "ttc:spaceID";
 	public final static String CST_DOC_SCHEMA_PUBLISHING = "publishing";
 	public final static String CST_DOC_SCHEMA_NUXEO_PUBLISH_PREFIX = "publish";
@@ -85,6 +86,7 @@ public class ToutaticeNuxeoStudioConst {
 	public final static String CST_DOC_XPATH_MNT_AUTOMATION_LOGS_STATUS = CST_DOC_SCHEMA_MNT_PREFIX + ":automationLogsStatus";
 	public final static String CST_DOC_XPATH_MNT_AUTOMATION_LOGS_THRESHOLD = CST_DOC_SCHEMA_MNT_PREFIX + ":automationLogsThreshold";
 	public static final String CST_DOC_SCHEMA_TOUTATICE_WEBID = CST_DOC_SCHEMA_TOUTATICE_PREFIX + ":webid";
+    public static final String CST_DOC_XPATH_TOUTATICESPACE_WEBID_ENABLED = CST_DOC_SCHEMA_TOUTATICE_SPACE_PREFIX + ":hasWebIdEnabled";
 	
 	// life cycle states
 	public final static String CST_DOC_STATE_PROJECT = "project";

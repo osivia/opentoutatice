@@ -50,14 +50,15 @@ public class SetWebID {
 
     /** Op ID */
     public static final String ID = "Document.SetWebId";
-    
+
     private static final Log log = LogFactory.getLog(SetWebID.class);
 
-    private static final String SEARCH_QUERY = "SELECT * FROM Document WHERE %s";
 
     private static final String CREATE_OR_COPY = "createOrCopyOp";
-    private static final String MOVE_OR_RESTORE = "movedOrRestoredOp";
-    private static final String MODIFY = "beforeModificationOp";
+
+    private static final String WEB_ID_UNICITY_QUERY = "select * from Document Where ttc:domainID = '%s'"
+            + " AND ttc:webid = '%s' AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+
 
     @Context
     protected CoreSession coreSession;
@@ -69,21 +70,6 @@ public class SetWebID {
     @Param(name = "chainSource", required = true)
     protected String chainSource;
 
-    // private IdGeneratorService service;
-    //
-    // private IdGeneratorService getIdGeneratorService() {
-    //
-    // if (service == null) {
-    // try {
-    // service = Framework.getService(IdGeneratorService.class);
-    // } catch (Exception e) {
-    // log.warn("unable to load generator service."));
-    // }
-    // }
-    //
-    // return service;
-    // }
-
     /**
      * Main method
      * 
@@ -94,6 +80,7 @@ public class SetWebID {
     @OperationMethod()
     public DocumentModel run(DocumentModel doc) throws Exception {
         String webid = null;
+        String extension = null;
         boolean hasToBeUpdated = false;
 
         // if document has not toutatice schema
@@ -118,25 +105,38 @@ public class SetWebID {
         }
 
 
-
         // [Creation mode] get the segment path and put it in the webid field
 
         if (CREATE_OR_COPY.equals(chainSource)) {
 
-            String[] arrayPath = doc.getPathAsString().split("/");
-            webid = arrayPath[arrayPath.length - 1];
-            
-            // for Files or Pictures : put the extension of the file if exists
-            if ("File".equals(doc.getType()) || "Picture".equals(doc.getType())) {
-                int lastIndexOf = doc.getTitle().lastIndexOf(".");
-                if (lastIndexOf > -1) {
-                    String extension = doc.getTitle().substring(lastIndexOf, doc.getTitle().length());
-                    webid = webid.concat(extension);
+            // if in import or copy mode, webid is set
+            if (doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID) != null) {
+                if (doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID) != null) {
+                    webid = doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID).toString();
+
+                    // clean if needed
+                    webid = IdUtils.generateId(webid, "-", true, 24);
                 }
-                
+            } else {
+                // else new id is ganarated
+                String[] arrayPath = doc.getPathAsString().split("/");
+                webid = arrayPath[arrayPath.length - 1];
+
+                // for Files or Pictures : put the extension of the file if exists
+                if ("File".equals(doc.getType()) || "Picture".equals(doc.getType())) {
+                    int lastIndexOf = doc.getTitle().lastIndexOf(".");
+                    if (lastIndexOf > -1) {
+                        extension = doc.getTitle().substring(lastIndexOf + 1, doc.getTitle().length());
+
+                        if (webid.endsWith(extension)) {
+                            webid = webid.substring(0, webid.length() - extension.length() - 1);
+                        }
+                    }
+
+                }
+
+                hasToBeUpdated = true;
             }
-            
-            hasToBeUpdated = true;
         }
         // [other modes] get the current webid
         else {
@@ -155,58 +155,41 @@ public class SetWebID {
         if ((webid != null && webid.length() > 0) && domainID != null) {
 
             if (StringUtils.isNotEmpty(domainID.toString())) {
-                // [modification mode] throw an exception : the user has set a wrong id
-//                if (MODIFY.equals(chainSource)) {
-//
-//                    String searchDuplicatedWebUrl = "ttc:domainID = '" + domainID.toString() + "' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'"
-//                            + " AND ttc:webid = '" + webid + "' AND ecm:path <>'" + doc.getPathAsString() + "'";
-//
-//                    String queryStr = String.format(SEARCH_QUERY, searchDuplicatedWebUrl);
-//
-//                    DocumentModelList query = coreSession.query(queryStr);
-//
-//                    if (query.size() > 0) {
-//                        throw new OperationException("L'identifiant webId " + webid + " est déjà attribué à un autre contenu dans ce domaine.");
-//                    }
-//                } else {
 
-                    // [others ops like move, restore, ...] don't throw an exception, put a suffix after the id
-                    boolean unicity = true;
-                    Integer suffix = null;
-                    String webidconcat = webid;
-                    do {
+                // [others ops like move, restore, ...] don't throw an exception, put a suffix after the id
+                boolean unicity = true;
+                Integer suffix = null;
+                String webidconcat = webid;
+                do {
 
-                        String searchDuplicatedWebUrl = "ttc:domainID = '" + domainID.toString()
-                                + "' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'" + " AND ttc:webid = '" + webidconcat + "' AND ecm:path <> '"
-                                + doc.getPathAsString() + "'";
+                    DocumentModelList query = coreSession.query(String.format(WEB_ID_UNICITY_QUERY, domainID.toString(), webidconcat, doc.getId()));
 
-                        String queryStr = String.format(SEARCH_QUERY, searchDuplicatedWebUrl);
+                    if (query.size() > 0) {
+                        unicity = false;
+                        if (suffix == null)
+                            suffix = 1;
+                        else
+                            suffix = suffix + 1;
+                        webidconcat = webid.concat(suffix.toString());
+                    } else {
+                        unicity = true;
 
-                        DocumentModelList query = coreSession.query(queryStr);
-
-                        if (query.size() > 0) {
-                            unicity = false;
-                            if (suffix == null)
-                                suffix = 1;
-                            else
-                                suffix = suffix + 1;
-                            webidconcat = webid.concat(suffix.toString());
-                        } else {
-                            unicity = true;
-
-                            if (!webid.equals(webidconcat)) {
-                                webid = webidconcat;
-                                hasToBeUpdated = true;
-                            }
+                        if (!webid.equals(webidconcat)) {
+                            webid = webidconcat;
+                            hasToBeUpdated = true;
                         }
-                    } while (!unicity);
-
-                    // save weburl
-                    if (hasToBeUpdated) {
-                        log.warn("Id relocated to "+webid+" for document "+doc.getPathAsString());
-                        doc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, webid);
-                        this.coreSession.saveDocument(doc);
                     }
+                } while (!unicity);
+
+                // save weburl
+                if (hasToBeUpdated) {
+                    log.warn("Id relocated to " + webid + " for document " + doc.getPathAsString());
+                    doc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, webid);
+                    if (extension != null) {
+                        doc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXTENSION_URL, extension);
+                    }
+                    this.coreSession.saveDocument(doc);
+                }
 
                 // }
             }
@@ -215,7 +198,8 @@ public class SetWebID {
         return doc;
     }
 
-    /**Z
+    /**
+     * Z
      * Get the parent space and look at the property "ttcs:hasWebIdEnabled"
      * 
      * @param doc
@@ -230,7 +214,7 @@ public class SetWebID {
         if (spaces.size() > 0) {
 
             DocumentModel space = spaces.get(0);
-            Property hasWebIdEnabled = space.getProperty("ttcs:hasWebIdEnabled");
+            Property hasWebIdEnabled = space.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICESPACE_WEBID_ENABLED);
 
             if (hasWebIdEnabled != null) {
                 if (hasWebIdEnabled.getValue(Boolean.class) == false) {
