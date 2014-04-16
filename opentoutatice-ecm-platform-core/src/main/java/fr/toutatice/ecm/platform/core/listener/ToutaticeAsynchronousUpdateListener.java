@@ -20,20 +20,14 @@
 package fr.toutatice.ecm.platform.core.listener;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.nuxeo.ecm.automation.AutomationService;
-import org.nuxeo.ecm.automation.OperationChain;
-import org.nuxeo.ecm.automation.OperationContext;
-import org.nuxeo.ecm.automation.OperationParameters;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventBundle;
 import org.nuxeo.ecm.core.event.EventContext;
-import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.PostCommitEventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
-import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeOperationHelper;
@@ -62,7 +56,7 @@ public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListe
                 DocumentModel document = docCtx.getSourceDocument();
                 CoreSession session = ctx.getCoreSession();
                 if (DOCUMENT_MODIFIED.equals(event.getName()) && ToutaticeNuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(document.getType())) {
-                    try {
+                    try {                       
                         ToutaticeOperationHelper.runOperationChain(session, UPDATE_DOMAIN_CHAIN, document);
                     } catch (ToutaticeException e) {
                         throw new ClientException(e);
