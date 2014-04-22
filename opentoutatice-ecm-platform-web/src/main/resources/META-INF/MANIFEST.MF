@@ -57,5 +57,6 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-actions-contrib.xml,
  OSGI-INF/extensions/remote-publishing/pageprovider-contrib.xml,
  OSGI-INF/extensions/remote-publishing/publisher-finder-contrib.xml,
  OSGI-INF/extensions/remote-publishing/publisher-jbpm-contrib.xml,
- OSGI-INF/extensions/remote-publishing/notifications-contrib.xml
+ OSGI-INF/extensions/remote-publishing/notifications-contrib.xml,
+ OSGI-INF/extensions/permalink/toutatice-actions-contrib.xml
  
