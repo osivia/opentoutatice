@@ -69,6 +69,11 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 @Operation(id = FetchPublicationInfos.ID, category = Constants.CAT_FETCH, label = "Fetch publish space informations", description = "Fetch informations about the publish space, worksapce, proxy status, ... of a given document.")
 public class FetchPublicationInfos {
+
+    private static final String WEB_ID_QUERY = "select * from Document Where ttc:domainID = '%s'"
+            + " AND ttc:webid = '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+
+
 	private static final Log log = LogFactory.getLog(FetchPublicationInfos.class);
 
 	/**
@@ -119,8 +124,12 @@ public class FetchPublicationInfos {
 	/**
 	 * Identifiant ("path" ou uuid) du document en entrée.
 	 */
-	@Param(name = "path", required = true)
+    @Param(name = "path", required = false)
 	protected DocumentModel document;
+
+    @Param(name = "webid", required = false)
+    protected String webid;
+
 
 	@OperationMethod
 	public Object run() throws Exception {
@@ -131,10 +140,34 @@ public class FetchPublicationInfos {
 
 		List<Integer> errorsCodes = new ArrayList<Integer>();
 
-		/*
-		 * Récupération du DocumentModel dont le path ou uuid est donné en
-		 * entrée
-		 */
+        // Si on passe non pas un docRef en entrée mais un webId :
+        if (webid != null) {
+            log.warn("webid : " + webid);
+
+            String[] segments = webid.split("/");
+            String domainIdSegment;
+            String webIdSegment;
+            if(segments.length >= 2) {
+                domainIdSegment = segments[0];
+                webIdSegment = segments[1];
+            }   
+            else {
+                throw new NoSuchDocumentException(webid);
+            }
+
+
+            UnrestrictedFecthWebIdRunner fecthWebIdRunner = new UnrestrictedFecthWebIdRunner(coreSession, domainIdSegment, webIdSegment);
+            fecthWebIdRunner.runUnrestricted();
+            document = fecthWebIdRunner.getDoc();
+            if (document == null) {
+                throw new NoSuchDocumentException(webid);
+            }
+        }
+
+        /*
+         * Récupération du DocumentModel dont le path ou uuid est donné en
+         * entrée
+         */
 		DocumentRef docRef = document.getRef();
 		Object fetchDocumentRes = getDocument(docRef);
 		/*
@@ -367,7 +400,7 @@ public class FetchPublicationInfos {
 	private Object getDocument(DocumentRef refDoc) throws ServeurException {
 		DocumentModel doc = null;
 		try {
-			doc = coreSession.getDocument(refDoc);
+            doc = coreSession.getDocument(refDoc);
 		} catch (ClientException ce) {
 			if (ce instanceof DocumentSecurityException) {
 				return ERROR_CONTENT_FORBIDDEN;
@@ -738,6 +771,39 @@ public class FetchPublicationInfos {
 		}
 
 	}
+
+
+    /**
+     * Get doc by webid in unrestricted mode (admin)
+     */
+    private class UnrestrictedFecthWebIdRunner extends UnrestrictedSessionRunner {
+
+        String webIdSegment;
+        String domainIdSegment;
+        DocumentModel docResolved;
+
+        protected UnrestrictedFecthWebIdRunner(CoreSession session, String domainId, String webId) {
+            super(session);
+            this.webIdSegment = webId;
+            this.domainIdSegment = domainId;
+
+        }
+
+        @Override
+        public void run() throws ClientException {
+            DocumentModelList docs = session.query(String.format(WEB_ID_QUERY, domainIdSegment, webIdSegment));
+            if (docs.size() == 1) {
+                docResolved = docs.get(0);
+            } else if (docs.size() > 1) {
+                throw new ClientException("Two or more documents have the webid : " + webid);
+            }
+        }
+
+        public DocumentModel getDoc() {
+            return docResolved;
+        }
+
+    }
 
 	private static String safeString(String value) {
 		String safeValue = value;
