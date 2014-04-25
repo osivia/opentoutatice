@@ -36,9 +36,20 @@ public class SetDocumentACL {
 	private static final String ACE_DELIMITER = ",";
 	private static final String VALUE_DELIMITER = ":";
 	private static enum ENTRY_KEYS {
-		USER,
-		PERMISSION,
-		GRANT;
+		USER(0),
+		PERMISSION(1),
+		GRANT(2);
+		
+		private int value;
+		
+		ENTRY_KEYS(int value) {
+			this.value = value;
+		};
+		
+		public int getValue() {return this.value;} 
+		public String toString(){
+			return String.valueOf(this.value);
+		}
 	}
 
 	@Context
@@ -85,12 +96,12 @@ public class SetDocumentACL {
 		StringTokenizer aceTokenizer = new StringTokenizer(entries, ACE_DELIMITER);
 		while (aceTokenizer.hasMoreTokens()) {
 			String aceStg = aceTokenizer.nextToken();
-			Pattern p = Pattern.compile("^(?<" + ENTRY_KEYS.USER.toString() + ">.*)" + VALUE_DELIMITER + "(?<" + ENTRY_KEYS.PERMISSION.toString() + ">.*)" + VALUE_DELIMITER + "(?<" + ENTRY_KEYS.GRANT.toString() + ">.*)$");
+			Pattern p = Pattern.compile("^(.+?)" + VALUE_DELIMITER + "(.+?)" + VALUE_DELIMITER + "(.+?)$");
 			Matcher m = p.matcher(aceStg);
 			if (m.find()) {
-				String user = m.group(ENTRY_KEYS.USER.toString());
-				String permission = m.group(ENTRY_KEYS.PERMISSION.toString());
-				boolean granted = Boolean.parseBoolean(m.group(ENTRY_KEYS.GRANT.toString()));
+				String user = m.group(1);
+				String permission = m.group(2);
+				boolean granted = Boolean.parseBoolean(m.group(3));
 				ACE ace = new ACE(user, permission, granted);
 				list.add(ace);
 			} else {
