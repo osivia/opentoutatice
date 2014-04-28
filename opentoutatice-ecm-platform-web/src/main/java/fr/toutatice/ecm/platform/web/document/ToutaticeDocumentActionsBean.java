@@ -190,9 +190,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         updateDocWithMapSwitch(changeableDocument);
         String view = super.saveDocument(changeableDocument);
 
-        // creation de la version MAJOR
-        updateNUpgradeCurrentDocument("MAJOR");
-
         // mise en ligne
         DocumentModel newDocument = navigationContext.getCurrentDocument();
         setDocumentOnline(newDocument);
