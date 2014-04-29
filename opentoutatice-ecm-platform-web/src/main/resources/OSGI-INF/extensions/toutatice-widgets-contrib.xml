@@ -208,6 +208,25 @@
 			</subWidgets>
 		</widget>
 
+		<widget name="toutatice_widget_portal_theme" type="template">
+			<labels>
+				<label mode="any">toutatice.toutatice.theme</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">toutatice.toutatice.theme.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:theme</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_select_portal_flavor_widget_template.xhtml</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(navigationContext.isASpaceDocument(currentDocument) and (currentUser.administrator or currentNuxeoPrincipal.isMemberOf('Administrators')) and not empty themeConfigurationActions.getDefaultFlavorName('toutatice/portal'), layout.mode, 'hidden')}</mode>
+			</widgetModes>
+		</widget>
+
 	</extension>
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"

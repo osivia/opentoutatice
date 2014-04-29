@@ -149,6 +149,9 @@
 				<row>
 					<widget>toutatice_widget_contextualize_external_contents</widget>
 				</row>
+				<row>
+					<widget>toutatice_widget_portal_theme</widget>
+				</row>
 			</rows>
 		</layout>
 
@@ -167,6 +170,9 @@
 				</row>
 				<row>
 					<widget>toutatice_widget_show_in_menu</widget>
+				</row>
+				<row>
+					<widget>toutatice_widget_portal_theme</widget>
 				</row>
 			</rows>
 		</layout>
