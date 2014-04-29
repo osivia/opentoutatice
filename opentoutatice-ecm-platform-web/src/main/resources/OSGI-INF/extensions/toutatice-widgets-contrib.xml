@@ -155,7 +155,31 @@
                 </property>
                 <property name="disabled">#{!toutaticeValidator.spaceSupportsWebId}</property>
             </properties>
+         
 		</widget>
+        <widget name="toutatice_removeWebId_widget" type="template">
+			<labels>
+				<label mode="any">Web Id</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>ttc:webid</field>
+			</fields>
+            <properties mode="any">
+                <property name="template">
+                    /widgets/toutatice_removewebid_widget.xhtml
+                </property>
+            </properties>
+            <!-- 
+            <widgetModes>
+                <mode value="edit">#{nxu:test(!toutaticeValidator.spaceSupportsWebId,
+                    layout.mode, 'hidden')}</mode>
+            </widgetModes>
+             --> 
+        </widget>
+        
+        
+        
         <widget name="toutatice_explicitUrl_widget" type="text">
             <labels>
                 <label mode="any">URL explicite</label>

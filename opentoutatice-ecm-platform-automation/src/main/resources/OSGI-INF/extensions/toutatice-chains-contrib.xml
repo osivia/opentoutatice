@@ -136,9 +136,17 @@
 			<operation id="Document.SetSpaceID" />
 			<operation id="Document.SetDomainID" />
             <operation id="Document.SetWebId">
-                <param type="String" name="chainSource">createOrCopyOp</param>
+                <param type="String" name="chainSource">createOp</param>
             </operation>            
 		</chain>
+        
+                <!-- Chaines pour les webid -->
+        <chain id="webIdUnicity">
+            <operation id="Document.SetWebId">
+                <param type="String" name="chainSource">other</param>
+            </operation>
+        </chain>
+        
 
 		<chain id="moveOp">
 			<operation id="Document.SetSpaceID" />
@@ -149,17 +157,6 @@
 			<operation id="Document.SetDomainID" />
 		</chain>
         
-        <!-- Chaines pour les webid -->
-        <chain id="createOrCopyOp">
-            <operation id="Document.SetWebId">
-                <param type="String" name="chainSource">createOrCopyOp</param>
-            </operation>
-        </chain>
-        <chain id="movedOrRestoredOp">
-            <operation id="Document.SetWebId">
-                <param type="String" name="chainSource">movedOrRestoredOp</param>
-            </operation>
-        </chain>
 
 		<chain id="images-resizing">
 			<operation id="Context.FetchDocument" />

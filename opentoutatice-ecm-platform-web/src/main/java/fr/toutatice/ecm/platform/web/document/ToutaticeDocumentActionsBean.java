@@ -1087,6 +1087,16 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         return null;
     }
     
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public String removeDocumentWebId() throws ClientException {
+        DocumentModel currentDoc = getCurrentDocument();
+        if (currentDoc != null) {
+            currentDoc.setProperty("toutatice", "webid", StringUtils.EMPTY);
+        }
+        return null;
+    }
+
+
     /*
      * Service de calcul de permalien vers le portail.
      */
