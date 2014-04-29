@@ -33,24 +33,8 @@ public class SetDocumentACL {
 	private static final Log log = LogFactory.getLog(SetDocumentACL.class);
 
 	public static final String ID = "Document.SetACL";
-	private static final String ACE_DELIMITER = ",";
-	private static final String VALUE_DELIMITER = ":";
-	private static enum ENTRY_KEYS {
-		USER(0),
-		PERMISSION(1),
-		GRANT(2);
-		
-		private int value;
-		
-		ENTRY_KEYS(int value) {
-			this.value = value;
-		};
-		
-		public int getValue() {return this.value;} 
-		public String toString(){
-			return String.valueOf(this.value);
-		}
-	}
+	public static final String ACE_DELIMITER = ",";
+	public static final String VALUE_DELIMITER = ":";
 
 	@Context
 	protected CoreSession session;
@@ -105,7 +89,7 @@ public class SetDocumentACL {
 				ACE ace = new ACE(user, permission, granted);
 				list.add(ace);
 			} else {
-				log.warn("ACE doesn't respect the format <principal><permission><grant>, entry='" + aceStg + "'");
+				log.warn("ACE doesn't respect the format <principal>" + VALUE_DELIMITER + "<permission>" + VALUE_DELIMITER + "<grant>, entry='" + aceStg + "'");
 			}
 		}
 		
