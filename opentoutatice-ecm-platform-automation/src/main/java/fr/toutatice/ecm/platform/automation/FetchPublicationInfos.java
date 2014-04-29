@@ -552,7 +552,7 @@ public class FetchPublicationInfos {
 
 				Object fetchPublishSpaceRes = null;
 				try {
-					fetchPublishSpaceRes = callOperation(automation, ctx, "Document.FetchPublishSpace", parameters);
+					fetchPublishSpaceRes = ToutaticeDocumentHelper.callOperation(automation, ctx, "Document.FetchPublishSpace", parameters);
 					DocumentModel publishSpaceDoc = (DocumentModel) fetchPublishSpaceRes;
 					this.infosPubli.element("publishSpaceType", publishSpaceDoc.getType());
 					this.infosPubli.element("publishSpacePath",
@@ -581,7 +581,7 @@ public class FetchPublicationInfos {
 				parameters.put("document", document);
 				Object workspaceRes = null;
 				try {
-					workspaceRes = callOperation(automation, ctx, "Document.FetchWorkspaceOfDocument", parameters);
+					workspaceRes = ToutaticeDocumentHelper.callOperation(automation, ctx, "Document.FetchWorkspaceOfDocument", parameters);
 					DocumentModel workspace = (DocumentModel) workspaceRes;
 					this.infosPubli.element("workspacePath", URLEncoder.encode(workspace.getPathAsString(), "UTF-8"));
 					try {
@@ -611,7 +611,7 @@ public class FetchPublicationInfos {
 
 				DocumentModel publishedDoc = null;
 				try {
-					publishedDoc = (DocumentModel) callOperation(automation, ctx, "Document.FetchPublished", parameters);
+					publishedDoc = (DocumentModel) ToutaticeDocumentHelper.callOperation(automation, ctx, "Document.FetchPublished", parameters);
 					this.infosPubli.element("published", Boolean.TRUE);
 				} catch (Exception e) {
 					this.infosPubli.element("published", Boolean.FALSE);
@@ -630,49 +630,7 @@ public class FetchPublicationInfos {
 
 		}
 
-		/**
-		 * Méthode permettant d'appeler une opération Nuxeo..
-		 * 
-		 * @param automation
-		 *            Service automation
-		 * @param ctx
-		 *            Contexte d'exécution
-		 * @param operationId
-		 *            identifiant de l'opération
-		 * @param parameters
-		 *            paramètres de l'opération
-		 * @return le résultat de l'opération dont le type n'est pas connu à
-		 *         priori
-		 * @throws ServeurException
-		 */
-		private Object callOperation(AutomationService automation, OperationContext ctx, String operationId,
-				Map<String, Object> parameters) throws Exception {
-			InvokableMethod operationMethod = getRunMethod(automation, operationId);
-			Object operationRes = operationMethod.invoke(ctx, parameters);
-			return operationRes;
-		}
 
-		/**
-		 * Méthode permettant de récupérer la méthode d'exécution (run()) d'une
-		 * opération.
-		 * 
-		 * @param automation
-		 *            instance du service d'automation
-		 * @param operationId
-		 *            identifiant de l'opération
-		 * @return la méthode run() de l'opération
-		 * @throws SecurityException
-		 * @throws NoSuchMethodException
-		 * @throws OperationNotFoundException
-		 */
-		private InvokableMethod getRunMethod(AutomationService automation, String operationId)
-				throws SecurityException, NoSuchMethodException, OperationNotFoundException {
-			OperationType opType = automation.getOperation(operationId);
-			Method method = opType.getType().getMethod("run", (Class<?>[]) null);
-			OperationMethod anno = method.getAnnotation(OperationMethod.class);
-
-			return new InvokableMethod(opType, method, anno);
-		}
 
 		/**
 		 * Méthode permettant de vérifier si un document publié est accessible

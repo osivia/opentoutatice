@@ -18,6 +18,7 @@
  */
 package fr.toutatice.ecm.platform.core.helper;
 
+import java.lang.reflect.Method;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,11 +26,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.nuxeo.ecm.automation.AutomationService;
+import org.nuxeo.ecm.automation.OperationContext;
+import org.nuxeo.ecm.automation.OperationNotFoundException;
+import org.nuxeo.ecm.automation.OperationType;
+import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
+import org.nuxeo.ecm.automation.core.impl.InvokableMethod;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentException;
@@ -696,35 +704,31 @@ public class ToutaticeDocumentHelper {
 
 
 	/**
-	 * Copy les permissions dans l'ACL local en excluant les permissions passés en paramétre
+	 * 
 	 * @param session
-	 * @param doc 
-	 * @param permissionsExclude permissions à exclure
-	 * @throws ClientException
+	 * @param doc
+	 * @param aclName par défaut Local
+	 * @param filter
+	 * @return
+	 * @throws ClientException 
 	 */
-	public static void copyPermissionsInLocalACL(CoreSession session, DocumentModel doc,String permissionsExclude) throws ClientException{
-		DocumentRef ref = doc.getRef(); 
-		StringTokenizer st = new StringTokenizer(permissionsExclude,",");
-		List<String> lstPerm = new ArrayList<String>(st.countTokens());
-		while(st.hasMoreTokens()){
-			lstPerm.add(st.nextToken());
-		}  
-		// nettoyer les acls local
-		ACP acp = doc.getACP();
-		acp.removeACL(ACL.LOCAL_ACL);
-		session.setACP(ref, acp, true);
-
-		//récupérer les acls du parent    	
-		DocumentModel parent = session.getParentDocument(ref);
-		ACP acpParent = parent.getACP();
-		for (ACL acl : acpParent.getACLs()) {
+	public static ACL getDocumentACL(CoreSession session, DocumentModel doc,String aclName, ToutaticeFilter<ACE> filter) throws ClientException{
+		ACL res = new ACLImpl();
+			
+		if (aclName==null){
+			aclName=ACL.LOCAL_ACL;
+		}		
+		    			
+		ACP acp = doc.getACP();		
+		for (ACL acl : acp.getACLs()) {
 			for (ACE ace : acl.getACEs()) {
-				if (ace.isGranted() && !lstPerm.contains(ace.getPermission())) {
+				if (filter==null || filter.accept(ace)) {
 					// ajouter les permissions au document doc
-					setACE(session, ref,ace);
+					res.add(ace);
 				}
-			}
-		}            	
+			}		       
+		}
+		return res;
 	}
 	
 	/**
@@ -758,6 +762,58 @@ public class ToutaticeDocumentHelper {
 		}
 		
 		return status;
+	}
+	
+	
+	/**
+	 * Méthode permettant d'appeler une opération Nuxeo..
+	 * 
+	 * @param automation
+	 *            Service automation
+	 * @param ctx
+	 *            Contexte d'exécution
+	 * @param operationId
+	 *            identifiant de l'opération
+	 * @param parameters
+	 *            paramètres de l'opération
+	 * @return le résultat de l'opération dont le type n'est pas connu à
+	 *         priori
+	 * @throws ServeurException
+	 */
+	public static Object callOperation(AutomationService automation, OperationContext ctx, String operationId,
+			Map<String, Object> parameters) throws Exception {
+		InvokableMethod operationMethod = getRunMethod(automation, operationId);
+		Object operationRes = operationMethod.invoke(ctx, parameters);
+		return operationRes;
+	}
+	
+	/**
+	 * Méthode permettant de récupérer la méthode d'exécution (run()) d'une
+	 * opération.
+	 * 
+	 * @param automation
+	 *            instance du service d'automation
+	 * @param operationId
+	 *            identifiant de l'opération
+	 * @return la méthode run() de l'opération
+	 * @throws SecurityException
+	 * @throws NoSuchMethodException
+	 * @throws OperationNotFoundException
+	 */
+	private static InvokableMethod getRunMethod(AutomationService automation, String operationId)
+			throws SecurityException, NoSuchMethodException, OperationNotFoundException {
+		OperationType opType = automation.getOperation(operationId);
+		Method method;
+		try{
+			method= opType.getType().getMethod("run", (Class<?>[]) null);
+		}catch(NoSuchMethodException nsme){
+			Class[] tabArg = new Class[1];
+			tabArg[0] = DocumentModel.class;
+			method= opType.getType().getMethod("run", tabArg);
+		}
+		OperationMethod anno = method.getAnnotation(OperationMethod.class);
+
+		return new InvokableMethod(opType, method, anno);
 	}
 	
 }

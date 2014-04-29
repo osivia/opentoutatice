@@ -34,7 +34,7 @@ public class SetDocumentACL {
 
 	public static final String ID = "Document.SetACL";
 	public static final String ACE_DELIMITER = ",";
-	public static final String VALUE_DELIMITER = ":";
+	public static final String VALUE_DELIMITER = ":";	
 
 	@Context
 	protected CoreSession session;

@@ -19,23 +19,23 @@ public class SetDocumentACLMain {
 	private static final String ACE_FORMAT = "%s:%s:%s";
 	
 	public static void main(String[] args) throws Exception {
-		HttpAutomationClient client = new HttpAutomationClient("http://localhost:8080/nuxeo/site/automation");
+		HttpAutomationClient client = new HttpAutomationClient("http://localhost:8082/nuxeo/site/automation");
 
 		try {
-			Session session = client.getSession("Administrator", "Administrator");
+			Session session = client.getSession("nxjahier", "JAHIER");
 			Assert.assertNotNull(session);
 
 			OperationRequest request = session.newRequest(SetDocumentACL.ID);
-			PathRef input = new PathRef("/default-domain.1392657624307/workspaces/espace-de-publication-1/p-1/article-1");
+			PathRef input = new PathRef("/default-domain/workspaces/espace-de-travail-de-tes/test-des-vues-resume");
 			request.setInput(input);
 			request.set("acl", "local");
 			request.set("overwrite", true);
 			request.set("break", true);
 			
 	        final List<String> entries = new ArrayList<String>();
-	        entries.add(String.format(ACE_FORMAT, "Contrib2", SecurityConstants.WRITE, false));
-	        entries.add(String.format(ACE_FORMAT, "Gestionnaire1", SecurityConstants.READ, true));
-	        entries.add(String.format(ACE_FORMAT, "GCONTRIBUTEURS", SecurityConstants.READ, true));
+	        entries.add(String.format(ACE_FORMAT, "RVal", SecurityConstants.WRITE, false));
+	        entries.add(String.format(ACE_FORMAT, "RCon", SecurityConstants.READ, true));
+	        entries.add(String.format(ACE_FORMAT, "nxjahier", SecurityConstants.EVERYTHING, true));
 	        request.set("entries", StringUtils.join(entries, ACE_DELIMITER));
 	        
 			Document document = (Document) request.execute();
