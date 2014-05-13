@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="fr.toutatice.ecm.platform.web.thumbnail.event.handler">
+
+	<require>org.nuxeo.ecm.core.operation.OperationServiceComponent
+	</require>
+
+	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+		point="event-handlers">
+
+		<handler chainId="vignette-resizing">
+			<event>documentCreated</event>
+			<event>beforeDocumentModification</event>
+			<filters>
+				<expression>Document.hasSchema('toutatice') == false</expression>
+			</filters>
+		</handler>
+
+	</extension>
+
+</component>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.contextualization.filters">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="filters">
+		
+		<filter id="isPortalConfigurable">
+			<rule grant="true">
+				<facet>TTCPortalConfigurable</facet>
+			</rule>
+			<rule grant="true">
+				<type>Workspace</type>
+			</rule>
+		</filter>
+						
+	</extension>
+	
+</component>

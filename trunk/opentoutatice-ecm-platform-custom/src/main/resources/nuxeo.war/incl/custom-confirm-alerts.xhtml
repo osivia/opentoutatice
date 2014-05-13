@@ -1,0 +1,23 @@
+<div xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core">
+
+	<script type="text/javascript">
+		function confirmOnlineWorkflow_cancel() {
+			return confirm("#{messages['label.documents.confirm.onlineWorkflow_cancel']}");
+		}
+		function confirmSetDocumentVersionOnline() {
+			return confirm("#{messages['label.documents.confirm.setDocumentVersionOnline']}");
+		}
+	</script>
+
+	<c:if test="false">
+          File "toutatice-custom-confirm-alerts.xhtml" is placeholder for custom confirms alerts.
+          See the native Nuxeo file "confirm-alerts.xhtml" for sample usage.
+    </c:if>
+	<ui:include src="/incl/client-custom-confirm-alerts.xhtml" />
+
+</div>
+
+

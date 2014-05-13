@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.customize.base.types">
+
+	<require>fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService
+	</require>
+	<require>fr.toutatice.ecm.platform.core.doctypes</require>
+	<require>fr.toutatice.ecm.platform.core.schemas</require>
+	<require>fr.toutatice.ecm.platform.customize.base.rules.types</require>
+
+	<extension
+		target="fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService"
+		point="basettc">
+
+		<doctype name="*">
+			<schema name="uid" />
+			<schema name="toutatice" />
+			<facet name="Versionable" />
+		</doctype>
+
+	</extension>
+
+	<extension
+		target="fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService"
+		point="doctype">
+
+		<doctype name="Workspace">
+			<facet name="Space" />
+		</doctype>
+
+		<!--<doctype name="Domain">
+			<facet name="Space" />
+		</doctype>-->
+
+	</extension>
+
+</component>

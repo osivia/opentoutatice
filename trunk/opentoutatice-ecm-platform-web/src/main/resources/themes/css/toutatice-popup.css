@@ -1,0 +1,183 @@
+/* MODE VIEW */
+
+span.toutaticeButtonLikeLinkPos {
+	display: block;
+    margin-bottom: 8px;
+    padding-right: 10px;
+}
+
+.savePanelAction input.button {
+    box-shadow: none;
+}
+
+/* Page */
+table.themeSectionFrame {
+	width: 100%;
+}
+
+/* Header */
+div.toutatice_view_header_class {
+    background-color: #2F4456;    
+    text-align: center;
+}
+
+div.toutatice_view_header_class h1 {
+	color: white;
+}
+
+td.themeCellFrame.content {
+	padding-left: 7px;
+}
+
+
+/* Zone d'affichage du titre du document*/
+.summary_superscript {
+	font-size: 12px;
+	color: white;
+	padding:2px 4px 2px 4px;
+	margin-left: 5px;
+	vertical-align: top;
+}
+
+.summary_publishedVersion {
+	background-color: #6EB735;
+}
+
+.summary_workVersion {
+	background-color: #5977BD;
+}
+
+.summary_archivedVersion {
+	background-color: #BD82E4;
+}
+
+.summary_pendingVersion {
+	background-color: #F88C22;
+}
+
+.summary_lockedVersion {
+	background-color: #E0A406;
+}
+
+.summary_draft {
+	background-color: #808080;
+}
+
+div.widgetPanel.actionsWidgetPanel {
+    padding: 7px 0;
+}
+
+div.gridBox.gridStyle7{
+	width: 100%;
+}
+
+div.gridBox.gridStyle5 {
+	width: 100%;
+}
+
+.visibilityH {
+	display: none;
+}
+
+span.summaryTitle {
+    border-color: #CFECFF;
+    border-style: none none double;
+    border-width: 3px;
+    color: #000000;
+    font-size: 1.4em;
+    font-weight: bold;
+    margin: 0 0 1em;
+    padding: 0 0 0.3em;
+    text-transform: uppercase;
+}
+
+/* MODE EDIT */
+
+div.toutatice_edit_header_class {
+	background-color: #2F4456;
+    text-align: center;
+}
+
+div.toutatice_edit_header_class h1 {
+	color:white;
+}
+
+.toutatice_edit_actions_class {
+    background-color: #799BB0;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+div.savePanelAction {
+	display: inline;
+	padding-left: 10px;
+}
+
+div.savePanelAction.input {
+	margin: 0;
+}
+
+/* "Inputs" mode Edit */
+
+.ttcInput input, .ttcInput.mceLayout, .ttcInput textarea {
+    padding: 4px;
+    vertical-align: top; 
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.ttcInput input.rich-calendar-input {
+    width: 160px;
+}
+
+.ttcInput input {
+	margin-bottom: none;
+	padding: none;
+	vertical-align: none;
+}
+
+.ttcInput .checkDiv input {
+	vertical-align: middle;
+}
+
+.ttcInput input[type="image"] {
+    border: 0 none;
+    width: auto;
+}
+
+/* "Inputs" mode View */
+
+.summary_div_0 .note_content_block {
+	max-width: 99%;
+	box-shadow: none;
+}
+
+.note_content_block {
+	border-radius: 0;
+}
+
+.actionsColumn img {
+    display: none;
+}
+
+a.toutaticeButtonLikeLink {
+	display:none;
+}
+
+a.toutaticeButtonLikeLink:hover {
+	background: none #cfecff;
+}
+
+input[type="radio"]{
+	margin-left: 15px;
+	margin-right: 0px;
+	max-width: 15px;
+}
+
+
+textarea, input[type="text"] {
+	max-width: 600px;
+	min-width: 400px;
+}
+
+			
