@@ -61,6 +61,7 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
+import org.nuxeo.ecm.core.api.DocumentSecurityException;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.LifeCycleConstants;
 import org.nuxeo.ecm.core.api.PagedDocumentsProvider;
@@ -419,7 +420,16 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      * @throws ClientException
      */
     public boolean isOnlineDocument(DocumentModel document) throws ClientException {
-        return hasProxy(document);
+    	boolean res = false;
+    	try{
+    		res = hasProxy(document);
+    	}catch(DocumentSecurityException se){
+    		// dans le cadre de la publication profilée 
+    		// re-visualisation d'un contentview contenant un document qui n'est plus visible par l'utilisateur courant
+    		// le document live est encore dans le cache par contre son proxy est mis à jour est n'est plus visible par l'U
+    		log.warn(se.getMessage());
+    	}
+        return res;
     }
 
     /**
