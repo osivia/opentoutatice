@@ -7,10 +7,10 @@
 	xmlns:nxh="http://nuxeo.org/nxweb/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jstl/core">
-	
+
 	<script type="text/javascript" src="#{baseURL}scripts/contextKeeper.js"></script>
 	<script type="text/javascript">
-		document.NXContextKeeper = new InputContextKeeper();
+		document.NXContextKeeper = new InputContextKeeper('images_list');
 	</script>
 
 	<script type="text/javascript">
@@ -94,7 +94,8 @@
 	  });
 	</script>
 
-	<h:form enctype="multipart/form-data" id="document_images_edit" rendered="#{currentDocument.hasSchema('toutatice')}">
+	<h:form enctype="multipart/form-data" id="document_images_edit"
+		rendered="#{currentDocument.hasSchema('toutatice')}">
 
 		<div>
 
@@ -102,53 +103,51 @@
 				<tr>
 					<td class="toutatice_image_tab_cell_download">
 						<h3>
-							<h:outputLabel value="#{messages['toutatice.label.upload.images.download']}" />
-						</h3>
-
-						<rich:fileUpload id="images_upload"
-							uploadData="#{ImageManagerActions.uploadedFiles}" 
-							listHeight="150"
-							listWidth="500" 
-							maxFilesQuantity="5"
-							locale="#{localeSelector.localeString}" 
-							immediateUpload="true">
-							<a4j:support onsubmit="removeUploadedFile(event.memo.entry);" event="onclear" />
+							<h:outputLabel
+								value="#{messages['toutatice.label.upload.images.download']}" />
+						</h3> <rich:fileUpload id="images_upload"
+							uploadData="#{ImageManagerActions.uploadedFiles}"
+							listHeight="150" listWidth="500" maxFilesQuantity="5"
+							locale="#{localeSelector.localeString}" immediateUpload="true">
+							<a4j:support onsubmit="removeUploadedFile(event.memo.entry);"
+								event="onclear" />
 						</rich:fileUpload>
 
 						<p class="buttonsGadget">
-							<h:commandButton value="#{messages['toutatice.command.add.images']}"
+							<h:commandButton
+								value="#{messages['toutatice.command.add.images']}"
 								styleClass="button"
 								action="#{ImageManagerActions.validateMultiplesUpload}" />
 						</p>
 					</td>
 					<td class="toutatice_image_tab_cell_search">
 						<h3>
-							<h:outputLabel value="#{messages['toutatice.label.upload.images.search']}" />
-						</h3>
-						
-						<nxu:set var="actions"
-							  value="#{webActions.getActionsList('TOUTATICE_IMAGES_SEARCH_FROM_NUXEO')}" 
-							  cache="true">
-							  <c:forEach var="action" items="#{actions}" varStatus="status">
-							    <ui:decorate template="/incl/action/generic_action_template.xhtml" />
-							    <!--<c:if test="#{not status.last}">
-							      <h:outputText value=" | " />
-							    </c:if>-->
-							  </c:forEach>
+							<h:outputLabel
+								value="#{messages['toutatice.label.upload.images.search']}" />
+						</h3> <nxu:set var="actions"
+							value="#{webActions.getActionsList('TOUTATICE_IMAGES_SEARCH_FROM_NUXEO')}"
+							cache="true">
+							<c:forEach var="action" items="#{actions}" varStatus="status">
+								<ui:decorate
+									template="/incl/action/generic_action_template.xhtml">
+									<ui:param name="useButton" value="true" />
+									<ui:param name="hideIcon" value="true" />
+								</ui:decorate>
+							</c:forEach>
 						</nxu:set>
 					</td>
 				</tr>
 			</table>
 
 		</div>
-		
-		<div >
+
+		<div id="images_list">
 			<a4j:region renderRegionOnly="true" id="images_region">
 
 				<a4j:outputPanel ajaxRendered="true">
 
 					<h3>Liste des images jointes</h3>
-					
+
 					<table class="dataList">
 						<thead>
 							<tr>
@@ -161,56 +160,48 @@
 						<tbody>
 
 							<nxu:inputList id="images_input"
-								value="#{currentDocument.toutatice.images}"
-								model="model">
+								value="#{currentDocument.toutatice.images}" model="model">
 								<tr style="#{nxu:test(empty currentDocument.toutatice.images[model.rowIndex].file, 'display:none', '')}">
-									<td>
-										<a4j:commandLink id="images_delete"
-											immediate="true"
+									<td><a4j:commandLink id="images_delete" immediate="true"
 											onclick="document.NXContextKeeper.removeFromKeeper(#{model.rowIndex});"
 											oncomplete="document.NXContextKeeper.onReturnAnswer();"
 											actionListener="#{ImageManagerActions.performAction}"
 											reRender="images_input" bypassUpdates="true">
 											<h:graphicImage value="/icons/action_delete.gif" />
 											<f:param name="index" value="#{model.rowIndex}" />
-										</a4j:commandLink>
-									</td>
-									<td>
-										<h:graphicImage value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'toutatice:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}"
-											height="50px" width="50px" />
-									</td>
-									<td>
-										<nxh:outputLink value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'toutatice:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}">
-											<nxh:outputText	value="#{currentDocument.toutatice.images[model.rowIndex].filename}" />
-										</nxh:outputLink>
-									</td>
-									<td>
-										<nxh:commandLink id="create_image_stamp"
-											styleClass="toutaticeUploadImageGadget" 
-											immediate="true"
+										</a4j:commandLink></td>
+									<td><h:graphicImage
+											value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'toutatice:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}"
+											height="50px" width="50px" /></td>
+									<td><nxh:outputLink
+											value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'toutatice:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}">
+											<nxh:outputText
+												value="#{currentDocument.toutatice.images[model.rowIndex].filename}" />
+										</nxh:outputLink></td>
+									<td><nxh:commandLink id="create_image_stamp"
+											styleClass="toutaticeUploadImageGadget" immediate="true"
 											onclick="if( !confirmImageStampCreation() ) return false;"
 											actionListener="#{ImageManagerActions.createImageStamp}">
-											<h:outputText value=" #{messages['toutatice.label.images.create.stamp']}" />
+											<h:outputText
+												value=" #{messages['toutatice.label.images.create.stamp']}" />
 											<f:param name="index" value="#{model.rowIndex}" />
-											
-										</nxh:commandLink> 
-										<nxh:commandLink id="create_image_head"
-											styleClass="toutaticeUploadImageGadget" 
-											immediate="true"
+
+										</nxh:commandLink> <nxh:commandLink id="create_image_head"
+											styleClass="toutaticeUploadImageGadget" immediate="true"
 											rendered="#{currentDocument.hasSchema('annonce')}"
 											onclick="if( !confirmImageHeadCreation() ) return false;"
 											actionListener="#{ImageManagerActions.createHeadImage}">
 											<h:outputText
 												value=" #{messages['toutatice.label.images.create.head']}" />
 											<f:param name="index" value="#{model.rowIndex}" />
-										</nxh:commandLink>
-									</td>
+										</nxh:commandLink></td>
 								</tr>
 							</nxu:inputList>
 						</tbody>
 					</table>
-					
-					<h:message id="images_message" styleClass="errorMessage" for="images_input" />
+
+					<h:message id="images_message" styleClass="errorMessage"
+						for="images_input" />
 
 				</a4j:outputPanel>
 			</a4j:region>
