@@ -14,16 +14,6 @@
 			<category>VIEW_ACTION_LIST</category>
 			<filter-id>filter@TTC_TAB_FOLDERISH_VIEW</filter-id>
 		</action>
-		
-		<!-- Bouton de recherche de l'onglet TAB_RELATIONS -->
-		<action id="search_relations" label="Recherche" type="fancybox">
-			<category>TOUTATICE_SEARCH_RELATIONS</category>
-			<properties>
-				<property name="iframe">#{baseURL}toutatice_create_relation_search_document_popup.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}
-				</property>
-				<property name="onclick" />
-			</properties>
-		</action>
 
 	</extension>
 

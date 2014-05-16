@@ -13,7 +13,7 @@
             <event>documentImported</event>
             <filters>
                 <attribute>Mutable Document</attribute>
-                <expression>Document.hasSchema('toutatice') == false</expression>
+                <condition>Document.hasSchema('toutatice') == true</condition>
             </filters>
         </handler>
 
@@ -24,14 +24,14 @@
             <!-- <event>documentImported</event>-->
             <filters>
                 <attribute>Mutable Document</attribute>
-                <expression>Document.hasSchema('toutatice') == false</expression>
+                <condition>Document.hasSchema('toutatice') == true</condition>
             </filters>
         </handler>
         <handler chainId="movedOrRestoredOp">
             <event>aboutToMove</event>
             <event>beforeRestoringDocument</event>
             <filters>
-                <expression>Document.hasSchema('toutatice') == false</expression>
+                <condition>Document.hasSchema('toutatice') == true</condition>
             </filters>
         </handler>
 

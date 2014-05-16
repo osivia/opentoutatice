@@ -11,7 +11,7 @@
 			<event>documentCreated</event>
 			<event>beforeDocumentModification</event>
 			<filters>
-				<expression>Document.hasSchema('toutatice') == false</expression>
+				<condition>Document.hasSchema('toutatice') == true</condition>
 			</filters>
 		</handler>
 

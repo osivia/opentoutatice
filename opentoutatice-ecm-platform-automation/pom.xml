@@ -5,7 +5,7 @@
 	<parent>
 	   <groupId>opentoutatice-ecm.platform</groupId>
 	   <artifactId>opentoutatice-ecm-platform-parent</artifactId>
-	   <version>1.2.0-RC1</version>
+	   <version>2.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-automation</artifactId>
@@ -14,7 +14,7 @@
 	</description>
 
 	<properties>
-		<nuxeo.version>5.6.0-HF29</nuxeo.version>
+		<nuxeo.version>5.8.0-HF11</nuxeo.version>
 	</properties>
 
 	<dependencies>
@@ -35,16 +35,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-jbpm-api</artifactId>
-			<version>${nuxeo.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-jbpm-automation</artifactId>
-			<version>${nuxeo.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-publisher-task</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
@@ -54,10 +44,27 @@
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-platform-document-routing-core</artifactId>
+			<version>${nuxeo.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.nuxeo.ecm.automation</groupId>
+			<artifactId>nuxeo-automation-jsf</artifactId>
+			<version>${nuxeo.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-platform-directory-ldap</artifactId>
+			<version>5.8</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
@@ -75,11 +82,6 @@
 			<artifactId>json-lib</artifactId>
             <version>2.4</version>
 			<classifier>jdk15</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.nuxeo.ecm.automation</groupId>
-			<artifactId>nuxeo-automation-jsf</artifactId>
-			<version>${nuxeo.version}</version>
 		</dependency>
 
 	</dependencies>
@@ -100,7 +102,7 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}" />
+                                        <copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/2.0.0" />
                                     </tasks>
                                 </configuration>
                                 <phase>package</phase>

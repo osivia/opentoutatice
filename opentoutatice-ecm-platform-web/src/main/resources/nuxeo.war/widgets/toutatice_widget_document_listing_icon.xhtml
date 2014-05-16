@@ -13,16 +13,13 @@
 	</c:if>
 
 	<c:if test="#{nxl:isLikeViewMode(widget.mode)}">
-		<div class="AlignIcon" styleClass="#{widget.properties.styleClass}">
-		
-			<c:set var="isOnlineRequestRunning" value="#{jbpmActions.isPending(document,'toutatice_online_approbation')}"/>
-			<c:set var="helpLabel" value="#{nxu:test(isOnlineRequestRunning, messages['toutatice.label.pending.online'], '')}"/>
+		<div class="AlignIcon #{widget.properties.styleClass}">
 			
-			<c:set var="isPublishRequestRunning" value="#{taskActions.isPendingPublishTask(document)}"/>
+			<c:set var="isPublishRequestRunning" value="#{taskActions.hasNuxeoPublishTaskPending()}"/>
 			<c:set var="helpLabel" value="#{nxu:test(isPublishRequestRunning, messages['toutatice.label.pending.publication'], helpLabel)}"/>
 
 			<c:choose>
-				<c:when test="#{isOnlineRequestRunning or isPublishRequestRunning}">
+				<c:when test="#{isPublishRequestRunning}">
 					<nxu:graphicImage value="/icons/review_pending.gif"
 						alt="#{helpLabel}" 
 						title="#{helpLabel}"

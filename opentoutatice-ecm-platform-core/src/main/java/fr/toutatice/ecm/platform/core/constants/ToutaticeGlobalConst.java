@@ -39,7 +39,7 @@ public class ToutaticeGlobalConst {
     public static final String CST_ADVANCED_SEARCH_XPATH_PATH = "advanced_search:searchpath";
     public static final String CST_FACETED_SEARCH_XPATH_PATH = "faceted_search_default:ecm_path";
     public static final String CST_RELATION_SEARCH_XPATH_PATH = "relation_search:ecm_path";
-	
+    
 	// Workflow tasks - mise en ligne
 	public final static String CST_WORKFLOW_TASK_CHOOSE_PARTICIPANT = "choose-participant";
 	public final static String CST_WORKFLOW_PROCESS_ONLINE = "toutatice_online_approbation";
@@ -64,6 +64,12 @@ public class ToutaticeGlobalConst {
 	// Events
 	public final static String CST_EVENT_SUB_TAB_SELECTION_CHANGED = "subTabSelectionChanged";
 	public final static String CST_EVENT_PROPAGATE_SECTIONS = "propagateSections";
+	/* Online workflow events */
+	public final static String CST_EVENT_ONLINE_TASK_APPROVED_ASSIGNED = "workflowOnlineTaskAssigned";
+	public final static String CST_EVENT_ONLINE_TASK_APPROVED = "workflowOnlineTaskApproved";
+	public final static String CST_EVENT_ONLINE_TASK_REJECTED = "workflowOnlineTaskRejected";
+	public final static String CST_EVENT_ONLINE_WF_CANCELED = "workflowOnlineTaskCanceled";
+	
 	/* TODO: delete */
 	public final static String CST_EVENT_PROPAGATE_ORGANISATION_SOURCE = "propagateOrganisationSource";
 	public final static String CST_EVENT_SECTION_MODIFICATION = "sectionModified";

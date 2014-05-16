@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>1.2.0-RC1</version>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-web</artifactId>
@@ -13,7 +13,7 @@
 	<name>Partie web de la plate-forme toutatice</name>
 
 	<properties>
-		<nuxeo.version>5.6.0-HF29</nuxeo.version>
+		<nuxeo.version>5.8.0-HF11</nuxeo.version>
 		<jboss.j2ee.version>4.2.3.GA</jboss.j2ee.version>
 		<jboss.ejb.version>3.0-RC8</jboss.ejb.version>
 		<jboss.seam.version>2.1.0.SP1</jboss.seam.version>
@@ -55,22 +55,24 @@
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-publisher-task</artifactId>
 			<version>${nuxeo.version}</version>
-		</dependency>
+		</dependency>	
+		
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-jbpm-core</artifactId>
+			<artifactId>nuxeo-platform-document-routing-api</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-jbpm-api</artifactId>
+			<artifactId>nuxeo-platform-document-routing-core</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-jbpm-web</artifactId>
+			<artifactId>nuxeo-platform-document-routing-web</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-search-api</artifactId>
@@ -120,7 +122,7 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}" />
+										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/2.0.0" />
 									</tasks>
 								</configuration>
 								<phase>package</phase>

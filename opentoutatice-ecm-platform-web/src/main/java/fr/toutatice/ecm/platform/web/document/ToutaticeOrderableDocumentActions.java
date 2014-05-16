@@ -18,9 +18,7 @@
  */
 package fr.toutatice.ecm.platform.web.document;
 
-import java.text.Collator;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,11 +31,9 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
-import org.nuxeo.ecm.core.api.Sorter;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.webapp.contentbrowser.OrderableDocumentActions;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 
 @Name("orderableDocumentActions")
