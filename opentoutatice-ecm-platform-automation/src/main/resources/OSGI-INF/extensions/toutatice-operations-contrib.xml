@@ -34,6 +34,7 @@
 	<operation class="fr.toutatice.ecm.platform.automation.QueryDocumentBaseOperation" />
 	<operation class="fr.toutatice.ecm.platform.automation.FetchPublishingStatusChildren" />
 	<operation class="fr.toutatice.ecm.platform.automation.SetDocumentACL" />
+	<operation class="fr.toutatice.ecm.platform.automation.RefreshPrincipal" />
 	
   </extension>
 

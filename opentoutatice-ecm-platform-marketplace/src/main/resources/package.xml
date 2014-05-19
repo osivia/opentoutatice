@@ -4,9 +4,11 @@
 		<p>This addon implements the opened platform called Toutatice 
 			(which one is based on the Nuxeo DM distribution)</p>
 			
-		Main corrections provided:
-         * Fix : pb refresh d'un contentview suite à une publication profilé
-		 		
+		Main fixes provided:
+         * Fix : refresh problem of a content view after profiled publishing
+         
+        Main evolutions
+         * Add the content operation "RefreshPrincipal"
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
 	<vendor>Academie de Rennes - OSIVIA</vendor>
