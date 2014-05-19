@@ -23,9 +23,6 @@ package fr.toutatice.ecm.platform.automation;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
@@ -33,8 +30,8 @@ import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.api.security.ACE;
-import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.core.api.security.ACL;
+import org.nuxeo.ecm.core.api.security.ACP;
 
 
 @Operation(id = GetUsersAndGroupsDocument.ID, 
@@ -48,8 +45,7 @@ public class GetUsersAndGroupsDocument {
 	
 	    public static final String ID = "Document.GetUsersAndGroupsDocument";
 
-	    private static final Log log = LogFactory.getLog(Log.class);
-
+//	    private static final Log log = LogFactory.getLog(GetUsersAndGroupsDocument.class);
 	   
 	    @OperationMethod
 	    public Blob run(DocumentModel doc) throws Exception 
