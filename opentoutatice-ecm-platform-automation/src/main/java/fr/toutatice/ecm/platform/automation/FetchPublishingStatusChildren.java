@@ -18,6 +18,9 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -32,9 +35,11 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
+import org.nuxeo.ecm.core.api.DocumentSecurityException;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 
+import fr.toutatice.ecm.platform.automation.FetchPublicationInfos.ServeurException;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 
@@ -61,18 +66,18 @@ public class FetchPublishingStatusChildren {
     protected boolean liveStatus;
 
     @OperationMethod
-    public Object run() throws ClientException {
+    public Object run() throws ClientException, ServeurException, UnsupportedEncodingException {
         JSONArray childrenWithStatus = new JSONArray();
         if (document.isProxy()) {
             log.warn("Document " + document.getId() + " is proxy: can't access children.");
-            return new JSONArray();
+            return childrenWithStatus;
         }
         DocumentModelList children = documentManager.getChildren(document.getRef());
         for (DocumentModel child : children) {
             boolean isDeleted = DELETED_STATE.equals(child.getCurrentLifeCycleState());
-            if (liveStatus && !child.isProxy() && !isDeleted) {
+            JSONObject childWithStatus = new JSONObject();
+            if (liveStatus && !child.isProxy() && !isDeleted && isEditableByUser(child)) {
                 // Live children
-                JSONObject childWithStatus = new JSONObject();
                 String publishedChildVersionLabel = ToutaticeDocumentHelper.getProxyVersion(documentManager, child);
                 boolean isPublished = publishedChildVersionLabel != null;
                 childWithStatus.element("isPublished", isPublished);
@@ -82,31 +87,53 @@ public class FetchPublishingStatusChildren {
                 } else {
                     childWithStatus.element("isLiveModifiedFromProxy", false);
                 }
-                childWithStatus.element("docId", child.getId());
-                childWithStatus.element("docPath", child.getPathAsString());
-                childWithStatus.element("docType", child.getType());
-                childWithStatus.element("docTitle", child.getTitle());
-                boolean isFolderish = child.getFacets().contains("Folderish");
-                childWithStatus.element("isFolderish", isFolderish);
-                childrenWithStatus.add(childWithStatus);
+                childrenWithStatus = fillGlobalProperties(childrenWithStatus, child, childWithStatus);
             } else if (!liveStatus && child.isProxy() && !isDeleted) {
                 // Proxies children
-                JSONObject childWithStatus = new JSONObject();
                 childWithStatus.element("isPublished", true);
                 DocumentModel srcDocument = documentManager.getSourceDocument(child.getRef());
                 DocumentModel liveDocument = documentManager.getWorkingCopy(srcDocument.getRef());
                 boolean isLiveModifiedFromProxy = !child.getVersionLabel().equals(liveDocument.getVersionLabel());
                 childWithStatus.element("isLiveModifiedFromProxy", isLiveModifiedFromProxy);
-                childWithStatus.element("docId", child.getId());
-                childWithStatus.element("docPath", child.getPathAsString());
-                childWithStatus.element("docType", child.getType());
-                childWithStatus.element("docTitle", child.getTitle());
-                boolean isFolderish = child.getFacets().contains("Folderish");
-                childWithStatus.element("isFolderish", isFolderish);
-                childrenWithStatus.add(childWithStatus);
+                childrenWithStatus = fillGlobalProperties(childrenWithStatus, child, childWithStatus);
             }
         }
         return new StringBlob(childrenWithStatus.toString(), "application/json");
+    }
+
+    /**
+     * @param childrenWithStatus
+     * @param child
+     * @param childWithStatus
+     * @throws ClientException
+     * @throws UnsupportedEncodingException 
+     */
+    public JSONArray fillGlobalProperties(JSONArray childrenWithStatus, DocumentModel child, JSONObject childWithStatus) throws ClientException, UnsupportedEncodingException {
+        childWithStatus.element("docId", child.getId());
+        childWithStatus.element("docPath", URLEncoder.encode(child.getPathAsString(), "UTF-8"));
+        childWithStatus.element("docType", child.getType());
+        childWithStatus.element("docTitle", URLEncoder.encode(child.getTitle(), "UTF-8"));
+        boolean isFolderish = child.getFacets().contains("Folderish");
+        childWithStatus.element("isFolderish", isFolderish);
+        childrenWithStatus.add(childWithStatus);
+        return childrenWithStatus;
+    }
+    
+    /* FIXME: duplicate code with FetchPubliInfos: to mutualise in Helrper class */
+    private boolean isEditableByUser(DocumentModel liveDoc) throws ServeurException {
+        boolean canModify = false;
+        try {
+            canModify = documentManager.hasPermission(liveDoc.getRef(), SecurityConstants.WRITE);
+        } catch (ClientException e) {
+            if (e instanceof DocumentSecurityException) {
+                return Boolean.FALSE;
+            } else {
+                log.warn("Failed to fetch permissions for document '" + liveDoc.getPathAsString() + "', error:"
+                        + e.getMessage());
+                throw new ServeurException(e);
+            }
+        }
+        return canModify;
     }
 
 }
