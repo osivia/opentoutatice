@@ -23,10 +23,12 @@ import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
-import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
+import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
 
 @Operation(id = CreateChildComment.ID, category = Constants.CAT_DOCUMENT, label = "CreateChildCommentOfDocument",
@@ -55,18 +57,49 @@ public class CreateChildComment {
 
     @OperationMethod
     public Object run() throws Exception {
-        boolean isPost = AddComment.THREAD_TYPE.equals(document.getType());
         CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
         DocumentModel childComment = AddComment.createComment(document.getRef(), document.getType(), session, childCommentContent, childCommentTitle, fileName);
         DocumentModel commentDoc = commentableDoc.addComment(comment, childComment);
-        if (isPost) {
-            Boolean isModerated = (Boolean) document.getProperty("thread", "moderated");
-            if (!isModerated) {
-                session.followTransition(commentDoc.getRef(), AddComment.PUBLISHED_TRANSITION);
+        
+        UnrestrictedAclAndLifeCycleCommentRunner runner = new UnrestrictedAclAndLifeCycleCommentRunner(session, document, commentDoc);
+        runner.runUnrestricted();
+        commentDoc = runner.getCommentCreated();
+        return new StringBlob(commentDoc.getId());
+    }
+    
+    /* 
+     * The new comment dosen't have user ACL, so we must follow transition in unrestricted mode.
+     * We decide to do all creation in unrestricted mode.
+     */
+    private static class UnrestrictedAclAndLifeCycleCommentRunner extends UnrestrictedSessionRunner {
+        
+        private DocumentModel document;
+        private DocumentModel commentCreated;
+        
+        public DocumentModel getCommentCreated() {
+            return this.commentCreated;
+        }
+
+        protected UnrestrictedAclAndLifeCycleCommentRunner(CoreSession session, DocumentModel document, DocumentModel commentCreated) {
+            super(session);
+            this.document = document;
+            this.commentCreated = commentCreated;
+        }
+
+
+        @Override
+        public void run() throws ClientException {
+            boolean isPost = AddComment.THREAD_TYPE.equals(this.document.getType());
+            ACP acp = this.session.getACP(this.document.getRef());
+            this.session.setACP(this.commentCreated.getRef(), acp, true);
+            if (isPost) {
+                Boolean isModerated = (Boolean) this.document.getProperty("thread", "moderated");
+                if (!isModerated) {
+                    this.session.followTransition(this.commentCreated.getRef(), AddComment.PUBLISHED_TRANSITION);
+                }
             }
         }
-        return new StringBlob(commentDoc.getId());
-
+        
     }
 
 }

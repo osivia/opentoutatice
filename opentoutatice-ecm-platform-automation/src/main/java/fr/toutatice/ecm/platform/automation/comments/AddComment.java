@@ -27,12 +27,13 @@ import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
-import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
+import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
+import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
 
 @Operation(id = AddComment.ID, category = Constants.CAT_DOCUMENT, label = "AddCommentToDocument", description = "Add a comment to a (commentable) document")
@@ -63,16 +64,14 @@ public class AddComment {
 
     @OperationMethod
     public Object run() throws Exception {
-
+        
         CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
         DocumentModel comment = createComment(document.getRef(), document.getType(), session, commentContent, commentTitle, fileName);
         DocumentModel commentDoc = commentableDoc.addComment(comment);
-        if(THREAD_TYPE.equals(document.getType())){
-            Boolean isModerated = (Boolean) document.getProperty("thread", "moderated");
-            if(!isModerated){
-                session.followTransition(commentDoc.getRef(), PUBLISHED_TRANSITION);
-            }
-        }
+        
+        UnrestrictedAclAndLifeCycleRunner runner = new UnrestrictedAclAndLifeCycleRunner(session, document, commentDoc);
+        runner.runUnrestricted();
+        commentDoc = runner.getCommentCreated();
         return new StringBlob(commentDoc.getId());
 
     }
@@ -106,6 +105,40 @@ public class AddComment {
             type = POST_TYPE;
         }
         return type;
+    }
+    
+    /* 
+     * The new comment doesn't have user ACL, so we must follow transition in unrestricted mode
+     * adn set ACL for future attachables files (cd Osivia Portal)
+     * We decide to do all creation in unrestricted mode.
+     */
+    private static class UnrestrictedAclAndLifeCycleRunner extends UnrestrictedSessionRunner {
+        
+        private DocumentModel document;
+        private DocumentModel commentCreated;
+
+        protected UnrestrictedAclAndLifeCycleRunner(CoreSession session, DocumentModel document, DocumentModel commentCreated) {
+            super(session);
+            this.document = document;
+            this.commentCreated = commentCreated;
+        }
+        
+        public DocumentModel getCommentCreated() {
+            return commentCreated;
+        }
+
+        @Override
+        public void run() throws ClientException {
+            ACP acp = this.session.getACP(this.document.getRef());
+            this.session.setACP(this.commentCreated.getRef(), acp, true);
+            if(THREAD_TYPE.equals(document.getType())){
+                Boolean isModerated = (Boolean) this.document.getProperty("thread", "moderated");
+                if(!isModerated){
+                    this.session.followTransition(this.commentCreated.getRef(), PUBLISHED_TRANSITION);
+                }
+            }
+        }
+        
     }
 
 }
