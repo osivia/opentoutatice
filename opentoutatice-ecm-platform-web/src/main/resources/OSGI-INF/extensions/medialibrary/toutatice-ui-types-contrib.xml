@@ -8,28 +8,28 @@
 		point="types">
 
 		<type id="MediaLibrary">
-            <label>MediaLibrary</label>
-            <icon>/img/book-review-icon.gif</icon>
-            <bigIcon>/img/book-review-icon.gif</bigIcon>
-            <description>MediaLibrary.description</description>
-            <default-view>view_documents</default-view>        
-            <layouts mode="create">
-            <layout>heading</layout>
-            </layouts>
-            <layouts mode="edit">
-                <layout>heading</layout>
-            </layouts>
-            <layouts mode="view" />
-            <contentViews category="content">
-                <contentView showInExportView="false">orderable_document_content
-                </contentView>
-            </contentViews>
-            <contentViews category="trash_content">
-                <contentView showInExportView="false">document_trash_content
-                </contentView>
-            </contentViews>
+			<label>MediaLibrary</label>
+			<icon>/icons/book-review-icon.gif</icon>
+			<bigIcon>/icons/book-review-icon.gif</bigIcon>
+			<description>MediaLibrary.description</description>
+			<default-view>view_documents</default-view>
+			<layouts mode="create">
+				<layout>heading</layout>
+			</layouts>
+			<layouts mode="edit">
+				<layout>heading</layout>
+			</layouts>
+			<layouts mode="view" />
+			<contentViews category="content">
+				<contentView showInExportView="false">orderable_document_content
+				</contentView>
+			</contentViews>
+			<contentViews category="trash_content">
+				<contentView showInExportView="false">document_trash_content
+				</contentView>
+			</contentViews>
 		</type>
-		
+
 	</extension>
 
 
