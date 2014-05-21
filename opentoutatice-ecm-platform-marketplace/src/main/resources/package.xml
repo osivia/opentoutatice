@@ -2,13 +2,14 @@
 	<title>Open Toutatice</title>
 	<description>
 		<p>This addon implements the opened platform called Toutatice 
-			(which one is based on the Nuxeo DM distribution)</p>
+			(which one is based on the Nuxeo DM distribution)
 			
 		Main fixes provided:
-         * Fix : refresh problem of a content view after profiled publishing
+         * Refresh problem of a content view after profiled publishing
          
-        Main evolutions
-         * Add the content operation "RefreshPrincipal"
+        Main evolutions:
+		 * Add an operation to refresh the principal (so that LDAP updates are taken into consideration synchronously) 
+		</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
 	<vendor>Academie de Rennes - OSIVIA</vendor>
