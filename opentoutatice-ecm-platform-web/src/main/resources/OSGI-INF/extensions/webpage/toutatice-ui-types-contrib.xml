@@ -9,8 +9,8 @@
 
 		<type id="WebConfigurationFolder">
 			<label>Dossier de configuration</label>
-			<icon>/img/configuration_folder.gif</icon>
-			<bigIcon>/img/configuration_folder.gif</bigIcon>
+			<icon>/icons/configuration_folder.gif</icon>
+			<bigIcon>/icons/configuration_folder.gif</bigIcon>
 			<description></description>
 			<default-view>view_documents</default-view>
 			<subtypes>
@@ -36,8 +36,8 @@
 
 		<type id="WebConfiguration">
 			<label>Configuration web</label>
-			<icon>/img/customize.png</icon>
-			<bigIcon>/img/customize.png</bigIcon>
+			<icon>/icons/customize.png</icon>
+			<bigIcon>/icons/customize.png</bigIcon>
 			<description>Used to define a configuration element consumed by the
 				portal to design a page.
 			</description>
