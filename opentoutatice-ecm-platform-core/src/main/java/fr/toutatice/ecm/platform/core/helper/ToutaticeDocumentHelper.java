@@ -25,6 +25,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -52,6 +53,7 @@ import org.nuxeo.ecm.core.api.VersionModel;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.api.impl.LifeCycleFilter;
 import org.nuxeo.ecm.core.api.impl.VersionModelImpl;
+import org.nuxeo.ecm.core.api.model.Property;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.core.api.security.ACE;
 import org.nuxeo.ecm.core.api.security.ACL;
@@ -302,6 +304,33 @@ public class ToutaticeDocumentHelper {
 		};
 
 		return ToutaticeDocumentHelper.getParentList(session, document, filter, runInUnrestrictedMode, immediateOnly, thisIncluded);
+	}
+	
+	/** 
+	 * @param session la session courante de l'utilisateur
+	 * @param document le document pour lequel il faut rechercher le parent
+	 * @param lstXpaths les xpaths des propriétés qu'il faut retourner
+	 * @param filter filtre déterminant le parent à consulter
+	 * @param runInUnrestrictedMode opération doit-être exécuter en mode unrestricted	  
+	 * @param thisIncluded le document courant est examiné 
+	 * @return
+	 *    une map de <xpath, property> du document parent 
+	 */
+	public static Map<String,Property> getPropertiesParentDoc(CoreSession session, DocumentModel document,List<String> lstXpaths,Filter filter, boolean runInUnrestrictedMode, boolean thisIncluded){
+		Map<String,Property> mapPpty = null;
+		try {
+			GetParentPropertiesRunner runner = new GetParentPropertiesRunner(session, document, lstXpaths, filter,runInUnrestrictedMode, thisIncluded);
+			if (runInUnrestrictedMode) {
+				runner.runUnrestricted();
+			} else {
+				runner.run();
+			}
+			mapPpty = runner.getProperties();
+		} catch (ClientException e) {
+			log.error("Failed to get the parent for the current document, error: " + e.getMessage());
+		}		
+		
+		return mapPpty;
 	}
 
 	/**
@@ -591,6 +620,42 @@ public class ToutaticeDocumentHelper {
 			return this.versionLabel;
 		}
 
+	}
+	
+	private static class GetParentPropertiesRunner extends UnrestrictedSessionRunner{
+		private DocumentModel doc;
+		private Filter filter;		
+		private boolean included;
+		private boolean runInUnrestrictedMode;
+		private List<String> lstxpath;
+		private Map<String,Property> mapPpties;
+		
+		public GetParentPropertiesRunner(CoreSession session, DocumentModel document,List<String> lstXpaths,Filter filter,boolean runInUnrestrictedMode, boolean included){
+			super(session);
+			this.doc = document;
+			this.filter = filter;
+			this.lstxpath = lstXpaths;
+			this.included = included;
+			this.runInUnrestrictedMode = runInUnrestrictedMode;
+		}
+		public Map<String,Property> getProperties(){
+			return mapPpties;
+		}
+		
+		@Override
+		public void run() throws ClientException {
+			DocumentModelList lstParent =  getParentList(session, this.doc, this.filter, this.runInUnrestrictedMode, true, this.included);
+			DocumentModel parent = null;
+			if (lstParent != null && !lstParent.isEmpty()) {
+				parent = lstParent.get(0);
+			}
+			if(parent!=null){
+			this.mapPpties = new HashMap<String, Property>(lstxpath.size());
+			for (String xpath : this.lstxpath) {
+				mapPpties.put(xpath, parent.getProperty(xpath));
+			}
+			}
+		}
 	}
 
 	private static class UnrestrictedGetParentsListRunner extends UnrestrictedSessionRunner {
