@@ -209,6 +209,12 @@ public class FetchPublicationInfos {
 			infosPubli.element("documentPath", URLEncoder.encode(path, "UTF-8"));
 		}
 
+        /* Indique une modification du live depuis la dernière publication du proxy */
+        DocumentModel liveDoc = (DocumentModel) liveDocRes;
+        boolean isLiveModifiedFromProxy = !document.getVersionLabel().equals(liveDoc.getVersionLabel());
+        infosPubli.element("isLiveModifiedFromProxy", isLiveModifiedFromProxy);
+
+
 		infosPubli.put("subTypes", new JSONObject());
 		if (document.isFolder()) {
 			boolean canAddChildren = coreSession.hasPermission(document.getRef(), SecurityConstants.ADD_CHILDREN);
@@ -221,7 +227,7 @@ public class FetchPublicationInfos {
 				for (Type subType : allowedSubTypes) {
 					subTypes.put(subType.getId(), URLEncoder.encode(subType.getLabel(), "UTF-8"));
 				}
-				infosPubli.put("subTypes", subTypes);
+                infosPubli.put("subTypes", subTypes);
 			}
 		}
 
@@ -238,6 +244,7 @@ public class FetchPublicationInfos {
 
 		UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession,
 				document, 
+
 				infosPubli, 
 				userManager,
 				errorsCodes);
