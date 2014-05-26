@@ -211,8 +211,7 @@ public class FetchPublicationInfos {
 
         /* Indique une modification du live depuis la dernière publication du proxy */
         DocumentModel liveDoc = (DocumentModel) liveDocRes;
-        boolean isLiveModifiedFromProxy = !document.getVersionLabel().equals(liveDoc.getVersionLabel());
-        infosPubli.element("isLiveModifiedFromProxy", isLiveModifiedFromProxy);
+        infosPubli.element("liveVersion", liveDoc.getVersionLabel());
 
 
 		infosPubli.put("subTypes", new JSONObject());
@@ -614,9 +613,16 @@ public class FetchPublicationInfos {
 
 				DocumentModel publishedDoc = null;
 				try {
+
+
 					publishedDoc = (DocumentModel) ToutaticeDocumentHelper.callOperation(automation, ctx, "Document.FetchPublished", parameters);
+
+                    boolean equalVersion = publishedDoc.getVersionLabel().equals(infosPubli.get("liveVersion"));
+                    this.infosPubli.element("isLiveModifiedFromProxy", !equalVersion);
+                    this.infosPubli.element("proxyVersion", publishedDoc.getVersionLabel());
 					this.infosPubli.element("published", Boolean.TRUE);
 				} catch (Exception e) {
+                    this.infosPubli.element("isLiveModifiedFromProxy", true);
 					this.infosPubli.element("published", Boolean.FALSE);
 				}
 
