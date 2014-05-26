@@ -117,6 +117,9 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     @RequestParameter("params")
     protected String reqParams;
+    
+    /** Used by Portal Views (information send to Portal */
+    protected boolean live = true;
 
     String newSwitchValue;
     String newKeyword;
@@ -126,6 +129,14 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     static private final String CST_DEFAULT_PUBLICATON_AREA_TITLE = "inconnu";
     static private final String CST_DEFAULT_PUBLICATON_AREA_PATH = "/";
     static private final String CST_DEFAULT_UNKNOWN_VERSION_LABEL = "Version indéterminée"; // I18N
+    
+    public boolean isLive() {
+        return live;
+    }
+    
+    public void setLive(boolean live) {
+        this.live = live;
+    }
 
     @Create
     public void initialize() throws Exception {
@@ -167,6 +178,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public String saveDocument(String viewId) throws ClientException {
         saveDocument();
+        live = true;
         return viewId;
     }
     
@@ -200,6 +212,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public String saveNSetOnLineDocument(String viewId) throws ClientException {
         saveNSetOnLineDocument();
+        live = false;
         return viewId;
     }
 
@@ -224,6 +237,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         if (null != this.pictureBookManager) {
             // create
             this.pictureBookManager.createPictureBook();
+            live = true;
         } else {
             log.error("Failed to get the picture book manager from seam context");
         }
@@ -235,10 +249,10 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         if (null != this.pictureBookManager) {
             // create
             this.pictureBookManager.createPictureBook();
-
             // mise en ligne
             DocumentModel newDocument = navigationContext.getCurrentDocument();
             setDocumentOnline(newDocument);
+            live = false;
         } else {
             log.error("Failed to get the picture book manager from seam context");
         }
@@ -259,6 +273,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public String updateCurrentDocument(String viewId) throws ClientException {
         updateCurrentDocument();
+        live = true;
         return viewId;
     }
 
@@ -291,6 +306,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      */
     public String updateNUpgradeCurrentDocument(String version, String viewId) throws ClientException {
         updateNUpgradeCurrentDocument(version);
+        live = true;
         return viewId;
     }
 
@@ -311,6 +327,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public String updateNSetOnLineCurrentDocument(String viewId) throws ClientException {
         updateNSetOnLineCurrentDocument();
+        live = false;
         return viewId;
     }
 
