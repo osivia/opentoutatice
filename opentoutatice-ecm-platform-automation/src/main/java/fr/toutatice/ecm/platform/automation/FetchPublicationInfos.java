@@ -18,7 +18,6 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
-import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -34,14 +33,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationContext;
-import org.nuxeo.ecm.automation.OperationNotFoundException;
-import org.nuxeo.ecm.automation.OperationType;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
-import org.nuxeo.ecm.automation.core.impl.InvokableMethod;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -69,6 +65,11 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 @Operation(id = FetchPublicationInfos.ID, category = Constants.CAT_FETCH, label = "Fetch publish space informations", description = "Fetch informations about the publish space, worksapce, proxy status, ... of a given document.")
 public class FetchPublicationInfos {
+
+    private static final String WEB_ID_QUERY = "select * from Document Where ttc:domainID = '%s'"
+            + " AND ttc:webid = '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+
+
 	private static final Log log = LogFactory.getLog(FetchPublicationInfos.class);
 
 	/**
@@ -119,8 +120,12 @@ public class FetchPublicationInfos {
 	/**
 	 * Identifiant ("path" ou uuid) du document en entrée.
 	 */
-	@Param(name = "path", required = true)
+    @Param(name = "path", required = false)
 	protected DocumentModel document;
+
+    @Param(name = "webid", required = false)
+    protected String webid;
+
 
 	@OperationMethod
 	public Object run() throws Exception {
@@ -131,10 +136,34 @@ public class FetchPublicationInfos {
 
 		List<Integer> errorsCodes = new ArrayList<Integer>();
 
-		/*
-		 * Récupération du DocumentModel dont le path ou uuid est donné en
-		 * entrée
-		 */
+        // Si on passe non pas un docRef en entrée mais un webId :
+        if (webid != null) {
+            log.warn("webid : " + webid);
+
+            String[] segments = webid.split("/");
+            String domainIdSegment;
+            String webIdSegment;
+            if(segments.length >= 2) {
+                domainIdSegment = segments[0];
+                webIdSegment = segments[1];
+            }   
+            else {
+                throw new NoSuchDocumentException(webid);
+            }
+
+
+            UnrestrictedFecthWebIdRunner fecthWebIdRunner = new UnrestrictedFecthWebIdRunner(coreSession, domainIdSegment, webIdSegment);
+            fecthWebIdRunner.runUnrestricted();
+            document = fecthWebIdRunner.getDoc();
+            if (document == null) {
+                throw new NoSuchDocumentException(webid);
+            }
+        }
+
+        /*
+         * Récupération du DocumentModel dont le path ou uuid est donné en
+         * entrée
+         */
 		DocumentRef docRef = document.getRef();
 		Object fetchDocumentRes = getDocument(docRef);
 		/*
@@ -180,6 +209,11 @@ public class FetchPublicationInfos {
 			infosPubli.element("documentPath", URLEncoder.encode(path, "UTF-8"));
 		}
 
+        /* Indique une modification du live depuis la dernière publication du proxy */
+        DocumentModel liveDoc = (DocumentModel) liveDocRes;
+        infosPubli.element("liveVersion", liveDoc.getVersionLabel());
+
+
 		infosPubli.put("subTypes", new JSONObject());
 		if (document.isFolder()) {
 			boolean canAddChildren = coreSession.hasPermission(document.getRef(), SecurityConstants.ADD_CHILDREN);
@@ -192,7 +226,7 @@ public class FetchPublicationInfos {
 				for (Type subType : allowedSubTypes) {
 					subTypes.put(subType.getId(), URLEncoder.encode(subType.getLabel(), "UTF-8"));
 				}
-				infosPubli.put("subTypes", subTypes);
+                infosPubli.put("subTypes", subTypes);
 			}
 		}
 
@@ -209,6 +243,7 @@ public class FetchPublicationInfos {
 
 		UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession,
 				document, 
+
 				infosPubli, 
 				userManager,
 				errorsCodes);
@@ -367,7 +402,7 @@ public class FetchPublicationInfos {
 	private Object getDocument(DocumentRef refDoc) throws ServeurException {
 		DocumentModel doc = null;
 		try {
-			doc = coreSession.getDocument(refDoc);
+            doc = coreSession.getDocument(refDoc);
 		} catch (ClientException ce) {
 			if (ce instanceof DocumentSecurityException) {
 				return ERROR_CONTENT_FORBIDDEN;
@@ -519,7 +554,7 @@ public class FetchPublicationInfos {
 
 				Object fetchPublishSpaceRes = null;
 				try {
-					fetchPublishSpaceRes = callOperation(automation, ctx, "Document.FetchPublishSpace", parameters);
+					fetchPublishSpaceRes = ToutaticeDocumentHelper.callOperation(automation, ctx, "Document.FetchPublishSpace", parameters);
 					DocumentModel publishSpaceDoc = (DocumentModel) fetchPublishSpaceRes;
 					this.infosPubli.element("publishSpaceType", publishSpaceDoc.getType());
 					this.infosPubli.element("publishSpacePath",
@@ -548,7 +583,7 @@ public class FetchPublicationInfos {
 				parameters.put("document", document);
 				Object workspaceRes = null;
 				try {
-					workspaceRes = callOperation(automation, ctx, "Document.FetchWorkspaceOfDocument", parameters);
+					workspaceRes = ToutaticeDocumentHelper.callOperation(automation, ctx, "Document.FetchWorkspaceOfDocument", parameters);
 					DocumentModel workspace = (DocumentModel) workspaceRes;
 					this.infosPubli.element("workspacePath", URLEncoder.encode(workspace.getPathAsString(), "UTF-8"));
 					try {
@@ -578,9 +613,16 @@ public class FetchPublicationInfos {
 
 				DocumentModel publishedDoc = null;
 				try {
-					publishedDoc = (DocumentModel) callOperation(automation, ctx, "Document.FetchPublished", parameters);
+
+
+					publishedDoc = (DocumentModel) ToutaticeDocumentHelper.callOperation(automation, ctx, "Document.FetchPublished", parameters);
+
+                    boolean equalVersion = publishedDoc.getVersionLabel().equals(infosPubli.get("liveVersion"));
+                    this.infosPubli.element("isLiveModifiedFromProxy", !equalVersion);
+                    this.infosPubli.element("proxyVersion", publishedDoc.getVersionLabel());
 					this.infosPubli.element("published", Boolean.TRUE);
 				} catch (Exception e) {
+                    this.infosPubli.element("isLiveModifiedFromProxy", true);
 					this.infosPubli.element("published", Boolean.FALSE);
 				}
 
@@ -597,49 +639,7 @@ public class FetchPublicationInfos {
 
 		}
 
-		/**
-		 * Méthode permettant d'appeler une opération Nuxeo..
-		 * 
-		 * @param automation
-		 *            Service automation
-		 * @param ctx
-		 *            Contexte d'exécution
-		 * @param operationId
-		 *            identifiant de l'opération
-		 * @param parameters
-		 *            paramètres de l'opération
-		 * @return le résultat de l'opération dont le type n'est pas connu à
-		 *         priori
-		 * @throws ServeurException
-		 */
-		private Object callOperation(AutomationService automation, OperationContext ctx, String operationId,
-				Map<String, Object> parameters) throws Exception {
-			InvokableMethod operationMethod = getRunMethod(automation, operationId);
-			Object operationRes = operationMethod.invoke(ctx, parameters);
-			return operationRes;
-		}
 
-		/**
-		 * Méthode permettant de récupérer la méthode d'exécution (run()) d'une
-		 * opération.
-		 * 
-		 * @param automation
-		 *            instance du service d'automation
-		 * @param operationId
-		 *            identifiant de l'opération
-		 * @return la méthode run() de l'opération
-		 * @throws SecurityException
-		 * @throws NoSuchMethodException
-		 * @throws OperationNotFoundException
-		 */
-		private InvokableMethod getRunMethod(AutomationService automation, String operationId)
-				throws SecurityException, NoSuchMethodException, OperationNotFoundException {
-			OperationType opType = automation.getOperation(operationId);
-			Method method = opType.getType().getMethod("run", (Class<?>[]) null);
-			OperationMethod anno = method.getAnnotation(OperationMethod.class);
-
-			return new InvokableMethod(opType, method, anno);
-		}
 
 		/**
 		 * Méthode permettant de vérifier si un document publié est accessible
@@ -738,6 +738,39 @@ public class FetchPublicationInfos {
 		}
 
 	}
+
+
+    /**
+     * Get doc by webid in unrestricted mode (admin)
+     */
+    private class UnrestrictedFecthWebIdRunner extends UnrestrictedSessionRunner {
+
+        String webIdSegment;
+        String domainIdSegment;
+        DocumentModel docResolved;
+
+        protected UnrestrictedFecthWebIdRunner(CoreSession session, String domainId, String webId) {
+            super(session);
+            this.webIdSegment = webId;
+            this.domainIdSegment = domainId;
+
+        }
+
+        @Override
+        public void run() throws ClientException {
+            DocumentModelList docs = session.query(String.format(WEB_ID_QUERY, domainIdSegment, webIdSegment));
+            if (docs.size() == 1) {
+                docResolved = docs.get(0);
+            } else if (docs.size() > 1) {
+                throw new ClientException("Two or more documents have the webid : " + webid);
+            }
+        }
+
+        public DocumentModel getDoc() {
+            return docResolved;
+        }
+
+    }
 
 	private static String safeString(String value) {
 		String safeValue = value;

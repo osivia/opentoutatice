@@ -55,7 +55,6 @@
 		</chain>
 
 		<chain id="SetAssignees">
-			<!-- <operation id="Context.FetchDocument" /> -->
 			<operation id="Seam.GetCurrentDocument" />
 			<operation id="Document.GetUsersAndGroups">
 				<param type="string" name="permission">validationWorkflow_validation
@@ -69,6 +68,12 @@
 				<param type="string" name="name">assignedTo</param>
 				<param type="object" name="value">expr:Context["assignedTo"]</param>
 			</operation>
+			<!-- Used for replace system initiator (automatic transition from start 
+			     to validate-online) by workflow initiator -->
+			<!-- <operation id="Context.SetWorkflowNodeVar">
+				<param type="string" name="name">initiator</param>
+				<param type="object" name="value">expr:workflowInitiator</param>
+			</operation> -->
 		</chain>
 
 		<chain id="createOp">
