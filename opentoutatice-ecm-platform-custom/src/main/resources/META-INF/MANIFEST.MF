@@ -5,5 +5,6 @@ Bundle-SymbolicName: fr.toutatice.ecm.platform.custom;singleton:=true
 Bundle-Localization: plugin
 Bundle-Category: stateful
 Nuxeo-Component: OSGI-INF/extensions/custom-by-ottc-services/custom-generic-layouts-contrib.xml,
- OSGI-INF/extensions/custom-by-ottc-services/custom-layouts-contrib.xml
+ OSGI-INF/extensions/custom-by-ottc-services/custom-layouts-contrib.xml,
+ OSGI-INF/extensions/custom/custom-core-types.xml
  
