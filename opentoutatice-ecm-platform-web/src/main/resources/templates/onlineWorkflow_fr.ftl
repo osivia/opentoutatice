@@ -1,7 +1,7 @@
 <HTML>
 <BODY>
-<#if eventId == "workflowOnlineTaskAssigned">
-Une demande de mise en ligne du document '${htmlEscape(docTitle)}' a &eacute;t&eacute; &eacute;mise par ${author} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}.
+<#if eventId == "workflowTaskAssigned">
+Une demande de mise en ligne du document '${htmlEscape(docTitle)}' a &eacute;t&eacute; &eacute;mise par ${initiator} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}.
 <#elseif eventId == "workflowOnlineTaskApproved">
 Le document '${htmlEscape(docTitle)}' a &eacute;t&eacute; mis en ligne par ${author} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}.
 <#elseif eventId == "workflowOnlineTaskRejected">
