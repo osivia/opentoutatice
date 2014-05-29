@@ -20,7 +20,7 @@
             <nxu:set var="isRoutingTask"
               value="#{routingTaskActions.isRoutingTask(task)}">
               <c:if test="#{isRoutingTask}">
-                <p class="buttonsGadget">
+                <p>
                   <script>
                    function setClickButton(buttonId) {
                       jQuery("input[name='button']").attr('value', buttonId);

@@ -1,0 +1,30 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxdir="http://nuxeo.org/nxdirectory"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout" id="#{widget.id}">
+
+	<c:if test="#{widget.mode == 'edit'}">
+
+		<a4j:region renderRegionOnly="true">
+			<a4j:outputPanel id="webid_panel" ajaxRendered="true">
+
+				<nxl:widget name="toutatice_webId_widget" mode="edit"
+					value="#{currentDocument}" />
+
+				<a4j:commandLink id="webid_delete"
+					action="#{documentActions.removeDocumentWebId}"
+					reRender="webid_panel">
+					<h:graphicImage url="/icons/action_tag_delete.png" /> Supprimer le webId.
+				</a4j:commandLink>
+
+			</a4j:outputPanel>
+		</a4j:region>
+
+	</c:if>
+
+</f:subview>
+
+

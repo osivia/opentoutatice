@@ -95,7 +95,8 @@
 	</script>
 
 	<h:form enctype="multipart/form-data" id="document_images_edit"
-		rendered="#{currentDocument.hasSchema('toutatice')}" disableDoubleClickShield="true">
+		rendered="#{currentDocument.hasSchema('toutatice')}"
+		disableDoubleClickShield="true">
 
 		<div>
 
@@ -114,8 +115,7 @@
 						</rich:fileUpload>
 
 						<p class="buttonsGadget">
-							<h:commandButton
-								type="submit" immediate="true"
+							<h:commandButton type="submit" immediate="true"
 								value="#{messages['toutatice.command.add.images']}"
 								class="button"
 								action="#{ImageManagerActions.validateMultiplesUpload(currentDocument)}" />
@@ -149,7 +149,7 @@
 
 					<h3>Liste des images jointes</h3>
 
-					<table class="dataList">
+					<table class="dataList dataListAlign">
 						<thead>
 							<tr>
 								<th></th>
@@ -162,7 +162,7 @@
 
 							<nxu:inputList id="images_input"
 								value="#{currentDocument.toutatice.images}" model="model">
-								<tr style="#{nxu:test(empty currentDocument.toutatice.images[model.rowIndex].file, 'display:none', '')}">
+								<tr>
 									<td><a4j:commandLink id="images_delete" immediate="true"
 											onclick="document.NXContextKeeper.removeFromKeeper(#{model.rowIndex});"
 											oncomplete="document.NXContextKeeper.onReturnAnswer();"
@@ -179,23 +179,20 @@
 											<nxh:outputText
 												value="#{currentDocument.toutatice.images[model.rowIndex].filename}" />
 										</nxh:outputLink></td>
-									<td><nxh:commandLink id="create_image_stamp"
-											styleClass="toutaticeUploadImageGadget" immediate="true"
-											onclick="if( !confirmImageStampCreation() ) return false;"
-											actionListener="#{ImageManagerActions.createImageStamp}">
-											<h:outputText
-												value=" #{messages['toutatice.label.images.create.stamp']}" />
-											<f:param name="index" value="#{model.rowIndex}" />
-
-										</nxh:commandLink> <nxh:commandLink id="create_image_head"
-											styleClass="toutaticeUploadImageGadget" immediate="true"
-											rendered="#{currentDocument.hasSchema('annonce')}"
-											onclick="if( !confirmImageHeadCreation() ) return false;"
-											actionListener="#{ImageManagerActions.createHeadImage}">
-											<h:outputText
-												value=" #{messages['toutatice.label.images.create.head']}" />
-											<f:param name="index" value="#{model.rowIndex}" />
-										</nxh:commandLink></td>
+									<td><nxu:set var="actions"
+											value="#{webActions.getActionsList('TOUTATICE_IMAGES_TAB_CREATE')}"
+											cache="true">
+											<c:forEach var="action" items="#{actions}" varStatus="status">
+												<ui:decorate
+													template="/incl/action/generic_action_template.xhtml">
+													<ui:param name="mode" value="view" />
+													<ui:param name="useButton" value="true" />
+													<ui:param name="hideIcon" value="true" />
+													<ui:param name="useAjaxForm" value="true" />
+													<ui:define name="before_action_trigger"><f:param name="index" value="#{model.rowIndex}" /></ui:define>
+												</ui:decorate>
+											</c:forEach>
+										</nxu:set></td>
 								</tr>
 							</nxu:inputList>
 						</tbody>

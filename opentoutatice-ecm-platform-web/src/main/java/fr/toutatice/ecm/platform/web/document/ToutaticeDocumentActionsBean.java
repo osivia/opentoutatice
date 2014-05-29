@@ -27,17 +27,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.security.PermitAll;
 import javax.ejb.PostActivate;
 import javax.ejb.PrePassivate;
-import javax.ejb.Remove;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
@@ -45,8 +42,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.Destroy;
 import org.jboss.seam.annotations.Factory;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
@@ -113,9 +108,12 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
 	@RequestParameter("type")
 	protected String typeName;
-
+	
 	@RequestParameter("params")
-	protected String reqParams;
+    protected String reqParams;
+
+    /** Used by Portal Views (information send to Portal */
+    protected boolean live = true;
 
 	String newSwitchValue;
 	String newKeyword;
@@ -126,17 +124,13 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 	static private final String CST_DEFAULT_PUBLICATON_AREA_PATH = "/";
 	static private final String CST_DEFAULT_UNKNOWN_VERSION_LABEL = "Version indéterminée"; // I18N
 
-	@Create
-	public void initialize() throws Exception {
-		log.debug("Initializing...");
-	}
+    public boolean isLive() {
+        return live;
+    }
 
-	@Destroy
-	@Remove
-	@PermitAll
-	public void destroy() {
-		log.debug("Removing SEAM action listener...");
-	}
+    public void setLive(boolean live) {
+        this.live = live;
+    }
 
 	@PrePassivate
 	public void saveState() {
@@ -179,6 +173,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
 	public String saveDocument(String viewId) throws ClientException {
 		saveDocument();
+		live = true;
 		return viewId;
 	}
 
@@ -216,6 +211,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
 	public String saveNSetOnLineDocument(String viewId) throws ClientException {
 		saveNSetOnLineDocument();
+		live = false;
 		return viewId;
 	}
 
@@ -236,13 +232,14 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 		return view;
 	}
 
-	public String createPictureBook(String viewId) throws Exception {
-		if (null != this.pictureBookManager) {
-			// create
-			this.pictureBookManager.createPictureBook();
-		} else {
-			log.error("Failed to get the picture book manager from seam context");
-		}
+    public String createPictureBook(String viewId) throws Exception {
+        if (null != this.pictureBookManager) {
+            // create
+            this.pictureBookManager.createPictureBook();
+            live = true;
+        } else {
+            log.error("Failed to get the picture book manager from seam context");
+        }
 
 		return viewId;
 	}
@@ -275,6 +272,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
 	public String updateCurrentDocument(String viewId) throws ClientException {
 		updateCurrentDocument();
+		live = true;
 		return viewId;
 	}
 
@@ -314,6 +312,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 	public String updateNUpgradeCurrentDocument(String version, String viewId)
 			throws ClientException {
 		updateNUpgradeCurrentDocument(version);
+		live = true;
 		return viewId;
 	}
 
@@ -335,6 +334,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 	public String updateNSetOnLineCurrentDocument(String viewId)
 			throws ClientException {
 		updateNSetOnLineCurrentDocument();
+		live = false;
 		return viewId;
 	}
 
@@ -1155,6 +1155,15 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 		}
 		return null;
 	}
+
+	 @SuppressWarnings({"unchecked", "rawtypes"})
+    public String removeDocumentWebId() throws ClientException {
+        DocumentModel currentDoc = getCurrentDocument();
+        if (currentDoc != null) {
+            currentDoc.setProperty("toutatice", "webid", StringUtils.EMPTY);
+        }
+        return null;
+    }
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public String removeDocumentKeyword() throws ClientException {

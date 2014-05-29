@@ -155,7 +155,31 @@
                 </property>
                 <property name="disabled">#{!toutaticeValidator.spaceSupportsWebId}</property>
             </properties>
+         
 		</widget>
+        <widget name="toutatice_removeWebId_widget" type="template">
+			<labels>
+				<label mode="any">Web Id</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>ttc:webid</field>
+			</fields>
+            <properties mode="any">
+                <property name="template">
+                    /widgets/toutatice_removewebid_widget.xhtml
+                </property>
+            </properties>
+            <!-- 
+            <widgetModes>
+                <mode value="edit">#{nxu:test(!toutaticeValidator.spaceSupportsWebId,
+                    layout.mode, 'hidden')}</mode>
+            </widgetModes>
+             --> 
+        </widget>
+        
+        
+        
         <widget name="toutatice_explicitUrl_widget" type="text">
             <labels>
                 <label mode="any">URL explicite</label>
@@ -180,6 +204,9 @@
             <fields>
                 <field>ttcs:hasWebIdEnabled</field>
             </fields>
+            <properties widgetMode="edit">
+                <property name="immediate">true</property>
+            </properties>         
             <widgetModes>
                 <mode value="any">#{nxu:test(currentDocument.hasFacet('Space'),
                     layout.mode, 'hidden')}</mode>
@@ -206,6 +233,25 @@
 					</fields>
 				</widget>
 			</subWidgets>
+		</widget>
+
+		<widget name="toutatice_widget_portal_theme" type="template">
+			<labels>
+				<label mode="any">toutatice.toutatice.theme</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">toutatice.toutatice.theme.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:theme</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_select_portal_flavor_widget_template.xhtml</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(navigationContext.isASpaceDocument(currentDocument) and (currentUser.administrator or currentNuxeoPrincipal.isMemberOf('Administrators')) and not empty themeConfigurationActions.getDefaultFlavorName('toutatice/portal'), layout.mode, 'hidden')}</mode>
+			</widgetModes>
 		</widget>
 
 	</extension>

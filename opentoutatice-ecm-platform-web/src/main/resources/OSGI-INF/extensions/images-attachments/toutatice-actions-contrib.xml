@@ -6,7 +6,7 @@
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
 
-		<!-- Onglet "Images" -->
+		<!-- "Images" Tab -->
 		<action id="TAB_IMAGES_EDIT" link="/incl/tabs/toutatice_document_images_edit.xhtml"
 			order="50" label="toutatice.action.view.images">
 			<category>VIEW_ACTION_LIST</category>
@@ -15,13 +15,24 @@
 			<filter-id>canAttachImages</filter-id>
 		</action>
 
-		<!-- Action de recherche d'Images Nuxeo -->
+		<!-- Images search from Nuxeo -->
 		<action id="TOUTATICE_IMAGES_SEARCH_FROM_NUXEO" label="toutatice.command.in.nuxeo"
 			type="fancybox">
 			<category>TOUTATICE_IMAGES_SEARCH_FROM_NUXEO</category>
 			<properties>
 				<property name="iframe">#{baseURL}toutatice_create_image_search_document_popup.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}
 				</property>
+			</properties>
+		</action>
+		
+		<!-- Stamp creation -->
+		<action id="TOUTATICE_IMAGES_CREATE_STAMP" label="toutatice.label.images.create.stamp"
+			link="#{ImageManagerActions.createImageStamp}">
+			<category>TOUTATICE_IMAGES_TAB_CREATE</category>
+			<properties>
+				<property name="confirmMessage">toutatice.label.images.confirm.stamp.creation
+				</property>
+				<property name="ajaxSupport">true</property>
 			</properties>
 		</action>
 

@@ -24,7 +24,6 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.core.Events;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.platform.publisher.task.CoreProxyWithWorkflowFactory;
@@ -98,34 +97,26 @@ public class ToutaticeTaskActionsBean extends TaskActionsBean {
 		return isAuthorized;
 	}
 	
-//	public void acceptOnlineDemand() throws ClientException{
-//		Task validateTask = getValidateOnlineTask();
-//		acceptTask(validateTask);
-//		Events.instance().raiseEvent(ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED);
-//	}
-//	
-//	public void rejectOnlineDemand() throws ClientException{
-//		Task validateTask = getValidateOnlineTask();
-//		rejectTask(validateTask);
-//		Events.instance().raiseEvent(ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_REJECTED);
-//	}
-	
 	public String getValidateOnlineTaskName(){
 		return ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE;
 	}
 	
 	public Task getValidateOnlineTask() throws ClientException{
+		return getTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE);
+	}
+	
+	public Task getTaskByName(String name) throws ClientException{
 		Task validateTask = null;
 		List<Task> currentTaskInstances = taskService.getCurrentTaskInstances(documentManager);
 		int index = 0;
 		while(index < currentTaskInstances.size() && validateTask == null){
 			Task task = currentTaskInstances.get(index);
-			if(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE.equals(task.getName())){
+			if(name.equals(task.getName())){
 				validateTask = task;
 			}
 			index++;
 		}
 		return validateTask;
 	}
-
+	
 }

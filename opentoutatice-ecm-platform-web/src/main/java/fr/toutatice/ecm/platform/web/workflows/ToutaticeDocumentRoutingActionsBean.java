@@ -29,6 +29,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -41,14 +42,15 @@ import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
 import org.nuxeo.ecm.platform.routing.core.api.DocumentRoutingEngineService;
 import org.nuxeo.ecm.platform.routing.web.DocumentRoutingActionsBean;
+import org.nuxeo.ecm.platform.task.Task;
 import org.nuxeo.ecm.platform.task.TaskEventNames;
-import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
 
 /**
@@ -65,7 +67,10 @@ public class ToutaticeDocumentRoutingActionsBean extends
 
 	private static final Log log = LogFactory
 			.getLog(ToutaticeDocumentRoutingActionsBean.class);
-
+	
+	@In(create = true)
+	ToutaticeTaskActionsBean taskActions;
+	
 	/* 'Fork' of startRoute() to select online workflow */
 	public String startOnlineWorkflow() throws ClientException {
 		DocumentModel onlineWf = getOnlineWorkflowModel();
@@ -75,19 +80,36 @@ public class ToutaticeDocumentRoutingActionsBean extends
 
 		getDocumentRoutingService().createNewInstance(onlineWf.getName(),
 				currentDocIds, documentManager, true);
-
+		
+		/* Events for Observers and listeners */
 		Events.instance().raiseEvent(EventNames.DOCUMENT_CHILDREN_CHANGED,
 				onlineWf);
-		/* Nuxeo events */
-		Events.instance().raiseEvent(TaskEventNames.WORKFLOW_NEW_STARTED);
-		Events.instance().raiseEvent(
-				ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED_ASSIGNED);
+		
+//		Task validateTask = getValidateTask();
+//		ToutaticeWorkflowHelper.notifyRecipients(documentManager, validateTask,
+//				currentDoc, null,
+//				ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED_ASSIGNED);
+		
 		/* UI Seam events */
 		FacesMessages.instance().addFromResourceBundle(
 				"toutatice.label.online.wf.started");
 
 		webActions.resetTabList();
 		return null;
+	}
+	
+	private Task getValidateTask() throws ClientException{
+		Task validate = null;
+		List<Task> currentRouteAllTasks = getCurrentRouteAllTasks();
+		int index = 0;
+		while(index < currentRouteAllTasks.size() && validate == null){
+			Task task = currentRouteAllTasks.get(index);
+			if(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE.equalsIgnoreCase(task.getName())){
+				validate = task;
+			}
+			index++;
+		}
+		return validate;
 	}
 
 	private DocumentModel getOnlineWorkflowModel() throws ClientException {
@@ -215,8 +237,6 @@ public class ToutaticeDocumentRoutingActionsBean extends
 		if (relatedRoute != null) {
 			name = relatedRoute.getName();
 		} else {
-			ToutaticeTaskActionsBean taskActions = (ToutaticeTaskActionsBean) SeamComponentCallHelper
-					.getSeamComponentByName("taskActions");
 			if (taskActions.hasNuxeoPublishTaskPending()) {
 				name = "remote_publication_process";
 			}
@@ -237,11 +257,18 @@ public class ToutaticeDocumentRoutingActionsBean extends
 				route, documentManager);
 		// force computing of tabs
 		webActions.resetTabList();
+		
 		Events.instance().raiseEvent(TaskEventNames.WORKFLOW_CANCELED);
-		Events.instance().raiseEvent(
-				ToutaticeGlobalConst.CST_EVENT_ONLINE_WF_CANCELED);
+		
+//		Task validateTask = getValidateTask();
+//		DocumentModel currentDoc = navigationContext.getCurrentDocument();
+//		ToutaticeWorkflowHelper.notifyRecipients(documentManager, validateTask,
+//				currentDoc, null,
+//				ToutaticeGlobalConst.CST_EVENT_ONLINE_WF_CANCELED);
+		
 		Contexts.removeFromAllContexts("relatedRoutes");
 		documentManager.save();
+		
 		return navigationContext.navigateToDocument(navigationContext
 				.getCurrentDocument());
 	}

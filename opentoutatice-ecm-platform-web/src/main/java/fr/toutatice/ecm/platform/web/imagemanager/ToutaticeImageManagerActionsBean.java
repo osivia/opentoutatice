@@ -40,10 +40,12 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.platform.ui.web.util.files.FileUtils;
 import org.nuxeo.ecm.webapp.filemanager.FileManageActionsBean;
 import org.richfaces.model.UploadItem;
@@ -59,8 +61,8 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeImageCollectionHelper;
 public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
 	
 	private static final Log log = LogFactory.getLog(ToutaticeImageManagerActionsBean.class);
-	
-    @Override
+
+	@Override
     @SuppressWarnings("unchecked")
     public void validateMultipleUploadForDocument(DocumentModel current) throws ClientException, FileNotFoundException {
     	List<String>  msg_params = new ArrayList<String>();
@@ -131,7 +133,7 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
     }
     
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public void createImageStamp(ActionEvent event) {
+    public void createImageStamp() {
         FacesContext context = FacesContext.getCurrentInstance();
         ExternalContext eContext = context.getExternalContext();
         String index = eContext.getRequestParameterMap().get("index");
@@ -151,8 +153,8 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
             documentManager.saveDocument(currentDocument);
 
             // notifier la fin de l'opération
-			facesMessages.add(StatusMessage.Severity.INFO,
-					messages.get("toutatice.fileImporter.create.success.stamp"));
+            facesMessages.add(StatusMessage.Severity.INFO,
+            		messages.get("toutatice.fileImporter.create.success.stamp"));
 			
             // some changes (versioning) happened server-side, fetch new one
 			fetchCurrentDocument(currentDocument);

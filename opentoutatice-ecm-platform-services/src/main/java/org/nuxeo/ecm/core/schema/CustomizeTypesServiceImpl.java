@@ -140,7 +140,7 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements
 	public void addToutaticeDocType(DocumentTypeDescriptor baseDocTypeDescriptor)
 			throws Exception {
 
-		/* Loop of contributions for selected types */
+		/* getDocumentTypes() induces recomputing */
 		DocumentType[] types = schemaManager.getDocumentTypes();
 
 		SchemaManagerImpl schemaManagerImpl = ((SchemaManagerImpl) schemaManager);
@@ -149,42 +149,36 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements
 
 		for (DocumentType type : types) {
 			String name = type.getName();
-			if (!TypeConstants.DOCUMENT.equals(name)
-					&& !verifyExcludedRule(type)) {
-				DocumentTypeDescriptor baseDocTypeDesc = baseDocTypeDescriptor
-						.clone();
-				baseDocTypeDesc.name = name;
+			if (!TypeConstants.DOCUMENT.equals(name)) {
+				if (!verifyExcludedRule(type)) {
+					DocumentTypeDescriptor baseDocTypeDesc = baseDocTypeDescriptor
+							.clone();
+					baseDocTypeDesc.name = name;
 
-				schemaManagerImpl.registerDocumentType(baseDocTypeDesc);
-			} 
-//			else {
-//				DocumentTypeDescriptor exDocTypeDesc = schemaManagerImpl
-//						.getDocumentTypeDescriptor(name);
-//				excludedDocTypesDesc.add(exDocTypeDesc);
-//				excludedDocTypes.put(name, (DocumentTypeImpl) type);
-//			}
+					schemaManagerImpl.registerDocumentType(baseDocTypeDesc);
+				} else {
+					DocumentTypeDescriptor exDocTypeDesc = schemaManagerImpl
+							.getDocumentTypeDescriptor(name);
+					excludedDocTypesDesc.add(exDocTypeDesc);
+					excludedDocTypes.put(name, (DocumentTypeImpl) type);
+				}
+			}
 		}
-//		/* To del excluded types from recomputing */
-//		schemaManagerImpl.allDocumentTypes.removeAll(excludedDocTypesDesc);
-//		schemaManagerImpl.recompute();
-//		schemaManagerImpl.documentTypes.putAll(excludedDocTypes);
-//		/*
-//		 * To avoid recomputing in flushPendingRegistration() method of
-//		 * SchemaManagerImpl
-//		 */
-//		schemaManagerImpl.dirty = false;
+
+		/* To del excluded types from recomputing */
+		schemaManagerImpl.allDocumentTypes.removeAll(excludedDocTypesDesc);
+		schemaManagerImpl.recompute();
+		schemaManagerImpl.allDocumentTypes.addAll(excludedDocTypesDesc);
+		schemaManagerImpl.documentTypes.putAll(excludedDocTypes);
+		/*
+		 * To avoid recomputing in flushPendingRegistration() method of
+		 * SchemaManagerImpl
+		 */
+		schemaManagerImpl.dirty = false;
 
 		log.warn("Excluded Types from toutatice's schema setting: "
 				+ allExcludedTypes.toString());
 
 	}
-	
-//	@Override
-//    public void applicationStarted(ComponentContext context) throws Exception {
-//		SchemaManagerImpl schemaManagerImpl = ((SchemaManagerImpl) schemaManager);
-//		if(!schemaManagerImpl.dirty){
-//			
-//		}
-//    }
-	
+
 }
