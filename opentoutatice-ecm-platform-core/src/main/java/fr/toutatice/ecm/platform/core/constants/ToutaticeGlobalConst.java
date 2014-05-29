@@ -45,6 +45,7 @@ public class ToutaticeGlobalConst {
 	public final static String CST_WORKFLOW_PROCESS_ONLINE = "toutatice_online_approbation";
 	public final static String CST_WORKFLOW_TASK_ONLINE_VALIDATE = "validate-online";
 	public final static String CST_WORKFLOW_TASK_ONLINE_REJECT = "reject-online";
+	public final static String CST_WORKFLOW_BUTTON_ONLINE_ACCEPT = "workflow_online_accept";
 	public final static String CST_WORKFLOW_TASK_ONLINE_CHOOSE_PARTICIPANT = "choose-participant";
 	
 	// Workflow tasks - ensembles  
@@ -68,7 +69,7 @@ public class ToutaticeGlobalConst {
 	public final static String CST_EVENT_ONLINE_TASK_APPROVED_ASSIGNED = "workflowOnlineTaskAssigned";
 	public final static String CST_EVENT_ONLINE_TASK_APPROVED = "workflowOnlineTaskApproved";
 	public final static String CST_EVENT_ONLINE_TASK_REJECTED = "workflowOnlineTaskRejected";
-	public final static String CST_EVENT_ONLINE_WF_CANCELED = "workflowOnlineTaskCanceled";
+	public final static String CST_EVENT_ONLINE_WF_CANCELED = "workflowOnlineCanceled";
 	
 	/* TODO: delete */
 	public final static String CST_EVENT_PROPAGATE_ORGANISATION_SOURCE = "propagateOrganisationSource";
@@ -96,4 +97,5 @@ public class ToutaticeGlobalConst {
 	
 	//Groupe
 	public final static String CST_GROUP_ADMINISTRATOR = "Administrators";
+	
 }

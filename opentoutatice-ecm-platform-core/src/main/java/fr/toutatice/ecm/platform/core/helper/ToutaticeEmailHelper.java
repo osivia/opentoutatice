@@ -46,6 +46,7 @@ import org.nuxeo.ecm.platform.rendering.RenderingService;
 import org.nuxeo.ecm.platform.rendering.impl.DocumentRenderingContext;
 import org.nuxeo.runtime.api.Framework;
 
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.freemarker.ToutaticeFunctions;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -88,6 +89,11 @@ public class ToutaticeEmailHelper extends EmailHelper {
 		context.put("docPermalink", link);   
         
         context.put("creator",doc.getPropertyValue("dc:creator"));
+        
+        boolean isOnLineWF = ToutaticeWorkflowHelper.isOnLineWorkflow(doc);
+        context.put("isOnLineWF", isOnLineWF);
+        String initiator = ToutaticeWorkflowHelper.getOnLineWorkflowInitiator(doc);
+        context.put("initiator",initiator);
         
         String customSubjectTemplate = (String) mail.get(NotificationConstants.SUBJECT_TEMPLATE_KEY);
         if (customSubjectTemplate == null) {
