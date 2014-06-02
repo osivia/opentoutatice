@@ -244,7 +244,6 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
             docView.getParameters();
 
             String ret = URIUtils.addParametersToURIQuery(uri, requestParams);
-            log.error(ret);
             return ret;
         }
 
