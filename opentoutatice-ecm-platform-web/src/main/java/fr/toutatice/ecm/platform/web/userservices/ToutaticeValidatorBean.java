@@ -83,7 +83,7 @@ public class ToutaticeValidatorBean {
     public void validateDomainIdUnicity(FacesContext context, UIComponent component, Object value) throws ValidatorException {
 
         String domainID = (String) value;
-        if (StringUtils.isNotBlank(domainID)) {
+        if (StringUtils.isNotEmpty(domainID)) {
             String msg = null;
 
 
@@ -134,7 +134,7 @@ public class ToutaticeValidatorBean {
 
 
         String webID = (String) value;
-        if (StringUtils.isNotBlank(webID)) {
+        if (StringUtils.isNotEmpty(webID)) {
             String msg = null;
 
 
@@ -188,7 +188,7 @@ public class ToutaticeValidatorBean {
 
 
         String explicitUrl = (String) value;
-        if (StringUtils.isNotBlank(explicitUrl)) {
+        if (StringUtils.isNotEmpty(explicitUrl)) {
             String msg = null;
 
             // format control

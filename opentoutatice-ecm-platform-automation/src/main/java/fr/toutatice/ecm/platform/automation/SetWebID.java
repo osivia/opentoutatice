@@ -120,6 +120,11 @@ public class SetWebID {
             String[] arrayPath = doc.getPathAsString().split("/");
             webid = arrayPath[arrayPath.length - 1];
 
+            // for docs whose ecm:name may be identical, nuxeo add a .timestamp, remove it
+            if (webid.contains(".")) {
+                webid = webid.substring(0, webid.indexOf("."));
+            }
+
             // for Files or Pictures : put the extension of the file if exists
             if ("File".equals(doc.getType()) || "Picture".equals(doc.getType())) {
                 int lastIndexOf = doc.getTitle().lastIndexOf(".");

@@ -153,11 +153,11 @@ public class WebIdFunctions {
 
 
             Serializable explicitUrl = doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXPLICIT_URL);
-            if (explicitUrl != null) {
+            if (explicitUrl != null && StringUtils.isNotBlank(explicitUrl.toString())) {
                 params.put(WebIdCodec.EXPLICIT_KEY, explicitUrl.toString());
             }
             Serializable extensionUrl = doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXTENSION_URL);
-            if (extensionUrl != null) {
+            if (extensionUrl != null && StringUtils.isNotBlank(extensionUrl.toString())) {
                 params.put(WebIdCodec.EXT_KEY, extensionUrl.toString());
             }
 
