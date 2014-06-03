@@ -20,7 +20,6 @@
 			<to-view-id>osivia_done.xhtml</to-view-id>
 		</navigation-case>
 
-
 		<navigation-case>
 			<from-outcome>toutatice_create</from-outcome>
 			<to-view-id>/toutatice_create_document.xhtml</to-view-id>

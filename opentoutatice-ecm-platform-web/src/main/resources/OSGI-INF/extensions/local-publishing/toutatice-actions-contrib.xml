@@ -378,6 +378,11 @@
 			order="1" 
 			type="widget">
 			<category>TOUTATICE_DOCUMENT_HEADER_ACTIONS_LIST</category>
+			<filter id="filter@toutatice_superscript_version">
+				<rule grant="true">
+					<facet>Versionable</facet>
+				</rule>
+			</filter>
 			<properties>
 				<property name="widgetName">toutatice_extended_title_version_widget</property>
 				<property name="displayWidgetLabel">false</property>				
