@@ -378,7 +378,7 @@
 				<fields />
 				<properties mode="any">
 					<property name="template">/widgets/toutatice_widget_document_listing_icon.xhtml</property>
-					<property name="iconPath">img/yes.png</property>
+					<property name="iconPath">icons/yes.png</property>
 					<property name="label">En ligne</property>
 				</properties>
 			</widget>
