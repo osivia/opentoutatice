@@ -58,6 +58,8 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements Custo
     public static final String TYPES_RULE = "types";
     public static final String FACETS_RULE = "facets";
     private Map<String, List<String>> excludedRules;
+    
+    DocumentTypeDescriptor baseDocTypeDescriptor;
 
     /* To log */
     private List<String> exclTypes = new ArrayList<String>();
@@ -79,13 +81,24 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements Custo
             setExcludedRules(rulesDescriptor);
         }
         if (BASE_TYPE_EXT_POINT.equals(extensionPoint)) {
-            DocumentTypeDescriptor baseDocTypeDescriptor = (DocumentTypeDescriptor) contribution;
-            addToutaticeDocType(baseDocTypeDescriptor);
+            baseDocTypeDescriptor = (DocumentTypeDescriptor) contribution;
         }
         if (DOC_TYPE_EXT_POINT.equals(extensionPoint)) {
             DocumentTypeDescriptor docTypeDescriptor = (DocumentTypeDescriptor) contribution;
             addDocTypeContrib(docTypeDescriptor);
         }
+    }
+    
+    @Override
+    public int getApplicationStartedOrder() {
+        /* Before RepositoryService wich initialize Model */
+        return 90;
+    }
+
+    
+    @Override
+    public void applicationStarted(ComponentContext context) throws Exception {
+        addToutaticeDocType(baseDocTypeDescriptor);
     }
 
     public void setExcludedRules(RulesDescriptor rules) {
@@ -136,6 +149,7 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements Custo
      */
     @Override
     public void addToutaticeDocType(DocumentTypeDescriptor baseDocTypeDescriptor) {
+        
         SchemaDescriptor[] schemasDescriptor = baseDocTypeDescriptor.schemas;
         Set<String> schemas = SchemaDescriptor.getSchemaNames(schemasDescriptor);
         String[] facetsToAddTab = baseDocTypeDescriptor.facets;
@@ -181,7 +195,8 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements Custo
 
         log.info("EXCLUDED TYPES: " + exclTypes.toString());
     }
-
+    
+    
     private List<Schema> getSchemasInFacets(String[] facetsNames) {
         List<Schema> schemasInFacets = new ArrayList<Schema>();
         for (String facetName : facetsNames) {
