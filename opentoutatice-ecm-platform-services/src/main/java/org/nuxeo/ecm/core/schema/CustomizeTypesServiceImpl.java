@@ -62,6 +62,7 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements
 	private List<String> allExcludedTypes = new ArrayList<String>();
 
 	private SchemaManager schemaManager;
+	private DocumentTypeDescriptor baseDocTypeDescriptor;
 
 	@Override
 	public void activate(ComponentContext context) throws Exception {
@@ -69,6 +70,12 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements
 		schemaManager = Framework.getLocalService(SchemaManager.class);
 		excludedRules = new HashMap<String, List<String>>(0);
 	}
+	
+	@Override
+    public int getApplicationStartedOrder() {
+		/* Before RepositoryService wich initialize Model */
+        return 90;
+    }
 
 	@Override
 	public void registerContribution(Object contribution,
@@ -83,10 +90,14 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements
 			setExcludedRules(rulesDescriptor);
 		}
 		if (BASE_TYPE_EXT_POINT.equals(extensionPoint)) {
-			DocumentTypeDescriptor baseDocTypeDescriptor = (DocumentTypeDescriptor) contribution;
-			addToutaticeDocType(baseDocTypeDescriptor);
+			baseDocTypeDescriptor = (DocumentTypeDescriptor) contribution;
 		}
 	}
+	
+	@Override
+    public void applicationStarted(ComponentContext context) throws Exception {
+		addToutaticeDocType(baseDocTypeDescriptor);
+    }
 
 	public void setExcludedRules(RulesDescriptor rules) {
 		String[] types = rules.getTypes();

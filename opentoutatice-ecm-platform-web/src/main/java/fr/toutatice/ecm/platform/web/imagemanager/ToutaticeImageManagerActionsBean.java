@@ -39,13 +39,13 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.platform.ui.web.util.files.FileUtils;
 import org.nuxeo.ecm.webapp.filemanager.FileManageActionsBean;
 import org.richfaces.model.UploadItem;
@@ -153,7 +153,7 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
             documentManager.saveDocument(currentDocument);
 
             // notifier la fin de l'opération
-            facesMessages.add(StatusMessage.Severity.INFO,
+            facesMessages.addFromResourceBundle(StatusMessage.Severity.INFO,
             		messages.get("toutatice.fileImporter.create.success.stamp"));
 			
             // some changes (versioning) happened server-side, fetch new one

@@ -96,16 +96,6 @@ public final class ToutaticeWorkflowHelper {
 		}
 		return onLineWF;
 	}
-	
-	public static boolean isOnLineWorkflow(Path docPath) {
-		 String[] segments = docPath.segments();
-		 for(String segment : segments){
-			 if(StringUtils.contains(segment, ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE)){
-				 return true;
-			 }
-		 }
-		 return false;
-	}
 
 	public static boolean isOnLineWorkflow(DocumentModel currentDoc) {
 		return getOnLineWorkflow(currentDoc) != null;

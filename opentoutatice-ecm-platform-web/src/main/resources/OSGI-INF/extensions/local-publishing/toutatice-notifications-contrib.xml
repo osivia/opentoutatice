@@ -13,28 +13,30 @@
 			(document routing) est: avalaibleIn=Workspace ... cependant, cette information 
 			ne semble pas être utilisée (pour les autoSubscribed="true"?): getInterstedUsers 
 			méthod of NotificationEventListener -->
-		<notification autoSubscribed="true" availableIn="PortalSite"
+		<notification autoSubscribed="true" availableIn="Workspace"
 			channel="email" enabled="false" label="label.nuxeo.notifications.appReviewStarted"
 			name="Task assigned" subject="Task Assigned for ${docTitle}"
 			template="workflowTaskAssigned"
 			templateExpr="NotificationContext['taskInstance'].getVariable('taskNotificationTemplate')">
 			<event name="workflowTaskAssigned" />
 		</notification>
-
-		<!-- <notification autoSubscribed="true" availableIn="PortalSite" channel="email" 
-			enabled="true" name="On Line WF" subjectTemplate="onlineWorkflowSubject" 
-			template="onlineWorkflow"> <event name="workflowOnlineTaskAssigned" /> <event 
-			name="workflowOnlineCanceled" /> <event name="workflowOnlineTaskRejected" 
-			/> <event name="workflowOnlineTaskApproved" /> </notification> -->
-
-		<notification autoSubscribed="true" availableIn="PortalSite"
-			channel="email" enabled="true" name="OnLineWFAndOther"
+		
+		<!-- Called by Content Routing workflows and "integrated" remote publication workflow -->
+		<notification autoSubscribed="true" availableIn="Section,PortalSite"
+			channel="email" enabled="true" name="OnLineWFAndOther" label="Publication distante"
 			subjectTemplate="onlineWorkflowAndOtherSubject"
+			template="automaticWorkflowTaskAssigned"
 			templateExpr="NotificationContext['taskInstance'].getVariable('taskNotificationTemplate')">
-			<event name="workflowProcessCanceled" />
-			<event name="workflowTaskCompleted" />
-			<event name="workflowTaskRejected" />
 			<event name="workflowTaskAssigned" />
+		</notification>
+		
+		<notification autoSubscribed="true" availableIn="PortalSite"
+			channel="email" enabled="true" name="OnLineWF"
+			subjectTemplate="onlineWorkflowSubject"
+			template="onlineWorkflow">
+			<event name="workflowOnlineCanceled" />
+			<event name="workflowOnlineTaskApproved" />
+			<event name="workflowOnlineTaskRejected" />
 		</notification>
 
 	</extension>
@@ -45,7 +47,9 @@
 
 		<template name="workflow" src="templates/workflow_fr.ftl" />
 		<template name="onlineWorkflow" src="templates/onlineWorkflow_fr.ftl" />
-		<template name="onlineWorkflowAndOther" src="templates/onLineWFNOtherSubject_fr.ftl" />
+		<template name="onlineWorkflowAndOtherSubject" src="templates/onLineWFNOtherSubject_fr.ftl" />
+		<template name="onlineWorkflowSubject" src="templates/onLineWFSubject_fr.ftl" />
+		<template name="automaticWorkflowTaskAssigned" src="templates/automaticWorkflowTaskAssigned_fr.ftl" />
 
 	</extension>
 

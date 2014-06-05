@@ -291,7 +291,7 @@
 				</property>
 				<property name="displayWidgetLabel">false</property>
 			</properties>
-			<filter-id>hasToutaticeSchema</filter-id>
+			<filter-id>isVersionable</filter-id>
 		</action>
 
 		<!-- Barre de titre: affichache des vignettes de workflow en cours -->
@@ -303,7 +303,6 @@
 				</property>
 				<property name="displayWidgetLabel">false</property>
 			</properties>
-			<filter-id>hasToutaticeSchema</filter-id>
 		</action>
 
 		<!-- Barre de titre: affichache de la vignette de présence d'un verrou -->

@@ -32,12 +32,6 @@
 			<event>documentMoved</event>
 		</listener>
 
-		<!-- <listener name="notificationListener" async="true"
-			postCommit="true"
-			class="fr.toutatice.ecm.platform.core.listener.ToutaticeNotificationEventListener"
-			priority="120">
-		</listener> -->
-
 	</extension>
 
 </component>

@@ -62,6 +62,12 @@
 				</condition>
 			</rule>
 		</filter>
+		
+		<filter id="isVersionable">
+			<rule grant="true">
+				<facet>Versionable</facet>
+			</rule>
+		</filter>
 
 		<filter id="not_version">
 			<rule grant="false">

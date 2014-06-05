@@ -32,7 +32,8 @@
 			<properties>
 				<property name="confirmMessage">toutatice.label.images.confirm.stamp.creation
 				</property>
-				<property name="ajaxSupport">true</property>
+				<property name="styleClass">toutaticeUploadImageGadget
+				</property>
 			</properties>
 		</action>
 

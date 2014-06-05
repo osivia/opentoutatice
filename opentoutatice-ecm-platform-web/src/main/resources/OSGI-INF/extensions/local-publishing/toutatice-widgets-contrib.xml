@@ -44,8 +44,8 @@
 			</controls>
 		</widget>
 
-		<!-- Widget to display openToutatice buttons of accept/reject validate online task in summary 
-			and content view -->
+		<!-- Widget to display openToutatice buttons of accept/reject validate 
+			online task in summary and content view -->
 		<widget name="toutatice_validate_online_task_widget" type="custom_validate_task_actions">
 			<handlingLabels>true</handlingLabels>
 			<labels>
@@ -165,13 +165,30 @@
 			</widgetModes>
 		</widget>
 
+		<!-- Disable this widget in Local PublishingSpace -->
+		<widget name="summary_current_document_publications" type="summary_current_document_publications">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<controls mode="any">
+				<control name="requireSurroundingForm">true</control>
+				<control name="handleLabels">true</control>
+			</controls>
+			<widgetModes>
+				<mode value="any">#{nxu:test(!documentActions.belongToPublishSpace(),
+					layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+
 	</extension>
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgettypes">
 
-		<!-- Widget type to display openToutatice buttons of accept/reject validate task in summary 
-			and content view -->
+		<!-- Widget type to display openToutatice buttons of accept/reject validate 
+			task in summary and content view -->
 		<widgetType name="custom_validate_task_actions">
 			<configuration>
 				<title>OpenToutatice validate task actions widget</title>

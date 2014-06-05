@@ -186,10 +186,8 @@
 												<ui:decorate
 													template="/incl/action/generic_action_template.xhtml">
 													<ui:param name="mode" value="view" />
-													<ui:param name="useButton" value="true" />
 													<ui:param name="hideIcon" value="true" />
-													<ui:param name="useAjaxForm" value="true" />
-													<ui:define name="before_action_trigger"><f:param name="index" value="#{model.rowIndex}" /></ui:define>
+													<ui:define name="inside_action"><f:param name="index" value="#{model.rowIndex}" /></ui:define>
 												</ui:decorate>
 											</c:forEach>
 										</nxu:set></td>

@@ -253,18 +253,19 @@ public class ToutaticeDocumentRoutingActionsBean extends
 		}
 		DocumentRoute route = getRunningWorkflowByName(routes,
 				ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE);
+		
+		Task validateTask = getValidateTask();
+		DocumentModel currentDoc = navigationContext.getCurrentDocument();
+		ToutaticeWorkflowHelper.notifyRecipients(documentManager, validateTask,
+				currentDoc, null,
+				ToutaticeGlobalConst.CST_EVENT_ONLINE_WF_CANCELED);
+		
 		Framework.getLocalService(DocumentRoutingEngineService.class).cancel(
 				route, documentManager);
 		// force computing of tabs
 		webActions.resetTabList();
 		
 		Events.instance().raiseEvent(TaskEventNames.WORKFLOW_CANCELED);
-		
-//		Task validateTask = getValidateTask();
-//		DocumentModel currentDoc = navigationContext.getCurrentDocument();
-//		ToutaticeWorkflowHelper.notifyRecipients(documentManager, validateTask,
-//				currentDoc, null,
-//				ToutaticeGlobalConst.CST_EVENT_ONLINE_WF_CANCELED);
 		
 		Contexts.removeFromAllContexts("relatedRoutes");
 		documentManager.save();

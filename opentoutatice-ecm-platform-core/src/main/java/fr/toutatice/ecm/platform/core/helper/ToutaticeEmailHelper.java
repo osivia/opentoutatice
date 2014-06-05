@@ -46,127 +46,134 @@ import org.nuxeo.ecm.platform.rendering.RenderingService;
 import org.nuxeo.ecm.platform.rendering.impl.DocumentRenderingContext;
 import org.nuxeo.runtime.api.Framework;
 
-import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.freemarker.ToutaticeFunctions;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 public class ToutaticeEmailHelper extends EmailHelper {
-	
-	private static final Log log = LogFactory.getLog(ToutaticeEmailHelper.class);
+
+	private static final Log log = LogFactory
+			.getLog(ToutaticeEmailHelper.class);
 	// used for loading templates from strings
-    private final Configuration stringCfg = new Configuration();
-	
+	private final Configuration stringCfg = new Configuration();
+
 	@Override
-	 public void sendmail(Map<String, Object> mail) throws Exception {
-		
-        Session session = getSession();
-        if (javaMailNotAvailable || session == null) {
-            log.warn("Not sending email since JavaMail is not configured");
-            return;
-        }
+	public void sendmail(Map<String, Object> mail) throws Exception {
 
-        // Construct a MimeMessage
-        MimeMessage msg = new MimeMessage(session);
-        msg.setFrom(new InternetAddress(session.getProperty("mail.from")));
-        Object to = mail.get("mail.to");
-        if (!(to instanceof String)) {
-            log.error("Invalid email recipient: " + to);
-            return;
-        }
-        msg.setRecipients(Message.RecipientType.TO,
-                InternetAddress.parse((String) to, false));
+		Session session = getSession();
+		if (javaMailNotAvailable || session == null) {
+			log.warn("Not sending email since JavaMail is not configured");
+			return;
+		}
 
-        RenderingService rs = Framework.getService(RenderingService.class);
+		// Construct a MimeMessage
+		MimeMessage msg = new MimeMessage(session);
+		msg.setFrom(new InternetAddress(session.getProperty("mail.from")));
+		Object to = mail.get("mail.to");
+		if (!(to instanceof String)) {
+			log.error("Invalid email recipient: " + to);
+			return;
+		}
+		msg.setRecipients(Message.RecipientType.TO,
+				InternetAddress.parse((String) to, false));
 
-        DocumentRenderingContext context = new DocumentRenderingContext();
-        context.remove("doc");
-        context.putAll(mail);
-        DocumentModel doc = (DocumentModel) mail.get("document");
+		RenderingService rs = Framework.getService(RenderingService.class);
+
+		DocumentRenderingContext context = new DocumentRenderingContext();
+		context.remove("doc");
+		context.putAll(mail);
+		DocumentModel doc = (DocumentModel) mail.get("document");
 		context.setDocument(doc);
-        
-		String link = (new ToutaticeFunctions()).getPermalink(doc);       
-		context.put("docPermalink", link);   
-        
-        context.put("creator",doc.getPropertyValue("dc:creator"));
-        
-        boolean isOnLineWF = ToutaticeWorkflowHelper.isOnLineWorkflow(doc);
-        context.put("isOnLineWF", isOnLineWF);
-        String initiator = ToutaticeWorkflowHelper.getOnLineWorkflowInitiator(doc);
-        context.put("initiator",initiator);
-        
-        String customSubjectTemplate = (String) mail.get(NotificationConstants.SUBJECT_TEMPLATE_KEY);
-        if (customSubjectTemplate == null) {
-            String subjTemplate = (String) mail.get(NotificationConstants.SUBJECT_KEY);
-            Template templ = new Template("name",
-                    new StringReader(subjTemplate), stringCfg);
 
-            Writer out = new StringWriter();
-            templ.process(mail, out);
-            out.flush();
+		String link = (new ToutaticeFunctions()).getPermalink(doc);
+		context.put("docPermalink", link);
 
-            msg.setSubject(out.toString(), "UTF-8");
-        } else {
-            rs.registerEngine(new NotificationsRenderingEngine(customSubjectTemplate));
+		context.put("creator", doc.getPropertyValue("dc:creator"));
 
-            LoginContext lc = Framework.login();
+		boolean isOnLineWF = ToutaticeWorkflowHelper.isOnLineWorkflow(doc);
+		context.put("isOnLineWF", isOnLineWF);
+		String initiator = ToutaticeWorkflowHelper
+				.getOnLineWorkflowInitiator(doc);
+		context.put("initiator", initiator);
 
-            Collection<RenderingResult> results = rs.process(context);
-            String subjectMail = "<HTML><P>No parsing Succeded !!!</P></HTML>";
+		context.put("Runtime", Framework.getRuntime());
 
-            for (RenderingResult result : results) {
-                subjectMail = (String) result.getOutcome();
-            }
-            subjectMail = NotificationServiceHelper.getNotificationService().getEMailSubjectPrefix()
-                    + subjectMail;
-            msg.setSubject(subjectMail, "UTF-8");
+		String customSubjectTemplate = (String) mail
+				.get(NotificationConstants.SUBJECT_TEMPLATE_KEY);
+		if (customSubjectTemplate == null) {
+			String subjTemplate = (String) mail
+					.get(NotificationConstants.SUBJECT_KEY);
+			Template templ = new Template("name",
+					new StringReader(subjTemplate), stringCfg);
 
-            lc.logout();
-        }
+			Writer out = new StringWriter();
+			templ.process(mail, out);
+			out.flush();
 
-        msg.setSentDate(new Date());
+			msg.setSubject(out.toString(), "UTF-8");
+		} else {
+			rs.registerEngine(new NotificationsRenderingEngine(
+					customSubjectTemplate));
 
-        rs.registerEngine(new NotificationsRenderingEngine((String) mail.get(NotificationConstants.TEMPLATE_KEY)));
+			LoginContext lc = Framework.login();
 
-        LoginContext lc = Framework.login();
+			Collection<RenderingResult> results = rs.process(context);
+			String subjectMail = "<HTML><P>No parsing Succeded !!!</P></HTML>";
 
-        Collection<RenderingResult> results = rs.process(context);
-        String bodyMail = "<HTML><P>No parsing Succedeed !!!</P></HTML>";
+			for (RenderingResult result : results) {
+				subjectMail = (String) result.getOutcome();
+			}
+			subjectMail = NotificationServiceHelper.getNotificationService()
+					.getEMailSubjectPrefix() + subjectMail;
+			msg.setSubject(subjectMail, "UTF-8");
 
-        for (RenderingResult result : results) {
-            bodyMail = (String) result.getOutcome();
-        }
+			lc.logout();
+		}
 
-        lc.logout();
+		msg.setSentDate(new Date());
 
-        rs.unregisterEngine("ftl");
+		rs.registerEngine(new NotificationsRenderingEngine((String) mail
+				.get(NotificationConstants.TEMPLATE_KEY)));
 
-        msg.setContent(bodyMail, "text/html; charset=utf-8");
+		LoginContext lc = Framework.login();
 
-        // Send the message.
-        Transport.send(msg);
+		Collection<RenderingResult> results = rs.process(context);
+		String bodyMail = "<HTML><P>No parsing Succedeed !!!</P></HTML>";
+
+		for (RenderingResult result : results) {
+			bodyMail = (String) result.getOutcome();
+		}
+
+		lc.logout();
+
+		rs.unregisterEngine("ftl");
+
+		msg.setContent(bodyMail, "text/html; charset=utf-8");
+
+		// Send the message.
+		Transport.send(msg);
 	}
-	
-	   /**
-     * Gets the session from the JNDI.
-     */
-    private static Session getSession() {
-        Session session = null;
-        if (javaMailNotAvailable) {
-            return null;
-        }
-        // First, try to get the session from JNDI, as would be done under J2EE.
-        try {
-            NotificationService service = (NotificationService) Framework.getRuntime().getComponent(
-                    NotificationService.NAME);
-            InitialContext ic = new InitialContext();
-            session = (Session) ic.lookup(service.getMailSessionJndiName());
-        } catch (Exception ex) {
-            log.warn("Unable to find Java mail API", ex);
-            javaMailNotAvailable = true;
-        }
 
-        return session;
-    }
+	/**
+	 * Gets the session from the JNDI.
+	 */
+	private static Session getSession() {
+		Session session = null;
+		if (javaMailNotAvailable) {
+			return null;
+		}
+		// First, try to get the session from JNDI, as would be done under J2EE.
+		try {
+			NotificationService service = (NotificationService) Framework
+					.getRuntime().getComponent(NotificationService.NAME);
+			InitialContext ic = new InitialContext();
+			session = (Session) ic.lookup(service.getMailSessionJndiName());
+		} catch (Exception ex) {
+			log.warn("Unable to find Java mail API", ex);
+			javaMailNotAvailable = true;
+		}
+
+		return session;
+	}
 
 }

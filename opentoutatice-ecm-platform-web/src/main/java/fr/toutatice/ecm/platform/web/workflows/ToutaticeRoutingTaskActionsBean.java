@@ -31,7 +31,6 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.routing.web.RoutingTaskActionsBean;
 import org.nuxeo.ecm.platform.task.Task;
 import org.nuxeo.ecm.platform.task.TaskService;
-import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 import org.nuxeo.ecm.webapp.action.MainTabsActions;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
@@ -64,23 +63,23 @@ public class ToutaticeRoutingTaskActionsBean extends RoutingTaskActionsBean {
 		return routingActions.getCurrentWorkflowInitiator();
 	}
 
-//	@Override
-//	public String endTask(Task task) throws ClientException {
-//		DocumentModel currentDoc = navigationContext.getCurrentDocument();
-//		String wfInitiator = getWorkFlowInitiator();
-//		if (isAcceptOnLineButtonCliked()) {
-//			ToutaticeWorkflowHelper.notifyRecipients(documentManager, task,
-//					currentDoc, wfInitiator, 
-//					ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED);
-//		} else {
-//			ToutaticeWorkflowHelper.notifyRecipients(documentManager, task,
-//					currentDoc, wfInitiator, 
-//					ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_REJECTED);
-//		}
-//		// Done at end to keep attributes for code above
-//		super.endTask(task);
-//		
-//		return MainTabsActions.DEFAULT_VIEW;
-//	}
+	@Override
+	public String endTask(Task task) throws ClientException {
+		DocumentModel currentDoc = navigationContext.getCurrentDocument();
+		String wfInitiator = getWorkFlowInitiator();
+		if (isAcceptOnLineButtonCliked()) {
+			ToutaticeWorkflowHelper.notifyRecipients(documentManager, task,
+					currentDoc, wfInitiator, 
+					ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED);
+		} else {
+			ToutaticeWorkflowHelper.notifyRecipients(documentManager, task,
+					currentDoc, wfInitiator, 
+					ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_REJECTED);
+		}
+		// Done at end to keep attributes for code above
+		super.endTask(task);
+		
+		return MainTabsActions.DEFAULT_VIEW;
+	}
 
 }
