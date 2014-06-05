@@ -110,7 +110,6 @@ public class PermaLinkServiceImpl extends DefaultComponent implements
 	public void registerContribution(Object contribution,
 			String extensionPoint, ComponentInstance contributor)
 			throws Exception {
-		log.info("--> PublicationServiceImpl.registerContribution");
 		if (PERMALINKS_EXTENSION_POINTS.equals(extensionPoint)) {
 			PermalinkDescriptor desc = (PermalinkDescriptor) contribution;
 			String permalinkName = desc.getName();
@@ -118,7 +117,7 @@ public class PermaLinkServiceImpl extends DefaultComponent implements
 			if (desc.getDefaultPermalink())
 				defaultPermalinkName = permalinkName;
 			permalinkImpls.remove(permalinkName);
-			log.info((new StringBuilder()).append(" Added descriptor ")
+			log.debug((new StringBuilder()).append(" Added descriptor ")
 					.append(permalinkName).toString());
 		}
 		log.debug("<-- PublicationServiceImpl.registerContribution");
@@ -128,16 +127,15 @@ public class PermaLinkServiceImpl extends DefaultComponent implements
 	public void unregisterContribution(Object contribution,
 			String extensionPoint, ComponentInstance contributor)
 			throws Exception {
-		log.info("--> PublicationServiceImpl.unregisterContribution");
 		if (PERMALINKS_EXTENSION_POINTS.equals(extensionPoint)) {
 			PermalinkDescriptor desc = (PermalinkDescriptor) contribution;
 			String permalinkName = desc.getName();
 			descriptors.remove(permalinkName);
 			permalinkImpls.remove(permalinkName);
-			log.info((new StringBuilder()).append(" remove descriptor ")
+			log.debug((new StringBuilder()).append(" remove descriptor ")
 					.append(permalinkName).toString());
 		}
-		log.info("<-- PublicationServiceImpl.unregisterContribution");
+		log.debug("<-- PublicationServiceImpl.unregisterContribution");
 	}
 
 }
