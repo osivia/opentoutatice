@@ -207,12 +207,11 @@ public class FetchPublicationInfos {
 			if (docPath.endsWith(TOUTATICE_PUBLI_SUFFIX) && docPath.equals(livePath + TOUTATICE_PUBLI_SUFFIX))
 				path = livePath;
 			infosPubli.element("documentPath", URLEncoder.encode(path, "UTF-8"));
+			
+			/* Indique une modification du live depuis la dernière publication du proxy */
+			liveDoc = (DocumentModel) liveDocRes;
+			infosPubli.element("liveVersion", liveDoc.getVersionLabel());
 		}
-
-        /* Indique une modification du live depuis la dernière publication du proxy */
-        DocumentModel liveDoc = (DocumentModel) liveDocRes;
-        infosPubli.element("liveVersion", liveDoc.getVersionLabel());
-
 
 		infosPubli.put("subTypes", new JSONObject());
 		if (document.isFolder()) {
@@ -234,16 +233,16 @@ public class FetchPublicationInfos {
 		 * Récupération du "droit" de commenter.
 		 */
 		boolean docCommentable = document.hasFacet("Commentable");
+		boolean docMutable = !document.isImmutable();
 		Principal user = coreSession.getPrincipal();
 		if (user == null) {
 			throw new ClientException("Current user not found.");
 		}
 		boolean userNotAnonymous = !((NuxeoPrincipal) user).isAnonymous();
-		infosPubli.put("isCommentableByUser", docCommentable && userNotAnonymous);
+		infosPubli.put("isCommentableByUser", docCommentable && docMutable && userNotAnonymous);
 
 		UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession,
 				document, 
-
 				infosPubli, 
 				userManager,
 				errorsCodes);
