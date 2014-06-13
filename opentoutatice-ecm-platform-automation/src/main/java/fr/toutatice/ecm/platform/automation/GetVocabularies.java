@@ -120,7 +120,7 @@ public class GetVocabularies {
 				String valkey = entry.getTitle();
 				String vali18n = entry.getLabel();
 				String valparent = entry.getParent();
-				if ((key == null) || valparent.equalsIgnoreCase(key)) {
+				if ((key == null) || key.equalsIgnoreCase(valparent)) {
 					// remplir l'objet JSON
 					JSONObject obj = new JSONObject();
 					obj.element("key", valkey);
