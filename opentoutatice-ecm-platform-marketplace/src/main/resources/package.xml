@@ -1,11 +1,13 @@
 <package type="addon" name="open-toutatice" version="@VERSION@">
 	<title>Open Toutatice</title>
 	<description>
-		<p>This addon implements the opened platform called Toutatice 
+		<p>This addon implements the opened platform called Open Toutatice 
 			(which one is based on the Nuxeo DM distribution)
 			
 		Main fixes provided:
          * Refresh problem of a content view after profiled publishing
+		 * Fix operation to get vocabularies.
+		 * Fix technical silent mode that leads to back set approved documents into project lifecycle state 
          
         Main evolutions:
 		 * Add an operation to refresh the principal (so that LDAP updates are taken into consideration synchronously) 

@@ -48,7 +48,7 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 	private boolean installed;
 	private ServiceProvider nextProvider;
 	private static ToutaticeServiceProvider instance = null;
-	private static Map<String, List<String>> filteredUsersMap = null;
+	private static List<String> filteredUsersList = null;
 	
 	protected final Map<Class<?>, Entry<?>> registry = new HashMap<Class<?>, Entry<?>>();
 
@@ -58,7 +58,7 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 	// singleton
 	private ToutaticeServiceProvider() {
 		installed = false;
-		filteredUsersMap = Collections.synchronizedMap(new HashMap<String, List<String>>());
+		filteredUsersList = Collections.synchronizedList(new ArrayList<String>());
 	}
 	
 	public static ToutaticeServiceProvider instance() {
@@ -84,43 +84,27 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 		installed = false;
 	}
 	
-	public void register(Class<?> service, String principalId) {
-		String serviceName = service.getName();
-		
-		synchronized (filteredUsersMap) {
-			if (!filteredUsersMap.containsKey(serviceName)) {
-				filteredUsersMap.put(serviceName, new ArrayList<String>());
-			}
-			
-			List<String> usersList = filteredUsersMap.get(serviceName);
-			if (!usersList.contains(principalId)) {
-				usersList.add(principalId);
-			}
+	public void register(String principalId) {
+		synchronized (filteredUsersList) {
+			/**
+			 * For multi-threading purpose, the expression to test whether the user is already registered is commented.
+			 * Hence, multiple asynchronous processing ran for one connected user will keep in silent mode. The first thread
+			 * to unregister won't unregister the other threads. 
+			 */
+//			if (!filteredUsersList.contains(principalId)) {
+				filteredUsersList.add(principalId);
+//			}
 		}
 	}
 
-	public void unregister(Class<?> service, String principalId) {
-		String serviceName = service.getName();
-
-		synchronized (filteredUsersMap) {
-			if (filteredUsersMap.containsKey(serviceName)) {
-				List<String> usersList = filteredUsersMap.get(serviceName);
-				usersList.remove(principalId);
-			}
+	public void unregister(String principalId) {
+		synchronized (filteredUsersList) {
+			filteredUsersList.remove(principalId);
 		}
 	}
 
-	public boolean isRegistered(Class<?> service, String principalId) {
-		boolean status = false;
-
-		String serviceName = service.getName();
-		synchronized (filteredUsersMap) {
-			if (filteredUsersMap.containsKey(serviceName)) {
-				List<String> usersList = filteredUsersMap.get(serviceName);
-				status = usersList.contains(principalId);
-			}
-		}		
-		return status;
+	public boolean isRegistered(String principalId) {
+		return filteredUsersList.contains(principalId);
 	}
 
 	@Override

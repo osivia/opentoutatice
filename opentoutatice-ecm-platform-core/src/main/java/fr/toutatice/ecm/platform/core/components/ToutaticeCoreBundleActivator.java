@@ -45,13 +45,13 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeEmailHelper;
  * @author mberhaut1
  */
 public class ToutaticeCoreBundleActivator implements BundleActivator {
-	private static Object currentFninstance = null;
+	private static Object currentFnInstance = null;
 //	private static Object currentMailHelper = null;
 	
 	@Override
 	public void start(BundleContext context) throws Exception {
 		// sauvegarde de l'ancienne instance Fn
-		currentFninstance = Functions.getInstance();
+		currentFnInstance = Functions.getInstance();
 		// instancier le nouvel Fn
 		ToutaticeFunctions localFn = new ToutaticeFunctions();
 		Functions.setInstance(localFn);
@@ -62,7 +62,7 @@ public class ToutaticeCoreBundleActivator implements BundleActivator {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		// restauration de l'ancienne instance Fn 
-		Functions.setInstance(currentFninstance);
+		Functions.setInstance(currentFnInstance);
 	}
 
 	private void installEmailHelper() throws Exception {

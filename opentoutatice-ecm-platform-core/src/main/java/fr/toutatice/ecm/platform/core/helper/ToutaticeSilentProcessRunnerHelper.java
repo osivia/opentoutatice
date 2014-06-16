@@ -24,7 +24,6 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
-import org.nuxeo.ecm.core.event.EventService;
 
 import fr.toutatice.ecm.platform.core.components.ToutaticeServiceProvider;
 
@@ -60,8 +59,8 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
     	}
     	
 		try {
-			// installer le service de filtrage des événements pour l'utilisateur
-			ToutaticeServiceProvider.instance().register(EventService.class, userName);
+			// installer le service de filtrage pour l'utilisateur
+			ToutaticeServiceProvider.instance().register(userName);
 			
 			// Exécuter le coprs du traitement
 			if (runInUnrestrictedMode) {
@@ -71,7 +70,7 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
 			}
 		} finally {
 			// désinstaller le service de filtrage des événements pour l'utilisateur
-			ToutaticeServiceProvider.instance().unregister(EventService.class, userName);
+			ToutaticeServiceProvider.instance().unregister(userName);
 	    	log.debug("Fin de l'exécution d'un processus en mode silencieux");
 		}
     }
