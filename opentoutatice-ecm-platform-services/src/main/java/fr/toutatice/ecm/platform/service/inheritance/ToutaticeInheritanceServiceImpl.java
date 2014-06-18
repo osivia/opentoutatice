@@ -222,7 +222,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 					if (settersDescriptors.containsKey(setterName)) {
 						ToutaticeInheritanceSetterDescriptor sDesc = settersDescriptors.get(setterName);
 						ToutaticeInheritanceSetter setter = sDesc.getSetter();
-						boolean isUpdated  = setter.execute(session, (null != parents && 0 < parents.size()) ? parents.get(0) : null, document);
+						boolean isUpdated  = setter.execute(eventContext, (null != parents && 0 < parents.size()) ? parents.get(0) : null, document);
 						
 						if (isUpdated && !DocumentEventTypes.EMPTY_DOCUMENTMODEL_CREATED.equals(eventName)) {
 							this.session.saveDocument(document);
@@ -230,6 +230,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 						
 						// Apply action recursively if it is specifies so 
 						if (document.isFolder() && recursive) {
+							eventContext.setProperty(ToutaticeInheritanceSetter.CTXT_RECURSIVE_ITERATION, true);
 							DocumentModelList children = session.getChildren(document.getRef(), null, new Filter() {
 
 								private static final long serialVersionUID = 1L;
