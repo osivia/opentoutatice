@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
@@ -31,6 +33,18 @@ public class ToutaticeVersioningServiceHandler<T> extends ToutaticeAbstractServi
 
 //	private static final Log log = LogFactory.getLog(ToutaticeVersioningServiceHandler.class);
 
+	private static final List<String> filteredMethodsList = new ArrayList<String>() {
+		private static final long serialVersionUID = 1L;
+
+		{
+			add("doPostCreate");
+			add("doPreSave");
+			add("doPostSave");
+			add("doCheckIn");
+			add("doCheckOut");
+		}
+	};
+	
 	@Override
 	public T newProxy(T object, Class<T> itf) {
 		setObject(object);
@@ -42,7 +56,7 @@ public class ToutaticeVersioningServiceHandler<T> extends ToutaticeAbstractServi
 		NuxeoPrincipal principal = null;
 		
 		try {
-			if ("doPreSave".equals(method.getName())) {
+			if (filteredMethodsList.contains(method.getName())) {
 				if (null != args && 0 < args.length) {
 					for (Object arg : args) {
 						if (arg instanceof SQLDocumentLive) {
