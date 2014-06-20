@@ -48,7 +48,7 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 	private boolean installed;
 	private ServiceProvider nextProvider;
 	private static ToutaticeServiceProvider instance = null;
-	private static List<String> filteredUsersList = null;
+	private static Map<String, List<String>> filteredUsersMap = null;
 	
 	protected final Map<Class<?>, Entry<?>> registry = new HashMap<Class<?>, Entry<?>>();
 
@@ -58,7 +58,7 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 	// singleton
 	private ToutaticeServiceProvider() {
 		installed = false;
-		filteredUsersList = Collections.synchronizedList(new ArrayList<String>());
+		filteredUsersMap = Collections.synchronizedMap(new HashMap<String, List<String>>());
 	}
 	
 	public static ToutaticeServiceProvider instance() {
@@ -84,27 +84,78 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 		installed = false;
 	}
 	
-	public void register(String principalId) {
-		synchronized (filteredUsersList) {
+	public void register(Class<?> service, String principalId) {
+		String serviceName = service.getName();
+		
+		synchronized (filteredUsersMap) {
+			if (!filteredUsersMap.containsKey(serviceName)) {
+				filteredUsersMap.put(serviceName, new ArrayList<String>());
+			}
+			
+			List<String> usersList = filteredUsersMap.get(serviceName);
 			/**
 			 * For multi-threading purpose, the expression to test whether the user is already registered is commented.
 			 * Hence, multiple asynchronous processing ran for one connected user will keep in silent mode. The first thread
 			 * to unregister won't unregister the other threads. 
 			 */
-//			if (!filteredUsersList.contains(principalId)) {
-				filteredUsersList.add(principalId);
+//			if (!usersList.contains(principalId)) {
+				usersList.add(principalId);
 //			}
 		}
 	}
 
-	public void unregister(String principalId) {
-		synchronized (filteredUsersList) {
-			filteredUsersList.remove(principalId);
+	@SuppressWarnings("unchecked")
+	public void registerAll(String principalId) {
+		List<Class<?>> services = Collections.emptyList();
+		
+		try {
+			services = getProxyFactoryService().getAllServicesHandlers();			
+		} catch (Exception e) {
+			log.error("Failed to get all services handlers, error:" + e.getMessage());
+		}
+		
+		for (Class<?> service : services) {
+			register(service, principalId);
 		}
 	}
 
-	public boolean isRegistered(String principalId) {
-		return filteredUsersList.contains(principalId);
+	public void unregister(Class<?> service, String principalId) {
+		String serviceName = service.getName();
+
+		synchronized (filteredUsersMap) {
+			if (filteredUsersMap.containsKey(serviceName)) {
+				List<String> usersList = filteredUsersMap.get(serviceName);
+				usersList.remove(principalId);
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void unregisterAll(String principalId) {
+		List<Class<?>> services = Collections.emptyList();
+		
+		try {
+			services = getProxyFactoryService().getAllServicesHandlers();			
+		} catch (Exception e) {
+			log.error("Failed to get all services handlers, error:" + e.getMessage());
+		}
+		
+		for (Class<?> service : services) {
+			unregister(service, principalId);
+		}
+	}
+
+	public boolean isRegistered(Class<?> service, String principalId) {
+		boolean status = false;
+
+		String serviceName = service.getName();
+		synchronized (filteredUsersMap) {
+			if (filteredUsersMap.containsKey(serviceName)) {
+				List<String> usersList = filteredUsersMap.get(serviceName);
+				status = usersList.contains(principalId);
+			}
+		}		
+		return status;
 	}
 
 	@Override

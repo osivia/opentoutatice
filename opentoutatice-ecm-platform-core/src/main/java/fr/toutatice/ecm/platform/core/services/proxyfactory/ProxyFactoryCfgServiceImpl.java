@@ -18,7 +18,9 @@
  */
 package fr.toutatice.ecm.platform.core.services.proxyfactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -50,8 +52,10 @@ public class ProxyFactoryCfgServiceImpl<T> extends DefaultComponent implements P
 			throws Exception {
 		if (EXTENSION_POINT.equals(extensionPoint)) {
 			ProxyFactoryCfgDescriptor desc = (ProxyFactoryCfgDescriptor) contribution;
-			descriptors.put(desc.getServiceClass(), desc);
-			log.info((new StringBuilder()).append(" Added descriptor ").append(desc.getServiceClass()).toString());
+			if (desc.isEnabled()) {
+				this.descriptors.put(desc.getServiceClass(), desc);
+				log.info((new StringBuilder()).append(" Added descriptor ").append(desc.getServiceClass()).toString());
+			}
 		}
 	}
 
@@ -60,7 +64,7 @@ public class ProxyFactoryCfgServiceImpl<T> extends DefaultComponent implements P
 			throws Exception {
 		if (EXTENSION_POINT.equals(extensionPoint)) {
 			ProxyFactoryCfgDescriptor desc = (ProxyFactoryCfgDescriptor) contribution;
-			descriptors.remove(desc.getServiceClass());
+			this.descriptors.remove(desc.getServiceClass());
 			log.info((new StringBuilder()).append(" Removed descriptor ").append(desc.getServiceClass()).toString());
 		}
 	}
@@ -90,13 +94,22 @@ public class ProxyFactoryCfgServiceImpl<T> extends DefaultComponent implements P
 		// look among contributions whether a service proxy is configured (and enabled)
 		if (this.descriptors.containsKey(clazz.getName())) {
 			ProxyFactoryCfgDescriptor handlerDescriptor = this.descriptors.get(clazz.getName());
-			if (handlerDescriptor.isEnabled()) {
-				handlerClassName = handlerDescriptor.getHandlerClass();
-				t = Class.forName(handlerClassName);
-			}
+			handlerClassName = handlerDescriptor.getHandlerClass();
+			t = Class.forName(handlerClassName);
 		}
 		
 		return t;
+	}
+
+	@Override
+	public List<Class<?>> getAllServicesHandlers() throws ClassNotFoundException {
+		List<Class<?>> handlers = new ArrayList<Class<?>>();
+		
+		for (String serviceClassName : this.descriptors.keySet()) {
+			handlers.add(Class.forName(serviceClassName));
+		}
+		
+		return handlers;
 	}
 
 }

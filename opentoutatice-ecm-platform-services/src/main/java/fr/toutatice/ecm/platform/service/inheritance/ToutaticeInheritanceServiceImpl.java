@@ -1,6 +1,7 @@
 package fr.toutatice.ecm.platform.service.inheritance;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,9 @@ import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.event.DocumentEventTypes;
 import org.nuxeo.ecm.core.event.Event;
+import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
+import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.actions.Action;
 import org.nuxeo.ecm.platform.actions.ActionContext;
 import org.nuxeo.ecm.platform.actions.ejb.ActionManager;
@@ -34,8 +37,17 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
 public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements ToutaticeInheritanceService {
 
 	private static final Log log = LogFactory.getLog(ToutaticeInheritanceServiceImpl.class);
-	public static final ComponentName ID = new ComponentName("fr.toutatice.ecm.platform.service.inheritance");
+	
+	private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
+		private static final long serialVersionUID = 1L;
 
+		{
+			add(EventService.class);
+			add(VersioningService.class);
+		}
+	};
+
+	public static final ComponentName ID = new ComponentName("fr.toutatice.ecm.platform.service.inheritance");
 	public static final String EXTENSION_POINTS_SETTERS = "setters";
 
 	protected final Map<String, ToutaticeInheritanceSetterDescriptor> settersDescriptors;
@@ -80,7 +92,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 		
 		try {
 			ToutaticeSilentProcessRunnerHelper runner = new InheritanceSilentModeRunner(session, event, false);
-			runner.silentRun(true);
+			runner.silentRun(true, FILTERED_SERVICES_LIST);
 		} catch (ClientException e) {
 			log.error("Failed to run the inheritance process, error: " + e.getMessage());
 		}
@@ -93,7 +105,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 		
 		try {
 			ToutaticeSilentProcessRunnerHelper runner = new InheritanceSilentModeRunner(session, event, true);
-			runner.silentRun(true);
+			runner.silentRun(true, FILTERED_SERVICES_LIST);
 		} catch (ClientException e) {
 			log.error("Failed to run the inheritance process, error: " + e.getMessage());
 		}

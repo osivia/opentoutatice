@@ -28,6 +28,7 @@ import java.util.Map;
 
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.storage.sql.coremodel.SQLDocumentLive;
+import org.nuxeo.ecm.core.versioning.VersioningService;
 
 public class ToutaticeVersioningServiceHandler<T> extends ToutaticeAbstractServiceHandler<T> {
 
@@ -67,7 +68,7 @@ public class ToutaticeVersioningServiceHandler<T> extends ToutaticeAbstractServi
 						}
 					}
 					
-					if (null != principal && ToutaticeServiceProvider.instance().isRegistered(principal.getName())) {
+					if (null != principal && ToutaticeServiceProvider.instance().isRegistered(VersioningService.class, principal.getName())) {
 						// do filter invocation
 						return null;
 					}

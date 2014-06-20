@@ -44,7 +44,7 @@ public class ToutaticeEventFilterHandler<T> extends ToutaticeAbstractServiceHand
 					Event evt = (Event) args[0];
 					Principal principal = evt.getContext().getPrincipal();
 					
-					if (null != principal && ToutaticeServiceProvider.instance().isRegistered(principal.getName())) {
+					if (null != principal && ToutaticeServiceProvider.instance().isRegistered(EventService.class, principal.getName())) {
 						// do filter invocation
 						return null;
 					}
