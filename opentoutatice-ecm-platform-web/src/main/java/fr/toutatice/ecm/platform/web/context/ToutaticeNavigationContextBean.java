@@ -34,6 +34,7 @@ import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.ClientRuntimeException;
 import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
@@ -51,6 +52,8 @@ import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.service.url.ToutaticeDocumentResolver;
+import fr.toutatice.ecm.platform.service.url.WedIdRef;
 
 @Name("navigationContext")
 @Scope(CONVERSATION)
@@ -79,6 +82,24 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
         } catch (ClientException e) {
             throw new ClientRuntimeException(e);
         }
+    }
+    
+    @Override
+    public String navigateToRef(DocumentRef docRef) throws ClientException {
+        if (documentManager == null) {
+            throw new IllegalStateException("documentManager not initialized");
+        }
+        DocumentModel doc = null;
+        if(docRef instanceof WedIdRef){
+        	try {
+				doc = ToutaticeDocumentResolver.resolveReference(documentManager, (WedIdRef) docRef);
+			} catch (DocumentException e) {
+				throw new ClientException(e);
+			}
+        }else{
+        	doc = documentManager.getDocument(docRef);
+        }
+        return navigateToDocument(doc, "view");
     }
 
     public DocumentModel getDocumentDomain(DocumentModel document) {
