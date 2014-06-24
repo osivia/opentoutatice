@@ -18,6 +18,9 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -25,11 +28,7 @@ import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.event.Event;
-import org.nuxeo.ecm.core.event.EventContext;
-import org.nuxeo.ecm.core.event.EventService;
-import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
-import org.nuxeo.ecm.core.event.impl.EventImpl;
+import org.nuxeo.ecm.core.trash.TrashService;
 import org.nuxeo.runtime.api.Framework;
 
 
@@ -40,8 +39,6 @@ import org.nuxeo.runtime.api.Framework;
 public class PutDocumentInTrash {
     
     public static final String ID= "Document.PutDocumentInTrash";
-    private static final String ABOUT_TO_REMOVE = "aboutToRemove";
-    private static final String DELETE = "delete";
     
     @Context
     protected CoreSession session;
@@ -51,13 +48,11 @@ public class PutDocumentInTrash {
     
     @OperationMethod
     public Object run() throws Exception {
+        List<DocumentModel> docs = new ArrayList<DocumentModel>(1);
+        docs.add(document);
         
-        EventService eventService = Framework.getService(EventService.class);
-        EventContext eventContext = new DocumentEventContext(session, session.getPrincipal(), document); 
-        Event event = new EventImpl(ABOUT_TO_REMOVE, eventContext);
-        eventService.fireEvent(event);
-        
-        session.followTransition(document.getRef(), DELETE);
+        TrashService trashService = Framework.getService(TrashService.class);
+        trashService.trashDocuments(docs);
         
         return document;
         
