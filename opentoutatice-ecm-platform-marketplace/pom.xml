@@ -4,9 +4,8 @@
 	<parent>
 		<groupId>org.nuxeo.ecm.distribution</groupId>
 		<artifactId>nuxeo-distribution</artifactId>
-		<version>5.6.0-HF29</version>
+		<version>5.6</version>
 	</parent>
-
   
     <groupId>org.nuxeo.ecm.distribution</groupId>
 	<artifactId>opentoutatice-ecm-platform-marketplace</artifactId>
@@ -22,7 +21,6 @@
 			<groupId>org.nuxeo.ecm.distribution</groupId>
 			<artifactId>nuxeo-distribution-dm</artifactId>
 			<type>pom</type>
-            <version>5.6.0-HF29</version>
 		</dependency>
 
 		<!-- Additional bundles to be deployed by the MP -->
