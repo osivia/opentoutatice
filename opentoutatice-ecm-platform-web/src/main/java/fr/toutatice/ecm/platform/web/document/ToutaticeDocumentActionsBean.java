@@ -118,7 +118,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     @RequestParameter("params")
     protected String reqParams;
     
-    /** Used by Portal Views (information send to Portal */
+    /** Used by Portal Views (information send to Portal) */
     protected boolean live = true;
 
     String newSwitchValue;
@@ -212,7 +212,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public String saveNSetOnLineDocument(String viewId) throws ClientException {
         saveNSetOnLineDocument();
-        live = false;
         return viewId;
     }
 
@@ -252,7 +251,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
             // mise en ligne
             DocumentModel newDocument = navigationContext.getCurrentDocument();
             setDocumentOnline(newDocument);
-            live = false;
         } else {
             log.error("Failed to get the picture book manager from seam context");
         }
@@ -327,7 +325,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public String updateNSetOnLineCurrentDocument(String viewId) throws ClientException {
         updateNSetOnLineCurrentDocument();
-        live = false;
         return viewId;
     }
 
@@ -578,8 +575,10 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
             if (!document.getVersionLabel().equals(proxyVersionLabel)) {
                 if (documentManager.hasPermission(document.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE)) {
                     ToutaticeOperationHelper.runOperationChain(documentManager, ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_PUBLISH_ONLY, document);
+                    live = false;
                 } else {
                     ToutaticeOperationHelper.runOperationChain(documentManager, ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_PUBLISH_REQUEST, document);
+                    live = true;
                 }
             }
         } catch (Exception e) {
