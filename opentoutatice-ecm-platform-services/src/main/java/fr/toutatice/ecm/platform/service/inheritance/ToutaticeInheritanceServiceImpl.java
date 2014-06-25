@@ -210,6 +210,11 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 						DocumentModel root = document;
 						if (DocumentEventTypes.EMPTY_DOCUMENTMODEL_CREATED.equals(eventName)) {
 							String parentPath = (String) eventContext.getProperty("parentPath");
+							if (StringUtils.isBlank(parentPath)) {
+								// discrards fake documents created for instance to validate WebSite or BlogSite documents
+								return;
+							}
+							
 							root = this.session.getDocument(new PathRef(parentPath));
 							thisIncluded = true;
 						}
