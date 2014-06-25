@@ -29,6 +29,20 @@ import org.jboss.seam.annotations.web.RequestParameter;
 @Scope(ScopeType.CONVERSATION)
 @Install(precedence = Install.DEPLOYMENT)
 public class PageBean {
+    
+    protected String notificationKey;
+    
+    
+    public String getNotificationKey() {
+        String notif = notificationKey;
+        setNotificationKey(null);
+        return notif;
+    }
+
+    
+    public void setNotificationKey(String notificationKey) {
+        this.notificationKey = notificationKey;
+    }
 
     /**
      * identifiant url de provenance
