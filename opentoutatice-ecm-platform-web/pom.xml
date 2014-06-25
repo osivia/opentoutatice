@@ -82,6 +82,11 @@
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.nuxeo.ecm.automation</groupId>
+			<artifactId>nuxeo-automation-jsf</artifactId>
+			<version>${nuxeo.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-forum</artifactId>
 			<version>${nuxeo.version}</version>
