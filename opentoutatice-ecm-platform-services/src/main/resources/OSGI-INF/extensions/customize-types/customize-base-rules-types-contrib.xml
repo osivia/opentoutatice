@@ -15,6 +15,8 @@
 			<facet name="SystemDocument" />
 			<types>
 				<type>AdministrativeStatus</type>
+				<type>CommentRoot</type>
+				<type>Comment</type>
 			</types>
 		</rules>
 
