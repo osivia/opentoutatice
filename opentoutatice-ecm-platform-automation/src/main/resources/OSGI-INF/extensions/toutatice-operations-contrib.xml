@@ -36,6 +36,7 @@
 	<operation class="fr.toutatice.ecm.platform.automation.SetDocumentACL" />
 	<operation class="fr.toutatice.ecm.platform.automation.RefreshPrincipal" />
     <operation class="fr.toutatice.ecm.platform.automation.GetUserProfile" />
+    <operation class="fr.toutatice.ecm.platform.automation.GetExtendedTasks" />
     <operation class="fr.toutatice.ecm.platform.automation.StopWFProcess" />
 	
   </extension>
