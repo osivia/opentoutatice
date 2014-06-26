@@ -81,7 +81,7 @@ public class ToutaticeRootSectionsFinder extends DefaultRootSectionsFinder {
         public void run() throws ClientException {
             for (DocumentModel sectionRoot : list) {
                 try {
-                    DocumentModel sectionRootParent = session.getParentDocument(sectionRoot.getRef());
+                    DocumentModel sectionRootParent = this.session.getParentDocument(sectionRoot.getRef());
                     if (!sectionRootParent.hasFacet(FacetNames.MASTER_PUBLISH_SPACE)) {
                         this.sectionRoots.add(sectionRoot);
                     }
