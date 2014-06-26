@@ -7,12 +7,12 @@
 	<require>fr.toutatice.ecm.platform.core.doctypes</require>
 	<require>fr.toutatice.ecm.platform.core.schemas</require>
 
-	<extension
-		target="fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService"
+	<extension target="fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService"
 		point="excludedrules">
 
 		<rules>
 			<facet name="SystemDocument" />
+			<facet name="HiddenInNavigation" />
 			<types>
 				<type>AdministrativeStatus</type>
 			</types>

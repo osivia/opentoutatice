@@ -1,15 +1,12 @@
 <?xml version="1.0"?>
-
 <component name="fr.toutatice.ecm.platform.customize.base.types">
 
-	<require>fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService
-	</require>
+	<require>fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService</require>
 	<require>fr.toutatice.ecm.platform.core.doctypes</require>
 	<require>fr.toutatice.ecm.platform.core.schemas</require>
 	<require>fr.toutatice.ecm.platform.customize.base.rules.types</require>
 
-	<extension
-		target="fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService"
+	<extension target="fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService"
 		point="basettc">
 
 		<doctype name="*">
@@ -19,18 +16,13 @@
 		</doctype>
 
 	</extension>
-
-	<extension
-		target="fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService"
+	
+	<extension target="fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService"
 		point="doctype">
 
 		<doctype name="Workspace">
 			<facet name="Space" />
 		</doctype>
-
-		<!--<doctype name="Domain">
-			<facet name="Space" />
-		</doctype>-->
 
 	</extension>
 

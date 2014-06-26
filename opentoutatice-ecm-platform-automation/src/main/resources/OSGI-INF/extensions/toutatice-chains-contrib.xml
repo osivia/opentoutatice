@@ -147,7 +147,6 @@
 			</operation>
 		</chain>
 
-
 		<chain id="moveOp">
 			<operation id="Document.SetSpaceID" />
 			<operation id="Document.SetDomainID" />
