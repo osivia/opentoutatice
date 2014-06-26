@@ -10,7 +10,7 @@
 		point="actions">
 
 		<action id="TOUTATICE_CREATE_DOCUMENT" link="#{documentActions.saveDocument('done')}"
-			order="1" label="command.create" onclick="#{pageBean.setLive(true)}">
+			order="1" label="command.create">
 			<category>TOUTATICE_CREATE_DOCUMENT_FORM</category>
 			<filter-id>is_not_creating_form_specific_document</filter-id>
 		</action>
