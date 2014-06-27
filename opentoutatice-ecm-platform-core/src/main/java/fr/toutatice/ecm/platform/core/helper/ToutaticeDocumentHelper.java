@@ -248,7 +248,7 @@ public class ToutaticeDocumentHelper {
 			}
 			parent = runner.getParentList();
 		} catch (ClientException e) {
-			log.error("Failed to get the parent for the current document, error: " + e.getMessage());
+			log.warn("Failed to get the parent for the current document, error: " + e.getMessage());
 		}
 
 		return parent;
@@ -328,7 +328,7 @@ public class ToutaticeDocumentHelper {
 			}
 			mapPpty = runner.getProperties();
 		} catch (ClientException e) {
-			log.error("Failed to get the parent for the current document, error: " + e.getMessage());
+			log.warn("Failed to get the parent for the current document, error: " + e.getMessage());
 		}		
 		
 		return mapPpty;
