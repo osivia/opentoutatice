@@ -75,7 +75,7 @@
 			<facet name="TTCPortalConfigurable" />
 			<facet name="TTCAttachableImages" />
 			<facet name="FolderishEditable" />
-			<facet name="SpaceContent"/>
+			<!-- <facet name="SpaceContent"/> -->
 			<facet name="SpaceNavigationItem" />
 			<facet name="PublishSpace" />
 			<prefetch>common.icon, dc:title, dc:description, dc:created,

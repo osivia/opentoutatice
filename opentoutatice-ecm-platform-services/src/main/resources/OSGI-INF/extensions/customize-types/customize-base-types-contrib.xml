@@ -27,6 +27,10 @@
 		<doctype name="Workspace">
 			<facet name="Space" />
 		</doctype>
+		
+		<doctype name="PictureBook">
+			<facet name="SpaceContent" />
+		</doctype>
 
 		<!--<doctype name="Domain">
 			<facet name="Space" />
