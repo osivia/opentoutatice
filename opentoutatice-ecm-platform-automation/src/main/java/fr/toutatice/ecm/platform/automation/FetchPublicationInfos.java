@@ -246,9 +246,10 @@ public class FetchPublicationInfos {
         boolean userNotAnonymous = !((NuxeoPrincipal) user).isAnonymous();
         infosPubli.put("isCommentableByUser", docCommentable && docMutable && userNotAnonymous);
 
-        UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession, document, infosPubli, userManager, errorsCodes);
-
+        UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession, document, liveDocRes, infosPubli, userManager,
+                errorsCodes);
         infosPubliRunner.runUnrestricted();
+
         errorsCodes = infosPubliRunner.getErrorsCodes();
         infosPubli = infosPubliRunner.getInfosPubli();
         infosPubli.element("errorCodes", errorsCodes);
@@ -503,6 +504,7 @@ public class FetchPublicationInfos {
     private static class UnrestrictedFecthPubliInfosRunner extends UnrestrictedSessionRunner {
 
         private DocumentModel document;
+        private Object liveDocRes;
         private JSONObject infosPubli;
         private List<Integer> errorsCodes;
         private UserManager userManager;
@@ -521,10 +523,11 @@ public class FetchPublicationInfos {
             return errorsCodes;
         }
 
-        public UnrestrictedFecthPubliInfosRunner(CoreSession session, DocumentModel document, JSONObject infosPubli, UserManager userManager,
-                List<Integer> errorsCodes) {
+        public UnrestrictedFecthPubliInfosRunner(CoreSession session, DocumentModel document, Object liveDocRes, JSONObject infosPubli,
+                UserManager userManager, List<Integer> errorsCodes) {
             super(session);
             this.document = document;
+            this.liveDocRes = liveDocRes;
             this.infosPubli = infosPubli;
             this.errorsCodes = errorsCodes;
             this.userManager = userManager;
@@ -533,21 +536,24 @@ public class FetchPublicationInfos {
         @Override
         public void run() throws ClientException {
             try {
-                /*
-                 * Récupération du spaceID
-                 */
-                this.infosPubli.put("spaceID", getSpaceID(this.document));
+                if (!isError(liveDocRes)) {
+                    DocumentModel liveDoc = (DocumentModel) this.liveDocRes;
+                    /*
+                     * Récupération du spaceID
+                     */
+                    this.infosPubli.put("spaceID", getSpaceID(liveDoc));
 
-                /*
-                 * Récupération du parentSpaceID
-                 */
-                String parentSpaceID = "";
-                DocumentModelList spaceParentList = ToutaticeDocumentHelper.getParentSpaceList(this.session, this.document, true, true);
-                if (spaceParentList != null && spaceParentList.size() > 0) {
-                    DocumentModel parentSpace = (DocumentModel) spaceParentList.get(0);
-                    parentSpaceID = getSpaceID(parentSpace);
+                    /*
+                     * Récupération du parentSpaceID
+                     */
+                    String parentSpaceID = "";
+                    DocumentModelList spaceParentList = ToutaticeDocumentHelper.getParentSpaceList(this.session, liveDoc, true, true);
+                    if (spaceParentList != null && spaceParentList.size() > 0) {
+                        DocumentModel parentSpace = (DocumentModel) spaceParentList.get(0);
+                        parentSpaceID = getSpaceID(parentSpace);
+                    }
+                    this.infosPubli.put("parentSpaceID", parentSpaceID);
                 }
-                this.infosPubli.put("parentSpaceID", parentSpaceID);
 
                 /*
                  * Récupération du contexte propre à l'appel d'autres opérations
