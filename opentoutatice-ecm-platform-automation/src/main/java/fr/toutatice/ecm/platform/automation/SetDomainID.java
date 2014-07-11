@@ -19,6 +19,9 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,6 +34,8 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.Filter;
+import org.nuxeo.ecm.core.event.EventService;
+import org.nuxeo.ecm.core.versioning.VersioningService;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
@@ -50,10 +55,19 @@ public class SetDomainID {
     @Context
     protected CoreSession coreSession;
 
+	private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
+		private static final long serialVersionUID = 1L;
+
+		{
+			add(EventService.class);
+			add(VersioningService.class);
+		}
+	};
+
 	@OperationMethod()
 	public DocumentModel run(DocumentModel doc) throws Exception {
 		InnerSilentModeUpdateDomainID runner = new InnerSilentModeUpdateDomainID(coreSession, doc);
-		runner.silentRun(true);
+		runner.silentRun(true, FILTERED_SERVICES_LIST);
 		return runner.getDocument();
 	}
 

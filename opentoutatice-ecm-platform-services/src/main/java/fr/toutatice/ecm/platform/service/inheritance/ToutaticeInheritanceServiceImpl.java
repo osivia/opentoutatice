@@ -136,6 +136,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 			boolean status = true;
 			
 			this.actionContext.setCurrentDocument(docModel);
+			this.actionContext.remove("PrecomputedFilters");
 			for (String filterId : this.filters) {
 				status = this.actionManager.checkFilter(filterId, this.actionContext);
 				if (false == status) {
@@ -245,7 +246,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 							this.session.saveDocument(document);
 						}
 						
-						// Apply action recursively if it is specifies so 
+						// Apply action recursively if it is specified so 
 						if (document.isFolder() && recursive) {
 							eventContext.setProperty(ToutaticeInheritanceSetter.CTXT_RECURSIVE_ITERATION, true);
 							DocumentModelList children = session.getChildren(document.getRef(), null, new Filter() {
