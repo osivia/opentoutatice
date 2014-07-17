@@ -72,10 +72,6 @@ public class PageBean implements Serializable {
 	@RequestParameter("fromUrl")
 	private String requestedFromUrl;
 
-	// FIXME: try with Boolean
-	@RequestParameter("liveEdit")
-	private String liveEdit;
-
 	@RequestParameter("docId")
 	private String inputDocId;
 
@@ -87,14 +83,6 @@ public class PageBean implements Serializable {
 
 	public void setNotificationKey(String notificationKey) {
 		this.notificationKey = notificationKey;
-	}
-
-	public String getLiveEdit() {
-		return this.liveEdit;
-	}
-
-	public void setLiveEdit(String liveEdit) {
-		this.liveEdit = liveEdit;
 	}
 
 	public String getInputDocId() {
