@@ -14,6 +14,8 @@
  *
  * Contributors:
  *   mberhaut1
+ *   dchevrier
+ *   lbillon
  *    
  */
 package fr.toutatice.ecm.platform.automation;
