@@ -27,6 +27,10 @@
 			<view id="/toutatice_create_relation_search_document_popup.xhtml">
 				<theme>galaxy/popup</theme>
 			</view>
+            
+            <view id="/osivia_open_live_edit.xhtml">
+                <theme>galaxy/popup</theme>
+            </view>            
 		</application>
 	</extension>
 

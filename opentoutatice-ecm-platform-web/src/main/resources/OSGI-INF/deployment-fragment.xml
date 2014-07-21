@@ -20,6 +20,12 @@
 			<to-view-id>/osivia_done.xhtml</to-view-id>
 		</navigation-case>
 
+        <!-- Ecran live edit -->
+        <navigation-case>
+            <from-outcome>open_live_edit</from-outcome>
+            <to-view-id>/osivia_open_live_edit.xhtml</to-view-id>
+        </navigation-case>
+
 		<navigation-case>
 			<from-outcome>toutatice_create</from-outcome>
 			<to-view-id>/toutatice_create_document.xhtml</to-view-id>
