@@ -15,7 +15,15 @@
 			<category>Collaborative</category>
 			<default-view>view_documents</default-view>
 			<create-view>create_picturebook</create-view>
-			<layouts mode="any">
+			<layouts mode="view">
+				<layout>heading</layout>
+				<layout>picturebook</layout>
+			</layouts>
+			<layouts mode="create">
+				<layout>heading</layout>
+				<layout>picturebook</layout>
+			</layouts>
+			<layouts mode="edit">
 				<layout>heading</layout>
 				<layout>picturebook</layout>
 			</layouts>
