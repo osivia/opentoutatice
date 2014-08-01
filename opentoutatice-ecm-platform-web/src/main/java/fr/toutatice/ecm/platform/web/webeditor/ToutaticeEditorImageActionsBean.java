@@ -49,6 +49,7 @@ import org.nuxeo.ecm.webapp.note.EditorImageActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeFileHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeImageCollectionHelper;
 
@@ -122,20 +123,22 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 
     private DocumentModel getMediaSpace() throws ClientException {
 
-
-        DocumentModel currentDomain = navigationContext.getCurrentDomain();
-        String searchMediaLibraries = "ecm:primaryType = '" + MEDIALIB + "' and ecm:path startswith '" + currentDomain.getPathAsString()
-                + "' and ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'";
-
-        String queryMediaLibraries = String.format(SEARCH_QUERY, searchMediaLibraries);
-
-        DocumentModelList query = documentManager.query(queryMediaLibraries);
-
-        if (query.size() < 1 || query.size() > 1) {
-            mediaSpace = null;
-        } else
-            mediaSpace = query.get(0);
-
+    	DocumentModel currentDomain = ToutaticeDocumentHelper.getDomain(documentManager, navigationContext.getCurrentDocument(), true);
+        if(currentDomain!=null){
+		    String searchMediaLibraries = "ecm:primaryType = '" + MEDIALIB + "' and ecm:path startswith '" + currentDomain.getPathAsString()
+		            + "' and ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'";
+		
+		    String queryMediaLibraries = String.format(SEARCH_QUERY, searchMediaLibraries);
+		
+		    DocumentModelList query = documentManager.query(queryMediaLibraries);
+		    
+		    if (query.size() < 1 || query.size() > 1) {
+		        mediaSpace = null;
+		    } else
+		        mediaSpace = query.get(0);
+        }else{
+        	log.warn("CurrentDomain not available "+navigationContext.getCurrentDocument().getTitle());
+        }
 
         return mediaSpace;
     }
@@ -257,7 +260,9 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
         if (selectedTab != null) {
             oldSelectedTab = selectedTab;
         } else if (oldSelectedTab == null) {
-            oldSelectedTab = "SEARCH";
+            oldSelectedTab = "UPLOAD";
+			// TOCHECK
+			// oldSelectedTab = "SEARCH";
         }
         return oldSelectedTab;
     }

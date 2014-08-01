@@ -19,6 +19,7 @@
 			<facet name="RouteStep" />
 			<facet name="StepFolder" />
 			<facet name="Task" />
+            <facet name="HiddenInNavigation" />
 			<types>
 				<type>AdministrativeStatus</type>
 			</types>

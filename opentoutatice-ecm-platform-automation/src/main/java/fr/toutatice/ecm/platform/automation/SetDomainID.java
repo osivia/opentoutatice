@@ -19,6 +19,9 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,11 +34,12 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.Filter;
+import org.nuxeo.ecm.core.event.EventService;
+import org.nuxeo.ecm.core.versioning.VersioningService;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
-
 
 /**
  * @author David Chevrier
@@ -51,20 +55,21 @@ public class SetDomainID {
     @Context
     protected CoreSession coreSession;
 
+	private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
+		private static final long serialVersionUID = 1L;
+
+		{
+			add(EventService.class);
+			add(VersioningService.class);
+		}
+	};
+
 	@OperationMethod()
 	public DocumentModel run(DocumentModel doc) throws Exception {
-		if (!doc.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
-			return doc;
-		}
-
 		InnerSilentModeUpdateDomainID runner = new InnerSilentModeUpdateDomainID(coreSession, doc);
-		runner.silentRun(true);
-		doc = runner.getDocument();
-
-		return doc;
+		runner.silentRun(true, FILTERED_SERVICES_LIST);
+		return runner.getDocument();
 	}
-
-
 
     private class InnerSilentModeUpdateDomainID extends ToutaticeSilentProcessRunnerHelper {
 
@@ -86,43 +91,45 @@ public class SetDomainID {
         @Override
         public void run() throws ClientException {
             try {
-				updateDoc(this.document);
+            	updateDoc(this.document);
 			} catch (Exception e) {
 				throw new ClientException(e);
 			}
         }
-
+        
         private void updateDoc(DocumentModel document) throws Exception {
-        	//get domainID
-        	DocumentModel domain = getDomain(this.document);
-        	
-        	if(domain!=null){
-        		String domainID = (String) domain.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID);
-                 		
-	            /* Set domainId on created document */
-	            if(StringUtils.isBlank(domainID)){
-	                domainID = domain.getName();
-	            }
-	            document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID, domainID);
-	            this.session.saveDocument(document);
-	
-	            /* Moved document case: propagate to children */
-	            if (document.isFolder()) {
-	                StringBuilder query = new StringBuilder();
-	                query.append("select * from Document where ecm:mixinType != 'HiddenInNavigation' AND ecm:isCheckedInVersion = 0 AND ");
-	                query.append("ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0 AND ecm:parentId = '");
-	                query.append(document.getId());
-	                query.append("'");
-	
-	                DocumentModelList children = this.session.query(query.toString());
-	
-	                if (children != null && !children.isEmpty()) {
-	                    for (DocumentModel child : children) {
-	                        updateDoc(child);
-	                    }
-	                }
-	            }
-	         }
+        	if (!document.isImmutable() && document.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
+        		//get domainID
+        		DocumentModel domain = getDomain(this.document);
+        		
+        		if (null != domain) {
+        			String domainID = (String) domain.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID);
+        			
+        			/* Set domainId on created document */
+        			if(StringUtils.isBlank(domainID)){
+        				domainID = domain.getName();
+        			}
+        			document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID, domainID);
+        			this.session.saveDocument(document);
+        			
+        			/* Moved document case: propagate to children */
+        			if (document.isFolder()) {
+        				StringBuilder query = new StringBuilder();
+        				query.append("select * from Document where ecm:mixinType != 'HiddenInNavigation' AND ecm:isCheckedInVersion = 0 AND ");
+        				query.append("ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0 AND ecm:parentId = '");
+        				query.append(document.getId());
+        				query.append("'");
+        				
+        				DocumentModelList children = this.session.query(query.toString());
+        				
+        				if (children != null && !children.isEmpty()) {
+        					for (DocumentModel child : children) {
+        						updateDoc(child);
+        					}
+        				}
+        			}
+        		}
+        	}
         }
         
         private DocumentModel getDomain(DocumentModel doc) throws Exception {

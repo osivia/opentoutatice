@@ -63,6 +63,7 @@ import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.api.security.impl.ACLImpl;
 import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
+import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
@@ -249,7 +250,7 @@ public class ToutaticeDocumentHelper {
 			}
 			parent = runner.getParentList();
 		} catch (ClientException e) {
-			log.error("Failed to get the parent for the current document, error: " + e.getMessage());
+			log.warn("Failed to get the parent for the current document, error: " + e.getMessage());
 		}
 
 		return parent;
@@ -306,6 +307,33 @@ public class ToutaticeDocumentHelper {
 		};
 
 		return ToutaticeDocumentHelper.getParentList(session, document, filter, runInUnrestrictedMode, immediateOnly, thisIncluded);
+	}
+	
+	/** 
+	 * @param session la session courante de l'utilisateur
+	 * @param document le document pour lequel il faut rechercher le parent
+	 * @param lstXpaths les xpaths des propriétés qu'il faut retourner
+	 * @param filter filtre déterminant le parent à consulter
+	 * @param runInUnrestrictedMode opération doit-être exécuter en mode unrestricted	  
+	 * @param thisIncluded le document courant est examiné 
+	 * @return
+	 *    une map de <xpath, property> du document parent 
+	 */
+	public static Map<String,Property> getPropertiesParentDoc(CoreSession session, DocumentModel document,List<String> lstXpaths,Filter filter, boolean runInUnrestrictedMode, boolean thisIncluded){
+		Map<String,Property> mapPpty = null;
+		try {
+			GetParentPropertiesRunner runner = new GetParentPropertiesRunner(session, document, lstXpaths, filter,runInUnrestrictedMode, thisIncluded);
+			if (runInUnrestrictedMode) {
+				runner.runUnrestricted();
+			} else {
+				runner.run();
+			}
+			mapPpty = runner.getProperties();
+		} catch (ClientException e) {
+			log.warn("Failed to get the parent for the current document, error: " + e.getMessage());
+		}		
+		
+		return mapPpty;
 	}
 
 	/**
@@ -553,6 +581,39 @@ public class ToutaticeDocumentHelper {
 		return status;
 	}
 
+	/**
+	 * Copy les permissions dans l'ACL local en excluant les permissions passés en paramétre
+	 * @param session
+	 * @param doc 
+	 * @param permissionsExclude permissions à exclure
+	 * @throws ClientException
+	 */
+	@Deprecated
+	public static void copyPermissionsInLocalACL(CoreSession session, DocumentModel doc,String permissionsExclude) throws ClientException{
+		DocumentRef ref = doc.getRef(); 
+		StringTokenizer st = new StringTokenizer(permissionsExclude,",");
+		List<String> lstPerm = new ArrayList<String>(st.countTokens());
+		while(st.hasMoreTokens()){
+			lstPerm.add(st.nextToken());
+		}  
+		// nettoyer les acls local
+		ACP acp = doc.getACP();
+		acp.removeACL(ACL.LOCAL_ACL);
+		session.setACP(ref, acp, true);
+
+		//récupérer les acls du parent    	
+		DocumentModel parent = session.getParentDocument(ref);
+		ACP acpParent = parent.getACP();
+		for (ACL acl : acpParent.getACLs()) {
+			for (ACE ace : acl.getACEs()) {
+				if (ace.isGranted() && !lstPerm.contains(ace.getPermission())) {
+					// ajouter les permissions au document doc
+					setACE(session, ref,ace);
+				}
+			}
+		}            	
+	}
+
 	private static class UnrestrictedGetProxyRunner extends UnrestrictedSessionRunner {
 		private DocumentModel document;
 		private DocumentModelList proxies;
@@ -595,6 +656,42 @@ public class ToutaticeDocumentHelper {
 			return this.versionLabel;
 		}
 
+	}
+	
+	private static class GetParentPropertiesRunner extends UnrestrictedSessionRunner{
+		private DocumentModel doc;
+		private Filter filter;		
+		private boolean included;
+		private boolean runInUnrestrictedMode;
+		private List<String> lstxpath;
+		private Map<String,Property> mapPpties;
+		
+		public GetParentPropertiesRunner(CoreSession session, DocumentModel document,List<String> lstXpaths,Filter filter,boolean runInUnrestrictedMode, boolean included){
+			super(session);
+			this.doc = document;
+			this.filter = filter;
+			this.lstxpath = lstXpaths;
+			this.included = included;
+			this.runInUnrestrictedMode = runInUnrestrictedMode;
+		}
+		public Map<String,Property> getProperties(){
+			return mapPpties;
+		}
+		
+		@Override
+		public void run() throws ClientException {
+			DocumentModelList lstParent =  getParentList(session, this.doc, this.filter, this.runInUnrestrictedMode, true, this.included);
+			DocumentModel parent = null;
+			if (lstParent != null && !lstParent.isEmpty()) {
+				parent = lstParent.get(0);
+			}
+			if(parent!=null){
+			this.mapPpties = new HashMap<String, Property>(lstxpath.size());
+			for (String xpath : this.lstxpath) {
+				mapPpties.put(xpath, parent.getProperty(xpath));
+			}
+			}
+		}
 	}
 
 	private static class UnrestrictedGetParentsListRunner extends UnrestrictedSessionRunner {
@@ -708,35 +805,31 @@ public class ToutaticeDocumentHelper {
 
 
 	/**
-	 * Copy les permissions dans l'ACL local en excluant les permissions passés en paramétre
+	 * 
 	 * @param session
-	 * @param doc 
-	 * @param permissionsExclude permissions à exclure
-	 * @throws ClientException
+	 * @param doc
+	 * @param aclName par défaut Local
+	 * @param filter
+	 * @return
+	 * @throws ClientException 
 	 */
-	public static void copyPermissionsInLocalACL(CoreSession session, DocumentModel doc,String permissionsExclude) throws ClientException{
-		DocumentRef ref = doc.getRef(); 
-		StringTokenizer st = new StringTokenizer(permissionsExclude,",");
-		List<String> lstPerm = new ArrayList<String>(st.countTokens());
-		while(st.hasMoreTokens()){
-			lstPerm.add(st.nextToken());
-		}  
-		// nettoyer les acls local
-		ACP acp = doc.getACP();
-		acp.removeACL(ACL.LOCAL_ACL);
-		session.setACP(ref, acp, true);
-
-		//récupérer les acls du parent    	
-		DocumentModel parent = session.getParentDocument(ref);
-		ACP acpParent = parent.getACP();
-		for (ACL acl : acpParent.getACLs()) {
+	public static ACL getDocumentACL(CoreSession session, DocumentModel doc,String aclName, ToutaticeFilter<ACE> filter) throws ClientException{
+		ACL res = new ACLImpl();
+			
+		if (aclName==null){
+			aclName=ACL.LOCAL_ACL;
+		}		
+		    			
+		ACP acp = doc.getACP();		
+		for (ACL acl : acp.getACLs()) {
 			for (ACE ace : acl.getACEs()) {
-				if (ace.isGranted() && !lstPerm.contains(ace.getPermission())) {
+				if (filter==null || filter.accept(ace)) {
 					// ajouter les permissions au document doc
-					setACE(session, ref,ace);
+					res.add(ace);
 				}
-			}
-		}            	
+			}		       
+		}
+		return res;
 	}
 	
 	/**
@@ -772,7 +865,6 @@ public class ToutaticeDocumentHelper {
 		return status;
 	}
 	
-	
 	/**
 	 * Méthode permettant d'appeler une opération Nuxeo..
 	 * 
@@ -794,7 +886,17 @@ public class ToutaticeDocumentHelper {
 		Object operationRes = operationMethod.invoke(ctx, parameters);
 		return operationRes;
 	}
-	
+
+	/**
+	 * Check whether the document is a runtime (technical) document.
+	 * 
+	 * @param document the document to check
+	 * @return  true if the document is runtime type, otherwise false.
+	 */
+	public static boolean isRuntimeDocument(DocumentModel document) {
+		return document.hasFacet(FacetNames.SYSTEM_DOCUMENT) || document.hasFacet(FacetNames.HIDDEN_IN_NAVIGATION);
+	}
+
 	/**
 	 * Méthode permettant de récupérer la méthode d'exécution (run()) d'une
 	 * opération.
@@ -823,5 +925,5 @@ public class ToutaticeDocumentHelper {
 
 		return new InvokableMethod(opType, method, anno);
 	}
-	
+
 }

@@ -25,26 +25,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.plexus.util.StringUtils;
-import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.core.Manager;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.ClientRuntimeException;
 import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
-import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.schema.FacetNames;
@@ -52,18 +45,15 @@ import org.nuxeo.ecm.platform.ui.web.pathelements.ArchivedVersionsPathElement;
 import org.nuxeo.ecm.platform.ui.web.pathelements.DocumentPathElement;
 import org.nuxeo.ecm.platform.ui.web.pathelements.PathElement;
 import org.nuxeo.ecm.platform.ui.web.pathelements.VersionDocumentPathElement;
-import org.nuxeo.ecm.platform.ui.web.rest.RestHelper;
-import org.nuxeo.ecm.platform.ui.web.rest.api.URLPolicyService;
-import org.nuxeo.ecm.platform.util.RepositoryLocation;
 import org.nuxeo.ecm.webapp.context.NavigationContextBean;
-import org.nuxeo.ecm.webapp.helpers.EventManager;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
-import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.service.url.ToutaticeDocumentResolver;
+import fr.toutatice.ecm.platform.service.url.WedIdRef;
 
 @Name("navigationContext")
 @Scope(CONVERSATION)
@@ -92,6 +82,24 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
         } catch (ClientException e) {
             throw new ClientRuntimeException(e);
         }
+    }
+    
+    @Override
+    public String navigateToRef(DocumentRef docRef) throws ClientException {
+        if (documentManager == null) {
+            throw new IllegalStateException("documentManager not initialized");
+        }
+        DocumentModel doc = null;
+        if(docRef instanceof WedIdRef){
+        	try {
+				doc = ToutaticeDocumentResolver.resolveReference(documentManager, (WedIdRef) docRef);
+			} catch (DocumentException e) {
+				throw new ClientException(e);
+			}
+        }else{
+        	doc = documentManager.getDocument(docRef);
+        }
+        return navigateToDocument(doc, "view");
     }
 
     public DocumentModel getDocumentDomain(DocumentModel document) {
@@ -157,6 +165,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
     public boolean isASpaceDocument(DocumentModel document) {
 		return (null != document) ? ToutaticeDocumentHelper.isASpaceDocument(document) : false;
 	}
+    
     public DocumentModel getCurrentWorkspaceArea() {
         return getWorkspaceArea(getCurrentDocument());
     }

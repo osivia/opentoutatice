@@ -13,25 +13,18 @@
             <event>documentImported</event>
             <filters>
                 <attribute>Mutable Document</attribute>
-                <condition>Document.hasSchema('toutatice') == true</condition>
+                <condition>Document.hasSchema('toutatice')</condition>
             </filters>
         </handler>
 
 		<!-- WebURL -->
-        <handler chainId="createOrCopyOp">
-            <!-- <event>documentCreated</event>-->
-            <event>documentCreatedByCopy</event>  
-            <!-- <event>documentImported</event>-->
+        <handler chainId="webIdUnicity">
+            <event>documentCreatedByCopy</event>
+            <event>documentMoved</event>
+            <event>lifecycle_transition_event</event> <!-- for put in trash and restauration -->
             <filters>
                 <attribute>Mutable Document</attribute>
-                <condition>Document.hasSchema('toutatice') == true</condition>
-            </filters>
-        </handler>
-        <handler chainId="movedOrRestoredOp">
-            <event>aboutToMove</event>
-            <event>beforeRestoringDocument</event>
-            <filters>
-                <condition>Document.hasSchema('toutatice') == true</condition>
+                <condition>Document.hasSchema('toutatice')</condition>
             </filters>
         </handler>
 

@@ -21,8 +21,6 @@ package fr.toutatice.ecm.platform.core.components;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-import org.nuxeo.runtime.api.Framework;
-
 public abstract class ToutaticeAbstractServiceHandler<T> implements InvocationHandler {
 	protected T object;
 

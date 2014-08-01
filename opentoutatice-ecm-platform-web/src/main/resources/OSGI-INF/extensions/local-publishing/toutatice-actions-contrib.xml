@@ -71,7 +71,7 @@
 
 		<!-- Mise en ligne directe d'un document -->
 		<action id="setDocumentOnlineDirect" label="toutatice.command.direct.setonline"
-			enabled="true" order="1" immediate="false"
+			enabled="true" order="10" immediate="false"
 			link="#{operationActionBean.doOperation('setOnLine')}">
 			<category>SUBVIEW_UPPER_LIST</category>
 			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
@@ -84,7 +84,7 @@
 
 		<!-- mise hors ligne directe d'un document (version ou pas) -->
 		<action id="setDocumentOfflineDirect" label="toutatice.command.direct.setoffline"
-			enabled="true" order="1" immediate="false"
+			enabled="true" order="10" immediate="false"
 			link="#{operationActionBean.doOperation('setOffLineOne')}">
 			<category>SUBVIEW_UPPER_LIST</category>
 			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
@@ -100,7 +100,8 @@
 			link="#{operationActionBean.doOperation('setOnLine')}">
 			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
 			<properties>
-				<property name="confirmMessage">label.documents.confirm.setDocumentVersionOnline</property>
+				<property name="confirmMessage">label.documents.confirm.setDocumentVersionOnline
+				</property>
 			</properties>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>is_version</filter-id>
@@ -204,8 +205,7 @@
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter id="filter@seeOnlineDocumentVersionFromResumeView">
 				<rule grant="true">
-					<condition>#{documentActions.isSeeOnlineDocumentVersionActionAuthorized()
-						== true}
+					<condition>#{documentActions.isSeeOnlineDocumentVersionActionAuthorized()}
 					</condition>
 				</rule>
 			</filter>
@@ -221,8 +221,7 @@
 			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
 			<filter id="filter@seeLiveDocumentVersion">
 				<rule grant="true">
-					<condition>#{documentActions.isSeeLiveDocumentVersionActionAuthorized()
-						== true}
+					<condition>#{documentActions.isSeeLiveDocumentVersionActionAuthorized()}
 					</condition>
 				</rule>
 			</filter>

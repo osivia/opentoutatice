@@ -39,6 +39,8 @@ import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoutingConstants;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoutingService;
 import org.nuxeo.ecm.platform.task.Task;
+import org.nuxeo.ecm.platform.task.TaskService;
+import org.nuxeo.ecm.platform.task.core.helpers.TaskActorsHelper;
 import org.nuxeo.ecm.platform.task.core.service.TaskEventNotificationHelper;
 import org.nuxeo.runtime.api.Framework;
 
@@ -74,27 +76,31 @@ public final class ToutaticeWorkflowHelper {
 	}
 
 	public static DocumentRoute getOnLineWorkflow(DocumentModel currentDoc) {
-		DocumentRoute onLineWF = null;
-		if (currentDoc != null) {
-			DocumentRoutingService routingService = Framework
-					.getLocalService(DocumentRoutingService.class);
-			CoreSession coreSession = currentDoc.getCoreSession();
-			List<DocumentRoute> documentRoutes = routingService
-					.getDocumentRoutesForAttachedDocument(coreSession,
-							currentDoc.getId());
-			if (documentRoutes != null && !documentRoutes.isEmpty()) {
-				int index = 0;
-				while (index < documentRoutes.size() && onLineWF == null) {
-					DocumentRoute route = documentRoutes.get(index);
-					if (ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE
-							.equalsIgnoreCase(route.getName())) {
-						onLineWF = route;
-					}
-					index++;
-				}
-			}
-		}
-		return onLineWF;
+		return getWorkflowByName(ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE, currentDoc);
+	}
+	
+	public static DocumentRoute getWorkflowByName(String workflowName, DocumentModel currentDoc){
+	    DocumentRoute wf = null;
+        if (currentDoc != null) {
+            DocumentRoutingService routingService = Framework
+                    .getLocalService(DocumentRoutingService.class);
+            CoreSession coreSession = currentDoc.getCoreSession();
+            List<DocumentRoute> documentRoutes = routingService
+                    .getDocumentRoutesForAttachedDocument(coreSession,
+                            currentDoc.getId());
+            if (documentRoutes != null && !documentRoutes.isEmpty()) {
+                int index = 0;
+                while (index < documentRoutes.size() && wf == null) {
+                    DocumentRoute route = documentRoutes.get(index);
+                    if (workflowName
+                            .equalsIgnoreCase(route.getName())) {
+                        wf = route;
+                    }
+                    index++;
+                }
+            }
+        }
+        return wf;
 	}
 
 	public static boolean isOnLineWorkflow(DocumentModel currentDoc) {
@@ -111,5 +117,26 @@ public final class ToutaticeWorkflowHelper {
 		}
 		return initiator;
 	}
+	
+	public static Task getDocumentTaskByName(String name, CoreSession documentManager, DocumentModel currentDoc) throws ClientException{
+        Task validateTask = null;
+        TaskService taskService = Framework.getLocalService(TaskService.class);
+        
+        NuxeoPrincipal principal = (NuxeoPrincipal) documentManager.getPrincipal();
+        List<String> actors = new ArrayList<String>();
+        actors.addAll(TaskActorsHelper.getTaskActors(principal));
+        List<Task> currentTaskInstances = taskService.getTaskInstances(currentDoc, actors,
+                true, documentManager);
+        
+        int index = 0;
+        while(index < currentTaskInstances.size() && validateTask == null){
+            Task task = currentTaskInstances.get(index);
+            if(name.equals(task.getName())){
+                validateTask = task;
+            }
+            index++;
+        }
+        return validateTask;
+    }
 
 }

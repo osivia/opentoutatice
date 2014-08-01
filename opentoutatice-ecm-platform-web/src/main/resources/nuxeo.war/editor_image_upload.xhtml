@@ -22,23 +22,17 @@
 
 			<div class="tabsBar">
 				<ul>
-					<li
-						class="#{nxu:test(editorImageActions.selectedTab == 'SEARCH', 'selected', '')}">
+					<li class="#{nxu:test(editorImageActions.selectedTab == 'SEARCH', 'selected', '')}">
 						<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=SEARCH">#{messages['toutatice.label.imageUpload.searchTab']}</a>
 					</li>
-					<c:choose>
-						<c:when test="#{currentDocument.hasFacet('TTCAttachableImages')}">
-							<li class="#{nxu:test(editorImageActions.selectedTab == 'UPLOAD', 'selected', '')}">
-								<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=UPLOAD">#{messages['toutatice.label.imageUpload.attachableImagesTab']}</a>
-							</li>
-						</c:when>
-						<c:otherwise>
-							<li class="#{nxu:test(editorImageActions.selectedTab == 'UPLOAD', 'selected', '')}">
-								<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=UPLOAD">#{messages['toutatice.label.imageUpload.uploadTab']}</a>
-							</li>						
-						</c:otherwise>
-					</c:choose>
-
+					<li class="#{nxu:test(editorImageActions.selectedTab == 'UPLOAD', 'selected', '')}">
+						<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=UPLOAD">#{messages['toutatice.label.imageUpload.uploadTab']}</a>
+					</li>
+					<c:if test="#{currentDocument.hasFacet('TTCAttachableImages')}">
+						<li class="#{nxu:test(editorImageActions.selectedTab == 'ENCLOSED', 'selected', '')}">
+							<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=ENCLOSED">#{messages['toutatice.label.imageUpload.attachableImagesTab']}</a>
+						</li>
+					</c:if>						
 				</ul>
 			</div>
 
@@ -56,74 +50,6 @@
 		
 					</f:subview>
 					
-					<f:subview rendered="#{!editorImageActions.inToutaticeCreationMode and currentDocument.hasFacet('TTCAttachableImages') and not empty currentDocument.toutatice.images}">
-
-						<script type="text/javascript">
-							function getSelectedRadio(buttonGroup) {
-								if (buttonGroup[0]) {
-								  for (var i=0; i&lt;buttonGroup.length; i++) {
-								    if (buttonGroup[i].checked) {
-								      return buttonGroup[i]
-								    }
-								  }
-								} else if (buttonGroup.checked) {
-								  return buttonGroup;
-								}
-								return null;
-							}
-							      
-							function updateEditorWithImagePJ(form) {
-							  if (window.opener.tinyMCE) {
-							    var tinyMCE = window.opener.tinyMCE;
-							    var button = getSelectedRadio(form.elements.selection);
-							    var html = '&lt;img src="' + button.value + '"/&gt;';
-							    tinyMCE.execCommand('mceInsertContent', false, html);
-							  }
-							  self.close();
-							}
-					       
-						</script>
-
-						<a4j:region>
-							<div id="contentPJ">
-          						<h:form id="search_resultsPJ">
-							
-									<h3>
-										<h:outputText value="#{messages['toutatice.label.imageUpload.choose.attachedImage']}" />
-									</h3>
-		
-									<h:selectOneRadio>
-										<nxu:inputList id="images_input" 
-											model="model"
-											value="#{currentDocument.toutatice.images}"
-											styleClass="dataOutput">
-		
-											<h:panelGrid columns="3" style="#{nxu:test(empty currentDocument.toutatice.images[model.rowIndex].file, 'display:none', '')}">
-											
-												<input id="selection"
-													type="radio" 
-													name="selection"
-													value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}" />
-		
-												<h:graphicImage	height="50px" width="50px" 
-													value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}" />
-		
-												<nxh:outputText	value="#{currentDocument.toutatice.images[model.rowIndex].filename}" />
-											</h:panelGrid>
-		
-										</nxu:inputList>
-		
-									</h:selectOneRadio>
-		
-									<input type="submit" id="button_update_imagePJ" class="button"
-										value="#{messages['command.ok']}"
-										onclick="javascript:updateEditorWithImagePJ(this.form);" />
-								</h:form>
-							</div>
-						</a4j:region>
-						
-					</f:subview>
-			
 					<f:subview rendered="#{!editorImageActions.inToutaticeCreationMode}">
 
 						<f:subview rendered="#{editorImageActions.isImageUploaded}">
@@ -163,7 +89,103 @@
 			
 				</f:subview>
 				
+				<f:subview rendered="#{editorImageActions.selectedTab == 'ENCLOSED'}">
+
+
+					<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
+		
+						<h3>
+							<h:outputText styleClass="errorMessage" value="#{messages['label.imageUpload.unableToUpload']}" />
+						</h3>
+		
+					</f:subview>
+
+					<f:subview rendered="#{!editorImageActions.inToutaticeCreationMode and currentDocument.hasFacet('TTCAttachableImages')}">
+
+						<c:choose>
+							<c:when test="#{empty currentDocument.toutatice.images}">
+								<h3>
+									<h:outputText styleClass="errorMessage" value="#{messages['toutatice.label.imageUpload.choose.NoattachedImage']}" />
+								</h3>
+							</c:when>
+							<c:otherwise>
+								<script type="text/javascript">
+									function getSelectedRadio(buttonGroup) {
+										if (buttonGroup[0]) {
+										  for (var i=0; i&lt;buttonGroup.length; i++) {
+										    if (buttonGroup[i].checked) {
+										      return buttonGroup[i]
+										    }
+										  }
+										} else if (buttonGroup.checked) {
+										  return buttonGroup;
+										}
+										return null;
+									}
+									      
+									function updateEditorWithImagePJ(form) {
+									  if (window.opener.tinyMCE) {
+									    var tinyMCE = window.opener.tinyMCE;
+									    var button = getSelectedRadio(form.elements.selection);
+									    var html = '&lt;img src="' + button.value + '"/&gt;';
+									    tinyMCE.execCommand('mceInsertContent', false, html);
+									  }
+									  self.close();
+									}
+							       
+								</script>
+
+								<a4j:region>
+									<div id="contentPJ">
+									<h:form id="search_resultsPJ">
 				
+											<h3>
+												<h:outputText value="#{messages['toutatice.label.imageUpload.choose.attachedImage']}" />
+											</h3>
+
+											<h:selectOneRadio>
+												<nxu:inputList id="images_input" 
+													model="model"
+													value="#{currentDocument.toutatice.images}"
+													styleClass="dataOutput">
+
+													<h:panelGrid columns="3" style="#{nxu:test(empty currentDocument.toutatice.images[model.rowIndex].file, 'display:none', '')}">
+								
+														<input id="selection"
+															type="radio" 
+															name="selection"
+															value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}" />
+
+														<h:graphicImage	height="50px" width="50px" 
+															value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}" />
+
+														<nxh:outputText	value="#{currentDocument.toutatice.images[model.rowIndex].filename}" />
+													</h:panelGrid>
+
+												</nxu:inputList>
+
+											</h:selectOneRadio>
+
+											<input type="submit" id="button_update_imagePJ" class="button"
+												value="#{messages['command.ok']}"
+												onclick="javascript:updateEditorWithImagePJ(this.form);" />
+										</h:form>
+									</div>
+								</a4j:region>
+							</c:otherwise>
+						</c:choose>
+
+
+					</f:subview>
+
+<!--
+					<f:subview rendered="#{!editorImageActions.inToutaticeCreationMode and currentDocument.hasFacet('TTCAttachableImages') and not empty currentDocument.toutatice.images}">
+
+						
+					</f:subview>
+-->
+						
+				</f:subview>
 				
 				
 			

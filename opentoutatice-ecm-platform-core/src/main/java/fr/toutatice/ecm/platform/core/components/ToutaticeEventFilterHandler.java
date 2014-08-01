@@ -27,8 +27,6 @@ import java.security.Principal;
 
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventService;
-import org.nuxeo.ecm.platform.task.TaskEventNames;
-import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 
 public class ToutaticeEventFilterHandler<T> extends ToutaticeAbstractServiceHandler<T> {
 
@@ -48,7 +46,6 @@ public class ToutaticeEventFilterHandler<T> extends ToutaticeAbstractServiceHand
 					Event evt = (Event) args[0];
 					Principal principal = evt.getContext().getPrincipal();
 					
-					// Silent Mode
 					if (null != principal && ToutaticeServiceProvider.instance().isRegistered(EventService.class, principal.getName())) {
 						// do filter invocation
 						return null;

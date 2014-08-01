@@ -236,11 +236,11 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
 			throw new ClientException(e);
 		}
 	}
-	
+
 	/**
 	 * Si le document passé en paramètre possède un proxy, ce dernier est placé au dessus du document target.
 	 */
-	private void moveDocumentProxy(DocumentModel container, DocumentModel document) throws ClientException {
+	protected void moveDocumentProxy(DocumentModel container, DocumentModel document) throws ClientException {
 		DocumentModel proxy = documentActions.getProxy(document);
 		if (null != proxy) {
 			documentManager.orderBefore(container.getRef(), proxy.getName(), document.getName());

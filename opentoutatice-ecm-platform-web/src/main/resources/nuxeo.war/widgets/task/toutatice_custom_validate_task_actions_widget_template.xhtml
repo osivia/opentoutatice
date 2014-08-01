@@ -17,9 +17,9 @@
 
         <div>
           <div id="#{idPrefix}_box">
-            <nxu:set var="isRoutingTask"
-              value="#{routingTaskActions.isRoutingTask(task)}">
-              <c:if test="#{isRoutingTask}">
+            <nxu:set var="isValidateOnLineTask"
+              value="#{taskActions.isValidateOnLineTask(task)}">
+              <c:if test="#{isValidateOnLineTask}">
                 <p>
                   <script>
                    function setClickButton(buttonId) {
@@ -44,37 +44,6 @@
                 </p>
               </c:if>
 
-              <c:if test="#{not isRoutingTask}">
-                <table class="dataInput">
-                  <tr>
-                    <td class="labelColumn"><h:outputText
-                        class="required"
-                        value="#{messages['label.review.user.comment']}" /></td>
-                    <td><h:inputTextarea
-                        id="#{widget.id}_taskActionComment" rows="5"
-                        cols="50" value="#{taskActions.comment}" /></td>
-                  </tr>
-                  <tr>
-                    <td colspan="6"><h:message
-                        styleClass="errorMessage"
-                        for="#{widget.id}_taskActionComment" /></td>
-                  </tr>
-                </table>
-                <p class="buttonsGadget">
-                  <h:commandButton
-                    value="#{messages['label.review.end.task']}"
-                    styleClass="button smallButton"
-                    action="#{taskActions.acceptTask(task)}"
-                    rendered="#{taskService.canEndTask(currentUser, task)}" />
-                  <a4j:commandButton
-                    value="#{messages['label.review.reject.task']}"
-                    styleClass="button smallButton"
-                    action="#{taskActions.rejectTask(task)}"
-                    rendered="#{taskService.canEndTask(currentUser, task)}"
-                    reRender="#{widget.id}_panel"
-                    onclick="jQuery.fancybox.close();" />
-                </p>
-              </c:if>
             </nxu:set>
           </div>
         </div>

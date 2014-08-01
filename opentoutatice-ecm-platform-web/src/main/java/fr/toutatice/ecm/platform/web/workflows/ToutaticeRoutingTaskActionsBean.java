@@ -28,8 +28,10 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.platform.routing.api.DocumentRoutingConstants;
 import org.nuxeo.ecm.platform.routing.web.RoutingTaskActionsBean;
 import org.nuxeo.ecm.platform.task.Task;
+import org.nuxeo.ecm.platform.task.TaskConstants;
 import org.nuxeo.ecm.platform.task.TaskService;
 import org.nuxeo.ecm.webapp.action.MainTabsActions;
 
@@ -47,10 +49,10 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
 public class ToutaticeRoutingTaskActionsBean extends RoutingTaskActionsBean {
 
 	private static final long serialVersionUID = -5854741772106895168L;
-	
+
 	@In
 	TaskService taskService;
-	
+
 	@In(create = true)
 	ToutaticeDocumentRoutingActionsBean routingActions;
 
@@ -69,16 +71,16 @@ public class ToutaticeRoutingTaskActionsBean extends RoutingTaskActionsBean {
 		String wfInitiator = getWorkFlowInitiator();
 		if (isAcceptOnLineButtonCliked()) {
 			ToutaticeWorkflowHelper.notifyRecipients(documentManager, task,
-					currentDoc, wfInitiator, 
+					currentDoc, wfInitiator,
 					ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED);
 		} else {
 			ToutaticeWorkflowHelper.notifyRecipients(documentManager, task,
-					currentDoc, wfInitiator, 
+					currentDoc, wfInitiator,
 					ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_REJECTED);
 		}
 		// Done at end to keep attributes for code above
 		super.endTask(task);
-		
+
 		return MainTabsActions.DEFAULT_VIEW;
 	}
 

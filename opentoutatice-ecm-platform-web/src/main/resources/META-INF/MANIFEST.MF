@@ -13,7 +13,6 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-actions-contrib.xml,
  OSGI-INF/extensions/toutatice-theme-contrib.xml,
  OSGI-INF/extensions/toutatice-ui-types-contrib.xml,
  OSGI-INF/extensions/toutatice-event-handler-contrib.xml,
- OSGI-INF/extensions/toutatice-url-service-contrib.xml,
  OSGI-INF/extensions/contextualization/toutatice-actions-contrib.xml,
  OSGI-INF/extensions/contextualization/toutatice-widgets-contrib.xml,
  OSGI-INF/extensions/contextualization/toutatice-filters-contrib.xml,
@@ -57,5 +56,6 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-actions-contrib.xml,
  OSGI-INF/extensions/remote-publishing/pageprovider-contrib.xml,
  OSGI-INF/extensions/remote-publishing/publisher-finder-contrib.xml,
  OSGI-INF/extensions/remote-publishing/publisher-task-contrib.xml,
- OSGI-INF/extensions/remote-publishing/notifications-contrib.xml
+ OSGI-INF/extensions/remote-publishing/notifications-contrib.xml,
+ OSGI-INF/extensions/permalink/toutatice-actions-contrib.xml
  

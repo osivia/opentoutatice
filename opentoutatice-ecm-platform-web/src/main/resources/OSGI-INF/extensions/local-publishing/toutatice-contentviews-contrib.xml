@@ -24,15 +24,10 @@
 						<field name="modified_max" schema="advanced_search" />
 					</predicate>
 					<fixedPart>
-						ecm:mixinType !=
-						'HiddenInNavigation'
-						AND
-						ecm:isCheckedInVersion = 0
-						AND
-						ecm:currentLifeCycleState !=
-						'deleted'
-						AND (ecm:name NOT LIKE
-						'%.proxy')
+						ecm:mixinType != 'HiddenInNavigation'
+						AND ecm:isCheckedInVersion = 0
+						AND ecm:currentLifeCycleState != 'deleted'
+						AND (ecm:isProxy = 0 OR (ecm:isProxy = 1 AND ecm:name NOT LIKE '%.proxy'))
 						AND ecm:parentId = ?
 					</fixedPart>
 				</whereClause>

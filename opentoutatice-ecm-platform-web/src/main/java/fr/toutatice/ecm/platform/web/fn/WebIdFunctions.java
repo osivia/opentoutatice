@@ -17,7 +17,6 @@
  */
 package fr.toutatice.ecm.platform.web.fn;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,15 +26,17 @@ import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentLocation;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
+import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.platform.ui.web.rest.api.URLPolicyService;
 import org.nuxeo.ecm.platform.ui.web.tag.fn.DocumentModelFunctions;
 import org.nuxeo.ecm.platform.url.DocumentViewImpl;
 import org.nuxeo.ecm.platform.url.api.DocumentView;
+import org.nuxeo.ecm.platform.url.codec.DocumentFileCodec;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
-import fr.toutatice.ecm.platform.web.urlservice.WebIdCodec;
+import fr.toutatice.ecm.platform.service.url.ToutaticeDocumentLocation;
+import fr.toutatice.ecm.platform.service.url.WebIdCodec;
 
 /**
  * Functions for making webid's urls in views
@@ -45,15 +46,17 @@ import fr.toutatice.ecm.platform.web.urlservice.WebIdCodec;
  */
 public class WebIdFunctions {
 
-    private static final Log log = LogFactory.getLog(WebIdCodec.class);
+    private static final Log log = LogFactory.getLog(WebIdFunctions.class);
 
     private static final String BASE_URL = "";
-    private static final String PATTERN = "webidpattern";
+    private static final String WEBID_PATTERN = "webidpattern";
+    private static final String WEBID_DOWNLOAD_PICTURE = "webiddownloadpicture";
 
     /**
      * Return true if document has a webid defined
      * 
-     * @param doc the current doc
+     * @param doc
+     *            the current doc
      * @return webid defined
      */
     public static boolean hasWebId(DocumentModel doc) {
@@ -73,7 +76,6 @@ public class WebIdFunctions {
         return ret;
     }
 
-
     /**
      * Return the url by webid or the path (if not defined)
      * 
@@ -87,7 +89,6 @@ public class WebIdFunctions {
         try {
             Object webid = doc.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID).getValue();
             if (webid != null && StringUtils.isNotBlank(webid.toString())) {
-
                 url = callCodec(doc, null);
             } else {
                 return doc.getPathAsString();
@@ -95,10 +96,10 @@ public class WebIdFunctions {
 
         } catch (ClientException e) {
             log.error("Erreur génération webid " + e);
-        } 
+        }
         return url;
     }
-    
+
     /**
      * Return the url by webid or the path (if not defined)
      * 
@@ -115,7 +116,6 @@ public class WebIdFunctions {
         try {
             Object webid = doc.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID).getValue();
             if (webid != null && StringUtils.isNotBlank(webid.toString())) {
-
                 url = callCodec(doc, blobPropertyName);
             } else {
                 return DocumentModelFunctions.fileUrl(patternName, doc, blobPropertyName, filename);
@@ -128,7 +128,7 @@ public class WebIdFunctions {
         return url;
     }
 
-    /**
+	/**
      * Translate webid in url
      * 
      * @param doc
@@ -137,37 +137,22 @@ public class WebIdFunctions {
      */
     private static String callCodec(DocumentModel doc, String blobPropertyName) {
 
-        String url = "";
+        String url = StringUtils.EMPTY;
 
         try {
             URLPolicyService service = Framework.getService(URLPolicyService.class);
 
-            DocumentLocation docLoc = new DocumentLocationImpl(doc);
-            Map<String, String> params = new HashMap<String, String>();
-
-            String webid = doc.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID).getValue().toString();
-            String domainID = doc.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID).getValue().toString();
-
-            params.put(WebIdCodec.WEBID_KEY, webid.toString());
-            params.put(WebIdCodec.DOMAINID_KEY, domainID.toString());
-
-
-            Serializable explicitUrl = doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXPLICIT_URL);
-            if (explicitUrl != null) {
-                params.put(WebIdCodec.EXPLICIT_KEY, explicitUrl.toString());
-            }
-            Serializable extensionUrl = doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXTENSION_URL);
-            if (extensionUrl != null) {
-                params.put(WebIdCodec.EXT_KEY, extensionUrl.toString());
+            Map<String, String> parameters = new HashMap<String, String>();
+            if ("Picture".equals(doc.getType())) {
+                if (StringUtils.isNotBlank(blobPropertyName)) {
+                    parameters.put(WebIdCodec.CONTENT_PARAM, StringUtils.replace(blobPropertyName, ":content", ""));
+                }
             }
 
-            if (blobPropertyName != null) {
-                params.put(WebIdCodec.CONTENT_PARAM, StringUtils.replace(blobPropertyName, ":content", ""));
-            }
+            ToutaticeDocumentLocation webIdDocLoc = new ToutaticeDocumentLocation(doc);
+            DocumentView docView = new DocumentViewImpl(webIdDocLoc, null, parameters);
+            url = service.getUrlFromDocumentView(WEBID_PATTERN, docView, BASE_URL);
 
-            DocumentView docView = new DocumentViewImpl(docLoc, null, params);
-
-            url = service.getUrlFromDocumentView(PATTERN, docView, BASE_URL);
         } catch (ClientException e) {
             log.error("Erreur génération webid " + e);
         } catch (Exception e) {
@@ -175,5 +160,63 @@ public class WebIdFunctions {
         }
 
         return url;
+
+    }
+
+
+//    /**
+//     * Translate webid in url
+//     * 
+//     * @param doc
+//     * @param blobPropertyName
+//     * @return
+//     */
+//    private static String callCodec(DocumentModel doc, String blobPropertyName) {
+//
+//        String url = StringUtils.EMPTY;
+//
+//        try {
+//            URLPolicyService service = Framework.getService(URLPolicyService.class);
+//
+//            String pattern = WEBID_PATTERN;
+//            Map<String, String> params = new HashMap<String, String>();
+//            if ("Picture".equals(doc.getType())) {
+//                pattern = WEBID_DOWNLOAD_PICTURE;
+//                params.put(WebIdCodec.CONTENT_PARAM, StringUtils.replace(blobPropertyName, ":content", ""));
+//            }
+//
+//            ToutaticeDocumentLocation webIdDocLoc = new ToutaticeDocumentLocation(doc);
+//            DocumentView docView = new DocumentViewImpl(webIdDocLoc, null, params);
+//            url = service.getUrlFromDocumentView(pattern, docView, BASE_URL);
+//
+//        } catch (ClientException e) {
+//            log.error("Erreur génération webid " + e);
+//        } catch (Exception e) {
+//            log.error("Erreur génération webid " + e);
+//        }
+//
+//        return url;
+//    }
+
+    protected static DocumentView getDownloadFileProperties(DocumentLocation docLoc, DocumentModel doc) throws PropertyException, ClientException {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put(DocumentFileCodec.FILE_PROPERTY_PATH_KEY, "file:content");
+        String fileName = (String) doc.getPropertyValue("file:filename");
+
+        parameters.put(DocumentFileCodec.FILENAME_KEY, fileName);
+        return new DocumentViewImpl(docLoc, null, parameters);
+    }
+
+    protected static DocumentView getDownloadPictureProperties(DocumentLocation docLoc, DocumentModel doc, String blobPropertyName) throws PropertyException,
+            ClientException {
+        Map<String, String> parameters = new HashMap<String, String>();
+        if (StringUtils.isNotBlank(blobPropertyName)) {
+            parameters.put(DocumentFileCodec.FILE_PROPERTY_PATH_KEY, blobPropertyName);
+        } else {
+            parameters.put(DocumentFileCodec.FILE_PROPERTY_PATH_KEY, "Original:content");
+        }
+        String fileName = doc.getPropertyValue("dc:modified").toString();
+        parameters.put(DocumentFileCodec.FILENAME_KEY, fileName);
+        return new DocumentViewImpl(docLoc, null, parameters);
     }
 }

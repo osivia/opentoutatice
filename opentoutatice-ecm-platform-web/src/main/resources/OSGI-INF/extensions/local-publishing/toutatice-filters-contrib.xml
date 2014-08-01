@@ -79,7 +79,7 @@
 				<type>Domain</type>
 			</rule>
 			<rule grant="false">
-				<condition>#{routingActions.isWorkflowRunning() == true}
+				<condition>#{routingActions.isWorkflowRunning()}
 				</condition>
 			</rule>
 		</filter>
@@ -94,7 +94,7 @@
 				<type>Domain</type>
 			</rule>
 			<rule grant="false">
-				<condition>#{routingActions.isWorkflowRunning() == true}
+				<condition>#{routingActions.isWorkflowRunning()}
 				</condition>
 			</rule>
 		</filter>
@@ -129,8 +129,8 @@
 				<permission>validationWorkflow_validation</permission>
 			</rule>
 			<rule grant="false">
-				<condition>#{routingActions.isWorkflowRunning() == true}</condition>
-				<condition>#{documentActions.isOnlineWithSameVersion() == true}
+				<condition>#{routingActions.isWorkflowRunning()}</condition>
+				<condition>#{documentActions.isOnlineWithSameVersion()}
 				</condition>
 			</rule>
 		</filter>
@@ -143,7 +143,7 @@
 				</condition>
 			</rule>
 			<rule grant="false">
-				<condition>#{routingActions.isWorkflowRunning() == true}</condition>
+				<condition>#{routingActions.isWorkflowRunning()}</condition>
 			</rule>
 		</filter>
 
@@ -156,10 +156,10 @@
 				<type>Root</type>
 			</rule>
 			<rule grant="false">
-				<condition>#{routingActions.isWorkflowRunning() == true}</condition>
+				<condition>#{routingActions.isWorkflowRunning()}</condition>
 			</rule>
 			<rule grant="false">
-				<condition>#{documentActions.isOnlineWithSameVersion() == true}
+				<condition>#{documentActions.isOnlineWithSameVersion()}
 				</condition>
 			</rule>
 			<rule grant="false">

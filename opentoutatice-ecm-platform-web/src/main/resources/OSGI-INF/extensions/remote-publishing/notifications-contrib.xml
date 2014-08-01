@@ -19,7 +19,6 @@
 			enabled="true" availableIn="Section,PortalSite" autoSubscribed="false"
 			template="publish" subject="Publication du document ${docTitle}" label="label.nuxeo.notifications.publish">
 			<event name="documentPublicationApproved" />
-			<event name="documentPublicationRejected" />
 			<event name="documentPublished" />
 		</notification>
 

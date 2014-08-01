@@ -17,6 +17,9 @@
 		<style name="images-tab">
 			<src>themes/css/images-tab.css</src>
 		</style>
+		<style name="flavors-configuration">
+			<src>themes/css/flavors-configuration.css</src>
+		</style>
 	</extension>
 	
 	<extension target="org.nuxeo.theme.services.ThemeService" point="applications">	
@@ -24,6 +27,10 @@
 			<view id="/toutatice_create_relation_search_document_popup.xhtml">
 				<theme>galaxy/popup</theme>
 			</view>
+            
+            <view id="/osivia_open_live_edit.xhtml">
+                <theme>galaxy/popup</theme>
+            </view>            
 		</application>
 	</extension>
 

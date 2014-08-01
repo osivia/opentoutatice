@@ -23,9 +23,6 @@ package fr.toutatice.ecm.platform.automation;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
@@ -47,9 +44,6 @@ description = "List users and groups allowed to read the document.")
 public class GetUsersAndGroupsDocument {
 	
 	    public static final String ID = "Document.GetUsersAndGroupsDocument";
-
-	    private static final Log log = LogFactory.getLog(Log.class);
-
 	   
 	    @OperationMethod
 	    public Blob run(DocumentModel doc) throws Exception 

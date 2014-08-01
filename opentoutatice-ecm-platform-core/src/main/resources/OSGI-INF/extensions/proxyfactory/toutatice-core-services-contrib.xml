@@ -9,10 +9,14 @@
 		<handler enabled="true"
 			serviceClass="org.nuxeo.ecm.core.event.EventService"
 			handlerClass="fr.toutatice.ecm.platform.core.components.ToutaticeEventFilterHandler" />
-
+			
 		<handler enabled="true"
 			serviceClass="org.nuxeo.ecm.automation.AutomationService"
 			handlerClass="fr.toutatice.ecm.platform.core.components.ToutaticeAutomationServiceHandler" />
+			
+		<handler enabled="true"
+			serviceClass="org.nuxeo.ecm.core.versioning.VersioningService"
+			handlerClass="fr.toutatice.ecm.platform.core.components.ToutaticeVersioningServiceHandler" />
 			
 	</extension>
 	

@@ -19,9 +19,11 @@
 package fr.toutatice.ecm.platform.core.services.proxyfactory;
 
 import java.io.Serializable;
+import java.util.List;
 
 public interface ProxyFactoryCfgService<T> extends Serializable {
 	
 	public Class<?> getServiceHandler(Class<T> clazz) throws ClassNotFoundException;
+	public List<Class<?>> getAllServicesHandlers() throws ClassNotFoundException;
 	
 }

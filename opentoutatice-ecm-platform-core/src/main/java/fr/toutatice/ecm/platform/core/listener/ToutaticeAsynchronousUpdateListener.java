@@ -40,37 +40,39 @@ import fr.toutatice.ecm.platform.core.utils.exception.ToutaticeException;
 public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListener {
 
     private static final String UPDATE_DOMAIN_CHAIN = "updateDomain";
-    private static final String CREATE_OR_MOVE_OP_CHAIN = "moveOp";
+    private static final String MOVE_OP_CHAIN = "moveOp";
 
-    private static final String DOCUMENT_MODIFIED = "documentModified";
+	private static final String DOCUMENT_MODIFIED = "documentModified";
 
-    private static final String[] SELECTED_EVENTS = {"documentCreated", "documentCreatedByCopy", "documentMoved", "documentRestored"};
+	private static final String[] SELECTED_EVENTS = {"documentCreated", "documentCreatedByCopy", "documentMoved", "documentRestored"};
 
-    @Override
-    public void handleEvent(EventBundle events) throws ClientException {
-        for (Event event : events) {
+	@Override
+	public void handleEvent(EventBundle events) throws ClientException {
+		for (Event event : events) {
 
-            if (event.getContext() instanceof DocumentEventContext) {
-                EventContext ctx = event.getContext();
-                DocumentEventContext docCtx = (DocumentEventContext) event.getContext();
-                DocumentModel document = docCtx.getSourceDocument();
-                CoreSession session = ctx.getCoreSession();
-                if (DOCUMENT_MODIFIED.equals(event.getName()) && ToutaticeNuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(document.getType())) {
-                    try {                       
-                        ToutaticeOperationHelper.runOperationChain(session, UPDATE_DOMAIN_CHAIN, document);
-                    } catch (ToutaticeException e) {
-                        throw new ClientException(e);
-                    }
-                } else if (ArrayUtils.contains(SELECTED_EVENTS, event.getName())) {
-                    try {
-                        ToutaticeOperationHelper.runOperationChain(session, CREATE_OR_MOVE_OP_CHAIN, document);
-                    } catch (ToutaticeException e) {
-                        throw new ClientException(e);
-                    }
-                }
-            }
-        }
-    }
+			if (event.getContext() instanceof DocumentEventContext) {
+				EventContext ctx = event.getContext();
+				DocumentEventContext docCtx = (DocumentEventContext) event.getContext();
+				DocumentModel document = docCtx.getSourceDocument();
+				CoreSession session = ctx.getCoreSession();
+
+				if (document.isImmutable()) {
+					// ignore immutable documents
+					return;
+				}
+				
+				try {                       
+					if (DOCUMENT_MODIFIED.equals(event.getName()) && ToutaticeNuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(document.getType())) {
+						ToutaticeOperationHelper.runOperationChain(session, UPDATE_DOMAIN_CHAIN, document);
+					} else if (ArrayUtils.contains(SELECTED_EVENTS, event.getName())) {
+						ToutaticeOperationHelper.runOperationChain(session, MOVE_OP_CHAIN, document);
+					}
+				} catch (ToutaticeException e) {
+					throw new ClientException(e);
+				}
+			}
+		}
+	}
 
 
 }

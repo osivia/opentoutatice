@@ -89,7 +89,11 @@
 
 		<!-- Filtre pour le bouton "newDocument" -->
 		<filter id="create" append="true">
+			<rule grant="false">
+				<condition>document.isImmutable()</condition>
+			</rule>
 			<rule grant="true">
+				<permission>AddChildren</permission>
 				<type>Domain</type>
 				<type>PortalSite</type>
 				<type>PortalPage</type>
@@ -100,6 +104,7 @@
 
 		<filter id="importFile" append="true">
 			<rule grant="true">
+				<permission>AddChildren</permission>
 				<type>Domain</type>
 				<type>WorkspaceRoot</type>
 				<type>PortalSite</type>

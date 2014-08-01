@@ -93,9 +93,29 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 			}
 			
 			List<String> usersList = filteredUsersMap.get(serviceName);
-			if (!usersList.contains(principalId)) {
+			/**
+			 * For multi-threading purpose, the expression to test whether the user is already registered is commented.
+			 * Hence, multiple asynchronous processing ran for one connected user will keep in silent mode. The first thread
+			 * to unregister won't unregister the other threads. 
+			 */
+//			if (!usersList.contains(principalId)) {
 				usersList.add(principalId);
-			}
+//			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void registerAll(String principalId) {
+		List<Class<?>> services = Collections.emptyList();
+		
+		try {
+			services = getProxyFactoryService().getAllServicesHandlers();			
+		} catch (Exception e) {
+			log.error("Failed to get all services handlers, error:" + e.getMessage());
+		}
+		
+		for (Class<?> service : services) {
+			register(service, principalId);
 		}
 	}
 
@@ -107,6 +127,21 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 				List<String> usersList = filteredUsersMap.get(serviceName);
 				usersList.remove(principalId);
 			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void unregisterAll(String principalId) {
+		List<Class<?>> services = Collections.emptyList();
+		
+		try {
+			services = getProxyFactoryService().getAllServicesHandlers();			
+		} catch (Exception e) {
+			log.error("Failed to get all services handlers, error:" + e.getMessage());
+		}
+		
+		for (Class<?> service : services) {
+			unregister(service, principalId);
 		}
 	}
 

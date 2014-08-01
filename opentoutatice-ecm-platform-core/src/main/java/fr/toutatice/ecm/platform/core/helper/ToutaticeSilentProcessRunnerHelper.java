@@ -18,6 +18,9 @@
  */
 package fr.toutatice.ecm.platform.core.helper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -32,10 +35,18 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
 	
 	private static final Log log = LogFactory.getLog(ToutaticeSilentProcessRunnerHelper.class);
 	
+	private static final List<Class<?>> DEFAULT_FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
+		private static final long serialVersionUID = 1L;
+
+		{
+			add(EventService.class);
+		}
+	};
+		
 	public ToutaticeSilentProcessRunnerHelper(CoreSession session) {
 		super(session);
 	}
-	
+
     /**
      * Calls the {@link #run()} method with a silent mode. The dublincore events are disabled either for the current user session (usual run method is called)
      * or the for the system/administrator user session (unrestricted method is called).
@@ -44,6 +55,18 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
      * @throws ClientException
      */
     public void silentRun(boolean runInUnrestrictedMode) throws ClientException {
+    	silentRun(runInUnrestrictedMode, DEFAULT_FILTERED_SERVICES_LIST);
+    }
+    
+    /**
+     * Calls the {@link #run()} method with a silent mode. The dublincore events are disabled either for the current user session (usual run method is called)
+     * or the for the system/administrator user session (unrestricted method is called).
+     * 
+     * @param runInUnrestrictedMode Indique si les traitements doivent être réalisés en mode unrestricted (avec l'utilisateur system/administrateur)
+     * @param filteredServices the class name of services to filter (provided these one have a handler contributed onto the proxy factory service)
+     * @throws ClientException
+     */
+    public void silentRun(boolean runInUnrestrictedMode, List<Class<?>> filteredServices) throws ClientException {
     	String userName = session.getPrincipal().getName();
 		
     	log.debug("Démarrage de l'exécution d'un processus en mode silencieux");
@@ -60,8 +83,14 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
     	}
     	
 		try {
-			// installer le service de filtrage des événements pour l'utilisateur
-			ToutaticeServiceProvider.instance().register(EventService.class, userName);
+			// installer le service de filtrage pour l'utilisateur
+			if (null != filteredServices) {
+				for (Class<?> service : filteredServices) {
+					ToutaticeServiceProvider.instance().register(service, userName);
+				}
+			} else {
+				ToutaticeServiceProvider.instance().registerAll(userName);
+			}
 			
 			// Exécuter le coprs du traitement
 			if (runInUnrestrictedMode) {
@@ -70,8 +99,15 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
 				run();
 			}
 		} finally {
-			// désinstaller le service de filtrage des événements pour l'utilisateur
-			ToutaticeServiceProvider.instance().unregister(EventService.class, userName);
+			// désinstaller le service de filtrage pour l'utilisateur
+			if (null != filteredServices) {
+				for (Class<?> service : filteredServices) {
+					ToutaticeServiceProvider.instance().unregister(service, userName);
+				}
+			} else {
+				ToutaticeServiceProvider.instance().unregisterAll(userName);
+			}
+			
 	    	log.debug("Fin de l'exécution d'un processus en mode silencieux");
 		}
     }
