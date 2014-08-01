@@ -59,7 +59,6 @@ public class SetWebID {
     private static final String WEB_ID_UNICITY_QUERY = "select * from Document Where ttc:domainID = '%s'"
             + " AND ttc:webid = '%s' AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
-
     @Context
     protected CoreSession coreSession;
 
@@ -84,11 +83,10 @@ public class SetWebID {
         boolean hasToBeUpdated = false;
 
         // if document has not toutatice schema
-        if (!doc.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
+    	if (doc.isImmutable() || !doc.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
             return doc;
         }
-
-
+    	
         // if space does not supports webid or if we can not verify it.
         if (!isSpaceSupportsWebId(doc)) {
 
@@ -105,7 +103,6 @@ public class SetWebID {
 
             return doc;
         }
-
 
         // webid setted in the document, we use it
         if (doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID) != null) {
@@ -140,7 +137,6 @@ public class SetWebID {
 
             hasToBeUpdated = true;
         }
-
 
         Object domainID = doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID);
 
@@ -183,8 +179,6 @@ public class SetWebID {
                     }
                     this.coreSession.saveDocument(doc);
                 }
-
-                // }
             }
         }
 
@@ -192,7 +186,6 @@ public class SetWebID {
     }
 
     /**
-     * Z
      * Get the parent space and look at the property "ttcs:hasWebIdEnabled"
      * 
      * @param doc

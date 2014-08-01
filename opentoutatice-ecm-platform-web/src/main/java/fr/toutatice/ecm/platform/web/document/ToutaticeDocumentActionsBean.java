@@ -84,14 +84,12 @@ import org.nuxeo.ecm.webapp.pagination.ResultsProvidersCache;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
-import fr.toutatice.ecm.platform.core.constants.PortalConstants;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeOperationHelper;
 import fr.toutatice.ecm.platform.services.permalink.PermaLinkService;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
-import fr.toutatice.ecm.platform.web.fragments.PageBean;
 
 /**
  * @author oadam
@@ -108,9 +106,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     @In(create = true)
     protected transient NavigationContext navigationContext;
-    
-    @In(create=true)
-    PageBean pageBean;
 
     @In(create = true)
     protected transient PictureBookManager pictureBookManager;
@@ -183,7 +178,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public String saveDocument(String viewId) throws ClientException {
         saveDocument();
-        pageBean.setNotificationKey(PortalConstants.Notifications.SUCCESS_MESSAGE_CREATE.name());
         live = true;
         return viewId;
     }
@@ -242,7 +236,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         if (null != this.pictureBookManager) {
             // create
             this.pictureBookManager.createPictureBook();
-            pageBean.setNotificationKey(PortalConstants.Notifications.SUCCESS_MESSAGE_CREATE.name());
             live = true;
         } else {
             log.error("Failed to get the picture book manager from seam context");
@@ -278,7 +271,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public String updateCurrentDocument(String viewId) throws ClientException {
         updateCurrentDocument();
-        pageBean.setNotificationKey(PortalConstants.Notifications.SUCCESS_MESSAGE_MODIFY.name());
         live = true;
         return viewId;
     }
@@ -312,7 +304,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      */
     public String updateNUpgradeCurrentDocument(String version, String viewId) throws ClientException {
         updateNUpgradeCurrentDocument(version);
-        pageBean.setNotificationKey(PortalConstants.Notifications.SUCCESS_MESSAGE_MODIFY.name());	
         live = true;
         return viewId;
     }
@@ -584,11 +575,9 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
             if (!document.getVersionLabel().equals(proxyVersionLabel)) {
                 if (documentManager.hasPermission(document.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE)) {
                     ToutaticeOperationHelper.runOperationChain(documentManager, ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_PUBLISH_ONLY, document);
-                    pageBean.setNotificationKey(PortalConstants.Notifications.SUCCESS_MESSAGE_PUBLISH.name());
                     live = false;
                 } else {
                     ToutaticeOperationHelper.runOperationChain(documentManager, ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_PUBLISH_REQUEST, document);
-                    pageBean.setNotificationKey(PortalConstants.Notifications.SUCCESS_MESSAGE_ASK_PUBLISH.name());
                     live = true;
                 }
             }

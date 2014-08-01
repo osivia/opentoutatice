@@ -61,6 +61,7 @@ import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.api.security.impl.ACLImpl;
 import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
+import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
@@ -247,7 +248,7 @@ public class ToutaticeDocumentHelper {
 			}
 			parent = runner.getParentList();
 		} catch (ClientException e) {
-			log.error("Failed to get the parent for the current document, error: " + e.getMessage());
+			log.warn("Failed to get the parent for the current document, error: " + e.getMessage());
 		}
 
 		return parent;
@@ -327,7 +328,7 @@ public class ToutaticeDocumentHelper {
 			}
 			mapPpty = runner.getProperties();
 		} catch (ClientException e) {
-			log.error("Failed to get the parent for the current document, error: " + e.getMessage());
+			log.warn("Failed to get the parent for the current document, error: " + e.getMessage());
 		}		
 		
 		return mapPpty;
@@ -862,7 +863,6 @@ public class ToutaticeDocumentHelper {
 		return status;
 	}
 	
-	
 	/**
 	 * Méthode permettant d'appeler une opération Nuxeo..
 	 * 
@@ -884,7 +884,17 @@ public class ToutaticeDocumentHelper {
 		Object operationRes = operationMethod.invoke(ctx, parameters);
 		return operationRes;
 	}
-	
+
+	/**
+	 * Check whether the document is a runtime (technical) document.
+	 * 
+	 * @param document the document to check
+	 * @return  true if the document is runtime type, otherwise false.
+	 */
+	public static boolean isRuntimeDocument(DocumentModel document) {
+		return document.hasFacet(FacetNames.SYSTEM_DOCUMENT) || document.hasFacet(FacetNames.HIDDEN_IN_NAVIGATION);
+	}
+
 	/**
 	 * Méthode permettant de récupérer la méthode d'exécution (run()) d'une
 	 * opération.
@@ -913,5 +923,5 @@ public class ToutaticeDocumentHelper {
 
 		return new InvokableMethod(opType, method, anno);
 	}
-	
+
 }

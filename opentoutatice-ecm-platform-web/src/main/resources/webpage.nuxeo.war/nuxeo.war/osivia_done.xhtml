@@ -35,19 +35,16 @@
 		<script type="text/javascript">	
 		<!-- 
 			var parent_url = '#{pageBean.fromUrl}';
-		
 			var currentDocumentId = '#{currentDocument.id}'; 
 			var isLive = '#{documentActions.live}';
-			var notificationKey = '#{pageBean.notificationKey}';
+			
 			
 	        XD.postMessage('currentDocumentId='+currentDocumentId, parent_url, parent);
 	        XD.postMessage('live='+isLive, parent_url, parent);
-	        XD.postMessage('notificationKey='+ notificationKey, parent_url, parent);
 	        
 	        window.setTimeout(
 	        	function() {XD.postMessage('closeFancyBox', parent_url, parent)}
 	        ,1000);
-			
 		 -->
 		</script>	
 	

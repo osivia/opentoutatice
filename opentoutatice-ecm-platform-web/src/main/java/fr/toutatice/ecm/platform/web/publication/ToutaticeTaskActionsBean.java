@@ -34,8 +34,6 @@ import org.nuxeo.ecm.platform.ui.web.invalidations.AutomaticDocumentBasedInvalid
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 
-
-
 /**
  * @author David Chevrier
  */

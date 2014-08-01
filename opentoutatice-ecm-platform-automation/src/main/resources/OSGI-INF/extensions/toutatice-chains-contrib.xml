@@ -107,20 +107,6 @@
 				<param type="string" name="message">Le document est mis en ligne</param>
 			</operation>
 		</chain>
-		
-		<!-- Only called by Portal -->
-		<chain id="portal_onlineWorkflow_validate">
-			<operation id="Context.FetchDocument" />
-			<operation id="Workflow.OperateProcess">
-				<param type="string" name="task name">validate-online</param>
-				<param type="string" name="transition">validate_online</param>
-				<param type="string" name="event">workflowOnlineTaskApproved</param>
-			</operation>
-			<operation id="Context.RunOperation">
-				<param type="string" name="id">setOnLine</param>
-				<param type="boolean" name="isolate">false</param>
-			</operation>
-		</chain>
 
 		<chain id="onlineWorkflow_rejected">
 			<operation id="Context.FetchDocument" />
@@ -144,21 +130,6 @@
 				<param type="string" name="message">La demande est rejetée</param>
 			</operation>
 		</chain>
-		
-		<!-- Only called by Portal -->
-		<chain id="portal_onlineWorkflow_rejected">
-			<operation id="Context.FetchDocument" />
-			<operation id="Workflow.OperateProcess">
-				<param type="string" name="task name">validate-online</param>
-				<param type="string" name="transition">reject_online</param>
-				<param type="string" name="event">workflowOnlineTaskRejected</param>
-			</operation>
-			<operation id="Audit.Log">
-				<param type="string" name="event">Rejet de la demande de mise en ligne
-				</param>
-				<param type="string" name="category">Automation</param>
-			</operation>
-		</chain>
 
 		<chain id="createOp">
 			<operation id="Context.FetchDocument" />
@@ -175,7 +146,6 @@
 				<param type="String" name="chainSource">other</param>
 			</operation>
 		</chain>
-
 
 		<chain id="moveOp">
 			<operation id="Document.SetSpaceID" />

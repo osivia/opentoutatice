@@ -108,10 +108,8 @@ public class OperateWFProcess {
 	            		coreSession, 
 	            		nuxpal, 
 	            		document);
-	            /* Test for Portal calls */
-	            if(Events.exists()){
-	                Events.instance().raiseEvent(event);
-	            }
+	            
+	            Events.instance().raiseEvent(event);
 			}
 		}
         
