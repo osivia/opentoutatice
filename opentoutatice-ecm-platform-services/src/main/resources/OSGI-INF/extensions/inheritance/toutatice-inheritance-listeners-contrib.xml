@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.service.inheritance.listeners">
+	
+	<require>org.nuxeo.ecm.core.event.EventServiceComponent</require>
+	
+	<extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
+		point="listener">
+		
+		<listener name="ToutaticeInheritanceSynchListener" 
+			priority="1000"
+			async="false"
+			postCommit="false"
+			class="fr.toutatice.ecm.platform.service.inheritance.ToutaticeInheritanceSynchListener" >
+			<event>documentMoved</event>
+			<event>documentModified</event>
+			<event>documentCreatedByCopy</event>
+			<event>emptyDocumentModelCreated</event>
+		</listener>
+		
+		<listener name="ToutaticeInheritanceAsynchListener"
+			priority="1000"
+			async="true"
+			postCommit="true"
+			class="fr.toutatice.ecm.platform.service.inheritance.ToutaticeInheritanceAsynchListener" >
+			<event>documentMoved</event>
+			<event>documentModified</event>
+			<event>documentCreatedByCopy</event>
+		</listener>
+		
+	</extension>
+	
+</component>
