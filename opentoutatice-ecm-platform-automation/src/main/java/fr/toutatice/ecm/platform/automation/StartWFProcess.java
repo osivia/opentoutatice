@@ -175,7 +175,10 @@ public class StartWFProcess {
         		nuxpal, 
         		document);
         
-        Events.instance().raiseEvent(JbpmEventNames.WORKFLOW_NEW_STARTED);
+        /* Test for Portal call */
+        if(Events.exists()){
+            Events.instance().raiseEvent(JbpmEventNames.WORKFLOW_NEW_STARTED);
+        }
         
 		return document;
 	}

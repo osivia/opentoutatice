@@ -28,8 +28,12 @@ import java.util.Map;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jbpm.JbpmContext;
+import org.jbpm.graph.exe.ProcessInstance;
+import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.Constants;
@@ -54,12 +58,14 @@ import org.nuxeo.ecm.core.api.security.Access;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 import org.nuxeo.ecm.core.trash.TrashService;
+import org.nuxeo.ecm.platform.jbpm.JbpmListFilter;
 import org.nuxeo.ecm.platform.jbpm.JbpmService;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.platform.types.TypeManager;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 import org.nuxeo.runtime.api.Framework;
 
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
@@ -201,6 +207,10 @@ public class FetchPublicationInfos {
             infosPubli.element("isDeletableByUser", isDeletable);
             Object canUserValidate = canUserValidate(infosPubli, liveDoc);
             infosPubli.element("canUserValidate", canUserValidate);
+            Object isOnLinePending = isValidateOnLineTaskPending(liveDoc);
+            infosPubli.element("isOnLinePending", isOnLinePending);
+            Object isUserOnLineInitiator = isUserOnLIneWorkflowInitiator(liveDoc);
+            infosPubli.element("isUserOnLineInitiator", isUserOnLineInitiator);
 
             /*
              * Récupération du path du document - cas où un uuid est donné en
@@ -246,10 +256,9 @@ public class FetchPublicationInfos {
         boolean userNotAnonymous = !((NuxeoPrincipal) user).isAnonymous();
         infosPubli.put("isCommentableByUser", docCommentable && docMutable && userNotAnonymous);
 
-        UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession, document, liveDocRes, infosPubli, userManager,
-                errorsCodes);
-        infosPubliRunner.runUnrestricted();
+        UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession, document, infosPubli, userManager, errorsCodes);
 
+        infosPubliRunner.runUnrestricted();
         errorsCodes = infosPubliRunner.getErrorsCodes();
         infosPubli = infosPubliRunner.getInfosPubli();
         infosPubli.element("errorCodes", errorsCodes);
@@ -368,6 +377,44 @@ public class FetchPublicationInfos {
         }
 
         return canBeDelete;
+    }
+
+    private boolean isValidateOnLineTaskPending(DocumentModel document) throws ClientException {
+        List<TaskInstance> lstTasks = jbpmService.getTaskInstances(document, null, (StringUtils
+                .isNotBlank(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE)) ? new TaskInstanceFilter(
+                ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE) : null);
+        return (lstTasks != null && !lstTasks.isEmpty());
+    }
+
+    private Object isUserOnLIneWorkflowInitiator(DocumentModel liveDoc) throws ClientException {
+        String currentProcessInitiator = StringUtils.EMPTY;
+
+        NuxeoPrincipal currentUser = (NuxeoPrincipal) coreSession.getPrincipal();
+        ProcessInstance onLineProcess = getOnLineProcess(currentUser);
+        if (onLineProcess != null) {
+            Object initiator = onLineProcess.getContextInstance().getVariable(JbpmService.VariableName.initiator.name());
+            if (initiator instanceof String) {
+                currentProcessInitiator = (String) initiator;
+                if (currentProcessInitiator.startsWith(NuxeoPrincipal.PREFIX)) {
+                    currentProcessInitiator = currentProcessInitiator.substring(NuxeoPrincipal.PREFIX.length());
+                }
+            }
+        }
+        return currentProcessInitiator.equals(currentUser.getName());
+    }
+
+    public ProcessInstance getOnLineProcess(NuxeoPrincipal currentUser) throws ClientException {
+        ProcessInstance onLineProcess = null;
+        List<ProcessInstance> processes = jbpmService.getProcessInstances(document, currentUser, null);
+        if (processes != null) {
+            for (ProcessInstance process : processes) {
+                if (process.getProcessDefinition().getName().equals(ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE)) {
+                    onLineProcess = process;
+                    break;
+                }
+            }
+        }
+        return onLineProcess;
     }
 
     /**
@@ -523,8 +570,8 @@ public class FetchPublicationInfos {
             return errorsCodes;
         }
 
-        public UnrestrictedFecthPubliInfosRunner(CoreSession session, DocumentModel document, Object liveDocRes, JSONObject infosPubli,
-                UserManager userManager, List<Integer> errorsCodes) {
+        public UnrestrictedFecthPubliInfosRunner(CoreSession session, DocumentModel document, JSONObject infosPubli, UserManager userManager,
+                List<Integer> errorsCodes) {
             super(session);
             this.document = document;
             this.liveDocRes = liveDocRes;
@@ -536,24 +583,21 @@ public class FetchPublicationInfos {
         @Override
         public void run() throws ClientException {
             try {
-                if (!isError(liveDocRes)) {
-                    DocumentModel liveDoc = (DocumentModel) this.liveDocRes;
-                    /*
-                     * Récupération du spaceID
-                     */
-                    this.infosPubli.put("spaceID", getSpaceID(liveDoc));
+                /*
+                 * Récupération du spaceID
+                 */
+                this.infosPubli.put("spaceID", getSpaceID(this.document));
 
-                    /*
-                     * Récupération du parentSpaceID
-                     */
-                    String parentSpaceID = "";
-                    DocumentModelList spaceParentList = ToutaticeDocumentHelper.getParentSpaceList(this.session, liveDoc, true, true);
-                    if (spaceParentList != null && spaceParentList.size() > 0) {
-                        DocumentModel parentSpace = (DocumentModel) spaceParentList.get(0);
-                        parentSpaceID = getSpaceID(parentSpace);
-                    }
-                    this.infosPubli.put("parentSpaceID", parentSpaceID);
+                /*
+                 * Récupération du parentSpaceID
+                 */
+                String parentSpaceID = "";
+                DocumentModelList spaceParentList = ToutaticeDocumentHelper.getParentSpaceList(this.session, this.document, true, true);
+                if (spaceParentList != null && spaceParentList.size() > 0) {
+                    DocumentModel parentSpace = (DocumentModel) spaceParentList.get(0);
+                    parentSpaceID = getSpaceID(parentSpace);
                 }
+                this.infosPubli.put("parentSpaceID", parentSpaceID);
 
                 /*
                  * Récupération du contexte propre à l'appel d'autres opérations
@@ -753,6 +797,41 @@ public class FetchPublicationInfos {
         }
 
     }
+
+    /**
+     * Classe permettant de filtrer une liste de "task instance" en fonction du nom
+     */
+    private class TaskInstanceFilter implements JbpmListFilter {
+
+        private static final long serialVersionUID = 1L;
+        private String taskName;
+
+        public TaskInstanceFilter(String taskName) {
+            this.taskName = taskName;
+        }
+
+        @SuppressWarnings("unchecked")
+        public <T> ArrayList<T> filter(JbpmContext jbpmContext, DocumentModel document, ArrayList<T> list, NuxeoPrincipal principal) {
+            ArrayList<TaskInstance> result = new ArrayList<TaskInstance>();
+
+            // pas de filtrage si pas de nom passé en paramètre
+            if (StringUtils.isBlank(this.taskName)) {
+                return list;
+            }
+
+            // filtrage
+            for (T t : list) {
+                TaskInstance ti = (TaskInstance) t;
+                String name = ti.getName();
+                if (this.taskName.equals(name)) {
+                    result.add(ti);
+                }
+            }
+
+            return (ArrayList<T>) result;
+        }
+    }
+
 
     /**
      * Get doc by webid in unrestricted mode (admin)
