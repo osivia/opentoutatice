@@ -35,9 +35,9 @@
 				<li><h:outputLabel value="Affichage : " for="selectListStyle" />
 					<oh:icons id="selectListStyle" src="#{config.listTemplates}"
 							value="#{fgt.view}" ulStyleClass="cssStyleList"
-							binding="#{simpleForm.simpleComponent}"
-							inputClientId="#{simpleForm.simpleComponentClientId}"
-							multiSelect="false" /></li>
+							binding="#{listStyleSimpleForm.simpleComponent}"
+							inputClientId="#{listStyleSimpleForm.simpleComponentClientId}"
+							multiSelect="false" iconsGroup="listStyleGroup"/></li>
 				
 				<li>
 					<h:outputLabel value="Nombre de résultats : " for="view" >
