@@ -31,12 +31,14 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
+import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.model.Property;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
 
 /**
  * Generate or apply a webId on a document. Check if the webId is unique in the domain
@@ -73,116 +75,14 @@ public class SetWebID {
      * Main method
      * 
      * @param doc
-     * @return docment modified
+     * @return document modified
      * @throws Exception
      */
     @OperationMethod()
-    public DocumentModel run(DocumentModel doc) throws Exception {
-        String webid = null;
-        String extension = null;
-        boolean hasToBeUpdated = false;
-
-        // if document has not toutatice schema
-    	if (doc.isImmutable() || !doc.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
-            return doc;
-        }
-    	
-        // if space does not supports webid or if we can not verify it.
-        if (!isSpaceSupportsWebId(doc)) {
-
-            Object currentWebId = doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
-            if (currentWebId != null) { // in case of import, copy, move or restauration
-                if (StringUtils.isNotEmpty(currentWebId.toString())) {
-
-                    // blank the value of the webid document
-                    doc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, StringUtils.EMPTY);
-                    this.coreSession.saveDocument(doc);
-
-                }
-            }
-
-            return doc;
-        }
-
-        // webid setted in the document, we use it
-        if (doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID) != null) {
-            webid = doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID).toString();
-
-            // clean if needed
-            webid = IdUtils.generateId(webid, "-", true, 24);
-        }
-        // else in creation or import, try to generate it.
-        else if (CREATE_OP.equals(chainSource)) {
-            // else new id is ganarated
-            String[] arrayPath = doc.getPathAsString().split("/");
-            webid = arrayPath[arrayPath.length - 1];
-
-            // for docs whose ecm:name may be identical, nuxeo add a .timestamp, remove it
-            if (webid.contains(".")) {
-                webid = webid.substring(0, webid.indexOf("."));
-            }
-
-            // for Files or Pictures : put the extension of the file if exists
-            if ("File".equals(doc.getType()) || "Picture".equals(doc.getType())) {
-                int lastIndexOf = doc.getTitle().lastIndexOf(".");
-                if (lastIndexOf > -1) {
-                    extension = doc.getTitle().substring(lastIndexOf + 1, doc.getTitle().length());
-
-                    if (webid.endsWith(extension)) {
-                        webid = webid.substring(0, webid.length() - extension.length() - 1);
-                    }
-                }
-
-            }
-
-            hasToBeUpdated = true;
-        }
-
-        Object domainID = doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID);
-
-        // if webid is defined
-        if ((webid != null && webid.length() > 0) && domainID != null) {
-
-            if (StringUtils.isNotEmpty(domainID.toString())) {
-
-                // [others ops like move, restore, ...] don't throw an exception, put a suffix after the id
-                boolean unicity = true;
-                Integer suffix = null;
-                String webidconcat = webid;
-                do {
-
-                    DocumentModelList query = coreSession.query(String.format(WEB_ID_UNICITY_QUERY, domainID.toString(), webidconcat, doc.getId()));
-
-                    if (query.size() > 0) {
-                        unicity = false;
-                        if (suffix == null)
-                            suffix = 1;
-                        else
-                            suffix = suffix + 1;
-                        webidconcat = webid.concat(suffix.toString());
-                    } else {
-                        unicity = true;
-
-                        if (!webid.equals(webidconcat)) {
-                            webid = webidconcat;
-                            hasToBeUpdated = true;
-                        }
-                    }
-                } while (!unicity);
-
-                // save weburl
-                if (hasToBeUpdated) {
-                    log.warn("Id relocated to " + webid + " for document " + doc.getPathAsString());
-                    doc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, webid);
-                    if (extension != null) {
-                        doc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXTENSION_URL, extension);
-                    }
-                    this.coreSession.saveDocument(doc);
-                }
-            }
-        }
-
-        return doc;
+    public DocumentModel run(DocumentModel document) throws Exception {
+        UnrestrictedSilentSetWebIdRunner runner = new UnrestrictedSilentSetWebIdRunner(coreSession, document);
+        runner.silentRun(true);
+        return runner.getDocument();
     }
 
     /**
@@ -197,7 +97,7 @@ public class SetWebID {
         // check if document belong to a space whose supports webid
         boolean spaceSupportsWebId = true;
         DocumentModelList spaces = ToutaticeDocumentHelper.getParentSpaceList(coreSession, doc, false, true, true);
-        if (spaces!=null && spaces.size() > 0) {
+        if (spaces != null && spaces.size() > 0) {
 
             DocumentModel space = spaces.get(0);
             Property hasWebIdEnabled = space.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICESPACE_WEBID_ENABLED);
@@ -214,4 +114,129 @@ public class SetWebID {
         }
         return spaceSupportsWebId;
     }
+
+    private class UnrestrictedSilentSetWebIdRunner extends ToutaticeSilentProcessRunnerHelper {
+        
+        private DocumentModel document;
+
+        protected UnrestrictedSilentSetWebIdRunner(CoreSession session, DocumentModel document) {
+            super(session);
+            this.document = document;
+        }
+        
+        public DocumentModel getDocument(){
+            return this.document;
+        }
+
+        @Override
+        public void run() throws ClientException {
+            String webid = null;
+            String extension = null;
+            boolean hasToBeUpdated = false;
+
+            // if document has not toutatice schema
+            if (this.document.isImmutable() || !this.document.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
+                return;
+            }
+
+            // if space does not supports webid or if we can not verify it.
+            if (!isSpaceSupportsWebId(this.document)) {
+
+                Object currentWebId = this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
+                if (currentWebId != null) { // in case of import, copy, move or restauration
+                    if (StringUtils.isNotEmpty(currentWebId.toString())) {
+
+                        // blank the value of the webid document
+                        this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, StringUtils.EMPTY);
+                        this.session.saveDocument(this.document);
+
+                    }
+                }
+
+                return;
+            }
+
+            // webid setted in the document, we use it
+            if (this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID) != null) {
+                webid = this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID).toString();
+
+                // clean if needed
+                webid = IdUtils.generateId(webid, "-", true, 24);
+            }
+            // else in creation or import, try to generate it.
+            else if (CREATE_OP.equals(chainSource)) {
+                // else new id is ganarated
+                String[] arrayPath = this.document.getPathAsString().split("/");
+                webid = arrayPath[arrayPath.length - 1];
+
+                // for docs whose ecm:name may be identical, nuxeo add a .timestamp, remove it
+                if (webid.contains(".")) {
+                    webid = webid.substring(0, webid.indexOf("."));
+                }
+
+                // for Files or Pictures : put the extension of the file if exists
+                if ("File".equals(this.document.getType()) || "Picture".equals(this.document.getType())) {
+                    int lastIndexOf = this.document.getTitle().lastIndexOf(".");
+                    if (lastIndexOf > -1) {
+                        extension = this.document.getTitle().substring(lastIndexOf + 1, this.document.getTitle().length());
+
+                        if (webid.endsWith(extension)) {
+                            webid = webid.substring(0, webid.length() - extension.length() - 1);
+                        }
+                    }
+
+                }
+
+                hasToBeUpdated = true;
+            }
+
+            Object domainID = this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID);
+
+            // if webid is defined
+            if ((webid != null && webid.length() > 0) && domainID != null) {
+
+                if (StringUtils.isNotEmpty(domainID.toString())) {
+
+                    // [others ops like move, restore, ...] don't throw an exception, put a suffix after the id
+                    boolean unicity = true;
+                    Integer suffix = null;
+                    String webidconcat = webid;
+                    do {
+
+                        DocumentModelList query = coreSession.query(String.format(WEB_ID_UNICITY_QUERY, domainID.toString(), webidconcat, this.document.getId()));
+
+                        if (query.size() > 0) {
+                            unicity = false;
+                            if (suffix == null)
+                                suffix = 1;
+                            else
+                                suffix = suffix + 1;
+                            webidconcat = webid.concat(suffix.toString());
+                        } else {
+                            unicity = true;
+
+                            if (!webid.equals(webidconcat)) {
+                                webid = webidconcat;
+                                hasToBeUpdated = true;
+                            }
+                        }
+                    } while (!unicity);
+
+                    // save weburl
+                    if (hasToBeUpdated) {
+                        log.warn("Id relocated to " + webid + " for document " + this.document.getPathAsString());
+                        this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, webid);
+                        if (extension != null) {
+                            this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXTENSION_URL, extension);
+                        }
+                        this.session.saveDocument(this.document);
+                    }
+                }
+            }
+
+        }
+
+
+    }
+
 }
