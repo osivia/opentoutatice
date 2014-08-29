@@ -18,11 +18,11 @@
 package fr.toutatice.ecm.platform.automation;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.nuxeo.ecm.automation.OperationException;
-import org.nuxeo.ecm.automation.client.model.PropertyList;
-import org.nuxeo.ecm.automation.client.model.PropertyMap;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -31,7 +31,6 @@ import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.automation.core.collectors.DocumentModelCollector;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.model.Property;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -48,8 +47,8 @@ public class AddComplexProperty {
     @Context
     protected CoreSession session;
 
-    @Param(name = "xpath")
-    protected String xpath;
+    @Param(name = "schema")
+    protected String schema;
 
     @Param(name = "value")
     protected Serializable value;
@@ -65,16 +64,20 @@ public class AddComplexProperty {
         } else {
             Map<String, Object> newEntry = (Map<String, Object>) value;
 
-            Property property = doc.getProperty(xpath);
-            PropertyList complexList = property.getValue(PropertyList.class);
+            Map<String, Object> properties = doc.getProperties(schema);
 
-            PropertyMap map = new PropertyMap(newEntry);
+            Collection<Object> values = properties.values();
 
-            if (complexList != null) {
-                complexList.add(map);
+            // Une seule liste dans ce schéma
+            Object object = values.iterator().next();
+
+            if (object instanceof List) {
+                List<Map<String, Object>> complexList = (List<Map<String, Object>>) object;
+
+                complexList.add(newEntry);
             }
 
-            doc.setPropertyValue(xpath, complexList);
+            doc.setProperties(schema, properties);
         }
 
         if (save) {
