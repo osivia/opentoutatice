@@ -18,22 +18,26 @@
 package fr.toutatice.ecm.platform.automation;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.automation.core.collectors.DocumentModelCollector;
+import org.nuxeo.ecm.automation.core.util.Properties;
 import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.model.Property;
 
 /**
- * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
+ * Add an entry in a complex property defined in the xpath parameter. The value must be a list of params seperated with line separator ( \n).
+ * 
+ * @author lbillon
  */
 @Operation(
         id = AddComplexProperty.ID,
@@ -47,11 +51,11 @@ public class AddComplexProperty {
     @Context
     protected CoreSession session;
 
-    @Param(name = "schema")
-    protected String schema;
+    @Param(name = "xpath")
+    protected String xpath;
 
     @Param(name = "value")
-    protected Serializable value;
+    protected Properties value;
 
     @Param(name = "save", required = false, values = "true")
     protected boolean save = true;
@@ -59,30 +63,30 @@ public class AddComplexProperty {
     @OperationMethod(collector = DocumentModelCollector.class)
     public DocumentModel run(DocumentModel doc) throws Exception {
 
-        if (!(value instanceof Map<?, ?>)) {
-            throw new OperationException("The value is not a Map");
-        } else {
-            Map<String, Object> newEntry = (Map<String, Object>) value;
+        Property property = doc.getProperty(xpath);
 
-            Map<String, Object> properties = doc.getProperties(schema);
+        if (property != null) {
+            Serializable value2 = property.getValue();
 
-            Collection<Object> values = properties.values();
+            if (value2 instanceof Serializable && value2 instanceof List<?>) {
+                List<Map<String, Object>> complexList = (List<Map<String, Object>>) value2;
 
-            // Une seule liste dans ce schéma
-            Object object = values.iterator().next();
+                complexList.add(new HashMap<String, Object>(value));
 
-            if (object instanceof List) {
-                List<Map<String, Object>> complexList = (List<Map<String, Object>>) object;
-
-                complexList.add(newEntry);
+                doc.setPropertyValue(xpath, (Serializable) complexList);
+            } else {
+                throw new DocumentException("the value is not a Serializable List " + value);
             }
 
-            doc.setProperties(schema, properties);
+        } else {
+            throw new DocumentException("no property with name " + property);
         }
+
 
         if (save) {
             doc = session.saveDocument(doc);
         }
+
 
         return doc;
     }
