@@ -20,11 +20,15 @@ package fr.toutatice.ecm.platform.core.helper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.nuxeo.ecm.automation.features.PrincipalHelper;
 import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.security.PermissionProvider;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 import org.nuxeo.runtime.api.Framework;
 
@@ -33,6 +37,7 @@ public class ToutaticeUserMngtHelper {
 
 	private static ToutaticeUserMngtHelper instance;
 	private static UserManager userManager;
+	private static PermissionProvider permissionProvider;
 
 	private ToutaticeUserMngtHelper() {
 	}
@@ -92,6 +97,23 @@ public class ToutaticeUserMngtHelper {
 	public List<String> getSuperAdministrators() throws ClientException {
 		return getUserManager().getAdministratorsGroups();
 	}
+	
+	/**
+	 * 
+	 * @param doc document	
+	 * @param permission permission à contrôler
+	 * @param ignoreGroups si true, alors les groupes sont exclus du resultat
+	 * @param resolveGroups si true, alors les utilisateurs du groupe sont ajoutés au résultat
+	 * @return
+	 * @throws Exception
+	 */
+	 public Set<String> getDocumentUsersAndGroups(DocumentModel doc,String permission,boolean ignoreGroups, boolean resolveGroups) 
+			 throws ClientException {
+		 PrincipalHelper ph = new PrincipalHelper(getUserManager(), getPermissionProvider());
+		 Set<String> result = ph.getUserAndGroupIdsForPermission(doc, permission, ignoreGroups, resolveGroups, false);
+		 
+		 return result;
+	 }
 
 	/**
 	 * Initialize the service attribute
@@ -108,5 +130,21 @@ public class ToutaticeUserMngtHelper {
 		 
 		 return userManager;
 	 }
+	 
+	
+		 private static PermissionProvider getPermissionProvider() throws ClientException {
+			 try {
+				 if (null == permissionProvider) {
+					 permissionProvider = (PermissionProvider) Framework.getService(PermissionProvider.class);
+				 }
+			 } catch (Exception e) {
+				 log.error("Failed to get the user manager service, exception message: " + e.getMessage());
+				 throw new ClientException("Failed to get the user manager service, exception message: " + e.getMessage());
+			 }
+			 
+			 return permissionProvider;
+		 }
+	 
+
 
 }
