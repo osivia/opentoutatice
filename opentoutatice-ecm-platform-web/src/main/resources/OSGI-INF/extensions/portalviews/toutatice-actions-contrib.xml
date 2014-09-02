@@ -148,7 +148,7 @@
 		</action> 
 
 		<!-- Vue portail : Création d'un Workspace
-			(l'action de création solicité par la vue Nuxeo est définie par Nuxeo lui-même) 
+			(l'action de création solicitée par la vue Nuxeo est définie par Nuxeo lui-même) 
 		-->
 		<action id="TOUTATICE_CREATE_WORKSPACE_DOCUMENT" link="#{documentTemplatesActions.createDocumentFromTemplate('done')}"
 			order="1" label="command.create">
