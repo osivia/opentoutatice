@@ -9,7 +9,7 @@
   
     <groupId>org.nuxeo.ecm.distribution</groupId>
 	<artifactId>opentoutatice-ecm-platform-marketplace</artifactId>
-	<version>1.2.2-SNAPSHOT</version>
+	<version>1.2.2-RC1</version>
 	<packaging>zip</packaging>
 	<name>Marketplace package - Open Toutatice platform</name>
 
@@ -305,8 +305,8 @@
 	</distributionManagement>
 
   <scm>
-    <connection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.2.1/opentoutatice-ecm-platform-marketplace</connection>
-    <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.2.1/opentoutatice-ecm-platform-marketplace</developerConnection>
-    <url>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.2.1/opentoutatice-ecm-platform-marketplace</url>
+    <connection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.2.2-RC1/opentoutatice-ecm-platform-marketplace</connection>
+    <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.2.2-RC1/opentoutatice-ecm-platform-marketplace</developerConnection>
+    <url>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.2.2-RC1/opentoutatice-ecm-platform-marketplace</url>
   </scm>
 </project>
