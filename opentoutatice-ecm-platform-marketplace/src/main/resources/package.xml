@@ -5,10 +5,10 @@
 			(which one is based on the Nuxeo DM distribution)
 			
 		Main fixes provided:
-         * 
+         * Not possible to hot reload a marketplace package (refer to Nuxeo Jira https://jira.nuxeo.com/browse/SUPNXP-11255) 
          
         Main evolutions:
-		 * (technical) Add the possibility to instanciate the Unrestricted mode class ToutaticeSilentProcessRunnerHelper based on the repository name only (without any session)
+		 * (technical) Add the possibility to instantiate the Unrestricted mode class ToutaticeSilentProcessRunnerHelper based on the repository name only (without any session)
 		 
 		</p>
 	</description>
