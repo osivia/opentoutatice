@@ -52,6 +52,7 @@ public class ToutaticeNuxeoArchiveReader extends NuxeoArchiveReader {
 					String initialLifeCycleState = getDefaultLifeCycleStateForDoc(doc);
 					
 					// Filtrer les documents supprimés
+					DefaultElement lcpolicy = (DefaultElement) system.element(ExportConstants.LIFECYCLE_POLICY_TAG);
 					DefaultElement lcs = (DefaultElement) system.element(ExportConstants.LIFECYCLE_STATE_TAG);
 					if (null != lcs && LifeCycleConstants.DELETED_STATE.equals(lcs.getTextTrim())) {
 						// Lire le document suivant
@@ -70,8 +71,9 @@ public class ToutaticeNuxeoArchiveReader extends NuxeoArchiveReader {
 						}
 					}
 					
-					// Forcer le passage dans l'état initial
-					if (null != initialLifeCycleState) {
+					// Forcer le passage dans l'état initial (except for Content Routing documents)
+					if (null != initialLifeCycleState
+						&& (null != lcpolicy &&  !"documentRouteElement".equals(lcpolicy.getTextTrim())) ) {
 						lcs.setText(initialLifeCycleState);
 					}
 				}
