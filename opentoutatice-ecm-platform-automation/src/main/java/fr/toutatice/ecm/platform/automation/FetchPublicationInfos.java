@@ -65,6 +65,7 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
+import fr.toutatice.ecm.platform.core.services.drive.ToutaticeDriveService;
 
 @Operation(id = FetchPublicationInfos.ID, category = Constants.CAT_FETCH, label = "Fetch publish space informations",
         description = "Fetch informations about the publish space, worksapce, proxy status, ... of a given document.")
@@ -74,7 +75,7 @@ public class FetchPublicationInfos {
             + " AND ttc:webid = '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
 
-    private static final Log log = LogFactory.getLog(FetchPublicationInfos.class);
+    private static final Log log = LogFactory.getLog("FetchPublicationInfos");
 
     /**
      * Id Nuxeo de l'opération (s'applique à un Document).
@@ -220,6 +221,17 @@ public class FetchPublicationInfos {
             /* Indique une modification du live depuis la dernière publication du proxy */
             liveDoc = (DocumentModel) liveDocRes;
             infosPubli.element("liveVersion", liveDoc.getVersionLabel());
+
+
+            /*
+             * Nuxeo Drive
+             */
+            ToutaticeDriveService drive = Framework.getService(ToutaticeDriveService.class);
+            Map<String, String> infosSynchro = drive.fetchSynchronizationInfos(coreSession, liveDoc);
+            infosPubli.accumulateAll(infosSynchro);
+
+            log.warn("[drive] " + document.getPathAsString() + " (" + document.getId() + ") " + infosSynchro);
+
         }
 
         infosPubli.put("subTypes", new JSONObject());
@@ -237,6 +249,7 @@ public class FetchPublicationInfos {
                 infosPubli.put("subTypes", subTypes);
             }
         }
+
 
         /*
          * Récupération du "droit" de commenter.

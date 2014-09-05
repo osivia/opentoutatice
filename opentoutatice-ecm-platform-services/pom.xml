@@ -12,10 +12,6 @@
 	<packaging>jar</packaging>
 	<name>Partie service de la plate-forme opentoutatice</name>
 
-	<properties>
-		<nuxeo.version>5.8.0-HF13</nuxeo.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.nuxeo.ecm.core</groupId>

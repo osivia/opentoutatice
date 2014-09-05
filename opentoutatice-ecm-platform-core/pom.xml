@@ -11,10 +11,6 @@
 	<packaging>jar</packaging>
 	<name>Partie core de la plate-forme toutatice</name>
 
-	<properties>
-		<nuxeo.version>5.8.0-HF13</nuxeo.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.nuxeo.ecm.core</groupId>
@@ -102,6 +98,20 @@
 			<artifactId>nuxeo-platform-notification-core</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
+        
+        
+        <!-- Drive -->
+        <dependency>
+            <groupId>org.nuxeo.ecm</groupId>
+            <artifactId>nuxeo-drive-core</artifactId>
+            <version>${nuxeo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.nuxeo.ecm</groupId>
+            <artifactId>nuxeo-drive-core</artifactId>
+            <version>${nuxeo.version}</version>
+        </dependency>        
+        
 		<!--  -->
 		<dependency>
 			<groupId>org.nuxeo.ecm.automation</groupId>
