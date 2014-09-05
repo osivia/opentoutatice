@@ -140,7 +140,6 @@ public class ToutaticeWebActionsBean extends WebActionsBean {
     @Observer(value = { EventNames.DOCUMENT_SELECTION_CHANGED, 
     		EventNames.DOMAIN_SELECTION_CHANGED,
     		EventNames.CONTENT_ROOT_SELECTION_CHANGED,
-    		/*EventNames.DOCUMENT_CHANGED, */
     		EventNames.GO_HOME}, create = false)
 	public void resetActionContext() {
     	if (null != this.conditionalActionsStatusMap) {

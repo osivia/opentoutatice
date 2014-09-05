@@ -28,9 +28,11 @@
 					<li class="#{nxu:test(editorImageActions.selectedTab == 'UPLOAD', 'selected', '')}">
 						<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=UPLOAD">#{messages['toutatice.label.imageUpload.uploadTab']}</a>
 					</li>
-					<li class="#{nxu:test(editorImageActions.selectedTab == 'ENCLOSED', 'selected', '')}">
-						<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=ENCLOSED">#{messages['toutatice.label.imageUpload.attachableImagesTab']}</a>
-					</li>						
+					<c:if test="#{currentDocument.hasFacet('TTCAttachableImages')}">
+						<li class="#{nxu:test(editorImageActions.selectedTab == 'ENCLOSED', 'selected', '')}">
+							<a href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=ENCLOSED">#{messages['toutatice.label.imageUpload.attachableImagesTab']}</a>
+						</li>
+					</c:if>						
 				</ul>
 			</div>
 

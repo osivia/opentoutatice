@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
-<component name="fr.toutatice.ecm.platform.web.contentview.local.publishing.contrib">
+
+<component
+	name="fr.toutatice.ecm.platform.web.contentview.local.publishing.contrib">
 
 	<require>org.nuxeo.ecm.platform.ui.web.ContentViewService</require>
 	<require>org.nuxeo.ecm.webapp.contentview.contrib</require>
@@ -22,10 +24,15 @@
 						<field name="modified_max" schema="advanced_search" />
 					</predicate>
 					<fixedPart>
-						ecm:mixinType != 'HiddenInNavigation'
-						AND ecm:isCheckedInVersion = 0
-						AND ecm:currentLifeCycleState != 'deleted'
-						AND (ecm:isProxy = 0 OR (ecm:isProxy = 1 AND ecm:name NOT LIKE '%.proxy'))
+						ecm:mixinType !=
+						'HiddenInNavigation'
+						AND
+						ecm:isCheckedInVersion = 0
+						AND
+						ecm:currentLifeCycleState !=
+						'deleted'
+						AND (ecm:name NOT LIKE
+						'%.proxy')
 						AND ecm:parentId = ?
 					</fixedPart>
 				</whereClause>
@@ -48,7 +55,6 @@
 			<cacheKey>#{currentDocument.id}</cacheKey>
 			<cacheSize>10</cacheSize>
 			<selectionList>CURRENT_SELECTION</selectionList>
-			<actions category="CURRENT_SELECTION_LIST" />
 			<actions category="ORDERABLE_CURRENT_SELECTION_LIST" />
 			<resultLayouts>
 				<layout name="cv_ContentOrderedReadNWrite@cvListingLayout"

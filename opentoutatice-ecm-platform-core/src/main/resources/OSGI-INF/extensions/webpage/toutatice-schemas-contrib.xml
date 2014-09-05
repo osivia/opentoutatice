@@ -12,6 +12,7 @@
 		<schema name="webconfigurationfolder" prefix="webconfigurationfolder"
 			src="schemas/webpage/webconfigurationfolder.xsd" />
 
+        <schema name="regions" prefix="rg" src="schemas/webpage/regions.xsd" />
 		<schema name="fragments" prefix="fgts" src="schemas/webpage/fragments.xsd" />
 		<schema name="html_fragments" prefix="htmlfgt"
 			src="schemas/webpage/html_fragments.xsd" />

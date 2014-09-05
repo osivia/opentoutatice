@@ -13,7 +13,7 @@
             <event>documentImported</event>
             <filters>
                 <attribute>Mutable Document</attribute>
-                <expression>Document.hasSchema('toutatice') == false</expression>
+                <condition>Document.hasSchema('toutatice')</condition>
             </filters>
         </handler>
 
@@ -24,7 +24,7 @@
             <event>lifecycle_transition_event</event> <!-- for put in trash and restauration -->
             <filters>
                 <attribute>Mutable Document</attribute>
-                <expression>Document.hasSchema('toutatice') == false</expression>
+                <condition>Document.hasSchema('toutatice')</condition>
             </filters>
         </handler>
 

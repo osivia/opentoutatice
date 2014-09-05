@@ -3,69 +3,39 @@
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:c="http://java.sun.com/jstl/core">
 
-	<c:if test="#{!documentActions.belongToPublishSpace()}">
-		<nxu:set var="pendingProcess"
-			value="#{jbpmActions.getPendingProcessName(currentDocument)}">
-			<c:if test="#{not empty pendingProcess}">
+	<nxu:set var="pendingWorkflow"
+		value="#{routingActions.getPendingWorkflowName()}">
+
+		<c:if test="#{!documentActions.belongToPublishSpace()}">
+			<c:if test="#{not empty pendingWorkflow}">
 				<c:set var="pendingLabel"
-					value="label.toutatice.version.pending.#{pendingProcess}" />
+					value="label.toutatice.version.pending.#{pendingWorkflow}" />
 				<h:outputText class="summary_superscript summary_pendingVersion"
 					value="#{messages[pendingLabel]}" />
 			</c:if>
-		</nxu:set>
-	</c:if>
 
-	<c:if test="#{documentActions.belongToPublishSpace()}">
-		<c:choose>
-			<c:when test="#{documentActions.isRemoteProxy()}">
-				<!-- Used, for instance, just for remote publishing -->
-				<nxu:set var="pendingPublishTask"
-					value="#{taskActions.getPendingPublishTaskName()}">
-					<c:choose>
-						<c:when test="#{not empty pendingPublishTask}">
-							<c:set var="pendingTaskLabel"
-								value="toutatice.label.version.pending.#{pendingPublishTask}" />
-							<h:outputText class="summary_superscript summary_pendingVersion"
-								value="#{messages[pendingTaskLabel]}" />
-						</c:when>
-						<c:otherwise>
-							<h:outputText class="summary_superscript summary_workVersion"
-								value="#{messages['label.toutatice.version.work']}"
-								rendered="#{!documentActions.isOnlineWithSameVersion()}" />
+		</c:if>
 
-							<h:outputText
-								class="summary_superscript summary_publishedVersion"
-								value="#{messages['label.toutatice.version.published']}"
-								rendered="#{documentActions.isOnlineWithSameVersion()}" />
-						</c:otherwise>
-					</c:choose>
-				</nxu:set>
-			</c:when>
-			<c:otherwise>
-				<nxu:set var="pendingProcess"
-					value="#{jbpmActions.getPendingProcessName(currentDocument)}">
-					<c:choose>
-						<c:when test="#{not empty pendingProcess}">
-							<c:set var="pendingLabel"
-								value="label.toutatice.version.pending.#{pendingProcess}" />
-							<h:outputText class="summary_superscript summary_pendingVersion"
-								value="#{messages[pendingLabel]}" />
-						</c:when>
-						<c:otherwise>
-							<h:outputText class="summary_superscript summary_workVersion"
-								value="#{messages['label.toutatice.version.work']}"
-								rendered="#{!documentActions.isOnlineWithSameVersion()}" />
+		<c:if test="#{documentActions.belongToPublishSpace()}">
+			<c:choose>
+				<c:when test="#{not empty pendingWorkflow}">
+					<c:set var="pendingLabel"
+						value="label.toutatice.version.pending.#{pendingWorkflow}" />
+					<h:outputText class="summary_superscript summary_pendingVersion"
+						value="#{messages[pendingLabel]}" />
+				</c:when>
+				<c:otherwise>
+					<h:outputText class="summary_superscript summary_workVersion"
+						value="#{messages['label.toutatice.version.work']}"
+						rendered="#{!documentActions.isOnlineWithSameVersion()}" />
 
-							<h:outputText
-								class="summary_superscript summary_publishedVersion"
-								value="#{messages['label.toutatice.version.published']}"
-								rendered="#{documentActions.isOnlineWithSameVersion()}" />
-						</c:otherwise>
-					</c:choose>
-				</nxu:set>
-			</c:otherwise>
-		</c:choose>
-	</c:if>
+					<h:outputText class="summary_superscript summary_publishedVersion"
+						value="#{messages['label.toutatice.version.published']}"
+						rendered="#{documentActions.isOnlineWithSameVersion()}" />
+				</c:otherwise>
+			</c:choose>
+		</c:if>
+
+	</nxu:set>
 
 </f:subview>
-

@@ -204,6 +204,9 @@
             <fields>
                 <field>ttcs:hasWebIdEnabled</field>
             </fields>
+            <properties widgetMode="edit">
+                <property name="immediate">true</property>
+            </properties>         
             <widgetModes>
                 <mode value="any">#{nxu:test(currentDocument.hasFacet('Space'),
                     layout.mode, 'hidden')}</mode>

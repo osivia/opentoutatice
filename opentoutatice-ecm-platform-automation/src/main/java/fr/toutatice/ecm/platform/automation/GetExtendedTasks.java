@@ -27,8 +27,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jbpm.JbpmContext;
-import org.jbpm.taskmgmt.exe.TaskInstance;
+import org.jboss.seam.bpm.TaskInstance;
 import org.nuxeo.common.utils.i18n.I18NUtils;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.Constants;
@@ -41,8 +40,8 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.LifeCycleConstants;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
-import org.nuxeo.ecm.platform.jbpm.JbpmListFilter;
-import org.nuxeo.ecm.platform.jbpm.JbpmService;
+import org.nuxeo.ecm.platform.task.Task;
+import org.nuxeo.ecm.platform.task.TaskService;
 
 
 @Operation(id = GetExtendedTasks.ID, category = Constants.CAT_SERVICES, label = "Get extended tasks", since = "5.4",
@@ -61,25 +60,26 @@ public class GetExtendedTasks // extends GetUserTasks
     protected CoreSession repo;
 
     @Context
-    protected JbpmService srv;
+    protected TaskService taskService;
 
     @OperationMethod
     public Blob run() throws Exception {
         NuxeoPrincipal principal = principal();
-        List<TaskInstance> tasks = srv.getCurrentTaskInstances(principal, null);
+        
+        List<Task> tasks = taskService.getCurrentTaskInstances(repo);
 
         if (tasks == null) {
             return null;
         }
 
         JSONArray rows = new JSONArray();
-        for (TaskInstance task : tasks) {
+        for (Task task : tasks) {
             DocumentModel doc = null;
             try {
                 if (task.hasEnded() || task.isCancelled()) {
                     continue;
                 }
-                doc = srv.getDocumentModel(task, principal);
+                doc = taskService.getTargetDocumentModel(task, repo);
             } catch (Exception e) {
                 log.warn("Cannot get doc for task " + task.getId() + ", error: " + e.getMessage());
             }
@@ -107,7 +107,7 @@ public class GetExtendedTasks // extends GetUserTasks
                      * description = "";
                      * obj.element("description", URLEncoder.encode(description,"UTF-8"));
                      */
-                    obj.element("startDate", task.getCreate());
+                    obj.element("startDate", task.getCreated());
                     obj.element("dueDate", task.getDueDate());
 
                     // obj.element("directive", task.getVariableLocally(TaskVariableName.directive.name()));
@@ -150,18 +150,6 @@ public class GetExtendedTasks // extends GetUserTasks
 
     protected NuxeoPrincipal principal() {
         return (NuxeoPrincipal) ctx.getPrincipal();
-    }
-
-    protected JbpmListFilter filter() {
-        return new JbpmListFilter() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public <T> ArrayList<T> filter(JbpmContext jbpmContext, DocumentModel document, ArrayList<T> list, NuxeoPrincipal principal) {
-                return list;
-            }
-        };
     }
 
 }

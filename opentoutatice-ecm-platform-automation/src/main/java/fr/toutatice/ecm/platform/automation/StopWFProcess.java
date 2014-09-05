@@ -19,33 +19,26 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.jboss.seam.core.Events;
-import org.jboss.seam.international.StatusMessage;
-import org.jbpm.graph.exe.ProcessInstance;
-import org.jbpm.taskmgmt.exe.TaskInstance;
+import org.nuxeo.ecm.automation.AutomationService;
+import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.NuxeoPrincipal;
-import org.nuxeo.ecm.platform.jbpm.JbpmEventNames;
-import org.nuxeo.ecm.platform.jbpm.JbpmService;
-import org.nuxeo.ecm.platform.jbpm.core.helper.AbandonProcessUnrestricted;
-import org.nuxeo.ecm.platform.jbpm.core.helper.EndProcessUnrestricted;
-
-import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
+import org.nuxeo.ecm.platform.routing.core.api.DocumentRoutingEngineService;
+import org.nuxeo.ecm.platform.routing.core.api.operation.CancelWorkflowOperation;
 
 
 /**
  * @author David Chevrier
  */
-@Operation(id = StopWFProcess.ID, category = Constants.CAT_SERVICES, label = "Stop process", since = "5.3.2",
+@Operation(id = StopWFProcess.ID, category = Constants.CAT_SERVICES, label = "Stop process", since = "1.2.2",
         description = "Stop (or cancel) a process bound to the document.")
 public class StopWFProcess {
 
@@ -53,48 +46,33 @@ public class StopWFProcess {
 
     @Context
     protected CoreSession documentManager;
+    
+    @Context
+    protected OperationContext context;
+    
+    @Context 
+    protected transient AutomationService automationService;
 
     @Context
-    protected transient JbpmService jbpmService;
+    protected transient DocumentRoutingEngineService engineRoutingService;
 
     @Param(name = "workflow name", required = true, order = 0)
-    protected String processName;
+    protected String inputWorkflowName;
 
     @OperationMethod()
     public void run(DocumentModel document) throws Exception {
-        NuxeoPrincipal currentUser = (NuxeoPrincipal) documentManager.getPrincipal();
-        ProcessInstance currentProcess = getProcessByName(currentUser, ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE, document);
-        if (currentProcess != null) {
-            // remove wf acls
-            Long pid = Long.valueOf(currentProcess.getId());
-            if (document != null) {
-                AbandonProcessUnrestricted runner = new AbandonProcessUnrestricted(documentManager, document.getRef(), pid);
-                runner.runUnrestricted();
-            }
+        
+        Map<String, Object> params = new HashMap<String, Object>(1);
+        params.put("id", inputWorkflowName);
+        automationService.run(context, CancelWorkflowOperation.ID, params);
 
-            // end process and tasks using unrestricted session
-            List<TaskInstance> tis = jbpmService.getTaskInstances(documentManager.getDocument(document.getRef()), (NuxeoPrincipal) null, null);
+//        DocumentRoute inputWorkflowRoute = ToutaticeWorkflowHelper.getWorkflowByName(inputWorkflowName, document);
+//        if (inputWorkflowRoute != null) {
+//            engineRoutingService.cancel(inputWorkflowRoute, documentManager);
+//        } else {
+//            throw new WorkflowManagmentException("There is no " + inputWorkflowName + " workflow instance to cancel");
+//        }
 
-            EndProcessUnrestricted endProcessRunner = new EndProcessUnrestricted(documentManager, tis);
-            endProcessRunner.runUnrestricted();
-
-            jbpmService.deleteProcessInstance(currentUser, pid);
-        }
-    }
-    
-    /* FIXME: to move in Core */
-    public ProcessInstance getProcessByName(NuxeoPrincipal currentUser, String processname, DocumentModel document) throws ClientException {
-        ProcessInstance searchProcess = null;
-        List<ProcessInstance> processes = jbpmService.getProcessInstances(document, currentUser, null);
-        if (processes != null) {
-            for (ProcessInstance process : processes) {
-                if (process.getProcessDefinition().getName().equals(processname)) {
-                    searchProcess = process;
-                    break;
-                }
-            }
-        }
-        return searchProcess;
     }
 
 }

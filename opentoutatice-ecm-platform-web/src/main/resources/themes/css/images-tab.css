@@ -1,4 +1,8 @@
 /* Onglet Images */
+.dataListAlign td {
+	vertical-align: middle;
+}
+
 td.toutatice_image_tab_cell_download {
 	border-color: grey;
 	border-style: solid;

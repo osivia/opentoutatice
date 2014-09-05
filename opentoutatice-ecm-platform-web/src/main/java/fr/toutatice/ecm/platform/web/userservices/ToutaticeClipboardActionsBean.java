@@ -28,8 +28,8 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.bpm.ProcessInstance;
 import org.jboss.seam.international.StatusMessage;
-import org.jbpm.graph.exe.ProcessInstance;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -38,7 +38,8 @@ import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.LifeCycleConstants;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
-import org.nuxeo.ecm.platform.jbpm.JbpmService;
+import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
+import org.nuxeo.ecm.platform.routing.api.DocumentRoutingService;
 import org.nuxeo.ecm.webapp.clipboard.ClipboardActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
@@ -54,7 +55,7 @@ public class ToutaticeClipboardActionsBean extends ClipboardActionsBean {
 	private static final Log log = LogFactory.getLog(ToutaticeClipboardActionsBean.class);
 	
     @In(create = true)
-    protected transient JbpmService jbpmService;
+    protected transient DocumentRoutingService routingService;
     
 	/*
 	 * Empêcher la possibilité de déplacer un document qui est impliqué dans un workflow
@@ -86,8 +87,8 @@ public class ToutaticeClipboardActionsBean extends ClipboardActionsBean {
                 boolean sameFolder = sourceFolderRef.equals(destFolderRef);
                 
                 boolean hasActiveWF = false;
-                List<ProcessInstance> processes = jbpmService.getProcessInstances(docModel, null, null);
-                if (processes != null && !processes.isEmpty()) {
+                List<DocumentRoute> documentRoutes = routingService.getDocumentRoutesForAttachedDocument(documentManager, docModel.getId());
+                if (documentRoutes != null && !documentRoutes.isEmpty()) {
                 	hasActiveWF = true;
                 }
                 
@@ -121,8 +122,8 @@ public class ToutaticeClipboardActionsBean extends ClipboardActionsBean {
             boolean sameFolder = sourceFolderRef.equals(destFolderRef);
             
             boolean hasActiveWF = false;
-            List<ProcessInstance> processes = jbpmService.getProcessInstances(docModel, null, null);
-            if (processes != null && !processes.isEmpty()) {
+            List<DocumentRoute> documentRoutes = routingService.getDocumentRoutesForAttachedDocument(documentManager, docModel.getId());
+            if (documentRoutes != null && !documentRoutes.isEmpty()) {
             	hasActiveWF = true;
             }
 

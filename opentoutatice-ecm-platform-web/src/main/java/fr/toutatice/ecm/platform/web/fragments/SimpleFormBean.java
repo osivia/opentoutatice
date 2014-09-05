@@ -24,6 +24,8 @@ import javax.faces.context.FacesContext;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Role;
+import org.jboss.seam.annotations.Roles;
 import org.jboss.seam.annotations.Scope;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
@@ -36,6 +38,8 @@ import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 @Name("simpleForm")
 @Scope(ScopeType.SESSION)
 @Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
+@Roles({@Role(name = "genericStyleSimpleForm", scope = ScopeType.SESSION), @Role(name = "listStyleSimpleForm", scope = ScopeType.SESSION),
+@Role(name = "pageTemplateSimpleForm", scope = ScopeType.SESSION), @Role(name = "subpageTemplateSimpleForm", scope = ScopeType.SESSION)})
 public class SimpleFormBean {
 
     private UIComponent simpleComponent;

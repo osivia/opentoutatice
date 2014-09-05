@@ -31,7 +31,6 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
-import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.model.Property;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
@@ -224,7 +223,7 @@ public class SetWebID {
 
                     // save weburl
                     if (hasToBeUpdated) {
-                        log.warn("Id relocated to " + webid + " for document " + this.document.getPathAsString());
+                        // log.warn("Id relocated to " + webid + " for document " + this.document.getPathAsString());
                         this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, webid);
                         if (extension != null) {
                             this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXTENSION_URL, extension);

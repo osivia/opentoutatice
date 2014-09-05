@@ -62,6 +62,12 @@
 				</condition>
 			</rule>
 		</filter>
+		
+		<filter id="isVersionable">
+			<rule grant="true">
+				<facet>Versionable</facet>
+			</rule>
+		</filter>
 
 		<filter id="not_version">
 			<rule grant="false">
@@ -91,7 +97,8 @@
 				<type>Domain</type>
 				<type>PortalSite</type>
 				<type>PortalPage</type>
-				<condition>#{typeManager.getAllowedSubTypes(document.getType(),document).size() &gt; 0}</condition>
+				<condition>#{typeManager.getAllowedSubTypes(document.getType(),
+					document).size() &gt; 0}</condition>
 			</rule>
 		</filter>
 

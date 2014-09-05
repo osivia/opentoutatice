@@ -24,8 +24,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.chemistry.opencmis.commons.enums.CmisVersion;
 import org.apache.chemistry.opencmis.commons.server.CallContext;
+import org.apache.chemistry.opencmis.commons.server.CmisServiceFactory;
 import org.apache.chemistry.opencmis.server.impl.CallContextImpl;
+import org.apache.chemistry.opencmis.server.shared.ThresholdOutputStreamFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,6 +48,7 @@ import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.opencmis.impl.server.CMISQLQueryMaker;
 import org.nuxeo.ecm.core.opencmis.impl.server.NuxeoCmisService;
 import org.nuxeo.ecm.core.opencmis.impl.server.NuxeoRepository;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.utils.exception.ToutaticeException;
 
@@ -208,10 +216,14 @@ public final class ToutaticeSQLQueryHelper {
 		NuxeoCmisService service = null;
 
 		try {
+			/* TO TEST
 			getRepository(session);
-			CallContext context = new CallContextImpl(CallContext.BINDING_LOCAL, session.getRepositoryName(), true);
+			CallContext context = new CallContextImpl(CallContext.BINDING_LOCAL, session.getRepositoryName(), true); 
 
-			service = new NuxeoCmisService(repository, context, session);
+			service = new NuxeoCmisService(repository, context, session);*/
+			
+			service = Framework.getService(NuxeoCmisService.class);
+
 		} catch (Exception e) {
 			if (log.isErrorEnabled()) {
 				log.error("Failed to obtain the CMIS service, error: " + e.getMessage());

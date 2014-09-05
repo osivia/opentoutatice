@@ -26,25 +26,27 @@
 				<tr>
 					<td><h:outputLabel value="Titre : " for="title" /></td>
 					<td><nxl:widgetType id="title" name="text" size="50"
-							onchange="setHideTitle(this)" mode="edit" value="#{fgt.title}" />
+							mode="edit" value="#{fgt.title}" />
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2"><span class="note">Laisser ce champ
-							vide pour qu'aucun titre ne s'affiche.</span></td>
+					<td><h:outputLabel value="Masquer le titre : " for="hideTitle" /></td>
+					<td><nxl:widgetType id="hideTitle" name="checkbox" 
+							mode="edit" value="#{fgt.hideTitle}" />
+					</td>
 				</tr>
+
 				<tr>
 					<td><h:outputLabel value="Style : " for="style" /></td>
 					<td><oh:icons id="selectStyle" src="#{config.windowStyles}"
 							value="#{fgt.style}" ulStyleClass="cssStyleList"
-							binding="#{simpleForm.simpleComponent}"
-							inputClientId="#{simpleForm.simpleComponentClientId}"
-							multiSelect="true" /></td>
+							binding="#{genericStyleSimpleForm.simpleComponent}"
+							inputClientId="#{genericStyleSimpleForm.simpleComponentClientId}"
+							multiSelect="true" iconsGroup="styleGroup" /></td>
 				</tr>
 
 			</table>
 
-			<h:inputHidden id="hideTitle" value="#{fgt.hideTitle}" />
 
 		</s:div>
 

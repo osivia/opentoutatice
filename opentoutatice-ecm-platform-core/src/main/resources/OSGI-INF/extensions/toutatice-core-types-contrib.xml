@@ -33,6 +33,7 @@
 			<schema name="portalsite" />
 			<schema name="toutatice_navigation" />
 			<schema name="webpage" />
+            <schema name="regions" />
 			<schema name="fragments" />
             <schema name="html_fragments" />
             <schema name="zoom_fragments" />
@@ -63,6 +64,7 @@
 			<schema name="portalpage" />
 			<schema name="toutatice_navigation" />
 			<schema name="webpage" />
+            <schema name="regions" />
 			<schema name="fragments" />
             <schema name="html_fragments" />
             <schema name="zoom_fragments" />

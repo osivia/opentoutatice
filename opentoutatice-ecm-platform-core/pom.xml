@@ -4,16 +4,12 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>1.2.2-SNAPSHOT</version>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-core</artifactId>
 	<packaging>jar</packaging>
 	<name>Partie core de la plate-forme toutatice</name>
-
-	<properties>
-		<nuxeo.version>5.6.0-HF29</nuxeo.version>
-	</properties>
 
 	<dependencies>
 		<dependency>
@@ -66,21 +62,57 @@
 			<artifactId>nuxeo-platform-contentview-jsf</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
+		<!-- all for tasks TODO: reduce to effective used -->
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-jbpm-core</artifactId>
+			<artifactId>nuxeo-platform-publisher-task</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-jbpm-api</artifactId>
+			<artifactId>nuxeo-platform-task-api</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.nuxeo.ecm.automation</groupId>
-			<artifactId>nuxeo-automation-core</artifactId>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-platform-task-automation</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-platform-task-core</artifactId>
+			<version>${nuxeo.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-platform-task-web</artifactId>
+			<version>${nuxeo.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-platform-document-routing-api</artifactId>
+			<version>${nuxeo.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-platform-notification-core</artifactId>
+			<version>${nuxeo.version}</version>
+		</dependency>
+        
+        
+        <!-- Drive -->
+        <dependency>
+            <groupId>org.nuxeo.ecm</groupId>
+            <artifactId>nuxeo-drive-core</artifactId>
+            <version>${nuxeo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.nuxeo.ecm</groupId>
+            <artifactId>nuxeo-drive-core</artifactId>
+            <version>${nuxeo.version}</version>
+        </dependency>        
+        
+		<!--  -->
 		<dependency>
 			<groupId>org.nuxeo.ecm.automation</groupId>
 			<artifactId>nuxeo-automation-features</artifactId>
@@ -98,12 +130,6 @@
 		</dependency>
 		
 		<!-- For test purpose only -->
-		<dependency>
-			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-jbpm-test</artifactId>
-			<version>${nuxeo.version}</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.runtime</groupId>
 			<artifactId>nuxeo-runtime-test</artifactId>
@@ -159,7 +185,7 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}" />
+										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/2.0.0" />
 									</tasks>
 								</configuration>
 								<phase>package</phase>

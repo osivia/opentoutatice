@@ -30,8 +30,8 @@ import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.api.security.ACE;
-import org.nuxeo.ecm.core.api.security.ACL;
 import org.nuxeo.ecm.core.api.security.ACP;
+import org.nuxeo.ecm.core.api.security.ACL;
 
 
 @Operation(id = GetUsersAndGroupsDocument.ID, 
@@ -44,8 +44,6 @@ description = "List users and groups allowed to read the document.")
 public class GetUsersAndGroupsDocument {
 	
 	    public static final String ID = "Document.GetUsersAndGroupsDocument";
-
-//	    private static final Log log = LogFactory.getLog(GetUsersAndGroupsDocument.class);
 	   
 	    @OperationMethod
 	    public Blob run(DocumentModel doc) throws Exception 

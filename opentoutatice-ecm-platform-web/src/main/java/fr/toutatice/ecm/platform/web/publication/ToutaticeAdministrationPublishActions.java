@@ -20,6 +20,7 @@ package fr.toutatice.ecm.platform.web.publication;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -38,7 +39,6 @@ import org.nuxeo.ecm.platform.publisher.web.AdministrationPublishActions;
 import org.nuxeo.ecm.webapp.tree.DocumentTreeNode;
 import org.nuxeo.ecm.webapp.tree.DocumentTreeNodeImpl;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSorterHelper;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;

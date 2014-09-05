@@ -77,7 +77,7 @@ public class AddComment {
             }
         }
 
-        return new StringBlob(commentDoc.getId());
+         return new StringBlob(commentDoc.getId());
     }
 
     public static DocumentModel createComment(String docType, CoreSession session, String commentContent, String commentTitle, String fileName, Blob blob)

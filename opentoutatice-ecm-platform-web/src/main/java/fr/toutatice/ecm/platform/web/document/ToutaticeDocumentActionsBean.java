@@ -1,20 +1,19 @@
 /*
  * (C) Copyright 2014 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- *
+ * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- *
+ * 
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
- *
+ * 
+ * 
  * Contributors:
- *   mberhaut1
- *    
+ * mberhaut1
  */
 package fr.toutatice.ecm.platform.web.document;
 
@@ -44,8 +43,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jboss.seam.Component;
-import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Destroy;
 import org.jboss.seam.annotations.Factory;
@@ -64,7 +61,6 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentSecurityException;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.LifeCycleConstants;
-import org.nuxeo.ecm.core.api.PagedDocumentsProvider;
 import org.nuxeo.ecm.core.api.VersioningOption;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.api.model.PropertyException;
@@ -75,12 +71,9 @@ import org.nuxeo.ecm.platform.picture.web.PictureBookManager;
 import org.nuxeo.ecm.platform.types.SubType;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
-import org.nuxeo.ecm.platform.ui.web.model.SelectDataModel;
-import org.nuxeo.ecm.platform.ui.web.model.impl.SelectDataModelImpl;
+import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 import org.nuxeo.ecm.webapp.contentbrowser.DocumentActionsBean;
-import org.nuxeo.ecm.webapp.documentsLists.DocumentsListsManager;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
-import org.nuxeo.ecm.webapp.pagination.ResultsProvidersCache;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
@@ -92,6 +85,7 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeOperationHelper;
 import fr.toutatice.ecm.platform.services.permalink.PermaLinkService;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
 import fr.toutatice.ecm.platform.web.fragments.PageBean;
+import fr.toutatice.ecm.platform.web.workflows.ToutaticeDocumentRoutingActionsBean;
 
 /**
  * @author oadam
@@ -108,14 +102,16 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     @In(create = true)
     protected transient NavigationContext navigationContext;
-    
-    @In(create=true)
+
+    @In(create = true)
     PageBean pageBean;
 
     @In(create = true)
     protected transient PictureBookManager pictureBookManager;
-    
+
     protected transient PermaLinkService permaLinkService;
+
+    protected transient ToutaticeDocumentRoutingActionsBean routingActionBean;
 
     @RequestParameter("type")
     protected String typeName;
@@ -134,11 +130,11 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     static private final String CST_DEFAULT_PUBLICATON_AREA_TITLE = "inconnu";
     static private final String CST_DEFAULT_PUBLICATON_AREA_PATH = "/";
     static private final String CST_DEFAULT_UNKNOWN_VERSION_LABEL = "Version indéterminée"; // I18N
-    
+
     public boolean isLive() {
         return live;
     }
-    
+
     public void setLive(boolean live) {
         this.live = live;
     }
@@ -147,7 +143,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     public void initialize() throws Exception {
         log.debug("Initializing...");
     }
-   
+
     @Destroy
     @Remove
     @PermitAll
@@ -165,8 +161,16 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         log.debug("PostActivate");
     }
 
+    protected ToutaticeDocumentRoutingActionsBean getDocumentRoutingActionBean() {
+        return (ToutaticeDocumentRoutingActionsBean) SeamComponentCallHelper.getSeamComponentByName("routingActions");
+    }
+
     public boolean getEveryThingRight() throws ClientException {
         return documentManager.hasPermission(navigationContext.getCurrentDocument().getRef(), SecurityConstants.EVERYTHING);
+    }
+
+    public boolean checkPermission(DocumentModel document, String permission) throws ClientException {
+        return documentManager.hasPermission(document.getRef(), permission);
     }
 
     public boolean isRemoteProxy() {
@@ -587,9 +591,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
                     pageBean.setNotificationKey(PortalConstants.Notifications.SUCCESS_MESSAGE_PUBLISH.name());
                     live = false;
                 } else {
-                    ToutaticeOperationHelper.runOperationChain(documentManager, ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_PUBLISH_REQUEST, document);
-                    pageBean.setNotificationKey(PortalConstants.Notifications.SUCCESS_MESSAGE_ASK_PUBLISH.name());
-                    live = true;
+                    getDocumentRoutingActionBean().startOnlineWorkflow();
                 }
             }
         } catch (Exception e) {
@@ -636,8 +638,8 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         }
 
         try {
-            ToutaticeOperationHelper.runOperationChain(documentManager, ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_UNPUBLISH_SELECTION, new DocumentModelListImpl(
-                    currentDocumentSelection));
+            ToutaticeOperationHelper.runOperationChain(documentManager, ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_UNPUBLISH_SELECTION,
+                    new DocumentModelListImpl(currentDocumentSelection));
         } catch (Exception e) {
             log.error("Failed to set offline the selection from the document: '" + currentFolder.getTitle() + "', error: " + e.getMessage());
         }
@@ -669,7 +671,8 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      *         'false' sinon.
      */
     public boolean belongToPublishSpace() {
-        return (!ToutaticeGlobalConst.NULL_DOCUMENT_MODEL.getType().equals(((ToutaticeNavigationContext) navigationContext).getCurrentPublicationArea().getType()));
+        return (!ToutaticeGlobalConst.NULL_DOCUMENT_MODEL.getType().equals(
+                ((ToutaticeNavigationContext) navigationContext).getCurrentPublicationArea().getType()));
     }
 
     /**
@@ -690,7 +693,8 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      *         sinon.
      */
     public boolean belongToWorkSpace() {
-        return (!ToutaticeGlobalConst.NULL_DOCUMENT_MODEL.getType().equals(((ToutaticeNavigationContext) navigationContext).getCurrentWorkspaceArea().getType()));
+        return (!ToutaticeGlobalConst.NULL_DOCUMENT_MODEL.getType()
+                .equals(((ToutaticeNavigationContext) navigationContext).getCurrentWorkspaceArea().getType()));
     }
 
     /**
@@ -710,7 +714,8 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         List<String> list = new ArrayList<String>();
 
         try {
-            if ((null != referenceDoc && document.getId().equals(referenceDoc.getId())) || (ToutaticeNuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(document.getType()))) {
+            if ((null != referenceDoc && document.getId().equals(referenceDoc.getId()))
+                    || (ToutaticeNuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(document.getType()))) {
                 return list;
             }
 
@@ -854,43 +859,12 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
                 } catch (IOException ioe) {
                     log.error("*** ERROR " + ioe.getMessage());
                     new ClientException("Impossible de lire le(s) logiciel(s) sélectionné(s)");
-                    // FacesMessages.instance().add(StatusMessage.Severity.ERROR, "Impossible de lire le(s) logiciel(s) sélectionné(s)", new Object());
-                    // navigateToView("toutatice_error");
                 }
 
             }
         }
 
         return changeableDocument;
-    }
-
-    @Factory(value = "currentPictureBookChildrenSelectModel", scope = ScopeType.EVENT)
-    public SelectDataModel getPictureBookChildrenSelectModel() throws ClientException {
-        DocumentModelList documents = getCurrentPictureBookChildrenPage();
-        List<DocumentModel> selectedDocuments = documentsListsManager.getWorkingList(DocumentsListsManager.CURRENT_DOCUMENT_SELECTION);
-        SelectDataModel model = new SelectDataModelImpl(ToutaticeNuxeoStudioConst.CHILDREN_DOCUMENT_LIST, documents, selectedDocuments);
-        model.addSelectModelListener(this);
-        return model;
-    }
-
-    private DocumentModelList getCurrentPictureBookChildrenPage() throws ClientException {
-        final String logPrefix = "<getCurrentPictureBookChildrenPage> ";
-        DocumentModelList currentDocumentChildren = new DocumentModelListImpl();
-
-        if (documentManager == null) {
-            log.error(logPrefix + "documentManager not initialized");
-        } else {
-            try {
-                ResultsProvidersCache resultsProvidersCache = (ResultsProvidersCache) Component.getInstance("resultsProvidersCache");
-                resultsProvidersCache.invalidate("TOUTATICE_CURRENT_PICTUREBOOK_CHILDREN");
-                PagedDocumentsProvider resultsProvider = resultsProvidersCache.get("TOUTATICE_CURRENT_PICTUREBOOK_CHILDREN");
-                currentDocumentChildren = resultsProvider.getCurrentPage();
-            } catch (Throwable t) {
-                log.error("Failed to get the list of images within picture book, error: " + t.getMessage());
-            }
-        }
-
-        return currentDocumentChildren;
     }
 
     /**
@@ -1013,7 +987,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         }
     }
 
-
     public boolean showShowInMenu() throws ClientException {
         boolean res = false;
         DocumentModel newDocument = navigationContext.getChangeableDocument();
@@ -1104,6 +1077,15 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
+    public String removeDocumentWebId() throws ClientException {
+        DocumentModel currentDoc = getCurrentDocument();
+        if (currentDoc != null) {
+            currentDoc.setProperty("toutatice", "webid", StringUtils.EMPTY);
+        }
+        return null;
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public String removeDocumentKeyword() throws ClientException {
         DocumentModel currentDoc = getCurrentDocument();
         if (currentDoc != null) {
@@ -1123,49 +1105,39 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         }
         return null;
     }
-    
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public String removeDocumentWebId() throws ClientException {
-        DocumentModel currentDoc = getCurrentDocument();
-        if (currentDoc != null) {
-            currentDoc.setProperty("toutatice", "webid", StringUtils.EMPTY);
-        }
-        return null;
-    }
-
 
     /*
      * Service de calcul de permalien vers le portail.
      */
     public PermaLinkService getPermaLinkService() throws ClientException {
-    	try {
-    		if(permaLinkService == null){
-    			permaLinkService = Framework.getService(PermaLinkService.class);
-    		}
-    	} catch (Exception e) {
+        try {
+            if (permaLinkService == null) {
+                permaLinkService = Framework.getService(PermaLinkService.class);
+            }
+        } catch (Exception e) {
             log.error("Failed to get the publication service, exception message: " + e.getMessage());
             throw new ClientException("Failed to get the publication service, exception message: " + e.getMessage());
-    	}
+        }
         return permaLinkService;
     }
-    
+
     @Override
     public String getDocumentPermalink() throws ClientException {
         DocumentModel currentDoc = navigationContext.getCurrentDocument();
         return getDocumentPermalink(currentDoc);
 
     }
-    
-    public String getDocumentPermalink(DocumentModel doc) throws ClientException {
-        return getPermaLinkService().getPermalink(doc);     
-    }
-    
-	public boolean hasChildrenWithType(String type) throws ClientException{
-		DocumentModelList docLst = documentManager.getChildren(navigationContext.getCurrentDocument().getRef(), type);
-		return (docLst!=null && !docLst.isEmpty());
-	}
 
-	public boolean hasView(String viewId) {
-		return ToutaticeDocumentHelper.hasView(navigationContext.getCurrentDocument(), viewId);
-	}
+    public String getDocumentPermalink(DocumentModel doc) throws ClientException {
+        return getPermaLinkService().getPermalink(doc);
+    }
+
+    public boolean hasChildrenWithType(String type) throws ClientException {
+        DocumentModelList docLst = documentManager.getChildren(navigationContext.getCurrentDocument().getRef(), type);
+        return (docLst != null && !docLst.isEmpty());
+    }
+
+    public boolean hasView(String viewId) {
+        return ToutaticeDocumentHelper.hasView(navigationContext.getCurrentDocument(), viewId);
+    }
 }

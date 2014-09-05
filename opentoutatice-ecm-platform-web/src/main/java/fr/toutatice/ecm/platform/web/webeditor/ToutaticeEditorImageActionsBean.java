@@ -261,6 +261,8 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
             oldSelectedTab = selectedTab;
         } else if (oldSelectedTab == null) {
             oldSelectedTab = "UPLOAD";
+			// TOCHECK
+			// oldSelectedTab = "SEARCH";
         }
         return oldSelectedTab;
     }

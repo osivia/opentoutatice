@@ -50,6 +50,7 @@ public class WebIdFunctions {
 
     private static final String BASE_URL = "";
     private static final String WEBID_PATTERN = "webidpattern";
+    private static final String WEBID_DOWNLOAD_PICTURE = "webiddownloadpicture";
 
     /**
      * Return true if document has a webid defined
@@ -127,7 +128,7 @@ public class WebIdFunctions {
         return url;
     }
 
-    /**
+	/**
      * Translate webid in url
      * 
      * @param doc
@@ -160,5 +161,62 @@ public class WebIdFunctions {
 
         return url;
 
+    }
+
+
+//    /**
+//     * Translate webid in url
+//     * 
+//     * @param doc
+//     * @param blobPropertyName
+//     * @return
+//     */
+//    private static String callCodec(DocumentModel doc, String blobPropertyName) {
+//
+//        String url = StringUtils.EMPTY;
+//
+//        try {
+//            URLPolicyService service = Framework.getService(URLPolicyService.class);
+//
+//            String pattern = WEBID_PATTERN;
+//            Map<String, String> params = new HashMap<String, String>();
+//            if ("Picture".equals(doc.getType())) {
+//                pattern = WEBID_DOWNLOAD_PICTURE;
+//                params.put(WebIdCodec.CONTENT_PARAM, StringUtils.replace(blobPropertyName, ":content", ""));
+//            }
+//
+//            ToutaticeDocumentLocation webIdDocLoc = new ToutaticeDocumentLocation(doc);
+//            DocumentView docView = new DocumentViewImpl(webIdDocLoc, null, params);
+//            url = service.getUrlFromDocumentView(pattern, docView, BASE_URL);
+//
+//        } catch (ClientException e) {
+//            log.error("Erreur génération webid " + e);
+//        } catch (Exception e) {
+//            log.error("Erreur génération webid " + e);
+//        }
+//
+//        return url;
+//    }
+
+    protected static DocumentView getDownloadFileProperties(DocumentLocation docLoc, DocumentModel doc) throws PropertyException, ClientException {
+        Map<String, String> parameters = new HashMap<String, String>();
+        parameters.put(DocumentFileCodec.FILE_PROPERTY_PATH_KEY, "file:content");
+        String fileName = (String) doc.getPropertyValue("file:filename");
+
+        parameters.put(DocumentFileCodec.FILENAME_KEY, fileName);
+        return new DocumentViewImpl(docLoc, null, parameters);
+    }
+
+    protected static DocumentView getDownloadPictureProperties(DocumentLocation docLoc, DocumentModel doc, String blobPropertyName) throws PropertyException,
+            ClientException {
+        Map<String, String> parameters = new HashMap<String, String>();
+        if (StringUtils.isNotBlank(blobPropertyName)) {
+            parameters.put(DocumentFileCodec.FILE_PROPERTY_PATH_KEY, blobPropertyName);
+        } else {
+            parameters.put(DocumentFileCodec.FILE_PROPERTY_PATH_KEY, "Original:content");
+        }
+        String fileName = doc.getPropertyValue("dc:modified").toString();
+        parameters.put(DocumentFileCodec.FILENAME_KEY, fileName);
+        return new DocumentViewImpl(docLoc, null, parameters);
     }
 }

@@ -47,14 +47,6 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
 		super(session);
 	}
 
-	public ToutaticeSilentProcessRunnerHelper(String repositoryName) {
-		super(repositoryName);
-	}
-
-    protected ToutaticeSilentProcessRunnerHelper(String repositoryName, String originatingUser) {
-    	super(repositoryName, originatingUser);
-    }
-
     /**
      * Calls the {@link #run()} method with a silent mode. The dublincore events are disabled either for the current user session (usual run method is called)
      * or the for the system/administrator user session (unrestricted method is called).

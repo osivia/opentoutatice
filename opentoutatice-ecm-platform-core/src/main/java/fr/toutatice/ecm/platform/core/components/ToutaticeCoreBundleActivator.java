@@ -46,7 +46,6 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeEmailHelper;
  */
 public class ToutaticeCoreBundleActivator implements BundleActivator {
 	private static Object currentFnInstance = null;
-//	private static Object currentMailHelper = null;
 	
 	@Override
 	public void start(BundleContext context) throws Exception {

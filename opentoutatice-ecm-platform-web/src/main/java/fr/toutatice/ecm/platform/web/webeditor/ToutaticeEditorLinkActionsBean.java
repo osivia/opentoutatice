@@ -19,6 +19,7 @@ package fr.toutatice.ecm.platform.web.webeditor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,6 @@ import org.nuxeo.ecm.core.schema.SchemaManager;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.webapp.action.EditorLinkActionsBean;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSorterHelper;
 

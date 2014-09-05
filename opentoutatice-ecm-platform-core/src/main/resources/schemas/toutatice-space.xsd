@@ -52,6 +52,6 @@ targetNamespace="http://www.nuxeo.org/ecm/project/schemas/ACRENNES2/toutatice-sp
 			<xs:element name="cid" type="xs:string" />
 			<xs:element name="clabel" type="xs:string" />
 		</xs:sequence>
-	</xs:complexType>
-  
+	</xs:complexType>	
+  <xs:element name="catSpaceKey" type="xs:string"/>
 </xs:schema>

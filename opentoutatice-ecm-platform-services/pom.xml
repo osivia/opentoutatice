@@ -5,16 +5,12 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>1.2.2-SNAPSHOT</version>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-services</artifactId>
 	<packaging>jar</packaging>
 	<name>Partie service de la plate-forme opentoutatice</name>
-
-	<properties>
-		<nuxeo.version>5.6.0-HF29</nuxeo.version>
-	</properties>
 
 	<dependencies>
 		<dependency>
@@ -30,6 +26,11 @@
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-forms-layout-client</artifactId>
+			<version>${nuxeo.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-platform-el</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
@@ -56,7 +57,7 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}" />
+										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/2.0.0" />
 									</tasks>
 								</configuration>
 								<phase>package</phase>

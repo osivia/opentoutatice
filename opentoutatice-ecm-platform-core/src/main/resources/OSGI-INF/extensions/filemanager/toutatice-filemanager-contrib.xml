@@ -2,9 +2,24 @@
 <component name="fr.toutatice.ecm.platform.core.FileManagerService.contrib">
 
 	<require>org.nuxeo.ecm.platform.filemanager.service.FileManagerService</require>
+	<require>org.nuxeo.ecm.platform.routing.FileManagerService.contrib</require>
 
 	<extension target="org.nuxeo.ecm.platform.filemanager.service.FileManagerService"
 		point="plugins">
+
+		<!-- <plugin name="RouteModelsImporter"
+			enabled="false"
+			class="org.nuxeo.ecm.platform.routing.core.persistence.RouteModelsZipImporter"
+			order="5">
+			<filter>application/zip</filter>
+		</plugin>
+		    
+		<plugin name="ToutaticeRouteModelsImporter"
+			enabled="true"
+			class="fr.toutatice.ecm.platform.core.persistence.ToutaticeRouteModelsZipImporter"
+			order="5">
+			<filter>application/zip</filter>
+		</plugin> -->
 
 		<plugin name="RouteModelsImporter"
 			enabled="false"
@@ -18,6 +33,7 @@
 			order="5">
 			<filter>application/zip</filter>
 		</plugin>
+
 	</extension>
 
 

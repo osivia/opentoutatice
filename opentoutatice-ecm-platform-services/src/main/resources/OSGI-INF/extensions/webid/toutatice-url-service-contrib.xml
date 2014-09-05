@@ -31,6 +31,9 @@
 		</documentation>
 		<documentViewCodec class="fr.toutatice.ecm.platform.service.url.WebIdCodec"
 			default="false" enabled="true" name="webid" prefix="web" />
+		<!--<documentViewCodec
+			class="fr.toutatice.ecm.platform.service.url.WebIdFileCodec" default="false"
+			enabled="true" name="webidfile" prefix="webpicsfile" />-->
 	</extension>
 
 
@@ -65,6 +68,21 @@
 				</binding>
 			</bindings>
 		</urlPattern>
+
+		<!--<urlPattern enabled="true" name="webiddownloadpicture">
+			<defaultURLPolicy>false</defaultURLPolicy>
+			<needBaseURL>true</needBaseURL>
+			<needRedirectFilter>false</needRedirectFilter>
+			<needFilterPreprocessing>true</needFilterPreprocessing>
+			<codecName>webidfile</codecName>
+			<actionBinding>#{pictureManager.download}</actionBinding>
+			<documentViewBinding>
+				#{restHelper.documentView}
+			</documentViewBinding>
+			<newDocumentViewBinding>
+				#{restHelper.newDocumentView}
+			</newDocumentViewBinding>
+		</urlPattern>-->
 
 	</extension>
 

@@ -1,12 +1,12 @@
 <HTML>
 <BODY>
-<#if eventId == "workflowOnlineTaskAssigned">
-Une demande de mise en ligne du document '${htmlEscape(docTitle)}' a &eacute;t&eacute; &eacute;mise par ${author} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}.
+<#if isOnLineWF && eventId == "workflowTaskAssigned">
+Une demande de mise en ligne du document '${htmlEscape(docTitle)}' a &eacute;t&eacute; &eacute;mise par ${initiator} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}.
 <#elseif eventId == "workflowOnlineTaskApproved">
 Le document '${htmlEscape(docTitle)}' a &eacute;t&eacute; mis en ligne par ${author} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}.
 <#elseif eventId == "workflowOnlineTaskRejected">
 La demande de mise en ligne du document '${htmlEscape(docTitle)}' a &eacute;t&eacute; rejet&eacute;e par ${author} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}.
-<#elseif eventId == "workflowOnlineTaskCanceled">
+<#elseif eventId == "workflowOnlineCanceled">
 La demande de mise en ligne du document '${htmlEscape(docTitle)}' a &eacute;t&eacute; annul&eacute;e par ${author} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}.
 </#if>
 <BR>

@@ -31,9 +31,6 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jbpm.JbpmContext;
-import org.jbpm.graph.exe.ProcessInstance;
-import org.jbpm.taskmgmt.exe.TaskInstance;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.Constants;
@@ -58,8 +55,7 @@ import org.nuxeo.ecm.core.api.security.Access;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 import org.nuxeo.ecm.core.trash.TrashService;
-import org.nuxeo.ecm.platform.jbpm.JbpmListFilter;
-import org.nuxeo.ecm.platform.jbpm.JbpmService;
+import org.nuxeo.ecm.platform.task.Task;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.platform.types.TypeManager;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
@@ -68,6 +64,8 @@ import org.nuxeo.runtime.api.Framework;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
+import fr.toutatice.ecm.platform.core.services.drive.ToutaticeDriveService;
 
 @Operation(id = FetchPublicationInfos.ID, category = Constants.CAT_FETCH, label = "Fetch publish space informations",
         description = "Fetch informations about the publish space, worksapce, proxy status, ... of a given document.")
@@ -77,7 +75,7 @@ public class FetchPublicationInfos {
             + " AND ttc:webid = '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
 
-    private static final Log log = LogFactory.getLog(FetchPublicationInfos.class);
+    private static final Log log = LogFactory.getLog("FetchPublicationInfos");
 
     /**
      * Id Nuxeo de l'opération (s'applique à un Document).
@@ -123,9 +121,6 @@ public class FetchPublicationInfos {
      */
     @Context
     protected UserManager userManager;
-
-    @Context
-    protected transient JbpmService jbpmService;
 
     /**
      * Identifiant ("path" ou uuid) du document en entrée.
@@ -226,6 +221,17 @@ public class FetchPublicationInfos {
             /* Indique une modification du live depuis la dernière publication du proxy */
             liveDoc = (DocumentModel) liveDocRes;
             infosPubli.element("liveVersion", liveDoc.getVersionLabel());
+
+
+            /*
+             * Nuxeo Drive
+             */
+            ToutaticeDriveService drive = Framework.getService(ToutaticeDriveService.class);
+            Map<String, String> infosSynchro = drive.fetchSynchronizationInfos(coreSession, liveDoc);
+            infosPubli.accumulateAll(infosSynchro);
+
+            log.warn("[drive] " + document.getPathAsString() + " (" + document.getId() + ") " + infosSynchro);
+
         }
 
         infosPubli.put("subTypes", new JSONObject());
@@ -244,6 +250,7 @@ public class FetchPublicationInfos {
             }
         }
 
+
         /*
          * Récupération du "droit" de commenter.
          */
@@ -256,7 +263,7 @@ public class FetchPublicationInfos {
         boolean userNotAnonymous = !((NuxeoPrincipal) user).isAnonymous();
         infosPubli.put("isCommentableByUser", docCommentable && docMutable && userNotAnonymous);
 
-        UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession, document, infosPubli, userManager, errorsCodes);
+        UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession, document, liveDocRes, infosPubli, userManager, errorsCodes);
 
         infosPubliRunner.runUnrestricted();
         errorsCodes = infosPubliRunner.getErrorsCodes();
@@ -380,41 +387,21 @@ public class FetchPublicationInfos {
     }
 
     private boolean isValidateOnLineTaskPending(DocumentModel document) throws ClientException {
-        List<TaskInstance> lstTasks = jbpmService.getTaskInstances(document, null, (StringUtils
-                .isNotBlank(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE)) ? new TaskInstanceFilter(
-                ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE) : null);
-        return (lstTasks != null && !lstTasks.isEmpty());
+        boolean isPending = false;
+        Task onLineTask = ToutaticeWorkflowHelper.getDocumentTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, coreSession, document);
+        if(onLineTask != null){
+            isPending = onLineTask.isOpened();
+        }
+        return isPending;
     }
 
     private Object isUserOnLIneWorkflowInitiator(DocumentModel liveDoc) throws ClientException {
-        String currentProcessInitiator = StringUtils.EMPTY;
+        String onLineWorkflowInitiator = StringUtils.EMPTY;
 
         NuxeoPrincipal currentUser = (NuxeoPrincipal) coreSession.getPrincipal();
-        ProcessInstance onLineProcess = getOnLineProcess(currentUser);
-        if (onLineProcess != null) {
-            Object initiator = onLineProcess.getContextInstance().getVariable(JbpmService.VariableName.initiator.name());
-            if (initiator instanceof String) {
-                currentProcessInitiator = (String) initiator;
-                if (currentProcessInitiator.startsWith(NuxeoPrincipal.PREFIX)) {
-                    currentProcessInitiator = currentProcessInitiator.substring(NuxeoPrincipal.PREFIX.length());
-                }
-            }
-        }
-        return currentProcessInitiator.equals(currentUser.getName());
-    }
+        onLineWorkflowInitiator = ToutaticeWorkflowHelper.getOnLineWorkflowInitiator(liveDoc);
 
-    public ProcessInstance getOnLineProcess(NuxeoPrincipal currentUser) throws ClientException {
-        ProcessInstance onLineProcess = null;
-        List<ProcessInstance> processes = jbpmService.getProcessInstances(document, currentUser, null);
-        if (processes != null) {
-            for (ProcessInstance process : processes) {
-                if (process.getProcessDefinition().getName().equals(ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE)) {
-                    onLineProcess = process;
-                    break;
-                }
-            }
-        }
-        return onLineProcess;
+        return onLineWorkflowInitiator.equals(currentUser.getName());
     }
 
     /**
@@ -570,7 +557,7 @@ public class FetchPublicationInfos {
             return errorsCodes;
         }
 
-        public UnrestrictedFecthPubliInfosRunner(CoreSession session, DocumentModel document, JSONObject infosPubli, UserManager userManager,
+        public UnrestrictedFecthPubliInfosRunner(CoreSession session, DocumentModel document, Object liveDocRes, JSONObject infosPubli, UserManager userManager,
                 List<Integer> errorsCodes) {
             super(session);
             this.document = document;
@@ -583,21 +570,24 @@ public class FetchPublicationInfos {
         @Override
         public void run() throws ClientException {
             try {
-                /*
-                 * Récupération du spaceID
-                 */
-                this.infosPubli.put("spaceID", getSpaceID(this.document));
+                if (!isError(liveDocRes)) {
+                    DocumentModel liveDoc = (DocumentModel) this.liveDocRes;
+                    /*
+                     * Récupération du spaceID
+                     */
+                    this.infosPubli.put("spaceID", getSpaceID(liveDoc));
 
-                /*
-                 * Récupération du parentSpaceID
-                 */
-                String parentSpaceID = "";
-                DocumentModelList spaceParentList = ToutaticeDocumentHelper.getParentSpaceList(this.session, this.document, true, true);
-                if (spaceParentList != null && spaceParentList.size() > 0) {
-                    DocumentModel parentSpace = (DocumentModel) spaceParentList.get(0);
-                    parentSpaceID = getSpaceID(parentSpace);
+                    /*
+                     * Récupération du parentSpaceID
+                     */
+                    String parentSpaceID = "";
+                    DocumentModelList spaceParentList = ToutaticeDocumentHelper.getParentSpaceList(this.session, liveDoc, true, true);
+                    if (spaceParentList != null && spaceParentList.size() > 0) {
+                        DocumentModel parentSpace = (DocumentModel) spaceParentList.get(0);
+                        parentSpaceID = getSpaceID(parentSpace);
+                    }
+                    this.infosPubli.put("parentSpaceID", parentSpaceID);
                 }
-                this.infosPubli.put("parentSpaceID", parentSpaceID);
 
                 /*
                  * Récupération du contexte propre à l'appel d'autres opérations
@@ -797,41 +787,6 @@ public class FetchPublicationInfos {
         }
 
     }
-
-    /**
-     * Classe permettant de filtrer une liste de "task instance" en fonction du nom
-     */
-    private class TaskInstanceFilter implements JbpmListFilter {
-
-        private static final long serialVersionUID = 1L;
-        private String taskName;
-
-        public TaskInstanceFilter(String taskName) {
-            this.taskName = taskName;
-        }
-
-        @SuppressWarnings("unchecked")
-        public <T> ArrayList<T> filter(JbpmContext jbpmContext, DocumentModel document, ArrayList<T> list, NuxeoPrincipal principal) {
-            ArrayList<TaskInstance> result = new ArrayList<TaskInstance>();
-
-            // pas de filtrage si pas de nom passé en paramètre
-            if (StringUtils.isBlank(this.taskName)) {
-                return list;
-            }
-
-            // filtrage
-            for (T t : list) {
-                TaskInstance ti = (TaskInstance) t;
-                String name = ti.getName();
-                if (this.taskName.equals(name)) {
-                    result.add(ti);
-                }
-            }
-
-            return (ArrayList<T>) result;
-        }
-    }
-
 
     /**
      * Get doc by webid in unrestricted mode (admin)
