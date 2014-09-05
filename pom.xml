@@ -69,7 +69,7 @@
     </build>
 
     <scm>
-        <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/1.2.0-RC1</developerConnection>
+        <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/trunk</developerConnection>
     </scm>
 
     <distributionManagement>
