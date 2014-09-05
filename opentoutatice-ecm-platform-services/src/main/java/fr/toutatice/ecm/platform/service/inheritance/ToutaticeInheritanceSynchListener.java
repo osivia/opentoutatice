@@ -18,7 +18,7 @@ public class ToutaticeInheritanceSynchListener implements EventListener {
 	public void handleEvent(Event event) throws ClientException {
 		if (event.getContext() instanceof DocumentEventContext) {
 			try {
-				getInheritanceService().runSync(event);
+				getInheritanceService().run(event, true);
 			} catch (Exception e) {
 				log.error("Failed to request the data inheriatnce service, error: " + e.getMessage());
 			}
