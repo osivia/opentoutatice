@@ -27,51 +27,51 @@ public class ZoomFragment implements Fragment {
         Map<String, Object> links;
         Map<String, Object> frags;
 		try {
-            links = doc.getProperties(ZOOM_LINKS_SCHEMA);
-
-            Collection<Object> values = links.values();
-
-			// Une seule liste dans ce schéma
-			Object liste = values.iterator().next();
-
-			if (liste instanceof List) {
-				List<Map<String, String>> listeData = (List<Map<String, String>>) liste;
-
-				Map<String, String> newEntry = new HashMap<String, String>();
-				newEntry.put("refURI", uri);
-                newEntry.put("order", "0");
-                listeData.add(newEntry);
-
-                Map<String, String> newEntry1 = new HashMap<String, String>();
-                newEntry1.put("refURI", uri);
-                newEntry1.put("order", "1");
-                listeData.add(newEntry1);
-
-                Map<String, String> newEntry2 = new HashMap<String, String>();
-                newEntry2.put("refURI", uri);
-                newEntry2.put("order", "2");
-                listeData.add(newEntry2);
-
-                Map<String, String> newEntry3 = new HashMap<String, String>();
-                newEntry3.put("refURI", uri);
-                newEntry3.put("order", "3");
-                listeData.add(newEntry3);
-
-                Map<String, String> newEntry4 = new HashMap<String, String>();
-                newEntry4.put("refURI", uri);
-                newEntry4.put("order", "4");
-                listeData.add(newEntry4);
-
-                doc.setProperties(ZOOM_LINKS_SCHEMA, links);
-			}
+//            links = doc.getProperties(ZOOM_LINKS_SCHEMA);
+//
+//            Collection<Object> values = links.values();
+//
+//			// Une seule liste dans ce schéma
+//			Object liste = values.iterator().next();
+//
+//			if (liste instanceof List) {
+//				List<Map<String, String>> listeData = (List<Map<String, String>>) liste;
+//
+//				Map<String, String> newEntry = new HashMap<String, String>();
+//				newEntry.put("refURI", uri);
+//                newEntry.put("order", "0");
+//                listeData.add(newEntry);
+//
+//                Map<String, String> newEntry1 = new HashMap<String, String>();
+//                newEntry1.put("refURI", uri);
+//                newEntry1.put("order", "1");
+//                listeData.add(newEntry1);
+//
+//                Map<String, String> newEntry2 = new HashMap<String, String>();
+//                newEntry2.put("refURI", uri);
+//                newEntry2.put("order", "2");
+//                listeData.add(newEntry2);
+//
+//                Map<String, String> newEntry3 = new HashMap<String, String>();
+//                newEntry3.put("refURI", uri);
+//                newEntry3.put("order", "3");
+//                listeData.add(newEntry3);
+//
+//                Map<String, String> newEntry4 = new HashMap<String, String>();
+//                newEntry4.put("refURI", uri);
+//                newEntry4.put("order", "4");
+//                listeData.add(newEntry4);
+//
+//                doc.setProperties(ZOOM_LINKS_SCHEMA, links);
+//			}
 
 
             frags = doc.getProperties(ZOOM_SCHEMA);
 
-            values = frags.values();
+            Collection<Object>  values = frags.values();
 
             // Une seule liste dans ce schéma
-            liste = values.iterator().next();
+            Object liste = values.iterator().next();
 
             if (liste instanceof List) {
                 List<Map<String, String>> listeData = (List<Map<String, String>>) liste;

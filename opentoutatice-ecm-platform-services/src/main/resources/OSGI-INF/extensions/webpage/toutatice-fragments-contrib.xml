@@ -23,7 +23,13 @@
             code="fgt.list"
             class="fr.toutatice.ecm.platform.service.fragments.types.ListFragment"
             title="osivia.fragment.list.title"
-            layout="list_fragment_layout" />            
+            layout="list_fragment_layout" />
+            
+        <fragment
+            code="fgt.links"
+            class="fr.toutatice.ecm.platform.service.fragments.types.LinksFragment"
+            title="osivia.fragment.links.title"
+            layout="links_fragment_layout" />                          
 
         <fragment
             code="fgt.portlet"

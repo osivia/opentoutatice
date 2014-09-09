@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nxs="http://www.nuxeo.org/ecm/project/schemas/ACRENNES5/zoom_links" targetNamespace="http://www.nuxeo.org/ecm/project/schemas/ACRENNES5/zoom_links">  
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nxs="http://www.nuxeo.org/ecm/project/schemas/ACRENNES5/links" targetNamespace="http://www.nuxeo.org/ecm/project/schemas/ACRENNES5/links">  
   <!-- helper XSD definitions for zoom types -->  
   <xs:complexType name="content"> 
     <xs:sequence> 
@@ -32,20 +32,18 @@
       <xs:element name="item" type="nxs:content" minOccurs="0" maxOccurs="unbounded"/> 
     </xs:sequence> 
   </xs:complexType>  
-  <xs:element name="zoomLink" type="nxs:list_zoomLinkType"/>
-  <xs:complexType name="list_zoomLinkType">
+  <xs:element name="links" type="nxs:list_LinkType"/>
+  <xs:complexType name="list_LinkType">
     <xs:sequence>
-      <xs:element name="item" type="nxs:zoomLinkType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="item" type="nxs:linkType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="zoomLinkType">
+  <xs:complexType name="linkType">
     <xs:sequence>
         <xs:element name="refURI" type="xs:string"/>
         <xs:element name="href" type="xs:string"/>
         <xs:element name="title" type="xs:string"/>
-        <xs:element name="description" type="xs:string"/>
-        <xs:element name="vignette" type="nxs:content"/>
-        <xs:element name="order" type="xs:integer"/>
+        <xs:element name="icon" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 </xs:schema>

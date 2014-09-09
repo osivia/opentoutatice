@@ -6,65 +6,50 @@
 	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:nxdir="http://nuxeo.org/nxdirectory"
-	xmlns:nxl="http://nuxeo.org/nxforms/layout" 
-	xmlns:oh="http://osivia.org/html"
-	id="#{widget.id}">
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
+	xmlns:oh="http://osivia.org/html" id="#{widget.id}">
 	<c:set var="mode" value="#{layout.mode}" />
 
 	<div class="titre2">
 		<img src="theme/images/icone_fragment.gif" /><span>Propriétés
-			des zooms</span>
+			du zooms</span>
 	</div>
 
-	<ul class="newFragList">
-	
-		<nxu:dataList id="props"
-			value="#{currentDocument.zfgt.zoomFragment}" var="zoom">
-
-	
-				<s:div rendered="#{zoom.refURI eq fragmentBean.uri}">
-	
-				<li><h:outputLabel value="Affichage : " for="selectListStyle" />
-					<oh:icons id="selectListStyle" src="#{config.listTemplates}"
-							value="#{zoom.view}" ulStyleClass="cssStyleList"
-							binding="#{listStyleSimpleForm.simpleComponent}"
-							inputClientId="#{listStyleSimpleForm.simpleComponentClientId}"
-							multiSelect="false" /></li>
-
-			</s:div>
-		</nxu:dataList>
-		<nxu:dataList id="links"
-			value="#{currentDocument.zl.zoomLink}" var="zoom">
+	<nxu:dataList id="props" value="#{currentDocument.zfgt.zoomFragment}"
+		var="zoom">
 
 
+		<s:div rendered="#{zoom.refURI eq fragmentBean.uri}">
 
-			<s:div rendered="#{zoom.refURI eq fragmentBean.uri}">
-				<li>
-					<h:outputLabel value="Lien numéro : #{zoom.order}" />
-							
-				</li>			
-				<li>
-					<h:outputLabel value="URL : " for="href" />
-					<nxl:widgetType id="href" name="text" mode="edit" 
-						title="URL du lien."
-						value="#{zoom.href}"/>			
-				</li>
-				<li>
-					<h:outputLabel value="Titre : " for="title" />
-					<nxl:widgetType id="title" name="text" mode="edit" 
-						title="Titre du lien."
-						value="#{zoom.title}"/>			
-				</li>
-				<li>
-					<h:outputLabel value="Description : " for="desc" />
-					<nxl:widgetType id="desc" name="textarea" mode="edit" 
-						title="Description du lien."
-						value="#{zoom.desc}"/>
-				</li>
-				
-				<hr />
-			</s:div>
+			<p>
+				<h:outputLabel value="URL : " />
+				<nxl:widgetType id="zl_href" name="text" mode="edit"
+					title="URL du lien." value="#{zoom.href}" />
+			</p>
+			
+			<p>
+				<h:outputLabel value="Référence image : "  />
+				<nxl:widgetType id="zl_picture" name="text" mode="edit"
+					title="Image"
+					value="#{zoom.picture}"  />
+			</p>
+			
+			<p>
+				<h:outputLabel value="Type de zoom : " for="selectZoomType" />
+				<oh:icons id="selectZoomType" src="#{config.zoomTypes}"
+					value="#{zoom.zoomType}" ulStyleClass="cssStyleList"
+					binding="#{zoomTypeSimpleForm.simpleComponent}"
+					inputClientId="#{zoomTypeSimpleForm.simpleComponentClientId}"
+					multiSelect="false" iconsGroup="zoomTypesGroup" />
+			</p>			
+			
+			<p>
+				<h:outputLabel value="Description : " />
+				<nxl:widgetType id="zl_desc" name="htmltext" mode="edit"
+					title="Texte du lien." value="#{zoom.content}" />
+			</p>
 
-		</nxu:dataList>
-	</ul>
+		</s:div>
+	</nxu:dataList>
+
 </f:subview>

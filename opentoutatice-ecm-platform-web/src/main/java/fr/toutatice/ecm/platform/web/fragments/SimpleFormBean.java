@@ -39,6 +39,7 @@ import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 @Scope(ScopeType.SESSION)
 @Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 @Roles({@Role(name = "genericStyleSimpleForm", scope = ScopeType.SESSION), @Role(name = "listStyleSimpleForm", scope = ScopeType.SESSION),
+	@Role(name = "zoomTypeSimpleForm", scope = ScopeType.SESSION),
 @Role(name = "pageTemplateSimpleForm", scope = ScopeType.SESSION), @Role(name = "subpageTemplateSimpleForm", scope = ScopeType.SESSION)})
 public class SimpleFormBean {
 

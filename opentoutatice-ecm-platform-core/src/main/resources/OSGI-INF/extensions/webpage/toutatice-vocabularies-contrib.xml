@@ -12,10 +12,15 @@
 			<idField>id</idField>
 			<autoincrementIdField>false</autoincrementIdField>
 			<createTablePolicy>on_missing_columns</createTablePolicy>
-			<table>vocabulary_webconfiguration-types</table>
+			<table>vocabulary_webconfiguration_types</table>
 			<dataFile>vocabularies/webpage/webconfiguration-types.csv</dataFile>
 		</directory>
 
 	</extension>
+	
+    <extension target="org.nuxeo.ecm.directory.ui.DirectoryUIManager"
+        point="directories">
+        <directory name="webconfiguration-types" layout="vocabulary" sortField="id" />
+    </extension>	
 
 </component>

@@ -51,7 +51,8 @@
 	/*position: relative;*/
 	padding: 4px 0;
 	cursor: pointer;
-	float: left;
+	/*float: left;*/
+	display:inline-block;
 	list-style: none;
 	width: 200px;
 	/*text-align: center;*/

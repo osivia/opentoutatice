@@ -1,5 +1,7 @@
-"id","label","obsolete","ordering"
-"pagetemplate","Page template","0","0"
-"windowstyle","Window style","0","0"
-"fragmenttype","Fragment type","0","0"
-"listtemplate","List template","0","0"
+id,label,obsolete,ordering
+pagetemplate,Page template,0,0
+windowstyle,Window style,0,0
+fragmenttype,Fragment type,0,0
+listtemplate,List template,0,0
+zoomtype,Zoom type,0,0
+regionlayout,Region layout,0,0

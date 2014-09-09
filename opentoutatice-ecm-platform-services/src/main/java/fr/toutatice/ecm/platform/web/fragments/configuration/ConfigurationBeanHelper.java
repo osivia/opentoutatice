@@ -145,6 +145,23 @@ public class ConfigurationBeanHelper {
         return getConfigs("listtemplate");
     }
 
+    
+    /**
+     * 
+     * @return a list of zoom types who can be setted on the zoom fragment
+     */
+    public DocumentModelList getZoomTypes() {
+        return getConfigs("zoomtype");
+    }
+    
+    /**
+     * 
+     * @return the avaliable regions layouts
+     */
+    public DocumentModelList getRegionLayouts() {
+        return getConfigs("regionlayout");
+    }
+    
     /**
      * List of configurations in nuxeo
      * 

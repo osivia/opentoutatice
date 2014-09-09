@@ -42,6 +42,7 @@
     <xs:sequence>
       <xs:element name="regionId" type="xs:string"/>
       <xs:element name="inheritance" type="xs:string"/>
+      <xs:element name="regionLayout" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 </xs:schema>

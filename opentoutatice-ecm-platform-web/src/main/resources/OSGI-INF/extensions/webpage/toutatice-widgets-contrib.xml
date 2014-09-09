@@ -503,6 +503,20 @@
             </properties>
         </widget>
 
+
+        <widget name="links_fragment_widget" type="template">
+            <labels>
+                <label mode="any" />
+            </labels>
+            <translated>true</translated>
+            <properties mode="any">
+                <property name="template">/widgets/links_fragment_template.xhtml
+                </property>
+                <property name="currentDocument">value</property>
+            </properties>
+        </widget>
+        
+        
 		<widget name="list_fragment_widget" type="template">
 			<labels>
 				<label mode="any" />

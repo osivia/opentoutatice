@@ -16,6 +16,10 @@
 		<schema name="fragments" prefix="fgts" src="schemas/webpage/fragments.xsd" />
 		<schema name="html_fragments" prefix="htmlfgt"
 			src="schemas/webpage/html_fragments.xsd" />
+        <schema name="links" prefix="lk"
+            src="schemas/webpage/links.xsd" />
+        <schema name="links_fragments" prefix="lkfgt"
+            src="schemas/webpage/links_fragments.xsd" />   			
 		<schema name="list_fragments" prefix="listfgt"
 			src="schemas/webpage/list_fragments.xsd" />
 		<schema name="newsfeed_links" prefix="nwslk"
@@ -26,8 +30,7 @@
 			src="schemas/webpage/portlet_properties.xsd" />
         <schema name="zoom_fragments" prefix="zfgt"
             src="schemas/webpage/zoom_fragments.xsd" />
-        <schema name="zoom_links" prefix="zl"
-            src="schemas/webpage/zoom_links.xsd" />            
+         
 	</extension>
 
 </component>
