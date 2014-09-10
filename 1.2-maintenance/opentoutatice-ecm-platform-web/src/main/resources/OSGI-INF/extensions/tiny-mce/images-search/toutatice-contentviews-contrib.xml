@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.web.images.search.contentview">
+
+	<require>org.nuxeo.ecm.platform.ui.web.ContentViewService</require>
+	<require>org.nuxeo.ecm.webapp.contentview.contrib</require>
+
+	<extension target="org.nuxeo.ecm.platform.ui.web.ContentViewService"
+		point="contentViews">
+
+		<contentView name="cv_image_search_popup">
+
+			<title>label.search.results</title>
+			<translateTitle>true</translateTitle>
+
+			<emptySentence>label.content.empty.search</emptySentence>
+			<translateEmptySentence>true</translateEmptySentence>
+
+			<coreQueryPageProvider>
+				<parameter>#{currentDocument.id}</parameter>
+				<property name="coreSession">#{documentManager}</property>
+				<whereClause docType="doc_toutatice_image_search">
+					<predicate parameter="ecm:path" operator="STARTSWITH">
+						<field schema="sch_toutatice_image_search" name="ecm_path" />
+					</predicate>
+
+					<predicate parameter="ecm:fulltext" operator="LIKE">
+						<field schema="sch_toutatice_image_search" name="ecm_fulltext" />
+					</predicate>
+
+					<fixedPart>
+						ecm:uuid != ? AND
+						ecm:primaryType = 'Picture' AND
+						ecm:mixinType != 'HiddenInNavigation' AND
+						ecm:isCheckedInVersion =
+						0 AND
+						ecm:currentLifeCycleState != 'deleted'
+						AND ecm:isProxy = 0
+	          		</fixedPart>
+				</whereClause>
+				<sort column="dc:title" ascending="true" />
+				<pageSize>20</pageSize>
+			</coreQueryPageProvider>
+
+			<searchLayout name="toutatice_image_search_layout" />
+
+			<showPageSizeSelector>true</showPageSizeSelector>
+			<useGlobalPageSize>true</useGlobalPageSize>
+			<refresh>
+				<event>documentChanged</event>
+				<event>documentChildrenChanged</event>
+			</refresh>
+			<cacheKey>only_one_cache</cacheKey>
+			<cacheSize>1</cacheSize>
+			<selectionList>CURRENT_SELECTION</selectionList>
+			<actions category="cv_actions@cv_image_search_popup" />
+			<resultLayouts>
+				<layout name="toutatice_image_search_result_layout" title="document_listing"
+					translateTitle="true" iconPath="/icons/document_listing_icon.png" />
+			</resultLayouts>
+
+		</contentView>
+		
+	</extension>
+
+</component>

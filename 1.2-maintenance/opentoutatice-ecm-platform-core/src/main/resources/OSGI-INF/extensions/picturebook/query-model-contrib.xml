@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+	Le rôle de cette contribution est de pallier un problème associé au composant "OrderableDocumentActions"
+	pour l'affichage conditionnel des actions up, down, top et bottom.
+	
+	Détail:
+	Pour la publication interne des documents de type 'proxy' sont créés qui faussent l'implémentation des méthodes de type
+	"OrderableDocumentActions::getCanMove...()".
+	
+	Voir le ticket #4529
+	
+	Quand se ticket sera résolu, cette contribution devrait pouvoir être supprimée. 
+ -->
+<component name="fr.toutatice.ecm.platform.core.picturebook.querymodels">
+
+	<require>org.nuxeo.ecm.core.search.api.client.querymodel.QueryModelService</require>
+
+	<extension target="org.nuxeo.ecm.core.search.api.client.querymodel.QueryModelService" point="model">
+
+		<queryModel name="TOUTATICE_CURRENT_PICTUREBOOK_CHILDREN">
+			<pattern>
+				SELECT * FROM Picture WHERE ecm:parentId = ? 
+				AND ecm:isCheckedInVersion = 0 AND ecm:mixinType != 'HiddenInNavigation' 
+				AND ecm:currentLifeCycleState != 'deleted' 
+				AND ecm:isProxy = 0
+			</pattern>
+			<sortable value="true" defaultSortColumn="dc:title"
+				defaultSortAscending="true" />
+			<max>20</max>
+		</queryModel>
+		
+	</extension>
+
+</component>

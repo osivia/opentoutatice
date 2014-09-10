@@ -1,0 +1,78 @@
+<div xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:c="http://java.sun.com/jstl/core">
+	<h3>
+		<h:outputText value="#{messages['label.permalink.title']}" />
+	</h3>
+
+
+	<a4j:region id="#{widget.id}_region" renderRegionOnly="true">
+		<h:commandButton id="actionPermalinkPortal"
+			value="Permalien du portail" onclick="showInputPortal();return;"
+			immediate="true" styleClass="button buttonActive">
+		</h:commandButton>
+
+		<h:commandButton id="actionPermalinkNuxeo"
+			onclick="showInputNuxeo();return;" value="Permalien de nuxeo"
+			immediate="true" styleClass="button">
+		</h:commandButton>
+		<c:if
+			test="#{documentActions.getProxy(currentDocument)!=null 
+			and (userSession.administrator or currentNuxeoPrincipal.isMemberOf('Administrators'))}">
+			<h:commandButton id="actionPermalinkProxy"
+				onclick="showInputProxy();return;" value="Permalien du proxy"
+				immediate="true" styleClass="button">
+			</h:commandButton>
+		</c:if>
+		<div id="divInputPortal">
+			<h:inputText id="permalinkInputPortal"
+				value="#{documentActions.getDocumentPermalink()}" readonly="true"
+				onclick="javascript:this.focus();this.select();" size="120" />
+		</div>
+		<div id="divInputNuxeo" style="display: none">
+			<h:inputText class="permalinkFocus"
+				value="#{nxd:complexDocumentUrl('id', currentDocument, null, null, true)}"
+				readonly="true" onclick="javascript:this.focus();this.select();"
+				size="120" />
+		</div>
+		<div id="divInputProxy" style="display: none">
+			<h:inputText class="permalinkFocus"
+				value="#{nxd:complexDocumentUrl('id', documentActions.getProxy(currentDocument), null, null, true)}"
+				readonly="true" onclick="javascript:this.focus();this.select();"
+				size="120" />
+		</div>
+	</a4j:region>
+
+
+
+	<script>
+		function showInputNuxeo() {
+			document.getElementById("divInputPortal").style.display = "none";
+			document.getElementById("divInputNuxeo").style.display = "block";
+			document.getElementById("divInputProxy").style.display = "none";
+			document.getElementById("documentActionsUpperButtons:actionPermalinkNuxeo").className = "button buttonActive";
+			document.getElementById("documentActionsUpperButtons:actionPermalinkPortal").className = "button";
+			document.getElementById("documentActionsUpperButtons:actionPermalinkProxy").className = "button";
+
+		}
+		function showInputPortal() {
+			document.getElementById("divInputPortal").style.display = "block";
+			document.getElementById("divInputNuxeo").style.display = "none";
+			document.getElementById("divInputProxy").style.display = "none";
+			document.getElementById("documentActionsUpperButtons:actionPermalinkNuxeo").className = "button";
+			document.getElementById("documentActionsUpperButtons:actionPermalinkProxy").className = "button";
+			document.getElementById("documentActionsUpperButtons:actionPermalinkPortal").className = "button buttonActive"
+
+		}
+		function showInputProxy() {
+			document.getElementById("divInputProxy").style.display = "block";
+			document.getElementById("divInputPortal").style.display = "none";
+			document.getElementById("divInputNuxeo").style.display = "none";
+			document.getElementById("documentActionsUpperButtons:actionPermalinkNuxeo").className = "button";
+			document.getElementById("documentActionsUpperButtons:actionPermalinkPortal").className = "button";
+			document.getElementById("documentActionsUpperButtons:actionPermalinkProxy").className = "button buttonActive"
+
+		}
+	</script>
+
+</div>
