@@ -17,6 +17,9 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,9 +34,10 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
-import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.model.Property;
 import org.nuxeo.ecm.core.api.model.PropertyException;
+import org.nuxeo.ecm.core.event.EventService;
+import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
@@ -60,13 +64,21 @@ public class SetWebID {
 
     private static final String WEB_ID_UNICITY_QUERY = "select * from Document Where ttc:domainID = '%s'"
             + " AND ttc:webid = '%s' AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+    
+    private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
+    	private static final long serialVersionUID = 1L;
+    	
+    	{
+    		add(EventService.class);
+    		add(VersioningService.class);
+    	}
+    };
 
     @Context
     protected CoreSession coreSession;
 
     @In(create = true)
     protected NavigationContext navigationContext;
-
 
     @Param(name = "chainSource", required = true)
     protected String chainSource;
@@ -81,7 +93,7 @@ public class SetWebID {
     @OperationMethod()
     public DocumentModel run(DocumentModel document) throws Exception {
         UnrestrictedSilentSetWebIdRunner runner = new UnrestrictedSilentSetWebIdRunner(coreSession, document);
-        runner.silentRun(true);
+		runner.silentRun(true, FILTERED_SERVICES_LIST);
         return runner.getDocument();
     }
 
