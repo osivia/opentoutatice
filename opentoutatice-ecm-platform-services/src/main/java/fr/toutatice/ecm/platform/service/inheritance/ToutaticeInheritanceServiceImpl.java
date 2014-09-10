@@ -86,25 +86,13 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 	}
 
 	@Override
-	public void runSync(Event event) {
+	public void run(Event event, boolean isSynchronousExecution) {
 		DocumentEventContext eventContext = (DocumentEventContext) event.getContext();
 		CoreSession session = eventContext.getCoreSession();
+		eventContext.setProperty(ToutaticeInheritanceService.CTXT_RECURSION_DEPTH_COUNT, new Integer(0));
 		
 		try {
-			ToutaticeSilentProcessRunnerHelper runner = new InheritanceSilentModeRunner(session, event, false);
-			runner.silentRun(true, FILTERED_SERVICES_LIST);
-		} catch (ClientException e) {
-			log.error("Failed to run the inheritance process, error: " + e.getMessage());
-		}
-	}
-	
-	@Override
-	public void runAsync(Event event) {
-		DocumentEventContext eventContext = (DocumentEventContext) event.getContext();
-		CoreSession session = eventContext.getCoreSession();
-		
-		try {
-			ToutaticeSilentProcessRunnerHelper runner = new InheritanceSilentModeRunner(session, event, true);
+			ToutaticeSilentProcessRunnerHelper runner = new InheritanceSilentModeRunner(session, event, isSynchronousExecution);
 			runner.silentRun(true, FILTERED_SERVICES_LIST);
 		} catch (ClientException e) {
 			log.error("Failed to run the inheritance process, error: " + e.getMessage());
@@ -136,6 +124,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 			boolean status = true;
 			
 			this.actionContext.setCurrentDocument(docModel);
+			this.actionContext.remove("PrecomputedFilters");
 			for (String filterId : this.filters) {
 				status = this.actionManager.checkFilter(filterId, this.actionContext);
 				if (false == status) {
@@ -151,12 +140,12 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 	private class InheritanceSilentModeRunner extends ToutaticeSilentProcessRunnerHelper {
 		
 		private Event event;
-		private boolean asynchronously;
+		private boolean synchronously;
 
-		public InheritanceSilentModeRunner(CoreSession session, Event event, boolean asynchronously) {
+		public InheritanceSilentModeRunner(CoreSession session, Event event, boolean synchronously) {
 			super(session);
 			this.event = event;
-			this.asynchronously = asynchronously;
+			this.synchronously = synchronously;
 		}
 
 		@Override
@@ -164,15 +153,15 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 			DocumentEventContext eventContext = (DocumentEventContext) this.event.getContext();
 			String eventName = this.event.getName();
 			DocumentModel document = eventContext.getSourceDocument();
-			
-			run(eventContext, document, eventName);
+			run(eventContext, document, eventName, null);
 		}
 		
 		@SuppressWarnings("unchecked")
-		private void run(DocumentEventContext eventContext, DocumentModel document, String eventName) {
+		private void run(DocumentEventContext eventContext, DocumentModel document, String eventName, Action threadAction) {
 			boolean thisIncluded;
 			boolean immediateOnly;
-			boolean recursive;
+			int recursionDepthLevel;
+			boolean isRecursive;
 			DocumentModelList parents = null;
 			
 			if (document.isImmutable()) {
@@ -180,19 +169,29 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 			}
 			
 			try {
+				/**
+				 * Find applying actions
+				 */
 				ActionContext actionContext = new ActionContext();
 				actionContext.setCurrentDocument(document);
 				actionContext.setDocumentManager(this.session);
 				actionContext.setCurrentPrincipal((NuxeoPrincipal) this.session.getPrincipal()); 
-
-				String ACTION_ID_PREFIX = String.format("OPENTOUTATICE_INHERITANCE_%s@", (this.asynchronously) ? "ASYNC" : "SYNC");
-				List<Action> actions = getActionService().getActions(ACTION_ID_PREFIX + eventName, actionContext);
+				List<Action> actions = new ArrayList<Action>();
+				if (null != threadAction) {
+					// continue on current action thread and check it still apply
+					Action a = getActionService().getAction(threadAction.getId(), actionContext, true);
+					actions.add(a);
+				} else {
+					// look for all applying actions (first call)
+					String ACTION_ID_PREFIX = String.format("OPENTOUTATICE_INHERITANCE_%s@", (this.synchronously) ? "SYNC" : "ASYNC");
+					actions = getActionService().getActions(ACTION_ID_PREFIX + eventName, actionContext);
+				}
+				
 				for (Action action : actions) {
 					/**
-					 * Get action source properties
+					 * Get action's source properties
 					 */
 					Map<String, Serializable> properties = action.getProperties();
-
 					Map<String, Serializable> srcProperties = (Map<String, Serializable>) properties.get("source");
 					if (null != srcProperties) {
 						String thisIncludedPrty = (String) srcProperties.get("thisIncluded");
@@ -226,12 +225,14 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 					}
 					
 					/**
-					 * Get action destination properties
+					 * Get action's destination properties
 					 */
 					Map<String, Serializable> dstProperties = (Map<String, Serializable>) properties.get("destination");
 					String setterName = (String) dstProperties.get("setter");
-					String recursivePrty = (String) dstProperties.get("recursive");
-					recursive = StringUtils.isNotBlank(recursivePrty) ? Boolean.parseBoolean(recursivePrty) : false;
+					String recursivityProp = (String) dstProperties.get("recursion");
+					isRecursive = StringUtils.isNotBlank(recursivityProp) ? Boolean.parseBoolean(recursivityProp) : false;
+					String recursionDepthLevelProp = (String) dstProperties.get("recursionDepthLevel");
+					recursionDepthLevel = StringUtils.isNotBlank(recursionDepthLevelProp) ? Integer.parseInt(recursionDepthLevelProp) : 0;
 					
 					/**
 					 *  Apply setter
@@ -245,9 +246,10 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 							this.session.saveDocument(document);
 						}
 						
-						// Apply action recursively if it is specifies so 
-						if (document.isFolder() && recursive) {
-							eventContext.setProperty(ToutaticeInheritanceSetter.CTXT_RECURSIVE_ITERATION, true);
+						// Apply action recursively if it is specified so
+						Integer recursionCount = (Integer) eventContext.getProperty(ToutaticeInheritanceService.CTXT_RECURSION_DEPTH_COUNT);
+						if (document.isFolder() && isRecursive && (0 == recursionDepthLevel || recursionCount < recursionDepthLevel)) {
+							eventContext.setProperty(ToutaticeInheritanceService.CTXT_RECURSION_DEPTH_COUNT, ++recursionCount); // one level down
 							DocumentModelList children = session.getChildren(document.getRef(), null, new Filter() {
 
 								private static final long serialVersionUID = 1L;
@@ -268,8 +270,10 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 							}, null);
 							
 							for (DocumentModel child : children) {
-								run(eventContext, child, eventName);
+								run(eventContext, child, eventName, action);
 							}
+							
+							eventContext.setProperty(ToutaticeInheritanceService.CTXT_RECURSION_DEPTH_COUNT, --recursionCount); // one level up
 						}
 					} else {
 						log.warn("Referenced unknown setter '" + setterName + "'");

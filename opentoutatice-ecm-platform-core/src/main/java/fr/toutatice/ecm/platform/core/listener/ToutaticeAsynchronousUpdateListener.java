@@ -39,8 +39,8 @@ import fr.toutatice.ecm.platform.core.utils.exception.ToutaticeException;
  */
 public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListener {
 
-	private static final String UPDATE_DOMAIN_CHAIN = "updateDomain";
-	private static final String CREATE_OR_MOVE_OP_CHAIN = "moveOp";
+    private static final String UPDATE_DOMAIN_CHAIN = "updateDomain";
+    private static final String MOVE_OP_CHAIN = "moveOp";
 
 	private static final String DOCUMENT_MODIFIED = "documentModified";
 
@@ -65,7 +65,7 @@ public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListe
 					if (DOCUMENT_MODIFIED.equals(event.getName()) && ToutaticeNuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(document.getType())) {
 						ToutaticeOperationHelper.runOperationChain(session, UPDATE_DOMAIN_CHAIN, document);
 					} else if (ArrayUtils.contains(SELECTED_EVENTS, event.getName())) {
-						ToutaticeOperationHelper.runOperationChain(session, CREATE_OR_MOVE_OP_CHAIN, document);
+						ToutaticeOperationHelper.runOperationChain(session, MOVE_OP_CHAIN, document);
 					}
 				} catch (ToutaticeException e) {
 					throw new ClientException(e);

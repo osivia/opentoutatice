@@ -18,6 +18,8 @@
  */
 package fr.toutatice.ecm.platform.core.helper;
 
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.AutomationService;
@@ -55,6 +57,38 @@ public class ToutaticeOperationHelper {
         	throw new ToutaticeException(e);
         }
     }
+	
+	/**
+	 * Méthode permettant d'appeler une opération Nuxeo..
+	 * 
+	 * @param automation
+	 *            Service automation
+	 * @param ctx
+	 *            Contexte d'exécution
+	 * @param operationId
+	 *            identifiant de l'opération
+	 * @param parameters
+	 *            paramètres de l'opération
+	 * @return le résultat de l'opération dont le type n'est pas connu à
+	 *         priori
+	 * @throws ServeurException
+	 */
+	public static Object callOperation(OperationContext ctx, String operationId,Map<String, Object> parameters) throws ToutaticeException {
+		
+		Object operationRes = null;
+		try {
+			AutomationService automationService = getAutomationService();
+			operationRes = automationService.run(ctx, operationId, parameters);
+		
+		} catch (Exception e) {
+			DocumentModel document = (DocumentModel) ctx.getInput();
+        	log.error("Failed to run the operation '" + operationId + "' on document '" + document.getName() + "', error: " + e.getMessage());
+        	throw new ToutaticeException(e);
+		}
+		
+		return operationRes;
+	}
+	
 
 	private static AutomationService getAutomationService() throws ClientException {
 		if (automationService == null) {

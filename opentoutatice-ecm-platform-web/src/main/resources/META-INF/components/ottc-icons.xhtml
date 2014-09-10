@@ -8,6 +8,10 @@
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
+	<c:if test = "${empty multiSelect}">
+		<c:set var="multiSelect" value="false" />
+	</c:if>
+
 	<ul id="group-#{iconsGroup}" class="#{ulStyleClass}">
 
 		<nxu:dataList id="confs" value="#{src}" var="conf">
@@ -15,7 +19,7 @@
 			<li class="ui-state-default 
 				#{ ((!empty conf.wconf.code) and (!empty value) and (value.contains(conf.wconf.code)) 
 					or ((empty conf.wconf.code) and (empty value))) ? 'ui-state-active' : '' }"
-				onclick="javascript:toggleIcon(this, '#{inputClientId}', '#{conf.wconf.code}', '#{iconsGroup}')">
+				onclick="javascript:toggleIcon(this, '#{inputClientId}', '#{conf.wconf.code}', '#{iconsGroup}', #{multiSelect})">
 				<h:graphicImage value="#{nxd:fileUrl('downloadFile', conf, 'wconf:picture', conf.wconf.picture.filename)}" />
 				<div><h:outputText value="#{conf.title}" /></div>
 			</li>

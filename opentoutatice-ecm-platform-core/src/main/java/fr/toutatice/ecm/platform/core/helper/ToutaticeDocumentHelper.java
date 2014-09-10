@@ -877,7 +877,9 @@ public class ToutaticeDocumentHelper {
 	 * @return le résultat de l'opération dont le type n'est pas connu à
 	 *         priori
 	 * @throws ServeurException
+	 * @deprecated use {@link #ToutaticeOperationHelper.callOperation()} instead. 
 	 */
+	@Deprecated
 	public static Object callOperation(AutomationService automation, OperationContext ctx, String operationId,
 			Map<String, Object> parameters) throws Exception {
 		InvokableMethod operationMethod = getRunMethod(automation, operationId);
