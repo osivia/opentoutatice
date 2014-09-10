@@ -1,0 +1,10 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	id="#{widget.id}">
+	
+	<c:if test="#{nxl:isLikeViewMode(widget.mode)}">
+		<h:graphicImage styleClass="#{widget.properties.styleClass}" value="#{nxd:fileUrl('downloadPicture', value.data, widget.fieldDefinitions[0].propertyName, field_1)}" />
+	</c:if>
+
+</f:subview>

@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.filters">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="filters">
+
+		<filter id="belong_to_publish_space">
+			<rule grant="true">
+				<condition>#{documentActions.belongToPublishSpace() == true}
+				</condition>
+			</rule>
+		</filter>
+
+		<filter id="dont_belong_to_publish_space">
+			<rule grant="true">
+				<condition>#{documentActions.belongToPublishSpace() == false}
+				</condition>
+			</rule>
+		</filter>
+
+		<filter id="not_belong_to_publish_space">
+			<rule grant="false">
+				<condition>#{documentActions.belongToPublishSpace() == true}
+				</condition>
+			</rule>
+		</filter>
+
+		<filter id="hasToutaticeSchema">
+			<rule grant="true">
+				<schema>toutatice</schema>
+			</rule>
+		</filter>
+
+		<!-- Administreur "global", peut-être: - un administrateur au sens Nuxeo 
+			(appartient au groupe 'SuperAdministrators' configuré dans le fichier 'usermanager-config.xml' 
+			ou bien le user name = 'system') - ou bien un usager qui possède la permission 
+			'Everything' -->
+		<filter id="isGlobalAdministrator">
+			<!-- Administrateur système défini comme appartenant au groupe 'SuperAdministrators' 
+				défini dans 'usermanager-config.xml' -->
+			<rule grant="true">
+				<condition>#{userSession.administrator}</condition>
+			</rule>
+			<!-- Simple appartenance au groupe 'Administrators' -->
+			<rule grant="true">
+				<condition>#{currentNuxeoPrincipal.isMemberOf('Administrators')}
+				</condition>
+			</rule>
+		</filter>
+
+		<filter id="is_not_thread_document">
+			<rule grant="false">
+				<type>Thread</type>
+			</rule>
+		</filter>
+
+		<filter id="belong_to_work_space">
+			<rule grant="true">
+				<condition>#{documentActions.belongToWorkSpace() == true}
+				</condition>
+			</rule>
+		</filter>
+
+		<filter id="not_version">
+			<rule grant="false">
+				<condition>document.isVersion()</condition>
+			</rule>
+		</filter>
+
+		<filter id="non-folderish-rights">
+			<rule grant="true">
+				<permission>WriteSecurity</permission>
+			</rule>
+		</filter>
+
+		<filter id="filter@TTC_TAB_FOLDERISH_VIEW">
+			<rule grant="true">
+				<condition>document.hasFacet('FolderishEditable')</condition>
+			</rule>
+		</filter>
+
+		<!-- Filtre pour le bouton "newDocument" -->
+		<filter id="create" append="true">
+			<rule grant="false">
+				<condition>document.isImmutable()</condition>
+			</rule>
+			<rule grant="true">
+				<permission>AddChildren</permission>
+				<type>Domain</type>
+				<type>PortalSite</type>
+				<type>PortalPage</type>
+				<condition>#{typeManager.getAllowedSubTypes(document.getType(),document).size() &gt; 0}</condition>
+			</rule>
+		</filter>
+
+		<filter id="importFile" append="true">
+			<rule grant="true">
+				<permission>AddChildren</permission>
+				<type>Domain</type>
+				<type>WorkspaceRoot</type>
+				<type>PortalSite</type>
+				<type>PortalPage</type>
+			</rule>
+		</filter>
+
+	</extension>
+
+</component>

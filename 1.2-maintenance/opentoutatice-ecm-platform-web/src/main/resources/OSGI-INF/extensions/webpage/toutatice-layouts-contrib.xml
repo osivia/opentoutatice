@@ -1,0 +1,285 @@
+<?xml version="1.0"?>
+<component
+	name="fr.toutatice.ecm.platform.web.document.forms.layouts.webpage">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+	<require>fr.toutatice.ecm.platform.web.widgets</require>
+	<require>fr.toutatice.ecm.platform.web.filters</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="layouts">
+
+		<layout name="layout@WebConfiguration-create">
+			<templates>
+				<template mode="any">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>web_conf_title</widget>
+				</row>
+				<row>
+					<widget>code</widget>
+				</row>
+				<row>
+					<widget>code2</widget>
+				</row>
+				<row>
+					<widget>type</widget>
+				</row>
+				<row>
+					<widget>web_conf_picture</widget>
+				</row>
+				<row>
+					<widget>enabled</widget>
+				</row>
+				<row>
+					<widget>order</widget>
+				</row>
+				<row>
+					<widget>options</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<layout name="layout@WebConfiguration-edit">
+			<templates>
+				<template mode="any">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>web_conf_title</widget>
+				</row>
+				<row>
+					<widget>code</widget>
+				</row>
+				<row>
+					<widget>code2</widget>
+				</row>
+				<row>
+					<widget>type</widget>
+				</row>
+				<row>
+					<widget>web_conf_picture</widget>
+				</row>
+				<row>
+					<widget>enabled</widget>
+				</row>
+				<row>
+					<widget>order</widget>
+				</row>
+				<row>
+					<widget>options</widget>
+				</row>
+			</rows>
+		</layout>
+		
+		<layout name="layout@WebConfiguration-view">
+			<templates>
+				<template mode="any">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>web_conf_title</widget>
+				</row>
+				<row>
+					<widget>code</widget>
+				</row>
+				<row>
+					<widget>code2</widget>
+				</row>
+				<row>
+					<widget>type</widget>
+				</row>
+				<row>
+					<widget>web_conf_picture</widget>
+				</row>
+				<row>
+					<widget>enabled</widget>
+				</row>
+				<row>
+					<widget>order</widget>
+				</row>
+				<row>
+					<widget>options</widget>
+				</row>
+			</rows>
+		</layout>
+
+
+		<layout name="fragments_form@edit">
+			<templates>
+				<template mode="any">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>fragments</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<layout name="html_fragments_form@edit">
+			<templates>
+				<template mode="any">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>htmlFragment</widget>
+				</row>
+			</rows>
+		</layout>
+		<layout name="html_fragments_form@view">
+			<templates>
+				<template mode="any">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<layout>heading</layout>
+				</row>
+			</rows>
+		</layout>
+
+		<layout name="list_fragments_form@edit">
+			<templates>
+				<template mode="any">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>listFragment</widget>
+				</row>
+			</rows>
+		</layout>
+
+
+		<layout name="portlet_fragments_form@edit">
+			<templates>
+				<template mode="any">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>portletFragment</widget>
+				</row>
+				<row>
+					<widget>properties</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<!-- fragment générique -->
+		<layout name="generic_fragment_layout">
+			<templates>
+				<template mode="any">/layouts/simple_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<properties mode="any">
+						<property name="nxl_colspan_0">1</property>
+					</properties>
+					<widget>generic_fragment_widget</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<!-- fragment HTML -->
+		<layout name="html_fragment_layout">
+			<templates>
+				<template mode="any">/layouts/simple_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<properties mode="any">
+						<property name="nxl_colspan_0">1</property>
+					</properties>
+					<widget>html_fragment_widget</widget>
+				</row>
+			</rows>
+		</layout>
+
+        <!-- fragment zoom -->
+        <layout name="zoom_fragment_layout">
+            <templates>
+                <template mode="any">/layouts/simple_template.xhtml
+                </template>
+            </templates>
+            <rows>
+                <row>
+                    <properties mode="any">
+                        <property name="nxl_colspan_0">1</property>
+                    </properties>
+                    <widget>zoom_fragment_widget</widget>
+                </row>
+            </rows>
+        </layout>
+
+
+		<!-- fragment Liste -->
+		<layout name="list_fragment_layout">
+			<templates>
+				<template mode="any">/layouts/simple_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<properties mode="any">
+						<property name="nxl_colspan_0">1</property>
+					</properties>
+					<widget>list_fragment_widget</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<!-- fragment portlet -->
+		<layout name="portlet_fragment_layout">
+			<templates>
+				<template mode="any">/layouts/simple_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<properties mode="any">
+						<property name="nxl_colspan_0">1</property>
+					</properties>
+					<widget>portlet_fragment_widget</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<!-- Modification page depuis le front office -->
+		<layout name="osivia_edit_document_layout">
+			<templates>
+				<template mode="any">/layouts/osivia_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>osivia_widget_title</widget>
+				</row>
+				<row>
+					<widget>osivia_widget_description</widget>
+				</row>
+				<row>
+					<widget>osivia_widget_picture</widget>
+				</row>
+				<row>
+					<widget>toutatice_widget_show_in_menu</widget>
+				</row>
+				<row>
+					<widget>osivia_page_template_widget</widget>
+				</row>
+			</rows>
+		</layout>
+
+	</extension>
+
+
+</component>
