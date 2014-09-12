@@ -24,7 +24,7 @@
 
 			<ul class="newFragList">
 				<li>
-					<h:outputLabel value="Requête : " for="request" />
+					<h:outputLabel value="Requête : " />
 					<nxl:widgetType id="request" name="textarea" mode="edit" rows="3" cols="50"
 						title="Requête NXQL retournant les documents à afficher dans la liste."
 						value="#{fgt.request}"/>			
@@ -32,7 +32,7 @@
 				</li>
 				
 				
-				<li><h:outputLabel value="Affichage : " for="selectListStyle" />
+				<li><h:outputLabel value="Affichage : " />
 					<oh:icons id="selectListStyle" src="#{config.listTemplates}"
 							value="#{fgt.view}" ulStyleClass="cssStyleList"
 							binding="#{listStyleSimpleForm.simpleComponent}"
@@ -40,7 +40,7 @@
 							multiSelect="false" iconsGroup="listStyleGroup"/></li>
 				
 				<li>
-					<h:outputLabel value="Nombre de résultats : " for="view" >
+					<h:outputLabel value="Nombre de résultats : " >
 					</h:outputLabel>
 
  					<nxl:widgetType id="list_maxItems" name="text" mode="edit" size="3"
@@ -48,7 +48,7 @@
 					
 				</li>
 				<li>
-					<h:outputLabel value="Taille des pages : " for="view" >
+					<h:outputLabel value="Taille des pages : " >
 					</h:outputLabel>
 
  					<nxl:widgetType id="list_pageSize" name="text" mode="edit" size="3"
@@ -56,7 +56,7 @@
 					
 				</li>
 				<li>
-					<h:outputLabel value="Etendre la recherche hors du site : " for="view" >
+					<h:outputLabel value="Etendre la recherche hors du site : "  >
 					</h:outputLabel>
 
  					<nxl:widgetType id="list_policy" name="checkbox" mode="edit"

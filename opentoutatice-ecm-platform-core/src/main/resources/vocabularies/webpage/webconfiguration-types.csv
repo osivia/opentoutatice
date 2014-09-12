@@ -3,5 +3,6 @@ pagetemplate,Page template,0,0
 windowstyle,Window style,0,0
 fragmenttype,Fragment type,0,0
 listtemplate,List template,0,0
-zoomtype,Zoom type,0,0
+zoomtemplate,Zoom template,0,0
+linkstemplate,Links template,0,0
 regionlayout,Region layout,0,0

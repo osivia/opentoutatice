@@ -148,10 +148,19 @@ public class ConfigurationBeanHelper {
     
     /**
      * 
-     * @return a list of zoom types who can be setted on the zoom fragment
+     * @return a list of zoom templates who can be setted on the zoom fragment
      */
-    public DocumentModelList getZoomTypes() {
-        return getConfigs("zoomtype");
+    public DocumentModelList getZoomTemplates() {
+        return getConfigs("zoomtemplate");
+    }
+    
+    
+    /**
+     * 
+     * @return a list of links templates who can be setted on the links fragment
+     */
+    public DocumentModelList getLinksTemplates() {
+        return getConfigs("linkstemplate");
     }
     
     /**

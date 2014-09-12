@@ -8,7 +8,8 @@ xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:nxh="http://nuxeo.org/nxweb/html"
 	xmlns:nxd="http://nuxeo.org/nxweb/document"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core">
 	
 	<ui:define name="stylesheets">
 		<link href="#{baseURL}/css/jquery-ui-1.8.16.custom.css"
@@ -51,8 +52,16 @@ xmlns="http://www.w3.org/1999/xhtml"
 								<li><nxh:commandLink
 										action="#{fragmentBean.dispatchCreation(conf.wconf.code, conf.wconf.code2)}">
 
-										<h:graphicImage class="iconFragment"
-											value="#{nxd:fileUrl('downloadFile', conf, 'wconf:picture', conf.wconf.picture.filename)}" />
+										<c:choose>
+											<c:when test="#{not empty conf.wconf.picture}">
+												<h:graphicImage class="iconFragment"
+													value="#{nxd:fileUrl('downloadFile', conf, 'wconf:picture', conf.wconf.picture.filename)}" />
+											</c:when>
+											<c:otherwise>
+												<h:graphicImage class="iconFragment"
+													value="#{baseURL}/theme/images/icone_fragment.gif" />
+											</c:otherwise>
+										</c:choose>
 										<h:outputText value="#{conf.title}" />
 
 

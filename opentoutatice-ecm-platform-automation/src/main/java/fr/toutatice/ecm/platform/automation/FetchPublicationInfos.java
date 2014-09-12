@@ -230,7 +230,7 @@ public class FetchPublicationInfos {
             Map<String, String> infosSynchro = drive.fetchSynchronizationInfos(coreSession, liveDoc);
             infosPubli.accumulateAll(infosSynchro);
 
-            log.warn("[drive] " + document.getPathAsString() + " (" + document.getId() + ") " + infosSynchro);
+            //log.warn("[drive] " + document.getPathAsString() + " (" + document.getId() + ") " + infosSynchro);
 
         }
 

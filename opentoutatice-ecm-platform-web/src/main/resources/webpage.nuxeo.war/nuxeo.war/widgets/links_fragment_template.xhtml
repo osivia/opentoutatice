@@ -15,6 +15,23 @@
 			des liens</span>
 	</div>
 
+	<nxu:dataList id="link" value="#{currentDocument.lkfgt.linksFragment}"
+		var="frag">
+
+
+		<s:div rendered="#{frag.refURI eq fragmentBean.uri}">
+		
+			<p>
+				<h:outputLabel value="Présentation des liens : " />
+				<oh:icons id="selectLinksTemplate" src="#{config.linksTemplates}"
+					value="#{frag.linksTemplate}" ulStyleClass="cssStyleList"
+					binding="#{templateSimpleForm.simpleComponent}"
+					inputClientId="#{templateSimpleForm.simpleComponentClientId}"
+					multiSelect="false" iconsGroup="linksTemplateGroup" />
+			</p>
+		
+		</s:div>
+	</nxu:dataList>
 
 	<nxu:dataList id="links" value="#{currentDocument.lk.links}"
 		var="link">

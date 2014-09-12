@@ -41,7 +41,7 @@
   <xs:complexType name="listfgt_zoomFragmentType">
     <xs:sequence>
         <xs:element name="refURI" type="xs:string"/>
-        <xs:element name="zoomType" type="xs:string"/>
+        <xs:element name="zoomTemplate" type="xs:string"/>
         <xs:element name="href" type="xs:string"/>
         <xs:element name="content" type="xs:string"/>
         <xs:element name="picture" type="xs:string"/>

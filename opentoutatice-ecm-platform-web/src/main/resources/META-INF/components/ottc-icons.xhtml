@@ -20,7 +20,16 @@
 				#{ ((!empty conf.wconf.code) and (!empty value) and (value.contains(conf.wconf.code)) 
 					or ((empty conf.wconf.code) and (empty value))) ? 'ui-state-active' : '' }"
 				onclick="javascript:toggleIcon(this, '#{inputClientId}', '#{conf.wconf.code}', '#{iconsGroup}', #{multiSelect})">
-				<h:graphicImage value="#{nxd:fileUrl('downloadFile', conf, 'wconf:picture', conf.wconf.picture.filename)}" />
+				
+				<c:choose>
+					<c:when test="#{not empty conf.wconf.picture}">
+						<h:graphicImage value="#{nxd:fileUrl('downloadFile', conf, 'wconf:picture', conf.wconf.picture.filename)}" />		
+					</c:when>
+					<c:otherwise>
+						<h:graphicImage value="#{baseURL}/theme/images/conf_#{conf.wconf.type}.png" />
+					</c:otherwise>
+				</c:choose>
+								
 				<div><h:outputText value="#{conf.title}" /></div>
 			</li>
 

@@ -33,21 +33,21 @@
 					title="Image"
 					value="#{zoom.picture}"  />
 			</p>
-			
-			<p>
-				<h:outputLabel value="Type de zoom : " for="selectZoomType" />
-				<oh:icons id="selectZoomType" src="#{config.zoomTypes}"
-					value="#{zoom.zoomType}" ulStyleClass="cssStyleList"
-					binding="#{zoomTypeSimpleForm.simpleComponent}"
-					inputClientId="#{zoomTypeSimpleForm.simpleComponentClientId}"
-					multiSelect="false" iconsGroup="zoomTypesGroup" />
-			</p>			
-			
+		
 			<p>
 				<h:outputLabel value="Description : " />
 				<nxl:widgetType id="zl_desc" name="htmltext" mode="edit"
 					title="Texte du lien." value="#{zoom.content}" />
 			</p>
+			
+			<p>
+				<h:outputLabel value="Présentation du zoom : " />
+				<oh:icons id="selectZoomTemplate" src="#{config.zoomTemplates}"
+					value="#{zoom.zoomTemplate}" ulStyleClass="cssStyleList"
+					binding="#{templateSimpleForm.simpleComponent}"
+					inputClientId="#{templateSimpleForm.simpleComponentClientId}"
+					multiSelect="false" iconsGroup="zoomTypesGroup" />
+			</p>			
 
 		</s:div>
 	</nxu:dataList>

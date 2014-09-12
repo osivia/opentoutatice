@@ -48,7 +48,7 @@
 	<xs:complexType name="listfgt_linksFragmentType">
 		<xs:sequence>
 			<xs:element name="refURI" type="xs:string" />
-			
+			<xs:element name="linksTemplate" type="xs:string"/>
 		</xs:sequence>
 	</xs:complexType>
  

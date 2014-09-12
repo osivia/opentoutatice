@@ -24,20 +24,20 @@
 			<table>
 
 				<tr>
-					<td><h:outputLabel value="Titre : " for="title" /></td>
+					<td><h:outputLabel value="Titre : " /></td>
 					<td><nxl:widgetType id="title" name="text" size="50"
 							mode="edit" value="#{fgt.title}" />
 					</td>
 				</tr>
 				<tr>
-					<td><h:outputLabel value="Masquer le titre : " for="hideTitle" /></td>
+					<td><h:outputLabel value="Masquer le titre : " /></td>
 					<td><nxl:widgetType id="hideTitle" name="checkbox" 
 							mode="edit" value="#{fgt.hideTitle}" />
 					</td>
 				</tr>
 
 				<tr>
-					<td><h:outputLabel value="Style : " for="style" /></td>
+					<td><h:outputLabel value="Style : " /></td>
 					<td><oh:icons id="selectStyle" src="#{config.windowStyles}"
 							value="#{fgt.style}" ulStyleClass="cssStyleList"
 							binding="#{genericStyleSimpleForm.simpleComponent}"
