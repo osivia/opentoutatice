@@ -611,31 +611,30 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     }
 
     /**
-     * Mettre hors ligne une sélection de documents dans un content view (folder
-     * ou document non folderish)
+     * Mettre hors ligne une sélection de documents dans un content view 
+     * (folder ou document non folderish)
      * 
      * @throws ClientException
      */
     public void unPublishDocumentSelection() throws ClientException {
-        DocumentModel currentFolder = navigationContext.getCurrentDocument();
         List<DocumentModel> currentDocumentSelection = documentsListsManager.getWorkingList(CURRENT_DOCUMENT_SELECTION);
-
-        if (currentDocumentSelection.isEmpty()) {
-            return;
+        
+        if (null != currentDocumentSelection && !currentDocumentSelection.isEmpty()) {
+        	DocumentModel currentFolder = navigationContext.getCurrentDocument();
+        	try {
+        		ToutaticeOperationHelper.runOperationChain(documentManager, 
+        				ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_UNPUBLISH_SELECTION, 
+        				new DocumentModelListImpl(currentDocumentSelection));
+        	} catch (Exception e) {
+        		log.error("Failed to set offline the selection from the document: '" + currentFolder.getTitle() + "', error: " + e.getMessage());
+        	}
+        	
+        	// Rafraîchir la liste de sélection
+        	documentsListsManager.resetWorkingList(CURRENT_DOCUMENT_SELECTION);
+        	
+        	// Rafraîchir le content view
+        	Events.instance().raiseEvent(EventNames.DOCUMENT_CHILDREN_CHANGED, currentFolder);
         }
-
-        try {
-            ToutaticeOperationHelper.runOperationChain(documentManager, ToutaticeNuxeoStudioConst.CST_OPERATION_DOCUMENT_UNPUBLISH_SELECTION, new DocumentModelListImpl(
-                    currentDocumentSelection));
-        } catch (Exception e) {
-            log.error("Failed to set offline the selection from the document: '" + currentFolder.getTitle() + "', error: " + e.getMessage());
-        }
-
-        // Rafraîchir la liste de sélections
-        documentsListsManager.resetWorkingList(CURRENT_DOCUMENT_SELECTION);
-
-        // Rafraîchir le content view
-        Events.instance().raiseEvent(EventNames.DOCUMENT_CHILDREN_CHANGED, currentFolder);
     }
 
     @SuppressWarnings("static-access")

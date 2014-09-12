@@ -70,7 +70,7 @@ public class RemovePublishedVersions {
 		@Override
 		public void run() throws ClientException {
 			DocumentRef targetRef = this.target.getRef();
-			DocumentRef baseDocRef = document.getRef();
+			DocumentRef baseDocRef = this.document.getRef();
 			returnedDocument = this.document;
 
 			if (this.document.isVersion()) {

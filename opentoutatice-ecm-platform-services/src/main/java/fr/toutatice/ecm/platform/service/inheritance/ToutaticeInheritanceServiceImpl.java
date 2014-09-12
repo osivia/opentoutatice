@@ -180,7 +180,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 				if (null != threadAction) {
 					// continue on current action thread and check it still apply
 					Action a = getActionService().getAction(threadAction.getId(), actionContext, true);
-					actions.add(a);
+					if (null != a) {actions.add(a);}
 				} else {
 					// look for all applying actions (first call)
 					String ACTION_ID_PREFIX = String.format("OPENTOUTATICE_INHERITANCE_%s@", (this.synchronously) ? "SYNC" : "ASYNC");

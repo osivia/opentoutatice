@@ -317,8 +317,8 @@
 		<!-- Cette action appartient à une catégorie "virtuelle" car elle ne sera 
 			jamais présentée à l'IHM. Son rôle est de pouvoir présenter de façon conditionnelle 
 			les actions "PUBLISH/UNPUBLISH_DOCUMENTS_SELECTION" (mettre en ligne / hors 
-			ligne) en fonction du critère "appartient à un espace de publication". (voir 
-			implémentation dans ToutaticeWebActionBean::getUnfiltredActionsList()) -->
+			ligne) en fonction du critère "appartient à un espace de publication". 
+		-->
 		<action id="VIRTUAL_ACTION_VIEW_IN_PUBLISH_SPACE_ONLY" enabled="true"
 			icon="">
 			<category>VIRTUAL_CATEGORY</category>
