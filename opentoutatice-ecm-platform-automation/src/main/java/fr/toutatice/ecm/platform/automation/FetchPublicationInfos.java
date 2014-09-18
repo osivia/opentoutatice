@@ -143,7 +143,7 @@ public class FetchPublicationInfos {
 
         // Si on passe non pas un docRef en entrée mais un webId :
         if (webid != null) {
-            log.warn("webid : " + webid);
+            //log.warn("webid : " + webid);
 
             String[] segments = webid.split("/");
             String domainIdSegment;
