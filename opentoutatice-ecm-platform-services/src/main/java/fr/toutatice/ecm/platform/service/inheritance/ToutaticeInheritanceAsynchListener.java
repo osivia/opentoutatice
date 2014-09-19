@@ -20,7 +20,7 @@ public class ToutaticeInheritanceAsynchListener implements PostCommitEventListen
         for (Event event : events) {
         	if (event.getContext() instanceof DocumentEventContext) {
         		try {
-        			getInheritanceService().runAsync(event);
+        			getInheritanceService().run(event, false);
         		} catch (Exception e) {
         			log.error("Failed to request the data inheriatnce service, error: " + e.getMessage());
         		}

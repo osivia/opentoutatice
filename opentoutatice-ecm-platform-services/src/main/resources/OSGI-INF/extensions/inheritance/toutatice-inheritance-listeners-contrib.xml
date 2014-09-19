@@ -6,17 +6,17 @@
 	<extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
 		point="listener">
 		
+		<!-- Events handled via a synchronous listener -->
 		<listener name="ToutaticeInheritanceSynchListener" 
 			priority="1000"
 			async="false"
 			postCommit="false"
 			class="fr.toutatice.ecm.platform.service.inheritance.ToutaticeInheritanceSynchListener" >
-			<event>documentMoved</event>
-			<event>documentModified</event>
-			<event>documentCreatedByCopy</event>
 			<event>emptyDocumentModelCreated</event>
+			<event>beforeDocumentModification</event>
 		</listener>
 		
+		<!-- Events handled via an asynchronous (post commit) listener -->
 		<listener name="ToutaticeInheritanceAsynchListener"
 			priority="1000"
 			async="true"

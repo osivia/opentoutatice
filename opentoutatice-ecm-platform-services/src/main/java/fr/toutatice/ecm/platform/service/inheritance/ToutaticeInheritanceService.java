@@ -4,7 +4,8 @@ import org.nuxeo.ecm.core.event.Event;
 
 public interface ToutaticeInheritanceService {
 
-	public void runSync(Event event);
-	public void runAsync(Event event);
+	public String CTXT_RECURSION_DEPTH_COUNT = "recursionDepthCount";
+
+	public void run(Event event, boolean isSynchronousEvent);
 	
 }

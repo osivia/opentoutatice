@@ -5,8 +5,6 @@ import org.nuxeo.ecm.core.event.EventContext;
 
 public interface ToutaticeInheritanceSetter {
 
-	String CTXT_RECURSIVE_ITERATION = "isRecursiveIteration";
-	
 	/**
 	 * Core setter processing to update the destination document according to the source document.
 	 * The classes that implement this interface have to implement this method to define their own
