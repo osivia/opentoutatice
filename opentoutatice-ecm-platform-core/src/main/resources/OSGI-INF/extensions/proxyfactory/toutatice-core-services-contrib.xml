@@ -10,7 +10,9 @@
 			serviceClass="org.nuxeo.ecm.core.event.EventService"
 			handlerClass="fr.toutatice.ecm.platform.core.components.ToutaticeEventFilterHandler" />
 			
-		<handler enabled="true"
+		<!-- Disabled since it leads to fail the hot reload process while the marketplace installation
+		(see support ticket: https://jira.nuxeo.com/browse/SUPNXP-11255 -->
+		<handler enabled="false"
 			serviceClass="org.nuxeo.ecm.automation.AutomationService"
 			handlerClass="fr.toutatice.ecm.platform.core.components.ToutaticeAutomationServiceHandler" />
 			
