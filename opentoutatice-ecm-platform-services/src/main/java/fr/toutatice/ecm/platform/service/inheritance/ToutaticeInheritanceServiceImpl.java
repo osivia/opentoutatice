@@ -25,6 +25,7 @@ import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.actions.Action;
 import org.nuxeo.ecm.platform.actions.ActionContext;
 import org.nuxeo.ecm.platform.actions.ejb.ActionManager;
+import org.nuxeo.ecm.platform.actions.seam.SeamActionContext;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.model.ComponentContext;
 import org.nuxeo.runtime.model.ComponentInstance;
@@ -124,7 +125,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 			boolean status = true;
 			
 			this.actionContext.setCurrentDocument(docModel);
-			this.actionContext.remove("PrecomputedFilters");
+			this.actionContext.putLocalVariable("PrecomputedFilters", null);
 			for (String filterId : this.filters) {
 				status = this.actionManager.checkFilter(filterId, this.actionContext);
 				if (false == status) {
@@ -161,7 +162,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 			boolean thisIncluded;
 			boolean immediateOnly;
 			int recursionDepthLevel;
-			boolean isRecursive;
+            boolean isRecursive;
 			DocumentModelList parents = null;
 			
 			if (document.isImmutable()) {
@@ -169,10 +170,10 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 			}
 			
 			try {
-				/**
-				 * Find applying actions
-				 */
-				ActionContext actionContext = new ActionContext();
+			    /**
+                 * Find applying actions
+                 */
+				ActionContext actionContext = new SeamActionContext();
 				actionContext.setCurrentDocument(document);
 				actionContext.setDocumentManager(this.session);
 				actionContext.setCurrentPrincipal((NuxeoPrincipal) this.session.getPrincipal()); 
