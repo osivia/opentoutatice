@@ -32,7 +32,11 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
+import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.webapp.contentbrowser.OrderableDocumentActions;
+import org.nuxeo.ecm.webapp.documentsLists.DocumentsListsManager;
+
+import com.sun.star.sdb.DocumentSaveRequest;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 
@@ -50,6 +54,17 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
 
     @In(create = true, required = false)
     protected transient ToutaticeDocumentActions documentActions;
+    
+    /* FIXME: correction temporaire; réfléchir au fait 
+     * que now, Section = doc avec Facet PublishSpace
+     * (tout du moins, dans cette méthode)
+     */
+    @Override
+    protected boolean isSectionType(DocumentModel doc) {
+        boolean is = super.isSectionType(doc);
+       return is && !documentActions.belongToPublishSpace();
+    }
+
 
 	@Override
 	protected boolean getCanMoveDown(DocumentModel container, String documentsListName) throws ClientException {
@@ -79,7 +94,7 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
 	@Override
 	protected boolean getCanMoveUp(DocumentModel container,	String documentsListName) throws ClientException {
 		boolean status = false;
-
+		
 		List<DocumentModel> docs = documentsListsManager.getWorkingList(documentsListName);
 		if (null != docs && docs.size() == 1) {
 			status = true;
