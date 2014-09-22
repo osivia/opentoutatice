@@ -32,11 +32,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
-import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.webapp.contentbrowser.OrderableDocumentActions;
-import org.nuxeo.ecm.webapp.documentsLists.DocumentsListsManager;
-
-import com.sun.star.sdb.DocumentSaveRequest;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 
@@ -58,6 +54,9 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
     /* FIXME: correction temporaire; réfléchir au fait 
      * que now, Section = doc avec Facet PublishSpace
      * (tout du moins, dans cette méthode)
+     * Ajouter CURRENT_DOCUMENT_SECTION_SELECTION
+     * à contentView de PortalPage, i.e.
+     * c'est une section?
      */
     @Override
     protected boolean isSectionType(DocumentModel doc) {
