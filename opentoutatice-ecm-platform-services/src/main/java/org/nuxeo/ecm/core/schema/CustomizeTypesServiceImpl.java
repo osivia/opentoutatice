@@ -22,6 +22,7 @@ package org.nuxeo.ecm.core.schema;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -157,7 +158,8 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements
 		SchemaManagerImpl schemaManagerImpl = ((SchemaManagerImpl) schemaManager);
 		List<DocumentTypeDescriptor> excludedDocTypesDesc = new ArrayList<DocumentTypeDescriptor>();
 		Map<String, DocumentTypeImpl> excludedDocTypes = new HashMap<String, DocumentTypeImpl>();
-
+		Map<String, Set<String>> excludedDocTypesExtending = new HashMap<String, Set<String>>();
+		
 		for (DocumentType type : types) {
 			String name = type.getName();
 			if (!TypeConstants.DOCUMENT.equals(name)) {
@@ -172,15 +174,12 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements
 							.getDocumentTypeDescriptor(name);
 					excludedDocTypesDesc.add(exDocTypeDesc);
 					excludedDocTypes.put(name, (DocumentTypeImpl) type);
+					excludedDocTypesExtending.put(name, schemaManagerImpl.getDocumentTypeNamesExtending(name));
 				}
 			}
 		}
 
-		/* To del excluded types from recomputing */
-		schemaManagerImpl.allDocumentTypes.removeAll(excludedDocTypesDesc);
-		schemaManagerImpl.recompute();
-		schemaManagerImpl.allDocumentTypes.addAll(excludedDocTypesDesc);
-		schemaManagerImpl.documentTypes.putAll(excludedDocTypes);
+		restoreDataModel(schemaManagerImpl, excludedDocTypesDesc, excludedDocTypes, excludedDocTypesExtending);
 		/*
 		 * To avoid recomputing in flushPendingRegistration() method of
 		 * SchemaManagerImpl
@@ -191,5 +190,29 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements
 				+ allExcludedTypes.toString());
 
 	}
+
+    private void restoreDataModel(SchemaManagerImpl schemaManagerImpl, List<DocumentTypeDescriptor> excludedDocTypesDesc,
+            Map<String, DocumentTypeImpl> excludedDocTypes, Map<String, Set<String>> excludedDocTypesExtending) {
+        /* To del excluded types from recomputing */
+		schemaManagerImpl.allDocumentTypes.removeAll(excludedDocTypesDesc);
+		schemaManagerImpl.recompute();
+		schemaManagerImpl.allDocumentTypes.addAll(excludedDocTypesDesc);
+		schemaManagerImpl.documentTypesExtending.putAll(excludedDocTypesExtending);
+		restoreFacetsByTypes(schemaManagerImpl, excludedDocTypes);
+		schemaManagerImpl.documentTypes.putAll(excludedDocTypes);
+    }
+
+    private void restoreFacetsByTypes(SchemaManagerImpl schemaManagerImpl, Map<String, DocumentTypeImpl> excludedDocTypes) {
+        for (DocumentType docType : excludedDocTypes.values()) {
+            for (String facet : docType.getFacets()) {
+                Set<String> set = schemaManagerImpl.documentTypesForFacet.get(facet);
+                if (set == null) {
+                    schemaManagerImpl.documentTypesForFacet.put(facet,
+                            set = new HashSet<String>());
+                }
+                set.add(docType.getName());
+            }
+        }
+    }
 
 }
