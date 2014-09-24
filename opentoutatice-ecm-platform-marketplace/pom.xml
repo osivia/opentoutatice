@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.nuxeo.ecm.distribution</groupId>
 		<artifactId>nuxeo-distribution</artifactId>
-		<version>5.8.0-HF19</version>
+		<version>5.8</version>
 	</parent>
  
 	<artifactId>opentoutatice-ecm-platform-marketplace</artifactId>
@@ -12,9 +12,7 @@
 	<packaging>zip</packaging>
 	<name>Marketplace package - Open Toutatice platform</name>
 
-	<properties>
-		<opentoutatice.version>2.0.0-SNAPSHOT</opentoutatice.version>
-	</properties>
+	<properties/>
 
 	<dependencies>
 		<!-- Base distribution(s) for the MP -->
@@ -28,25 +26,25 @@
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
-			<version>${opentoutatice.version}</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-automation</artifactId>
-			<version>${opentoutatice.version}</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-services</artifactId>
-			<version>${opentoutatice.version}</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-web</artifactId>
-			<version>${opentoutatice.version}</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
 	</dependencies>

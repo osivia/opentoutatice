@@ -5,12 +5,9 @@
 			(which one is based on the Nuxeo DM distribution)
 			
 		Main fixes provided:
-         * Refresh problem of a content view after profiled publishing
-		 * Fix operation to get vocabularies.
-		 * Fix technical silent mode that leads to back set approved documents into project lifecycle state 
          
-        Main evolutions:
-		 * Add an operation to refresh the principal (so that LDAP updates are taken into consideration synchronously) 
+                Main evolutions:
+		 * Upgrade to be compliant with the Nuxeo version 5.8 
 		</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
@@ -28,9 +25,8 @@
 	<dependencies>
 		<package>nuxeo-dm:@DISTRIB_VERSION@</package>
 		<!-- Dépendance sur le addon jbpm -->
-		<package>nuxeo-platform-jbpm:1.0</package>
+		<!--package>nuxeo-platform-jbpm:1.0</package-->
 		<!-- Dépendance sur les hotfixes -->
-		<package>nuxeo-5.6.0-HF29:1.0.0</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
