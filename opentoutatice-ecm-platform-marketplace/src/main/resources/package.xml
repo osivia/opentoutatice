@@ -23,7 +23,10 @@
 		<platform>cap-@DISTRIB_VERSION@</platform>
 	</platforms>
 	<dependencies>
+        <!-- Dépendances sur les addons Nuxeo -->
 		<package>nuxeo-dm:@DISTRIB_VERSION@</package>
+        <package>nuxeo-sites-blogs:1.0</package>
+        <package>nuxeo-agenda:1.0</package>
 		<!-- Dépendance sur le addon jbpm -->
 		<!--package>nuxeo-platform-jbpm:1.0</package-->
 		<!-- Dépendance sur les hotfixes -->
