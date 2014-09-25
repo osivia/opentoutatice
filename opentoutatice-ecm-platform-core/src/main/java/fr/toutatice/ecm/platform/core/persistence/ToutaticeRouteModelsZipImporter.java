@@ -27,7 +27,7 @@ public class ToutaticeRouteModelsZipImporter extends ExportedZipImporter {
 
 	private static final long serialVersionUID = -3660849547853979447L;
 	
-	private static final Log log = LogFactory.getLog(ToutaticeNuxeoArchiveReader.class);
+	private static final Log log = LogFactory.getLog(ToutaticeRouteModelsZipImporter.class);
 
     @Override
     public DocumentModel create(CoreSession session, Blob content, String path,
