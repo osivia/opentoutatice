@@ -5,7 +5,7 @@
 	<parent>
 	   <groupId>opentoutatice-ecm.platform</groupId>
 	   <artifactId>opentoutatice-ecm-platform-parent</artifactId>
-	   <version>1.0.3-SNAPSHOT</version>
+	   <version>1.0.3-RC1</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-automation</artifactId>
@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
-			<version>1.0.3-SNAPSHOT</version>
+			<version>1.0.3-RC1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
