@@ -12,7 +12,7 @@
 	<name>Partie core de la plate-forme toutatice</name>
 
 	<properties>
-		<nuxeo.version>5.6.0-HF26</nuxeo.version>
+		<nuxeo.version>5.6.0-HF33</nuxeo.version>
 		<nuxeo.test.version>5.6.0-HF17</nuxeo.test.version>
 	</properties>
 

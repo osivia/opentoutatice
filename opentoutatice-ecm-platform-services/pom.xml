@@ -13,7 +13,7 @@
 	<name>Partie service de la plate-forme opentoutatice</name>
 
 	<properties>
-		<nuxeo.version>5.6.0-HF26</nuxeo.version>
+		<nuxeo.version>5.6.0-HF33</nuxeo.version>
 		<common-lang-version>2.6</common-lang-version>
 	</properties>
 
