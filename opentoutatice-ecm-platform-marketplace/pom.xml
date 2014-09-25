@@ -13,7 +13,7 @@
 	<name>Marketplace package - Open Toutatice platform</name>
 
 	<properties>
-		<opentoutatice.ecm.platform>1.0.3-SNAPSHOT</opentoutatice.ecm.platform>
+		<opentoutatice.ecm.platform>1.0.3-RC1</opentoutatice.ecm.platform>
 	</properties>
 
 	<dependencies>
