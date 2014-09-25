@@ -51,13 +51,7 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
     @In(create = true, required = false)
     protected transient ToutaticeDocumentActions documentActions;
     
-    /* FIXME: correction temporaire; réfléchir au fait 
-     * que now, Section = doc avec Facet PublishSpace
-     * (tout du moins, dans cette méthode)
-     * Ajouter CURRENT_DOCUMENT_SECTION_SELECTION
-     * à contentView de PortalPage, i.e.
-     * c'est une section?
-     */
+    /* FIXME: test strength */
     @Override
     protected boolean isSectionType(DocumentModel doc) {
         boolean is = super.isSectionType(doc);
