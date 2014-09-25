@@ -39,6 +39,13 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
 
     @In(create = true, required = false)
     protected transient ToutaticeDocumentActions documentActions;
+    
+    /* FIXME: test strength */
+    @Override
+    protected boolean isSectionType(DocumentModel doc) {
+        boolean is = super.isSectionType(doc);
+       return is && !documentActions.belongToPublishSpace();
+    }
 
 	@Override
 	protected boolean getCanMoveDown(DocumentModel container, String documentsListName) throws ClientException {
