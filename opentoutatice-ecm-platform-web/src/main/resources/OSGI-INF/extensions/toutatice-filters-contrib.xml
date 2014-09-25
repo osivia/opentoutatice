@@ -80,7 +80,6 @@
 				<type>Domain</type>
 				<type>PortalSite</type>
 				<type>PortalPage</type>
-				<condition>!document.isImmutable()</condition>
 				<condition>#{typeManager.getAllowedSubTypes(document.getType(),
 					document).size() &gt; 0}</condition>
 			</rule>
