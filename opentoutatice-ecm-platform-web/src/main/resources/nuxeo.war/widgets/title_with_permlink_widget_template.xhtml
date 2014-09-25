@@ -93,7 +93,7 @@
 			<!-- Verrou -->
 			<h:outputText class="summary_superscript summary_lockedVersion"
 				value="#{messages['label.toutatice.version.locked.by']} #{nxu:userFullName(currentDocumentLockDetails['document.locker'])}"
-				title="#{messages['label.summary.the']} #{lockActions.getLockTime()}"
+				title="#{messages['label.summary.the']} #{lockActions.getLockDetails(correntDocument).get('document.lock.time')}"
 				rendered="#{!empty currentDocumentLockDetails['document.locker']}" />
 
 		</c:if>
