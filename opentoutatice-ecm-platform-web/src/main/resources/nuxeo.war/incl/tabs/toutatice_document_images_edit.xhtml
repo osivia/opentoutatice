@@ -162,7 +162,7 @@
 
 							<nxu:inputList id="images_input"
 								value="#{currentDocument.toutatice.images}" model="model">
-								<tr>
+								<tr style="#{nxu:test(empty currentDocument.toutatice.images[model.rowIndex].file, 'display:none', '')}">
 									<td><a4j:commandLink id="images_delete" immediate="true"
 											onclick="document.NXContextKeeper.removeFromKeeper(#{model.rowIndex});"
 											oncomplete="document.NXContextKeeper.onReturnAnswer();"
