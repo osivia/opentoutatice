@@ -14,6 +14,9 @@
  *
  * Contributors:
  *   mberhaut1
+ *   dchevrier
+ *   lbillon
+ *   sjahier 
  *    
  */
 package fr.toutatice.ecm.platform.core.helper;
