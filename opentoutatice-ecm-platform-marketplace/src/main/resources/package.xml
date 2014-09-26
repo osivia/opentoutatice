@@ -11,6 +11,7 @@
 		 * fixes #603: Add the possibility to instantiate the Unrestricted mode class ToutaticeSilentProcessRunnerHelper based on the repository name only (without any session)
 		 
 		</p>
+		<p>fix : #645</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
 	<vendor>Academie de Rennes - OSIVIA</vendor>
