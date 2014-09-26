@@ -40,7 +40,6 @@ import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.platform.ui.web.tag.fn.DocumentModelFunctions;
 import org.nuxeo.ecm.platform.ui.web.tag.fn.LiveEditConstants;
 import org.nuxeo.ecm.platform.ui.web.util.files.FileUtils;
@@ -65,7 +64,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
     protected transient DocumentsListsManager documentsListsManager;
     
     private static final String SEARCH_QUERY = "SELECT * FROM Document WHERE %s";
-    private static final String MEDIALIB = "MediaLibrary";
+    
 
     @In(create = true, required = false)
     private transient CoreSession documentManager;
@@ -119,34 +118,12 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 		return isImageUploadedAttr;
 	}
 
-    private DocumentModel mediaSpace;
-
-    private DocumentModel getMediaSpace() throws ClientException {
-
-    	DocumentModel currentDomain = ToutaticeDocumentHelper.getDomain(documentManager, navigationContext.getCurrentDocument(), true);
-        if(currentDomain!=null){
-		    String searchMediaLibraries = "ecm:primaryType = '" + MEDIALIB + "' and ecm:path startswith '" + currentDomain.getPathAsString()
-		            + "' and ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'";
-		
-		    String queryMediaLibraries = String.format(SEARCH_QUERY, searchMediaLibraries);
-		
-		    DocumentModelList query = documentManager.query(queryMediaLibraries);
-		    
-		    if (query.size() < 1 || query.size() > 1) {
-		        mediaSpace = null;
-		    } else
-		        mediaSpace = query.get(0);
-        }else{
-        	log.warn("CurrentDomain not available "+navigationContext.getCurrentDocument().getTitle());
-        }
-
-        return mediaSpace;
-    }
+    
 
     public String getMediaSpaceName() throws ClientException {
-
-        if (getMediaSpace() != null) {
-            return getMediaSpace().getTitle();
+		DocumentModel doc = navigationContext.getCurrentDocument();
+        if (ToutaticeDocumentHelper.getMediaSpace(doc,documentManager) != null) {
+            return ToutaticeDocumentHelper.getMediaSpace(doc,documentManager).getTitle();
         } else
             return null;
 
@@ -165,7 +142,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 
         // Si pas de médiathèque, l'option n'est pas disponible
         if (searchInSpace == 0) {
-            if (getMediaSpace() == null) {
+            if (ToutaticeDocumentHelper.getMediaSpace(navigationContext.getCurrentDocument(),documentManager) == null) {
                 searchInSpace = 1;
             }
         }
@@ -220,8 +197,8 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
         }
         
         // restrict to space if required
-        if (searchInSpace == SEARCH_IN_MEDIA && getMediaSpace() != null) {
-            constraints.add("ecm:path STARTSWITH '" + getMediaSpace().getPathAsString().replace("'", "\\'") + "'");
+        if (searchInSpace == SEARCH_IN_MEDIA && ToutaticeDocumentHelper.getMediaSpace(navigationContext.getCurrentDocument(),documentManager) != null) {
+            constraints.add("ecm:path STARTSWITH '" + ToutaticeDocumentHelper.getMediaSpace(navigationContext.getCurrentDocument(),documentManager).getPathAsString().replace("'", "\\'") + "'");
         } else if (searchInSpace == SEARCH_IN_SPACE) {
             constraints.add("ecm:path STARTSWITH '" + navigationContext.getCurrentSuperSpace().getPathAsString().replace("'", "\\'") + "'");
         }
