@@ -69,6 +69,7 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 public class ToutaticeDocumentHelper {
 
 	private static final Log log = LogFactory.getLog(ToutaticeDocumentHelper.class);
+	private static final String MEDIALIB = "MediaLibrary";
 	
 	private ToutaticeDocumentHelper() {
 		// static class, cannot be instantiated
@@ -925,5 +926,27 @@ public class ToutaticeDocumentHelper {
 
 		return new InvokableMethod(opType, method, anno);
 	}
+	
+    public static DocumentModel getMediaSpace(DocumentModel doc,CoreSession session) throws ClientException {
+    	DocumentModel mediaSpace=null;
+    	DocumentModel currentDomain = ToutaticeDocumentHelper.getDomain(session, doc, true);
+        if(currentDomain!=null){
+		    String searchMediaLibraries = "ecm:primaryType = '" + MEDIALIB + "' and ecm:path startswith '" + currentDomain.getPathAsString()
+		            + "' and ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'";
+		
+		    String queryMediaLibraries = String.format("SELECT * FROM Document WHERE %s", searchMediaLibraries);
+		
+		    DocumentModelList query = session.query(queryMediaLibraries);
+		    
+		    if (query.size() < 1 || query.size() > 1) {
+		        mediaSpace = null;
+		    } else
+		        mediaSpace = query.get(0);
+        }else{
+        	log.warn("CurrentDomain not available "+doc.getTitle());
+        }
+
+        return mediaSpace;
+    }
 
 }
