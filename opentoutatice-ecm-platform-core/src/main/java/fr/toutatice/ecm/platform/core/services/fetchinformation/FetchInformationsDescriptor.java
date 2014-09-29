@@ -8,7 +8,7 @@ import org.nuxeo.common.xmap.annotation.XObject;
 import org.nuxeo.runtime.api.Framework;
 
 @XObject("fetchInfos")
-public class FetchInformationDescriptor implements Serializable {
+public class FetchInformationsDescriptor implements Serializable {
 
     /**
 	 * 
