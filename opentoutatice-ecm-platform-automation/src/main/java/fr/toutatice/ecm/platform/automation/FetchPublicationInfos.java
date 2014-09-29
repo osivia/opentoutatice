@@ -65,7 +65,7 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
-import fr.toutatice.ecm.platform.core.services.drive.ToutaticeDriveService;
+import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationsService;
 
 @Operation(id = FetchPublicationInfos.ID, category = Constants.CAT_FETCH, label = "Fetch publish space informations",
         description = "Fetch informations about the publish space, worksapce, proxy status, ... of a given document.")
@@ -224,13 +224,13 @@ public class FetchPublicationInfos {
 
 
             /*
-             * Nuxeo Drive
+             * Extended informations
              */
-            ToutaticeDriveService drive = Framework.getService(ToutaticeDriveService.class);
-            Map<String, String> infosSynchro = drive.fetchSynchronizationInfos(coreSession, liveDoc);
-            infosPubli.accumulateAll(infosSynchro);
-
-            //log.warn("[drive] " + document.getPathAsString() + " (" + document.getId() + ") " + infosSynchro);
+            FetchInformationsService fetchInfosService = Framework.getService(FetchInformationsService.class);
+            if(fetchInfosService != null) {
+            	Map<String, String> infosSynchro = fetchInfosService.fetchAllInfos(coreSession, liveDoc);
+            	infosPubli.accumulateAll(infosSynchro);
+            }
 
         }
 

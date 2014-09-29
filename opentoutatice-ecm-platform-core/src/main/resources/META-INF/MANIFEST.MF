@@ -35,5 +35,5 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/proxyfactory/toutatice-core-services-contrib.xml,
  OSGI-INF/extensions/permalink/service-permalink.xml,
  OSGI-INF/extensions/filemanager/toutatice-filemanager-contrib.xml,
- OSGI-INF/extensions/drive/toutatice-core-services-contrib.xml
+ OSGI-INF/extensions/fetchinformation/toutatice-core-services-contrib.xml
  

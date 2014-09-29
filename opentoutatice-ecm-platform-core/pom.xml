@@ -100,18 +100,6 @@
 		</dependency>
         
         
-        <!-- Drive -->
-        <dependency>
-            <groupId>org.nuxeo.ecm</groupId>
-            <artifactId>nuxeo-drive-core</artifactId>
-            <version>${nuxeo.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.nuxeo.ecm</groupId>
-            <artifactId>nuxeo-drive-core</artifactId>
-            <version>${nuxeo.version}</version>
-        </dependency>        
-        
 		<!--  -->
 		<dependency>
 			<groupId>org.nuxeo.ecm.automation</groupId>
