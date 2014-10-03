@@ -10,7 +10,9 @@
 			<schema name="maintenance"/>
 			<schema name="dublincore"/>
 			<schema name="common"/>
-			<facet name="HiddenInFacetedSearch"/>
+			<!-- Deprecared since 5.7  
+			<facet name="HiddenInFacetedSearch"/> -->
+			<facet name="HiddenInNavigation"/>
 		</doctype>
 
 	</extension>
