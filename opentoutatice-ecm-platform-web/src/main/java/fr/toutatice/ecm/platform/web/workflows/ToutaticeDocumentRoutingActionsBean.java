@@ -85,11 +85,6 @@ public class ToutaticeDocumentRoutingActionsBean extends
 		Events.instance().raiseEvent(EventNames.DOCUMENT_CHILDREN_CHANGED,
 				onlineWf);
 		
-//		Task validateTask = getValidateTask();
-//		ToutaticeWorkflowHelper.notifyRecipients(documentManager, validateTask,
-//				currentDoc, null,
-//				ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED_ASSIGNED);
-		
 		/* UI Seam events */
 		FacesMessages.instance().addFromResourceBundle(
 				"toutatice.label.online.wf.started");

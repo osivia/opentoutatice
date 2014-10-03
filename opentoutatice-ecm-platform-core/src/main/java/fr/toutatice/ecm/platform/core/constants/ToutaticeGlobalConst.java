@@ -47,6 +47,8 @@ public class ToutaticeGlobalConst {
 	public final static String CST_WORKFLOW_BUTTON_ONLINE_ACCEPT = "workflow_online_accept";
 	public final static String CST_WORKFLOW_BUTTON_ONLINE_REJECT = "workflow_online_reject";
 	public final static String CST_WORKFLOW_TASK_ONLINE_CHOOSE_PARTICIPANT = "choose-participant";
+	public final static String CST_WORKFLOW_ONLINE_ACCEPT_TRANSITION = "workflow_online_accept";
+	public final static String CST_WORKFLOW_ONLINE_REJECT_TRANSITION = "workflow_online_reject";
 	
 	// Workflow tasks - ensembles  
 	public final static String[] CST_WORKFLOW_TASK_ONLINE_ALL = new String[] {

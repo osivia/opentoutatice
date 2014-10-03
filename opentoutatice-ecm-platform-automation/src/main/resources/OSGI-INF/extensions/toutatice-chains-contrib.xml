@@ -4,9 +4,12 @@
 
 	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
 		point="chains">
-
+		
+		<!-- Called only in workflow from Nuxeo (not from Portal) -->
 		<chain id="setOnLine">
-			<operation id="Context.FetchDocument" />
+			<operation id="Fetch.DocumentInList" >
+				<param type="integer" name="index">0</param>
+			</operation> 
 			<operation id="Document.SetOnLineOperation" />
 			<operation id="Seam.AddInfoMessage">
 				<param type="string" name="message">expr:Le document en version
@@ -55,7 +58,9 @@
 		</chain>
 
 		<chain id="SetAssignees">
-			<operation id="Seam.GetCurrentDocument" />  
+			<operation id="Fetch.DocumentInList" >
+				<param type="integer" name="index">0</param>
+			</operation> 
 			<operation id="Document.GetUsersAndGroups">
 				<param type="string" name="permission">validationWorkflow_validation
 				</param>
@@ -67,13 +72,7 @@
 			<operation id="Context.SetWorkflowVar">
 				<param type="string" name="name">assignedTo</param>
 				<param type="object" name="value">expr:Context["assignedTo"]</param>
-			</operation>
-			<!-- Used for replace system initiator (automatic transition from start 
-			     to validate-online) by workflow initiator -->
-			<!-- <operation id="Context.SetWorkflowNodeVar">
-				<param type="string" name="name">initiator</param>
-				<param type="object" name="value">expr:workflowInitiator</param>
-			</operation> -->
+			</operation> 
 		</chain>
 
 		<chain id="createOp">
@@ -130,21 +129,13 @@
 				<param type="string" name="task name">validate-online</param>
 				<param type="string" name="transition">workflow_online_accept</param>
 			</operation>
-			<operation id="Notification.SendTaskNotification">
-				<param type="string" name="task name">validate-online</param>
-				<param type="string" name="event">workflowOnlineTaskApproved</param>
-			</operation>
 		</chain>
-		
+
 		<chain id="portal_onlineWorkflow_rejected">
 			<operation id="Context.FetchDocument" />
 			<operation id="Workflow.OperateProcess">
 				<param type="string" name="task name">validate-online</param>
 				<param type="string" name="transition">workflow_online_reject</param>
-			</operation>
-			<operation id="Notification.SendTaskNotification">
-				<param type="string" name="task name">validate-online</param>
-				<param type="string" name="event">workflowOnlineTaskRejected</param>
 			</operation>
 			<operation id="Audit.Log">
 				<param type="string" name="event">Rejet de la demande de mise en ligne
@@ -152,7 +143,7 @@
 				<param type="string" name="category">Automation</param>
 			</operation>
 		</chain>
-		
+
 		<chain id="onlineWorkflow_start">
 			<operation id="Context.FetchDocument" />
 			<operation id="Context.StartWorkflow">

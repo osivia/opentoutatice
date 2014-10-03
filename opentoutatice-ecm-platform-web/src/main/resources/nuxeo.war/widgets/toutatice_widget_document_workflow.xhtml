@@ -6,7 +6,7 @@
 	<nxu:set var="pendingWorkflow"
 		value="#{routingActions.getPendingWorkflowName()}">
 
-		<c:if test="#{!documentActions.belongToPublishSpace()}">
+		<c:if test="#{!documentActions.belongToPublishSpace() and !routingActions.isCurrentRouteGraph()}">
 			<c:if test="#{not empty pendingWorkflow}">
 				<c:set var="pendingLabel"
 					value="label.toutatice.version.pending.#{pendingWorkflow}" />

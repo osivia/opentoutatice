@@ -39,10 +39,12 @@ import org.nuxeo.ecm.platform.routing.api.DocumentRoutingService;
 import org.nuxeo.ecm.platform.routing.api.exception.DocumentRouteException;
 import org.nuxeo.ecm.platform.routing.core.impl.GraphNode;
 import org.nuxeo.ecm.platform.task.Task;
+import org.nuxeo.ecm.platform.task.TaskImpl;
 import org.nuxeo.ecm.platform.task.TaskService;
 import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 import org.nuxeo.runtime.api.Framework;
 
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
 
 @Operation(id = OperateWFProcess.ID, category = Constants.CAT_SERVICES, label = "Operate an action on the process", since = "5.3.2", description = "Permit to operate an action (validate, reject) on the process bound to the document.")
@@ -72,6 +74,9 @@ public class OperateWFProcess {
 	public DocumentModel run(DocumentModel document) throws Exception {
 		
 		Task task = ToutaticeWorkflowHelper.getDocumentTaskByName(taskName, coreSession, document);
+		Task taskForNotif = new TaskImpl(task.getDocument());
+		
+		String initiator = ToutaticeWorkflowHelper.getOnLineWorkflowInitiator(document);
 		if(StringUtils.isNotBlank(comment)){
 		    Principal principal = coreSession.getPrincipal();
 		    task.addComment(principal.getName(), comment);
@@ -80,8 +85,22 @@ public class OperateWFProcess {
 		//FIXME: no matter if formVariable = new HashMap<String, Object>(0)?
 		routingService.endTask(coreSession, task, new HashMap<String, Object>(0), transition);
 		
+		ToutaticeWorkflowHelper.notifyRecipients(coreSession, taskForNotif,
+		        document, initiator,
+                getEvent(transition));
+		
 		return document;
 
 	}
+
+    protected String getEvent(String transition) {
+        String event = StringUtils.EMPTY;
+        if (ToutaticeGlobalConst.CST_WORKFLOW_ONLINE_ACCEPT_TRANSITION.equals(transition)) {
+            event = ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED;
+        } else {
+            event = ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_REJECTED;
+        }
+        return event;
+    }
 	
 }

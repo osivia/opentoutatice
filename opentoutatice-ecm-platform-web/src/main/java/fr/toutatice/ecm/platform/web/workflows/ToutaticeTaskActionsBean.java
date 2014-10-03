@@ -102,7 +102,7 @@ public class ToutaticeTaskActionsBean extends TaskActionsBean {
         return ToutaticeWorkflowHelper.getDocumentTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, documentManager, currentDocument);
     }
 
-    public boolean isValidateOnLinetask(Task task) throws ClientException {
+    public boolean isValidateOnLineTask(Task task) throws ClientException {
         if (task != null) {
             return ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE.equals(task.getName());
         }
