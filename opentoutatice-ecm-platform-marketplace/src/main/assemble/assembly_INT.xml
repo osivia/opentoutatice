@@ -134,11 +134,11 @@
 		<var name="install.properties" value="" />
 
 		<!-- Build the property that lists the templates to install -->
-		<var name="install.templates" value="" />
+		<!-- <var name="install.templates" value="" />
 		<if>
 			<available file="${outdir}/marketplace/install/templates" />
 			<then>
-				<!-- remove any former acrennes template -->
+				// remove any former acrennes template 
 				<loadfile property="profiles" srcfile="src/main/resources/profiles.txt" />
 				<for param="profile" list="${profiles}" delimiter="${line.separator}">
 					<sequential>
@@ -147,11 +147,11 @@
 					</sequential>
 				</for>
 
-				<!-- install the selected profile's template -->
+				// install the selected profile's template
 				<var name="install.templates" value="${line.separator}
 								&lt;copy dir=&quot;${package.root}/install/templates&quot; todir=&quot;${env.templates}&quot; overwrite=&quot;true&quot; /&gt;" />
 			</then>
-		</if>
+		</if> -->
 
 		<!-- Update the install.xml file from properties -->
 		<copy file="src/main/resources/install.xml" todir="${outdir}/marketplace" overwrite="true">
