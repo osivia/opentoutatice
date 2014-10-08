@@ -150,6 +150,11 @@
 				<param type="string" name="id">toutatice_online_approbation</param>
 			</operation>
 		</chain>
+		
+		<chain id="portal_setOnLine">
+			<operation id="Context.FetchDocument" />
+			<operation id="Document.SetOnLineOperation" />
+		</chain>
 
 	</extension>
 
