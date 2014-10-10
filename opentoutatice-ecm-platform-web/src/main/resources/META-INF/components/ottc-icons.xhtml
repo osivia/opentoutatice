@@ -14,7 +14,7 @@
 
 	<ul id="group-#{iconsGroup}" class="#{ulStyleClass}">
 
-		<nxu:dataList id="confs" value="#{src}" var="conf">
+		<c:forEach items="#{src}" var="conf">
 
 			<li class="ui-state-default 
 				#{ ((!empty conf.wconf.code) and (!empty value) and (value.contains(conf.wconf.code)) 
@@ -22,7 +22,7 @@
 				onclick="javascript:toggleIcon(this, '#{inputClientId}', '#{conf.wconf.code}', '#{iconsGroup}', #{multiSelect})">
 				
 				<c:choose>
-					<c:when test="#{not empty conf.wconf.picture}">
+					<c:when test="#{!empty conf.wconf.picture}">
 						<h:graphicImage value="#{nxd:fileUrl('downloadFile', conf, 'wconf:picture', conf.wconf.picture.filename)}" />		
 					</c:when>
 					<c:otherwise>
@@ -34,7 +34,7 @@
 			</li>
 
 
-		</nxu:dataList>
+		</c:forEach>
 
 	</ul>
 
