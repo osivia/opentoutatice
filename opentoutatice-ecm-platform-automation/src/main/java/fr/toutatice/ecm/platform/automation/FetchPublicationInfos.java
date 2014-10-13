@@ -55,7 +55,13 @@ import org.nuxeo.ecm.core.api.security.Access;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 import org.nuxeo.ecm.core.trash.TrashService;
+import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
+import org.nuxeo.ecm.platform.routing.api.DocumentRoutingService;
 import org.nuxeo.ecm.platform.task.Task;
+import org.nuxeo.ecm.platform.task.TaskQueryConstant;
+import org.nuxeo.ecm.platform.task.TaskService;
+import org.nuxeo.ecm.platform.task.core.helpers.TaskActorsHelper;
+import org.nuxeo.ecm.platform.task.core.service.DocumentTaskProvider;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.platform.types.TypeManager;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
@@ -143,7 +149,7 @@ public class FetchPublicationInfos {
 
         // Si on passe non pas un docRef en entrée mais un webId :
         if (webid != null) {
-            //log.warn("webid : " + webid);
+            // log.warn("webid : " + webid);
 
             String[] segments = webid.split("/");
             String domainIdSegment;
@@ -200,7 +206,7 @@ public class FetchPublicationInfos {
             infosPubli.element("editableByUser", isEditable);
             Object isDeletable = isDeletableByUser(infosPubli, liveDoc);
             infosPubli.element("isDeletableByUser", isDeletable);
-            Object canUserValidate = canUserValidate(infosPubli, liveDoc);
+            Object canUserValidate = canUserValidate(liveDoc);
             infosPubli.element("canUserValidate", canUserValidate);
             Object isOnLinePending = isValidateOnLineTaskPending(liveDoc);
             infosPubli.element("isOnLinePending", isOnLinePending);
@@ -227,9 +233,9 @@ public class FetchPublicationInfos {
              * Extended informations
              */
             FetchInformationsService fetchInfosService = Framework.getService(FetchInformationsService.class);
-            if(fetchInfosService != null) {
-            	Map<String, String> infosSynchro = fetchInfosService.fetchAllInfos(coreSession, liveDoc);
-            	infosPubli.accumulateAll(infosSynchro);
+            if (fetchInfosService != null) {
+                Map<String, String> infosSynchro = fetchInfosService.fetchAllInfos(coreSession, liveDoc);
+                infosPubli.accumulateAll(infosSynchro);
             }
 
         }
@@ -263,7 +269,8 @@ public class FetchPublicationInfos {
         boolean userNotAnonymous = !((NuxeoPrincipal) user).isAnonymous();
         infosPubli.put("isCommentableByUser", docCommentable && docMutable && userNotAnonymous);
 
-        UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession, document, liveDocRes, infosPubli, userManager, errorsCodes);
+        UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession, document, liveDocRes, infosPubli, userManager,
+                errorsCodes);
 
         infosPubliRunner.runUnrestricted();
         errorsCodes = infosPubliRunner.getErrorsCodes();
@@ -325,19 +332,48 @@ public class FetchPublicationInfos {
 
     /**
      * Get user validate rigth on document.
+     * 
+     * @throws ServeurException
+     * @throws ClientException
      */
-    private Object canUserValidate(JSONObject infos, DocumentModel liveDoc) throws ServeurException {
-        Boolean canValidate = null;
-        try {
-            canValidate = Boolean.valueOf(coreSession.hasPermission(liveDoc.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE));
-        } catch (ClientException e) {
-            if (e instanceof DocumentSecurityException) {
-                return Boolean.FALSE;
-            } else {
-                log.warn("Failed to fetch permissions for document '" + liveDoc.getPathAsString() + "', error:" + e.getMessage());
-                throw new ServeurException(e);
+    private Boolean canUserValidate(DocumentModel document) throws ServeurException, ClientException {
+        Boolean canValidate = Boolean.FALSE;
+        if (isValidateOnLineTaskPending(document)) {
+
+            List<Task> tasks = new ArrayList<Task>();
+            TaskService taskService = Framework.getLocalService(TaskService.class);
+
+            NuxeoPrincipal principal = (NuxeoPrincipal) coreSession.getPrincipal();
+            List<String> actors = new ArrayList<String>();
+            actors.addAll(TaskActorsHelper.getTaskActors(principal));
+
+            try {
+                tasks = taskService.getTaskInstances(document, actors, true, coreSession);
+                if (tasks != null && tasks.size() > 0) {
+                    int index = 0;
+                    while (index < tasks.size() && !canValidate) {
+                        Task task = tasks.get(index);
+                        if (task.isOpened() && ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE.equals(task.getName())) {
+                            canValidate = Boolean.TRUE;
+                        }
+                    }
+                }
+            } catch (ClientException e) {
+                // isAssignee stills false
+            }
+        } else {
+            try {
+                canValidate = Boolean.valueOf(coreSession.hasPermission(document.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE));
+            } catch (ClientException e) {
+                if (e instanceof DocumentSecurityException) {
+                    return Boolean.FALSE;
+                } else {
+                    log.warn("Failed to fetch permissions for document '" + document.getPathAsString() + "', error:" + e.getMessage());
+                    throw new ServeurException(e);
+                }
             }
         }
+
         return canValidate;
     }
 
@@ -389,8 +425,17 @@ public class FetchPublicationInfos {
     private boolean isValidateOnLineTaskPending(DocumentModel document) throws ClientException {
         boolean isPending = false;
         Task onLineTask = ToutaticeWorkflowHelper.getDocumentTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, coreSession, document);
-        if(onLineTask != null){
+        if (onLineTask != null) {
             isPending = onLineTask.isOpened();
+        } else {
+            // Principal can be initiator
+            DocumentRoutingService routing = Framework.getLocalService(DocumentRoutingService.class);
+            List<DocumentRoute> documentRoutes = routing.getDocumentRoutesForAttachedDocument(document.getCoreSession(), document.getId());
+            int index = 0;
+            while (index < documentRoutes.size() && !isPending) {
+                DocumentRoute documentRoute = documentRoutes.get(index);
+                isPending = ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE.equals(documentRoute.getName());
+            }
         }
         return isPending;
     }
@@ -557,8 +602,8 @@ public class FetchPublicationInfos {
             return errorsCodes;
         }
 
-        public UnrestrictedFecthPubliInfosRunner(CoreSession session, DocumentModel document, Object liveDocRes, JSONObject infosPubli, UserManager userManager,
-                List<Integer> errorsCodes) {
+        public UnrestrictedFecthPubliInfosRunner(CoreSession session, DocumentModel document, Object liveDocRes, JSONObject infosPubli,
+                UserManager userManager, List<Integer> errorsCodes) {
             super(session);
             this.document = document;
             this.liveDocRes = liveDocRes;
