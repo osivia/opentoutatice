@@ -20,7 +20,7 @@
 				</row>
 			</rows>
 		</layout>
-		
+
 		<layout name="domainIdLayoutRequired">
 			<templates>
 				<template mode="any">/layouts/layout_default_template.xhtml
@@ -149,8 +149,13 @@
 				<row>
 					<widget>toutatice_widget_contextualize_external_contents</widget>
 				</row>
+				<!-- toutatice_widget_portal_theme deprecated since 2.0.0: use Config 
+					object of "Page theme" type instead Keep for compatibility -->
 				<row>
 					<widget>toutatice_widget_portal_theme</widget>
+				</row>
+				<row>
+					<widget>osivia_page_theme_widget</widget>
 				</row>
 			</rows>
 		</layout>
@@ -171,8 +176,13 @@
 				<row>
 					<widget>toutatice_widget_show_in_menu</widget>
 				</row>
+				<!-- toutatice_widget_portal_theme deprecated since 2.0.0: use Config 
+					object of "Page theme" type instead Keep for compatibility -->
 				<row>
 					<widget>toutatice_widget_portal_theme</widget>
+				</row>
+				<row>
+					<widget>osivia_page_theme_widget</widget>
 				</row>
 			</rows>
 		</layout>
@@ -196,16 +206,16 @@
 			</templates>
 			<rows>
 				<row>
-                    <widget>toutatice_space_enable_webId_widget</widget>
+					<widget>toutatice_space_enable_webId_widget</widget>
 				</row>
-                <row>
-                    <widget>toutatice_removeWebId_widget</widget>
-                </row>
-                <row>
-                    <widget>toutatice_explicitUrl_widget</widget>
-                </row>
+				<row>
+					<widget>toutatice_removeWebId_widget</widget>
+				</row>
+				<row>
+					<widget>toutatice_explicitUrl_widget</widget>
+				</row>
 			</rows>
-            
+
 		</layout>
 
 	</extension>
