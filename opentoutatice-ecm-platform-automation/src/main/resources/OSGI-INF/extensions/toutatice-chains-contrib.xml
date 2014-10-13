@@ -6,7 +6,7 @@
 		point="chains">
 		
 		<!-- Called only in workflow from Nuxeo (not from Portal) -->
-		<chain id="setOnLine">
+		<chain id="setOnLineInWF">
 			<operation id="Fetch.DocumentInList" >
 				<param type="integer" name="index">0</param>
 			</operation> 
@@ -151,7 +151,7 @@
 			</operation>
 		</chain>
 		
-		<chain id="portal_setOnLine">
+		<chain id="setOnLine">
 			<operation id="Context.FetchDocument" />
 			<operation id="Document.SetOnLineOperation" />
 		</chain>
