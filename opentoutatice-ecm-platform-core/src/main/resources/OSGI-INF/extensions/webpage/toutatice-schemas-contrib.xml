@@ -16,6 +16,8 @@
 		<schema name="fragments" prefix="fgts" src="schemas/webpage/fragments.xsd" />
 		<schema name="html_fragments" prefix="htmlfgt"
 			src="schemas/webpage/html_fragments.xsd" />
+		<schema name="picture_fragments" prefix="pictfgt"
+			src="schemas/webpage/picture_fragments.xsd" />			
         <schema name="links" prefix="lk"
             src="schemas/webpage/links.xsd" />
         <schema name="links_fragments" prefix="lkfgt"

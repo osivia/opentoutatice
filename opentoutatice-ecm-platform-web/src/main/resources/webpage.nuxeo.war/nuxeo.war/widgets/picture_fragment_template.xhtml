@@ -1,0 +1,46 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxdir="http://nuxeo.org/nxdirectory"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout" id="#{widget.id}">
+	<c:set var="isEditMode" value="#{nxl:isBoundToEditMode(layout.mode)}" />
+
+	<div class="titre2">
+		<img src="theme/images/icone_web.gif" /><span>Contenu riche</span>
+	</div>
+
+	<c:choose>
+		<c:when test="${isEditMode}">
+
+		<nxu:dataList id="pict_fgts"
+					value="#{currentDocument.pictfgt.pictureFragment}" var="pict_fgt">
+
+	
+				<s:div rendered="#{pict_fgt.refURI eq fragmentBean.uri}">
+	
+	
+					<li><h:outputLabel value="Image* : "  />
+						<nxl:widgetType id="picturePath" name="text" mode="edit"
+							value="#{pict_fgt.picturePath}" /></li>
+
+					<li><h:outputLabel value="Lien : "  />
+						<nxl:widgetType id="targetPath" name="text" mode="edit"
+							value="#{pict_fgt.targetPath}" /></li>	
+				</s:div>
+				
+
+			</nxu:dataList>
+
+		</c:when>
+		<c:otherwise>
+
+    		
+    	</c:otherwise>
+	</c:choose>
+
+
+
+</f:subview>

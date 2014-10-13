@@ -64,4 +64,5 @@
   <xs:element name="extensionUrl" type="xs:string"/>
   <xs:element name="domainID" type="xs:string"/>
   <xs:element name="theme" type="xs:string"/>
+  <xs:element name="editorialTitle" type="xs:string"/>
 </xs:schema>

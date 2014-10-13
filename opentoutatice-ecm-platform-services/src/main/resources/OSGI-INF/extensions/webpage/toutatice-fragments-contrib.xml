@@ -14,6 +14,12 @@
             layout="html_fragment_layout" />
             
         <fragment
+            code="fgt.picture"
+            class="fr.toutatice.ecm.platform.service.fragments.types.PictureFragment"
+            title="osivia.fragment.picture.title"
+            layout="picture_fragment_layout" />            
+            
+        <fragment
             code="fgt.zoom"
             class="fr.toutatice.ecm.platform.service.fragments.types.ZoomFragment"
             title="osivia.fragment.zoom.title"

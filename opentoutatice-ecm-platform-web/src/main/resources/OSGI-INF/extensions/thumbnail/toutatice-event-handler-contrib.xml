@@ -4,6 +4,9 @@
 	<require>org.nuxeo.ecm.core.operation.OperationServiceComponent
 	</require>
 
+<!--
+	TODO : rendre paramétrable l'activation et les préférences de resizing par domaine
+ 
 	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
 		point="event-handlers">
 
@@ -16,5 +19,5 @@
 		</handler>
 
 	</extension>
-
+ -->
 </component>

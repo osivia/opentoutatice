@@ -1,7 +1,27 @@
 
-Version 2.0.0-RC1
+
+Version 2.1.0
 ================
-11/09/2014
+??/11/2014
+
+Dependencies
+------------
+nuxeo-5.8
+
+Content
+------------
+[Merged] ottc 1.2.? ---> TODO !
+[Evol] webpage : new fragments : picture, summary
+[Evol] webpage : a fragment can collapse
+[Evol] webpage : a portalpage or portalsite has now an editorial title, thumbnail are not resized yet
+[Evol] a widget to browse and select a picture or a document by its webId
+ 
+
+------------------------------------------------------------------
+
+Version 2.0.0
+================
+13/10/2014
 
 Dependencies
 ------------

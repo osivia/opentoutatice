@@ -491,6 +491,18 @@
 			</properties>
 		</widget>
 
+		<widget name="picture_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/picture_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
 		<widget name="zoom_fragment_widget" type="template">
 			<labels>
 				<label mode="any" />
@@ -558,6 +570,22 @@
 				<property name="required">true</property>
 			</properties>
 		</widget>
+		<widget name="osivia_widget_editorial_title" type="text">
+			<labels>
+				<label mode="any">osivia.document.editorialtitle</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.editorialtitle.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:editorialTitle</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">false</property>
+			</properties>
+		</widget>		
 		<widget name="osivia_widget_description" type="textarea">
 			<labels>
 				<label mode="any">osivia.document.description</label>
@@ -595,6 +623,19 @@
 				<field>ttcn:picture/filename</field>
 			</fields>
 		</widget>
+		<widget name="osivia_widget_thumbnail" type="file">
+			<labels>
+				<label mode="any">osivia.document.thumbnail</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.thumbnail.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:vignette</field>
+				<field>ttc:vignette/filename</field>
+			</fields>
+		</widget>
 		<!-- Added just for Help label... -->
 		<widget name="osivia_toutatice_removeWebId_widget" type="template">
 			<labels>
@@ -613,7 +654,8 @@
 				</property>
 			</properties>
 		</widget>
-
+		
+		
 		<widget name="osivia_page_template_widget" type="template">
 			<labels>
 				<label mode="any">osivia.document.pagetemplate</label>
