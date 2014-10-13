@@ -28,29 +28,25 @@
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
-			<!-- <version>${project.version}</version> -->
-			<version>2.0.0</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-automation</artifactId>
-			<!-- <version>${project.version}</version> -->
-			<version>2.0.0</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-services</artifactId>
-			<!-- <version>${project.version}</version> -->
-			<version>2.0.0</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-web</artifactId>
-			<!-- <version>${project.version}</version> -->
-			<version>2.0.0</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
 		<!-- Necessary for Portal -->
@@ -61,59 +57,6 @@
 			<type>jar</type>
 		</dependency>
 	</dependencies>
-	
-	
-	<build>
-		<plugins>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<encoding>UTF-8</encoding>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.2.1</version>
-				<configuration>
-					<tagBase>http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags</tagBase>
-					<releaseProfiles>unpack,pack</releaseProfiles>
-					<preparationGoals>clean install</preparationGoals>
-					<goals>deploy</goals>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<archive>
-						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-						<manifestEntries>
-							<Bundle-Version>${eclipseVersion}-t${buildNumber}</Bundle-Version>
-							<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-
-		</plugins>
-
-	</build>
-
-	<scm>
-		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/trunk/opentoutatice-ecm-platform-marketplace</developerConnection>
-	  <connection>scm:git:git://github.com/nuxeo/nuxeo-distribution.git/opentoutatice-ecm-platform-marketplace</connection>
-    <url>https://github.com/nuxeo/nuxeo-distribution/opentoutatice-ecm-platform-marketplace</url>
-  </scm>
-
-	
-	
-	
 	
 	<profiles>
 
