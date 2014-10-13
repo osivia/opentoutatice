@@ -120,6 +120,14 @@ public class ConfigurationBeanHelper {
     public DocumentModelList getPageTemplates() {
         return getConfigs("pagetemplate");
     }
+    
+    /**
+     * 
+     * @return a list of pages themes allowed in the cms mode
+     */
+    public DocumentModelList getPageThemes() {
+        return getConfigs("pagetheme");
+    }
 
     /**
      * 
@@ -144,7 +152,6 @@ public class ConfigurationBeanHelper {
     public DocumentModelList getListTemplates() {
         return getConfigs("listtemplate");
     }
-
     
     /**
      * 
