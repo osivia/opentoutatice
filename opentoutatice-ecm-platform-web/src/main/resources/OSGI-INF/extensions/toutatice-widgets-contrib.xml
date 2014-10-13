@@ -234,7 +234,9 @@
 				</widget>
 			</subWidgets>
 		</widget>
-
+		
+		<!-- Deprecated since 2.0.0: use Config object of "Page theme" type instead 
+		     Keep for compatibility -->
 		<widget name="toutatice_widget_portal_theme" type="template">
 			<labels>
 				<label mode="any">toutatice.toutatice.theme</label>
