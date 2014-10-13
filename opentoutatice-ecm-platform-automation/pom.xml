@@ -64,7 +64,8 @@
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
-			<version>${project.version}</version>
+			<!-- <version>${project.version}</version> -->
+			<version>2.0.0</version>
 		</dependency>
 		
 		<!-- FIXME: used? -->
