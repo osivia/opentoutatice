@@ -491,32 +491,32 @@
 			</properties>
 		</widget>
 
-        <widget name="zoom_fragment_widget" type="template">
-            <labels>
-                <label mode="any" />
-            </labels>
-            <translated>true</translated>
-            <properties mode="any">
-                <property name="template">/widgets/zoom_fragment_template.xhtml
-                </property>
-                <property name="currentDocument">value</property>
-            </properties>
-        </widget>
+		<widget name="zoom_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/zoom_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
 
 
-        <widget name="links_fragment_widget" type="template">
-            <labels>
-                <label mode="any" />
-            </labels>
-            <translated>true</translated>
-            <properties mode="any">
-                <property name="template">/widgets/links_fragment_template.xhtml
-                </property>
-                <property name="currentDocument">value</property>
-            </properties>
-        </widget>
-        
-        
+		<widget name="links_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/links_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+
 		<widget name="list_fragment_widget" type="template">
 			<labels>
 				<label mode="any" />
@@ -570,6 +570,18 @@
 				<field>dc:description</field>
 			</fields>
 		</widget>
+		<widget name="osivia_widget_content" type="htmltext">
+			<labels>
+				<label mode="any">osivia.document.content</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.content.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>webp:content</field>
+			</fields>
+		</widget>
 		<widget name="osivia_widget_picture" type="file">
 			<labels>
 				<label mode="any">osivia.document.picture</label>
@@ -583,6 +595,25 @@
 				<field>ttcn:picture/filename</field>
 			</fields>
 		</widget>
+		<!-- Added just for Help label... -->
+		<widget name="osivia_toutatice_removeWebId_widget" type="template">
+			<labels>
+				<label mode="any">osivia.webid.label</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webid.label.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:webid</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">
+					/widgets/toutatice_removewebid_widget.xhtml
+				</property>
+			</properties>
+		</widget>
+
 		<widget name="osivia_page_template_widget" type="template">
 			<labels>
 				<label mode="any">osivia.document.pagetemplate</label>
@@ -601,6 +632,25 @@
 			</properties>
 		</widget>
 		
+		<widget name="osivia_page_theme_widget" type="template">
+			<labels>
+				<label mode="any">osivia.document.pagetheme</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.pagetheme.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:theme</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">/widgets/osivia_page_theme_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+		
+
 
 	</extension>
 
