@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>2.0.0</version>
+		<version>2.1.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-automation</artifactId>
-	<version>2.0.0</version>
 	<name>Toutatice Automation</name>
 	<description>Partie automation de la plate-forme toutatice
 	</description>
@@ -61,8 +61,7 @@
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
-			<!-- <version>${project.version}</version> -->
-			<version>2.0.0</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- FIXME: used? -->
@@ -108,63 +107,6 @@
 
 	</dependencies>
 
-	<build>
-		<plugins>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<encoding>UTF-8</encoding>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.2.1</version>
-				<configuration>
-					<tagBase>http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags</tagBase>
-					<releaseProfiles>unpack,pack</releaseProfiles>
-					<preparationGoals>clean install</preparationGoals>
-					<goals>deploy</goals>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<archive>
-						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-						<manifestEntries>
-							<Bundle-Version>${eclipseVersion}-t${buildNumber}</Bundle-Version>
-							<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-
-		</plugins>
-
-	</build>
-
-	<scm>
-		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/2.0.0</developerConnection>
-	</scm>
-
-	<distributionManagement>
-		<repository>
-			<id>toutatice-releases</id>
-			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>toutatice-snapshots</id>
-			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<profiles>
 		<profile>
 			<id>deploy-toutatice-ecm-modules</id>
@@ -181,7 +123,8 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/2.0.0" />
+										<copy file="${basedir}/target/${project.build.finalName}.jar"
+											todir="${build.toutatice.ecm.modules.dir}/2.0.0" />
 									</tasks>
 								</configuration>
 								<phase>package</phase>
