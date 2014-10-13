@@ -47,6 +47,7 @@
       <xs:element name="style" type="xs:string"/>
       <xs:element name="title" type="xs:string"/>
       <xs:element name="uri" type="xs:string"/>
+      <xs:element name="collapsed" type="xs:boolean"/>
     </xs:sequence>
   </xs:complexType>
 </xs:schema>

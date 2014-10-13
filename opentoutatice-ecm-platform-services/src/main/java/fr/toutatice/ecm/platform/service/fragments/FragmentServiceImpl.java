@@ -85,7 +85,8 @@ public class FragmentServiceImpl extends DefaultComponent implements FragmentSer
 
     }
 
-    public Map.Entry<FragmentDescriptor, Fragment> findByCode(String code) throws FragmentServiceException {
+    @Override
+	public Map.Entry<FragmentDescriptor, Fragment> findByCode(String code) throws FragmentServiceException {
         for (Map.Entry<FragmentDescriptor, Fragment> entry : fragments.entrySet()) {
             if (entry.getKey().getCode().equals(code)) {
                 return entry;
@@ -100,7 +101,8 @@ public class FragmentServiceImpl extends DefaultComponent implements FragmentSer
      * @param uri id of the fragment
      * @return the fragmentCategory
      */
-    public Entry<FragmentDescriptor, Fragment> getFragmentCategory(DocumentModel doc, String uri) throws FragmentServiceException {
+    @Override
+	public Entry<FragmentDescriptor, Fragment> getFragmentCategory(DocumentModel doc, String uri) throws FragmentServiceException {
 
         String fgtCategory = null;
         Map<String, Object> properties;
@@ -148,7 +150,8 @@ public class FragmentServiceImpl extends DefaultComponent implements FragmentSer
      * @param code2
      * @return the new id (timestamp)
      */
-    public String prepareCreation(DocumentModel doc, Fragment specific, String fragmentCategory, String region, String belowUri, String code2)
+    @Override
+	public String prepareCreation(DocumentModel doc, Fragment specific, String fragmentCategory, String region, String belowUri, String code2)
             throws FragmentServiceException {
 
         String uri = null;
@@ -208,6 +211,7 @@ public class FragmentServiceImpl extends DefaultComponent implements FragmentSer
 
                 newEntry.put("title", "Nouveau fragment");
                 newEntry.put("hideTitle", Boolean.FALSE.toString());
+				newEntry.put("collapsed", Boolean.FALSE.toString());
                 newEntry.put("style", "");
 
                 listeFragments.add(newEntry);
