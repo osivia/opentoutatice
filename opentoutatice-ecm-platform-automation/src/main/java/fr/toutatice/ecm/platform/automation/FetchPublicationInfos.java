@@ -356,6 +356,7 @@ public class FetchPublicationInfos {
                         if (task.isOpened() && ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE.equals(task.getName())) {
                             canValidate = Boolean.TRUE;
                         }
+                        index++;
                     }
                 }
             } catch (ClientException e) {
