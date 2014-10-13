@@ -19,9 +19,6 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.Constants;
@@ -31,8 +28,11 @@ import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
 import org.nuxeo.ecm.platform.routing.core.api.DocumentRoutingEngineService;
-import org.nuxeo.ecm.platform.routing.core.api.operation.CancelWorkflowOperation;
+
+import fr.toutatice.ecm.platform.automation.exceptions.WorkflowManagmentException;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
 
 
 /**
@@ -62,16 +62,16 @@ public class StopWFProcess {
     @OperationMethod()
     public void run(DocumentModel document) throws Exception {
         
-        Map<String, Object> params = new HashMap<String, Object>(1);
-        params.put("id", inputWorkflowName);
-        automationService.run(context, CancelWorkflowOperation.ID, params);
+//        Map<String, Object> params = new HashMap<String, Object>(1);
+//        params.put("id", inputWorkflowName);
+//        automationService.run(context, CancelWorkflowOperation.ID, params);
 
-//        DocumentRoute inputWorkflowRoute = ToutaticeWorkflowHelper.getWorkflowByName(inputWorkflowName, document);
-//        if (inputWorkflowRoute != null) {
-//            engineRoutingService.cancel(inputWorkflowRoute, documentManager);
-//        } else {
-//            throw new WorkflowManagmentException("There is no " + inputWorkflowName + " workflow instance to cancel");
-//        }
+        DocumentRoute inputWorkflowRoute = ToutaticeWorkflowHelper.getWorkflowByName(inputWorkflowName, document);
+        if (inputWorkflowRoute != null) {
+            engineRoutingService.cancel(inputWorkflowRoute, documentManager);
+        } else {
+            throw new WorkflowManagmentException("There is no " + inputWorkflowName + " workflow instance to cancel");
+        }
 
     }
 
