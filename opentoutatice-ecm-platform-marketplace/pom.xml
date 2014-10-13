@@ -67,9 +67,9 @@
 				<profileName>DEV</profileName>
 			</properties>
 			
-			<activation>
+			<!-- <activation>
 				<activeByDefault>true</activeByDefault>
-			</activation>
+			</activation> -->
 
 			<repositories>
 				<repository>
@@ -259,9 +259,9 @@
 				<profileName>PROD</profileName>
 			</properties>
 
-			<!-- <activation>
+			<activation>
 				<activeByDefault>true</activeByDefault>
-			</activation> -->
+			</activation>
 
 			<repositories>
 				<repository>
