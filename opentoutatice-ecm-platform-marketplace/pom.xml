@@ -1,0 +1,373 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.nuxeo.ecm.distribution</groupId>
+		<artifactId>nuxeo-distribution</artifactId>
+		<version>5.8</version>
+	</parent>
+ 
+	<artifactId>opentoutatice-ecm-platform-marketplace</artifactId>
+	<version>2.0.0</version>
+	<packaging>zip</packaging>
+	<name>Marketplace package - Open Toutatice platform</name>
+
+	 <properties>
+        <nuxeo.version.hf>5.8.0-HF22</nuxeo.version.hf>
+    </properties>
+
+	<dependencies>
+		<!-- Base distribution(s) for the MP -->
+		<dependency>
+			<groupId>org.nuxeo.ecm.distribution</groupId>
+			<artifactId>nuxeo-distribution-dm</artifactId>
+			<type>pom</type>
+		</dependency>
+
+		<!-- Additional bundles to be deployed by the MP -->
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-platform-core</artifactId>
+			<!-- <version>${project.version}</version> -->
+			<version>2.0.0</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-platform-automation</artifactId>
+			<!-- <version>${project.version}</version> -->
+			<version>2.0.0</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-platform-services</artifactId>
+			<!-- <version>${project.version}</version> -->
+			<version>2.0.0</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-platform-web</artifactId>
+			<!-- <version>${project.version}</version> -->
+			<version>2.0.0</version>
+			<type>jar</type>
+		</dependency>
+		<!-- Necessary for Portal -->
+		<dependency>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-platform-login-portal-sso</artifactId>
+			<version>${nuxeo.version.hf}</version>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
+	
+	
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<tagBase>http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags</tagBase>
+					<releaseProfiles>unpack,pack</releaseProfiles>
+					<preparationGoals>clean install</preparationGoals>
+					<goals>deploy</goals>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<archive>
+						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+						<manifestEntries>
+							<Bundle-Version>${eclipseVersion}-t${buildNumber}</Bundle-Version>
+							<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+	</build>
+
+	<scm>
+		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/2.0.0</developerConnection>
+	</scm>
+
+	
+	
+	
+	
+	<profiles>
+
+		<profile>
+			<id>DEV</id>
+
+			<properties>
+				<profileName>DEV</profileName>
+			</properties>
+			
+			<!-- <activation>
+				<activeByDefault>true</activeByDefault>
+			</activation> -->
+
+			<repositories>
+				<repository>
+					<id>private-releases</id>
+					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>private-snapshots</id>
+					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>always</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.nuxeo.build</groupId>
+						<artifactId>nuxeo-distribution-tools</artifactId>
+						<version>1.15</version>
+						<configuration>
+							<buildFiles>
+								<buildFile>${basedir}/src/main/assemble/assembly_DEV.xml</buildFile>
+							</buildFiles>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>INT</id>
+
+			<properties>
+				<profileName>INT</profileName>
+			</properties>
+
+			<repositories>
+				<repository>
+					<id>private-releases</id>
+					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>private-snapshots</id>
+					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>always</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.nuxeo.build</groupId>
+						<artifactId>nuxeo-distribution-tools</artifactId>
+						<version>1.15</version>
+						<configuration>
+							<buildFiles>
+								<buildFile>${basedir}/src/main/assemble/assembly_INT.xml</buildFile>
+							</buildFiles>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>QUALIF</id>
+
+			<properties>
+				<profileName>QUALIF</profileName>
+			</properties>
+
+			<repositories>
+				<repository>
+					<id>private-releases</id>
+					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>private-snapshots</id>
+					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>always</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.nuxeo.build</groupId>
+						<artifactId>nuxeo-distribution-tools</artifactId>
+						<version>1.15</version>
+						<configuration>
+							<buildFiles>
+								<buildFile>${basedir}/src/main/assemble/assembly_QUALIF.xml</buildFile>
+							</buildFiles>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>PREPROD</id>
+
+			<properties>
+				<profileName>PREPROD</profileName>
+			</properties>
+
+			<repositories>
+				<repository>
+					<id>private-releases</id>
+					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>private-snapshots</id>
+					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>always</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.nuxeo.build</groupId>
+						<artifactId>nuxeo-distribution-tools</artifactId>
+						<version>1.15</version>
+						<configuration>
+							<buildFiles>
+								<buildFile>${basedir}/src/main/assemble/assembly_PREPROD.xml</buildFile>
+							</buildFiles>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>PROD</id>
+
+			<properties>
+				<profileName>PROD</profileName>
+			</properties>
+
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+
+			<repositories>
+				<repository>
+					<id>private-releases</id>
+					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>private-snapshots</id>
+					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>always</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.nuxeo.build</groupId>
+						<artifactId>nuxeo-distribution-tools</artifactId>
+						<version>1.15</version>
+						<configuration>
+							<buildFiles>
+								<buildFile>${basedir}/src/main/assemble/assembly_PROD.xml</buildFile>
+							</buildFiles>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
+
+	<distributionManagement>
+		<repository>
+			<id>toutatice-releases</id>
+			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>toutatice-snapshots</id>
+			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+</project>
