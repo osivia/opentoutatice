@@ -108,8 +108,7 @@
 				</row>
 			</rows>
 		</layout>
-
-
+		
 		<layout name="fragments_form@edit">
 			<templates>
 				<template mode="any">/layouts/layout_default_template.xhtml
@@ -287,7 +286,16 @@
 					<widget>osivia_widget_picture</widget>
 				</row>
 				<row>
+					<widget>osivia_widget_content</widget>
+				</row>
+				<row>
 					<widget>toutatice_widget_show_in_menu</widget>
+				</row>
+				<row>
+					<widget>osivia_toutatice_removeWebId_widget</widget>
+				</row>
+				<row>
+					<widget>osivia_page_theme_widget</widget>
 				</row>
 				<row>
 					<widget>osivia_page_template_widget</widget>
