@@ -48,7 +48,8 @@ public class ToutaticeTaskActionsBean extends TaskActionsBean {
 
     public boolean hasNuxeoPublishTaskPending() throws ClientException {
         boolean hasNuxeoPublicationTask = false;
-        /* getCurrentDocumentTasks() returns tasks for current user */
+        super.tasks = null;
+        /* getCurrentDocumentTasks() returns tasks for current user and user of its groups*/
         List<Task> currentDocumentTasks = getCurrentDocumentTasks();
         if (currentDocumentTasks != null && !currentDocumentTasks.isEmpty()) {
             int index = 0;
@@ -76,19 +77,30 @@ public class ToutaticeTaskActionsBean extends TaskActionsBean {
 
     protected boolean isTaskActionAuthorized(String taskName) throws ClientException {
         boolean isAuthorized = false;
-        List<Task> currentDocumentTasks = getCurrentDocumentTasks();
+        super.tasks = null;
+        List<Task> currentDocumentTasks = getCurrentDocumentTasks();// get tasks for current users and users of its groups
         if (currentDocumentTasks != null) {
             NuxeoPrincipal nxPrincipal = (NuxeoPrincipal) documentManager.getPrincipal();
-            for (Task task : currentDocumentTasks) {
-                if (task.isOpened() && taskName.equals(task.getName())) {
-                    List<String> actors = task.getActors();
-                    boolean nxpIsActor = false;
-                    if (actors != null && !actors.isEmpty()) {
-                        nxpIsActor = actors.contains(nxPrincipal.getName());
-                    }
-                    isAuthorized = nxPrincipal.isAdministrator() || nxpIsActor;
+            
+//            for (Task task : currentDocumentTasks) {
+//                if (task.isOpened() && taskName.equals(task.getName())) {
+//                    List<String> actors = task.getActors();
+//                    boolean nxpIsActor = false;
+//                    if (actors != null && !actors.isEmpty()) {
+//                        nxpIsActor = actors.contains(nxPrincipal.getName());
+//                    }
+//                    isAuthorized = nxPrincipal.isAdministrator() || nxpIsActor;
+//                }
+//            }
+            
+            int index = 0;
+            while (index < currentDocumentTasks.size() && !isAuthorized){
+                Task task = currentDocumentTasks.get(index);
+                if (task.isOpened() && ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE.equals(task.getName())) {
+                    isAuthorized = true;
                 }
             }
+            
         }
         return isAuthorized;
     }
