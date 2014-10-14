@@ -59,6 +59,17 @@
 							      var html = '&lt;img src="' + '#{editorImageActions.urlForImage}' + '"/&gt;';
 							      tinyMCE.execCommand('mceInsertContent', false, html);
 							    }
+							    
+							   	// fragment picture
+							   	if (window.opener.$picturePath) {
+									var picturePathField = window.opener.$picturePath;
+									 
+									var relativeUrl = "#{editorImageActions.urlForImage}".replace(/^(?:\/\/|[^\/]+)*\//, "/")
+									
+									picturePathField.val(relativeUrl);
+									window.opener.previewImg();
+							   	}							    
+							    							    
 							    self.close();
 							</script>
 						</f:subview>
@@ -130,6 +141,19 @@
 									    var html = '&lt;img src="' + button.value + '"/&gt;';
 									    tinyMCE.execCommand('mceInsertContent', false, html);
 									  }
+									  
+									  // fragment picture
+									  if (window.opener.$picturePath) {
+										  var picturePathField = window.opener.$picturePath;
+										  var button = getSelectedRadio(form.elements.selection);
+										  
+										  var relativeUrl = button.value.replace(/^(?:\/\/|[^\/]+)*\//, "/");
+										  
+										  picturePathField.val(relativeUrl);
+										  window.opener.previewImg();
+									  }
+									  
+									  
 									  self.close();
 									}
 							       
@@ -230,6 +254,20 @@
 						    var html = '&lt;img src="' + img.src + '"/&gt;';
 						    tinyMCE.execCommand('mceInsertContent', false, html);
 						  }
+						  
+						  // fragment picture
+						  if (window.opener.$picturePath) {
+							  var picturePathField = window.opener.$picturePath;
+							  var button = getSelectedRadio(form.elements.selection);
+							  var img = getImage(button);
+							  var relativeUrl = img.src.replace(/^(?:\/\/|[^\/]+)*\//, "/")
+							  
+							  picturePathField.val(relativeUrl);
+							  window.opener.previewImg();
+						  }
+						  
+						  
+						  
 						  self.close();
 						}
 						

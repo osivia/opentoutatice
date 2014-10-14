@@ -8,8 +8,32 @@
 	xmlns:nxl="http://nuxeo.org/nxforms/layout" id="#{widget.id}">
 	<c:set var="isEditMode" value="#{nxl:isBoundToEditMode(layout.mode)}" />
 
+	<script type="text/javascript">
+	<!--
+	
+	var $JQry = jQuery.noConflict();
+	var $picturePath = "texte";
+	var $targetPath = "texte";
+	$JQry(document).ready(function($) {
+		$picturePath = $(".picturePath");
+		
+		if($picturePath.val()) {
+			previewImg();
+		}
+		
+		$targetPath = $(".targetPath");
+	});
+	
+	function previewImg() {
+		$JQry("#imagePreview").html('<img src="' + $picturePath.val() + '"/>');
+	}
+	
+	-->
+	</script>
+
+
 	<div class="titre2">
-		<img src="theme/images/icone_web.gif" /><span>Contenu riche</span>
+		<img src="theme/images/icone_web.gif" /><span>Image</span>
 	</div>
 
 	<c:choose>
@@ -23,12 +47,27 @@
 	
 	
 					<li><h:outputLabel value="Image* : "  />
-						<nxl:widgetType id="picturePath" name="text" mode="edit"
-							value="#{pict_fgt.picturePath}" /></li>
+
+						<h:inputText id="picturePath" class="picturePath" size="30" value="#{pict_fgt.picturePath}" />
+						
+							<a href="#"
+								onclick="window.open('#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true', '_blank','toolbar=0,location=1,directories=0,status=1,menubar=0,scrollbars=1,resizable=1,width=640,height=480'); return false;"
+							
+							>Rechercher une image</a>
+							
+							</li>
+							<p id="imagePreview">
+							
+							</p>
 
 					<li><h:outputLabel value="Lien : "  />
-						<nxl:widgetType id="targetPath" name="text" mode="edit"
-							value="#{pict_fgt.targetPath}" /></li>	
+						
+						<h:inputText id="targetPath" class="targetPath" size="30" value="#{pict_fgt.targetPath}" />
+							<a href="#"
+								onclick="window.open('#{baseURL}editor_link_search_document.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true', '_blank','toolbar=0,location=1,directories=0,status=1,menubar=0,scrollbars=1,resizable=1,width=640,height=480'); return false;"
+									
+									>Rechercher un document</a>
+							</li>
 				</s:div>
 				
 

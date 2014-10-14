@@ -137,16 +137,32 @@
               if (window.opener.FCK) {
                 var FCK = window.opener.FCK;
                 FCK.InsertElement(docLink);
-              } else if (window.opener.tinyMCE) {
+              } 
+              
+              if (window.opener.tinyMCE) {
                 var tinyMCE = window.opener.tinyMCE;
 				var linkContent = docLink.childNodes[0].nodeValue;
-		        var selectionContent = tinyMCE.activeEditor.selection.getContent();
-				if(selectionContent != ""){
-		                  linkContent = selectionContent;
+				
+				if(tinyMCE.activeEditor) {
+			        var selectionContent = tinyMCE.activeEditor.selection.getContent();
+					if(selectionContent != ""){
+			                  linkContent = selectionContent;
+					}
 				}
+
 				var html = '&lt;a href="' + docLink.href + '"&gt;' + linkContent + '&lt;/a&gt;';
 				tinyMCE.execCommand('mceInsertContent', false, html);
               }
+              
+              // for fragment picture
+              if (window.opener.$targetPath) {
+                var targetPath = window.opener.$targetPath;
+
+  				var relativeUrl = docLink.href.replace(/^(?:\/\/|[^\/]+)*\//, "/")
+				
+				targetPath.val(relativeUrl);
+                }
+              
             }
             self.close();
           }
