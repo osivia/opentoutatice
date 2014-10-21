@@ -515,7 +515,6 @@
 			</properties>
 		</widget>
 
-
 		<widget name="links_fragment_widget" type="template">
 			<labels>
 				<label mode="any" />
@@ -570,7 +569,8 @@
 				<property name="required">true</property>
 			</properties>
 		</widget>
-		<widget name="osivia_widget_editorial_title" type="text">
+
+		<widget name="osivia_widget_editorial_title" type="htmltext">
 			<labels>
 				<label mode="any">osivia.document.editorialtitle</label>
 			</labels>
@@ -582,10 +582,29 @@
 				<field>ttc:editorialTitle</field>
 			</fields>
 			<properties widgetMode="edit">
-				<property name="styleClass">dataInputText</property>
-				<property name="required">false</property>
+				<property name="editorSelector">mceEditorMinimal</property>
+				<property name="rows">2</property>
 			</properties>
-		</widget>		
+		</widget>
+
+		<widget name="osivia_widget_abstract" type="htmltext">
+			<labels>
+				<label mode="any">osivia.document.abstract </label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.abstract.help
+				</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:abstract</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="editorSelector">mceEditorMinimal</property>
+				<property name="rows">3</property>
+			</properties>
+		</widget>
+
 		<widget name="osivia_widget_description" type="textarea">
 			<labels>
 				<label mode="any">osivia.document.description</label>
@@ -654,8 +673,8 @@
 				</property>
 			</properties>
 		</widget>
-		
-		
+
+
 		<widget name="osivia_page_template_widget" type="template">
 			<labels>
 				<label mode="any">osivia.document.pagetemplate</label>
@@ -673,7 +692,7 @@
 				<property name="currentDocument">value</property>
 			</properties>
 		</widget>
-		
+
 		<widget name="osivia_page_theme_widget" type="template">
 			<labels>
 				<label mode="any">osivia.document.pagetheme</label>
@@ -691,7 +710,7 @@
 				<property name="currentDocument">value</property>
 			</properties>
 		</widget>
-		
+
 
 
 	</extension>
