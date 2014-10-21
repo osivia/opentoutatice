@@ -297,9 +297,12 @@
 				</row>
 				<row>
 					<widget>osivia_widget_editorial_title</widget>
-				</row>				
+				</row>		
 				<row>
 					<widget>osivia_widget_description</widget>
+				</row>
+				<row>
+					<widget>osivia_widget_abstract</widget>
 				</row>
 				<row>
 					<widget>osivia_widget_thumbnail</widget>
