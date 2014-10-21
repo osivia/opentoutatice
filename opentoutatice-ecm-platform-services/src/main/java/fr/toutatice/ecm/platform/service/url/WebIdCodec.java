@@ -28,7 +28,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.common.utils.URIUtils;
-import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.platform.url.DocumentViewImpl;
 import org.nuxeo.ecm.platform.url.api.DocumentView;
 import org.nuxeo.ecm.platform.url.service.AbstractDocumentViewCodec;
@@ -159,8 +158,8 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
     public String getUrlFromDocumentView(DocumentView docView) {
 
         ToutaticeDocumentLocation docLoc = (ToutaticeDocumentLocation) docView.getDocumentLocation();
-        WedIdRef webIdRef = (WedIdRef) docLoc.getWebIdRef();
-        String extensionUrl = (String) webIdRef.getExtensionUrl();
+        WedIdRef webIdRef = docLoc.getWebIdRef();
+        String extensionUrl = webIdRef.getExtensionUrl();
         String webId = (String) webIdRef.reference();
         String explicitUrl = webIdRef.getExplicitUrl();
         String domainId = webIdRef.getDomainId();
@@ -173,10 +172,13 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
                 items.add(explicitUrl);
             }
             items.add(webId);
+
+			String uri = StringUtils.join(items, "/");
+
             if (StringUtils.isNotBlank(extensionUrl)) {
-                items.add(extensionUrl);
+				uri = uri.concat(".").concat(extensionUrl);
             }
-            String uri = StringUtils.join(items, "/");
+
             String ret = URIUtils.addParametersToURIQuery(uri, docView.getParameters());
             return ret;
         }
