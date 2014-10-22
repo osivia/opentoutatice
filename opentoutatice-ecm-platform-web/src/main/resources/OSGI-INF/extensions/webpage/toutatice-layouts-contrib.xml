@@ -143,7 +143,7 @@
 				</row>
 			</rows>
 		</layout>
-
+		
 		<layout name="list_fragments_form@edit">
 			<templates>
 				<template mode="any">/layouts/layout_default_template.xhtml
@@ -236,6 +236,21 @@
             </rows>
         </layout>
 
+		<!-- fragment sommaire -->
+		<layout name="summary_fragment_layout">
+			<templates>
+				<template mode="any">/layouts/simple_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<properties mode="any">
+						<property name="nxl_colspan_0">1</property>
+					</properties>
+					<widget>summary_fragment_widget</widget>
+				</row>
+			</rows>
+		</layout>
 
 		<!-- fragment Liste -->
 		<layout name="list_fragment_layout">
