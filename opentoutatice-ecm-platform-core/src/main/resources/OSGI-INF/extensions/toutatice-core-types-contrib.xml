@@ -41,6 +41,7 @@
             <schema name="links" />
             <schema name="links_fragments" />
             <schema name="list_fragments" />
+            <schema name="summary_fragments" />
             <schema name="portlet_fragments" />
             <schema name="portlet_properties" />
 			<facet name="Space" />
@@ -74,6 +75,7 @@
             <schema name="links" />
             <schema name="links_fragments" />
             <schema name="list_fragments" />
+            <schema name="summary_fragments" />
             <schema name="portlet_fragments" />
             <schema name="portlet_properties" />
 			<facet name="Folderish" />
