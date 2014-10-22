@@ -32,6 +32,8 @@
 			src="schemas/webpage/portlet_properties.xsd" />
         <schema name="zoom_fragments" prefix="zfgt"
             src="schemas/webpage/zoom_fragments.xsd" />
+         <schema name="summary_fragments" prefix="smyfgt"
+            src="schemas/webpage/summary_fragments.xsd" />
          
 	</extension>
 
