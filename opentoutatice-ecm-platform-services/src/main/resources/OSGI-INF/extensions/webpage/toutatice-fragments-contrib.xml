@@ -35,7 +35,13 @@
             code="fgt.links"
             class="fr.toutatice.ecm.platform.service.fragments.types.LinksFragment"
             title="osivia.fragment.links.title"
-            layout="links_fragment_layout" />                          
+            layout="links_fragment_layout" />        
+            
+        <fragment
+            code="fgt.summary"
+            class="fr.toutatice.ecm.platform.service.fragments.types.SummaryFragment"
+            title="osivia.fragment.summary.title"
+            layout="summary_fragment_layout" />                      
 
         <fragment
             code="fgt.portlet"
