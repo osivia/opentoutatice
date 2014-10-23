@@ -360,7 +360,7 @@
 			</properties>
 		</action>
 
-		<!-- Barre de titre: affichache du titre d'un document -->
+		<!-- Barre de titre: affichage du titre d'un document -->
 		<action id="toutatice_title"
 			enabled="true" 
 			order="0" 
@@ -372,7 +372,7 @@
 			</properties>
 		</action>
 
-		<!-- Barre de titre: affichache de la version d'un document -->
+		<!-- Barre de titre: affichage de la version d'un document -->
 		<action id="toutatice_superscript_version"
 			enabled="true" 
 			order="1" 
@@ -389,7 +389,7 @@
 			</properties>
 		</action>
 
-		<!-- Barre de titre: affichache des vignettes de workflow en cours -->
+		<!-- Barre de titre: affichage des vignettes de workflow en cours -->
 		<action id="toutatice_superscript_workflow"
 			enabled="true" 
 			order="2" 
@@ -401,7 +401,7 @@
 			</properties>
 		</action>
 
-		<!-- Barre de titre: affichache de la vignette de présence d'un verrou -->
+		<!-- Barre de titre: affichage de la vignette de présence d'un verrou -->
 		<action id="toutatice_superscript_lock"
 			enabled="true" 
 			order="3" 
