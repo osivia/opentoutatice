@@ -18,8 +18,11 @@
  */
 package fr.toutatice.ecm.platform.core.helper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.AutomationService;
@@ -27,6 +30,7 @@ import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.utils.exception.ToutaticeException;
@@ -52,8 +56,16 @@ public class ToutaticeOperationHelper {
         	AutomationService automationService = getAutomationService();
             automationService.run(context, chainId);
         } catch (Exception e) {
-        	DocumentModel document = (DocumentModel) context.getInput();
-        	log.error("Failed to run the operation '" + chainId + "' on document '" + document.getName() + "', error: " + e.getMessage());
+        	List<String> documentsList = new ArrayList<String>();
+        	Object input = context.getInput();
+        	if (input instanceof DocumentModel) {
+        		documentsList.add(((DocumentModel) input).getName());
+        	} else if (input instanceof DocumentModelList) {
+        		for (DocumentModel document : (DocumentModelList) input) {
+            		documentsList.add(document.getName());
+        		}
+        	}
+    		log.error("Failed to run the operation chain '" + chainId + "' on document '" + StringUtils.join(documentsList, ",") + "', error: " + e.getMessage());
         	throw new ToutaticeException(e);
         }
     }
@@ -73,16 +85,24 @@ public class ToutaticeOperationHelper {
 	 *         priori
 	 * @throws ServeurException
 	 */
-	public static Object callOperation(OperationContext ctx, String operationId,Map<String, Object> parameters) throws ToutaticeException {
+	public static Object callOperation(OperationContext context, String operationId, Map<String, Object> parameters) throws ToutaticeException {
 		
 		Object operationRes = null;
 		try {
 			AutomationService automationService = getAutomationService();
-			operationRes = automationService.run(ctx, operationId, parameters);
+			operationRes = automationService.run(context, operationId, parameters);
 		
 		} catch (Exception e) {
-			DocumentModel document = (DocumentModel) ctx.getInput();
-        	log.error("Failed to run the operation '" + operationId + "' on document '" + document.getName() + "', error: " + e.getMessage());
+        	List<String> documentsList = new ArrayList<String>();
+        	Object input = context.getInput();
+        	if (input instanceof DocumentModel) {
+        		documentsList.add(((DocumentModel) input).getName());
+        	} else if (input instanceof DocumentModelList) {
+        		for (DocumentModel document : (DocumentModelList) input) {
+            		documentsList.add(document.getName());
+        		}
+        	}
+    		log.error("Failed to run the operation '" + operationId + "' on document '" + StringUtils.join(documentsList, ",") + "', error: " + e.getMessage());
         	throw new ToutaticeException(e);
 		}
 		
