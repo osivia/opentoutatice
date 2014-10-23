@@ -47,6 +47,16 @@
 		</navigation-case>
 		
 		<navigation-case>
+			<from-outcome>osivia_create_fragment</from-outcome>
+			<to-view-id>/osivia_create_fragment.xhtml</to-view-id>
+		</navigation-case>
+		
+		<navigation-case>
+			<from-outcome>osivia_edit_fragment</from-outcome>
+			<to-view-id>/osivia_edit_fragment.xhtml</to-view-id>
+		</navigation-case>
+		
+		<navigation-case>
 			<from-outcome>osivia_edit_document</from-outcome>
 			<to-view-id>/osivia_edit_document.xhtml</to-view-id>
 		</navigation-case>
