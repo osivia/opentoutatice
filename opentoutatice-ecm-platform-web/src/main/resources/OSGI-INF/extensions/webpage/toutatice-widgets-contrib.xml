@@ -593,7 +593,7 @@
 				<field>ttc:editorialTitle</field>
 			</fields>
 			<properties widgetMode="edit">
-				<property name="editorSelector">mceEditorMinimal</property>
+				<property name="editorSelector">mceEditorMinimalInLine</property>
 				<property name="rows">2</property>
 			</properties>
 		</widget>

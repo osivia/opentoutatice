@@ -25,9 +25,35 @@ var lang = 'fr';
 			editor_selector : "mceEditorMinimal",
 			mode : "specific_textareas",
 			theme : "advanced",
-			plugins : "autoresize",
+			plugins : "",
 			language : lang,
 			theme_advanced_resizing : true,
+
+			valid_elements : "p,br,strong/b,em,span[style<text-decoration: underline;]",
+	
+			// Img insertion fixes
+			relative_urls : false,
+			remove_script_host : false,
+			skin : "o2k7",
+			skin_variant : "silver",
+			theme_advanced_buttons1 : "bold,italic,underline",
+			theme_advanced_buttons2 : "",
+			theme_advanced_buttons3 : "",
+			
+		});
+		
+		tinyMCE.init({
+			editor_selector : "mceEditorMinimalInLine",
+			mode : "specific_textareas",
+			theme : "advanced",
+			plugins : "",
+			language : lang,
+			theme_advanced_resizing : true,
+			//Disable <p> and <br> tag generation
+      		force_p_newlines : false,
+      		forced_root_block : false,
+			invalid_elements : "br",
+			valid_elements : "strong/b,em,span[style<text-decoration: underline;]",
 	
 			// Img insertion fixes
 			relative_urls : false,
