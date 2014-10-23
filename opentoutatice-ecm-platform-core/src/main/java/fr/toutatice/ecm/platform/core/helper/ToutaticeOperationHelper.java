@@ -64,7 +64,7 @@ public class ToutaticeOperationHelper {
             		documentsList.add(document.getName());
         		}
         	}
-    		log.error("Failed to run the operation '" + chainId + "' on document '" + StringUtils.join(documentsList, ",") + "', error: " + e.getMessage());
+    		log.error("Failed to run the operation chain '" + chainId + "' on document '" + StringUtils.join(documentsList, ",") + "', error: " + e.getMessage());
         	throw new ToutaticeException(e);
         }
     }
