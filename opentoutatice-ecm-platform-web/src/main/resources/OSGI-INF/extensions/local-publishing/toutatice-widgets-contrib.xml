@@ -85,7 +85,7 @@
 			</properties>
 		</widget>
 		
-		<!-- Barre de titre: affichache des vignettes de workflow en cours -->
+		<!-- Barre de titre: affichage des vignettes de workflow en cours -->
 		<widget name="toutatice_extended_title_workflow_widget" type="template">
 			<handlingLabels>true</handlingLabels>
 			<labels>
@@ -97,7 +97,7 @@
 			</properties>
 		</widget>
 
-		<!-- Barre de titre: affichache des vignettes de workflow en cours -->
+		<!-- Barre de titre: affichage des vignettes de workflow en cours -->
 		<widget name="toutatice_extended_title_lock_widget" type="template">
 			<handlingLabels>true</handlingLabels>
 			<labels>
