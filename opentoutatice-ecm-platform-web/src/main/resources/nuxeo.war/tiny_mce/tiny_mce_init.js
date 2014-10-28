@@ -16,8 +16,7 @@ var lang = 'fr';
 		theme_advanced_disable : "styleselect",
 		theme_advanced_buttons3 : "hr,removeformat,visualaid,|,sub,sup,|,charmap,|",
 		theme_advanced_buttons3_add : "fullscreen,nuxeoimageupload,nuxeolink",
-		// extended_valid_elements :
-		// "iframe[src|frameborder|style|scrolling|class|width|height|name|align]",
+		extended_valid_elements : "iframe[src|frameborder|style|scrolling|class|width|height|name|align]",
 		});
 
 
@@ -28,8 +27,13 @@ var lang = 'fr';
 			plugins : "",
 			language : lang,
 			theme_advanced_resizing : true,
+			
+			inline_styles: false,
+			formats : {
+				underline : {inline : 'u', exact : false}
+			},
 
-			valid_elements : "p,br,strong/b,em,span[style<text-decoration: underline;]",
+			valid_elements : "p,br,strong/b,em,u,span[style<text-decoration: underline;]",
 	
 			// Img insertion fixes
 			relative_urls : false,
@@ -49,11 +53,17 @@ var lang = 'fr';
 			plugins : "",
 			language : lang,
 			theme_advanced_resizing : true,
+
+			inline_styles: false,
+			formats : {
+				underline : {inline : 'u', exact : false}
+			},
+
 			//Disable <p> and <br> tag generation
       		force_p_newlines : false,
       		forced_root_block : false,
 			invalid_elements : "br",
-			valid_elements : "strong/b,em,span[style<text-decoration: underline;]",
+			valid_elements : "strong/b,em,u,span[style<text-decoration: underline;]",
 	
 			// Img insertion fixes
 			relative_urls : false,
@@ -66,7 +76,8 @@ var lang = 'fr';
 			
 		});
 		
-		tinyMCE.init({mode : "specific_textareas",
+		tinyMCE.init({
+			mode : "specific_textareas",
 		    language : "fr",
 		    theme : "advanced",
 		    editor_selector : "mceExtrait",
