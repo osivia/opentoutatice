@@ -24,6 +24,8 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.webapp.documenttemplates.DocumentTemplatesActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
@@ -43,5 +45,21 @@ public class ToutaticeDocumentTemplatesActionsBean extends DocumentTemplatesActi
 		super.createDocumentFromTemplate();
 		return viewId;
 	}
+	
+	/**
+	 * To avoid local proxies from templates list.
+	 */
+	@Override
+    public DocumentModelList getTemplates(String targetTypeName)
+            throws ClientException {
+        DocumentModelList templates = super.getTemplates(targetTypeName);
+        DocumentModel[] templatesArray = templates.toArray(new DocumentModel[0]);
+        for(DocumentModel template : templatesArray){
+            if(template.isProxy()){
+                templates.remove(template);
+            }
+        }
+        return templates;
+    }
 
 }
