@@ -34,6 +34,7 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
+import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.model.Property;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.core.event.EventService;
@@ -64,14 +65,15 @@ public class SetWebID {
 
     private static final String WEB_ID_UNICITY_QUERY = "select * from Document Where ttc:domainID = '%s'"
             + " AND ttc:webid = '%s' AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
-    
+
     private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
-    	private static final long serialVersionUID = 1L;
-    	
-    	{
-    		add(EventService.class);
-    		add(VersioningService.class);
-    	}
+
+        private static final long serialVersionUID = 1L;
+
+        {
+            add(EventService.class);
+            add(VersioningService.class);
+        }
     };
 
     @Context
@@ -93,7 +95,7 @@ public class SetWebID {
     @OperationMethod()
     public DocumentModel run(DocumentModel document) throws Exception {
         UnrestrictedSilentSetWebIdRunner runner = new UnrestrictedSilentSetWebIdRunner(coreSession, document);
-		runner.silentRun(true, FILTERED_SERVICES_LIST);
+        runner.silentRun(true, FILTERED_SERVICES_LIST);
         return runner.getDocument();
     }
 
@@ -128,16 +130,17 @@ public class SetWebID {
     }
 
     private class UnrestrictedSilentSetWebIdRunner extends ToutaticeSilentProcessRunnerHelper {
-        
+
         private DocumentModel document;
+        private DocumentModel parentDoc;
 
         protected UnrestrictedSilentSetWebIdRunner(CoreSession session, DocumentModel document) {
             super(session);
             this.document = document;
         }
-        
-        public DocumentModel getDocument(){
-            return this.document;
+
+        public DocumentModel getDocument() {
+            return this.parentDoc != null ? this.parentDoc : this.document;
         }
 
         @Override
@@ -215,7 +218,8 @@ public class SetWebID {
                     String webidconcat = webid;
                     do {
 
-                        DocumentModelList query = coreSession.query(String.format(WEB_ID_UNICITY_QUERY, domainID.toString(), webidconcat, this.document.getId()));
+                        DocumentModelList query = coreSession
+                                .query(String.format(WEB_ID_UNICITY_QUERY, domainID.toString(), webidconcat, this.document.getId()));
 
                         if (query.size() > 0) {
                             unicity = false;
@@ -243,6 +247,17 @@ public class SetWebID {
                         }
                         this.session.saveDocument(this.document);
                     }
+                }
+            }
+
+            DocumentRef parentRef = this.document.getRef();
+            if (this.session.hasChildren(parentRef)) {
+                if (this.parentDoc == null) {
+                    this.parentDoc = this.document;
+                }
+                for (DocumentModel child : this.session.getChildren(parentRef)) {
+                    this.document = child;
+                    run();
                 }
             }
 
