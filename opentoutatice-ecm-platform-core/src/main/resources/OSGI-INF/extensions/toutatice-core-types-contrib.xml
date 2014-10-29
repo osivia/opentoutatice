@@ -91,6 +91,10 @@
 			</prefetch>
 		</doctype>
 		
+		<doctype name="Domain" append="true">
+			<schema name="toutatice_domain" />
+		</doctype>
+		
 	</extension>
 	
 	<extension target="org.nuxeo.ecm.platform.types.TypeService"
