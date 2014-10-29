@@ -15,7 +15,7 @@ Content
 [Evol] webpage : a fragment can collapse
 [Evol] webpage : a portalpage or portalsite has now an editorial title, thumbnail are not resized yet
 [Evol] a widget to browse and select a picture or a document by its webId
- 
+[Evol] Admin can define a default portail inside a domain
 
 ------------------------------------------------------------------
 

@@ -219,8 +219,8 @@ public class ToutaticeValidatorBean {
 
         // check if document belong to a space whose supports webid
         boolean spaceSupportsWebId = true;
-        DocumentModelList spaces = ToutaticeDocumentHelper.getParentSpaceList(documentManager, doc, false, true, true);
-        if (spaces.size() > 0) {
+		DocumentModelList spaces = ToutaticeDocumentHelper.getParentSpaceList(documentManager, doc, true, true, true);
+		if (spaces != null && spaces.size() > 0) {
 
             DocumentModel space = spaces.get(0);
             Property hasWebIdEnabled = space.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICESPACE_WEBID_ENABLED);

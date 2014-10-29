@@ -181,7 +181,18 @@
 			</widgetModes>
 		</widget>
 
-
+		<!-- Barre de titre: affichache du portail par défaut -->
+		<widget name="toutatice_widget_document_default_portal" type="template">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<fields />
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_widget_document_default_portal.xhtml
+				</property>
+			</properties>
+		</widget>
 	</extension>
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
@@ -276,6 +287,8 @@
 				/widgets/task/toutatice_custom_validate_task_actions_widget_template.xhtml
 			</property>
 		</widgetType>
+
+
 
 	</extension>
 

@@ -314,6 +314,34 @@
 				<property name="displayWidgetLabel">false</property>
 			</properties>
 		</action>
+		
+		
+		<!-- Portal site can be made default -->
+		<action id="TOUTATICE_MAKE_DEFAULT_PORTAL_SITE"
+			link="#{domainActions.makeDefaultPortalSite('done')}"
+			order="3" label="toutatice.command.make.default">
+			<category>SUBVIEW_UPPER_LIST</category>
+			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
+			<filter-id>isGlobalAdministrator</filter-id>
+			<filter id="filter@TOUTATICE_MAKE_DEFAULT_PORTAL_SITE">
+				<rule grant="true">
+					<condition>#{domainActions.canMakeDefaultPSite()}</condition>
+				</rule>
+			</filter>
+		</action>
+		<action id="TOUTATICE_MAKE_DEFAULT_PORTAL_SITE_LABEL" order="1" type="widget">
+			<category>TOUTATICE_DOCUMENT_HEADER_ACTIONS_LIST</category>
+			<properties>
+				<property name="widgetName">toutatice_widget_document_default_portal
+				</property>
+				<property name="displayWidgetLabel">false</property>
+			</properties>
+			<filter id="filter@TOUTATICE_MAKE_DEFAULT_PORTAL_SITE_LABEL">
+				<rule grant="true">
+					<condition>#{domainActions.showIsDefaultPSite()}</condition>
+				</rule>
+			</filter>
+		</action>
 
 	</extension>
 
