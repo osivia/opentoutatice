@@ -40,6 +40,7 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
+import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.model.Property;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
@@ -214,28 +215,53 @@ public class ToutaticeValidatorBean {
      */
     public Boolean getSpaceSupportsWebId() throws PropertyException, ClientException {
 
-
         DocumentModel doc = navigationContext.getCurrentDocument();
 
         // check if document belong to a space whose supports webid
-        boolean spaceSupportsWebId = true;
-		DocumentModelList spaces = ToutaticeDocumentHelper.getParentSpaceList(documentManager, doc, true, true, true);
-		if (spaces != null && spaces.size() > 0) {
+        UnrestrictedSpaceSupportsWebId runner = new UnrestrictedSpaceSupportsWebId(documentManager, doc);
+        runner.runUnrestricted();
+        return runner.isSupports();
+        
+    }
+    
+    private class UnrestrictedSpaceSupportsWebId extends UnrestrictedSessionRunner {
+        
+        private Boolean supports;
+        private DocumentModel document;
+        
+        public Boolean isSupports(){
+            return this.supports;
+        }
 
-            DocumentModel space = spaces.get(0);
-            Property hasWebIdEnabled = space.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICESPACE_WEBID_ENABLED);
+        protected UnrestrictedSpaceSupportsWebId(CoreSession session, DocumentModel document) {
+            super(session);
+            this.document = document;
+        }
 
-            if (hasWebIdEnabled != null) {
-                if (hasWebIdEnabled.getValue(Boolean.class) == false) {
-                    spaceSupportsWebId = false;
+        @Override
+        public void run() throws ClientException {
+            boolean spaceSupportsWebId = true;
+            DocumentModelList spaces = ToutaticeDocumentHelper.getParentSpaceList(this.session, this.document, false, true, true);
+            if (spaces != null && spaces.size() > 0) {
+
+                DocumentModel space = spaces.get(0);
+                
+                Property hasWebIdEnabled = space.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICESPACE_WEBID_ENABLED);
+
+                if (hasWebIdEnabled != null) {
+                    if (hasWebIdEnabled.getValue(Boolean.class) == false) {
+                        spaceSupportsWebId = false;
+                    }
+                } else {
+                    spaceSupportsWebId = false; // param in space is set to false
                 }
             } else {
-                spaceSupportsWebId = false; // param in space is set to false
+                spaceSupportsWebId = false; // space is not found
             }
-        } else {
-            spaceSupportsWebId = false; // space is not found
+            this.supports = spaceSupportsWebId;
+            
         }
-        return spaceSupportsWebId;
+        
     }
 
 }

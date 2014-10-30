@@ -38,6 +38,7 @@ import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
+import org.nuxeo.ecm.core.api.DocumentSecurityException;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.schema.FacetNames;
@@ -95,6 +96,8 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
 				doc = ToutaticeDocumentResolver.resolveReference(documentManager, (WedIdRef) docRef);
 			} catch (DocumentException e) {
 				throw new ClientException(e);
+			} catch (DocumentSecurityException dse){
+			    throw new ClientException(dse);
 			}
         }else{
         	doc = documentManager.getDocument(docRef);

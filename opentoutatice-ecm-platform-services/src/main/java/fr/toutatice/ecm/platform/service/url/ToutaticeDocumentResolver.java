@@ -55,56 +55,32 @@ public class ToutaticeDocumentResolver {
 			throw new DocumentException("Invalid reference (null)");
 		}
 		DocumentModel document = resolveDocumentByWebId(session, webIdRef);
-		checkPermission(session, document, SecurityConstants.READ);
 		return document;
 	}
 
 	protected static DocumentModel resolveDocumentByWebId(CoreSession session, WedIdRef webIdRef) throws ClientException {
 		String webId = (String) webIdRef.reference();
 		String domainId = webIdRef.getDomainId();
-		GetDocsByWebIdUnrestricted runner = new GetDocsByWebIdUnrestricted(session, domainId, webId);
-		runner.runUnrestricted();
-		DocumentModel doc = runner.getDocument();
-		return doc;
-	}
-	
-	private static class GetDocsByWebIdUnrestricted extends UnrestrictedSessionRunner {
 		
-		private String domainId;
-		private String webId;
-		private DocumentModel document;
-		
-		public DocumentModel getDocument(){
-			return this.document;
-		}
-		
-		public GetDocsByWebIdUnrestricted(CoreSession session, String domainId, String webId){
-			super(session);
-			this.domainId = domainId;
-			this.webId = webId;
-		}
-
-		@Override
-		public void run() throws ClientException {
-			DocumentModelList docs = null;
-			try {
-				docs = this.session
-						.query("SELECT * FROM Document where ttc:webid = '"
-								+ this.webId
-								+ "' AND ttc:domainID = '"
-								+ this.domainId
-								+ "'"
-								+ " AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0 AND ecm:isCheckedInVersion = 0");
-			} catch (ClientException e) {
-				log.error("Impossible de déterminer le webID " + e);
-			}
-			if (docs != null && docs.size() == 1 && docs.get(0) != null) {
-				this.document = docs.get(0);
-			} else {
-				log.error("More than one document with webid: " + webId);
-			}
-		}
-		
+		DocumentModel document = null;
+		DocumentModelList docs = null;
+        try {
+            docs = session
+                    .query("SELECT * FROM Document where ttc:webid = '"
+                            + webId
+                            + "' AND ttc:domainID = '"
+                            + domainId
+                            + "'"
+                            + " AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0 AND ecm:isCheckedInVersion = 0");
+        } catch (ClientException e) {
+            log.error("Impossible de déterminer le webID " + e);
+        }
+        if (docs != null && docs.size() == 1) {
+            document = docs.get(0);
+        } else {
+            throw new DocumentSecurityException("You don't have read right on ressource with webId: " + webId);
+        }
+		return document;
 	}
 	
 	protected static final void checkPermission(CoreSession session, DocumentModel doc, String permission)
