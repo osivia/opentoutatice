@@ -78,7 +78,7 @@ import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformation
 public class FetchPublicationInfos {
 
     private static final String WEB_ID_QUERY = "select * from Document Where ttc:domainID = '%s'"
-            + " AND ttc:webid = '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+            + " AND ttc:webid = '%s' %s AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
 
     private static final Log log = LogFactory.getLog("FetchPublicationInfos");
@@ -842,6 +842,9 @@ public class FetchPublicationInfos {
         String webIdSegment;
         String domainIdSegment;
         DocumentModel docResolved;
+        
+        private static final String PROXY_FILTER = " AND ecm:isProxy = 1 ";
+        private static final String LIVE_FILTER = " AND ecm:isProxy = 0 ";
 
         protected UnrestrictedFecthWebIdRunner(CoreSession session, String domainId, String webId) {
             super(session);
@@ -852,11 +855,18 @@ public class FetchPublicationInfos {
 
         @Override
         public void run() throws ClientException {
-            DocumentModelList docs = session.query(String.format(WEB_ID_QUERY, domainIdSegment, webIdSegment));
-            if (docs.size() == 1) {
-                docResolved = docs.get(0);
-            } else if (docs.size() > 1) {
-                throw new ClientException("Two or more documents have the webid : " + webid);
+            DocumentModelList liveDocs = session.query(String.format(WEB_ID_QUERY, domainIdSegment, webIdSegment, LIVE_FILTER));
+            if (liveDocs.size() == 1) {
+                docResolved = liveDocs.get(0);
+            } else if(liveDocs.size() == 0){
+                DocumentModelList proxiesDocs = session.query(String.format(WEB_ID_QUERY, domainIdSegment, webIdSegment, PROXY_FILTER));
+                if(proxiesDocs.size() == 1){
+                    docResolved = proxiesDocs.get(0);
+                } else if (proxiesDocs.size() > 1) {
+                    throw new ClientException("Two or more published documents have the webid : " + webid);
+                }
+            } else if (liveDocs.size() > 1) {
+                throw new ClientException("Two or more live documents have the webid : " + webid);
             }
         }
 
