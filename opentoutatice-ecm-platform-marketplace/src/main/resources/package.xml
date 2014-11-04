@@ -31,7 +31,7 @@
         <!-- Dépendances sur les addons Nuxeo -->
 		<package>nuxeo-dm:@DISTRIB_VERSION@:@DISTRIB_VERSION@</package>
 		<!-- Dépendance sur les hotfixes -->
-		<package>nuxeo-5.8.0-HF22:1.0.0</package>
+		<package>nuxeo-5.8.0-HF23:1.0.0</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
