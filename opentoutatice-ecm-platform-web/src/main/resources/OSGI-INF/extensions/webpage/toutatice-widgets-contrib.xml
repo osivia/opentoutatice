@@ -594,7 +594,7 @@
 			</fields>
 			<properties widgetMode="edit">
 				<property name="editorSelector">mceEditorMinimalInLine</property>
-				<property name="rows">2</property>
+				<property name="disableHtmlInit">true</property>
 			</properties>
 		</widget>
 
@@ -612,7 +612,7 @@
 			</fields>
 			<properties widgetMode="edit">
 				<property name="editorSelector">mceEditorMinimal</property>
-				<property name="rows">3</property>
+				<property name="disableHtmlInit">true</property>
 			</properties>
 		</widget>
 
