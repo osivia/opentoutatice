@@ -10,6 +10,7 @@
 			* webpage : a fragment can collapse
 			* webpage : a portalpage or portalsite has now an editorial title, thumbnail are not resized yet
 			* a widget to browse and select a picture or a document by its webId
+			* Possibility to create a PortalSite with template
 
 	
 				Main fixes provided:
