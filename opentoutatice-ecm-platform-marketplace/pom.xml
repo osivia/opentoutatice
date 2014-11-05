@@ -13,7 +13,7 @@
 	<name>Marketplace package - Open Toutatice platform</name>
 
 	 <properties>
-        <nuxeo.version.hf>5.8.0-HF22</nuxeo.version.hf>
+        <nuxeo.version.hf>5.8.0-HF23</nuxeo.version.hf>
     </properties>
 
 	<dependencies>
