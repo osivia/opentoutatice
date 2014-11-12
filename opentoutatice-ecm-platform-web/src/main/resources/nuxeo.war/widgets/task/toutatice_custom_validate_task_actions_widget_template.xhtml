@@ -17,9 +17,6 @@
 
         <div>
           <div id="#{idPrefix}_box">
-            <nxu:set var="isValidateOnLineTask"
-              value="#{taskActions.isValidateOnLineTask(task)}">
-              <c:if test="#{isValidateOnLineTask}">
                 <p>
                   <script>
                    function setClickButton(buttonId) {
@@ -42,9 +39,6 @@
                     </nxu:dataList>
                   </nxu:set>
                 </p>
-              </c:if>
-
-            </nxu:set>
           </div>
         </div>
       </a4j:outputPanel>

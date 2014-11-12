@@ -61,6 +61,11 @@
 			<controls mode="any">
 				<control name="requireSurroundingForm">true</control>
 			</controls>
+			<widgetModes>
+				<mode value="view">#{nxu:test(taskActions.isValidateOnlineTask(taskActions.getValidateOnlineTask())
+					== true, layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
 		</widget>
 
 		<widget name="toutatice_summary_current_document_actions"
@@ -158,6 +163,13 @@
 
 		<!-- Sucharge pour ne pas apparaître pour la publication locale -->
 		<widget name="summary_current_document_single_tasks" type="summary_current_document_single_tasks">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<controls mode="any">
+				<control name="requireSurroundingForm">true</control>
+				<control name="handleLabels">true</control>
+			</controls>
 			<widgetModes>
 				<mode value="view">#{nxu:test(routingActions.isOnLineWorkflowRunning()
 					== false, layout.mode, 'hidden')}
@@ -175,7 +187,8 @@
 				<control name="handleLabels">true</control>
 			</controls>
 			<widgetModes>
-				<mode value="any">#{nxu:test(!documentActions.belongToPublishSpace(),
+				<mode value="any">#{nxu:test((documentActions.isRemoteProxy() ||
+					publishActions.hasRemoteProxy()),
 					layout.mode, 'hidden')}
 				</mode>
 			</widgetModes>

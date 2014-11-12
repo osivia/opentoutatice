@@ -18,6 +18,9 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -27,6 +30,7 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.model.PropertyException;
+import org.nuxeo.ecm.core.event.EventService;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
@@ -38,6 +42,14 @@ public class SetSpaceID {
 	public static final String ID = "Document.SetSpaceID";
 	public final String WORKSPACE_TYPE = "Workspace";
 	public final String USER_WORKSPACE_TYPE = "UserWorkspace";
+	
+	private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
+        private static final long serialVersionUID = 1L;
+        /* FIXME: VersioningService necessary? */
+        {
+            add(EventService.class);
+        }
+    };
 
 	@Context
 	protected CoreSession coreSession;
@@ -46,7 +58,7 @@ public class SetSpaceID {
 	public DocumentModel run(DocumentModel doc) throws Exception {
 		// mise à jour du document et de sa sous-arborescence éventuelle
 		InnerSilentModeUpdateSpaceID runner = new InnerSilentModeUpdateSpaceID(coreSession, doc);
-		runner.silentRun(true);
+		runner.silentRun(true, FILTERED_SERVICES_LIST);
 		
 		return runner.getDoc();
 	}

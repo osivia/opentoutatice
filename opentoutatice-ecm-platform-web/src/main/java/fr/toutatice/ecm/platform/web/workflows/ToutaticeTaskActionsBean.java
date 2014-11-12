@@ -17,6 +17,7 @@
  */
 package fr.toutatice.ecm.platform.web.workflows;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -25,7 +26,6 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.platform.publisher.task.CoreProxyWithWorkflowFactory;
 import org.nuxeo.ecm.platform.task.Task;
 import org.nuxeo.ecm.platform.task.web.TaskActionsBean;
@@ -52,25 +52,17 @@ public class ToutaticeTaskActionsBean extends TaskActionsBean {
         /* getCurrentDocumentTasks() returns tasks for current user and user of its groups*/
         List<Task> currentDocumentTasks = getCurrentDocumentTasks();
         if (currentDocumentTasks != null && !currentDocumentTasks.isEmpty()) {
-            int index = 0;
-            while (index < currentDocumentTasks.size() && !hasNuxeoPublicationTask) {
-                Task task = currentDocumentTasks.get(index);
+            Iterator<Task> iterator = currentDocumentTasks.iterator();
+            while (iterator.hasNext() && !hasNuxeoPublicationTask) {
+                Task task = iterator.next();
                 if (CoreProxyWithWorkflowFactory.TASK_NAME.equals(task.getName())) {
                     hasNuxeoPublicationTask = ((Boolean) task.isOpened()).booleanValue();
                 }
-                index++;
             }
         }
         return hasNuxeoPublicationTask;
     }
-
-    /**
-     * Determine si l'action "workflow_online_accept" de la vue 'summary' doit
-     * être présentée.
-     * 
-     * @return true si l'action doit être présentée. false sinon.
-     * @throws ClientException
-     */
+    
     public boolean isValidateOnlineActionAuthorized() throws ClientException {
         return isTaskActionAuthorized(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE);
     }
@@ -80,23 +72,11 @@ public class ToutaticeTaskActionsBean extends TaskActionsBean {
         super.tasks = null;
         List<Task> currentDocumentTasks = getCurrentDocumentTasks();// get tasks for current users and users of its groups
         if (currentDocumentTasks != null) {
-            NuxeoPrincipal nxPrincipal = (NuxeoPrincipal) documentManager.getPrincipal();
             
-//            for (Task task : currentDocumentTasks) {
-//                if (task.isOpened() && taskName.equals(task.getName())) {
-//                    List<String> actors = task.getActors();
-//                    boolean nxpIsActor = false;
-//                    if (actors != null && !actors.isEmpty()) {
-//                        nxpIsActor = actors.contains(nxPrincipal.getName());
-//                    }
-//                    isAuthorized = nxPrincipal.isAdministrator() || nxpIsActor;
-//                }
-//            }
-            
-            int index = 0;
-            while (index < currentDocumentTasks.size() && !isAuthorized){
-                Task task = currentDocumentTasks.get(index);
-                if (task.isOpened() && ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE.equals(task.getName())) {
+            Iterator<Task> iterator = currentDocumentTasks.iterator();
+            while (iterator.hasNext() && !isAuthorized){
+                Task task = iterator.next();
+                if (task.isOpened() && taskName.equals(task.getName())) {
                     isAuthorized = true;
                 }
             }
@@ -114,11 +94,11 @@ public class ToutaticeTaskActionsBean extends TaskActionsBean {
         return ToutaticeWorkflowHelper.getDocumentTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, documentManager, currentDocument);
     }
 
-    public boolean isValidateOnLineTask(Task task) throws ClientException {
+    public boolean isValidateOnlineTask(Task task) throws ClientException {
         if (task != null) {
             return ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE.equals(task.getName());
         }
         return false;
     }
-
+    
 }

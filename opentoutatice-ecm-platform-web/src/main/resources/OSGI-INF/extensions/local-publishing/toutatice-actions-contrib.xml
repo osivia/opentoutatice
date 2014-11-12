@@ -52,23 +52,6 @@
 			</properties>
 		</action>
 
-		<!-- To display OpenToutatice buttons in TOUTATICE_SUMMARY_PANEL_TOP_TASK 
-			category (Tasks actions) -->
-		<action id="toutatice_validate_task_actions" type="widget"
-			label="" enabled="true" order="0">
-			<category>SUMMARY_PANEL_TOP</category>
-			<category>SUBVIEW_UPPER_LIST</category>
-			<properties>
-				<property name="widgetName">toutatice_validate_online_task_widget
-				</property>
-				<property name="displayWidgetLabel">false</property>
-			</properties>
-			<filter-id>belong_to_publish_space</filter-id>
-			<filter-id>not_proxy</filter-id>
-			<filter-id>canValidateOnLineWF</filter-id>
-			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
-		</action>
-
 		<!-- Mise en ligne directe d'un document -->
 		<action id="setDocumentOnlineDirect" label="toutatice.command.direct.setonline"
 			enabled="true" order="10" immediate="false"
@@ -139,6 +122,34 @@
 		</action>
 
 		<!-- WORKFLOWS -->
+
+		<!-- Desactivate Workflow tab when online task -->
+		<action id="TAB_ROUTE_WORKFLOW" append="true">
+			<filter id="notShowWfTab">
+				<rule grant="false">
+					<permission>validationWorkflow_validation</permission>
+					<condition>#{taskActions.isValidateOnlineActionAuthorized()}
+					</condition>
+				</rule>
+			</filter>
+		</action>
+
+		<!-- To display OpenToutatice buttons in TOUTATICE_SUMMARY_PANEL_TOP_TASK 
+			category (Tasks actions) -->
+		<action id="toutatice_validate_online_task_actions" type="widget"
+			label="" enabled="true" order="0">
+			<category>SUMMARY_PANEL_TOP</category>
+			<category>SUBVIEW_UPPER_LIST</category>
+			<properties>
+				<property name="widgetName">toutatice_validate_online_task_widget
+				</property>
+				<property name="displayWidgetLabel">false</property>
+			</properties>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>canValidateOnLineWF</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
 
 		<!-- Demander la mise en ligne d'un document non version -->
 		<action id="workflow_online_demand" label="toutatice.command.request.setonline"
@@ -314,11 +325,10 @@
 				<property name="displayWidgetLabel">false</property>
 			</properties>
 		</action>
-		
-		
+
+
 		<!-- Portal site can be made default -->
-		<action id="TOUTATICE_MAKE_DEFAULT_PORTAL_SITE"
-			link="#{domainActions.makeDefaultPortalSite('done')}"
+		<action id="TOUTATICE_MAKE_DEFAULT_PORTAL_SITE" link="#{domainActions.makeDefaultPortalSite('done')}"
 			order="3" label="toutatice.command.make.default">
 			<category>SUBVIEW_UPPER_LIST</category>
 			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
@@ -329,7 +339,8 @@
 				</rule>
 			</filter>
 		</action>
-		<action id="TOUTATICE_MAKE_DEFAULT_PORTAL_SITE_LABEL" order="1" type="widget">
+		<action id="TOUTATICE_MAKE_DEFAULT_PORTAL_SITE_LABEL" order="1"
+			type="widget">
 			<category>TOUTATICE_DOCUMENT_HEADER_ACTIONS_LIST</category>
 			<properties>
 				<property name="widgetName">toutatice_widget_document_default_portal

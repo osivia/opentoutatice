@@ -20,7 +20,7 @@
 
 		<filter id="not_remote_proxy">
 			<rule grant="false">
-				<condition>#{documentActions.isRemoteProxy() == true}</condition>
+				<condition>#{documentActions.isRemoteProxy()}</condition>
 			</rule>
 		</filter>
 
@@ -56,23 +56,26 @@
 				<permission>validationWorkflow_validation</permission>
 			</rule>
 		</filter>
-		
+
 		<filter id="canValidateOnParent">
 			<rule grant="true">
-				<condition>#{documentActions.checkPermission(currentDocument, 'validationWorkflow_validation')}</condition>
+				<condition>#{documentActions.checkPermission(currentDocument,
+					'validationWorkflow_validation')}</condition>
 			</rule>
 		</filter>
-		
+
 		<filter id="canNotValidateOnParent">
 			<rule grant="false">
-				<condition>#{documentActions.checkPermission(currentDocument, 'validationWorkflow_validation')}</condition>
+				<condition>#{documentActions.checkPermission(currentDocument,
+					'validationWorkflow_validation')}</condition>
 			</rule>
 		</filter>
-		
+
 		<filter id="canCreateNSetDocumentOnline">
 			<rule grant="true">
 				<facet>Versionable</facet>
-				<condition>#{documentActions.checkPermission(currentDocument, 'Write')}</condition>
+				<condition>#{documentActions.checkPermission(currentDocument,
+					'Write')}</condition>
 			</rule>
 			<rule grant="false">
 				<type>Root</type>
@@ -170,8 +173,7 @@
 		<filter id="canValidateOnLineWF">
 			<rule grant="true">
 				<permission>validationWorkflow_validation</permission>
-				<condition>#{taskActions.isValidateOnlineActionAuthorized() ==
-					true}
+				<condition>#{taskActions.isValidateOnlineActionAuthorized()}
 				</condition>
 			</rule>
 		</filter>

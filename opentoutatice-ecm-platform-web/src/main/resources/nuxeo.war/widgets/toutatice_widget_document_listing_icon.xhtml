@@ -14,12 +14,15 @@
 
 	<c:if test="#{nxl:isLikeViewMode(widget.mode)}">
 		<div class="AlignIcon #{widget.properties.styleClass}">
+		
+			<c:set var="isOnlineRequestRunning" value="#{routingActions.isOnLineWfPending(document)}"/>
+			<c:set var="helpLabel" value="#{nxu:test(isOnlineRequestRunning, messages['toutatice.label.pending.online'], '')}"/>
 			
-			<c:set var="isPublishRequestRunning" value="#{taskActions.hasNuxeoPublishTaskPending()}"/>
+			<c:set var="isPublishRequestRunning" value="#{publishActions.isPending(document)}"/>
 			<c:set var="helpLabel" value="#{nxu:test(isPublishRequestRunning, messages['toutatice.label.pending.publication'], helpLabel)}"/>
 
 			<c:choose>
-				<c:when test="#{isPublishRequestRunning}">
+				<c:when test="#{isOnlineRequestRunning or isPublishRequestRunning}">
 					<nxu:graphicImage value="/icons/review_pending.gif"
 						alt="#{helpLabel}" 
 						title="#{helpLabel}"

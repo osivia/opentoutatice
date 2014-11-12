@@ -22,6 +22,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -350,14 +351,15 @@ public class FetchPublicationInfos {
             try {
                 tasks = taskService.getTaskInstances(document, actors, true, coreSession);
                 if (tasks != null && tasks.size() > 0) {
-                    int index = 0;
-                    while (index < tasks.size() && !canValidate) {
-                        Task task = tasks.get(index);
+                    
+                    Iterator<Task> iterator = tasks.iterator();
+                    while (iterator.hasNext() && !canValidate) {
+                        Task task = iterator.next();
                         if (task.isOpened() && ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE.equals(task.getName())) {
                             canValidate = Boolean.TRUE;
                         }
-                        index++;
                     }
+                    
                 }
             } catch (ClientException e) {
                 // isAssignee stills false
@@ -432,9 +434,10 @@ public class FetchPublicationInfos {
             // Principal can be initiator
             DocumentRoutingService routing = Framework.getLocalService(DocumentRoutingService.class);
             List<DocumentRoute> documentRoutes = routing.getDocumentRoutesForAttachedDocument(document.getCoreSession(), document.getId());
-            int index = 0;
-            while (index < documentRoutes.size() && !isPending) {
-                DocumentRoute documentRoute = documentRoutes.get(index);
+            
+            Iterator<DocumentRoute> iterator = documentRoutes.iterator();
+            while (iterator.hasNext() && !isPending) {
+                DocumentRoute documentRoute = iterator.next();
                 isPending = ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE.equals(documentRoute.getName());
             }
         }

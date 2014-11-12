@@ -23,6 +23,7 @@ package fr.toutatice.ecm.platform.core.helper;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -89,14 +90,13 @@ public final class ToutaticeWorkflowHelper {
                     .getDocumentRoutesForAttachedDocument(coreSession,
                             currentDoc.getId());
             if (documentRoutes != null && !documentRoutes.isEmpty()) {
-                int index = 0;
-                while (index < documentRoutes.size() && wf == null) {
-                    DocumentRoute route = documentRoutes.get(index);
+                Iterator<DocumentRoute> iterator = documentRoutes.iterator();
+                while (iterator.hasNext() && wf == null) {
+                    DocumentRoute route = iterator.next();
                     if (workflowName
                             .equalsIgnoreCase(route.getName())) {
                         wf = route;
                     }
-                    index++;
                 }
             }
         }
@@ -128,13 +128,12 @@ public final class ToutaticeWorkflowHelper {
         List<Task> currentTaskInstances = taskService.getTaskInstances(currentDoc, actors,
                 true, documentManager);
         
-        int index = 0;
-        while(index < currentTaskInstances.size() && validateTask == null){
-            Task task = currentTaskInstances.get(index);
+        Iterator<Task> iterator = currentTaskInstances.iterator();
+        while(iterator.hasNext() && validateTask == null){
+            Task task = iterator.next();
             if(name.equals(task.getName())){
                 validateTask = task;
             }
-            index++;
         }
         return validateTask;
     }

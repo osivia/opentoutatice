@@ -45,4 +45,9 @@ public class FetchDocumentInList {
         return list.get(index.intValue());
     }
     
+    @OperationMethod
+    public DocumentModel run(DocumentModel oneDoc) throws Exception {
+        return oneDoc;
+    }
+    
 }

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -124,10 +125,9 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements
 		boolean hasExcludedFacet = false;
 		if (excludedFacets != null) {
 			Set<String> facets = type.getFacets();
-			int index = 0;
-			while (index < excludedFacets.size() && !hasExcludedFacet) {
-				hasExcludedFacet = facets.contains(excludedFacets.get(index));
-				index++;
+			Iterator<String> iterator = excludedFacets.iterator();
+			while (iterator.hasNext() && !hasExcludedFacet) {
+				hasExcludedFacet = facets.contains(iterator.next());
 			}
 		}
 
