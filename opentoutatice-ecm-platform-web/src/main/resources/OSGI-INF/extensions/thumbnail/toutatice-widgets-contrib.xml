@@ -31,8 +31,9 @@
 		<widget name="toutatice_widget_summary_current_document_vignette"
 			type="toutatice_widget_summary_current_document_vignette_type">
 			<labels>
-				<label mode="any">Vignette</label>
+				<label mode="any">toutatice.label.thumbnail</label>
 			</labels>
+			<translated>true</translated>
 			<fields>
 				<field>ttc:vignette</field>
 				<field>ttc:vignette/filename</field>
@@ -41,9 +42,9 @@
 
 		<widget name="add_thumbnail" type="file">
 			<labels>
-				<label mode="any">Vignette</label>
+				<label mode="any">toutatice.label.add.thumbnail</label>
 			</labels>
-			<translated>false</translated>
+			<translated>true</translated>
 			<fields>
 				<field>ttc:vignette</field>
 				<field>ttc:vignette/filename</field>

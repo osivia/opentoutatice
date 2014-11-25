@@ -211,9 +211,9 @@
 				<row>
 					<widget>toutatice_removeWebId_widget</widget>
 				</row>
-				<row>
+				<!-- <row>
 					<widget>toutatice_explicitUrl_widget</widget>
-				</row>
+				</row> -->
 			</rows>
 
 		</layout>

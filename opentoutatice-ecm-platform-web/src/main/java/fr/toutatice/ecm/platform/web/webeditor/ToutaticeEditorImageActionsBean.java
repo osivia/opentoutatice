@@ -175,6 +175,11 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
             return !doc.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE);
         }
     }
+    
+    public String searchImages(String view) throws ClientException{
+        searchImages();
+        return view;
+    }
 
 	@Override
 	public String searchImages() throws ClientException {

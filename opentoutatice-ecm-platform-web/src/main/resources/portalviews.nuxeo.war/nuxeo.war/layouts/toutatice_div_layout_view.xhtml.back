@@ -1,0 +1,21 @@
+<f:subview xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:nxd="http://nuxeo.org/nxweb/document" id="#{layout.id}">
+
+	<div class="#{layoutProperty_styleClass}">
+		<nxl:layoutRow>
+			<div class="form-group #{layoutRow.properties['styleClass']}">
+				<nxl:layoutRowWidget>
+					<div class="col-sm-10 col-md-offset-1 col-md-5">
+						<nxl:widget widget="#{widget}" value="#{value}" />
+					</div>
+				</nxl:layoutRowWidget>
+			</div>
+		</nxl:layoutRow>
+	</div>
+
+</f:subview>

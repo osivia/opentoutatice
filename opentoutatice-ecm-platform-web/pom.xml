@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -54,8 +55,8 @@
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-publisher-task</artifactId>
 			<version>${nuxeo.version}</version>
-		</dependency>	
-		
+		</dependency>
+
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-document-routing-api</artifactId>
@@ -71,7 +72,7 @@
 			<artifactId>nuxeo-platform-document-routing-web</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-search-api</artifactId>
@@ -107,8 +108,33 @@
 			<artifactId>nuxeo-platform-task-core</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
-		
+
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.lesscss</groupId>
+				<artifactId>lesscss-maven-plugin</artifactId>
+				<configuration>
+					<sourceDirectory>${project.basedir}/src/main/less</sourceDirectory>
+					<outputDirectory>${project.basedir}/src/main/resources/nuxeo.war/css</outputDirectory>
+					<compress>true</compress>
+					<includes>
+						<include>toutatice-popup.less</include>
+					</includes>
+					<outputFileFormat>{fileName}.min.css</outputFileFormat>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 	<profiles>
 		<profile>
@@ -126,7 +152,8 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/2.0.0" />
+										<copy file="${basedir}/target/${project.build.finalName}.jar"
+											todir="${build.toutatice.ecm.modules.dir}/2.0.0" />
 									</tasks>
 								</configuration>
 								<phase>package</phase>

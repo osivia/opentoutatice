@@ -372,9 +372,9 @@
 			</widget>
 			<widget name="template" type="template">
 				<labels>
-					<label mode="any">Version en ligne?</label>
+					<label mode="any">toutatice.label.local.publish.status</label>
 				</labels>
-				<translated>false</translated>
+				<translated>true</translated>
 				<fields />
 				<properties mode="any">
 					<property name="template">/widgets/toutatice_widget_document_listing_icon.xhtml</property>

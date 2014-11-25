@@ -42,9 +42,9 @@
 		<!-- PostalSite, PortalPage widgets -->
 		<widget name="title" type="text">
 			<labels>
-				<label mode="any">Titre</label>
+				<label mode="any">toutatice.label.title</label>
 			</labels>
-			<translated>false</translated>
+			<translated>true</translated>
 			<fields>
 				<field>dc:title</field>
 			</fields>
@@ -57,9 +57,9 @@
 
 		<widget name="description" type="textarea">
 			<labels>
-				<label mode="any">Description</label>
+				<label mode="any">toutatice.label.description</label>
 			</labels>
-			<translated>false</translated>
+			<translated>true</translated>
 			<fields>
 				<field>dc:description</field>
 			</fields>
@@ -82,9 +82,9 @@
 
 		<widget name="summary_picture" type="summary_picture_type">
 			<labels>
-				<label mode="any">Visuel</label>
+				<label mode="any">toutatice.label.visual</label>
 			</labels>
-			<translated>false</translated>
+			<translated>true</translated>
 			<fields>
 				<field>toutatice_navigation:picture</field>
 				<field>toutatice_navigation:picture/filename</field>
@@ -93,9 +93,9 @@
 
 		<widget name="content" type="htmltext">
 			<labels>
-				<label mode="any">Contenu</label>
+				<label mode="any">toutatice.label.content</label>
 			</labels>
-			<translated>false</translated>
+			<translated>true</translated>
 			<fields>
 				<field>webp:content</field>
 			</fields>
@@ -103,9 +103,9 @@
 
 		<widget name="summary_content" type="summary_content_type">
 			<labels>
-				<label mode="any">Contenu</label>
+				<label mode="any">toutatice.label.content</label>
 			</labels>
-			<translated>false</translated>
+			<translated>true</translated>
 			<fields>
 				<field>webp:content</field>
 			</fields>
@@ -120,9 +120,9 @@
 		<!-- Widgets "Mots-clés" -->
 		<widget name="toutatice_keywords_widget" type="template">
 			<labels>
-				<label mode="any">Mots-clés</label>
+				<label mode="any">toutatice.label.keywords</label>
 			</labels>
-			<translated>false</translated>
+			<translated>true</translated>
 			<fields>
 				<field>ttc:keywords</field>
 			</fields>
@@ -140,13 +140,31 @@
 				</mode>
 			</widgetModes>
 		</widget>
+		
+		<!-- <widget name="toutatice_keywords_widget" type="summary_current_document_tagging">
+			<labels>
+				<label mode="any">toutatice.label.keyWords</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:keywords</field>
+			</fields>
+			<widgetModes>
+				<mode value="any">#{nxu:test(currentDocument.type != 'BlogSite' and
+					(currentUser.administrator or
+					currentNuxeoPrincipal.isMemberOf('Administrators')) ,
+					layout.mode,
+					'hidden')}
+				</mode>
+			</widgetModes>
+		</widget> -->
 
 		<!-- Widget en vue Modifier (ou Créer) -->
 		<widget name="toutatice_webId_widget" type="text">
 			<labels>
-				<label mode="any">Web Id</label>
+				<label mode="any">toutatice.label.title.webid.widget</label>
 			</labels>
-			<translated>false</translated>
+			<translated>true</translated>
 			<fields>
 				<field>ttc:webid</field>
 			</fields>
@@ -159,9 +177,9 @@
 		</widget>
         <widget name="toutatice_removeWebId_widget" type="template">
 			<labels>
-				<label mode="any">Web Id</label>
+				<label mode="any">toutatice.label.title.remove.webid.widget</label>
 			</labels>
-			<translated>false</translated>
+			<translated>true</translated>
 			<fields>
 				<field>ttc:webid</field>
 			</fields>
@@ -182,9 +200,9 @@
         
         <widget name="toutatice_explicitUrl_widget" type="text">
             <labels>
-                <label mode="any">URL explicite</label>
+                <label mode="any">toutatice.label.webid.url</label>
             </labels>
-            <translated>false</translated>
+            <translated>true</translated>
             <fields>
                 <field>ttc:explicitUrl</field>
             </fields>
@@ -198,9 +216,9 @@
         <!-- Widget en vue Modifier (ou Créer) -->
         <widget name="toutatice_space_enable_webId_widget" type="checkbox">
             <labels>
-                <label mode="any">Activer les Web Id</label>
+                <label mode="any">toutatice.label.webid.activate</label>
             </labels>
-            <translated>false</translated>
+            <translated>true</translated>
             <fields>
                 <field>ttcs:hasWebIdEnabled</field>
             </fields>
@@ -215,9 +233,9 @@
 
 		<widget name="files" type="filesList">
 			<labels>
-				<label mode="any">Pièces jointes</label>
+				<label mode="any">toutatice.label.attachments</label>
 			</labels>
-			<translated>false</translated>
+			<translated>true</translated>
 			<fields>
 				<field>files:files</field>
 			</fields>

@@ -1,0 +1,130 @@
+@import "bootstrap/bootstrap.less";
+
+.ttc-title {
+	i {
+		padding-right: 10px;
+	}
+}
+
+.ttc-form-control {
+	& > input, & > textarea, & > select {
+		.form-control;
+	}
+	
+	& > input[type="checkbox"] {
+		width: 0;
+		box-shadow: none;
+	}
+	
+	table.rich-calendar-popup {
+		width: 80%;
+	}
+	
+	.rich-calendar-input {
+		.form-control;
+		width:40%;
+		display: inline;
+		/*& > & >i {
+			padding-left: 10px;
+			cursor: pointer;
+		}*/
+	}
+	
+	.input-group-btn a.btn i {
+		line-height: inherit;
+	}
+	
+	& > .select2-container {
+		width: 100%;
+		
+		& > a {
+			.form-control;
+		}
+		
+		& > ul.select2-choices {
+			border: none;
+			background: none;
+			
+			li {
+				float: none;
+				
+				input {
+					.form-control;
+					
+					font-family: inherit;
+				}
+			}
+		}
+		
+	}
+	
+}
+
+.fileWidget {
+	td {
+		padding: 0 10px 6px 0;
+		vertical-align: top;
+		
+		input[type="radio"] {
+			margin: 0;
+		}
+		
+		img{
+			margin: 0 3px 0 7px;
+		}
+		
+		input[type="file"] {
+			.form-control;
+			height: auto;
+			white-space: normal;
+		}
+		
+	}
+	
+	& > a {
+		.btn;
+		.btn-default;
+		white-space: normal;
+			
+		img {
+			display:none;
+		}
+	}
+	
+}
+
+#tabpanel-container {
+	padding-bottom: 20px;
+}
+
+input[type="file"] {
+	.form-control;
+	height: auto;
+	white-space: normal;			
+}
+
+/* Do not show help labels for moment: position pb next RTE */
+.tooltip {
+	display: none;
+}
+
+.ttc-align {
+	align-items: center;
+    margin-top: 25%;
+    .text-center {
+    	padding-bottom: 20px;
+    }
+}
+
+table.ttcImgTable td {
+	padding: 0 20px 10px 0;
+}
+
+.mceToolbar td {
+    display:table-row;
+    float: left;
+}
+
+table.mceLayout, textarea.tinyMCE {
+    width: 100% !important;
+}

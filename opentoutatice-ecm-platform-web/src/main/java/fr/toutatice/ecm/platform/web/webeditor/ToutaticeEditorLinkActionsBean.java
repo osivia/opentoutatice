@@ -217,6 +217,11 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
     public boolean getHasSearchResults() {
         return hasSearchResults;
     }
+    
+    public String searchDocuments(String view) throws ClientException{
+        searchDocuments();
+        return view;
+    }
 
     @Override
     public String searchDocuments() throws ClientException {

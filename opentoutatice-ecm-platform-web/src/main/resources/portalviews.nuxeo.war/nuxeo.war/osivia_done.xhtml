@@ -13,28 +13,19 @@
 	xmlns:c="http://java.sun.com/jstl/core">
 
 	<ui:define name="stylesheets">
-		<link href="#{baseURL}/css/jquery-ui-1.8.16.custom.css"
-			type="text/css" rel="stylesheet" />
-		<link href="#{baseURL}/css/modepage.css" type="text/css"
+		<link href="#{baseURL}css/bootstrap.min.css" type="text/css"
+			rel="stylesheet" />
+		<link href="#{baseURL}css/toutatice-popup.min.css" type="text/css"
 			rel="stylesheet" />
 	</ui:define>
 
 	<ui:define name="header_scripts">
-		<script type="text/javascript"
-			src="#{baseURL}/scripts/jquery/jquery-ui-1.8.16.custom.min.js"></script>
-		<script type="text/javascript"
-			src="#{baseURL}/scripts/jquery/jquery-ui-timepicker-addon.js"></script>
-		<script type="text/javascript"
-			src="#{baseURL}/scripts/jquery/jquery-ui-sliderAccess.js"></script>
-		<script type="text/javascript"
-			src="#{baseURL}/scripts/datetime-picker.js"></script>
-		<script type="text/javascript" src="#{baseURL}/scripts/postmessage.js"></script>			
+		<script type="text/javascript" src="#{baseURL}/scripts/postmessage.js"></script>
+		<script>jQuery.noConflict();</script>
 	</ui:define>
 
 	<ui:define name="body">
-		<script type="text/javascript">	
-		<!-- 
-			var parent_url = '#{pageBean.fromUrl}';
+		<script type="text/javascript">			var parent_url = '#{pageBean.fromUrl}';
 		
 			var currentDocumentId = '#{currentDocument.id}'; 
 			var isLive = '#{documentActions.live}';
@@ -49,20 +40,18 @@
 	        ,1000);
 			
 		 -->
-		</script>	
-	
-		<div class="toutatice_edit_top_class">
-			<div class="toutatice_edit_header_class">
-				<h1>
-					<h:outputText value=" " />
-				</h1>
-			</div>
-			<div class="toutatice_edit_form_class">
-				<img src="#{baseURL}/img/standart_waiter.gif" /> &nbsp; <h:outputText
-						value="#{messages['osivia.views.done.wait']}" />
+		</script>
 
+		<div class="container ttc-align">
+			<div class="col-sm-12 text-center">
+				<h:outputText value="#{messages['osivia.views.done.wait']}" />
+			</div>
+
+			<div class="col-sm-12 text-center">
+				<img src="#{baseURL}/img/standart_waiter.gif" class="img-circle" />
 			</div>
 		</div>
+
 	</ui:define>
 
 </nxthemes:composition>

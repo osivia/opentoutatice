@@ -40,11 +40,6 @@
 			<from-outcome>toutatice_view</from-outcome>
 			<to-view-id>/toutatice_view_documents.xhtml</to-view-id>
 		</navigation-case>
-
-		<navigation-case>
-			<from-outcome>editor_link_search_document</from-outcome>
-			<to-view-id>/editor_link_search_document.xhtml</to-view-id>
-		</navigation-case>
 		
 		<navigation-case>
 			<from-outcome>osivia_create_fragment</from-outcome>
@@ -64,6 +59,16 @@
 		<navigation-case>
 			<from-outcome>osivia_create_document</from-outcome>
 			<to-view-id>/osivia_create_document.xhtml</to-view-id>
+		</navigation-case>
+		
+		<!-- Front Office (Portal) cases -->
+		<navigation-case>
+			<from-outcome>editor_image_upload</from-outcome>
+			<to-view-id>/editor_image_upload.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>editor_link_search_document</from-outcome>
+			<to-view-id>/editor_link_search_document.xhtml</to-view-id>
 		</navigation-case>
 
 	</extension>
@@ -121,6 +126,10 @@
 		<append
 			from="${bundle.fileName}.tmp/OSGI-INF/l10n/webpage/messages_fr.properties"
 			to="nuxeo.war/WEB-INF/classes/messages_fr.properties" addNewLine="true" />
+			
+		<append
+			from="${bundle.fileName}.tmp/OSGI-INF/l10n/webpage/messages_en.properties"
+			to="nuxeo.war/WEB-INF/classes/messages_en.properties" addNewLine="true" />
 			
 		<append
 			from="${bundle.fileName}.tmp/OSGI-INF/l10n/jsActionsConfirm_fr.properties"

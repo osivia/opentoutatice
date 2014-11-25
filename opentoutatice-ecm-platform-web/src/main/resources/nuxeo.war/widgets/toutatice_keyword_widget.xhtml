@@ -19,25 +19,38 @@
 
 		<a4j:region id="subjects_edit">
 			<a4j:outputPanel id="subjects_select" ajaxRendered="true">
-				<div>
+				<div class="input-group">
 					<h:inputText id="newSubject" value="#{documentActions.newKeyword}"
-						styleClass="dataInputText" />
-					<a4j:commandButton id="subjects_add"
-						action="#{documentActions.addDocumentKeyword}"
-						image="/icons/action_add.gif" reRender="subjects_select" />
-				</div>
-				<div style="margin-top: 5px">
-					<nxu:dataList id="document_subjects"
-						value="#{value.toutatice.keywords}" var="subject">
-						<a4j:commandLink id="subjects_delete"
-							action="#{documentActions.removeDocumentKeyword}"
-							reRender="subjects_select">
-							<f:param name="subject" value="#{subject}" />
-							<h:graphicImage url="/icons/action_tag_delete.png" />
+						styleClass="form-control" />
+					<span class="input-group-btn"> <a4j:commandLink
+							id="subjects_add" action="#{documentActions.addDocumentKeyword}"
+							reRender="subjects_select" styleClass="btn btn-default"
+							title="#{messages[toutatice.label.add.keyword]}">
+							<i class="glyphicons halflings plus"></i>
 						</a4j:commandLink>
-						<h:outputText value="#{subject} " />
-					</nxu:dataList>
-					<h:message styleClass="errorMessage" for="newSubject" />
+					</span>
+				</div>
+
+				<div class="form-inline">
+					<div style="margin-top: 5px">
+						<nxu:dataList id="document_subjects"
+							value="#{value.toutatice.keywords}" var="subject">
+
+							<div class="input-group">
+
+								<h:outputText class="form-control" value="#{subject} " />
+								<span class="input-group-btn"> <a4j:commandLink
+										id="subjects_delete"
+										action="#{documentActions.removeDocumentKeyword}"
+										reRender="subjects_select" styleClass="btn btn-default">
+										<f:param name="subject" value="#{subject}" />
+										<i class="glyphicons halflings remove"></i>
+									</a4j:commandLink>
+								</span>
+							</div>
+						</nxu:dataList>
+						<h:message styleClass="errorMessage" for="newSubject" />
+					</div>
 				</div>
 			</a4j:outputPanel>
 		</a4j:region>

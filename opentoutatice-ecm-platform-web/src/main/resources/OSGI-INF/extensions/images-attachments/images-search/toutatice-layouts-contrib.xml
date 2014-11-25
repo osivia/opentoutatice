@@ -111,9 +111,9 @@
 			</widget>
 			<widget name="title" type="text">
 				<labels>
-					<label mode="any">Titre</label>
+					<label mode="any">toutatice.label.title</label>
 				</labels>
-				<translated>false</translated>
+				<translated>true</translated>
 				<fields>
 					<field>data.dc.title</field>
 				</fields>
@@ -121,9 +121,9 @@
 			</widget>
 			<widget name="template" type="template">
 				<labels>
-					<label mode="any">Aperçu</label>
+					<label mode="any">toutatice.label.sketch</label>
 				</labels>
-				<translated>false</translated>
+				<translated>true</translated>
 				<fields>
 					<field>Thumbnail:content</field>
 					<field>data.dc.modified</field>

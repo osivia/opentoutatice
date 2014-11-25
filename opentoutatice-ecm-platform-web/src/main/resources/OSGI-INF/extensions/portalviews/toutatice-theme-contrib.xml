@@ -1,44 +1,64 @@
 <?xml version="1.0"?>
-<component name="fr.toutatice.ecm.platform.portalviews.theme">
+<component name="fr.toutatice.ecm.platform.responsive.portalviews.theme">
 
 	<require>org.nuxeo.theme.services.ThemeService</require>
-	<require>org.nuxeo.theme.styling.service</require>
+	<require>org.nuxeo.theme.nuxeo.default</require>
+
+	<extension target="org.nuxeo.theme.services.ThemeService"
+		point="themes">
+		<theme>
+			<src>themes/theme-toutatice-popup.xml</src>
+		</theme>
+	</extension>
 
 	<extension target="org.nuxeo.theme.services.ThemeService"
 		point="applications">
 
-		<application root="${org.nuxeo.ecm.contextPath}" template-engine="jsf-facelets">
-			<negotiation>
-				<strategy>nuxeo5</strategy>
-				<default-engine>default</default-engine>
-				<default-theme>galaxy/default</default-theme>
-				<default-perspective>default</default-perspective>
-			</negotiation>
-			<view id="/toutatice_view_documents.xhtml">
-				<theme>galaxy/popup</theme>
+		<application root="${org.nuxeo.ecm.contextPath}"
+			template-engine="jsf-facelets">
+			<view id="/osivia_done.xhtml">
+				<theme>toutatice/popup</theme>
 			</view>
 			<view id="/toutatice_edit_document.xhtml">
-				<theme>galaxy/popup</theme>
+				<theme>toutatice/popup</theme>
 			</view>
 			<view id="/toutatice_create_document.xhtml">
-				<theme>galaxy/popup</theme>
+				<theme>toutatice/popup</theme>
+			</view>
+			<view id="/osivia_edit_document.xhtml">
+				<theme>toutatice/popup</theme>
+			</view>
+			<view id="/osivia_edit_fragment.xhtml">
+				<theme>toutatice/popup</theme>
+			</view>
+
+			<view id="/editor_link_search_document.xhtml">
+				<theme>toutatice/popup</theme>
+			</view>
+			<view id="/editor_image_upload.xhtml">
+				<theme>toutatice/popup</theme>
 			</view>
 		</application>
 
 	</extension>
-	
-	<extension target="org.nuxeo.theme.styling.service" point="pages">
-		<themePage name="galaxy/popup">
-			<styles append="true">
-				<style>toutatice-popup</style>
-			</styles>
-		</themePage>
+
+	<extension target="org.nuxeo.theme.services.ThemeService"
+		point="views">
+
+		<view merge="true" name="nuxeo5 includes" template-engine="jsf-facelets">
+			<format-type>widget</format-type>
+			<resource>glyphicons.css</resource>
+		</view>
+
 	</extension>
 
-	<extension target="org.nuxeo.theme.styling.service" point="styles">
-		<style name="toutatice-popup">
-			<src>themes/css/toutatice-popup.css</src>
-		</style>
+	<extension target="org.nuxeo.theme.services.ThemeService"
+		point="resources">
+
+		<resource name="glyphicons.css">
+			<path>css/glyphicons/css/glyphicons.css</path>
+		</resource>
+
 	</extension>
 
 </component>

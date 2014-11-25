@@ -36,6 +36,7 @@ Content
 [Evol] webpage : new fragments : list of links & zoom
 [Evol] New document automation operation to add a new entry in a complex list
 [Evol] New service to add extra informations in FetchPublicationInfos
+[Evol] Possibility to create a PortalSite with template
 [Bugfix] webpage : icon selector component work both in back office and portal views, default icons displayed if thumbnail displayed
 
 About

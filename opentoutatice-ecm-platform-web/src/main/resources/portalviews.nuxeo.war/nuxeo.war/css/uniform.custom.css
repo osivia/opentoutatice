@@ -1,0 +1,10 @@
+div.uploader {
+	border: 1px solid #BBBBBB;
+	border-radius: 4px;
+	margin-left: 15px;
+	width: 220px;
+}
+
+div.uploader span.action {
+	width: 100px;
+}

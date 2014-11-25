@@ -216,19 +216,15 @@
 		<!-- Widget en vue Modifier (ou Créer) -->
 		<widget name="toutatice_showInMenu_widget" type="template">
 			<labels>
-				<label mode="any">toutatice.label.admin.publication.showInMenu</label>
+				<label mode="any">toutatice.label.edit.showInMenu</label>
 			</labels>
 			<translated>true</translated>
 			<fields>
 				<field>ttc:showInMenu</field>
 			</fields>
-			<labels>
-				<label mode="any" />
-			</labels>
-			<properties mode="any">
-				<property name="template">
-					/widgets/boolean_radio_widget_template.xhtml
-				</property>
+			<properties widgetMode="edit">
+			    <property name="template">/widgets/toutatice_checkbox.xhtml</property>
+				<property name="title">toutatice.title.edit.showInMenu</property>
 			</properties>
 			<widgetModes>
 				<mode value="view">hidden</mode>
