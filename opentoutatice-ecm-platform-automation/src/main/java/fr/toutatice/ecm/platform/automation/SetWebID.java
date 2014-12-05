@@ -110,7 +110,7 @@ public class SetWebID {
     private boolean isSpaceSupportsWebId(DocumentModel doc) throws PropertyException, ClientException {
         // check if document belong to a space whose supports webid
         boolean spaceSupportsWebId = true;
-        DocumentModelList spaces = ToutaticeDocumentHelper.getParentSpaceList(coreSession, doc, false, true, true);
+        DocumentModelList spaces = ToutaticeDocumentHelper.getParentSpaceList(coreSession, doc, true, true, true);
         if (spaces != null && spaces.size() > 0) {
 
             DocumentModel space = spaces.get(0);
