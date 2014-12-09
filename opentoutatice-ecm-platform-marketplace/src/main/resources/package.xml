@@ -12,8 +12,8 @@
 			* a widget to browse and select a picture or a document by its webId
 			* Possibility to create a PortalSite with template
 
-	
 				Main fixes provided:
+			* fixes #739: Permission 'valider' à ajouter sur un document de type PortalPage
 		</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
