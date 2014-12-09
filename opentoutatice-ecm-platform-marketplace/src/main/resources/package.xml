@@ -5,13 +5,12 @@
 			(which one is based on the Nuxeo DM distribution)
 			
 		Main fixes provided:
-         * fixes #604: Not possible to hot reload a marketplace package (refer to Nuxeo Jira https://jira.nuxeo.com/browse/SUPNXP-11255) 
+         * fixes #1611: Pb droits "Valider" dans un espace de publication pour un document "Page"
          
         Main evolutions:
-		 * fixes #603: Add the possibility to instantiate the Unrestricted mode class ToutaticeSilentProcessRunnerHelper based on the repository name only (without any session)
+		 * 
 		 
 		</p>
-		<p>fix : #645</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
 	<vendor>Academie de Rennes - OSIVIA</vendor>
