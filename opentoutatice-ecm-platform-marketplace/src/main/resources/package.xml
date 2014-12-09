@@ -5,7 +5,7 @@
 			(which one is based on the Nuxeo DM distribution)
 			
 		Main fixes provided:
-         * fixes #1611: Pb droits "Valider" dans un espace de publication pour un document "Page"
+         * fixes #739: Permission 'valider' à ajouter sur un document de type PortalPage
          
         Main evolutions:
 		 * 
