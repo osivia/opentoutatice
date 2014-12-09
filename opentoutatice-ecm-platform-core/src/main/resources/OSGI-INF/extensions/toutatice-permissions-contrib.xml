@@ -34,8 +34,8 @@
 		</visibility>
 
 		<visibility type="PortalPage">
-                        <item order="1000" show="true">validationWorkflow_validation</item>
-                        <item show="true" order="150">CanAskForPublishing</item>
+			<item order="1000" show="true">validationWorkflow_validation</item>
+			<item show="true" order="150">CanAskForPublishing</item>
 		</visibility>
 
 	</extension>
