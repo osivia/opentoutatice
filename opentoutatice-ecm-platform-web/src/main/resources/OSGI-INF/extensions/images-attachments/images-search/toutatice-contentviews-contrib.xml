@@ -54,9 +54,15 @@
 			<cacheSize>1</cacheSize>
 			<selectionList>CURRENT_SELECTION</selectionList>
 			<actions category="cv_actions@cv_image_search_popup" />
-			<resultLayouts>
+			<!-- <resultLayouts>
 				<layout name="toutatice_image_search_result_layout" title="document_listing"
 					translateTitle="true" iconPath="/icons/document_listing_icon.png" />
+			</resultLayouts> -->
+			<resultLayouts>
+				<layout iconPath="/icons/document_listing_icon_2_columns_icon.png"
+					name="document_listing_thumbnail" showEditRows="true"
+					showSlideshow="true" title="document_thumbnail_listing"
+					translateTitle="true" />
 			</resultLayouts>
 
 		</contentView>

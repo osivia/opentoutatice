@@ -3,7 +3,7 @@
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:nxl="http://nuxeo.org/nxforms/layout"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:nxh="http://nuxeo.org/nxweb/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jstl/core">
@@ -107,11 +107,9 @@
 							<h:outputLabel
 								value="#{messages['toutatice.label.upload.images.download']}" />
 						</h3> <rich:fileUpload id="images_upload"
-							uploadData="#{ImageManagerActions.uploadedFiles}"
+							fileUploadListener="#{ImageManagerActions.processUpload}"
 							listHeight="150" listWidth="500" maxFilesQuantity="5"
 							locale="#{localeSelector.localeString}" immediateUpload="true">
-							<a4j:support onsubmit="removeUploadedFile(event.memo.entry);"
-								event="onclear" />
 						</rich:fileUpload>
 
 						<p class="buttonsGadget">

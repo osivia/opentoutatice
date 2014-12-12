@@ -39,16 +39,14 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.intercept.BypassInterceptors;
 import org.jboss.seam.contexts.Contexts;
-import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.ui.web.util.files.FileUtils;
 import org.nuxeo.ecm.webapp.filemanager.FileManageActionsBean;
-import org.richfaces.model.UploadItem;
+import org.nuxeo.ecm.webapp.filemanager.NxUploadedFile;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
@@ -73,8 +71,8 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
         
         try {
         	List<Map<String, Object>> files = (List<Map<String, Object>>) current.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
-            for (UploadItem uploadItem : getUploadedFiles()) {
-                String filename = FileUtils.getCleanFileName(uploadItem.getFileName());
+            for (NxUploadedFile uploadItem : getUploadedFiles()) {
+                String filename = FileUtils.getCleanFileName(uploadItem.getName());
                 Blob blob = FileUtils.createSerializableBlob(new FileInputStream(uploadItem.getFile()), filename, null);
                 
                 // vérifier que le fichier est de type image
@@ -101,7 +99,7 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
             documentManager.saveDocument(current);
             documentManager.save();
         } finally {
-            for (UploadItem uploadItem : getUploadedFiles()) {
+            for (NxUploadedFile uploadItem : getUploadedFiles()) {
                 uploadItem.getFile().delete();
             }
         }

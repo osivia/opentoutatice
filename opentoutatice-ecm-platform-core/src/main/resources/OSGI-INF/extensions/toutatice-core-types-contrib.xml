@@ -132,7 +132,7 @@
 				<type>PortalPage</type>
 				<type>Folder</type>
 				<type>OrderedFolder</type>
-				<type>PictureBook</type>
+				<type>PictureBook</type> 
 				<type>File</type>
 				<type>Note</type>
 			</subtypes>

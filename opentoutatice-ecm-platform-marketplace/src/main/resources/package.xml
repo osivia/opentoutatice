@@ -12,6 +12,7 @@
 			* a widget to browse and select a picture or a document by its webId
 			* Possibility to create a PortalSite with template
 
+	
 				Main fixes provided:
 			* fixes #739: Permission 'valider' à ajouter sur un document de type PortalPage
 		</p>
@@ -30,9 +31,11 @@
 	</platforms>
 	<dependencies>
         <!-- Dépendances sur les addons Nuxeo -->
-		<package>nuxeo-dm:@DISTRIB_VERSION@:@DISTRIB_VERSION@</package>
+		<package>nuxeo-dam:6.0.0:6.0.0</package>
+		<!-- FIXME: just fro schema webpage of PortalSite et PortalPage... -->
+		<package>nuxeo-sites-blogs:1.2.0:1.2.0</package>
 		<!-- Dépendance sur les hotfixes -->
-		<package>nuxeo-5.8.0-HF23:1.0.0</package>
+		<!-- <package>nuxeo-5.8.0-HF23:1.0.0</package> -->
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>

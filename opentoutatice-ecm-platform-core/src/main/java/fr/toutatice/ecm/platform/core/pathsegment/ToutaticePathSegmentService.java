@@ -39,4 +39,9 @@ public class ToutaticePathSegmentService implements PathSegmentService {
 		return IdUtils.generateId(s, "-", true, 24);		
 	}
 
+	@Override
+	public String generatePathSegment(String s) throws ClientException {
+		return IdUtils.generateId(s, "-", true, 24);
+	}
+
 }

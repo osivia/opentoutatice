@@ -48,6 +48,8 @@
 		<view merge="true" name="nuxeo5 includes" template-engine="jsf-facelets">
 			<format-type>widget</format-type>
 			<resource>glyphicons.css</resource>
+			<!-- toutatice and glyphicons will be load at the end -->
+			<require>menu.min.css</require>
 		</view>
 
 	</extension>
@@ -57,6 +59,10 @@
 
 		<resource name="glyphicons.css">
 			<path>css/glyphicons/css/glyphicons.css</path>
+		</resource>
+		
+		<resource name="toutatice-popup.min.css">
+			<path>css/toutatice-popup.min.css</path>
 		</resource>
 
 	</extension>

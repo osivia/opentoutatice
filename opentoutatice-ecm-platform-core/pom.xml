@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>2.2.0-SNAPSHOT</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-core</artifactId>
@@ -89,8 +89,8 @@
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-document-routing-api</artifactId>
+			<groupId>org.nuxeo.ecm.routing</groupId>
+			<artifactId>nuxeo-routing-api</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
@@ -130,18 +130,6 @@
 			<version>${nuxeo.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.1</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-			<version>4.1</version>
-			<scope>compile</scope>
-		</dependency> -->
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
@@ -173,7 +161,7 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/2.0.0" />
+										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/3.0.0" />
 									</tasks>
 								</configuration>
 								<phase>package</phase>

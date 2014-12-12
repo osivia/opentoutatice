@@ -45,9 +45,6 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-actions-contrib.xml,
  OSGI-INF/extensions/portalviews/toutatice-theme-contrib.xml,
  OSGI-INF/extensions/portalviews/toutatice-layouts-contrib.xml,
  OSGI-INF/extensions/portalviews/toutatice-ui-types-contrib.xml,
- OSGI-INF/extensions/picturebook/toutatice-actions-contrib.xml,
- OSGI-INF/extensions/picturebook/toutatice-adapters-contrib.xml,
- OSGI-INF/extensions/picturebook/toutatice-ui-types-contrib.xml,
  OSGI-INF/extensions/rights/toutatice-filters-contrib.xml,
  OSGI-INF/extensions/medialibrary/toutatice-filters-contrib.xml,
  OSGI-INF/extensions/medialibrary/toutatice-ui-types-contrib.xml,
@@ -60,5 +57,6 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-actions-contrib.xml,
  OSGI-INF/extensions/permalink/toutatice-actions-contrib.xml,
  OSGI-INF/extensions/templates/actions-contrib.xml,
  OSGI-INF/extensions/templates/layouts-contrib.xml,
- OSGI-INF/extensions/templates/widgets-contrib.xml
+ OSGI-INF/extensions/templates/widgets-contrib.xml,
+ OSGI-INF/extensions/picturebook/toutatice-ui-types-contrib.xml
  

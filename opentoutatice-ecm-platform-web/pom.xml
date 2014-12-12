@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>2.2.0-SNAPSHOT</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-web</artifactId>
@@ -14,9 +14,10 @@
 	<name>Partie web de la plate-forme toutatice</name>
 
 	<properties>
-		<jboss.j2ee.version>4.2.3.GA</jboss.j2ee.version>
-		<jboss.ejb.version>3.0-RC8</jboss.ejb.version>
-		<jboss.seam.version>2.1.0.SP1</jboss.seam.version>
+		<!-- <jboss.j2ee.version>4.2.3.GA</jboss.j2ee.version> <jboss.ejb.version>3.0-RC8</jboss.ejb.version> 
+			<jboss.seam.version>2.1.0.SP1</jboss.seam.version> 
+		 <richfaces.nuxeo.version>3.3.1.GA-NX9.04</richfaces.nuxeo.version>
+		 <richfaces.version>3.3.1.GA</richfaces.version> -->
 	</properties>
 
 	<dependencies>
@@ -58,18 +59,18 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-document-routing-api</artifactId>
+			<groupId>org.nuxeo.ecm.routing</groupId>
+			<artifactId>nuxeo-routing-api</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-document-routing-core</artifactId>
+			<groupId>org.nuxeo.ecm.routing</groupId>
+			<artifactId>nuxeo-routing-core</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-document-routing-web</artifactId>
+			<groupId>org.nuxeo.ecm.routing</groupId>
+			<artifactId>nuxeo-routing-web</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
 
@@ -109,6 +110,34 @@
 			<version>${nuxeo.version}</version>
 		</dependency>
 
+		<!-- RichFaces 4 -->
+		<!-- <dependency>
+			<groupId>org.richfaces.framework</groupId>
+			<artifactId>richfaces-api</artifactId>
+			<version>${richfaces.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.richfaces.framework</groupId>
+			<artifactId>richfaces-impl</artifactId>
+			<version>${richfaces.nuxeo.version}</version>
+		</dependency> -->
+		
+		<dependency>
+			<groupId>org.richfaces</groupId>
+			<artifactId>richfaces-core</artifactId>
+			<version>4.5.0.Alpha3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.richfaces</groupId>
+			<artifactId>richfaces</artifactId>
+			<version>4.5.0.Alpha3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.richfaces</groupId>
+			<artifactId>richfaces-a4j</artifactId>
+			<version>4.5.0.Alpha3</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -116,12 +145,14 @@
 			<plugin>
 				<groupId>org.lesscss</groupId>
 				<artifactId>lesscss-maven-plugin</artifactId>
+				<version>1.7.0.1.1</version>
 				<configuration>
 					<sourceDirectory>${project.basedir}/src/main/less</sourceDirectory>
 					<outputDirectory>${project.basedir}/src/main/resources/nuxeo.war/css</outputDirectory>
 					<compress>true</compress>
 					<includes>
 						<include>toutatice-popup.less</include>
+						<include>webpage-popup.less</include>
 					</includes>
 					<outputFileFormat>{fileName}.min.css</outputFileFormat>
 				</configuration>
@@ -153,7 +184,7 @@
 								<configuration>
 									<tasks>
 										<copy file="${basedir}/target/${project.build.finalName}.jar"
-											todir="${build.toutatice.ecm.modules.dir}/2.0.0" />
+											todir="${build.toutatice.ecm.modules.dir}/3.0.0" />
 									</tasks>
 								</configuration>
 								<phase>package</phase>

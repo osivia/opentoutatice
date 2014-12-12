@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<nxthemes:composition xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:nxthemes="http://nuxeo.org/nxthemes"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -12,88 +12,88 @@
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:c="http://java.sun.com/jstl/core">
 
-	<ui:define name="stylesheets">
-		<link href="#{baseURL}/css/modepage.css" type="text/css"
-			rel="stylesheet" />
-	</ui:define>
+<head>
+<meta charset="utf-8"></meta>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
 
-	<ui:define name="header_scripts">
+<link href="#{baseURL}css/webpage-popup.min.css" type="text/css"
+	rel="stylesheet" /> 
+<link href="#{baseURL}css/glyphicons/css/glyphicons.css" type="text/css"
+	rel="stylesheet" />
 
-		<script type="text/javascript" src="#{baseURL}/scripts/icons.js"></script>
-	</ui:define>
+<script src="#{baseURL}nxthemes-lib/jquery.js"></script>
+<script src="#{baseURL}nxthemes-lib/prototype.js"></script>
+<script type="text/javascript" src="#{baseURL}/scripts/bootstrap/collapse.js"></script>
+<script type="text/javascript" src="#{baseURL}/scripts/icons.js"></script>
+</head>
 
-	<ui:define name="body">
-		<div class="toutatice_edit_top_class">
-			<div class="toutatice_edit_header_class">
-				<h1>
-					<h:outputFormat
-						value="#{messages['osivia.views.edit.fragment.title']}">
-						<c:if test="#{fragmentBean.descriptor != null}">
-							<f:param value="#{messages[fragmentBean.descriptor.title]}" />
-						</c:if>
-						<c:if test="#{fragmentBean.descriptor == null}">
-							<f:param value="" />
-						</c:if>
-					</h:outputFormat>
-				</h1>
+<body>
+	<div class="container">
+
+		<div class="form-group">
+			<div class="col-sm-12 ttc-title">
+
+				<fieldset>
+					<legend>
+						<h3>
+							<i class="glyphicons halflings pencil"></i>
+							<h:outputFormat
+								value="#{messages['osivia.views.edit.fragment.title']}">
+								<c:if test="#{fragmentBean.descriptor != null}">
+									<f:param value="#{messages[fragmentBean.descriptor.title]}" />
+								</c:if>
+								<c:if test="#{fragmentBean.descriptor == null}">
+									<f:param value="" />
+								</c:if>
+							</h:outputFormat>
+						</h3>
+					</legend>
+				</fieldset>
+
+			</div>
+		</div>
+
+
+		<h:form id="fragments_edit_form" class="form form-horizontal"
+			role="form">
+
+					<!-- Layout propriétés génériques -->
+					<nxl:layout name="generic_fragment_layout"
+						value="#{currentDocument}" mode="edit" />
+
+					<!-- Layout propriétés spécifiques -->
+					<c:if test="#{fragmentBean.descriptor != null}">
+						<nxl:layout name="#{fragmentBean.descriptor.layout}"
+							value="#{currentDocument}" mode="edit" />
+					</c:if>
+
+					<h:inputHidden name="fromUrl" value="#{pageBean.fromUrl}" />
+
+			<div class="form-group">
+				<div class="col-sm-10 col-sm-offset-2">
+					<div class="btn-group" role="groupe">
+						<nxu:set var="actions"
+							value="#{webActions.getActionsList('HTML_EDIT_FRAGMENT')}"
+							cache="true">
+
+							<c:forEach var="action" items="#{actions}">
+								<div class="savePanelAction">
+									<nxh:commandButton action="#{action.getLink()}"
+										immediate="#{action.immediate}" onclick="#{action.confirm}"
+										id="footer_edit_doc_#{action.id}"
+										value="#{messages[action.label]}" class="btn btn-default">
+									</nxh:commandButton>
+
+								</div>
+							</c:forEach>
+						</nxu:set>
+					</div>
+				</div>
 			</div>
 
+		</h:form>
+	</div>
+</body>
 
-			<h:form id="fragments_edit_form">
-				<nxu:set var="actions"
-					value="#{webActions.getActionsList('HTML_EDIT_FRAGMENT')}"
-					cache="true">
-
-					<div class="toutatice_edit_actions_class">
-						<c:forEach var="action" items="#{actions}">
-							<div class="savePanelAction">
-								<nxh:commandButton action="#{action.getLink()}"
-									immediate="#{action.immediate}" onclick="#{action.confirm}"
-									id="header_edit_doc_#{action.id}"
-									value="#{messages[action.label]}" class="button" >
-								</nxh:commandButton>
-							</div>
-						</c:forEach>
-					</div>
-
-
-					<div class="toutatice_edit_form_class">
-						<div class="ttcInput">
-
-							<!-- Layout propriétés génériques -->
-							<nxl:layout name="generic_fragment_layout"
-								value="#{currentDocument}" mode="edit" />
-
-							<!-- Layout propriétés spécifiques -->
-							<c:if test="#{fragmentBean.descriptor != null}">
-								<nxl:layout name="#{fragmentBean.descriptor.layout}"
-									value="#{currentDocument}" mode="edit" />
-							</c:if>
-							
-							
-							<h:inputHidden name="fromUrl" value="#{pageBean.fromUrl}" />
-						</div>
-					</div>
-
-					<ui:include src="/incl/message_banner.xhtml" />
-
-					<div class="toutatice_edit_actions_class">
-						<c:forEach var="action" items="#{actions}">
-							<div class="savePanelAction">
-								<nxh:commandButton action="#{action.getLink()}"
-									immediate="#{action.immediate}" onclick="#{action.confirm}"
-									id="footer_edit_doc_#{action.id}"
-									value="#{messages[action.label]}" class="button" >
-								</nxh:commandButton>
-									
-							</div>
-						</c:forEach>
-					</div>
-
-				</nxu:set>
-
-			</h:form>
-		</div>
-	</ui:define>
-
-</nxthemes:composition>
+</html>

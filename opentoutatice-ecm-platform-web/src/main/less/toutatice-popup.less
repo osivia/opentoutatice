@@ -16,11 +16,12 @@
 		box-shadow: none;
 	}
 	
-	table.rich-calendar-popup {
+	/* Widget Rich Calendar */
+	table.rf-cal-extr {
 		width: 80%;
 	}
 	
-	.rich-calendar-input {
+	.rf-cal-inp {
 		.form-control;
 		width:40%;
 		display: inline;
@@ -50,14 +51,19 @@
 				
 				input {
 					.form-control;
-					
+					width: inherit;
 					font-family: inherit;
 				}
+				
 			}
 		}
 		
 	}
 	
+}
+
+#select2-drop-mask {
+	width: inherit;
 }
 
 .fileWidget {
@@ -116,15 +122,16 @@ input[type="file"] {
     }
 }
 
+
 table.ttcImgTable td {
 	padding: 0 20px 10px 0;
 }
 
-.mceToolbar td {
+/*.mceToolbar td {
     display:table-row;
     float: left;
 }
 
 table.mceLayout, textarea.tinyMCE {
     width: 100% !important;
-}
+} */

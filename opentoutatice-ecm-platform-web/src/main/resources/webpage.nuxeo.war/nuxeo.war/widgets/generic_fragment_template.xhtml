@@ -2,7 +2,7 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:t="http://myfaces.apache.org/tomahawk"
-	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:nxdir="http://nuxeo.org/nxdirectory"
 	xmlns:nxl="http://nuxeo.org/nxforms/layout"
@@ -11,51 +11,80 @@
 
 	<c:set var="mode" value="#{layout.mode}" />
 
-	<div class="titre2">
-		<img src="theme/images/icone_fragment.gif" /><span>Options du
-			contenu</span>
+
+	<div class="panel">
+		<div class="panel-heading">
+			<div class="form-group">
+				<div class="col-sm-12">
+
+					<fieldset>
+						<a class="no-ajax-link collapsed" data-toggle="collapse"
+							href="#gen_prop"> <legend>
+								<i class="glyphicons halflings cog"></i>
+								<h:outputText value="Propriétés générales" />
+							</legend>
+						</a>
+					</fieldset>
+
+				</div>
+			</div>
+		</div>
+
+		<div id="gen_prop" class="panel-collapse collapse">
+			<div class="panel-body">
+
+				<c:forEach id="fgts" items="#{currentDocument.fgts.fragments}"
+					var="fgt">
+
+					<s:div rendered="#{fgt.uri == fragmentBean.uri}">
+
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="title">Titre</label>
+							<div class="col-sm-10">
+								<nxl:widgetType id="title" name="text" size="50" mode="edit"
+									value="#{fgt.title}" class="form-control" />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="hideTitle">Masquer
+								le titre</label>
+							<div class="col-sm-10">
+								<p class="form-control-static">
+									<nxl:widgetType id="hideTitle" name="checkbox" mode="edit"
+										value="#{fgt.hideTitle}" />
+								</p>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="collapsed">Affichage
+								réduit</label>
+							<div class="col-sm-10">
+								<p class="form-control-static">
+									<nxl:widgetType id="collapsed" name="checkbox" mode="edit"
+										value="#{fgt.collapsed}" />
+								</p>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="collapsed">Style</label>
+							<div class="col-sm-10">
+								<oh:icons id="selectStyle" src="#{config.windowStyles}"
+									value="#{fgt.style}" ulStyleClass="cssStyleList"
+									binding="#{genericStyleSimpleForm.simpleComponent}"
+									inputClientId="#{genericStyleSimpleForm.simpleComponentClientId}"
+									multiSelect="true" iconsGroup="styleGroup" />
+
+							</div>
+						</div>
+
+					</s:div>
+
+
+				</c:forEach>
+			</div>
+		</div>
 	</div>
-
-	<nxu:dataList id="fgts" value="#{currentDocument.fgts.fragments}"
-		var="fgt">
-
-		<s:div rendered="#{fgt.uri eq fragmentBean.uri}">
-
-			<table>
-
-				<tr>
-					<td><h:outputLabel value="Titre : " /></td>
-					<td><nxl:widgetType id="title" name="text" size="50"
-							mode="edit" value="#{fgt.title}" />
-					</td>
-				</tr>
-				<tr>
-					<td><h:outputLabel value="Masquer le titre : " /></td>
-					<td><nxl:widgetType id="hideTitle" name="checkbox" 
-							mode="edit" value="#{fgt.hideTitle}" />
-					</td>
-				</tr>
-				<tr>
-				<td><h:outputLabel value="Affichage réduit : " /></td>
-					<td><nxl:widgetType id="collapsed" name="checkbox" 
-							mode="edit" value="#{fgt.collapsed}" />
-					</td>
-				</tr>
-
-				<tr>
-					<td><h:outputLabel value="Style : " /></td>
-					<td><oh:icons id="selectStyle" src="#{config.windowStyles}"
-							value="#{fgt.style}" ulStyleClass="cssStyleList"
-							binding="#{genericStyleSimpleForm.simpleComponent}"
-							inputClientId="#{genericStyleSimpleForm.simpleComponentClientId}"
-							multiSelect="true" iconsGroup="styleGroup" /></td>
-				</tr>
-
-			</table>
-
-
-		</s:div>
-
-
-	</nxu:dataList>
 </f:subview>

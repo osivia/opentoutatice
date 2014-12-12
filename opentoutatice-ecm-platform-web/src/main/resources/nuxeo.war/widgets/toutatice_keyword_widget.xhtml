@@ -1,7 +1,7 @@
 <f:subview xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:nxdir="http://nuxeo.org/nxdirectory"
 	xmlns:nxl="http://nuxeo.org/nxforms/layout" id="#{widget.id}">
@@ -23,7 +23,8 @@
 					<h:inputText id="newSubject" value="#{documentActions.newKeyword}"
 						styleClass="form-control" />
 					<span class="input-group-btn"> <a4j:commandLink
-							id="subjects_add" action="#{documentActions.addDocumentKeyword}"
+							id="subjects_add"
+							action="#{documentActions.addDocumentKeyword()}"
 							reRender="subjects_select" styleClass="btn btn-default"
 							title="#{messages[toutatice.label.add.keyword]}">
 							<i class="glyphicons halflings plus"></i>
@@ -41,7 +42,7 @@
 								<h:outputText class="form-control" value="#{subject} " />
 								<span class="input-group-btn"> <a4j:commandLink
 										id="subjects_delete"
-										action="#{documentActions.removeDocumentKeyword}"
+										action="#{documentActions.removeDocumentKeyword()}"
 										reRender="subjects_select" styleClass="btn btn-default">
 										<f:param name="subject" value="#{subject}" />
 										<i class="glyphicons halflings remove"></i>

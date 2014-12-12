@@ -142,7 +142,7 @@ public abstract class ToutaticeMockFacesContext extends FacesContext {
         }
 
         @Override
-        public Iterator<Class> getConverterTypes() {
+        public Iterator<Class<?>> getConverterTypes() {
             return null;
         }
 

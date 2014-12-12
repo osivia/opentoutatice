@@ -5,7 +5,7 @@
 	<parent>
 	   <groupId>opentoutatice-ecm.platform</groupId>
 	   <artifactId>opentoutatice-ecm-platform-parent</artifactId>
-	   <version>2.2.0-SNAPSHOT</version>
+	   <version>3.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-custom</artifactId>
@@ -29,7 +29,7 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/2.0.0" />
+										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/3.0.0" />
 									</tasks>
 								</configuration>
 								<phase>package</phase>

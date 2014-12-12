@@ -9,25 +9,25 @@
 
 @font-face {
     font-family: 'Glyphicons Regular';
-    src: url('../fonts/glyphicons-regular.eot');
-    src: url('../fonts/glyphicons-regular.eot?#iefix')
+    src: url('/nuxeo/css/glyphicons/fonts/glyphicons-regular.eot');
+    src: url('/nuxeo/css/glyphicons/fonts/glyphicons-regular.eot?#iefix')
         format('embedded-opentype'),
-        url('../fonts/glyphicons-regular.woff')
+        url('/nuxeo/css/glyphicons/fonts/glyphicons-regular.woff')
         format('woff'),
-        url('../fonts/glyphicons-regular.ttf')
+        url('/nuxeo/css/glyphicons/fonts/glyphicons-regular.ttf')
         format('truetype'),
-        url('../fonts/glyphicons-regular.svg#glyphiconsregular')
+        url('/nuxeo/css/glyphicons/fonts/glyphicons-regular.svg#glyphiconsregular')
         format('svg');
 }
 
 @font-face {
     font-family: 'Glyphicons Halflings Regular';
-    src: url('../fonts/glyphicons-halflings-regular.eot');
-    src: url('../fonts/glyphicons-halflings-regular.eot?#iefix')
+    src: url('/nuxeo/css/glyphicons/fonts/glyphicons-halflings-regular.eot');
+    src: url('/nuxeo/css/glyphicons/fonts/glyphicons-halflings-regular.eot?#iefix')
         format('embedded-opentype'),
-        url('../fonts/glyphicons-halflings-regular.woff') format('woff'),
-        url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'),
-        url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular')
+        url('/nuxeo/css/glyphicons/fonts/glyphicons-halflings-regular.woff') format('woff'),
+        url('/nuxeo/css/glyphicons/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+        url('/nuxeo/css/glyphicons/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular')
         format('svg');
 }
 

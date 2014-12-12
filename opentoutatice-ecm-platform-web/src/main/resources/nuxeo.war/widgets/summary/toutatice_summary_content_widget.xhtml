@@ -6,7 +6,7 @@
 	<c:if
 		test="#{widget.mode != 'create' and widget.mode != 'edit' and field_0 != null}">
 		<h3>
-			<h:outputText value="#{widget.label}" />
+			<h:outputText value="#{messages[widget.label]}" />
 		</h3>
 
 		<c:if test="#{not empty field_0}">

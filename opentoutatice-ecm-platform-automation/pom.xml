@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>2.2.0-SNAPSHOT</version>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-automation</artifactId>
@@ -27,6 +27,13 @@
 			<artifactId>nuxeo-automation-core</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
+		<!-- Just for sources -->
+		<dependency>
+			<groupId>org.nuxeo.ecm.automation</groupId>
+			<artifactId>nuxeo-automation-features</artifactId>
+			<version>${nuxeo.version}</version>
+		</dependency>
+		<!--  -->
 		<dependency>
 			<groupId>org.nuxeo.ecm.automation</groupId>
 			<artifactId>nuxeo-automation-server</artifactId>
@@ -43,8 +50,8 @@
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-document-routing-core</artifactId>
+			<groupId>org.nuxeo.ecm.routing</groupId>
+			<artifactId>nuxeo-routing-core</artifactId>
 			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
@@ -122,7 +129,7 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/2.0.0" />
+										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/3.0.0" />
 									</tasks>
 								</configuration>
 								<phase>package</phase>

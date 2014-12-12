@@ -18,14 +18,14 @@
  */
 package fr.toutatice.ecm.platform.core.components;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import org.nuxeo.ecm.core.api.CoreInstance;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.storage.sql.coremodel.SQLDocumentLive;
 import org.nuxeo.ecm.core.versioning.VersioningService;
@@ -62,8 +62,9 @@ public class ToutaticeVersioningServiceHandler<T> extends ToutaticeAbstractServi
 					for (Object arg : args) {
 						if (arg instanceof SQLDocumentLive) {
 							SQLDocumentLive document = (SQLDocumentLive) args[0];
-							Map<String, Serializable> ctxt = document.getSession().getSessionContext();
-							principal = (NuxeoPrincipal) ctxt.get("principal");
+							String sessionId = document.getSession().getSessionId();
+							CoreSession session = CoreInstance.getInstance().getSession(sessionId);
+							principal = (NuxeoPrincipal) session.getPrincipal();
 							break;
 						}
 					}

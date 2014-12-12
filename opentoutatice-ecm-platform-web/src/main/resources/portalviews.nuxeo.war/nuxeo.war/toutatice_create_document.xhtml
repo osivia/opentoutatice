@@ -11,12 +11,16 @@
 	xmlns:nxd="http://nuxeo.org/nxweb/document"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:c="http://java.sun.com/jstl/core">
-
+	
 	<ui:define name="stylesheets">
 		<link href="#{baseURL}css/toutatice-popup.min.css" type="text/css"
 			rel="stylesheet" />
-		<link href="#{baseURL}css/glyphicons/css/glyphicons.css" type="text/css"
+		<link href="#{baseURL}org.richfaces.resources/javax.faces.resource/org.richfaces/calendar.ecss" type="text/css"
 			rel="stylesheet" />
+	</ui:define>
+	
+	<ui:define name="header_scripts">
+		<script src="#{baseURL}scripts/bootstrap/bootstrap-nx-widgets.js"></script>
 	</ui:define>
 
 	<ui:define name="body">

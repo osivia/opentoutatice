@@ -1,0 +1,87 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
+	xmlns:nxh="http://nuxeo.org/nxweb/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
+		<div class="has-error">
+			<h:outputText value="#{messages['label.imageUpload.unableToUpload']}" />
+		</div>
+	</f:subview>
+
+	<f:subview
+		rendered="#{!editorImageActions.inToutaticeCreationMode and currentDocument.hasFacet('TTCAttachableImages')}">
+
+		<c:choose>
+			<c:when test="#{empty currentDocument.toutatice.images}">
+
+				<div class="alert alert-warning">
+					<i class="glyphicons halflings warning-sign"></i> <span
+						class="text-warning">#{messages['toutatice.label.imageUpload.choose.NoattachedImage']}</span>
+
+				</div>
+
+			</c:when>
+			<c:otherwise>
+				<script type="text/javascript">
+					function updateEditorWithImagePJ(form) {
+						if (window.opener.tinyMCE) {
+							var tinyMCE = window.opener.tinyMCE;
+							var button = getSelectedRadio(form.elements.selection);
+							var html = '&lt;img src="' + button.value
+									+ '"/&gt;';
+							tinyMCE
+									.execCommand('mceInsertContent', false,
+											html);
+						}
+					}
+
+					function updateFragment(img) {
+
+						if (window.opener.$picturePath) {
+							var picturePathField = window.opener.$picturePath;
+							var relativeUrl = img.src.replace(
+									/^(?:\/\/|[^\/]+)*\//, "/");
+
+							picturePathField.val(relativeUrl);
+							window.opener.previewImg();
+						}
+
+						self.close();
+					}
+				</script>
+
+
+				<c:set var="index" value="0" />
+				<c:forEach var="img" items="#{currentDocument.toutatice.images}">
+
+					<div class="thumbnailDisplay">
+
+
+						<h:graphicImage
+							value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', index, 'file', img.filename)}"
+							onclick="javascript:updateFragment(this);" />
+
+						<p>#{img.filename}</p>
+
+						<c:set var="index" value="#{index + 1}" />
+
+					</div>
+
+				</c:forEach>
+
+			</c:otherwise>
+		</c:choose>
+		
+		<div>
+			<ui:include src="/incl/editor_media_upload/upload_attached_images.xhtml"/>
+		</div>
+		
+	</f:subview>
+
+</f:subview>

@@ -145,7 +145,7 @@
 				</rule>
 			</filter>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
-		</action> 
+		</action>  
 
 		<!-- Vue portail : Création d'un Workspace
 			(l'action de création solicité par la vue Nuxeo est définie par Nuxeo lui-même) 

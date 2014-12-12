@@ -97,12 +97,13 @@
 				<type>Domain</type>
 				<type>PortalSite</type>
 				<type>PortalPage</type>
+				<type>PictureBook</type>
 				<condition>#{typeManager.getAllowedSubTypes(document.getType(),
 					document).size() &gt; 0}</condition>
 			</rule>
 		</filter>
 
-		<filter id="importFile" append="true">
+		<!-- <filter id="importFile" append="true">
 			<rule grant="true">
 				<permission>AddChildren</permission>
 				<type>Domain</type>
@@ -110,7 +111,7 @@
 				<type>PortalSite</type>
 				<type>PortalPage</type>
 			</rule>
-		</filter>
+		</filter> -->
 
 	</extension>
 

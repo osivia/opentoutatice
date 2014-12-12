@@ -5,6 +5,7 @@
 	<require>fr.toutatice.ecm.platform.core</require>
 	<require>org.nuxeo.ecm.webapp.core</require>
 	<require>org.nuxeo.ecm.webapp.ui</require>
+	<require>org.nuxeo.ecm.platform.ui</require>
 	<require>org.nuxeo.ecm.platform.notification.core</require>
 
 	<extension target="faces-config#NAVIGATION">
@@ -13,18 +14,18 @@
 			<from-outcome>osivia_create_fragment_2</from-outcome>
 			<to-view-id>/osivia_edit_fragment.xhtml</to-view-id>
 		</navigation-case>
-		
+
 		<!-- Ecran confirmation webpage -->
 		<navigation-case>
 			<from-outcome>done</from-outcome>
 			<to-view-id>/osivia_done.xhtml</to-view-id>
 		</navigation-case>
 
-        <!-- Ecran live edit -->
-        <navigation-case>
-            <from-outcome>open_live_edit</from-outcome>
-            <to-view-id>/osivia_open_live_edit.xhtml</to-view-id>
-        </navigation-case>
+		<!-- Ecran live edit -->
+		<navigation-case>
+			<from-outcome>open_live_edit</from-outcome>
+			<to-view-id>/osivia_open_live_edit.xhtml</to-view-id>
+		</navigation-case>
 
 		<navigation-case>
 			<from-outcome>toutatice_create</from-outcome>
@@ -40,27 +41,27 @@
 			<from-outcome>toutatice_view</from-outcome>
 			<to-view-id>/toutatice_view_documents.xhtml</to-view-id>
 		</navigation-case>
-		
+
 		<navigation-case>
 			<from-outcome>osivia_create_fragment</from-outcome>
 			<to-view-id>/osivia_create_fragment.xhtml</to-view-id>
 		</navigation-case>
-		
+
 		<navigation-case>
 			<from-outcome>osivia_edit_fragment</from-outcome>
 			<to-view-id>/osivia_edit_fragment.xhtml</to-view-id>
 		</navigation-case>
-		
+
 		<navigation-case>
 			<from-outcome>osivia_edit_document</from-outcome>
 			<to-view-id>/osivia_edit_document.xhtml</to-view-id>
 		</navigation-case>
-		
+
 		<navigation-case>
 			<from-outcome>osivia_create_document</from-outcome>
 			<to-view-id>/osivia_create_document.xhtml</to-view-id>
 		</navigation-case>
-		
+
 		<!-- Front Office (Portal) cases -->
 		<navigation-case>
 			<from-outcome>editor_image_upload</from-outcome>
@@ -91,12 +92,18 @@
 			<dispatcher>REQUEST</dispatcher>
 			<dispatcher>FORWARD</dispatcher>
 		</filter-mapping>
-		<!--<filter-mapping>
-			<filter-name>NuxeoAuthenticationFilter</filter-name>
-			<url-pattern>/webpicsfile/*</url-pattern>
-			<dispatcher>REQUEST</dispatcher>
-			<dispatcher>FORWARD</dispatcher>
-		</filter-mapping>-->
+		<!--<filter-mapping> <filter-name>NuxeoAuthenticationFilter</filter-name> 
+			<url-pattern>/webpicsfile/*</url-pattern> <dispatcher>REQUEST</dispatcher> 
+			<dispatcher>FORWARD</dispatcher> </filter-mapping> -->
+	</extension>
+
+	<extension target="web#CONTEXT-PARAM">
+
+		<context-param>
+			<param-name>org.richfaces.skin</param-name>
+			<param-value>#{skinBean.skin}</param-value>
+		</context-param>
+		
 	</extension>
 
 	<install>
@@ -126,11 +133,11 @@
 		<append
 			from="${bundle.fileName}.tmp/OSGI-INF/l10n/webpage/messages_fr.properties"
 			to="nuxeo.war/WEB-INF/classes/messages_fr.properties" addNewLine="true" />
-			
+
 		<append
 			from="${bundle.fileName}.tmp/OSGI-INF/l10n/webpage/messages_en.properties"
 			to="nuxeo.war/WEB-INF/classes/messages_en.properties" addNewLine="true" />
-			
+
 		<append
 			from="${bundle.fileName}.tmp/OSGI-INF/l10n/jsActionsConfirm_fr.properties"
 			to="nuxeo.war/WEB-INF/classes/messages_fr.properties" addNewLine="true" />

@@ -30,6 +30,7 @@ public class ToutaticeNuxeoStudioConst {
 	public final static String CST_DOC_TYPE_WORKSPACE = "Workspace";
 	public final static String CST_DOC_TYPE_USER_WORKSPACE = "UserWorkspace";
 	public final static String CST_DOC_TYPE_PICTURE_BOOK = "PictureBook";
+	public final static String CST_DOC_TYPE_PICTURE = "Picture";
 	public final static String CST_DOC_TYPE_SECTION = "Section";
 	public final static String CST_DOC_TYPE_DOMAIN = "Domain";
 	public final static String CST_DOC_TYPE_ROOT = "Root";

@@ -230,28 +230,6 @@
                     layout.mode, 'hidden')}</mode>
             </widgetModes>            
         </widget>
-
-		<widget name="files" type="filesList">
-			<labels>
-				<label mode="any">toutatice.label.attachments</label>
-			</labels>
-			<translated>true</translated>
-			<fields>
-				<field>files:files</field>
-			</fields>
-			<subWidgets>
-				<widget name="sub0" type="file">
-					<labels>
-						<label mode="any"></label>
-					</labels>
-					<translated>false</translated>
-					<fields>
-						<field>file</field>
-						<field>filename</field>
-					</fields>
-				</widget>
-			</subWidgets>
-		</widget>
 		
 		<!-- Deprecated since 2.0.0: use Config object of "Page theme" type instead 
 		     Keep for compatibility -->
@@ -278,79 +256,6 @@
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgettypes">
-
-		<widgetType name="filesList">
-			<configuration>
-				<title>Files</title>
-				<description>
-					<p>
-						The Files displays an editable list of files, using javascript
-						to
-						keep the uploaded file path when adding several files in a row.
-					</p>
-					<p>Items are defined using sub wigdets configuration.</p>
-					<p>
-						This is actually a template widget type whose template uses a
-						&lt;nxu:inputList /&gt; tag in edit or create mode, and a table
-						iterating over items in other modes.
-					</p>
-				</description>
-				<categories>
-					<category>document</category>
-					<category>studio</category>
-				</categories>
-				<supportedModes>
-					<mode>edit</mode>
-					<mode>view</mode>
-				</supportedModes>
-				<acceptingSubWidgets>true</acceptingSubWidgets>
-				<fields>
-					<list>true</list>
-					<complex>false</complex>
-					<supportedTypes>
-						<type>blob</type>
-					</supportedTypes>
-					<defaultTypes>
-						<type>blob</type>
-					</defaultTypes>
-				</fields>
-				<properties>
-					<layouts mode="edit">
-						<layout name="list_widget_type_properties_edit">
-							<rows>
-								<row>
-									<widget>required</widget>
-								</row>
-								<row>
-									<widget>diff</widget>
-								</row>
-							</rows>
-							<widget name="required" type="checkbox">
-								<labels>
-									<label mode="any">Required</label>
-								</labels>
-								<fields>
-									<field>required</field>
-								</fields>
-							</widget>
-							<widget name="diff" type="checkbox">
-								<labels>
-									<label mode="any">Diff</label>
-								</labels>
-								<fields>
-									<field>diff</field>
-								</fields>
-							</widget>
-						</layout>
-					</layouts>
-				</properties>
-			</configuration>
-			<handler-class>
-				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
-			</handler-class>
-			<property name="template">/widgets/files_list_widget_template.xhtml
-			</property>
-		</widgetType>
 
 		<!-- Widget se basant sur le layout en mode view -->
 		<widgetType name="custom_summary_current_document_view">
