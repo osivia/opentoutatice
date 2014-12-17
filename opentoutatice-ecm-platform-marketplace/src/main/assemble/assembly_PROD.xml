@@ -50,12 +50,6 @@
 					<!-- Include your artifacts using their groupId for instance -->
 					<artifact groupId="opentoutatice-ecm.*" scope="!test" type="!pom" />
 				</includes>
-				<excludes>
-					<!-- Filter out the JBPM relative artifacts	since it must be defined as a package requirement
-						(must be installed via its own addon markplace package)
-					-->
-					<artifact artifactId="nuxeo-platform-jbpm*" />
-				</excludes>
 			</artifact:set>
 		</copy>
 		<nx:rmdups dir="${outdir}/nxr/bundles" />
@@ -69,11 +63,6 @@
 				<excludes>
 					<!-- Filter out your artifacts using their groupId for instance -->
 					<artifact groupId="opentoutatice-ecm.*" />
-					<!-- Filter out the JBPM relative artifacts	since it must be defined as a package requirement
-						(must be installed via its own addon markplace package)
-					-->
-					<artifact groupId="org.jbpm.*" />
-					<artifact groupId="bsh*" />
 				</excludes>
 			</artifact:set>
 		</copy>
@@ -110,8 +99,7 @@
 		<if>
 			<available file="${outdir}/marketplace/install/lib" />
 			<then>
-				<var name="install.libs" value="${line.separator}
-						&lt;update file=&quot;${package.root}/install/lib&quot; todir=&quot;${env.lib}&quot; /&gt;" />
+				<var name="install.libs" value="${line.separator} &lt;update file=&quot;${package.root}/install/lib&quot; todir=&quot;${env.lib}&quot; /&gt;" />
 			</then>
 		</if>
 

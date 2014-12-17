@@ -39,8 +39,7 @@
 
 		<!-- Base distribution NXR -->
 		<copy todir="${outdir}">
-			<!--<artifact:resolveFile key="org.nuxeo.ecm.distribution:nuxeo-distribution-cap::zip" />-->
-			<artifact:resolveFile key="org.nuxeo.ecm.distribution:nuxeo-distribution:6.0:zip" />
+			<artifact:resolveFile key="org.nuxeo.ecm.distribution:nuxeo-distribution-cap::zip" />
 		</copy>
 
 		<!-- Nuxeo bundles -->
@@ -51,12 +50,6 @@
 					<!-- Include your artifacts using their groupId for instance -->
 					<artifact groupId="opentoutatice-ecm.*" scope="!test" type="!pom" />
 				</includes>
-				<excludes>
-					<!-- Filter out the JBPM relative artifacts	since it must be defined as a package requirement
-						(must be installed via its own addon markplace package)
-					-->
-					<artifact artifactId="nuxeo-platform-jbpm*" />
-				</excludes>
 			</artifact:set>
 		</copy>
 		<nx:rmdups dir="${outdir}/nxr/bundles" />
@@ -70,11 +63,6 @@
 				<excludes>
 					<!-- Filter out your artifacts using their groupId for instance -->
 					<artifact groupId="opentoutatice-ecm.*" />
-					<!-- Filter out the JBPM relative artifacts	since it must be defined as a package requirement
-						(must be installed via its own addon markplace package)
-					-->
-					<artifact groupId="org.jbpm.*" />
-					<artifact groupId="bsh*" />
 				</excludes>
 			</artifact:set>
 		</copy>
@@ -90,7 +78,12 @@
 		<zip destfile="${outdir}/nxr-${maven.project.version}.zip" basedir="${outdir}/nxr" />
 
 		<!-- Your MP only needs to include files not already provided by the base distribution -->
-		<nx:zipdiff file1="${outdir}/nxr-${maven.project.version}.zip" file2="${outdir}/nuxeo-distribution-cap-${nuxeo.distribution.version}.zip" includesfile="${outdir}/includes" excludesfile="${outdir}/excludesfile" patternsetid="opentoutatice.versus.dm" ignoreContent="true">
+		<nx:zipdiff file1="${outdir}/nxr-${maven.project.version}.zip" 
+			        file2="${outdir}/nuxeo-distribution-cap-${nuxeo.distribution.version}.zip" 
+					includesfile="${outdir}/includes" 
+					excludesfile="${outdir}/excludesfile" 
+					patternsetid="opentoutatice.versus.dm" 
+					ignoreContent="true">
 		</nx:zipdiff>
 		<unzip src="${outdir}/nxr-${maven.project.version}.zip" dest="${outdir}/marketplace/install">
 			<patternset refid="opentoutatice.versus.dm" />
@@ -101,8 +94,7 @@
 		<if>
 			<available file="${outdir}/marketplace/install/bundles" />
 			<then>
-				<var name="install.bundles" value="${line.separator}
-						&lt;update file=&quot;${package.root}/install/bundles&quot; todir=&quot;${env.server.home}/nxserver/plugins&quot; /&gt;" />
+				<var name="install.bundles" value="${line.separator} &lt;update file=&quot;${package.root}/install/bundles&quot; todir=&quot;${env.server.home}/nxserver/plugins&quot; /&gt;" />
 			</then>
 		</if>
 
@@ -111,8 +103,7 @@
 		<if>
 			<available file="${outdir}/marketplace/install/lib" />
 			<then>
-				<var name="install.libs" value="${line.separator}
-						&lt;update file=&quot;${package.root}/install/lib&quot; todir=&quot;${env.lib}&quot; /&gt;" />
+				<var name="install.libs" value="${line.separator} &lt;update file=&quot;${package.root}/install/lib&quot; todir=&quot;${env.lib}&quot; /&gt;" />
 			</then>
 		</if>
 
@@ -149,11 +140,10 @@
 				</for>
 
 				<!-- install the selected profile's template -->
-				<var name="install.templates" value="${line.separator}
-								&lt;copy dir=&quot;${package.root}/install/templates&quot; todir=&quot;${env.templates}&quot; overwrite=&quot;true&quot; /&gt;" />
+				<var name="install.templates" value="${line.separator} &lt;copy dir=&quot;${package.root}/install/templates&quot; todir=&quot;${env.templates}&quot; overwrite=&quot;true&quot; /&gt;" />
 			</then>
 		</if>
-
+		
 		<!-- Update the install.xml file from properties -->
 		<copy file="src/main/resources/install.xml" todir="${outdir}/marketplace" overwrite="true">
 			<filterset>
@@ -161,7 +151,7 @@
 				<filter token="EXCLUDES" value="${install.excludes}" />
 				<filter token="LIBS" value="${install.libs}" />
 				<filter token="PROPERTIES" value="${install.properties}" />
-				<filter token="TEMPLATES" value="${install.templates}" />
+		   <!-- <filter token="TEMPLATES" value="${install.templates}" /> -->
 			</filterset>
 		</copy>
 
