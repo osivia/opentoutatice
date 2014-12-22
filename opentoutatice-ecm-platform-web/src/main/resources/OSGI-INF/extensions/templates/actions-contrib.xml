@@ -14,7 +14,7 @@
 			<filter-id>is_not_creating_portalsite</filter-id>
 		</action>
 
-		<action id="CREATE_PORTAL_PAGE" label="command.create"
+		<action id="CREATE_PORTAL_SITE" label="command.create"
 			link="#{documentTemplatesActions.createDocumentFromTemplate}" order="0">
 			<category>CREATE_DOCUMENT_FORM</category>
 			<filter-id>is_creating_portalsite</filter-id>
