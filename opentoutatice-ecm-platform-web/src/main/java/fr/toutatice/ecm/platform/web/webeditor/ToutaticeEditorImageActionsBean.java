@@ -490,13 +490,13 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 			}
 
 		};
-		
-		DocumentModelList children = documentManager.getChildren(node.getRef(),
-				null, filter, null);
-		if (children != null && !children.isEmpty()){
-			picturesNFolders.addAll(children);
+		if(node!=null){
+			DocumentModelList children = documentManager.getChildren(node.getRef(),
+					null, filter, null);
+			if (children != null && !children.isEmpty()){
+				picturesNFolders.addAll(children);
+			}
 		}
-		
 		return picturesNFolders;
 	}
 
