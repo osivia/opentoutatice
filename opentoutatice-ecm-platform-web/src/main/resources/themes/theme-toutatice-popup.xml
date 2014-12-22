@@ -11,6 +11,18 @@
         </cell>
       </section>
     </page>
+    <page name="portal">
+      <section class="nxMainContainer">
+        <cell class="content">
+          <!-- includes -->
+          <fragment type="generic fragment"/>
+          <!-- breadcrumbs -->
+          <fragment type="generic fragment"/>
+          <!-- main area -->
+          <fragment type="region fragment"/>
+        </cell>
+      </section>
+    </page>
    </layout>
   <properties element="page[1]/section[1]/cell[1]/fragment[2]">
     <name>body</name>
