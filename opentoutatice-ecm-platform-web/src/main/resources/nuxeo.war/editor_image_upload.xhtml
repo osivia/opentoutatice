@@ -64,12 +64,6 @@
 					data-toggle="tab"
 					href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=SEARCH_VIDEOS">#{messages['label.imageUpload.searchVideoTab']}</a>
 				</li>
-				<li
-					class="#{nxu:test(editorImageActions.selectedTab == 'LIBRARY_NAV', 'active', '')}"
-					role="presentation"><a aria-controls="library" role="tab"
-					data-toggle="tab"
-					href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=LIBRARY_NAV&amp;libraryRoot=true">Depuis la Médiathèque</a>
-				</li>
 			</ul>
 		</nav>
 
@@ -406,7 +400,123 @@
 
 			<f:subview
 				rendered="#{editorImageActions.selectedTab == 'ATTACH_IMGS'}">
-				<ui:include src="/incl/editor_media_upload/attached_images.xhtml"/>
+				<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
+
+					<div clas="has-error">
+						<h:outputText
+							value="#{messages['label.imageUpload.unableToUpload']}" />
+					</div>
+
+				</f:subview>
+
+				<f:subview
+					rendered="#{!editorImageActions.inToutaticeCreationMode and currentDocument.hasFacet('TTCAttachableImages')}">
+
+					<c:choose>
+						<c:when test="#{empty currentDocument.toutatice.images}">
+
+							<div class="alert alert-warning">
+								<i class="glyphicons halflings warning-sign"></i> <span
+									class="text-warning">#{messages['toutatice.label.imageUpload.choose.NoattachedImage']}</span>
+
+							</div>
+
+						</c:when>
+						<c:otherwise>
+							<script type="text/javascript">
+									function getSelectedRadio(buttonGroup) {
+										if (buttonGroup[0]) {
+										  for (var i=0; i&lt;buttonGroup.length; i++) {
+										    if (buttonGroup[i].checked) {
+										      return buttonGroup[i]
+										    }
+										  }
+										} else if (buttonGroup.checked) {
+										  return buttonGroup;
+										}
+										return null;
+									}
+									      
+									function updateEditorWithImagePJ(form) {
+									  if (window.opener.tinyMCE) {
+									    var tinyMCE = window.opener.tinyMCE;
+									    var button = getSelectedRadio(form.elements.selection);
+									    var html = '&lt;img src="' + button.value + '"/&gt;';
+									    tinyMCE.execCommand('mceInsertContent', false, html);
+									  }
+									  
+									  // fragment picture
+									  if (window.opener.$picturePath) {
+										  var picturePathField = window.opener.$picturePath;
+										  var button = getSelectedRadio(form.elements.selection);
+										  
+										  var relativeUrl = button.value.replace(/^(?:\/\/|[^\/]+)*\//, "/");
+										  
+										  picturePathField.val(relativeUrl);
+										  window.opener.previewImg();
+									  }
+									  
+									  
+									  self.close();
+									}
+							       
+								</script>
+
+							<a4j:region>
+								<div id="contentPJ">
+
+									<h:form id="search_resultsPJ">
+
+										<fieldset>
+											<legend>
+												<h:outputText
+													value="#{messages['toutatice.label.imageUpload.choose.attachedImage']}" />
+											</legend>
+										</fieldset>
+										<div class="from-group">
+											
+											<div class="table-responsive">
+												<h:selectOneRadio>
+													<nxu:inputList id="images_input" model="model"
+														value="#{currentDocument.toutatice.images}">
+
+														<h:panelGrid columns="3"
+															style="#{nxu:test(empty currentDocument.toutatice.images[model.rowIndex].file, 'display:none', '')}"
+															styleClass="table">
+
+															<input id="selection" type="radio" name="selection"
+																value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}" />
+
+															<h:graphicImage height="50px" width="50px"
+																value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}" />
+
+															<nxh:outputText
+																value="#{currentDocument.toutatice.images[model.rowIndex].filename}" />
+														</h:panelGrid>
+
+													</nxu:inputList>
+
+
+												</h:selectOneRadio>
+											</div>
+											
+										</div>
+
+										<div class="form-group">
+											<div class="col-sm-2 col-sm-offset-2">
+												<input type="submit" id="button_update_imagePJ"
+													class="btn btn-default"
+													value="#{messages['toutatice.label.command.insert']}"
+													onclick="javascript:updateEditorWithImagePJ(this.form);" />
+											</div>
+										</div>
+									</h:form>
+								</div>
+							</a4j:region>
+						</c:otherwise>
+					</c:choose>
+
+				</f:subview>
 			</f:subview>
 
 			<f:subview
@@ -535,10 +645,6 @@
 						</f:subview>
 					</div>
 				</a4j:region>
-			</f:subview>
-			
-			<f:subview rendered="#{editorImageActions.selectedTab == 'LIBRARY_NAV'}">
-				 <ui:include src="/incl/editor_media_upload/library.xhtml" />
 			</f:subview>
 
 		</div>
