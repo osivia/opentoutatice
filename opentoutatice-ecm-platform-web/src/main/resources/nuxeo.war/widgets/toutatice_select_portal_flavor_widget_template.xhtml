@@ -42,7 +42,7 @@
 										<c:set var="styleBodySelection" value="display:none;" />
 										<a4j:commandLink id="#{widget.id}_btSwitchok" 
 											immediate="true"
-											reRender="#{widget.id}_editselect"
+											render="#{widget.id}_editselect"
 											actionListener="#{documentActions.setIsSwitchState('false', 'ttc:theme')}">
 											<h:graphicImage url="/icons/toggle_plus.png" />
 											<h:outputText value="#{messages['toutatice.action.edit.set.theme']}" />
@@ -52,7 +52,7 @@
 										<c:set var="styleBodySelection" value="" />
 										<a4j:commandLink id="#{widget.id}_btSwitchok" 
 											immediate="true"
-											reRender="#{widget.id}_editselect"
+											render="#{widget.id}_editselect"
 											actionListener="#{documentActions.setIsSwitchState('true', 'ttc:theme')}">
 											<h:graphicImage url="/icons/toggle_minus.png" />
 											<h:outputText value="#{messages['toutatice.action.edit.unset.theme']}" />
@@ -75,14 +75,14 @@
 											<nxu:selectItems var="flavor" value="#{flavors}"
 												itemValue="#{flavor.name}"
 												itemLabel="#{messages[flavor.label]}" />
-											<a4j:support event="onchange" bypassUpdates="true"
+											<a4j:ajax event="change" bypassUpdates="true"
 												actionListener="#{selectionActions.onSelection}"
-												reRender="#{widget.id}_preview"
+												render="#{widget.id}_preview"
 												id="#{widget.id}_ajax_select">
 												<f:param name="selectorId" value="#{widget.id}" />
 												<f:param name="valueHolderId"
 													value="#{widget.id}_valueHolder" />
-											</a4j:support>
+											</a4j:ajax>
 										</h:selectOneListbox>
 									</nxu:set>
 									<h:message for="#{widget.id}" id="#{widget.id}_message"

@@ -25,7 +25,7 @@
 					<span class="input-group-btn"> <a4j:commandLink
 							id="subjects_add"
 							action="#{documentActions.addDocumentKeyword()}"
-							reRender="subjects_select" styleClass="btn btn-default"
+							render="subjects_select" styleClass="btn btn-default"
 							title="#{messages[toutatice.label.add.keyword]}">
 							<i class="glyphicons halflings plus"></i>
 						</a4j:commandLink>
@@ -43,7 +43,7 @@
 								<span class="input-group-btn"> <a4j:commandLink
 										id="subjects_delete"
 										action="#{documentActions.removeDocumentKeyword()}"
-										reRender="subjects_select" styleClass="btn btn-default">
+										render="subjects_select" styleClass="btn btn-default">
 										<f:param name="subject" value="#{subject}" />
 										<i class="glyphicons halflings remove"></i>
 									</a4j:commandLink>

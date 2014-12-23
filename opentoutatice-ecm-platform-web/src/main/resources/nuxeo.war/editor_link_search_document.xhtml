@@ -46,7 +46,7 @@
 					<h:selectOneListbox id="space" value="#{editorLinkActions.scope}"
 						size="1">
 						<f:selectItems value="#{editorLinkActions.scopes}" />
-						<a4j:support event="onchange" reRender="selecttype" />
+						<a4j:ajax event="change" render="selecttype" />
 					</h:selectOneListbox>
 				</div>
 			</div>

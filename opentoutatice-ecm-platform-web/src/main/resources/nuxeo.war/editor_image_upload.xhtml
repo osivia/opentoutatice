@@ -235,8 +235,8 @@
 											var="item" itemValue="#{item.value}"
 											itemLabel="#{messages[item.label]}" />
 
-										<a4j:support ajaxSingle="true" reRender="search_results"
-											event="onclick" />
+										<a4j:ajax ajaxSingle="true" render="search_results"
+											event="click" />
 									</h:selectOneMenu>
 
 								</div>

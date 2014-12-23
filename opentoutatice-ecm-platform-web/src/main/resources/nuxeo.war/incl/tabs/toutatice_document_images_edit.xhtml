@@ -165,7 +165,7 @@
 											onclick="document.NXContextKeeper.removeFromKeeper(#{model.rowIndex});"
 											oncomplete="document.NXContextKeeper.onReturnAnswer();"
 											actionListener="#{ImageManagerActions.performAction}"
-											reRender="images_input" bypassUpdates="true">
+											render="images_input" bypassUpdates="true">
 											<h:graphicImage value="/icons/action_tag_delete.png" />
 											<f:param name="index" value="#{model.rowIndex}" />
 										</a4j:commandLink></td>
