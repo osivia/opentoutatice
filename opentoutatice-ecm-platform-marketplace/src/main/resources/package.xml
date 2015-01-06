@@ -28,6 +28,8 @@
 		<package>nuxeo-dam:6.0.0</package>
 		<!-- FIXME: just for schema webpage of PortalSite et PortalPage... -->
 		<package>nuxeo-sites-blogs:1.2.0</package>
+		<!-- Dépendance sur les hotfixes -->
+		<package>nuxeo-6.0-HF02:1.0.0</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
