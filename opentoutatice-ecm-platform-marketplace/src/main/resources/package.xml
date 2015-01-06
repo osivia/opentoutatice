@@ -26,7 +26,7 @@
 	<dependencies>
         <!-- Dépendances sur les addons Nuxeo -->
 		<package>nuxeo-dam:6.0.0</package>
-		<!-- FIXME: just fro schema webpage of PortalSite et PortalPage... -->
+		<!-- FIXME: just for schema webpage of PortalSite et PortalPage... -->
 		<package>nuxeo-sites-blogs:1.2.0</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
