@@ -22,9 +22,19 @@
 		<delete failonerror="false" dir="${outdir}/nxr" />
 		<mkdir dir="${outdir}/nxr" />
 				
+		<delete failonerror="false" dir="${outdir}/marketplace" />
+		<mkdir dir="${outdir}/marketplace" />
+		<copy todir="${outdir}/marketplace">
+			<fileset dir="src/main/resources" />
+			<filterset>
+				<filter token="VERSION" value="${maven.project.version}" />
+				<filter token="DISTRIB_VERSION" value="${nuxeo.distribution.version}" />
+			</filterset>
+		</copy>
+		
 		<copy file="${outdir}/artifacts-opentoutatice.properties" todir="${outdir}/nxr" />
 		<copy file="${outdir}/test-artifacts-opentoutatice.properties" todir="${outdir}/nxr" />
-
+		
 		<!-- Base distribution NXR -->
 		<copy todir="${outdir}">
 			<artifact:resolveFile key="org.nuxeo.marketplace.dam:marketplace::zip:nxr" />

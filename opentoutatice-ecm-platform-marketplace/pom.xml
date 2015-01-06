@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.nuxeo</groupId>
-		<artifactId>nuxeo-ecm</artifactId>
+		<groupId>org.nuxeo.ecm.distribution</groupId>
+		<artifactId>nuxeo-distribution</artifactId>
 		<version>6.0</version>
 	</parent>
-
+  
 	<artifactId>opentoutatice-ecm-platform-marketplace</artifactId>
 	<version>3.0.0-SNAPSHOT</version>
 	<packaging>zip</packaging>
@@ -142,14 +142,13 @@
 				<plugins>
 					<plugin>
 						<groupId>org.nuxeo.build</groupId>
-						<artifactId>nuxeo-distribution-tools</artifactId>
-						<version>2.0</version>
+						<artifactId>ant-assembly-maven-plugin</artifactId>
 						<configuration>
 							<buildFiles>
 								<buildFile>${basedir}/src/main/assemble/assembly_INT.xml</buildFile>
 							</buildFiles>
 						</configuration>
-					</plugin>
+					</plugin>				
 				</plugins>
 			</build>
 		</profile>
@@ -189,14 +188,13 @@
 				<plugins>
 					<plugin>
 						<groupId>org.nuxeo.build</groupId>
-						<artifactId>nuxeo-distribution-tools</artifactId>
-						<version>2.0</version>
+						<artifactId>ant-assembly-maven-plugin</artifactId>
 						<configuration>
 							<buildFiles>
 								<buildFile>${basedir}/src/main/assemble/assembly_QUALIF.xml</buildFile>
 							</buildFiles>
 						</configuration>
-					</plugin>
+					</plugin>				
 				</plugins>
 			</build>
 		</profile>
@@ -236,14 +234,13 @@
 				<plugins>
 					<plugin>
 						<groupId>org.nuxeo.build</groupId>
-						<artifactId>nuxeo-distribution-tools</artifactId>
-						<version>2.0</version>
+						<artifactId>ant-assembly-maven-plugin</artifactId>
 						<configuration>
 							<buildFiles>
 								<buildFile>${basedir}/src/main/assemble/assembly_PREPROD.xml</buildFile>
 							</buildFiles>
 						</configuration>
-					</plugin>
+					</plugin>				
 				</plugins>
 			</build>
 		</profile>
