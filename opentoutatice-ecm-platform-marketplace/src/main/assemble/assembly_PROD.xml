@@ -1,64 +1,58 @@
-<project name="nuxeo-assembly" default="build" xmlns:nx="urn:nuxeo-build" xmlns:artifact="urn:nuxeo-artifact">
+<project name="nuxeo-assembly"
+         default="build"
+         xmlns:nx="urn:nuxeo-build"
+         xmlns:artifact="urn:nuxeo-artifact">
 	<taskdef resource="org/nuxeo/build/antlib.xml" uri="urn:nuxeo-build" />
 	<taskdef resource="org/nuxeo/build/artifact/antlib.xml" uri="urn:nuxeo-artifact" />
 	<taskdef resource="net/sf/antcontrib/antlib.xml" />
-
-	<target name="init" unless="init.done">
+	
+	<target name="build" description="Build the Nuxeo open toutatice platform Marketplace package">
 		<property name="outdir" value="${maven.project.build.directory}" />
-		<antcall target="expand" />
-		<property name="init.done" value="true" />
-	</target>
+		
+		<!-- Build the dependency tree, including the "test" scope, resolving artifacts if needed -->
+		<artifact:nuxeo-expand includeTestScope="true" />
 
-	<target name="expand">
-		<!-- Include your artifacts in the graph adding your groupId to groupPrefixes -->
-		<artifact:nuxeo-expand includeTestScope="true" groupPrefixes="org.nuxeo,com.nuxeo" />
-
-		<!-- For Nuxeo IDE being able to use that distribution as a SDK -->
+		<!-- Create specific optional files for use by Nuxeo SDK -->
 		<artifact:print output="${outdir}/artifacts-opentoutatice.properties" mode="sdk" />
 		<artifact:print output="${outdir}/test-artifacts-opentoutatice.properties" mode="sdk" scopes="test" />
 
-		<!-- Prints the graph for debugging purpose -->
+		<!-- Output the dependency tree for debugging purpose -->
 		<artifact:print output="${outdir}/dependency-tree.log" />
-	</target>
-
-	<target name="build" depends="init" description="Build the Nuxeo open toutatice platform Marketplace package">
-		<tstamp />
+		
 		<delete failonerror="false" dir="${outdir}/nxr" />
 		<mkdir dir="${outdir}/nxr" />
-		<delete failonerror="false" dir="${outdir}/marketplace" />
-		<mkdir dir="${outdir}/marketplace" />
-		<copy todir="${outdir}/marketplace">
-			<fileset dir="src/main/resources" />
-			<filterset>
-				<filter token="VERSION" value="${maven.project.version}" />
-				<filter token="DISTRIB_VERSION" value="${nuxeo.distribution.version}" />
-			</filterset>
-		</copy>
-		<copy file="${outdir}/artifacts-opentoutatice.properties" todir="${outdir}/marketplace/install" />
-		<copy file="${outdir}/test-artifacts-opentoutatice.properties" todir="${outdir}/marketplace/install" />
+				
+		<copy file="${outdir}/artifacts-opentoutatice.properties" todir="${outdir}/nxr" />
+		<copy file="${outdir}/test-artifacts-opentoutatice.properties" todir="${outdir}/nxr" />
 
 		<!-- Base distribution NXR -->
 		<copy todir="${outdir}">
-			<artifact:resolveFile key="org.nuxeo.ecm.distribution:nuxeo-distribution-dm::zip" />
+			<artifact:resolveFile key="org.nuxeo.marketplace.dam:marketplace::zip:nxr" />
 		</copy>
 
-		<!-- Nuxeo bundles -->
+		<!-- Get Nuxeo bundles but not Nuxeo libraries (which groupId starts with"org.nuxeo.lib"), nor bundles with "test" scope -->
 		<copy todir="${outdir}/nxr/bundles" overwrite="true">
 			<artifact:set>
 				<includes>
-					<artifact groupId="org.nuxeo*" scope="!test" type="!pom" />
+					<artifact groupId="org.nuxeo*" scope="!test" type="jar" />
 					<!-- Include your artifacts using their groupId for instance -->
-					<artifact groupId="opentoutatice-ecm.*" scope="!test" type="!pom" />
+					<artifact groupId="opentoutatice-ecm.*" scope="!test" type="jar" />
 				</includes>
+				<excludes>
+					<artifact groupId="org.nuxeo.lib*" />
+				</excludes>
 			</artifact:set>
 		</copy>
+		
+		<!-- Remove duplicates: keep only more recent version for each library -->
 		<nx:rmdups dir="${outdir}/nxr/bundles" />
-
+		
 		<!-- Third-party libraries -->
 		<copy todir="${outdir}/nxr/lib" overwrite="true">
 			<artifact:set>
 				<includes>
 					<artifact groupId="!org.nuxeo*" scope="!test" />
+					<artifact groupId="org.nuxeo.lib*" scope="!test" />
 				</includes>
 				<excludes>
 					<!-- Filter out your artifacts using their groupId for instance -->
@@ -66,20 +60,21 @@
 				</excludes>
 			</artifact:set>
 		</copy>
-		<move todir="${outdir}/nxr/lib">
-			<fileset dir="${outdir}/nxr/bundles">
-				<include name="nuxeo-generic-wss-front*" />
-				<include name="nuxeo-generic-wss-handler*" />
-			</fileset>
-		</move>
+		
+		<!-- Remove duplicates: keep only more recent version for each library -->
 		<nx:rmdups dir="${outdir}/nxr/lib" />
 
 		<!-- Temporary ZIP Nuxeo NXR to compare with base distribution NXR -->
 		<zip destfile="${outdir}/nxr-${maven.project.version}.zip" basedir="${outdir}/nxr" />
 
 		<!-- Your MP only needs to include files not already provided by the base distribution -->
-		<nx:zipdiff file1="${outdir}/nxr-${maven.project.version}.zip" file2="${outdir}/nuxeo-distribution-dm-${nuxeo.distribution.version}.zip" includesfile="${outdir}/includes" excludesfile="${outdir}/excludesfile" patternsetid="opentoutatice.versus.dm" ignoreContent="true">
-		</nx:zipdiff>
+		<nx:zipdiff file1="${outdir}/nxr-${maven.project.version}.zip" 
+			file2="${outdir}/marketplace-${nuxeo.runtime.version}-nxr.zip" 
+			includesfile="${outdir}/includes" 
+			excludesfile="${outdir}/excludesfile" 
+			patternsetid="opentoutatice.versus.dm" 
+			ignoreContent="true" />
+		
 		<unzip src="${outdir}/nxr-${maven.project.version}.zip" dest="${outdir}/marketplace/install">
 			<patternset refid="opentoutatice.versus.dm" />
 		</unzip>
@@ -122,7 +117,8 @@
 		<var name="install.properties" value="" />
 
 		<!-- Build the property that lists the templates to install -->
-		<!-- <var name="install.templates" value="" />
+		<var name="install.templates" value="" />
+		<!--
 		<if>
 			<available file="${outdir}/marketplace/install/templates" />
 			<then>
@@ -153,7 +149,7 @@
 		</copy>
 
 		<zip destfile="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip" basedir="${outdir}/marketplace" />
-		<artifact:attach file="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip" target="${maven.project.groupId}:${maven.project.artifactId}" type="zip" />
+		<artifact:attach file="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip" type="zip" />
 	</target>
 
 </project>

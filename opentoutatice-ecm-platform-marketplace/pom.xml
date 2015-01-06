@@ -68,10 +68,6 @@
 				<profileName>DEV</profileName>
 			</properties>
 
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-
 			<repositories>
 				<repository>
 					<id>private-releases</id>
@@ -259,7 +255,9 @@
 				<profileName>PROD</profileName>
 			</properties>
 
-			<!-- <activation> <activeByDefault>true</activeByDefault> </activation> -->
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 
 			<repositories>
 				<repository>

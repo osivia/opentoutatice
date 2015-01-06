@@ -149,7 +149,7 @@
 		</copy>
 
 		<zip destfile="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip" basedir="${outdir}/marketplace" />
-		<artifact:attach file="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip" target="${maven.project.groupId}:${maven.project.artifactId}" type="zip" />
+		<artifact:attach file="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip" type="zip" />
 	</target>
 
 </project>
