@@ -15,6 +15,7 @@
 			<event>beforeDocumentModification</event>
 			<filters>
 				<condition>Document.hasSchema('toutatice')</condition>
+				<attribute>Mutable Document</attribute>
 			</filters>
 		</handler>
 
