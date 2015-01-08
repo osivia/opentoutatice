@@ -1,4 +1,4 @@
-<project name="nuxeo-assembly"
+<project name="open-toutatice-marketplace"
          default="build"
          xmlns:nx="urn:nuxeo-build"
          xmlns:artifact="urn:nuxeo-artifact">
