@@ -32,12 +32,12 @@
 				<theme>toutatice/popup</theme>
 			</view>
 
-			<view id="/editor_link_search_document.xhtml">
+			<!-- <view id="/editor_link_search_document.xhtml">
 				<theme>toutatice/popup</theme>
 			</view>
 			<view id="/editor_image_upload.xhtml">
 				<theme>toutatice/popup</theme>
-			</view>
+			</view> -->
 		</application>
 
 	</extension>
@@ -50,6 +50,7 @@
 			<template>incl/pv_includes.xhtml</template>
 			<resource>glyphicons.css</resource>
 			<resource>toutatice-popup.min.css</resource>
+			<resource>custom-popup.min.css</resource>
 		</view>
 
 	</extension>
@@ -63,6 +64,10 @@
 		
 		<resource name="toutatice-popup.min.css">
 			<path>css/toutatice-popup.min.css</path>
+		</resource>
+		
+		<resource name="custom-popup.min.css">
+			<path>css/custom-popup.min.css</path>
 		</resource>
 
 	</extension>
