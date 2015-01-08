@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Nuxeo Distribution" default="package" basedir=".">
+<project name="Nuxeo Distribution" default="install" basedir=".">
 
   <property file="build.properties" />
   <property name="mvn.opts" value="" />
