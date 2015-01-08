@@ -45,11 +45,11 @@
 	<extension target="org.nuxeo.theme.services.ThemeService"
 		point="views">
 
-		<view merge="true" name="nuxeo5 includes" template-engine="jsf-facelets">
+		<view name="includes-pv" template-engine="jsf-facelets">
 			<format-type>widget</format-type>
+			<template>incl/pv_includes.xhtml</template>
 			<resource>glyphicons.css</resource>
-			<!-- toutatice and glyphicons will be load at the end -->
-			<require>menu.min.css</require>
+			<resource>toutatice-popup.min.css</resource>
 		</view>
 
 	</extension>

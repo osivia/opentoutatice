@@ -10,14 +10,14 @@
 		point="actions">
 
 		<action id="TOUTATICE_CREATE_DOCUMENT" link="#{documentActions.saveDocument('done')}"
-			order="1" label="command.create">
+			order="0" label="command.create">
 			<category>TOUTATICE_CREATE_DOCUMENT_FORM</category>
 			<filter-id>is_not_creating_form_specific_document</filter-id>
 		</action>
 
 		<action id="TOUTATICE_CREATE_AND_SET_ONLINE_DOCUMENT"
 			link="#{documentActions.saveNSetOnLineDocument('done')}"
-			order="0" label="toutatice.command.create.and.setonline">
+			order="1" label="toutatice.command.create.and.setonline">
 			<category>TOUTATICE_CREATE_DOCUMENT_FORM</category>
 			<filter-id>is_not_creating_form_specific_document</filter-id>
 			<filter-id>belong_to_publish_space</filter-id>

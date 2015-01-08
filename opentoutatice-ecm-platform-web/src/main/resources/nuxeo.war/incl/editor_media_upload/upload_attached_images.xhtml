@@ -2,13 +2,13 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:s="http://jboss.org/schema/seam/taglib"	
-	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:nxthemes="http://nuxeo.org/nxthemes"
 	xmlns:nxd="http://nuxeo.org/nxweb/document"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:nxh="http://nuxeo.org/nxweb/html"
-	xmlns:c="http://java.sun.com/jstl/core">
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich">
 
 	<c:if test="#{editorImageActions.inToutaticeCreationMode}">
 		<div class="alert alert-warning">
@@ -45,29 +45,28 @@
 			</script>
 		</f:subview>
 
-		<fieldset>
-			<legend>
-				<h4>
-					<h:outputText
-						value="#{messages['toutatice.label.imageUpload.attachables.images.upload']}" />
-				</h4>
-			</legend>
-		</fieldset>
+		<p class="h4">
+			<h:outputText
+				value="#{messages['toutatice.label.media.plugin.add.image']}" />
+		</p>
 
 		<h:form enctype="multipart/form-data" id="uploadForm"
-			rendered="#{!editorImageActions.isImageUploaded}"
-			class="form form-horizontal">
+			class="form form-horizontal" disableDoubleClickShield="true">
 			<div class="form-group">
-				<label class="control-label col-sm-2" for="size">#{messages['label.imageUpload.image']}</label>
+				<label class="control-label col-sm-2" for="up_img">#{messages['toutatice.label.media.plugin.add.image.select']}</label>
 				<div class="col-sm-6">
-					<s:fileUpload data="#{editorImageActions.uploadedImage}"
-						fileName="#{editorImageActions.uploadedImageName}" />
+					<rich:fileUpload id="images_upload"
+						fileUploadListener="#{ImageManagerActions.processUpload}"
+						listHeight="150" listWidth="500" maxFilesQuantity="5"
+						locale="#{localeSelector.localeString}" immediateUpload="true">
+					</rich:fileUpload>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-2 col-sm-offset-2">
 					<h:commandButton value="#{messages['command.imageUpload.send']}"
-						action="#{editorImageActions.uploadImage}" class="btn btn-default" />
+						action="#{ImageManagerActions.validateMultiplesUpload(currentDocument)}"
+						class="btn btn-primary" />
 				</div>
 			</div>
 

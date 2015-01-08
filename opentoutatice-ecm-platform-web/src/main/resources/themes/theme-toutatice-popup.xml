@@ -4,7 +4,9 @@
     <page name="popup">
       <section class="nxMainContainer">
         <cell class="content">
-          <!-- Include -->
+          <!-- Global Include -->
+          <fragment type="generic fragment"/>
+          <!-- PortalViews Include -->
           <fragment type="generic fragment"/>
           <!-- main area -->
           <fragment type="region fragment"/>
@@ -24,7 +26,7 @@
       </section>
     </page>
    </layout>
-  <properties element="page[1]/section[1]/cell[1]/fragment[2]">
+  <properties element="page[1]/section[1]/cell[1]/fragment[3]">
     <name>body</name>
     <defaultBody/>
     <defaultSrc/>
@@ -38,6 +40,9 @@
     <widget element="page[1]/section[1]/cell[1]/fragment[1]">
       <view>nuxeo5 includes</view>
     </widget>
+    <widget element="page[1]/section[1]/cell[1]/fragment[2]">
+      <view>includes-pv</view>
+    </widget>
     <widget element="page[1]">
       <view>page frame</view>
     </widget>
@@ -47,7 +52,7 @@
     <widget element="page[1]/section[1]/cell[1]">
       <view>cell frame</view>
     </widget>
-    <widget element="page[1]/section[1]/cell[1]/fragment[2]">
+    <widget element="page[1]/section[1]/cell[1]/fragment[3]">
       <view>facelet region</view>
     </widget>
   </formats>

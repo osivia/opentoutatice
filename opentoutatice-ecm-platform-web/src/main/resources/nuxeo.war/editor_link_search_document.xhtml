@@ -16,6 +16,8 @@
 			value="#{nuxeoApplicationName} - #{messages['toutatice.label.nx.link.window.title']}" /></title>
 	<link href="#{baseURL}css/toutatice-popup.min.css" type="text/css"
 		rel="stylesheet" />
+	<link href="#{baseURL}css/webpage-popup.min.css" type="text/css"
+		rel="stylesheet" />
 </head>
 
 <body>
@@ -23,11 +25,9 @@
 	<div class="container">
 
 
-		<fieldset>
-			<legend>
+		<p class="h4">
 				<h:outputText value="#{messages['toutatice.label.nx.link.title']}" />
-			</legend>
-		</fieldset>
+			</p>
 
 
 		<h:form class="form-horizontal" role="form">
@@ -65,18 +65,16 @@
 				<div class="col-sm-offset-2 col-sm-10">
 					<h:commandButton value="#{messages['toutatice.command.in.nuxeo']}"
 						action="#{editorLinkActions.searchDocuments('editor_link_search_document')}"
-						class="btn btn-default" />
+						class="btn btn-primary" />
 				</div>
 			</div>
 		</h:form>
 
 
 		<div id="content">
-			<fieldset>
-				<legend>
+			<p class="h4">
 					<h:outputText value="#{messages['label.search.results.keywords']}" />
-				</legend>
-			</fieldset>
+				</p>
 			<h:outputText value="#{messages['label.content.emptyFolder']}"
 				rendered="#{!editorLinkActions.hasSearchResults}" />
 			<h:form id="search_results"
@@ -209,15 +207,18 @@
           }
         </script>
 
-				<div class="form-group">
-					<div class="col-sm-offset-2">
-						<input type="submit" id="button_update" class="btn btn-default"
-							value="#{messages['command.ok']}"
+				<nav class="navbar navbar-default navbar-fixed-bottom">
+					<div class="container-fluid">
+						<div class="col-sm-offset-2">
+						<input type="submit" id="button_update" class="btn btn-primary navbar-btn"
+							value="#{messages['toutatice.label.command.insert']}"
 							onclick="javascript:updateEditor(this.form);" />
 					</div>
 				</div>
+				</nav>
 			</h:form>
 		</div>
+		<div class="pv-footer"></div>
 	</div>
 
 </body>

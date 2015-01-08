@@ -87,6 +87,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 	private String selectedSize = "Medium";
 	private String imageUrlAttr;
 	private boolean isImageUploadedAttr = false;
+	private String imageProperty;
 
 	private boolean isImage = true;
 
@@ -326,13 +327,20 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 	public List<DocumentModel> getSearchImageResults() {
 		return resultDocuments;
 	}
-
+	
+	@Override
 	public String getSelectedSize() {
-		return selectedSize;
+		return this.selectedSize;
 	}
-
+	
+	@Override
 	public void setSelectedSize(final String selectedSize) {
 		this.selectedSize = selectedSize;
+	}
+	
+	@Override
+	public String getImageProperty() {
+		return this.selectedSize + ":content";
 	}
 
 	@Override
@@ -340,16 +348,11 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 		if (selectedTab != null) {
 			oldSelectedTab = selectedTab;
 		} else if (oldSelectedTab == null) {
-			oldSelectedTab = "UPLOAD";
-			// TOCHECK
-			// oldSelectedTab = "SEARCH";
+			oldSelectedTab = "SEARCH";
 		}
 		return oldSelectedTab;
 	}
 
-	/*
-	 * Modif DCH
-	 */
 	public boolean getIsImage() {
 		return this.isImage;
 	}

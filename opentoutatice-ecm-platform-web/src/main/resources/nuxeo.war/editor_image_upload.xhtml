@@ -12,28 +12,32 @@
 	xmlns:oh="http://osivia.org/html">
 
 <head>
-<meta charset="utf-8"></meta>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
-<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title><h:outputText
 		value="#{messages['title.imageUpload.form']}" /></title>
-
 <link href="#{baseURL}css/webpage-popup.min.css" type="text/css"
 	rel="stylesheet" />
 <link href="#{baseURL}css/glyphicons/css/glyphicons.css" type="text/css"
 	rel="stylesheet" />
-<script src="#{baseURL}nxthemes-lib/jquery.js"></script>
-<script src="#{baseURL}nxthemes-lib/prototype.js"></script>
+<link
+	href="/nuxeo/org.richfaces.resources/javax.faces.resource/org.richfaces.staticResource/4.5.0.Alpha3/PackedCompressed/DEFAULT/packed/packed.css"
+	rel="stylesheet" type="text/css" />
+<script src="/nuxeo/javax.faces.resource/jsf.js.faces?ln=javax.faces"
+	type="text/javascript" />
+<script src="#{baseURL}nxthemes-lib/jquery.js" />
+<script src="#{baseURL}nxthemes-lib/prototype.js" />
+<script
+	src="/nuxeo/org.richfaces.resources/javax.faces.resource/org.richfaces.staticResource/4.5.0.Alpha3/PackedCompressed/packed/packed.js"
+	type="text/javascript" />
 </head>
 
 <body>
 	<div class="container">
 
 		<div class="form-group">
-			<div class="col-sm-offset-2">
-				<h3>#{messages['title.imageUpload.form']}</h3>
-			</div>
+			<h3>#{messages['title.imageUpload.form']}</h3>
 		</div>
 
 		<nav>
@@ -44,12 +48,14 @@
 					data-toggle="tab"
 					href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=SEARCH">#{messages['toutatice.label.imageUpload.searchTab']}</a>
 				</li>
-				<li
-					class="#{nxu:test(editorImageActions.selectedTab == 'UPLOAD', 'active', '')}"
-					role="presentation"><a aria-controls="upload" role="tab"
-					data-toggle="tab"
-					href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=UPLOAD">#{messages['toutatice.label.imageUpload.uploadTab']}</a>
-				</li>
+				<c:if test="#{not(currentDocument.hasFacet('TTCAttachableImages'))}">
+					<li
+						class="#{nxu:test(editorImageActions.selectedTab == 'UPLOAD', 'active', '')}"
+						role="presentation"><a aria-controls="upload" role="tab"
+						data-toggle="tab"
+						href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=UPLOAD">#{messages['toutatice.label.imageUpload.uploadTab']}</a>
+					</li>
+				</c:if>
 				<c:if test="#{currentDocument.hasFacet('TTCAttachableImages')}">
 					<li
 						class="#{nxu:test(editorImageActions.selectedTab == 'ATTACH_IMGS', 'active', '')}"
@@ -58,20 +64,18 @@
 						href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=ATTACH_IMGS">#{messages['toutatice.label.imageUpload.attachableImagesTab']}</a>
 					</li>
 				</c:if>
-				<li
+				<!-- <li
 					class="#{nxu:test(editorImageActions.selectedTab == 'SEARCH_VIDEOS', 'active', '')}"
 					role="presentation"><a aria-controls="videos" role="tab"
 					data-toggle="tab"
 					href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=SEARCH_VIDEOS">#{messages['label.imageUpload.searchVideoTab']}</a>
-				</li>
+				</li> -->
 			</ul>
 		</nav>
 
 		<div class="tab-content">
 
-			<f:subview rendered="#{editorImageActions.selectedTab == 'SEARCH'}">
-
-				<script type="text/javascript">
+			<script type="text/javascript">
 						function getSelectedRadio(buttonGroup) {
 						      if (buttonGroup[0]) {
 						        for (var i=0; i&lt;buttonGroup.length; i++) {
@@ -85,7 +89,7 @@
 						      return null;
 						    }
 												
-												function getSelectedMedia(radioButton) {
+							function getSelectedMedia(radioButton) {
 						      ele = radioButton;
 						      while (ele.nodeName != 'div' &amp;&amp; ele.nodeName != 'DIV') {
 						        ele = ele.nextSibling;
@@ -150,502 +154,26 @@
 						
 					</script>
 
-				<div>
-					<fieldset>
-						<legend>
-							<h:outputText
-								value="#{messages['toutatice.label.imageUpload.search.criterion']}" />
-						</legend>
-					</fieldset>
-					<h:form class="form-horizontal" role="form">
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="keywords">#{messages['toutatice.label.imageUpload.search.keywords']}</label>
-							<div class="col-sm-10">
-								<h:inputText id="keywords"
-									value="#{editorImageActions.searchKeywords}"
-									class="form-control"
-									onkeydown="if (event.keyCode == 13) {this.nextSibling.click()} else return true" />
-
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="space">#{messages['toutatice.label.imageUpload.search.space']}</label>
-							<div class="col-sm-10">
-
-								<h:selectOneMenu id="space"
-									value="#{editorImageActions.searchInSpace}"
-									class="form-control">
-									<c:if test="#{editorImageActions.mediaSpaceName != null}">
-										<f:selectItem
-											itemLabel="#{messages['toutatice.label.imageUpload.search.space.library']} : #{editorImageActions.mediaSpaceName}"
-											itemValue="0"
-											rendered="#{editorImageActions.mediaSpaceName != null}" />
-									</c:if>
-									<f:selectItem
-										itemLabel="#{messages['toutatice.label.imageUpload.search.space.space']} : #{editorImageActions.spaceName}"
-										itemValue="1" />
-									<f:selectItem
-										itemLabel="#{messages['toutatice.label.imageUpload.search.space.all']}"
-										itemValue="2" />
-
-								</h:selectOneMenu>
-
-							</div>
-						</div>
-
-
-						<div class="form-group">
-							<div class="col-sm-2 col-sm-offset-2">
-								<h:commandButton value="#{messages['command.search']}"
-									action="#{editorImageActions.searchImages('editor_image_upload')}"
-									class="btn btn-default" />
-							</div>
-						</div>
-
-					</h:form>
-				</div>
-
-
-				<a4j:region>
-					<div id="content">
-
-						<fieldset>
-							<legend>
-								<h:outputText
-									value="#{messages['toutatice.label.imageUpload.search.results']}" />
-							</legend>
-						</fieldset>
-
-						<h:outputText value="#{messages['label.content.emptyFolder']}"
-							rendered="#{!editorImageActions.hasSearchResults}" />
-
-						<f:subview rendered="#{editorImageActions.hasSearchResults}">
-
-							<h:form id="search_results" role="form"
-								rendered="#{editorImageActions.hasSearchResults}">
-
-								<div class="form-group">
-									<label for="size">#{messages['label.imageUpload.chooseSize']}</label>
-
-									<h:selectOneMenu id="size"
-										value="#{editorImageActions.selectedSize}"
-										class="form-control">
-										<nxu:selectItems value="#{editorImageActions.sizes}"
-											var="item" itemValue="#{item.value}"
-											itemLabel="#{messages[item.label]}" />
-
-										<a4j:ajax execute="@this" render="search_results"
-											event="click" />
-									</h:selectOneMenu>
-
-								</div>
-
-								<div class="form-group">
-									<label for="result">#{messages['label.imageUpload.chooseFile']}</label>
-
-
-
-									<h:selectOneRadio id="result">
-										<div class="table-responsive">
-											<nxu:dataTable id="dataTable"
-												value="#{editorImageActions.searchImageResults}"
-												var="document" rowClasses="dataRowEven,dataRowOdd"
-												styleClass="table">
-												<c:set var="imageSizePpty"
-													value="#{editorImageActions.selectedSize}:content" />
-												<!-- id and selection -->
-												<nxu:column styleClass="iconColumn">
-													<input type="radio" id="selection" name="selection"
-														value="#{document.id}" />
-													<div style="display: none;" id="#{document.id}">
-														<input type="hidden" name="docUrl"
-															value="#{oh:preferredImgUrl('downloadPicture', document, imageSizePpty, currentDocument.dublincore.modified)}" />
-													</div>
-
-												</nxu:column>
-												<!-- Icon + Type -->
-												<nxu:column styleClass="iconColumn">
-													<nxu:graphicImage value="#{nxd:iconPath(document)}"
-														alt="#{document.type}" />
-												</nxu:column>
-												<!--  Title -->
-												<nxu:column>
-													<f:facet name="header">
-														<h:outputText
-															value="#{messages['label.content.header.title']}" />
-													</f:facet>
-													<h:outputText value="#{nxd:titleOrId(document)}" />
-												</nxu:column>
-												<!--  Image -->
-												<h:column>
-													<f:facet name="header">
-														<h:outputText
-															value="#{messages['label.imageUpload.image']}" />
-													</f:facet>
-													<h:graphicImage
-														value="#{oh:preferredImgUrl('downloadPicture', document, 'Thumbnail:content', currentDocument.dublincore.modified)}" />
-												</h:column>
-											</nxu:dataTable>
-										</div>
-									</h:selectOneRadio>
-
-
-								</div>
-
-								<div class="form-group">
-									<div class="col-sm-2 col-sm-offset-2">
-										<input type="submit" id="button_update"
-											class="btn btn-default"
-											value="#{messages['toutatice.label.command.insert']}"
-											onclick="javascript:updateEditor(this.form.elements.selection, 'Picture');" />
-									</div>
-								</div>
-
-							</h:form>
-						</f:subview>
-					</div>
-				</a4j:region>
-
+			<f:subview rendered="#{editorImageActions.selectedTab == 'SEARCH'}">
+				<ui:include src="/incl/editor_media_upload/search_pictures.xhtml" />
 			</f:subview>
 
 
-			<f:subview rendered="#{editorImageActions.selectedTab == 'UPLOAD'}">
-
-
-				<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
-
-					<div class="alert alert-warning">
-						<i class="glyphicons halflings warning-sign"></i> <span
-							class="text-warning">#{messages['label.imageUpload.unableToUpload']}</span>
-					</div>
-
-				</f:subview>
-
-				<f:subview rendered="#{!editorImageActions.inToutaticeCreationMode}">
-
-					<f:subview rendered="#{editorImageActions.isImageUploaded}">
-						<script type="text/javascript">
-							    if (window.opener.tinyMCE) {
-              var tinyMCE = window.opener.tinyMCE;
-              var html = '&lt;img src="' + '#{editorImageActions.urlForImage}' + '"/&gt;';
-              tinyMCE.execCommand('mceInsertContent', false, html);
-            }
-							    
-							   	// fragment picture
-							   	if (window.opener.$picturePath) {
-									var picturePathField = window.opener.$picturePath;
-									 
-									var relativeUrl = "#{editorImageActions.urlForImage}".replace(/^(?:\/\/|[^\/]+)*\//, "/")
-									
-									picturePathField.val(relativeUrl);
-									window.opener.previewImg();
-							   	}							    
-							    							    
-							    self.close();
-							</script>
-					</f:subview>
-					<c:choose>
-						<c:when test="#{currentDocument.hasFacet('TTCAttachableImages')}">
-							<fieldset>
-								<legend>
-									<h:outputText
-										value="#{messages['toutatice.label.imageUpload.attachables.images.upload']}" />
-								</legend>
-							</fieldset>
-
-						</c:when>
-						<c:otherwise>
-
-							<fieldset>
-								<legend>
-									<h:outputText
-										value="#{messages['toutatice.label.imageUpload.upload']}" />
-								</legend>
-							</fieldset>
-
-						</c:otherwise>
-					</c:choose>
-					<h:form enctype="multipart/form-data" id="uploadForm"
-						rendered="#{!editorImageActions.isImageUploaded}"
-						class="form form-horizontal">
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="size">#{messages['label.imageUpload.image']}</label>
-							<div class="col-sm-6">
-								<s:fileUpload data="#{editorImageActions.uploadedImage}"
-									fileName="#{editorImageActions.uploadedImageName}" />
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-sm-2 col-sm-offset-2">
-								<h:commandButton value="#{messages['command.imageUpload.send']}"
-									action="#{editorImageActions.uploadImage}"
-									class="btn btn-default" />
-							</div>
-						</div>
-
-					</h:form>
-
-					<c:if test="#{!editorImageActions.isImage}">
-
-						<div class="alert alert-warning">
-							<i class="glyphicons halflings warning-sign"></i> <span
-								class="text-warning">#{messages['label.imageUpload.isNotImage']}</span>
-						</div>
-					</c:if>
-
-				</f:subview>
-
+			<f:subview rendered="#{editorImageActions.selectedTab == 'UPLOAD' and not(currentDocument.hasFacet('TTCAttachableImages'))}">
+				<ui:include src="/incl/editor_media_upload/file_upload.xhtml" />
 			</f:subview>
 
 			<f:subview
 				rendered="#{editorImageActions.selectedTab == 'ATTACH_IMGS'}">
-				<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
-
-					<div clas="has-error">
-						<h:outputText
-							value="#{messages['label.imageUpload.unableToUpload']}" />
-					</div>
-
-				</f:subview>
-
-				<f:subview
-					rendered="#{!editorImageActions.inToutaticeCreationMode and currentDocument.hasFacet('TTCAttachableImages')}">
-
-					<c:choose>
-						<c:when test="#{empty currentDocument.toutatice.images}">
-
-							<div class="alert alert-warning">
-								<i class="glyphicons halflings warning-sign"></i> <span
-									class="text-warning">#{messages['toutatice.label.imageUpload.choose.NoattachedImage']}</span>
-
-							</div>
-
-						</c:when>
-						<c:otherwise>
-							<script type="text/javascript">
-									function getSelectedRadio(buttonGroup) {
-										if (buttonGroup[0]) {
-										  for (var i=0; i&lt;buttonGroup.length; i++) {
-										    if (buttonGroup[i].checked) {
-										      return buttonGroup[i]
-										    }
-										  }
-										} else if (buttonGroup.checked) {
-										  return buttonGroup;
-										}
-										return null;
-									}
-									      
-									function updateEditorWithImagePJ(form) {
-									  if (window.opener.tinyMCE) {
-									    var tinyMCE = window.opener.tinyMCE;
-									    var button = getSelectedRadio(form.elements.selection);
-									    var html = '&lt;img src="' + button.value + '"/&gt;';
-									    tinyMCE.execCommand('mceInsertContent', false, html);
-									  }
-									  
-									  // fragment picture
-									  if (window.opener.$picturePath) {
-										  var picturePathField = window.opener.$picturePath;
-										  var button = getSelectedRadio(form.elements.selection);
-										  
-										  var relativeUrl = button.value.replace(/^(?:\/\/|[^\/]+)*\//, "/");
-										  
-										  picturePathField.val(relativeUrl);
-										  window.opener.previewImg();
-									  }
-									  
-									  
-									  self.close();
-									}
-							       
-								</script>
-
-							<a4j:region>
-								<div id="contentPJ">
-
-									<h:form id="search_resultsPJ">
-
-										<fieldset>
-											<legend>
-												<h:outputText
-													value="#{messages['toutatice.label.imageUpload.choose.attachedImage']}" />
-											</legend>
-										</fieldset>
-										<div class="from-group">
-											
-											<div class="table-responsive">
-												<h:selectOneRadio>
-													<nxu:inputList id="images_input" model="model"
-														value="#{currentDocument.toutatice.images}">
-
-														<h:panelGrid columns="3"
-															style="#{nxu:test(empty currentDocument.toutatice.images[model.rowIndex].file, 'display:none', '')}"
-															styleClass="table">
-
-															<input id="selection" type="radio" name="selection"
-																value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}" />
-
-															<h:graphicImage height="50px" width="50px"
-																value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}" />
-
-															<nxh:outputText
-																value="#{currentDocument.toutatice.images[model.rowIndex].filename}" />
-														</h:panelGrid>
-
-													</nxu:inputList>
-
-
-												</h:selectOneRadio>
-											</div>
-											
-										</div>
-
-										<div class="form-group">
-											<div class="col-sm-2 col-sm-offset-2">
-												<input type="submit" id="button_update_imagePJ"
-													class="btn btn-default"
-													value="#{messages['toutatice.label.command.insert']}"
-													onclick="javascript:updateEditorWithImagePJ(this.form);" />
-											</div>
-										</div>
-									</h:form>
-								</div>
-							</a4j:region>
-						</c:otherwise>
-					</c:choose>
-
-				</f:subview>
+				<ui:include src="/incl/editor_media_upload/attached_images.xhtml" />
 			</f:subview>
 
-			<f:subview
+
+
+			<!-- <f:subview
 				rendered="#{editorImageActions.selectedTab == 'SEARCH_VIDEOS'}">
-
-				<fieldset>
-					<legend>
-						<h:outputText value="#{messages['label.search.form.simple']}" />
-					</legend>
-				</fieldset>
-
-				<h:form class="form-horizontal" role="form">
-					<div class="form-group">
-						<label class="control-label col-sm-2" for="vids_keywords">#{messages['toutatice.label.imageUpload.search.keywords']}</label>
-						<div class="col-sm-10">
-							<h:inputText id="vids_keywords"
-								value="#{editorImageActions.searchKeywords}"
-								class="form-control"
-								onkeydown="if (event.keyCode == 13) {this.nextSibling.click()} else return true" />
-
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-2 col-sm-offset-2">
-							<h:commandButton value="#{messages['command.search']}"
-								action="#{editorImageActions.searchVideos('editor_image_upload')}"
-								class="btn btn-default" />
-						</div>
-					</div>
-
-				</h:form>
-
-
-
-
-
-				<a4j:region>
-					<div id="content_videos">
-
-						<fieldset>
-							<legend>
-								<h:outputText
-									value="#{messages['toutatice.label.imageUpload.search.results']}" />
-							</legend>
-						</fieldset>
-
-						<h:outputText value="#{messages['label.content.emptyFolder']}"
-							rendered="#{!editorImageActions.hasSearchVideosResults}" />
-
-						<f:subview rendered="#{editorImageActions.hasSearchVideosResults}">
-
-							<h:form id="search_videos_results" role="form"
-								rendered="#{editorImageActions.hasSearchVideosResults}">
-
-
-								<div class="form-group">
-
-									<h:selectOneRadio id="result_vids">
-										<nxu:dataTable id="dataTable_videos"
-											value="#{editorImageActions.searchVideosResults}"
-											var="document" rowClasses="dataRowEven,dataRowOdd"
-											styleClass="table">
-											<!-- id and selection -->
-											<nxu:column styleClass="iconColumn">
-												<input type="radio" id="selection_videos" name="selection"
-													value="#{document.id}" />
-												<div style="display: none;" id="#{document.id}">
-													<video id="#{document.id}_video"
-														width="#{document.getPropertyValue('vid:info').get('width')}"
-														height="#{document.getPropertyValue('vid:info').get('height')}"
-														class="video-js vjs-default-skin" controls="controls"
-														preload="auto" poster="#{staticPreview}">
-														<nxu:set var="urlMP4"
-															value="#{editorImageActions.getURLVideo(document, 'MP4 480p')}">
-															<nxu:set var="urlWebM"
-																value="#{editorImageActions.getURLVideo(document, 'WebM 480p')}">
-																<f:subview rendered="#{not empty urlMP4}">
-																	<source src="#{urlMP4}" type='video/mp4' />
-																</f:subview>
-																<f:subview rendered="#{not empty urlWebM}">
-																	<source src="#{urlWebM}" type='video/webm' />
-																</f:subview>
-															</nxu:set>
-														</nxu:set>
-													</video>
-												</div>
-											</nxu:column>
-											<!-- Icon + Type -->
-											<nxu:column styleClass="iconColumn">
-												<nxu:graphicImage value="#{nxd:iconPath(document)}"
-													alt="#{document.type}" />
-											</nxu:column>
-											<!--  Title -->
-											<nxu:column>
-												<f:facet name="header">
-													<h:outputText
-														value="#{messages['label.content.header.title']}" />
-												</f:facet>
-												<h:outputText value="#{nxd:titleOrId(document)}" />
-											</nxu:column>
-											<!--  Image -->
-											<h:column>
-												<f:facet name="header">
-													<h:outputText
-														value="#{messages['label.imageUpload.image']}" />
-												</f:facet>
-												<h:graphicImage
-													value="#{nxd:fileUrl('downloadPicture', document, 'StaticPlayerView:content', currentDocument.dublincore.modified)}" />
-											</h:column>
-										</nxu:dataTable>
-									</h:selectOneRadio>
-								</div>
-
-								<div class="form-group">
-									<div class="col-sm-2 col-sm-offset-2">
-										<input type="submit" id="button_videos_update"
-											class="btn btn-default"
-											value="#{messages['toutatice.label.command.insert']}"
-											onclick="javascript:updateEditor(this.form.elements.selection_videos, 'Video');" />
-									</div>
-								</div>
-
-
-							</h:form>
-
-						</f:subview>
-					</div>
-				</a4j:region>
-			</f:subview>
+				<ui:include src="/incl/editor_media_upload/search_videos.xhtml" />
+			</f:subview> -->
 
 		</div>
 	</div>
