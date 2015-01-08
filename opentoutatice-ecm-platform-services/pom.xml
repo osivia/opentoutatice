@@ -38,20 +38,6 @@
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
-		<!-- Just For sources -->
-		<dependency>
-			<groupId>org.nuxeo.elasticsearch</groupId>
-			<artifactId>nuxeo-elasticsearch-core</artifactId>
-			<version>6.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.nuxeo.elasticsearch</groupId>
-			<artifactId>nuxeo-elasticsearch-web</artifactId>
-			<version>6.0</version>
-		</dependency>
-
 	</dependencies>
 
 	<profiles>

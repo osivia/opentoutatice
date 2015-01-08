@@ -3,28 +3,41 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.nuxeo.ecm.distribution</groupId>
-		<artifactId>nuxeo-distribution</artifactId>
-		<version>6.0</version>
+		<groupId>opentoutatice-ecm.platform</groupId>
+		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
-  
+	
 	<artifactId>opentoutatice-ecm-platform-marketplace</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
 	<packaging>zip</packaging>
 	<name>Marketplace package - Open Toutatice platform</name>
 	
-	<properties/>
+	<properties>
+		<nuxeo.version>6.0</nuxeo.version>
+	</properties>
     
+	<dependencyManagement>
+		<dependencies>
+		<!-- Import Nuxeo BOM -->
+			<dependency>
+				<groupId>org.nuxeo.ecm.distribution</groupId>
+				<artifactId>nuxeo-distribution</artifactId>
+				<version>${nuxeo.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
 	<dependencies>
 		<!-- Base distribution(s) for the MP -->
 		<dependency>
 			<groupId>org.nuxeo.marketplace.dam</groupId>
 			<artifactId>marketplace</artifactId>
-			<version>6.0</version>
-			<classifier>nxr</classifier>
-			<type>zip</type>
+			<version>${nuxeo.version}</version>
+			<type>pom</type>
 		</dependency>
-
+		
 		<!-- Additional bundles to be deployed by the MP -->
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
@@ -54,7 +67,7 @@
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-login-portal-sso</artifactId>
-			<version>${nuxeo.core.version}</version>
+			<version>${nuxeo.version}</version>
 			<type>jar</type>
 		</dependency>
 	</dependencies>
@@ -93,7 +106,7 @@
 			</repositories>
 
 			<build>
-				<plugins>
+  				<plugins>
 					<plugin>
 						<groupId>org.nuxeo.build</groupId>
 						<artifactId>ant-assembly-maven-plugin</artifactId>
@@ -232,7 +245,7 @@
 
 			<build>
 				<plugins>
-					<plugin>
+   					<plugin>
 						<groupId>org.nuxeo.build</groupId>
 						<artifactId>ant-assembly-maven-plugin</artifactId>
 						<configuration>
@@ -247,7 +260,7 @@
 
 		<profile>
 			<id>PROD</id>
-
+        
 			<properties>
 				<profileName>PROD</profileName>
 			</properties>
@@ -284,14 +297,13 @@
 				<plugins>
 					<plugin>
 						<groupId>org.nuxeo.build</groupId>
-						<artifactId>nuxeo-distribution-tools</artifactId>
-						<version>2.0</version>
+						<artifactId>ant-assembly-maven-plugin</artifactId>
 						<configuration>
 							<buildFiles>
 								<buildFile>${basedir}/src/main/assemble/assembly_PROD.xml</buildFile>
 							</buildFiles>
 						</configuration>
-					</plugin>
+					</plugin>				
 				</plugins>
 			</build>
 		</profile>

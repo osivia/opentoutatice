@@ -8,9 +8,10 @@
 	
 	<target name="build" description="Build the Nuxeo open toutatice platform Marketplace package">
 		<property name="outdir" value="${maven.project.build.directory}" />
+		<mkdir dir="${outdir}" />	
 		
 		<!-- Build the dependency tree, including the "test" scope, resolving artifacts if needed -->
-		<artifact:nuxeo-expand includeTestScope="true" />
+		<artifact:nuxeo-expand includeTestScope="true" groupPrefixes="org.nuxeo" />
 
 		<!-- Create specific optional files for use by Nuxeo SDK -->
 		<artifact:print output="${outdir}/artifacts-opentoutatice.properties" mode="sdk" />
@@ -18,17 +19,18 @@
 
 		<!-- Output the dependency tree for debugging purpose -->
 		<artifact:print output="${outdir}/dependency-tree.log" />
+		<tstamp />
 		
 		<delete failonerror="false" dir="${outdir}/nxr" />
 		<mkdir dir="${outdir}/nxr" />
-				
+		
 		<delete failonerror="false" dir="${outdir}/marketplace" />
 		<mkdir dir="${outdir}/marketplace" />
 		<copy todir="${outdir}/marketplace">
 			<fileset dir="src/main/resources" />
 			<filterset>
 				<filter token="VERSION" value="${maven.project.version}" />
-				<filter token="DISTRIB_VERSION" value="${nuxeo.distribution.version}" />
+				<filter token="DISTRIB_VERSION" value="${nuxeo.version}" />
 			</filterset>
 		</copy>
 		
@@ -44,9 +46,9 @@
 		<copy todir="${outdir}/nxr/bundles" overwrite="true">
 			<artifact:set>
 				<includes>
-					<artifact groupId="org.nuxeo*" scope="!test" type="jar" />
+					<artifact groupId="org.nuxeo*" scope="!test" type="!pom" />
 					<!-- Include your artifacts using their groupId for instance -->
-					<artifact groupId="opentoutatice-ecm.*" scope="!test" type="jar" />
+					<artifact groupId="opentoutatice-ecm.*" scope="!test" type="!pom" />
 				</includes>
 				<excludes>
 					<artifact groupId="org.nuxeo.lib*" />
@@ -67,6 +69,8 @@
 				<excludes>
 					<!-- Filter out your artifacts using their groupId for instance -->
 					<artifact groupId="opentoutatice-ecm.*" />
+					<!-- Filter out not desired log4j lib (missing into DAM NXR?) -->
+					<artifact groupId="log4j*" />
 				</excludes>
 			</artifact:set>
 		</copy>
@@ -79,14 +83,15 @@
 
 		<!-- Your MP only needs to include files not already provided by the base distribution -->
 		<nx:zipdiff file1="${outdir}/nxr-${maven.project.version}.zip" 
-			file2="${outdir}/marketplace-${nuxeo.runtime.version}-nxr.zip" 
+			file2="${outdir}/marketplace-${nuxeo.version}-nxr.zip"
 			includesfile="${outdir}/includes" 
 			excludesfile="${outdir}/excludesfile" 
-			patternsetid="opentoutatice.versus.dm" 
-			ignoreContent="true" />
+			patternsetid="opentoutatice.versus.dam" 
+			ignoreContent="true" 
+			ignoreContentPattern=".*\.jar$" />
 		
 		<unzip src="${outdir}/nxr-${maven.project.version}.zip" dest="${outdir}/marketplace/install">
-			<patternset refid="opentoutatice.versus.dm" />
+			<patternset refid="opentoutatice.versus.dam" />
 		</unzip>
 
 		<!-- Build the property that lists the bundles to include -->
