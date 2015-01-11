@@ -9,9 +9,11 @@
 	xmlns:a4j="http://richfaces.org/a4j">
 
 	<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
-		<div class="has-error">
-			<h:outputText value="#{messages['label.imageUpload.unableToUpload']}" />
-		</div>
+		<div class="alert alert-warning">
+					<i class="glyphicons halflings warning-sign"></i> <span
+						class="text-warning">#{messages['label.imageUpload.unableToUpload']}</span>
+
+				</div>
 	</f:subview>
 
 	<f:subview
