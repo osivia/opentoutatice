@@ -14,9 +14,11 @@
 			<subtypes>
 				<type>Picture</type>
 			</subtypes>
+			<layouts mode="any">
+				<layout>heading</layout>
+			</layouts>
 			<layouts mode="edit">
 				<layout>heading</layout>
-				<layout>picturebook</layout>
 			</layouts>
 			<contentViews category="content">
 				<contentView showInExportView="false">cv_PB_ContentOrderedReadNWrite
