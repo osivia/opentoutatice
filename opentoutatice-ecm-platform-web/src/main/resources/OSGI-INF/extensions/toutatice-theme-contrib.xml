@@ -28,9 +28,9 @@
 				<theme>galaxy/popup</theme>
 			</view>
             
-            <view id="/osivia_open_live_edit.xhtml">
+          <!--  FIXME: to del <view id="/osivia_open_live_edit.xhtml">
                 <theme>galaxy/popup</theme>
-            </view>            
+            </view>    -->         
 		</application>
 	</extension>
 

@@ -41,6 +41,12 @@
 	display: none;
 }
 
+/* Visuel vue résumé d'un PortalSite */
+
+.widgetPanel.actionsWidgetPanel > img {
+	width: 100%;
+}
+
 
 /* Actions dans la vue résumé */
 

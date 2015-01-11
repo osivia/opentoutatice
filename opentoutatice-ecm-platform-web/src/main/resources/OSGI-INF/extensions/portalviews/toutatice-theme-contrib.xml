@@ -32,12 +32,6 @@
 				<theme>toutatice/popup</theme>
 			</view>
 
-			<!-- <view id="/editor_link_search_document.xhtml">
-				<theme>toutatice/popup</theme>
-			</view>
-			<view id="/editor_image_upload.xhtml">
-				<theme>toutatice/popup</theme>
-			</view> -->
 		</application>
 
 	</extension>
@@ -51,6 +45,7 @@
 			<resource>glyphicons.css</resource>
 			<resource>toutatice-popup.min.css</resource>
 			<resource>custom-popup.min.css</resource>
+			<require>nxthemes.css</require>
 		</view>
 
 	</extension>
