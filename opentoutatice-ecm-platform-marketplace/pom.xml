@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -6,16 +7,16 @@
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
 		<version>3.0.0-SNAPSHOT</version>
 	</parent>
-	
+
 	<artifactId>opentoutatice-ecm-platform-marketplace</artifactId>
 	<packaging>zip</packaging>
 	<name>Marketplace package - Open Toutatice platform</name>
-	
+
 	<properties />
-    
+
 	<dependencyManagement>
 		<dependencies>
-		<!-- Import Nuxeo BOM -->
+			<!-- Import Nuxeo BOM -->
 			<dependency>
 				<groupId>org.nuxeo.ecm.distribution</groupId>
 				<artifactId>nuxeo-distribution</artifactId>
@@ -25,7 +26,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
+
 	<dependencies>
 		<!-- Base distribution(s) for the MP -->
 		<dependency>
@@ -34,7 +35,7 @@
 			<version>${nuxeo.version}</version>
 			<type>pom</type>
 		</dependency>
-		
+
 		<!-- Additional bundles to be deployed by the MP -->
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
@@ -64,249 +65,66 @@
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-login-portal-sso</artifactId>
-			<version>${nuxeo.version}</version>
 			<type>jar</type>
 		</dependency>
 	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.nuxeo.build</groupId>
+				<artifactId>ant-assembly-maven-plugin</artifactId>
+				<configuration>
+					<buildFiles>
+						<buildFile>${basedir}/src/main/assemble/assembly.xml</buildFile>
+					</buildFiles>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 	<profiles>
-
 		<profile>
 			<id>DEV</id>
 
 			<properties>
 				<profileName>DEV</profileName>
 			</properties>
-
-			<repositories>
-				<repository>
-					<id>private-releases</id>
-					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-				</repository>
-				<repository>
-					<id>private-snapshots</id>
-					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
-					<releases>
-						<enabled>false</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-						<updatePolicy>always</updatePolicy>
-					</snapshots>
-				</repository>
-			</repositories>
-
-			<build>
-  				<plugins>
-					<plugin>
-						<groupId>org.nuxeo.build</groupId>
-						<artifactId>ant-assembly-maven-plugin</artifactId>
-						<configuration>
-							<buildFiles>
-								<buildFile>${basedir}/src/main/assemble/assembly_DEV.xml</buildFile>
-							</buildFiles>
-						</configuration>
-					</plugin>				
-				</plugins>
-			</build>
 		</profile>
-
 		<profile>
 			<id>INT</id>
 
 			<properties>
 				<profileName>INT</profileName>
 			</properties>
-
-			<repositories>
-				<repository>
-					<id>private-releases</id>
-					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-				</repository>
-				<repository>
-					<id>private-snapshots</id>
-					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
-					<releases>
-						<enabled>false</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-						<updatePolicy>always</updatePolicy>
-					</snapshots>
-				</repository>
-			</repositories>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.nuxeo.build</groupId>
-						<artifactId>ant-assembly-maven-plugin</artifactId>
-						<configuration>
-							<buildFiles>
-								<buildFile>${basedir}/src/main/assemble/assembly_INT.xml</buildFile>
-							</buildFiles>
-						</configuration>
-					</plugin>				
-				</plugins>
-			</build>
 		</profile>
-
 		<profile>
 			<id>QUALIF</id>
 
 			<properties>
 				<profileName>QUALIF</profileName>
 			</properties>
-
-			<repositories>
-				<repository>
-					<id>private-releases</id>
-					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-				</repository>
-				<repository>
-					<id>private-snapshots</id>
-					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
-					<releases>
-						<enabled>false</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-						<updatePolicy>always</updatePolicy>
-					</snapshots>
-				</repository>
-			</repositories>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.nuxeo.build</groupId>
-						<artifactId>ant-assembly-maven-plugin</artifactId>
-						<configuration>
-							<buildFiles>
-								<buildFile>${basedir}/src/main/assemble/assembly_QUALIF.xml</buildFile>
-							</buildFiles>
-						</configuration>
-					</plugin>				
-				</plugins>
-			</build>
 		</profile>
-
 		<profile>
 			<id>PREPROD</id>
 
 			<properties>
 				<profileName>PREPROD</profileName>
 			</properties>
-
-			<repositories>
-				<repository>
-					<id>private-releases</id>
-					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-				</repository>
-				<repository>
-					<id>private-snapshots</id>
-					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
-					<releases>
-						<enabled>false</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-						<updatePolicy>always</updatePolicy>
-					</snapshots>
-				</repository>
-			</repositories>
-
-			<build>
-				<plugins>
-   					<plugin>
-						<groupId>org.nuxeo.build</groupId>
-						<artifactId>ant-assembly-maven-plugin</artifactId>
-						<configuration>
-							<buildFiles>
-								<buildFile>${basedir}/src/main/assemble/assembly_PREPROD.xml</buildFile>
-							</buildFiles>
-						</configuration>
-					</plugin>				
-				</plugins>
-			</build>
 		</profile>
-
 		<profile>
 			<id>PROD</id>
-        
-			<properties>
-				<profileName>PROD</profileName>
-			</properties>
 
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
 
-			<repositories>
-				<repository>
-					<id>private-releases</id>
-					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-				</repository>
-				<repository>
-					<id>private-snapshots</id>
-					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
-					<releases>
-						<enabled>false</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-						<updatePolicy>always</updatePolicy>
-					</snapshots>
-				</repository>
-			</repositories>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.nuxeo.build</groupId>
-						<artifactId>ant-assembly-maven-plugin</artifactId>
-						<configuration>
-							<buildFiles>
-								<buildFile>${basedir}/src/main/assemble/assembly_PROD.xml</buildFile>
-							</buildFiles>
-						</configuration>
-					</plugin>				
-				</plugins>
-			</build>
+			<properties>
+				<profileName>PROD</profileName>
+			</properties>
 		</profile>
-
 	</profiles>
-
+		
 	<distributionManagement>
 		<repository>
 			<id>toutatice-releases</id>

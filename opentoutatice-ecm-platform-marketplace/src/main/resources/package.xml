@@ -1,13 +1,13 @@
 <package type="addon" name="open-toutatice" version="@VERSION@">
 	<title>Open Toutatice</title>
 	<description>
-		<p>This addon implements the opened platform called Open Toutatice 
+		<p>This addon implements the opened platform called Open Toutatice
 			(which one is based on the Nuxeo DM distribution)
-			
-				Main evolutions:
+
+			Main evolutions:
 			* Initial version compliant with Nuxeo 6.0
-	
-				Main fixes provided:
+
+			Main fixes provided:
 			* None
 		</p>
 	</description>
@@ -24,12 +24,12 @@
 		<platform>cap-@DISTRIB_VERSION@</platform>
 	</platforms>
 	<dependencies>
-        <!-- Dépendances sur les addons Nuxeo -->
+		<!-- Dépendances sur les addons Nuxeo -->
 		<package>nuxeo-dam:6.0.0</package>
 		<!-- FIXME: just for schema webpage of PortalSite et PortalPage... -->
 		<package>nuxeo-sites-blogs:1.2.0</package>
 		<!-- Dépendance sur les hotfixes -->
-		<package>nuxeo-6.0-HF02:1.0.0</package>
+		<package>nuxeo-6.0-HF03:1.0.0</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
