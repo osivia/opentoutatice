@@ -127,7 +127,8 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     String source;
     Map<String, Boolean> mapSwitchState = null;
 
-    static private final String CST_DEFAULT_PUBLICATON_AREA_TITLE = "inconnu";
+
+	static private final String CST_DEFAULT_PUBLICATON_AREA_TITLE = "inconnu";
     static private final String CST_DEFAULT_PUBLICATON_AREA_PATH = "/";
     static private final String CST_DEFAULT_UNKNOWN_VERSION_LABEL = "Version indéterminée"; // I18N
 
@@ -948,18 +949,27 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
                     }
                 }
             } else {
-                status = false;
+            	status = false;
             }
         }
 
         return status;
     }
 
-    public void setIsSwitchState(boolean isSwitchState, String param) {
-        this.mapSwitchState.put(param, isSwitchState);
-    }
+    
+	public Map<String, Boolean> getMapSwitchState() {
+		if(mapSwitchState==null){
+			mapSwitchState = new HashMap<String, Boolean>();
+		}
+		return mapSwitchState;
+	}
 
-    @Observer(value = {EventNames.DOCUMENT_SELECTION_CHANGED})
+	public void setMapSwitchState(Map<String, Boolean> mapSwitchState) {
+		this.mapSwitchState = mapSwitchState;
+	}
+
+
+	@Observer(value = {EventNames.DOCUMENT_SELECTION_CHANGED})
     public void resetChgDocument() {
         navigationContext.setChangeableDocument(null);
     }
@@ -1003,7 +1013,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     }
 
     public boolean initSwitchState(String param) throws PropertyException, ClientException {
-        if (null == mapSwitchState) {
+    	if (null == mapSwitchState) {
             mapSwitchState = new HashMap<String, Boolean>();
         }
 
