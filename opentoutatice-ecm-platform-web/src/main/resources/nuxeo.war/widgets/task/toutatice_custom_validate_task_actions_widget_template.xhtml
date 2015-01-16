@@ -9,8 +9,8 @@
   xmlns:nxd="http://nuxeo.org/nxweb/document">
   
 <nxu:set var="task" value="#{field_0}" cache="true">
-  <nxu:set var="idPrefix" value="#{field_1}" cache="true">
-
+    <nxu:set var="idPrefix" value="#{field_1}" cache="true">
+<c:if test="#{task!=null}">
     <f:subview id="#{idPrefix}_subview">
 
       <a4j:outputPanel id="#{idPrefix}_ajax_panel" layout="block">
@@ -43,6 +43,7 @@
         </div>
       </a4j:outputPanel>
     </f:subview>
+ </c:if>   
   </nxu:set>
 </nxu:set>
 </div>

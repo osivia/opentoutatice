@@ -101,4 +101,9 @@ public class ToutaticeTaskActionsBean extends TaskActionsBean {
         return false;
     }
     
+    public Task getTask(String nameTask) throws ClientException {
+        DocumentModel currentDocument = navigationContext.getCurrentDocument();
+        return ToutaticeWorkflowHelper.getDocumentTaskByName(nameTask, documentManager, currentDocument);
+    }
+    
 }
