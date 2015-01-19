@@ -38,7 +38,7 @@
 
 		<!-- Base distribution NXR -->
 		<copy todir="${outdir}">
-			<artifact:resolveFile key="org.nuxeo.marketplace.dam:marketplace::zip:nxr" />
+			<artifact:resolveFile key="org.nuxeo.marketplace.dam:marketplace:${nuxeo.version}:zip:nxr" />
 		</copy>
 
 		<!-- Get Nuxeo bundles but not Nuxeo libraries (which groupId starts with"org.nuxeo.lib"), 
