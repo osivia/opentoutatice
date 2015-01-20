@@ -60,6 +60,13 @@ public class AddComment {
 
     @Param(name = "fileName", required = false)
     protected String fileName;
+    
+    @OperationMethod
+    public Object run() throws Exception {
+    	CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
+        DocumentModel comment = createComment(document.getType(), session, commentContent, commentTitle, fileName, null);
+        return commentableDoc.addComment(comment);
+    }
 
     @OperationMethod
     public Object run(Blob blob) throws Exception {
