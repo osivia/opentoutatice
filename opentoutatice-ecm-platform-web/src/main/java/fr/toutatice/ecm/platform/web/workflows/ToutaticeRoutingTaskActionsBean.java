@@ -54,6 +54,10 @@ public class ToutaticeRoutingTaskActionsBean extends RoutingTaskActionsBean {
 
 	@In(create = true)
 	ToutaticeDocumentRoutingActionsBean routingActions;
+	
+	public String getClickedButton(){
+		return super.button;
+	}
 
 	public boolean isAcceptOnLineButtonCliked() {
 		return ToutaticeGlobalConst.CST_WORKFLOW_BUTTON_ONLINE_ACCEPT
