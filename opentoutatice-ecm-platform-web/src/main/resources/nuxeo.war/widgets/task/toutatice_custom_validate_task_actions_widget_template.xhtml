@@ -17,6 +17,10 @@
 
         <div>
           <div id="#{idPrefix}_box">
+                <nxl:layout
+                  name="#{routingTaskActions.getTaskLayout(task)}"
+                  mode="edit"
+                  value="#{routingTaskActions.getFormVariables(task)}" />
                 <p>
                   <script>
                    function setClickButton(buttonId) {
@@ -27,8 +31,7 @@
                     value="#{routingTaskActions.getTaskButtons(task)}"
                     cache="true">
                     <input type="hidden" name="button" value="" />
-                    <nxu:dataList var="btn_action" value="#{actions}"
-                      id="#{idPrefix}_versionActionsTable">
+                    <c:forEach var="btn_action" items="#{actions}">
                       <span id="#{sel_action.id}"> <h:commandButton
                           action="#{routingTaskActions.endTask(task)}"
                           value="#{messages[btn_action.label]}"
@@ -36,14 +39,15 @@
                           onclick="setClickButton('#{btn_action.id}');return true;">
                         </h:commandButton>
                       </span>
-                    </nxu:dataList>
+                    </c:forEach>
                   </nxu:set>
                 </p>
+                
           </div>
         </div>
       </a4j:outputPanel>
     </f:subview>
- </c:if>   
+</c:if>
   </nxu:set>
 </nxu:set>
 </div>
