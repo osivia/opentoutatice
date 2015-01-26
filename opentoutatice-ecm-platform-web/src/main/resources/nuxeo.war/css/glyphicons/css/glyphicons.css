@@ -31,6 +31,17 @@
         format('svg');
 }
 
+@font-face {
+	font-family: 'Glyphicons Social Regular';
+	src: url('/nuxeo/css/glyphicons/fonts/glyphicons-social-regular.eot');
+	src: url('/nuxeo/css/glyphicons/fonts/glyphicons-social-regular.eot?#iefix')
+		format('embedded-opentype'),
+		url('/nuxeo/css/glyphicons/fonts/glyphicons-social-regular.woff') format('woff'),
+		url('/nuxeo/css/glyphicons/fonts/glyphicons-social-regular.ttf') format('truetype'),
+		url('/nuxeo/css/glyphicons/fonts/glyphicons-social-regular.svg#glyphicons_socialregular')
+		format('svg');
+}
+
 
 
 /* Bootstrap integration */
@@ -48,8 +59,16 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.glyphicons {
+    font-family: 'Glyphicons Regular';
+}
+
 .glyphicons.halflings {
     font-family: 'Glyphicons Halflings Regular';
+}
+
+.glyphicons.social {
+    font-family: 'Glyphicons Social Regular';
 }
 
 

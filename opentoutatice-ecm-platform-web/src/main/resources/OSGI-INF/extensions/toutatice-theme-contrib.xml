@@ -6,6 +6,7 @@
 			<styles append="true">
 				<style>local-publishing</style>
 				<style>images-tab</style>
+				<style>opentoutatice</style>
 			</styles>
 		</themePage>
 	</extension>
@@ -20,6 +21,9 @@
 		<style name="flavors-configuration">
 			<src>themes/css/flavors-configuration.css</src>
 		</style>
+		<style name="opentoutatice">
+			<src>themes/css/opentoutatice.css</src>
+		</style>
 	</extension>
 	
 	<extension target="org.nuxeo.theme.services.ThemeService" point="applications">	
@@ -28,9 +32,6 @@
 				<theme>galaxy/popup</theme>
 			</view>
             
-          <!--  FIXME: to del <view id="/osivia_open_live_edit.xhtml">
-                <theme>galaxy/popup</theme>
-            </view>    -->         
 		</application>
 	</extension>
 

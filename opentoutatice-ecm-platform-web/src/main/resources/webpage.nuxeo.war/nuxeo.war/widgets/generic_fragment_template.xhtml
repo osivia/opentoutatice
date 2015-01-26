@@ -11,47 +11,73 @@
 
 	<c:set var="mode" value="#{layout.mode}" />
 
-	<div class="titre2">
-		<img src="theme/images/icone_fragment.gif" /><span>Options du
-			contenu</span>
+
+	<div class="form-group">
+		<div class="col-sm-12">
+
+			<fieldset>
+				<legend>
+					<i class="glyphicons halflings cog"></i>
+					<h:outputText value="#{messages['osivia.fragment.generic.title']}" />
+				</legend>
+			</fieldset>
+		</div>
+
+		<nxu:dataList id="fgts" value="#{currentDocument.fgts.fragments}"
+		var="fgt" class="fgts">
+
+			<s:div rendered="#{fgt.uri == fragmentBean.uri}">
+
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="title">#{messages['osivia.fragment.generic.field.title']}</label>
+					<div class="col-sm-10">
+						<h:inputText id="title" value="#{fgt.title}"
+							class="form-control" />
+					</div>
+
+
+					<div class="col-sm-offset-2 col-sm-10">
+						<div class="checkbox">
+							<label> <nxl:widgetType widgetName="hideTitle"
+									name="checkbox" mode="edit" value="#{fgt.hideTitle}" /><span>#{messages['osivia.fragment.generic.field.hide.title']}</span>
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="panel">#{messages['osivia.fragment.generic.panel']}</label>
+					<div class="col-sm-10">
+						<div class="checkbox">
+							<label> <nxl:widgetType widgetName="panel"
+									name="checkbox" mode="edit" value="#{fgt.panel}" />#{messages['osivia.fragment.generic.panel.display']}
+							</label>
+						</div>
+					</div>
+					<div class="col-sm-offset-2 col-sm-10">
+						<div class="checkbox">
+							<label> <nxl:widgetType widgetName="collapsed"
+									name="checkbox" mode="edit" value="#{fgt.collapsed}"/>#{messages['osivia.fragment.generic.panel.reduce']}
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<div id="stylesGroup" class="form-group">
+					<label class="control-label col-sm-2">#{messages['osivia.fragment.generic.field.style']}</label>
+						<div class="col-sm-10">
+							<oh:icons id="selectStyle_#{widget.id}" src="#{config.windowStyles}"
+									value="#{fgt.style}"
+									binding="#{genericStyleSimpleForm.simpleComponent}"
+									inputClientId="#{genericStyleSimpleForm.simpleComponentClientId}"
+									multiSelect="true" />
+						</div>
+
+				</div>
+
+			</s:div>
+
+
+		</nxu:dataList>
 	</div>
-
-	<c:forEach id="fgts" items="#{currentDocument.fgts.fragments}"
-		var="fgt">
-
-		<s:div rendered="#{fgt.uri eq fragmentBean.uri}">
-
-			<table>
-
-				<tr>
-					<td><h:outputLabel value="Titre : " /></td>
-					<td><nxl:widgetType id="title" name="text" size="50"
-							mode="edit" value="#{fgt.title}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputLabel value="Masquer le titre : " /></td>
-					<td><nxl:widgetType id="hideTitle" name="checkbox" mode="edit"
-							value="#{fgt.hideTitle}" /></td>
-				</tr>
-				<tr>
-					<td><h:outputLabel value="Affichage réduit : " /></td>
-					<td><nxl:widgetType id="collapsed" name="checkbox" mode="edit"
-							value="#{fgt.collapsed}" /></td>
-				</tr>
-
-				<tr>
-					<td><h:outputLabel value="Style : " /></td>
-					<td><oh:icons id="selectStyle" src="#{config.windowStyles}"
-							value="#{fgt.style}" ulStyleClass="cssStyleList"
-							binding="#{genericStyleSimpleForm.simpleComponent}"
-							inputClientId="#{genericStyleSimpleForm.simpleComponentClientId}"
-							multiSelect="true" iconsGroup="styleGroup" /></td>
-				</tr>
-
-			</table>
-
-
-		</s:div>
-
-	</c:forEach>
 </f:subview>

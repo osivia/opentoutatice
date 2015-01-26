@@ -9,15 +9,19 @@
 	xmlns:oh="http://osivia.org/html">
 
 <head>
-	<meta charset="utf-8"></meta>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
-	<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-	<title><h:outputText
-			value="#{nuxeoApplicationName} - #{messages['toutatice.label.nx.link.window.title']}" /></title>
-	<link href="#{baseURL}css/toutatice-popup.min.css" type="text/css"
-		rel="stylesheet" />
-	<link href="#{baseURL}css/webpage-popup.min.css" type="text/css"
-		rel="stylesheet" />
+<meta charset="utf-8"></meta>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+<title><h:outputText
+		value="#{nuxeoApplicationName} - #{messages['toutatice.label.nx.link.window.title']}" /></title>
+
+<script src="#{baseURL}nxthemes-lib/jquery.js" />
+<script src="#{baseURL}nxthemes-lib/prototype.js" />
+
+<link href="#{baseURL}css/toutatice-popup.min.css" type="text/css"
+	rel="stylesheet" />
+<link href="#{baseURL}css/plugin-popup.min.css" type="text/css"
+	rel="stylesheet" />
 </head>
 
 <body>
@@ -26,8 +30,8 @@
 
 
 		<p class="h4">
-				<h:outputText value="#{messages['toutatice.label.nx.link.title']}" />
-			</p>
+			<h:outputText value="#{messages['toutatice.label.nx.link.title']}" />
+		</p>
 
 
 		<h:form class="form-horizontal" role="form">
@@ -73,8 +77,8 @@
 
 		<div id="content">
 			<p class="h4">
-					<h:outputText value="#{messages['label.search.results.keywords']}" />
-				</p>
+				<h:outputText value="#{messages['label.search.results.keywords']}" />
+			</p>
 			<h:outputText value="#{messages['label.content.emptyFolder']}"
 				rendered="#{!editorLinkActions.hasSearchResults}" />
 			<h:form id="search_results"
@@ -195,11 +199,19 @@
               
               // for fragment picture
               if (window.opener.$targetPath) {
-                var targetPath = window.opener.$targetPath;
+                var targetPathField = window.opener.$targetPath;
+  				var relativeUrl = docLink.href.replace(/^(?:\/\/|[^\/]+)*\//, "/");
+				var paramIndex = relativeUrl.indexOf("@");
+				if(paramIndex != -1){
+					relativeUrl = relativeUrl.substr(0,paramIndex);
+				}
+				targetPathField.val(relativeUrl);
 
-  				var relativeUrl = docLink.href.replace(/^(?:\/\/|[^\/]+)*\//, "/")
-				
-				targetPath.val(relativeUrl);
+				var targetTitleField = window.opener.$targetTitle;
+				var title = jQuery(docLink).text();
+				targetTitleField.val(title);
+
+				targetTitleField.attr("readonly","readonly");
                 }
               
             }
@@ -210,11 +222,12 @@
 				<nav class="navbar navbar-default navbar-fixed-bottom">
 					<div class="container-fluid">
 						<div class="col-sm-offset-2">
-						<input type="submit" id="button_update" class="btn btn-primary navbar-btn"
-							value="#{messages['toutatice.label.command.insert']}"
-							onclick="javascript:updateEditor(this.form);" />
+							<input type="submit" id="button_update"
+								class="btn btn-primary navbar-btn"
+								value="#{messages['toutatice.label.command.insert']}"
+								onclick="javascript:updateEditor(this.form);" />
+						</div>
 					</div>
-				</div>
 				</nav>
 			</h:form>
 		</div>

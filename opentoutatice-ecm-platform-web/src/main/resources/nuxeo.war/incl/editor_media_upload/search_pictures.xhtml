@@ -83,6 +83,16 @@
 					tinyMCE.execCommand('mceInsertContent', false, html);
 					self.close();
 				}
+				// For Fragment
+				if(window.opener.$targetPath){
+					var relativeUrl = selectedPictureUrl.replace(
+									/^(?:\/\/|[^\/]+)*\//, "/");
+							
+					var picturePathField = window.opener.$picturePath;
+					picturePathField.val(relativeUrl);
+					window.opener.previewImg();
+					self.close();
+				}
 			}
 				</script>
 			</a4j:outputPanel>

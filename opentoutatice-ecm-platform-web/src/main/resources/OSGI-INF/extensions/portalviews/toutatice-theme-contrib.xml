@@ -16,6 +16,7 @@
 
 		<application root="${org.nuxeo.ecm.contextPath}"
 			template-engine="jsf-facelets">
+
 			<view id="/osivia_done.xhtml">
 				<theme>toutatice/popup</theme>
 			</view>
@@ -23,12 +24,6 @@
 				<theme>toutatice/popup</theme>
 			</view>
 			<view id="/toutatice_create_document.xhtml">
-				<theme>toutatice/popup</theme>
-			</view>
-			<view id="/osivia_edit_document.xhtml">
-				<theme>toutatice/popup</theme>
-			</view>
-			<view id="/osivia_edit_fragment.xhtml">
 				<theme>toutatice/popup</theme>
 			</view>
 
@@ -56,11 +51,11 @@
 		<resource name="glyphicons.css">
 			<path>css/glyphicons/css/glyphicons.css</path>
 		</resource>
-		
+
 		<resource name="toutatice-popup.min.css">
 			<path>css/toutatice-popup.min.css</path>
 		</resource>
-		
+
 		<resource name="custom-popup.min.css">
 			<path>css/custom-popup.min.css</path>
 		</resource>

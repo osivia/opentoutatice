@@ -43,6 +43,7 @@
       <xs:element name="refURI" type="xs:string"/>
       <xs:element name="picturePath" type="xs:string"/>
       <xs:element name="targetPath" type="xs:string"/>
+      <xs:element name="targetTitle" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
 </xs:schema>

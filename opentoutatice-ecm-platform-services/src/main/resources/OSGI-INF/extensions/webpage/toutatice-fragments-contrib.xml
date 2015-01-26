@@ -48,6 +48,13 @@
             class="fr.toutatice.ecm.platform.service.fragments.types.PortletFragment"
             title="osivia.fragment.portlet.title"
             layout="portlet_fragment_layout" />  
+            
+        <fragment
+            code="fgt.rss"
+            class="fr.toutatice.ecm.platform.service.fragments.types.RssFragment"
+            title="osivia.fragment.rss.title"
+            layout="rss_fragment_layout" />  
+            
     </extension>
 
 </component>

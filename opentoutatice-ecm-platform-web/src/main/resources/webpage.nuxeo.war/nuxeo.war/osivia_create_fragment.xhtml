@@ -1,75 +1,72 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<nxthemes:composition 
-xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:nxthemes="http://nuxeo.org/nxthemes"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
 	xmlns:nxh="http://nuxeo.org/nxweb/html"
 	xmlns:nxd="http://nuxeo.org/nxweb/document"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jstl/core">
-	
-	<ui:define name="stylesheets">
-		<link href="#{baseURL}/css/modepage.css" type="text/css"
-			rel="stylesheet" />
-	</ui:define>
 
-	<ui:define name="header_scripts">
-		<script type="text/javascript" src="#{baseURL}/scripts/icons.js"></script>
-	</ui:define>
+<h:head>
+	<meta charset="utf-8"></meta>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+	<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
 
+	<link href="#{baseURL}css/fragments-popup.min.css" type="text/css"
+		rel="stylesheet" />
+	<link href="#{baseURL}css/glyphicons/css/glyphicons.css"
+		type="text/css" rel="stylesheet" />
+</h:head>
 
-	<ui:define name="body">
-		<div class="toutatice_edit_top_class">
-			<div class="toutatice_edit_header_class">
-				<h1>
-					<h:outputText
-						value="#{messages['osivia.views.create.fragment.title']}" />
-				</h1>
-			</div>
+<body>
+	<div class="container-fluid">
+		<div class="form-group">
 
-			<div class="toutatice_edit_form_class">
-				<div class="ttcInput">
-
-					<h:form id="fragments_create_form">
-
-						<ul class="newFragList">
-							<nxu:dataList id="confs" value="#{config.fragmentTypes}"
-								var="conf">
-
-								<li><nxh:commandLink
-										action="#{fragmentBean.dispatchCreation(conf.wconf.code, conf.wconf.code2)}">
-
-										<c:choose>
-											<c:when test="#{not empty conf.wconf.picture}">
-												<h:graphicImage class="iconFragment"
-													value="#{nxd:fileUrl('downloadFile', conf, 'wconf:picture', conf.wconf.picture.filename)}" />
-											</c:when>
-											<c:otherwise>
-												<h:graphicImage class="iconFragment"
-													value="#{baseURL}/theme/images/icone_fragment.gif" />
-											</c:otherwise>
-										</c:choose>
-										<h:outputText value="#{conf.title}" />
-
-
-									</nxh:commandLink></li>
-
-							</nxu:dataList>
-						</ul>
-
-						<h:inputHidden name="fromUrl" value="#{pageBean.fromUrl}" />
-						<h:inputHidden name="region" value="#{fragmentBean.region}" />
-
-						<h:messages />
-
-					</h:form>
-
-				</div>
-			</div>
+			<h3>
+				<h:outputFormat
+					value="#{messages['osivia.views.create.fragment.title']}">
+				</h:outputFormat>
+			</h3>
 		</div>
-	</ui:define>
 
-</nxthemes:composition>
+		<h:form id="fragments_create_form">
+			<div class="list-group">
+
+				<c:forEach items="#{config.fragmentTypes}" var="conf">
+
+					<h:commandLink
+						action="#{fragmentBean.dispatchCreation(conf.wconf.code, conf.wconf.code2)}"
+						class="list-group-item">
+
+						<c:choose>
+							<c:when test="#{not empty conf.wconf.glyphicon}">
+								<i class="glyphicons #{conf.wconf.glyphicon}"></i>
+							</c:when>
+							<c:otherwise>
+								<i class="glyphicons halflings credit_card"></i>
+							</c:otherwise>
+						</c:choose>
+
+						<h:outputText value="#{conf.title}" />
+
+
+					</h:commandLink>
+
+				</c:forEach>
+
+			</div>
+			<h:inputHidden name="fromUrl" value="#{pageBean.fromUrl}" />
+			<h:inputHidden name="region" value="#{fragmentBean.region}" />
+
+			<h:messages />
+		</h:form>
+
+	</div>
+</body>
+
+</html>

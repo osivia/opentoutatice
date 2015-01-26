@@ -29,6 +29,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.platform.ui.web.rest.api.URLPolicyService;
 import org.nuxeo.ecm.platform.ui.web.tag.fn.DocumentModelFunctions;
+import org.nuxeo.ecm.platform.ui.web.util.BaseURL;
 import org.nuxeo.ecm.platform.url.DocumentViewImpl;
 import org.nuxeo.ecm.platform.url.api.DocumentView;
 import org.nuxeo.ecm.platform.url.codec.DocumentFileCodec;
@@ -48,7 +49,6 @@ public class WebIdFunctions {
 
     private static final Log log = LogFactory.getLog(WebIdFunctions.class);
 
-    private static final String BASE_URL = "";
     private static final String WEBID_PATTERN = "webidpattern";
     private static final String WEBID_DOWNLOAD_PICTURE = "webiddownloadpicture";
 
@@ -151,7 +151,7 @@ public class WebIdFunctions {
 
             ToutaticeDocumentLocation webIdDocLoc = new ToutaticeDocumentLocation(doc);
             DocumentView docView = new DocumentViewImpl(webIdDocLoc, null, parameters);
-            url = service.getUrlFromDocumentView(WEBID_PATTERN, docView, BASE_URL);
+            url = service.getUrlFromDocumentView(WEBID_PATTERN, docView, BaseURL.getBaseURL());
 
         } catch (ClientException e) {
             log.error("Erreur génération webid " + e);

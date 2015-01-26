@@ -5,29 +5,45 @@
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:nxdir="http://nuxeo.org/nxdirectory"
 	xmlns:nxl="http://nuxeo.org/nxforms/layout" id="#{widget.id}">
+	
 	<c:set var="isEditMode" value="#{nxl:isBoundToEditMode(layout.mode)}" />
 
-	<div class="titre2">
-		<img src="theme/images/icone_web.gif" /><span>Contenu riche</span>
+	<div class="form-group">
+		<div class="col-sm-12">
+
+			<fieldset>
+				<legend>
+					<i class="glyphicons halflings font"></i>
+					<h:outputText value="#{messages['osivia.fragment.html.field.title']}" />
+				</legend>
+			</fieldset>
+		</div>
 	</div>
 
 	<c:choose>
 		<c:when test="${isEditMode}">
 
-	<nxu:dataList id="html_fgts"
-				value="#{currentDocument.htmlfgt.htmlFragment}" var="html_fgt">
+			<nxu:dataList id="html_fgts"
+				value="#{currentDocument.htmlfgt.htmlFragment}" var="html_fgt"
+				class="fgts">
 
+				<div class="form-group">
+					<div class="col-sm-12 fgt-html">
 
-				<nxl:widgetType name="htmltext" mode="edit" value="#{html_fgt.data}"
-					rendered="#{html_fgt.refURI eq fragmentBean.uri}" />
+						<nxl:widgetType name="htmltext" mode="edit"
+							value="#{html_fgt.data}"
+							rendered="#{html_fgt.refURI eq fragmentBean.uri}" />
+
+					</div>
+				</div>
 
 			</nxu:dataList>
 
 		</c:when>
 		<c:otherwise>
 
-    		
-    	</c:otherwise>
+
+		</c:otherwise>
 	</c:choose>
 
 

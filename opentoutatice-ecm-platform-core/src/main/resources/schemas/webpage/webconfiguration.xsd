@@ -49,5 +49,6 @@
   </xs:complexType>
   <xs:element name="order" type="xs:integer"/>
   <xs:element name="picture" type="nxs:content"/>
+  <xs:element name="glyphicon" type="xs:string"/>
   <xs:element name="type" type="xs:string"/>
 </xs:schema>

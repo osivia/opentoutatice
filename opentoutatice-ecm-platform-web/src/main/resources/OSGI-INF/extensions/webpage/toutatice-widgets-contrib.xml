@@ -65,6 +65,18 @@
 				<property name="required">true</property>
 			</properties>
 		</widget>
+		<widget name="glyphicon" type="text">
+			<labels>
+				<label mode="any">osivia.webconfig.glyphicon</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.glyphicon.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:glyphicon</field>
+			</fields>
+		</widget>
 		<widget name="web_conf_picture" type="file">
 			<labels>
 				<label mode="any">osivia.webconfig.picture</label>
@@ -558,6 +570,18 @@
 			<translated>true</translated>
 			<properties mode="any">
 				<property name="template">/widgets/portlet_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+		
+		<widget name="rss_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/rss_fragment_template.xhtml
 				</property>
 				<property name="currentDocument">value</property>
 			</properties>
