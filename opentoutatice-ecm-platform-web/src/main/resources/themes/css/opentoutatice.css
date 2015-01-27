@@ -1,9 +1,11 @@
 /* Summary Picture view */
-div.pictureContainer  img.fullMaxWidth {
+.summary .pictureContainer .fullMaxWidth {
+	width: auto;
     max-width: 100%;
 }
 
 /* Summary Article view */
 .widgetPanel.actionsWidgetPanel > img {
+	width: auto;
 	max-width: 100%;
 }

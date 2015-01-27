@@ -1,0 +1,52 @@
+<div xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:nxh="http://nuxeo.org/nxweb/html"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
+	xmlns:nxd="http://nuxeo.org/nxweb/document">
+
+	<nxu:set var="task" value="#{field_0}" cache="true">
+		<nxu:set var="idPrefix" value="#{field_1}" cache="true">
+			<c:if test="#{task!=null}">
+				<f:subview id="#{idPrefix}_subview">
+
+					<a4j:outputPanel id="#{idPrefix}_ajax_panel" layout="block">
+
+						<div>
+							<div id="#{idPrefix}_box">
+								<nxl:layout name="#{routingTaskActions.getTaskLayout(task)}"
+									mode="edit"
+									value="#{routingTaskActions.getFormVariables(task)}" />
+								<p>
+									<script>
+										function setClickButton(buttonId) {
+											jQuery("input[name='button']")
+													.attr('value', buttonId);
+										}
+									</script>
+									<nxu:set var="actions"
+										value="#{routingTaskActions.getTaskButtons(task)}"
+										cache="true">
+										<input type="hidden" name="button" value="" />
+										<c:forEach var="btn_action" items="#{actions}"
+											id="#{idPrefix}_versionActionsTable">
+											<span id="#{sel_action.id}"> <h:commandButton
+													action="#{routingTaskActions.endTask(task)}"
+													value="#{messages[btn_action.label]}" styleClass="button"
+													onclick="setClickButton('#{btn_action.id}');return true;">
+												</h:commandButton>
+											</span>
+										</c:forEach>
+									</nxu:set>
+								</p>
+							</div>
+						</div>
+					</a4j:outputPanel>
+				</f:subview>
+			</c:if>
+		</nxu:set>
+	</nxu:set>
+</div>

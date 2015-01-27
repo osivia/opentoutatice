@@ -138,7 +138,7 @@
 			category (Tasks actions) -->
 		<action id="toutatice_validate_online_task_actions" type="widget"
 			label="" enabled="true" order="0">
-			<category>SUMMARY_PANEL_TOP</category>
+			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
 			<category>SUBVIEW_UPPER_LIST</category>
 			<properties>
 				<property name="widgetName">toutatice_validate_online_task_widget
