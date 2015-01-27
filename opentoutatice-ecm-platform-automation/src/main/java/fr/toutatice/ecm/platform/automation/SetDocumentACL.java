@@ -62,20 +62,25 @@ public class SetDocumentACL {
 		setACE(doc);
 		return session.getDocument(doc);
 	}
-
+		
 	protected void setACE(DocumentRef ref) throws ClientException {
 		ACP acp = session.getACP(ref);
-
-		ACLImpl acl = new ACLImpl(aclName);
-		List<ACE> aceList = slurpACEs(entries);
-		acl.addAll(aceList);
-		acp.addACL(acl);
+		ACLImpl acl = (ACLImpl) acp.getACL(aclName);
 		
+		List<ACE>[] aceList = slurpACEs(entries);
+		
+		acl.addAll(aceList[0]);
+		acl.removeAll(aceList[1]);	
+//		acp.removeACL(aclName);
+		acp.addACL(acl);
+
 		session.setACP(ref, acp, doOverwrite);
 	}
 
-	private List<ACE> slurpACEs(String entries) {
-		List<ACE> list = new ArrayList<ACE>();
+	private List<ACE>[] slurpACEs(String entries) {
+		List<ACE>[] tabList = new ArrayList[2];
+		List<ACE> lstAcePos = new ArrayList<ACE>();
+		List<ACE> lstAceNeg = new ArrayList<ACE>();
 		
 		StringTokenizer aceTokenizer = new StringTokenizer(entries, ACE_DELIMITER);
 		while (aceTokenizer.hasMoreTokens()) {
@@ -86,8 +91,12 @@ public class SetDocumentACL {
 				String user = m.group(1);
 				String permission = m.group(2);
 				boolean granted = Boolean.parseBoolean(m.group(3));
-				ACE ace = new ACE(user, permission, granted);
-				list.add(ace);
+				ACE ace = new ACE(user, permission, true);
+				if(granted){
+					lstAcePos.add(ace);
+				}else{
+					lstAceNeg.add(ace);
+				}
 			} else {
 				log.warn("ACE doesn't respect the format <principal>" + VALUE_DELIMITER + "<permission>" + VALUE_DELIMITER + "<grant>, entry='" + aceStg + "'");
 			}
@@ -95,9 +104,11 @@ public class SetDocumentACL {
 		
 		// always break inheritance at end 
 		if (doBreakInheritance) {
-			list.add(new ACE(SecurityConstants.EVERYONE, SecurityConstants.EVERYTHING, false));
+			lstAcePos.add(new ACE(SecurityConstants.EVERYONE, SecurityConstants.EVERYTHING, false));
 		}
-
-		return list;
+		tabList[0] = lstAcePos;
+		tabList[1] = lstAceNeg;
+		return tabList;
 	}
+
 }
