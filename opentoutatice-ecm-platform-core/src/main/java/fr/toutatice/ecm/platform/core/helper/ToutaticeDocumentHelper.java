@@ -31,7 +31,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -582,40 +581,7 @@ public class ToutaticeDocumentHelper {
 
 		return status;
 	}
-
-//	/**
-//	 * Copy les permissions dans l'ACL local en excluant les permissions passés en paramétre
-//	 * @param session
-//	 * @param doc 
-//	 * @param permissionsExclude permissions à exclure
-//	 * @throws ClientException
-//	 */
-//	@Deprecated
-//	public static void copyPermissionsInLocalACL(CoreSession session, DocumentModel doc,String permissionsExclude) throws ClientException{
-//		DocumentRef ref = doc.getRef(); 
-//		StringTokenizer st = new StringTokenizer(permissionsExclude,",");
-//		List<String> lstPerm = new ArrayList<String>(st.countTokens());
-//		while(st.hasMoreTokens()){
-//			lstPerm.add(st.nextToken());
-//		}  
-//		// nettoyer les acls local
-//		ACP acp = doc.getACP();
-//		acp.removeACL(ACL.LOCAL_ACL);
-//		session.setACP(ref, acp, true);
-//
-//		//récupérer les acls du parent    	
-//		DocumentModel parent = session.getParentDocument(ref);
-//		ACP acpParent = parent.getACP();
-//		for (ACL acl : acpParent.getACLs()) {
-//			for (ACE ace : acl.getACEs()) {
-//				if (ace.isGranted() && !lstPerm.contains(ace.getPermission())) {
-//					// ajouter les permissions au document doc
-//					setACE(session, ref,ace);
-//				}
-//			}
-//		}            	
-//	}
-
+	
 	private static class UnrestrictedGetProxyRunner extends UnrestrictedSessionRunner {
 		private DocumentModel document;
 		private DocumentModelList proxies;
