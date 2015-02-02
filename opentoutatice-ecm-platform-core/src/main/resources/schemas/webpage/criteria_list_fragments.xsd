@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:nxs="http://www.nuxeo.org/ecm/project/schemas/opentoutatice/criteria_list_fragments"
+	targetNamespace="http://www.nuxeo.org/ecm/project/schemas/opentoutatice/criteria_list_fragments">
+
+	<xs:simpleType name="stringList">
+		<xs:list itemType="xs:string" />
+	</xs:simpleType>
+
+	<xs:element name="criteriaListFragment" type="nxs:crtlistfgt_crtlistFragmentListType" />
+
+	<xs:complexType name="crtlistfgt_crtlistFragmentListType">
+		<xs:sequence>
+			<xs:element name="item" type="nxs:criteriaRequestFragment"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="criteriaRequestFragment">
+		<xs:sequence>
+			<xs:element name="refURI" type="xs:string" />
+			<xs:element name="requestCriteria" type="nxs:requestCriteria" />
+			<xs:element name="displayCriteria" type="nxs:displayCriteria" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="requestCriteria">
+		<xs:sequence>
+ 			<xs:element name="currentDocId" type="xs:string" />
+ 			<xs:element name="currentSpaceId" type="xs:string" />
+			<xs:element name="docTypes" type="nxs:stringList" />
+			<xs:element name="keyWords" type="nxs:stringList" />
+			<xs:element name="order" type="xs:string" />
+			<xs:element name="searchArea" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="displayCriteria">
+		<xs:sequence>
+			<xs:element name="style" type="xs:string" />
+			<xs:element name="nbItems" type="xs:integer" default="10" />
+			<xs:element name="nbItemsPerPage" type="xs:integer"
+				default="10" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

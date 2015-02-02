@@ -27,6 +27,7 @@ import java.util.Map;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
+import fr.toutatice.ecm.platform.service.fragments.FragmentConstants;
 import fr.toutatice.ecm.platform.service.fragments.FragmentServiceException;
 
 /**
@@ -63,7 +64,7 @@ public class RssFragment implements Fragment {
 
 				Map<String, String> newEntry = new HashMap<String, String>();
 
-				newEntry.put("refURI", uri);
+				newEntry.put(FragmentConstants.REF_URI, uri);
 
 				listeData.add(newEntry);
 

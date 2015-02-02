@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <component name="fr.toutatice.ecm.platform.web.theme">
 
+	<require>fr.toutatice.ecm.platform.responsive.portalviews.theme</require>
+
 	<extension target="org.nuxeo.theme.styling.service" point="pages">
 		<themePage name="*">
 			<styles append="true">
@@ -33,6 +35,16 @@
 			</view>
             
 		</application>
+	</extension>
+	
+	<extension target="org.nuxeo.theme.services.ThemeService"
+		point="views">
+		
+		<view name="nuxeo5 includes" template-engine="jsf-facelets" merge="true">
+			<format-type>widget</format-type>
+			<resource>glyphicons.css</resource>
+		</view>
+		
 	</extension>
 
 </component>

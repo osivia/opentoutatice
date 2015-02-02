@@ -23,12 +23,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
 import fr.toutatice.ecm.platform.service.fragments.FragmentServiceException;
 import fr.toutatice.ecm.platform.web.fragments.configuration.ConfigurationBeanHelper;
+import fr.toutatice.ecm.platform.web.fragments.configuration.ConfigurationConstants;
 
 /**
  * 
@@ -79,16 +79,15 @@ public class PortletFragment implements Fragment {
                 List<Map<String, String>> listeData = (List<Map<String, String>>) liste;
 
                 ConfigurationBeanHelper configBean = ConfigurationBeanHelper.getBean();
-                List options = configBean.getFragmentOptionsByCode(doc, code2);
+                List<Map<String, String>> options = configBean.getFragmentOptionsByCode(doc, code2);
 
                 if (options != null) {
-                    for (Object optionObj : options) {
-                        Map<String, String> option = (Map) optionObj;
+                    for (Map<String, String> option : options) {
                         Map<String, String> newEntry = new HashMap<String, String>();
 
                         newEntry.put("refURI", uri);
-                        newEntry.put("key", option.get("propertyName"));
-                        newEntry.put("value", option.get("propertyDefaultValue"));
+                        newEntry.put("key", option.get(ConfigurationConstants.KEY_OPTION));
+                        newEntry.put("value", option.get(ConfigurationConstants.VALUE_OPTION));
 
                         listeData.add(newEntry);
                     }

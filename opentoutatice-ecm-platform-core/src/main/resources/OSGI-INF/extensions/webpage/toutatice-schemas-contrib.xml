@@ -35,7 +35,8 @@
 			src="schemas/webpage/summary_fragments.xsd" />
 		<schema name="rss_fragments" prefix="rssfgt"
 			src="schemas/webpage/rss_fragments.xsd" />
-
+		<schema name="criteria_list_fragments" prefix="crtlistfgt"
+ 			src="schemas/webpage/criteria_list_fragments.xsd" />
 	</extension>
 
 </component>

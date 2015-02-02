@@ -13,6 +13,8 @@
  *
  *
  * Contributors:
+ *   lbillon
+ *   dchevrier
  *   mberhaut1
  *    
  */
@@ -23,6 +25,8 @@ import java.util.Map;
 
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
@@ -33,6 +37,7 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
+import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 
@@ -43,11 +48,16 @@ import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 @Scope(ScopeType.CONVERSATION)
 @Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ConfigurationBeanHelper {
-
+	
+	private static final Log log = LogFactory.getLog(ConfigurationBeanHelper.class);
 
     /** nagivation context for nuxeo queries */
     @In(create = true)
     protected transient NavigationContext navigationContext;
+    
+    /** To get intenationalization values by key. */
+    @In(create = true)
+    protected Map<String, String> messages;
 
     /**
      * Get the current JSF instance of this class
@@ -55,8 +65,7 @@ public class ConfigurationBeanHelper {
      * @return the instance
      */
     public static ConfigurationBeanHelper getBean() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        return (ConfigurationBeanHelper) context.getApplication().evaluateExpressionGet(context, "#{config}", ConfigurationBeanHelper.class);
+        return (ConfigurationBeanHelper) SeamComponentCallHelper.getSeamComponentByName("config");
     }
 
     /**
@@ -183,7 +192,7 @@ public class ConfigurationBeanHelper {
      * 
      * @return webconfig of portlet
      */
-    public List getFragmentOptionsByCode(DocumentModel doc, String code2) {
+    public List<Map<String, String>> getFragmentOptionsByCode(DocumentModel doc, String code2) {
 
         try {
             CoreSession session = navigationContext.getOrCreateDocumentManager();
@@ -227,7 +236,7 @@ public class ConfigurationBeanHelper {
                 Map<String, Object> properties = config.getProperties("webconfiguration");
 
                 if(properties.containsKey("wconf:options") && properties.get("wconf:options") != null)
-                    return (List) properties.get("wconf:options");
+                    return (List<Map<String, String>>) properties.get("wconf:options");
 
             }
 

@@ -55,6 +55,12 @@
             title="osivia.fragment.rss.title"
             layout="rss_fragment_layout" />  
             
+        <fragment
+            code="fgt.criteria_list"
+            class="fr.toutatice.ecm.platform.service.fragments.types.CriteriaListFragment"
+            title="osivia.fragment.criteria.list.title"
+            layout="criteria_list_fragment_layout" />  
+            
     </extension>
 
 </component>

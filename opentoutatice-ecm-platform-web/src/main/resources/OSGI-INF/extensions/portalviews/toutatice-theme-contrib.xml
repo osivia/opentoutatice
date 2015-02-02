@@ -42,7 +42,7 @@
 			<resource>custom-popup.min.css</resource>
 			<require>nxthemes.css</require>
 		</view>
-
+		
 	</extension>
 
 	<extension target="org.nuxeo.theme.services.ThemeService"

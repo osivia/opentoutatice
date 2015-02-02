@@ -117,7 +117,7 @@
 			</properties>
 		</widget>
 
-		<!-- Widgets "Mots-clés" -->
+		<!-- KeyWords widget -->
 		<widget name="toutatice_keywords_widget" type="template">
 			<labels>
 				<label mode="any">toutatice.label.keywords</label>
@@ -140,12 +140,6 @@
 				</mode>
 			</widgetModes>
 		</widget>
-
-		<!-- <widget name="toutatice_keywords_widget" type="summary_current_document_tagging"> 
-			<labels> <label mode="any">toutatice.label.keyWords</label> </labels> <translated>true</translated> 
-			<fields> <field>ttc:keywords</field> </fields> <widgetModes> <mode value="any">#{nxu:test(currentDocument.type 
-			!= 'BlogSite' and (currentUser.administrator or currentNuxeoPrincipal.isMemberOf('Administrators')) 
-			, layout.mode, 'hidden')} </mode> </widgetModes> </widget> -->
 
 		<!-- Widget en vue Modifier (ou Créer) -->
 		<widget name="toutatice_webId_widget" type="text">
