@@ -110,12 +110,11 @@
 			</labels>
 			<fields />
 			<properties mode="any">
-				<property name="template">/widgets/toutatice_widget_document_version.xhtml
-				</property>
+				<property name="template">/widgets/toutatice_widget_document_version.xhtml</property>
 			</properties>
 		</widget>
 
-		<!-- Barre de titre: affichache des vignettes de workflow en cours -->
+		<!-- Barre de titre: affichage des vignettes de workflow en cours -->
 		<widget name="toutatice_extended_title_workflow_widget" type="template">
 			<handlingLabels>true</handlingLabels>
 			<labels>
@@ -123,12 +122,11 @@
 			</labels>
 			<fields />
 			<properties mode="any">
-				<property name="template">/widgets/toutatice_widget_document_workflow.xhtml
-				</property>
+				<property name="template">/widgets/toutatice_widget_document_workflow.xhtml</property>
 			</properties>
 		</widget>
 
-		<!-- Barre de titre: affichache des vignettes de workflow en cours -->
+		<!-- Barre de titre: affichage des vignettes de workflow en cours -->
 		<widget name="toutatice_extended_title_lock_widget" type="template">
 			<handlingLabels>true</handlingLabels>
 			<labels>
@@ -136,8 +134,7 @@
 			</labels>
 			<fields />
 			<properties mode="any">
-				<property name="template">/widgets/toutatice_widget_document_lock.xhtml
-				</property>
+				<property name="template">/widgets/toutatice_widget_document_lock.xhtml</property>
 			</properties>
 		</widget>
 
@@ -194,7 +191,7 @@
 			</widgetModes>
 		</widget>
 
-		<!-- Barre de titre: affichache du portail par défaut -->
+		<!-- Barre de titre: affichage du portail par défaut -->
 		<widget name="toutatice_widget_document_default_portal" type="template">
 			<handlingLabels>true</handlingLabels>
 			<labels>
