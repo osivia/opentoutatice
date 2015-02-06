@@ -24,11 +24,9 @@ import static org.nuxeo.ecm.webapp.documentsLists.DocumentsListsManager.CURRENT_
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -64,8 +62,7 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeImageCollectionHelper;
 public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 
 	private static final long serialVersionUID = 1L;
-	private static final Log log = LogFactory
-			.getLog(EditorImageActionsBean.class);
+	private static final Log log = LogFactory.getLog(ToutaticeEditorImageActionsBean.class);
 
 	@In(required = false, create = true)
 	protected transient DocumentsListsManager documentsListsManager;
@@ -87,7 +84,6 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 	private String selectedSize = "Medium";
 	private String imageUrlAttr;
 	private boolean isImageUploadedAttr = false;
-	private String imageProperty;
 
 	private boolean isImage = true;
 

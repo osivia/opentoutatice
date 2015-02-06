@@ -10,17 +10,17 @@
 
 	<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
 
-					<div class="alert alert-warning">
-						<i class="glyphicons halflings warning-sign"></i> <span
-							class="text-warning">#{messages['label.imageUpload.unableToUpload']}</span>
-					</div>
+		<div class="alert alert-warning">
+			<i class="glyphicons halflings warning-sign"></i> <span
+				class="text-warning">#{messages['label.imageUpload.unableToUpload']}</span>
+		</div>
 
-				</f:subview>
+	</f:subview>
 
-				<f:subview rendered="#{!editorImageActions.inToutaticeCreationMode}">
+	<f:subview rendered="#{!editorImageActions.inToutaticeCreationMode}">
 
-					<f:subview rendered="#{editorImageActions.isImageUploaded}">
-						<script type="text/javascript">
+		<f:subview rendered="#{editorImageActions.isImageUploaded}">
+			<script type="text/javascript">
 							if (window.opener.tinyMCE) {
 								var tinyMCE = window.opener.tinyMCE;
 								var html = '&lt;img src="'
@@ -43,41 +43,40 @@
 
 							self.close();
 						</script>
-					</f:subview>
-					
-						<p class="h4">
-							<h:outputText value="#{messages['toutatice.label.imageUpload.upload']}" />
-						</p>
+		</f:subview>
 
-					<h:form enctype="multipart/form-data" id="uploadForm"
-						rendered="#{!editorImageActions.isImageUploaded}"
-						class="form form-horizontal">
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="size">#{messages['label.imageUpload.image']}</label>
-							<div class="col-sm-6">
-								<s:fileUpload data="#{editorImageActions.uploadedImage}"
-									fileName="#{editorImageActions.uploadedImageName}" />
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-sm-2 col-sm-offset-2">
-								<h:commandButton value="#{messages['command.imageUpload.send']}"
-									action="#{editorImageActions.uploadImage}"
-									class="btn btn-primary" />
-							</div>
-						</div>
+		<p class="h4">
+			<h:outputText
+				value="#{messages['toutatice.label.imageUpload.upload']}" />
+		</p>
 
-					</h:form>
+		<h:form enctype="multipart/form-data" id="uploadForm"
+			rendered="#{!editorImageActions.isImageUploaded}"
+			class="form form-horizontal">
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="size">#{messages['label.imageUpload.image']}</label>
+				<div class="col-sm-6">
+					<s:fileUpload data="#{editorImageActions.uploadedImage()}"
+						fileName="#{editorImageActions.uploadedImageName}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 col-sm-offset-2">
+					<h:commandButton value="#{messages['command.imageUpload.send']}"
+						action="#{editorImageActions.uploadImage}" class="btn btn-primary" />
+				</div>
+			</div>
 
-					<c:if test="#{!editorImageActions.isImage}">
+		</h:form>
 
-						<div class="alert alert-warning">
-							<i class="glyphicons halflings warning-sign"></i> <span
-								class="text-warning">#{messages['label.imageUpload.isNotImage']}</span>
-						</div>
-					</c:if>
+		<c:if test="#{!editorImageActions.isImage}">
 
-				</f:subview>
+			<div class="alert alert-warning">
+				<i class="glyphicons halflings warning-sign"></i> <span
+					class="text-warning">#{messages['label.imageUpload.isNotImage']}</span>
+			</div>
+		</c:if>
 
+	</f:subview>
 
 </div>

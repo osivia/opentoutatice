@@ -64,12 +64,6 @@
 						href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=ATTACH_IMGS">#{messages['toutatice.label.imageUpload.attachableImagesTab']}</a>
 					</li>
 				</c:if>
-				<!-- <li
-					class="#{nxu:test(editorImageActions.selectedTab == 'SEARCH_VIDEOS', 'active', '')}"
-					role="presentation"><a aria-controls="videos" role="tab"
-					data-toggle="tab"
-					href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=SEARCH_VIDEOS">#{messages['label.imageUpload.searchVideoTab']}</a>
-				</li> -->
 			</ul>
 		</nav>
 
@@ -167,14 +161,6 @@
 				rendered="#{editorImageActions.selectedTab == 'ATTACH_IMGS'}">
 				<ui:include src="/incl/editor_media_upload/attached_images.xhtml" />
 			</f:subview>
-
-
-
-			<!-- <f:subview
-				rendered="#{editorImageActions.selectedTab == 'SEARCH_VIDEOS'}">
-				<ui:include src="/incl/editor_media_upload/search_videos.xhtml" />
-			</f:subview> -->
-
 		</div>
 	</div>
 
