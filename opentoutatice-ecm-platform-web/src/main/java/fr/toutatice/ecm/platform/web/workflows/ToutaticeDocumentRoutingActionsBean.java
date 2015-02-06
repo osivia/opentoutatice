@@ -217,15 +217,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
         if (relatedRoute != null) {
             name = relatedRoute.getName();
         } else {
-        	DocumentModel currentDocument = navigationContext.getCurrentDocument();
-        	
-        	/**
-        	 * Ticket Redmine http://redmine.toutatice.fr/issues/1766
-        	 * Ce bloc gère uniquement le cas de la publication distante. Les autres workflows sont implémentés via le moteur 
-        	 * ContentRouting et seront identifiés par le statement ci-dessus "DocumentRoute relatedRoute = getRelatedRoute();".
-        	 * Par conséquent, seuls des documents de type proxy peuvent être concernés. 
-        	 */
-            if ((currentDocument.isProxy()) && ((ToutaticePublishActionsBean) publishActions).isPending()) {
+            if (((ToutaticePublishActionsBean) publishActions).isPending()) {
                 name = "remote_publication_process";
             }
         }
