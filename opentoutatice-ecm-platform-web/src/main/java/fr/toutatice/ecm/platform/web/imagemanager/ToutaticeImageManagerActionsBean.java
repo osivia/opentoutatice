@@ -44,6 +44,7 @@ import org.jboss.seam.international.StatusMessage;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.platform.ui.web.tag.fn.DocumentModelFunctions;
 import org.nuxeo.ecm.platform.ui.web.util.files.FileUtils;
 import org.nuxeo.ecm.webapp.filemanager.FileManageActionsBean;
 import org.nuxeo.ecm.webapp.filemanager.NxUploadedFile;
@@ -60,6 +61,71 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
 	
 	private static final Log log = LogFactory.getLog(ToutaticeImageManagerActionsBean.class);
 
+	private List<imageBean> imageBeanslist;
+
+	public List<imageBean> getImageBeanslist() {
+		if (null == this.imageBeanslist) {
+			this.imageBeanslist = new ArrayList<imageBean>();
+		} else {
+			this.imageBeanslist.clear();
+		}
+		
+        try {
+            DocumentModel currentDocument = navigationContext.getCurrentDocument();
+            if (currentDocument.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
+				@SuppressWarnings("unchecked")
+				List<Map<String, Object>> images = (List<Map<String, Object>>) currentDocument.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
+				for (int index = 0; index < images.size(); index++) {
+            		Map<String, Object> image = images.get(index);
+            		if (!ToutaticeImageCollectionHelper.instance().isFakeItem(image)) {
+            			String complexURL = DocumentModelFunctions.complexFileUrl("downloadFile", 
+            					currentDocument, 
+            					ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, 
+            					index, 
+            					"file", 
+            					(String) image.get("filename"));
+            			this.imageBeanslist.add(new imageBean(index, (String) image.get("filename"), complexURL));
+            		}
+            	}
+            }
+        } catch (Exception e) {
+            log.error("Failed to set list of images index, error: " +  e.getMessage());
+        }
+        
+		return this.imageBeanslist;
+	}
+
+	public class imageBean {
+		private int index;
+		private String filename;
+		private String fileURL;
+		
+		public imageBean(int index, String filename, String fileURL) {
+			setIndex(index);
+			setFilename(filename);
+			setFileURL(fileURL);
+		}
+		
+		public int getIndex() {
+			return index;
+		}
+		public void setIndex(int index) {
+			this.index = index;
+		}
+		public String getFilename() {
+			return filename;
+		}
+		public void setFilename(String filename) {
+			this.filename = filename;
+		}
+		public String getFileURL() {
+			return fileURL;
+		}
+		public void setFileURL(String fileURL) {
+			this.fileURL = fileURL;
+		}
+	}
+	
 	@Override
     @SuppressWarnings("unchecked")
     public void validateMultipleUploadForDocument(DocumentModel current) throws ClientException, FileNotFoundException {

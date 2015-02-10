@@ -34,6 +34,10 @@ public class ToutaticeImageCollectionHelper {
 		// singleton
 	}
 	
+	public boolean isFakeItem(Map<String, Object> item) {
+		return ToutaticeImageCollectionHelper.fakeItem.equals(item);
+	}
+	
 	public static ToutaticeImageCollectionHelper instance() {
 		if (null == instance) {
 			instance = new ToutaticeImageCollectionHelper();

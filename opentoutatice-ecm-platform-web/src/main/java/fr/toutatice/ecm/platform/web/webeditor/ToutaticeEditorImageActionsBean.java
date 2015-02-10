@@ -164,15 +164,6 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 		return previousLibraryNode;
 	}
 	
-//
-//	/* FIXME: to del */
-//	public void setCurrentLibraryNode(DocumentModel currentLibraryNode) {
-//		if (this.currentLibraryNode != null) {
-//			previousLibraryNode = this.currentLibraryNode;
-//		}
-//		this.currentLibraryNode = currentLibraryNode;
-//	}
-
 	public String getImageUrlAttr() {
 		return imageUrlAttr;
 	}

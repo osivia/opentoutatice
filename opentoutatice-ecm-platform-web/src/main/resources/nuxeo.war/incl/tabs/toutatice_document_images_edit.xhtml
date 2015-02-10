@@ -146,53 +146,59 @@
 				<a4j:outputPanel ajaxRendered="true">
 
 					<h3>Liste des images jointes</h3>
+					
+					<h:dataTable id="images_input" value="#{ImageManagerActions.imageBeanslist}" var="imageBean">
 
-					<table class="dataList dataListAlign">
-						<thead>
-							<tr>
-								<th></th>
-								<th>Aperçu</th>
-								<th>Titre</th>
-								<th>Action(s)</th>
-							</tr>
-						</thead>
-						<tbody>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="" />
+							</f:facet>
+							<a4j:commandLink id="images_delete" 
+								immediate="true"
+								onclick="document.NXContextKeeper.removeFromKeeper(#{imageBean.index});"
+								oncomplete="document.NXContextKeeper.onReturnAnswer();"
+								actionListener="#{ImageManagerActions.performAction}"
+								render="images_input" bypassUpdates="true">
+								<h:graphicImage value="/icons/action_tag_delete.png" />
+								<f:param name="index" value="#{imageBean.index}" />
+							</a4j:commandLink>
+						</h:column>
 
-							<nxu:inputList id="images_input"
-								value="#{currentDocument.toutatice.images}" model="model">
-								<tr style="#{nxu:test(empty currentDocument.toutatice.images[model.rowIndex].file, 'display:none', '')}">
-									<td><a4j:commandLink id="images_delete" immediate="true"
-											onclick="document.NXContextKeeper.removeFromKeeper(#{model.rowIndex});"
-											oncomplete="document.NXContextKeeper.onReturnAnswer();"
-											actionListener="#{ImageManagerActions.performAction}"
-											render="images_input" bypassUpdates="true">
-											<h:graphicImage value="/icons/action_tag_delete.png" />
-											<f:param name="index" value="#{model.rowIndex}" />
-										</a4j:commandLink></td>
-									<td><h:graphicImage
-											value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'toutatice:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}"
-											height="50px" width="50px" /></td>
-									<td><nxh:outputLink
-											value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'toutatice:images', model.rowIndex, 'file', currentDocument.toutatice.images[model.rowIndex].filename)}">
-											<nxh:outputText
-												value="#{currentDocument.toutatice.images[model.rowIndex].filename}" />
-										</nxh:outputLink></td>
-									<td><nxu:set var="actions"
-											value="#{webActions.getActionsList('TOUTATICE_IMAGES_TAB_CREATE')}"
-											cache="true">
-											<c:forEach var="action" items="#{actions}" varStatus="status">
-												<ui:decorate
-													template="/incl/action/generic_action_template.xhtml">
-													<ui:param name="mode" value="view" />
-													<ui:param name="hideIcon" value="true" />
-													<ui:define name="inside_action"><f:param name="index" value="#{model.rowIndex}" /></ui:define>
-												</ui:decorate>
-											</c:forEach>
-										</nxu:set></td>
-								</tr>
-							</nxu:inputList>
-						</tbody>
-					</table>
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Aperçu" />
+							</f:facet>
+							<h:graphicImage value="#{imageBean.fileURL}" height="50px" width="50px" />
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Titre" />
+							</f:facet>
+							<nxh:outputLink value="#{imageBean.fileURL}">
+								<nxh:outputText value="#{imageBean.filename}" />
+							</nxh:outputLink>
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Action(s)" />
+							</f:facet>
+							<nxu:set var="actions" value="#{webActions.getActionsList('TOUTATICE_IMAGES_TAB_CREATE')}" cache="true">
+								<c:forEach var="action" items="#{actions}" varStatus="status">
+									<ui:decorate
+										template="/incl/action/generic_action_template.xhtml">
+										<ui:param name="mode" value="view" />
+										<ui:param name="hideIcon" value="true" />
+										<ui:define name="inside_action">
+											<f:param name="index" value="#{imageBean.index}" />
+										</ui:define>
+									</ui:decorate>
+								</c:forEach>
+							</nxu:set>
+						</h:column>
+
+					</h:dataTable>
 
 					<h:message id="images_message" styleClass="errorMessage"
 						for="images_input" />
