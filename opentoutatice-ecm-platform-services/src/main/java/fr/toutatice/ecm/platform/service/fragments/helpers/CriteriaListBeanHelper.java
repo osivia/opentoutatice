@@ -54,9 +54,9 @@ public class CriteriaListBeanHelper implements Serializable {
     public static final String COMPLEX_PROPERTY_SEPARATOR = "/";
     
     @In(create = true)
-    private NavigationContext navigationContext;
+    protected NavigationContext navigationContext;
 
-    private String newKeyWord;
+    protected String newKeyWord;
 
     public String getNewKeyWord() {
         return newKeyWord;
@@ -165,21 +165,25 @@ public class CriteriaListBeanHelper implements Serializable {
     public SearchArea[] getSearchAreas() {
         return SearchArea.values();
     }
+    
+    public String getKeyWordXPath(){
+        return CriteriaListFragment.CRITERIA_LIST_XPATH;
+    }
 
-    public String getKeyWordsProperty(int index) {
-        StringBuffer keyWordsProperty = new StringBuffer().append(CriteriaListFragment.CRITERIA_LIST_XPATH).append(COMPLEX_PROPERTY_SEPARATOR)
+    public String getKeyWordsProperty(String xpath, int index) {
+        StringBuffer keyWordsProperty = new StringBuffer().append(xpath).append(COMPLEX_PROPERTY_SEPARATOR)
                 .append(String.valueOf(index)).append(COMPLEX_PROPERTY_SEPARATOR).append("requestCriteria").append(COMPLEX_PROPERTY_SEPARATOR)
                 .append("keyWords");
         return keyWordsProperty.toString();
     }
 
-    public void addKeyWord(int index) {
+    public void addKeyWord(String xpath, int index) {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         
         String keyWord = StringUtils.trim(newKeyWord);
         newKeyWord = StringUtils.EMPTY;
 
-        String keyWordsProperty = getKeyWordsProperty(index);
+        String keyWordsProperty = getKeyWordsProperty(xpath, index);
         String[] keyWordsValue = (String[]) currentDocument.getPropertyValue(keyWordsProperty);
         if (keyWordsValue == null) {
             keyWordsValue = new String[0];
@@ -189,10 +193,10 @@ public class CriteriaListBeanHelper implements Serializable {
         currentDocument.setPropertyValue(keyWordsProperty, keyWordsValue);
     }
 
-    public void removeKeyWord(int index) {
+    public void removeKeyWord(String xpath, int index) {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         
-        String keyWordsProperty = getKeyWordsProperty(index);
+        String keyWordsProperty = getKeyWordsProperty(xpath, index);
         String[] keyWordsValue = (String[]) currentDocument.getPropertyValue(keyWordsProperty);
 
         FacesContext context = FacesContext.getCurrentInstance();

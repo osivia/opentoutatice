@@ -38,13 +38,8 @@ public class RssFragment implements Fragment {
 
 	public static final String RSS_SCHEMA = "rss_fragments";
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * fr.toutatice.ecm.platform.service.fragments.types.Fragment#prepareCreation
-	 * (org.nuxeo.ecm.core.api.DocumentModel, java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String)
+	/**
+	 * {@inheritDoc}}
 	 */
 	@Override
 	public String prepareCreation(DocumentModel doc, String uri, String region,

@@ -61,6 +61,12 @@
             title="osivia.fragment.criteria.list.title"
             layout="criteria_list_fragment_layout" />  
             
+        <fragment
+            code="fgt.slider_list"
+            class="fr.toutatice.ecm.platform.service.fragments.types.SliderListFragment"
+            title="osivia.fragment.slider.list.title"
+            layout="slider_list_fragment_layout" />  
+            
     </extension>
 
 </component>

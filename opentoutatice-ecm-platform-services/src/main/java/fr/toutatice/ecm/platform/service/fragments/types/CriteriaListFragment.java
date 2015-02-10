@@ -28,7 +28,6 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.service.fragments.FragmentConstants;
@@ -44,8 +43,8 @@ public class CriteriaListFragment implements Fragment {
 	public static final String CRITERIA_LIST_SCHEMA = "criteria_list_fragments";
 	public static final String CRITERIA_LIST_XPATH = "crtlistfgt:criteriaListFragment";
 	
-	/* (non-Javadoc)
-	 * @see fr.toutatice.ecm.platform.service.fragments.types.Fragment#prepareCreation(org.nuxeo.ecm.core.api.DocumentModel, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	/**
+	 * {@inheritDoc}}
 	 */
 	@Override
 	public String prepareCreation(DocumentModel document, String uri, String region,
@@ -92,7 +91,7 @@ public class CriteriaListFragment implements Fragment {
 		return uri;
 	}
 	
-	protected String getSpaceId(DocumentModel document){
+	public static String getSpaceId(DocumentModel document){
 	    String spaceId = (String) document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_SPACEID);
 	    if(StringUtils.isBlank(spaceId)){
 	        /* Document is a root space */
