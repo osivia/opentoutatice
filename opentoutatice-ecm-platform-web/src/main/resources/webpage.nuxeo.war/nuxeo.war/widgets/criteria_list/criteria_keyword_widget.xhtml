@@ -10,11 +10,11 @@
 		<a4j:region id="#{widget.id}_keywords">
 			<a4j:outputPanel id="#{widget.id}_keywords_select" ajaxRendered="true">
 				<div class="input-group">
-					<h:inputText id="#{widget.id}_newKeyWord" value="#{criteriaListHelper.newKeyWord}"
+					<h:inputText id="#{widget.id}_newKeyWord" value="#{bean.newKeyWord}"
 						styleClass="form-control" />
 					<span class="input-group-btn"> <a4j:commandLink
 							id="#{widget.id}_addKeyWord"
-							action="#{criteriaListHelper.addKeyWord(index)}"
+							action="#{bean.addKeyWord(keyWordProperty, index)}"
 							render="#{widget.id}_keywords_select" styleClass="btn btn-default"
 							title="#{messages[toutatice.label.add.keyword]}">
 							<i class="glyphicons halflings plus"></i>
@@ -23,17 +23,17 @@
 				</div>
 
 				<div class="form-inline">
-					<div style="margin-top: 5px" class="ctrl-fgt-keywords-list">
+					<div class="ctrl-fgt-keywords-list">
 						<nxu:dataList id="#{widget.id}_list_keyWords"
-							value="#{crtlist_fgt.requestCriteria.keyWords}" var="keyWord">
+							value="#{fgt.requestCriteria.keyWords}" var="keyWord">
 
 							<div class="input-group">
 
 								<h:outputText class="form-control" value="#{keyWord} " />
 								<span class="input-group-btn"> <a4j:commandLink
 										id="#{widget.id}_keyWord_delete"
-										action="#{criteriaListHelper.removeKeyWord(index)}"
-										render="subjects_select" styleClass="btn btn-default">
+										action="#{bean.removeKeyWord(keyWordProperty, index)}"
+										styleClass="btn btn-default">
 										<f:param name="keyWordToDel" value="#{keyWord}" />
 										<i class="glyphicons halflings remove"></i>
 									</a4j:commandLink>

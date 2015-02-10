@@ -6,7 +6,8 @@
 	xmlns:nxdir="http://nuxeo.org/nxdirectory"
 	xmlns:nxl="http://nuxeo.org/nxforms/layout"
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
-	xmlns:oh="http://osivia.org/html" id="#{widget.id}">
+	xmlns:oh="http://osivia.org/html"
+	xmlns:s="http://jboss.org/schema/seam/taglib" id="#{widget.id}">
 
 	<c:set var="isEditMode" value="#{nxl:isBoundToEditMode(layout.mode)}" />
 
@@ -24,16 +25,18 @@
 			</fieldset>
 		</div>
 	</div>
+	
 
 	<c:choose>
 		<c:when test="${isEditMode}">
 
-			<c:forEach items="#{currentDocument.crtlistfgt.criteriaListFragment}"
-				var="crtlist_fgt">
+			
+			<nxu:dataList id="crtlist_fgts" value="#{currentDocument.crtlistfgt.criteriaListFragment}"
+					var="crtlist_fgt" class="fgts">
 
 				<c:set var="index" value="0" />
 
-				<c:if test="#{crtlist_fgt.refURI eq fragmentBean.uri}">
+				<s:div rendered="#{crtlist_fgt.refURI eq fragmentBean.uri}">
 
 					<div class="form-group">
 						<label class="control-label col-sm-2"
@@ -54,7 +57,11 @@
 						<label class="control-label col-sm-2"
 							for="#{widget.id}_crtlistKeyWords">#{messages['osivia.fragment.criteria.list.keywords.title']}</label>
 						<div class="col-sm-6">
-							<ui:include src="/widgets/criteria_list/criteria_keyword_widget.xhtml" />
+							<ui:include src="/widgets/criteria_list/criteria_keyword_widget.xhtml">
+								<ui:param name="bean" value="#{criteriaListHelper}" />
+								<ui:param name="fgt" value="#{crtlist_fgt}" />
+								<ui:param name="keyWordProperty" value="#{criteriaListHelper.getKeyWordXPath()}" />
+							</ui:include>
 						</div>
 					</div>
 
@@ -134,12 +141,12 @@
 						</div>
 					</div>
 					
-				</c:if>
+				</s:div>
 
 				<c:set var="index" value="#{index} + 1" />
 
-			</c:forEach>
-
+			</nxu:dataList>
+			
 		</c:when>
 		<c:otherwise>
 
@@ -147,7 +154,5 @@
 
 		</c:otherwise>
 	</c:choose>
-
-
 
 </f:subview>
