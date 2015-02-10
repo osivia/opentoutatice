@@ -14,6 +14,8 @@
  *
  * Contributors:
  *   mberhaut1
+ *   lbillon
+ *   dchevrier
  *    
  */
 package fr.toutatice.ecm.platform.core.constants;
@@ -25,5 +27,6 @@ package fr.toutatice.ecm.platform.core.constants;
 public interface ExtendedSeamPrecedence {
     
     int TOUTATICE = org.jboss.seam.annotations.Install.DEPLOYMENT + 1;
-    
+    int INHERIT_TOUTATICE = TOUTATICE + 10;
+
 }

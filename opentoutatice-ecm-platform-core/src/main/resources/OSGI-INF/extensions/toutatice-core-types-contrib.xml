@@ -45,6 +45,7 @@
             <schema name="portlet_fragments" />
             <schema name="rss_fragments" />
             <schema name="criteria_list_fragments" />
+            <schema name="slider_list_fragments" />
             <schema name="portlet_properties" />
 			<facet name="Space" />
 			<facet name="Folderish" />
@@ -81,6 +82,7 @@
             <schema name="portlet_fragments" />
             <schema name="rss_fragments" />
             <schema name="criteria_list_fragments" />
+            <schema name="slider_list_fragments" />
             <schema name="portlet_properties" />
 			<facet name="Folderish" />
 			<facet name="Orderable" />

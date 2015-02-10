@@ -399,9 +399,7 @@ public class ToutaticeDocumentHelper {
 
 		if (null != DomainList && !DomainList.isEmpty()) {
 			domain = DomainList.get(0);
-		} else {
-			log.warn("Cannot find the parent domain of the document '" + document.getTitle() + "'");
-		}
+		} 
 
 		return domain;
 	}
@@ -580,6 +578,11 @@ public class ToutaticeDocumentHelper {
 		}
 
 		return status;
+	}
+	
+	public static boolean isInPublishSpace(CoreSession session, DocumentModel document){
+	    DocumentModelList parentPublishSpaceList = getParentPublishSpaceList(session, document, true, true);
+	    return parentPublishSpaceList != null && !parentPublishSpaceList.isEmpty();
 	}
 	
 	private static class UnrestrictedGetProxyRunner extends UnrestrictedSessionRunner {

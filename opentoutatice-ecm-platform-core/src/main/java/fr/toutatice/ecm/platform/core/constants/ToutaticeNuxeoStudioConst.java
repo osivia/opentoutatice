@@ -26,6 +26,8 @@ package fr.toutatice.ecm.platform.core.constants;
  */
 public class ToutaticeNuxeoStudioConst {
 	// document types
+    public final static String CST_DOC_TYPE_PORTALSITE = "PortalSite";
+    public final static String CST_DOC_TYPE_PORTALPAGE = "PortalPage";
 	public final static String CST_DOC_TYPE_MAINTENANCE = "MaintenanceConfiguration";
 	public final static String CST_DOC_TYPE_WORKSPACE = "Workspace";
 	public final static String CST_DOC_TYPE_USER_WORKSPACE = "UserWorkspace";
@@ -34,6 +36,7 @@ public class ToutaticeNuxeoStudioConst {
 	public final static String CST_DOC_TYPE_SECTION = "Section";
 	public final static String CST_DOC_TYPE_DOMAIN = "Domain";
 	public final static String CST_DOC_TYPE_ROOT = "Root";
+	public final static String CST_DOC_TYPE_WEB_CONFIGURATION = "WebConfiguration";
 
 	// schemas
 	public final static String CST_DOC_SCHEMA_NUXEO_WEBCONTAINER = "webcontainer";
@@ -52,6 +55,7 @@ public class ToutaticeNuxeoStudioConst {
 	public static final String CST_DOC_SCHEMA_NUXEO_MAIL_PREFIX = "mail";
 	public static final String CST_DOC_SCHEMA_PICTURE_BOOK_PREFIX = "picturebook";
 	public static final String CST_DOC_SCHEMA_MNT_PREFIX = "maintenance";
+	public static final String CST_DOC_SCHEMA_WEB_CONF = "wconf";
 	
 	// facets
 	public final static String CST_DOC_FACET_WEB_VIEW = "WebView";
@@ -88,7 +92,8 @@ public class ToutaticeNuxeoStudioConst {
 	public final static String CST_DOC_XPATH_MNT_AUTOMATION_LOGS_THRESHOLD = CST_DOC_SCHEMA_MNT_PREFIX + ":automationLogsThreshold";
 	public static final String CST_DOC_SCHEMA_TOUTATICE_WEBID = CST_DOC_SCHEMA_TOUTATICE_PREFIX + ":webid";
     public static final String CST_DOC_XPATH_TOUTATICESPACE_WEBID_ENABLED = CST_DOC_SCHEMA_TOUTATICE_SPACE_PREFIX + ":hasWebIdEnabled";
-	
+    public static final String CST_DOC_XPATH_WEB_CONF_CODE = CST_DOC_SCHEMA_WEB_CONF + ":code";
+	 
 	// life cycle states
 	public final static String CST_DOC_STATE_PROJECT = "project";
 	public final static String CST_DOC_STATE_APPROVED = "approved";
