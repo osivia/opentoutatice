@@ -22,7 +22,6 @@ import java.io.Serializable;
 
 import org.nuxeo.common.xmap.annotation.XNode;
 import org.nuxeo.common.xmap.annotation.XObject;
-import org.nuxeo.ecm.core.schema.DocumentTypeDescriptor;
 
 
 /**

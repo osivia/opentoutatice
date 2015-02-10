@@ -20,9 +20,6 @@ package org.nuxeo.ecm.core.schema;
 
 import java.io.Serializable;
 
-import org.nuxeo.ecm.core.schema.DocumentTypeDescriptor;
-import org.nuxeo.ecm.platform.types.Type;
-
 /**
  * @author david
  *
