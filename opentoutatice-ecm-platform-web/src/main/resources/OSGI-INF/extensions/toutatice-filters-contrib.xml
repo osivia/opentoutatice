@@ -20,13 +20,6 @@
 			</rule>
 		</filter>
 
-		<filter id="not_belong_to_publish_space">
-			<rule grant="false">
-				<condition>#{documentActions.belongToPublishSpace() == true}
-				</condition>
-			</rule>
-		</filter>
-
 		<filter id="hasToutaticeSchema">
 			<rule grant="true">
 				<schema>toutatice</schema>
