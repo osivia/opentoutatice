@@ -211,6 +211,11 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
     public boolean getTrue() {
         return true;
     }
+    
+    @Override
+    public boolean isPending() throws ClientException {
+        return isPending(navigationContext.getCurrentDocument());
+    }
 
     public boolean isPending(DocumentModel document) throws ClientException {
         boolean isPending = false;
