@@ -1,7 +1,6 @@
 <div xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:nxl="http://nuxeo.org/nxforms/layout"
 	xmlns:nxh="http://nuxeo.org/nxweb/html"
@@ -45,10 +44,9 @@
 						</script>
 		</f:subview>
 
-		<p class="h4">
-			<h:outputText
-				value="#{messages['toutatice.label.imageUpload.upload']}" />
-		</p>
+		<h3>
+			<h:outputText value="#{messages['toutatice.label.imageUpload.upload']}" />
+		</h3>
 
 		<h:form enctype="multipart/form-data" id="uploadForm"
 			rendered="#{!editorImageActions.isImageUploaded}"
@@ -56,8 +54,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="size">#{messages['label.imageUpload.image']}</label>
 				<div class="col-sm-6">
-					<s:fileUpload data="#{editorImageActions.uploadedImage()}"
-						fileName="#{editorImageActions.uploadedImageName}" />
+					<h:inputFile value="#{editorImageActions.uploadedImage}" />
 				</div>
 			</div>
 			<div class="form-group">

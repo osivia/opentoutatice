@@ -11,7 +11,7 @@
 	<packaging>zip</packaging>
 	<name>Marketplace package - Open Toutatice platform</name>
 
-	<properties />
+	<properties/>
 
 	<dependencyManagement>
 		<dependencies>
@@ -29,9 +29,8 @@
 	<dependencies>
 		<!-- Base distribution(s) for the MP -->
 		<dependency>
-			<groupId>org.nuxeo.marketplace.dam</groupId>
-			<artifactId>marketplace</artifactId>
-			<version>${nuxeo.version}</version>
+			<groupId>org.nuxeo.ecm.distribution</groupId>
+			<artifactId>nuxeo-distribution-cap</artifactId>
 			<type>pom</type>
 		</dependency>
 

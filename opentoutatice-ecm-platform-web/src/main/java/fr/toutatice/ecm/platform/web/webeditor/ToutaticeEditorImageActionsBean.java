@@ -19,14 +19,17 @@
 package fr.toutatice.ecm.platform.web.webeditor;
 
 import static org.jboss.seam.ScopeType.CONVERSATION;
+
 import static org.nuxeo.ecm.webapp.documentsLists.DocumentsListsManager.CURRENT_DOCUMENT_SELECTION;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.Part;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -347,68 +350,63 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 	@Override
 	@SuppressWarnings("unchecked")
 	public String uploadImage() throws ClientException {
-		InputStream uploadedImage = getUploadedImage();
-		String uploadedImageName = getUploadedImageName();
-		if (uploadedImage == null || uploadedImageName == null) {
-			return "";
+		Part uploadedImg = getUploadedImage();
+		String uploadedImgName = FileUtils.retrieveFilename(uploadedImg);
+		if (null == uploadedImg || StringUtils.isBlank(uploadedImgName)) {
+			return null;
 		}
 
-		final DocumentModel doc = navigationContext.getCurrentDocument();
-
-		uploadedImageName = FileUtils.getCleanFileName(uploadedImageName);
-		Blob uploadedImageBlob = FileUtils.createSerializableBlob(
-				uploadedImage, uploadedImageName, null);
-		boolean isImage = ToutaticeFileHelper.instance().isImageTypeFile(
-				uploadedImageName, uploadedImageBlob);
-
-		if (isImage) {
-			List<Map<String, Object>> files = (List<Map<String, Object>>) doc
-					.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
-
-			final Map<String, Object> item = new HashMap<String, Object>();
-			item.put("filename", uploadedImageName);
-			item.put("file", uploadedImageBlob);
-
-			ToutaticeImageCollectionHelper.instance().add(files, item);
-			doc.setPropertyValue(
-					ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES,
-					(Serializable) files);
-
-			documentManager.saveDocument(doc);
-			documentManager.save();
-
-			imageUrlAttr = DocumentModelFunctions
-					.complexFileUrl(
-							"downloadFile",
-							doc,
-							ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES,
-							files.indexOf(item),
-							LiveEditConstants.DEFAULT_SUB_BLOB_FIELD,
-							uploadedImageName);
-			isImageUploadedAttr = true;
-		} else {
-			// Le document que l'on cherche à uploader n'a pas le bon type mime.
-			// Abandon + message d'erreur (dans page JSF)
-			this.isImage = false;
-		}
-
-		return "editor_image_upload";
+		try {
+			final DocumentModel doc = navigationContext.getCurrentDocument();
+			Blob uploadedImageBlob = FileUtils.createSerializableBlob(uploadedImg.getInputStream(), uploadedImgName, uploadedImg.getContentType());
+			boolean isImage = ToutaticeFileHelper.instance().isImageTypeFile(uploadedImgName, uploadedImageBlob);
+			
+			if (isImage) {
+				List<Map<String, Object>> files = (List<Map<String, Object>>) doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
+				
+				final Map<String, Object> item = new HashMap<String, Object>();
+				item.put("filename", uploadedImgName);
+				item.put("file", uploadedImageBlob);
+				
+				ToutaticeImageCollectionHelper.instance().add(files, item);
+				doc.setPropertyValue(
+						ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES,
+						(Serializable) files);
+				
+				documentManager.saveDocument(doc);
+				documentManager.save();
+				
+				imageUrlAttr = DocumentModelFunctions.complexFileUrl("downloadFile",
+						doc,
+						ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES,
+						files.indexOf(item),
+						LiveEditConstants.DEFAULT_SUB_BLOB_FIELD,
+						uploadedImgName);
+				isImageUploadedAttr = true;
+			} else {
+				// Le document que l'on cherche à uploader n'a pas le bon type mime. Abandon + message d'erreur (dans page JSF)
+				this.isImage = false;
+				log.debug("The binary file to upload hasn't the correct mimetype.");
+			}
+			
+			return "editor_image_upload";
+		} catch (IOException e) {
+			log.error("Failed to upload the image, error: " + e.getMessage());
+            throw new ClientException(e);
+        }
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public String addImageFromNuxeo() throws ClientException {
 		DocumentModel currentDoc = navigationContext.getCurrentDocument();
 
-		List<DocumentModel> selectedDocumentList = documentsListsManager
-				.getWorkingList(CURRENT_DOCUMENT_SELECTION);
+		List<DocumentModel> selectedDocumentList = documentsListsManager.getWorkingList(CURRENT_DOCUMENT_SELECTION);
 
 		if (null != selectedDocumentList && 0 < selectedDocumentList.size()) {
-			List<Map<String, Object>> files = (List<Map<String, Object>>) currentDoc
-					.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
+			List<Map<String, Object>> files = (List<Map<String, Object>>) currentDoc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
 
 			for (DocumentModel selectedDocument : selectedDocumentList) {
-				Map<String, Object> picture = selectedDocument
-						.getProperties("picture");
+				Map<String, Object> picture = selectedDocument.getProperties("picture");
 
 				List<Map<String, Object>> views = (List) picture.get("views");
 				for (Map<String, Object> view : views) {
