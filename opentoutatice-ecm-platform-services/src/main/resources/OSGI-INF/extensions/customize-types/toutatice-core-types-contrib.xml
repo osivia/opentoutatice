@@ -11,10 +11,6 @@
 		<doctype name="Workspace" append="true">
 			<facet name="Space" />
 		</doctype>
-
-		<!--<doctype name="Domain" append="true">
-			<facet name="Space" />
-		</doctype>-->
 		
 	</extension>
 
