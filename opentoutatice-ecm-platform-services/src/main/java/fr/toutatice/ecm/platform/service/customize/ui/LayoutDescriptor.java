@@ -14,6 +14,8 @@
  *
  * Contributors:
  *   mberhaut1
+ *   lbillon
+ *   dchevrier
  *    
  */
 package fr.toutatice.ecm.platform.service.customize.ui;
@@ -26,7 +28,7 @@ import org.nuxeo.common.xmap.annotation.XObject;
 
 
 /**
- * @author david
+ * @author david chevrier
  *
  */
 @XObject("layout")

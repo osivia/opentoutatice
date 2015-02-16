@@ -14,6 +14,8 @@
  *
  * Contributors:
  *   mberhaut1
+ *   lbillon
+ *   dchevrier
  *    
  */
 package fr.toutatice.ecm.platform.service.customize.ui;
@@ -22,7 +24,7 @@ import java.io.Serializable;
 
 
 /**
- * @author david
+ * @author david chevrier
  *
  */
 public interface CustomizeUIService extends Serializable {
