@@ -40,6 +40,7 @@
     <operation class="fr.toutatice.ecm.platform.automation.StopWFProcess" />
     <operation class="fr.toutatice.ecm.platform.automation.AddComplexProperty" />
     <operation class="fr.toutatice.ecm.platform.automation.FetchDocumentInList" />      
+    <operation class="fr.toutatice.ecm.platform.automation.GetWebConfigurations" />
 	
   </extension>
 

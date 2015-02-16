@@ -7,6 +7,10 @@
 
 	<extension target="org.nuxeo.ecm.core.schema.TypeService"
 		point="doctype">
+		
+		<facet name="WebConfigurationsLocalConfiguration">
+			<schema name="web_configurations_configuration" />
+		</facet>
 
 		<doctype name="WebConfiguration" extends="Document">
 			<schema name="webconfiguration" />
@@ -20,9 +24,9 @@
 			<schema name="dublincore" />
 			<facet name="Folderish" />
 		</doctype>
-
+		
 	</extension>
-	
+
 	<extension target="org.nuxeo.ecm.platform.types.TypeService"
 		point="types">
 
@@ -37,7 +41,7 @@
 				<type>WebConfiguration</type>
 			</subtypes>
 		</type>
-		
+
 	</extension>
 
 </component>
