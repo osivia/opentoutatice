@@ -35,8 +35,8 @@
 			</fields>
 			<properties widgetMode="edit">
 				<property name="required">false</property>
-				<!--<property name="validator">#{toutaticeValidator.validateWebConfCode}
-				</property> -->
+				<property name="validator">#{toutaticeValidator.validateWebConfCode}
+				</property> 
 			</properties>
 		</widget>
 		<widget name="code2" type="text">
@@ -168,7 +168,7 @@
 		</widget>
 
 		<!-- Local configuration -->
-		<!--<widget name="ui_web_confs_selection" type="shuttle">
+		<widget name="ui_web_confs_selection" type="shuttle">
 			<labels>
 				<label mode="any">osivia.label.local.configuration.ui.types.allowedConfsDocs
 				</label>
@@ -210,7 +210,7 @@
 			<fields>
 				<field>webconfs:denyAllConfsDocs</field>
 			</fields>
-		</widget> -->
+		</widget> 
 
 
 

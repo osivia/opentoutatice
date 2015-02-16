@@ -20,6 +20,8 @@
 package fr.toutatice.ecm.platform.web.userservices;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +30,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,12 +48,16 @@ import org.nuxeo.ecm.core.api.model.Property;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 import org.nuxeo.ecm.platform.ui.web.util.ComponentUtils;
+import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 import org.nuxeo.ecm.webapp.contentbrowser.DocumentActions;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.core.local.configuration.WebConfsConfigurationAdapter;
+import fr.toutatice.ecm.platform.core.local.configuration.WebConfsConfigurationConstants;
 import fr.toutatice.ecm.platform.web.document.ToutaticeDocumentActionsBean;
+import fr.toutatice.ecm.platform.web.local.configuration.WebConfsConfigurationActions;
 
 
 /**
@@ -206,6 +213,83 @@ public class ToutaticeValidatorBean {
     }
 
     /**
+     * Test if a configuration document can be created given its code.
+     * 
+     * @param context
+     * @param component
+     * @param value
+     * @throws ValidatorException
+     */
+    public void validateWebConfCode(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+
+        UnrestrictedWebConfsChecker checker = new UnrestrictedWebConfsChecker(documentManager, context, value);
+        checker.runUnrestricted();
+
+    }
+
+    private class UnrestrictedWebConfsChecker extends UnrestrictedSessionRunner {
+
+        private FacesContext context;
+        private Object value;
+
+        protected UnrestrictedWebConfsChecker(CoreSession session, FacesContext context, Object value) {
+            super(session);
+            this.context = context;
+            this.value = value;
+        }
+
+        @Override
+        public void run() throws ClientException {
+
+            String msg = ComponentUtils.translate(this.context, "osivia.label.validator.webConf.code");
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
+
+            WebConfsConfigurationActions webConfsActions = (WebConfsConfigurationActions) SeamComponentCallHelper
+                    .getSeamComponentByName("webConfsConfigurationActions");
+            DocumentModel currentDomain = navigationContext.getCurrentDomain();
+
+            // We try to override or create new conf
+            if (currentDomain != null) {
+                if (currentDomain.hasFacet(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_FACET)) {
+
+                    Boolean allDeniedConfs = (Boolean) currentDomain
+                            .getPropertyValue(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_DENIED_ALL_PROPERTY);
+                    if (BooleanUtils.isFalse(allDeniedConfs)) {
+                        // Case of denied confs
+                        List<DocumentModel> deniedWebConfs = webConfsActions.getNotSelectedConfs(currentDomain);
+                        if (deniedWebConfs != null) {
+                            for (Iterator<DocumentModel> it = deniedWebConfs.iterator(); it.hasNext();) {
+                                DocumentModel selectedWebConf = it.next();
+                                String code = (String) selectedWebConf.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_WEB_CONF_CODE);
+                                if (code.equals((String) this.value)) {
+                                    throw new ValidatorException(message);
+                                }
+                            }
+                        }
+                        // Case of allowed confs where one (or more) is desactived
+                        List<String> selectedWebConfs = webConfsActions.getAllowedWebConfs(currentDomain);
+                        if (selectedWebConfs != null && !selectedWebConfs.contains((String) value)) {
+                            throw new ValidatorException(message);
+                        }
+                    }
+
+                } else {
+                    List<String> globalWebConfs = webConfsActions.getGlobalWebconfsCodes();
+                    if (globalWebConfs != null) {
+                        if (!globalWebConfs.isEmpty() && !globalWebConfs.contains((String) value)) {
+                            String msg_ = ComponentUtils.translate(this.context, "osivia.label.validator.webConf.global.code");
+                            FacesMessage message_ = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg_, null);
+                            throw new ValidatorException(message_);
+                        }
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    /**
      * Get the parent space and look at the property "ttcs:hasWebIdEnabled"
      * 
      * @param doc
@@ -221,15 +305,15 @@ public class ToutaticeValidatorBean {
         UnrestrictedSpaceSupportsWebId runner = new UnrestrictedSpaceSupportsWebId(documentManager, doc);
         runner.runUnrestricted();
         return runner.isSupports();
-        
+
     }
-    
+
     private class UnrestrictedSpaceSupportsWebId extends UnrestrictedSessionRunner {
-        
+
         private Boolean supports;
         private DocumentModel document;
-        
-        public Boolean isSupports(){
+
+        public Boolean isSupports() {
             return this.supports;
         }
 
@@ -245,7 +329,7 @@ public class ToutaticeValidatorBean {
             if (spaces != null && spaces.size() > 0) {
 
                 DocumentModel space = spaces.get(0);
-                
+
                 Property hasWebIdEnabled = space.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICESPACE_WEBID_ENABLED);
 
                 if (hasWebIdEnabled != null) {
@@ -259,9 +343,9 @@ public class ToutaticeValidatorBean {
                 spaceSupportsWebId = false; // space is not found
             }
             this.supports = spaceSupportsWebId;
-            
+
         }
-        
+
     }
 
 }
