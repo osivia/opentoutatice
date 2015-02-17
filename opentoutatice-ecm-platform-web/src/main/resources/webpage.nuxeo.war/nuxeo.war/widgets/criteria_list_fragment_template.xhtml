@@ -30,11 +30,8 @@
 	<c:choose>
 		<c:when test="${isEditMode}">
 
-			
 			<nxu:dataList id="crtlist_fgts" value="#{currentDocument.crtlistfgt.criteriaListFragment}"
-					var="crtlist_fgt" class="fgts">
-
-				<c:set var="index" value="0" />
+					var="crtlist_fgt" rowKeyVar="index" first="0" class="fgts">
 
 				<s:div rendered="#{crtlist_fgt.refURI eq fragmentBean.uri}">
 
@@ -142,8 +139,6 @@
 					</div>
 					
 				</s:div>
-
-				<c:set var="index" value="#{index} + 1" />
 
 			</nxu:dataList>
 			
