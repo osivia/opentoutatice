@@ -27,8 +27,8 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
 import fr.toutatice.ecm.platform.service.fragments.FragmentServiceException;
-import fr.toutatice.ecm.platform.web.fragments.configuration.ConfigurationBeanHelper;
-import fr.toutatice.ecm.platform.web.fragments.configuration.ConfigurationConstants;
+import fr.toutatice.ecm.platform.service.fragments.configuration.ConfigurationBeanHelper;
+import fr.toutatice.ecm.platform.service.fragments.configuration.ConfigurationConstants;
 
 /**
  * 
