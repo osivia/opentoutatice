@@ -93,8 +93,7 @@ public class CriteriaListFragment implements Fragment {
 	
 	public static String getSpaceId(DocumentModel document){
 	    String spaceId = (String) document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_SPACEID);
-	    if(StringUtils.isBlank(spaceId)){
-	        /* Document is a root space */
+	    if(document.hasFacet(ToutaticeNuxeoStudioConst.CST_DOC_FACET_TTC_PUBLISH_SPACE)){
 	        spaceId = document.getId();
 	    }
 	    return spaceId;
