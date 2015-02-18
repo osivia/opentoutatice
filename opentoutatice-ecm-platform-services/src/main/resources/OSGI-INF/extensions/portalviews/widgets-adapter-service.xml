@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterService">
+
+	<service>
+		<provide interface="fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterService" />
+	</service>
+	
+	<implementation
+		class="fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterServiceImpl" />
+		
+	<extension-point name="adapter">
+		<object class="fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterDescriptor" />
+  	</extension-point>
+
+</component>

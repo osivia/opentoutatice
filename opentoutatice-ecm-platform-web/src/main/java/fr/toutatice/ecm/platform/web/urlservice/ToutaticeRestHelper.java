@@ -19,27 +19,17 @@ package fr.toutatice.ecm.platform.web.urlservice;
 
 import static org.jboss.seam.ScopeType.EVENT;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.faces.context.FacesContext;
-
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.plexus.util.StringUtils;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
-import org.nuxeo.ecm.core.api.DocumentLocation;
-import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.platform.picture.web.PictureManager;
 import org.nuxeo.ecm.platform.ui.web.rest.RestHelper;
-import org.nuxeo.ecm.platform.url.DocumentViewImpl;
 import org.nuxeo.ecm.platform.url.api.DocumentView;
-import org.nuxeo.ecm.platform.url.codec.DocumentFileCodec;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.service.url.WebIdCodec;
@@ -76,6 +66,6 @@ public class ToutaticeRestHelper extends RestHelper {
             initContextFromRestRequest(docView);
         }
 
-        return "";
+        return StringUtils.EMPTY;
     }    
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.services.portalviews.adapter">
+
+	<require>fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterService</require>
+	<require>fr.toutatice.ecm.platform.web.portalviews.widgets</require>
+
+	<extension target="fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterService"
+		point="adapter">
+		
+		<mappings>
+			<mapping nxWidget="vevent_dtstart" pvWidget="pv_event_dtstart" />
+		</mappings>
+		
+	</extension>
+
+</component> 
