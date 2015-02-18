@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.platform.forms.layout.api.Layout;
 import org.nuxeo.ecm.platform.forms.layout.api.LayoutRow;
 import org.nuxeo.ecm.platform.forms.layout.api.Widget;
@@ -45,7 +46,7 @@ import fr.toutatice.ecm.platform.core.components.ToutaticeAbstractServiceHandler
  *
  */
 public class ToutaticeWebLayoutManagerHandler<T> extends ToutaticeAbstractServiceHandler<T> {
-    
+
     protected enum PortalViewId {
         toutatice_edit, toutatice_create;
     }
@@ -89,9 +90,15 @@ public class ToutaticeWebLayoutManagerHandler<T> extends ToutaticeAbstractServic
     }
 
     protected boolean isInPortalViewContext() {
+        boolean is = false;
         RestHelper restHelper = (RestHelper) SeamComponentCallHelper.getSeamComponentByName("restHelper");
         DocumentView documentView = restHelper.getDocumentView();
-        String viewId = documentView.getViewId();
-        return (viewId.contains(PortalViewId.toutatice_edit.name())) || (viewId.contains(PortalViewId.toutatice_create.name()));
+        if (documentView != null) {
+            String viewId = documentView.getViewId();
+            if (StringUtils.isNotBlank(viewId)) {
+                is = (viewId.contains(PortalViewId.toutatice_edit.name())) || (viewId.contains(PortalViewId.toutatice_create.name()));
+            }
+        }
+        return is;
     }
 }
