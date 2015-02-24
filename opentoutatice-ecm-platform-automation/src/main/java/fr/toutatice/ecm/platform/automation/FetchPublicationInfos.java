@@ -424,20 +424,24 @@ public class FetchPublicationInfos {
 
     private boolean isValidateOnLineTaskPending(DocumentModel document) throws ClientException {
         boolean isPending = false;
-//        Task onLineTask = ToutaticeWorkflowHelper.getDocumentTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, coreSession, document);
-//        if (onLineTask != null) {
-//            isPending = onLineTask.isOpened();
-//        } else {
-//            // Principal can be initiator
-//            DocumentRoutingService routing = Framework.getLocalService(DocumentRoutingService.class);
-//            List<DocumentRoute> documentRoutes = routing.getDocumentRoutesForAttachedDocument(document.getCoreSession(), document.getId());
-//            
-//            Iterator<DocumentRoute> iterator = documentRoutes.iterator();
-//            while (iterator.hasNext() && !isPending) {
-//                DocumentRoute documentRoute = iterator.next();
-//                isPending = ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE.equals(documentRoute.getName());
-//            }
-//        }
+        /**
+         * Bug fix: redmine #2161
+         *  
+        Task onLineTask = ToutaticeWorkflowHelper.getDocumentTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, coreSession, document);
+        if (onLineTask != null) {
+            isPending = onLineTask.isOpened();
+        } else {
+            // Principal can be initiator
+            DocumentRoutingService routing = Framework.getLocalService(DocumentRoutingService.class);
+            List<DocumentRoute> documentRoutes = routing.getDocumentRoutesForAttachedDocument(document.getCoreSession(), document.getId());
+            
+            Iterator<DocumentRoute> iterator = documentRoutes.iterator();
+            while (iterator.hasNext() && !isPending) {
+                DocumentRoute documentRoute = iterator.next();
+                isPending = ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE.equals(documentRoute.getName());
+            }
+        }
+        */
         return isPending;
     }
 
