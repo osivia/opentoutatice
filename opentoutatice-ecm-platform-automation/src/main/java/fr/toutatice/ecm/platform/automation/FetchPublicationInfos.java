@@ -22,13 +22,13 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -56,16 +56,14 @@ import org.nuxeo.ecm.core.api.security.Access;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 import org.nuxeo.ecm.core.trash.TrashService;
-import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
-import org.nuxeo.ecm.platform.routing.api.DocumentRoutingService;
 import org.nuxeo.ecm.platform.task.Task;
-import org.nuxeo.ecm.platform.task.TaskService;
 import org.nuxeo.ecm.platform.task.core.helpers.TaskActorsHelper;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.platform.types.TypeManager;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 import org.nuxeo.runtime.api.Framework;
 
+import fr.toutatice.ecm.platform.automation.helper.TimeDebugger;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
@@ -80,7 +78,7 @@ public class FetchPublicationInfos {
             + " AND ttc:webid = '%s' %s AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
 
-    private static final Log log = LogFactory.getLog("FetchPublicationInfos");
+    private static final Log log = LogFactory.getLog(FetchPublicationInfos.class);
 
     /**
      * Id Nuxeo de l'opération (s'applique à un Document).
@@ -139,6 +137,10 @@ public class FetchPublicationInfos {
 
     @OperationMethod
     public Object run() throws Exception {
+
+        if (log.isDebugEnabled()) {
+            TimeDebugger.getInstance("run").setStartTime();
+        }
 
         /* Réponse de l'opération sous forme de flux JSon */
         JSONArray rowInfosPubli = new JSONArray();
@@ -205,11 +207,13 @@ public class FetchPublicationInfos {
             infosPubli.element("editableByUser", isEditable);
             Object isDeletable = isDeletableByUser(infosPubli, liveDoc);
             infosPubli.element("isDeletableByUser", isDeletable);
-            Object canUserValidate = canUserValidate(liveDoc);
-            infosPubli.element("canUserValidate", canUserValidate);
-            Object isOnLinePending = isValidateOnLineTaskPending(liveDoc);
+
+            Task onLineTask = getOnLineTask(liveDoc);
+            Object isOnLinePending = isValidateOnLineTaskPending(onLineTask);
             infosPubli.element("isOnLinePending", isOnLinePending);
-            Object isUserOnLineInitiator = isUserOnLIneWorkflowInitiator(liveDoc);
+            Object canUserValidate = canUserValidate(onLineTask);
+            infosPubli.element("canUserValidate", canUserValidate);
+            Object isUserOnLineInitiator = isUserOnLIneWorkflowInitiator(onLineTask);
             infosPubli.element("isUserOnLineInitiator", isUserOnLineInitiator);
 
             /*
@@ -275,6 +279,13 @@ public class FetchPublicationInfos {
         infosPubli = infosPubliRunner.getInfosPubli();
         infosPubli.element("errorCodes", errorsCodes);
         rowInfosPubli.add(infosPubli);
+
+        if (log.isDebugEnabled()) {
+            TimeDebugger timeDebugger = TimeDebugger.getInstance("run");
+            long totalTime = timeDebugger.getTotalTime();
+            log.debug(timeDebugger.getMessage("run", coreSession.getSessionId(), document.getPathAsString(), totalTime));
+        }
+
         return createBlob(rowInfosPubli);
     }
 
@@ -334,46 +345,58 @@ public class FetchPublicationInfos {
      * @throws ServeurException
      * @throws ClientException
      */
-    private Boolean canUserValidate(DocumentModel document) throws ServeurException, ClientException {
-        Boolean canValidate = Boolean.FALSE;
-        if (isValidateOnLineTaskPending(document)) {
+    private Boolean canUserValidate(Task onLineTask) throws ServeurException, ClientException {
 
-            List<Task> tasks = new ArrayList<Task>();
-            TaskService taskService = Framework.getLocalService(TaskService.class);
-
-            NuxeoPrincipal principal = (NuxeoPrincipal) coreSession.getPrincipal();
-            List<String> actors = new ArrayList<String>();
-            actors.addAll(TaskActorsHelper.getTaskActors(principal));
-
-            try {
-                tasks = taskService.getTaskInstances(document, actors, true, coreSession);
-                if (tasks != null && tasks.size() > 0) {
-                    
-                    Iterator<Task> iterator = tasks.iterator();
-                    while (iterator.hasNext() && !canValidate) {
-                        Task task = iterator.next();
-                        if (task.isOpened() && ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE.equals(task.getName())) {
-                            canValidate = Boolean.TRUE;
-                        }
-                    }
-                    
-                }
-            } catch (ClientException e) {
-                // isAssignee stills false
-            }
-        } else {
-            try {
-                canValidate = Boolean.valueOf(coreSession.hasPermission(document.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE));
-            } catch (ClientException e) {
-                if (e instanceof DocumentSecurityException) {
-                    return Boolean.FALSE;
-                } else {
-                    log.warn("Failed to fetch permissions for document '" + document.getPathAsString() + "', error:" + e.getMessage());
-                    throw new ServeurException(e);
-                }
-            }
+        if (log.isDebugEnabled()) {
+            TimeDebugger.getInstance("canUserValidate").setStartTime();
         }
 
+        Boolean canValidate = Boolean.FALSE;
+        Boolean isActor = Boolean.FALSE;
+        if (onLineTask != null) {
+
+            List<String> actors = onLineTask.getActors();
+            if (actors != null && !actors.isEmpty()) {
+                
+                NuxeoPrincipal principal = (NuxeoPrincipal) coreSession.getPrincipal();
+                if (principal != null) {
+                    
+                    List<String> taskActors = TaskActorsHelper.getTaskActors(principal);
+                    isActor = CollectionUtils.isSubCollection(actors, taskActors);
+                    
+                }
+            }
+
+            if (isActor) {
+                canValidate = checkValidatePermission();
+            }
+
+        } else {
+            // Direct on/off line
+            canValidate = checkValidatePermission();
+        }
+
+        if (log.isDebugEnabled()) {
+            TimeDebugger timeDebugger = TimeDebugger.getInstance("canUserValidate");
+            long totalTime = timeDebugger.getTotalTime();
+            log.debug(timeDebugger.getMessage("canUserValidate", coreSession.getSessionId(), document.getPathAsString(), totalTime));
+        }
+
+        return canValidate;
+    }
+
+    private Boolean checkValidatePermission() throws ServeurException {
+        Boolean canValidate = Boolean.FALSE;
+        try {
+            canValidate = Boolean.valueOf(coreSession.hasPermission(document.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE));
+        } catch (ClientException e) {
+            if (e instanceof DocumentSecurityException) {
+                return Boolean.FALSE;
+            } else {
+                log.warn("Failed to fetch permissions for document '" + document.getPathAsString() + "', error:" + e.getMessage());
+                throw new ServeurException(e);
+            }
+        }
         return canValidate;
     }
 
@@ -422,36 +445,57 @@ public class FetchPublicationInfos {
         return canBeDelete;
     }
 
-    private boolean isValidateOnLineTaskPending(DocumentModel document) throws ClientException {
-        boolean isPending = false;
-        /**
-         * Bug fix: redmine #2161
-         *  
-        Task onLineTask = ToutaticeWorkflowHelper.getDocumentTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, coreSession, document);
+    private Boolean isValidateOnLineTaskPending(Task onLineTask) throws ClientException {
+        Boolean isPending = Boolean.FALSE;
         if (onLineTask != null) {
             isPending = onLineTask.isOpened();
-        } else {
-            // Principal can be initiator
-            DocumentRoutingService routing = Framework.getLocalService(DocumentRoutingService.class);
-            List<DocumentRoute> documentRoutes = routing.getDocumentRoutesForAttachedDocument(document.getCoreSession(), document.getId());
-            
-            Iterator<DocumentRoute> iterator = documentRoutes.iterator();
-            while (iterator.hasNext() && !isPending) {
-                DocumentRoute documentRoute = iterator.next();
-                isPending = ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE.equals(documentRoute.getName());
-            }
         }
-        */
         return isPending;
     }
 
-    private Object isUserOnLIneWorkflowInitiator(DocumentModel liveDoc) throws ClientException {
-        String onLineWorkflowInitiator = StringUtils.EMPTY;
+    private Task getOnLineTask(DocumentModel document) {
+        Task onLinetask = null;
 
-        NuxeoPrincipal currentUser = (NuxeoPrincipal) coreSession.getPrincipal();
-        onLineWorkflowInitiator = ToutaticeWorkflowHelper.getOnLineWorkflowInitiator(liveDoc);
+        if (log.isDebugEnabled()) {
+            TimeDebugger.getInstance("getOnLineTask").setStartTime();
+        }
 
-        return onLineWorkflowInitiator.equals(currentUser.getName());
+        onLinetask = ToutaticeWorkflowHelper.getDocumentTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, coreSession, document);
+
+        if (log.isDebugEnabled()) {
+            TimeDebugger timeDebugger = TimeDebugger.getInstance("getOnLineTask");
+            long totalTime = timeDebugger.getTotalTime();
+            log.debug(timeDebugger.getMessage("getOnLineTask", coreSession.getSessionId(), document.getPathAsString(), totalTime));
+        }
+
+        return onLinetask;
+
+    }
+
+    private Object isUserOnLIneWorkflowInitiator(Task onLineTask) throws ClientException {
+        Boolean isInitiator = Boolean.FALSE;
+
+        if (log.isDebugEnabled()) {
+            TimeDebugger.getInstance("isUserOnLIneWorkflowInitiator").setStartTime();
+        }
+
+        if (onLineTask != null) {
+            /* Initiator of wf is task initiator */
+            String onLineWorkflowInitiator = onLineTask.getInitiator();
+            if (StringUtils.isNotBlank(onLineWorkflowInitiator)) {
+
+                NuxeoPrincipal currentUser = (NuxeoPrincipal) coreSession.getPrincipal();
+                isInitiator = onLineWorkflowInitiator.equals(currentUser.getName());
+
+            }
+
+            if (log.isDebugEnabled()) {
+                TimeDebugger timeDebugger = TimeDebugger.getInstance("isUserOnLIneWorkflowInitiator");
+                long totalTime = timeDebugger.getTotalTime();
+                log.debug(timeDebugger.getMessage("isUserOnLIneWorkflowInitiator", coreSession.getSessionId(), document.getPathAsString(), totalTime));
+            }
+        }
+        return isInitiator;
     }
 
     /**
@@ -846,7 +890,7 @@ public class FetchPublicationInfos {
         String webIdSegment;
         String domainIdSegment;
         DocumentModel docResolved;
-        
+
         private static final String PROXY_FILTER = " AND ecm:isProxy = 1 ";
         private static final String LIVE_FILTER = " AND ecm:isProxy = 0 ";
 
@@ -862,9 +906,9 @@ public class FetchPublicationInfos {
             DocumentModelList liveDocs = session.query(String.format(WEB_ID_QUERY, domainIdSegment, webIdSegment, LIVE_FILTER));
             if (liveDocs.size() == 1) {
                 docResolved = liveDocs.get(0);
-            } else if(liveDocs.size() == 0){
+            } else if (liveDocs.size() == 0) {
                 DocumentModelList proxiesDocs = session.query(String.format(WEB_ID_QUERY, domainIdSegment, webIdSegment, PROXY_FILTER));
-                if(proxiesDocs.size() == 1){
+                if (proxiesDocs.size() == 1) {
                     docResolved = proxiesDocs.get(0);
                 } else if (proxiesDocs.size() > 1) {
                     throw new ClientException("Two or more published documents have the webid : " + webid);
