@@ -57,6 +57,9 @@ public class ToutaticeNuxeoStudioConst {
 	public static final String CST_DOC_SCHEMA_MNT_PREFIX = "maintenance";
 	public static final String CST_DOC_SCHEMA_WEB_CONF = "wconf";
 	
+	public static final String CST_DOC_SCHEMA_TTC_EVENT = "toutatice_event";
+	public static final String CST_DOC_SCHEMA_TTC_EVENT_PREFIX = "ttcevt";
+	
 	// facets
 	public final static String CST_DOC_FACET_WEB_VIEW = "WebView";
 	public final static String CST_DOC_FACET_TTC_PUBLISH_SPACE = "TTCPublishSpace";
@@ -93,6 +96,13 @@ public class ToutaticeNuxeoStudioConst {
 	public static final String CST_DOC_SCHEMA_TOUTATICE_WEBID = CST_DOC_SCHEMA_TOUTATICE_PREFIX + ":webid";
     public static final String CST_DOC_XPATH_TOUTATICESPACE_WEBID_ENABLED = CST_DOC_SCHEMA_TOUTATICE_SPACE_PREFIX + ":hasWebIdEnabled";
     public static final String CST_DOC_XPATH_WEB_CONF_CODE = CST_DOC_SCHEMA_WEB_CONF + ":code";
+    
+    public static final String CST_DOC_XPATH_TTC_EVT_DATE_BEGIN = CST_DOC_SCHEMA_TTC_EVENT_PREFIX + ":dateBegin";
+    public static final String CST_DOC_XPATH_TTC_EVT_TIME_BEGIN = CST_DOC_SCHEMA_TTC_EVENT_PREFIX + ":timeBegin";
+    public static final String CST_DOC_XPATH_TTC_EVT_DATE_END = CST_DOC_SCHEMA_TTC_EVENT_PREFIX + ":dateEnd";
+    public static final String CST_DOC_XPATH_TTC_EVT_TIME_END = CST_DOC_SCHEMA_TTC_EVENT_PREFIX + ":timeEnd";
+    public static final String CST_DOC_XPATH_TTC_EVT_DATE_TIME_BEGIN = CST_DOC_SCHEMA_TTC_EVENT_PREFIX + ":dateTimeBegin";
+    public static final String CST_DOC_XPATH_TTC_EVT_DATE_TIME_END = CST_DOC_SCHEMA_TTC_EVENT_PREFIX + ":dateTimeEnd";
 	 
 	// life cycle states
 	public final static String CST_DOC_STATE_PROJECT = "project";

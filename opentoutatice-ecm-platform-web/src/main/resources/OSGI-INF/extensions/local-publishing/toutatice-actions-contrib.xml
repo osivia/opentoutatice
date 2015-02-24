@@ -16,8 +16,6 @@
 			<category>CREATE_DOCUMENT_FORM</category>
 			<filter-id>is_not_creating_form_specific_document</filter-id>
 			<filter-id>belong_to_publish_space</filter-id>
-			<filter-id>not_proxy</filter-id>
-			<filter-id>not_version</filter-id>
 			<filter-id>canCreateNSetDocumentOnline</filter-id>
 			<filter-id>canValidateOnParent</filter-id>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>

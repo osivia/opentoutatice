@@ -40,6 +40,10 @@
 			<resource>glyphicons.css</resource>
 			<resource>toutatice-popup.min.css</resource>
 			<resource>custom-popup.min.css</resource>
+			<resource>bootstrap-datepicker.js</resource>
+			<resource>bootstrap-datepicker.fr.js</resource>
+			<resource>bootstrap-timepicker.js</resource>
+			<!-- FIXME: necessary? -->
 			<require>nxthemes.css</require>
 		</view>
 		
@@ -51,15 +55,23 @@
 		<resource name="glyphicons.css">
 			<path>css/glyphicons/css/glyphicons.css</path>
 		</resource>
-
 		<resource name="toutatice-popup.min.css">
 			<path>css/toutatice-popup.min.css</path>
 		</resource>
-
 		<resource name="custom-popup.min.css">
 			<path>css/custom-popup.min.css</path>
 		</resource>
-
+		
+		<resource name="bootstrap-datepicker.js">
+			<path>scripts/bootstrap/bootstrap-datepicker.js</path>
+		</resource>
+		<resource name="bootstrap-datepicker.fr.js">
+			<path>scripts/bootstrap/locales/bootstrap-datepicker.fr.js</path>
+		</resource>
+		<resource name="bootstrap-timepicker.js">
+			<path>scripts/bootstrap/bootstrap-timepicker.js</path>
+		</resource>
+		
 	</extension>
 
 </component>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.services.portalviews.eventlistener">
+
+	<extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
+		point="listener">
+		
+		<listener name="toutaticeWidgetsAdapterListener" async="false" postCommit="true"
+			class="fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterListener"
+			priority="100">
+            <event>documentCreated</event>
+            <event>beforeDocumentModification</event>
+		</listener>
+
+	</extension>
+
+</component>

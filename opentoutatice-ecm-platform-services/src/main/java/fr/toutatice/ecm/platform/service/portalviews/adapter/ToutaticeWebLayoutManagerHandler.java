@@ -27,6 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.context.FacesContext;
+import javax.faces.view.facelets.FaceletContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.platform.forms.layout.api.Layout;
 import org.nuxeo.ecm.platform.forms.layout.api.LayoutRow;
@@ -36,6 +39,7 @@ import org.nuxeo.ecm.platform.forms.layout.api.impl.LayoutRowImpl;
 import org.nuxeo.ecm.platform.ui.web.rest.RestHelper;
 import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 import org.nuxeo.ecm.platform.url.api.DocumentView;
+import org.nuxeo.ecm.webengine.app.DefaultContext;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.components.ToutaticeAbstractServiceHandler;
@@ -92,12 +96,16 @@ public class ToutaticeWebLayoutManagerHandler<T> extends ToutaticeAbstractServic
     protected boolean isInPortalViewContext() {
         boolean is = false;
         RestHelper restHelper = (RestHelper) SeamComponentCallHelper.getSeamComponentByName("restHelper");
+        String viewId = StringUtils.EMPTY;
         DocumentView documentView = restHelper.getDocumentView();
         if (documentView != null) {
-            String viewId = documentView.getViewId();
-            if (StringUtils.isNotBlank(viewId)) {
-                is = (viewId.contains(PortalViewId.toutatice_edit.name())) || (viewId.contains(PortalViewId.toutatice_create.name()));
-            }
+            viewId = documentView.getViewId();
+        } else {
+            FacesContext context = FacesContext.getCurrentInstance();
+            viewId = context.getViewRoot().getViewId();
+        }
+        if (StringUtils.isNotBlank(viewId)) {
+            is = (viewId.contains(PortalViewId.toutatice_edit.name())) || (viewId.contains(PortalViewId.toutatice_create.name()));
         }
         return is;
     }

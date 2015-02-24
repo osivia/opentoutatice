@@ -1,28 +1,63 @@
-<f:subview xmlns:f="http://java.sun.com/jsf/core"
+<div xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:nxu="http://nuxeo.org/nxweb/util" id="#{widget.id}">
 
-	<link rel="stylesheet" href="#{baseUrl}css/datetime/datepicker.css" />
-	<link rel="stylesheet" href="#{baseUrl}css/bootstrap.min.css" />
-
-	<script type="text/javascript"
-		src="#{baseURL}scripts/bootstrap/bootstrap-datepicker.js" />
 	<script type="text/javascript">
+
             jQuery(document).ready(function () {
                 
-                jQuery('.datePicker').datepicker({
-                    format: "dd/mm/yyyy"
+                jQuery('.date-picker').datepicker({
+					language: "fr",
+                    autoclose: true,
+					todayHighlight: true,
+					//startDate: "Beginning of time",
+					clearBtn: true
                 });  
+                
+                jQuery('.time-picker').timepicker({
+					minuteStep: 1,
+					template: 'modal',
+					appendWidgetTo: 'body',
+					showSeconds: false,
+					showMeridian: false,
+					defaultTime: false
+				});
             
             });
-        </script>
+     </script>
 
+	<div class="row">
+		
+		<div class="control-group">
+		    <div class="controls">
+				<div class="col-sm-6">
 
-	<div class="input-append date">
-		<input class="datePicker form-control" type="text" value="" />
-		<span class="add-on"><i class="icon-th"></i></span>
-	</div>
+				    <div class="input-group">
+				        <h:inputText id="#{widget.id}_date-picker"  class="date-picker form-control" value="#{field_0}" required="#{widget.properties.required}"/>
+				        <h:outputLabel for="#{widget.id}_date-picker" class="input-group-addon btn"><i class="glyphicons calendar"></i>
+				        </h:outputLabel>
+				    </div>
+				    <h:message styleClass="errorMessage" for="#{widget.id}_date-picker" id="#{widget.id}_message" />
+				    
+				</div>
+				<div class="col-sm-1 text-center">
+					<label class="control-label">#{messages['toutatice.label.time']}</label>
+				</div>
+				<div class="col-sm-3">
+				<!-- add btn class after input-group-addon to enable time widget -->
+				<div class="input-group">
+						<h:outputLabel for="#{widget.id}_time-picker" class="input-group-addon"><i class="glyphicons halflings time"></i>
+				        </h:outputLabel>
+				        <h:inputText id="#{widget.id}_time-picker" class="time-picker form-control" value="#{field_1}"/>
+				    </div>
+
+				</div>
+		    </div>
+    	</div>
 	
-</f:subview>
+	</div>
+	<p/>
+
+</div>
