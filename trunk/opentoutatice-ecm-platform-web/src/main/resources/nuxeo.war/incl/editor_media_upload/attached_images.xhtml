@@ -1,0 +1,109 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
+	xmlns:nxh="http://nuxeo.org/nxweb/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+	<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
+		<div class="alert alert-warning">
+					<i class="glyphicons halflings warning-sign"></i> <span
+						class="text-warning">#{messages['label.imageUpload.unableToUpload']}</span>
+
+				</div>
+	</f:subview>
+
+	<f:subview
+		rendered="#{!editorImageActions.inToutaticeCreationMode and currentDocument.hasFacet('TTCAttachableImages')}">
+
+		<c:choose>
+			<c:when test="#{empty currentDocument.toutatice.images}">
+
+				<div class="alert alert-warning">
+					<i class="glyphicons halflings warning-sign"></i> <span
+						class="text-warning">#{messages['toutatice.label.imageUpload.choose.NoattachedImage']}</span>
+
+				</div>
+
+			</c:when>
+			<c:otherwise>
+				<script type="text/javascript">
+
+					function updateEditorWithImagePJ(img) {
+						if (window.opener.tinyMCE) {
+							var tinyMCE = window.opener.tinyMCE;
+							var html = '&lt;img src="' + img.src + '"/&gt;';
+							tinyMCE
+									.execCommand('mceInsertContent', false,
+											html);
+							self.close();
+						}
+					}
+
+					function updateFragment(img) {
+
+							var imgSrc = img.src;
+							var relativeUrl = imgSrc.replace(
+									/^(?:\/\/|[^\/]+)*\//, "/");
+							
+							var picturePathField = window.opener.$picturePath;
+							picturePathField.val(relativeUrl);
+							window.opener.previewImg();
+
+						self.close();
+					}
+
+					function updateCaller(img){
+						if(window.opener.$picturePath){
+							updateFragment(img);
+						} else {
+							updateEditorWithImagePJ(img)
+						}
+					}
+					
+				</script>
+
+
+				<p class="h4">
+					<h:outputText
+						value="#{messages['toutatice.label.attached.images.select']}" />
+				</p>
+
+
+
+				<div class="row">
+					<div class="pictures-list">
+						<c:set var="index" value="0" />
+						<c:forEach var="img" items="#{currentDocument.toutatice.images}">
+
+							<div class="col-xs-3 col-md-3"
+								onclick="javascript:updateCaller(jQuery(this).find('img')[0]);">
+								<div class="picture">
+									<a href="#" class="thumbnail"> <h:graphicImage
+											value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', index, 'file', img.filename)}" />
+									</a>
+								</div>
+								<p class="text-center">#{img.filename}</p>
+
+								<c:set var="index" value="#{index + 1}" />
+
+							</div>
+
+						</c:forEach>
+					</div>
+				</div>
+
+			</c:otherwise>
+		</c:choose>
+
+		<div>
+			<ui:include
+				src="/incl/editor_media_upload/upload_attached_images.xhtml" />
+		</div>
+
+	</f:subview>
+
+</f:subview>

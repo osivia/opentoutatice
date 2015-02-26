@@ -1,0 +1,824 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.webpage.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+		<widget name="web_conf_title" type="text">
+			<labels>
+				<label mode="any">osivia.webconfig.name</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.name.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>dc:title</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">true</property>
+			</properties>
+		</widget>
+		<widget name="code" type="text">
+			<labels>
+				<label mode="any">osivia.webconfig.code</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.code.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:code</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="required">false</property>
+				<property name="validator">#{toutaticeValidator.validateWebConfCode}
+				</property> 
+			</properties>
+		</widget>
+		<widget name="code2" type="text">
+			<labels>
+				<label mode="any">osivia.webconfig.code2</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.code2.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:code2</field>
+			</fields>
+		</widget>
+		<widget name="type" type="selectOneDirectory">
+			<labels>
+				<label mode="any">osivia.webconfig.type</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.type.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:type</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="directoryName">webconfiguration-types</property>
+				<property name="required">true</property>
+			</properties>
+		</widget>
+		<widget name="glyphicon" type="text">
+			<labels>
+				<label mode="any">osivia.webconfig.glyphicon</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.glyphicon.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:glyphicon</field>
+			</fields>
+		</widget>
+		<widget name="web_conf_picture" type="file">
+			<labels>
+				<label mode="any">osivia.webconfig.picture</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.picture.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:picture</field>
+				<field>wconf:picture/filename</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="iconRendered">true</property>
+			</properties>
+		</widget>
+		<widget name="enabled" type="checkbox">
+			<labels>
+				<label mode="any">osivia.webconfig.enabled</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.enabled.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:enabled</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="required">true</property>
+			</properties>
+		</widget>
+		<widget name="order" type="int">
+			<labels>
+				<label mode="any">osivia.webconfig.order</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.order.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:order</field>
+			</fields>
+		</widget>
+		<widget name="options" type="list">
+			<labels>
+				<label mode="any">osivia.webconfig.options</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.options.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:options</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="orderable">true</property>
+				<property name="display">table</property>
+				<property name="hideSubLabels">false</property>
+			</properties>
+			<subWidgets>
+				<widget name="sub0" type="text">
+					<labels>
+						<label mode="any">osivia.webconfig.options.name</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.webconfig.options.name.help</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>propertyName</field>
+					</fields>
+				</widget>
+				<widget name="sub1" type="text">
+					<labels>
+						<label mode="any">osivia.webconfig.options.defaultvalue</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.webconfig.options.defaultvalue.help
+						</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>propertyDefaultValue</field>
+					</fields>
+				</widget>
+			</subWidgets>
+		</widget>
+
+		<!-- Local configuration -->
+		<widget name="ui_web_confs_selection" type="shuttle">
+			<labels>
+				<label mode="any">osivia.label.local.configuration.ui.types.allowedConfsDocs
+				</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>webconfs:allowedConfsDocs</field>
+			</fields>
+			<properties mode="any">
+				<property name="availableElementsLabel">
+					osivia.label.local.configuration.selection.availableWebConfs
+				</property>
+				<property name="selectedElementsLabel">
+					osivia.label.local.configuration.selection.selectedWebConfs
+				</property>
+				<property name="sourceItems">
+					#{webConfsConfigurationActions.getNotSelectedConfs(layoutValue)}
+				</property>
+				<property name="sourceItemVar">docConf</property>
+				<property name="sourceItemValue">#{docConf.wconf.code}</property>
+				<property name="sourceItemLabel">#{docConf.title} [#{docConf.wconf.type}]</property>
+				<property name="sourceItemOrdering">#{docConf.wconf.type}</property>
+				<property name="sourceItemCaseSensitive">true</property>
+				<property name="targetItems">
+					#{webConfsConfigurationActions.getSelectedConfs(layoutValue)}
+				</property>
+				<property name="targetItemVar">docConf</property>
+				<property name="targetItemValue">#{docConf.wconf.code}</property>
+				<property name="targetItemLabel">#{docConf.title} [#{docConf.wconf.type}]</property>
+			</properties>
+		</widget>
+
+		<widget name="deny_all_confs" type="checkbox">
+			<labels>
+				<label mode="any">osivia.label.local.configuration.denyAllConfs
+				</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>webconfs:denyAllConfsDocs</field>
+			</fields>
+		</widget> 
+
+
+
+		<widget name="fragments" type="list">
+			<labels>
+				<label mode="any">osivia.fragment.list</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.fragment.list.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>fgts:fragments</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="hideAddButton">true</property>
+			</properties>
+			<subWidgets>
+				<widget name="sub0" type="text">
+					<labels>
+						<label mode="any">osivia.fragment.uri</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.fragment.uri.help</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>uri</field>
+					</fields>
+					<widgetModes>
+						<mode value="any">view</mode>
+					</widgetModes>
+				</widget>
+				<widget name="sub1" type="text">
+					<labels>
+						<label mode="any">osivia.fragment.fragmentCategory</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.fragment.fragmentCategory.help</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>fragmentCategory</field>
+					</fields>
+					<widgetModes>
+						<mode value="any">view</mode>
+					</widgetModes>
+				</widget>
+				<widget name="sub2" type="text">
+					<labels>
+						<label mode="any">osivia.fragment.title</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.fragment.title.help</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>title</field>
+					</fields>
+				</widget>
+				<widget name="sub3" type="checkbox">
+					<labels>
+						<label mode="any">osivia.fragment.hideTitle</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.fragment.hideTitle.help</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>hideTitle</field>
+					</fields>
+				</widget>
+				<widget name="sub4" type="text">
+					<labels>
+						<label mode="any">osivia.fragment.regionId</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.fragment.regionId.help</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>regionId</field>
+					</fields>
+				</widget>
+				<widget name="sub5" type="int">
+					<labels>
+						<label mode="any">osivia.fragment.order</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.fragment.order.help</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>order</field>
+					</fields>
+				</widget>
+				<widget name="sub6" type="text">
+					<labels>
+						<label mode="any">osivia.fragment.style</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.fragment.style.help</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>style</field>
+					</fields>
+				</widget>
+			</subWidgets>
+		</widget>
+
+		<widget name="htmlFragment" type="list">
+			<labels>
+				<label mode="any">Fragments HTML</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>htmlfgt:htmlFragment</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="hideSubLabels">false</property>
+			</properties>
+			<subWidgets>
+				<widget name="sub0" type="text">
+					<labels>
+						<label mode="any">RefURI</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>refURI</field>
+					</fields>
+				</widget>
+				<widget name="sub1" type="htmltext">
+					<labels>
+						<label mode="any">Data</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>data</field>
+					</fields>
+				</widget>
+			</subWidgets>
+		</widget>
+
+		<widget name="listFragment" type="list">
+			<labels>
+				<label mode="any">Fragments liste</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>listfgt:listFragment</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="hideSubLabels">false</property>
+			</properties>
+			<subWidgets>
+				<widget name="sub0" type="text">
+					<labels>
+						<label mode="any">RefURI</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>refURI</field>
+					</fields>
+					<properties widgetMode="edit">
+						<property name="required">true</property>
+					</properties>
+				</widget>
+				<widget name="sub1" type="textarea">
+					<labels>
+						<label mode="any">Requête</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>request</field>
+					</fields>
+					<properties widgetMode="edit">
+						<property name="required">false</property>
+					</properties>
+				</widget>
+				<widget name="sub2" type="int">
+					<labels>
+						<label mode="any">Nb d'items par page</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>pageSize</field>
+					</fields>
+				</widget>
+				<widget name="sub3" type="int">
+					<labels>
+						<label mode="any">Nb d'items par page (maximized)</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>pageSizeMax</field>
+					</fields>
+				</widget>
+				<widget name="sub4" type="int">
+					<labels>
+						<label mode="any">Nb max d'items</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>maxItems</field>
+					</fields>
+				</widget>
+				<widget name="sub5" type="selectOneDirectory">
+					<labels>
+						<label mode="any">Mode d'affichage</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>view</field>
+					</fields>
+					<properties widgetMode="edit">
+						<property name="directoryName">list-views</property>
+						<property name="required">true</property>
+					</properties>
+				</widget>
+				<widget name="sub6" type="checkbox">
+					<labels>
+						<label mode="any">Fil de documents</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>feed</field>
+					</fields>
+				</widget>
+			</subWidgets>
+		</widget>
+
+
+		<widget name="portletFragment" type="list">
+			<labels>
+				<label mode="any">Fragments portlet métier</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>ptlfgt:portletFragment</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="hideSubLabels">false</property>
+			</properties>
+			<subWidgets>
+				<widget name="sub0" type="text">
+					<labels>
+						<label mode="any">RefURI</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>refURI</field>
+					</fields>
+					<properties widgetMode="edit">
+						<property name="required">true</property>
+					</properties>
+				</widget>
+				<widget name="sub1" type="selectOneDirectory">
+					<labels>
+						<label mode="any">Instance</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>portletInstance</field>
+					</fields>
+					<properties widgetMode="edit">
+						<property name="directoryName">portlet-instances</property>
+						<property name="required">true</property>
+					</properties>
+				</widget>
+			</subWidgets>
+		</widget>
+
+		<widget name="properties" type="list">
+			<labels>
+				<label mode="any">Propriétés portlet</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>ptlprops:properties</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="hideSubLabels">false</property>
+			</properties>
+			<subWidgets>
+				<widget name="sub0" type="text">
+					<labels>
+						<label mode="any">RefURI</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>refURI</field>
+					</fields>
+				</widget>
+				<widget name="sub1" type="text">
+					<labels>
+						<label mode="any">Key</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>key</field>
+					</fields>
+				</widget>
+				<widget name="sub2" type="text">
+					<labels>
+						<label mode="any">Value</label>
+					</labels>
+					<translated>false</translated>
+					<fields>
+						<field>value</field>
+					</fields>
+				</widget>
+			</subWidgets>
+		</widget>
+
+		<widget name="generic_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/generic_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="html_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/html_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="picture_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/picture_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="zoom_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/zoom_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="links_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/links_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="summary_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/summary_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="list_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/list_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="portlet_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/portlet_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="rss_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/rss_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="criteria_list_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/criteria_list_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="slider_list_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/slider_list_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+
+		<widget name="osivia_widget_title" type="text">
+			<labels>
+				<label mode="any">osivia.document.title</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.title.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>dc:title</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">true</property>
+			</properties>
+		</widget>
+
+		<widget name="osivia_widget_editorial_title" type="htmltext">
+			<labels>
+				<label mode="any">osivia.document.editorialtitle</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.editorialtitle.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:editorialTitle</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="editorSelector">mceEditorMinimalInLine</property>
+				<property name="disableHtmlInit">true</property>
+			</properties>
+		</widget>
+
+		<widget name="osivia_widget_abstract" type="htmltext">
+			<labels>
+				<label mode="any">osivia.document.abstract </label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.abstract.help
+				</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:abstract</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="editorSelector">mceEditorMinimal</property>
+				<property name="disableHtmlInit">true</property>
+			</properties>
+		</widget>
+
+		<widget name="osivia_widget_description" type="textarea">
+			<labels>
+				<label mode="any">osivia.document.description</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.description.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>dc:description</field>
+			</fields>
+		</widget>
+		<widget name="osivia_widget_content" type="htmltext">
+			<labels>
+				<label mode="any">osivia.document.content</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.content.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>webp:content</field>
+			</fields>
+		</widget>
+		<widget name="osivia_widget_picture" type="file">
+			<labels>
+				<label mode="any">osivia.document.picture</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.picture.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttcn:picture</field>
+				<field>ttcn:picture/filename</field>
+			</fields>
+		</widget>
+		<widget name="osivia_widget_thumbnail" type="file">
+			<labels>
+				<label mode="any">osivia.document.thumbnail</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.thumbnail.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:vignette</field>
+				<field>ttc:vignette/filename</field>
+			</fields>
+		</widget>
+		<!-- Added just for Help label... -->
+		<widget name="osivia_toutatice_removeWebId_widget" type="template">
+			<labels>
+				<label mode="any">osivia.webid.label</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webid.label.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:webid</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">
+					/widgets/toutatice_removewebid_widget.xhtml
+				</property>
+			</properties>
+		</widget>
+
+
+		<widget name="osivia_page_template_widget" type="template">
+			<labels>
+				<label mode="any">osivia.document.pagetemplate</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.pagetemplate.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:pageTemplate</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">/widgets/osivia_page_template_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="osivia_page_theme_widget" type="template">
+			<labels>
+				<label mode="any">osivia.document.pagetheme</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.document.pagetheme.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:theme</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">/widgets/osivia_page_theme_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+
+
+	</extension>
+
+</component>

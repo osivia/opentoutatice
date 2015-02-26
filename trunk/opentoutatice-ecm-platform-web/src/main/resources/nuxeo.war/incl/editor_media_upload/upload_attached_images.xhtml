@@ -1,0 +1,84 @@
+<f:subview xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:nxthemes="http://nuxeo.org/nxthemes"
+	xmlns:nxd="http://nuxeo.org/nxweb/document"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxh="http://nuxeo.org/nxweb/html"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<c:if test="#{editorImageActions.inToutaticeCreationMode}">
+		<div class="alert alert-warning">
+			<i class="glyphicons halflings warning-sign"></i> <span
+				class="text-warning">#{messages['label.imageUpload.unableToUpload']}</span>
+		</div>
+	</c:if>
+
+
+
+	<f:subview rendered="#{!editorImageActions.inToutaticeCreationMode}">
+
+		<f:subview rendered="#{editorImageActions.isImageUploaded}">
+			<script type="text/javascript">
+				if (window.opener.tinyMCE) {
+					var tinyMCE = window.opener.tinyMCE;
+					var html = '&lt;img src="'
+							+ '#{editorImageActions.urlForImage}' + '"/&gt;';
+					tinyMCE.execCommand('mceInsertContent', false, html);
+				}
+
+				// fragment picture
+				if (window.opener.$picturePath) {
+					var picturePathField = window.opener.$picturePath;
+
+					var relativeUrl = "#{editorImageActions.urlForImage}"
+							.replace(/^(?:\/\/|[^\/]+)*\//, "/")
+
+					picturePathField.val(relativeUrl);
+					window.opener.previewImg();
+				}
+
+				self.close();
+			</script>
+		</f:subview>
+
+		<p class="h4">
+			<h:outputText
+				value="#{messages['toutatice.label.media.plugin.add.image']}" />
+		</p>
+
+		<h:form enctype="multipart/form-data" id="uploadForm"
+			class="form form-horizontal" disableDoubleClickShield="true">
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="up_img">#{messages['toutatice.label.media.plugin.add.image.select']}</label>
+				<div class="col-sm-6">
+					<rich:fileUpload id="images_upload"
+						fileUploadListener="#{ImageManagerActions.processUpload}"
+						listHeight="150" listWidth="500" maxFilesQuantity="5"
+						locale="#{localeSelector.localeString}" immediateUpload="true">
+					</rich:fileUpload>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 col-sm-offset-2">
+					<h:commandButton value="#{messages['command.imageUpload.send']}"
+						action="#{ImageManagerActions.validateMultiplesUpload(currentDocument)}"
+						class="btn btn-primary" />
+				</div>
+			</div>
+
+		</h:form>
+
+		<c:if test="#{!editorImageActions.isImage}">
+
+			<div class="alert alert-warning">
+				<i class="glyphicons halflings warning-sign"></i> <span
+					class="text-warning">#{messages['label.imageUpload.isNotImage']}</span>
+			</div>
+		</c:if>
+
+	</f:subview>
+</f:subview>

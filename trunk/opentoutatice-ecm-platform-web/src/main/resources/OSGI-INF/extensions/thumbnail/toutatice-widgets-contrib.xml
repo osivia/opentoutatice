@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.thumbnail.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+	
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgettypes">
+
+		<widgetType name="toutatice_widget_summary_current_document_vignette_type">
+			<configuration>
+				<categories>
+					<category>summary</category>
+				</categories>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/summary/toutatice_summary_thumbnail_widget.xhtml
+			</property>
+		</widgetType>
+
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+		<widget name="toutatice_widget_summary_current_document_vignette"
+			type="toutatice_widget_summary_current_document_vignette_type">
+			<labels>
+				<label mode="any">toutatice.label.thumbnail</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:vignette</field>
+				<field>ttc:vignette/filename</field>
+			</fields>
+		</widget>
+
+		<widget name="add_thumbnail" type="file">
+			<labels>
+				<label mode="any">toutatice.label.add.thumbnail</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:vignette</field>
+				<field>ttc:vignette/filename</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="required">false</property>
+				<property name="iconRendered">true</property>
+			</properties>
+		</widget> 
+
+	</extension>
+
+</component>

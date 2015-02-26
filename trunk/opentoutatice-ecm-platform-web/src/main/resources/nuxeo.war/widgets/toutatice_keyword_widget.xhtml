@@ -1,0 +1,62 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxdir="http://nuxeo.org/nxdirectory"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout" id="#{widget.id}">
+
+	<c:if test="#{widget.mode != 'create' and widget.mode != 'edit'}">
+
+		<nxu:dataList styleClass="standardList" var="subject"
+			value="#{currentDocument.toutatice.keywords}" layout="simple">
+			<h:outputText value="#{subject}" />
+		</nxu:dataList>
+
+	</c:if>
+
+	<c:if test="#{widget.mode == 'create' or widget.mode == 'edit'}">
+
+		<a4j:region id="subjects_edit">
+			<a4j:outputPanel id="subjects_select" ajaxRendered="true">
+				<div class="input-group">
+					<h:inputText id="newSubject" value="#{documentActions.newKeyword}"
+						styleClass="form-control" />
+					<span class="input-group-btn"> <a4j:commandLink
+							id="subjects_add"
+							action="#{documentActions.addDocumentKeyword()}"
+							render="subjects_select" styleClass="btn btn-default"
+							title="#{messages[toutatice.label.add.keyword]}">
+							<i class="glyphicons halflings plus"></i>
+						</a4j:commandLink>
+					</span>
+				</div>
+
+				<div class="form-inline">
+					<div class="ctrl-fgt-keywords-list">
+						<nxu:dataList id="document_subjects"
+							value="#{value.toutatice.keywords}" var="subject">
+
+							<div class="input-group">
+
+								<h:outputText class="form-control" value="#{subject} " />
+								<span class="input-group-btn"> <a4j:commandLink
+										id="subjects_delete"
+										action="#{documentActions.removeDocumentKeyword()}"
+										render="subjects_select" styleClass="btn btn-default">
+										<f:param name="subject" value="#{subject}" />
+										<i class="glyphicons halflings remove"></i>
+									</a4j:commandLink>
+								</span>
+							</div>
+						</nxu:dataList>
+						<h:message styleClass="errorMessage" for="newSubject" />
+					</div>
+				</div>
+			</a4j:outputPanel>
+		</a4j:region>
+
+
+	</c:if>
+
+</f:subview>
