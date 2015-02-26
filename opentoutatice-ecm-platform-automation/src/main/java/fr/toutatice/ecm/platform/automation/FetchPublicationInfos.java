@@ -458,24 +458,25 @@ public class FetchPublicationInfos {
         return isPending;
     }
 
-    private Task getOnLineTask(DocumentModel document) {
-        Task onLinetask = null;
-
-        if (log.isDebugEnabled()) {
-            TimeDebugger.getInstance("getOnLineTask", coreSession.getSessionId()).setStartTime();
-        }
-
-        onLinetask = ToutaticeWorkflowHelper.getTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, coreSession, document);
-
-        if (log.isDebugEnabled()) {
-            TimeDebugger timeDebugger = TimeDebugger.getInstance("getOnLineTask", coreSession.getSessionId());
-            long totalTime = timeDebugger.getTotalTime();
-            log.debug(timeDebugger.getMessage("getOnLineTask", coreSession.getSessionId(), document.getPathAsString(), totalTime));
-        }
-
-        return onLinetask;
-
-    }
+//    private Task getOnLineTask(DocumentModel document) {
+////        Task onLinetask = null;
+////
+////        if (log.isDebugEnabled()) {
+////            TimeDebugger.getInstance("getOnLineTask", coreSession.getSessionId()).setStartTime();
+////        }
+////
+//////        onLinetask = ToutaticeWorkflowHelper.getTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, coreSession, document);
+//////        onLinetask = ToutaticeWorkflowHelper.getDocumentTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, coreSession, document);
+////
+////        if (log.isDebugEnabled()) {
+////            TimeDebugger timeDebugger = TimeDebugger.getInstance("getOnLineTask", coreSession.getSessionId());
+////            long totalTime = timeDebugger.getTotalTime();
+////            log.debug(timeDebugger.getMessage("getOnLineTask", coreSession.getSessionId(), document.getPathAsString(), totalTime));
+////        }
+////
+////        return onLinetask;
+//
+//    }
 
     private Object isUserOnLIneWorkflowInitiator(Task onLineTask) throws ClientException {
         Boolean isInitiator = Boolean.FALSE;
