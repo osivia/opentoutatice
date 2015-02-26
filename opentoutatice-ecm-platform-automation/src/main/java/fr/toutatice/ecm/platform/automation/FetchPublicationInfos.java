@@ -14,6 +14,8 @@
  * 
  * Contributors:
  * mberhaut1
+ * lbillon
+ * dchevrier
  */
 package fr.toutatice.ecm.platform.automation;
 
@@ -108,7 +110,7 @@ public class FetchPublicationInfos {
     private static final String IN_CONTEXTUALIZATON_PROPERTY = "ttc:contextualizeInternalContents";
 
     /**
-     * Session "avec le coeur" de Nuxeo.
+     * Session.
      */
     @Context
     protected CoreSession coreSession;
@@ -139,7 +141,7 @@ public class FetchPublicationInfos {
     public Object run() throws Exception {
 
         if (log.isDebugEnabled()) {
-            TimeDebugger.getInstance("run").setStartTime();
+            TimeDebugger.getInstance("run", coreSession.getSessionId()).setStartTime();
         }
 
         /* Réponse de l'opération sous forme de flux JSon */
@@ -208,13 +210,16 @@ public class FetchPublicationInfos {
             Object isDeletable = isDeletableByUser(infosPubli, liveDoc);
             infosPubli.element("isDeletableByUser", isDeletable);
 
-            Task onLineTask = getOnLineTask(liveDoc);
-            Object isOnLinePending = isValidateOnLineTaskPending(onLineTask);
-            infosPubli.element("isOnLinePending", isOnLinePending);
-            Object canUserValidate = canUserValidate(onLineTask);
+            //Task onLineTask = getOnLineTask(liveDoc);
+            //Object isOnLinePending = isValidateOnLineTaskPending(onLineTask);
+            //infosPubli.element("isOnLinePending", isOnLinePending);
+            infosPubli.element("isOnLinePending", Boolean.FALSE);
+            //Object canUserValidate = canUserValidate(onLineTask);
+            Object canUserValidate = canUserValidate(null);
             infosPubli.element("canUserValidate", canUserValidate);
-            Object isUserOnLineInitiator = isUserOnLIneWorkflowInitiator(onLineTask);
-            infosPubli.element("isUserOnLineInitiator", isUserOnLineInitiator);
+            //Object isUserOnLineInitiator = isUserOnLIneWorkflowInitiator(onLineTask);
+            //infosPubli.element("isUserOnLineInitiator", isUserOnLineInitiator);
+            infosPubli.element("isUserOnLineInitiator", Boolean.FALSE);
 
             /*
              * Récupération du path du document - cas où un uuid est donné en
@@ -281,7 +286,7 @@ public class FetchPublicationInfos {
         rowInfosPubli.add(infosPubli);
 
         if (log.isDebugEnabled()) {
-            TimeDebugger timeDebugger = TimeDebugger.getInstance("run");
+            TimeDebugger timeDebugger = TimeDebugger.getInstance("run", coreSession.getSessionId());
             long totalTime = timeDebugger.getTotalTime();
             log.debug(timeDebugger.getMessage("run", coreSession.getSessionId(), document.getPathAsString(), totalTime));
         }
@@ -348,7 +353,7 @@ public class FetchPublicationInfos {
     private Boolean canUserValidate(Task onLineTask) throws ServeurException, ClientException {
 
         if (log.isDebugEnabled()) {
-            TimeDebugger.getInstance("canUserValidate").setStartTime();
+            TimeDebugger.getInstance("canUserValidate", coreSession.getSessionId()).setStartTime();
         }
 
         Boolean canValidate = Boolean.FALSE;
@@ -377,7 +382,7 @@ public class FetchPublicationInfos {
         }
 
         if (log.isDebugEnabled()) {
-            TimeDebugger timeDebugger = TimeDebugger.getInstance("canUserValidate");
+            TimeDebugger timeDebugger = TimeDebugger.getInstance("canUserValidate", coreSession.getSessionId());
             long totalTime = timeDebugger.getTotalTime();
             log.debug(timeDebugger.getMessage("canUserValidate", coreSession.getSessionId(), document.getPathAsString(), totalTime));
         }
@@ -457,13 +462,13 @@ public class FetchPublicationInfos {
         Task onLinetask = null;
 
         if (log.isDebugEnabled()) {
-            TimeDebugger.getInstance("getOnLineTask").setStartTime();
+            TimeDebugger.getInstance("getOnLineTask", coreSession.getSessionId()).setStartTime();
         }
 
-        onLinetask = ToutaticeWorkflowHelper.getDocumentTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, coreSession, document);
+        onLinetask = ToutaticeWorkflowHelper.getTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, coreSession, document);
 
         if (log.isDebugEnabled()) {
-            TimeDebugger timeDebugger = TimeDebugger.getInstance("getOnLineTask");
+            TimeDebugger timeDebugger = TimeDebugger.getInstance("getOnLineTask", coreSession.getSessionId());
             long totalTime = timeDebugger.getTotalTime();
             log.debug(timeDebugger.getMessage("getOnLineTask", coreSession.getSessionId(), document.getPathAsString(), totalTime));
         }
@@ -476,7 +481,7 @@ public class FetchPublicationInfos {
         Boolean isInitiator = Boolean.FALSE;
 
         if (log.isDebugEnabled()) {
-            TimeDebugger.getInstance("isUserOnLIneWorkflowInitiator").setStartTime();
+            TimeDebugger.getInstance("isUserOnLIneWorkflowInitiator", coreSession.getSessionId()).setStartTime();
         }
 
         if (onLineTask != null) {
@@ -490,7 +495,7 @@ public class FetchPublicationInfos {
             }
 
             if (log.isDebugEnabled()) {
-                TimeDebugger timeDebugger = TimeDebugger.getInstance("isUserOnLIneWorkflowInitiator");
+                TimeDebugger timeDebugger = TimeDebugger.getInstance("isUserOnLIneWorkflowInitiator", coreSession.getSessionId());
                 long totalTime = timeDebugger.getTotalTime();
                 log.debug(timeDebugger.getMessage("isUserOnLIneWorkflowInitiator", coreSession.getSessionId(), document.getPathAsString(), totalTime));
             }

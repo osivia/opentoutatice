@@ -38,11 +38,12 @@ public class TimeDebugger {
     
     private TimeDebugger () {};
     
-    public static TimeDebugger getInstance(String methodName){
-        TimeDebugger debugger = instances.get(methodName);
+    public static TimeDebugger getInstance(String methodName, String sessionId){
+        String id = sessionId + methodName;
+        TimeDebugger debugger = instances.get(id);
         if(debugger == null){
             debugger = new TimeDebugger();
-            instances.put(methodName, debugger);
+            instances.put(id, debugger);
         }
         return debugger;
     }
