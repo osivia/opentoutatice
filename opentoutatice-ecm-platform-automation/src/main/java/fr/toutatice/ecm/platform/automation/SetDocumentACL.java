@@ -66,9 +66,10 @@ public class SetDocumentACL {
 	protected void setACE(DocumentRef ref) throws ClientException {
 		List<ACE>[] aceList = slurpACEs(entries);
 		
-		ACP acp = session.getACP(ref);		
+		ACP acp = session.getACP(ref);	
+		
 		ACLImpl acl = (ACLImpl) acp.getACL(aclName);
-		if(acl==null){
+		if(acl==null || doOverwrite){
 			acl = new ACLImpl(aclName);
 		}
 		
@@ -77,7 +78,7 @@ public class SetDocumentACL {
 
 		acp.addACL(acl);
 
-		session.setACP(ref, acp, doOverwrite);
+		session.setACP(ref, acp, true);
 	}
 
 	private List<ACE>[] slurpACEs(String entries) {
