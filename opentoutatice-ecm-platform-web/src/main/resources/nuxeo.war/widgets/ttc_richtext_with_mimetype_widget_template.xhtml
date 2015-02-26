@@ -54,6 +54,7 @@
       value="#{nxu:test(!empty widgetProperty_editorSelector, widgetProperty_editorSelector, 'mceEditor')}" />
     <c:set var="propDisableHTMLInit" value="#{nxu:test(!empty widgetProperty_disableHTMLInit, widgetProperty_disableHTMLInit, false)}" />
 	<c:set var="defaultDisableHTMLInit" value="#{field_1 != null and field_1 != 'text/html'}" />
+	<c:set var="showFormat" value="#{nxu:test(!empty widgetProperty_showFormat, widgetProperty_showFormat ,true )}"/>
 
 	<c:if test="false">
 	   We can't insert it in view "nuxeo5 includes; I don't know why: bsn autosuggest already set error
@@ -79,24 +80,26 @@
       </nxu:set>
 
       <br />
-      <h:outputText value="#{messages['label.richtext.format']} " />
-      <h:selectOneMenu value="#{field_1}"
-        onchange="changeEditorType(this)"
-        id="#{widget.id}_editorselector" styleClass="#{widget.id}">
-        <f:selectItem itemLabel="#{messages['mimetype.html']}"
-          itemValue="text/html" />
-        <f:selectItem itemLabel="#{messages['mimetype.text']}"
-          itemValue="text/plain" />
-        <f:selectItem itemLabel="#{messages['mimetype.xml']}"
-          itemValue="text/xml" />
-        <f:selectItem itemLabel="#{messages['mimetype.markdown']}"
-          itemValue="text/x-web-markdown" />
-      </h:selectOneMenu>
-
-      <a4j:commandButton value="#{messages['label.fullscreen.toggle']}"
-        onclick="return toggleFullscreen(this);" styleClass="button"
-        id="#{widget.id}_fancybox"
-        style="#{disableHtmlInit?'display: none;':''}" type="button" />
+      <c:if test="#{showFormat}">
+	      <h:outputText value="#{messages['label.richtext.format']} " />
+	      <h:selectOneMenu value="#{field_1}"
+	        onchange="changeEditorType(this)"
+	        id="#{widget.id}_editorselector" styleClass="#{widget.id}">
+	        <f:selectItem itemLabel="#{messages['mimetype.html']}"
+	          itemValue="text/html" />
+	        <f:selectItem itemLabel="#{messages['mimetype.text']}"
+	          itemValue="text/plain" />
+	        <f:selectItem itemLabel="#{messages['mimetype.xml']}"
+	          itemValue="text/xml" />
+	        <f:selectItem itemLabel="#{messages['mimetype.markdown']}"
+	          itemValue="text/x-web-markdown" />
+	      </h:selectOneMenu>
+	
+	      <a4j:commandButton value="#{messages['label.fullscreen.toggle']}"
+	        onclick="return toggleFullscreen(this);" styleClass="button"
+	        id="#{widget.id}_fancybox"
+	        style="#{disableHtmlInit?'display: none;':''}" type="button" />
+        </c:if>
     </nxu:valueHolder>
 
     <script>
