@@ -17,35 +17,27 @@
 
 		<action id="TOUTATICE_CREATE_AND_SET_ONLINE_DOCUMENT"
 			link="#{documentActions.saveNSetOnLineDocument('done')}"
-			order="1" label="toutatice.command.create.and.setonline">
+			order="20" label="toutatice.command.create.and.setonline">
 			<category>TOUTATICE_CREATE_DOCUMENT_FORM</category>
 			<filter-id>is_not_creating_form_specific_document</filter-id>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>not_version</filter-id>
-			<filter-id>filter@updateNSetDocumentOnline</filter-id>
-			<filter id="filter@TOUTATICE_CREATE_AND_SET_ONLINE_DOCUMENT">
-				<rule grant="true">
-					<permission>validationWorkflow_validation</permission>
-				</rule>
-			</filter>
+			<filter-id>canCreateNSetDocumentOnline</filter-id>
+			<filter-id>canValidateOnParent</filter-id>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 
 		<action id="TOUTATICE_CREATE_AND_SET_ONLINE_DOCUMENT_REQUEST"
 			link="#{documentActions.saveNSetOnLineDocument('done')}"
-			order="0" label="toutatice.command.create.and.setonline.request">
+			order="20" label="toutatice.command.create.and.setonline.request">
 			<category>TOUTATICE_CREATE_DOCUMENT_FORM</category>
 			<filter-id>is_not_creating_form_specific_document</filter-id>
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>not_version</filter-id>
-			<filter-id>filter@updateNSetDocumentOnline</filter-id>
-			<filter id="filter@TOUTATICE_CREATE_AND_SET_ONLINE_DOCUMENT_REQUEST">
-				<rule grant="false">
-					<permission>validationWorkflow_validation</permission>
-				</rule>
-			</filter>
+			<filter-id>canCreateNSetDocumentOnline</filter-id>
+			<filter-id>canNotValidateOnParent</filter-id>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action> 
 
@@ -64,12 +56,8 @@
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>not_version</filter-id>
-			<filter-id>filter@updateNSetDocumentOnline</filter-id>
-			<filter id="filter@TOUTATICE_EDIT_AND_SET_ONLINE_CURRENT_DOCUMENT">
-				<rule grant="true">
-					<permission>validationWorkflow_validation</permission>
-				</rule>
-			</filter>
+			<filter-id>canUpdateNSetDocumentOnline</filter-id>
+			<filter-id>canValidate</filter-id>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
 		
@@ -81,13 +69,8 @@
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>not_version</filter-id>
-			<filter-id>filter@updateNSetDocumentOnline</filter-id>
-			<filter
-				id="filter@TOUTATICE_EDIT_AND_SET_ONLINE_CURRENT_DOCUMENT_REQUEST">
-				<rule grant="false">
-					<permission>validationWorkflow_validation</permission>
-				</rule>
-			</filter>
+			<filter-id>canUpdateNSetDocumentOnline</filter-id>
+			<filter-id>canNotValidate</filter-id>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action> 
 
@@ -112,7 +95,7 @@
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>not_version</filter-id>
-			<filter-id>filter@updateNSetDocumentOnline</filter-id>
+			<filter-id>canUpdateNSetDocumentOnline</filter-id>
 			<filter id="filter@CREATE_AND_SET_ONLINE_PICTUREBOOK_DOCUMENT">
 				<rule grant="true">
 					<condition>#{changeableDocument.type == 'PictureBook'}</condition>
@@ -133,7 +116,7 @@
 			<filter-id>belong_to_publish_space</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>not_version</filter-id>
-			<filter-id>filter@updateNSetDocumentOnline</filter-id>
+			<filter-id>canUpdateNSetDocumentOnline</filter-id>
 			<filter id="filter@CREATE_AND_SET_ONLINE_PICTUREBOOK_DOCUMENT">
 				<rule grant="true">
 					<condition>#{changeableDocument.type == 'PictureBook'}</condition>
