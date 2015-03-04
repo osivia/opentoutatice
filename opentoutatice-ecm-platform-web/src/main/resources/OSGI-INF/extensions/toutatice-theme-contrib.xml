@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.theme">
+
+	<extension target="org.nuxeo.theme.styling.service" point="pages">
+		<themePage name="*">
+			<styles append="true">
+				<style>local-publishing</style>
+				<style>images-tab</style>
+			</styles>
+		</themePage>
+	</extension>
+
+	<extension target="org.nuxeo.theme.styling.service" point="styles">
+		<style name="local-publishing">
+			<src>themes/css/local-publishing.css</src>
+		</style>
+		<style name="images-tab">
+			<src>themes/css/images-tab.css</src>
+		</style>
+		<style name="flavors-configuration">
+			<src>themes/css/flavors-configuration.css</src>
+		</style>
+	</extension>
+	
+	<extension target="org.nuxeo.theme.services.ThemeService" point="applications">	
+		<application root="${org.nuxeo.ecm.contextPath}" template-engine="jsf-facelets">
+			<view id="/toutatice_create_relation_search_document_popup.xhtml">
+				<theme>galaxy/popup</theme>
+			</view>
+            
+            <view id="/osivia_open_live_edit.xhtml">
+                <theme>galaxy/popup</theme>
+            </view>            
+		</application>
+	</extension>
+
+</component>

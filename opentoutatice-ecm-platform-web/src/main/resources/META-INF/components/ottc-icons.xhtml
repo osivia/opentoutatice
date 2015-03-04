@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:nxd="http://nuxeo.org/nxweb/document"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<c:if test = "${empty multiSelect}">
+		<c:set var="multiSelect" value="false" />
+	</c:if>
+
+	<ul id="group-#{iconsGroup}" class="#{ulStyleClass}">
+
+		<c:forEach items="#{src}" var="conf">
+
+			<li class="ui-state-default 
+				#{ ((!empty conf.wconf.code) and (!empty value) and (value.contains(conf.wconf.code)) 
+					or ((empty conf.wconf.code) and (empty value))) ? 'ui-state-active' : '' }"
+				onclick="javascript:toggleIcon(this, '#{inputClientId}', '#{conf.wconf.code}', '#{iconsGroup}', #{multiSelect})">
+				
+				<c:choose>
+					<c:when test="#{!empty conf.wconf.picture}">
+						<h:graphicImage value="#{nxd:fileUrl('downloadFile', conf, 'wconf:picture', conf.wconf.picture.filename)}" />		
+					</c:when>
+					<c:otherwise>
+						<h:graphicImage value="#{baseURL}/theme/images/conf_#{conf.wconf.type}.png" />
+					</c:otherwise>
+				</c:choose>
+								
+				<div><h:outputText value="#{conf.title}" /></div>
+			</li>
+
+
+		</c:forEach>
+
+	</ul>
+
+	<h:inputHidden id="#{id}" value="#{value}" binding="#{binding}" />
+</ui:composition>

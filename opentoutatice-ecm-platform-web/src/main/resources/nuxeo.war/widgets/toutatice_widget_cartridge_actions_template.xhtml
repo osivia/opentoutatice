@@ -1,0 +1,83 @@
+<div xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxh="http://nuxeo.org/nxweb/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<nxu:set var="actions" value="#{webActions.getActionsList('TOUTATICE_DOCUMENT_SUMMARY_CUSTOM_ACTIONS')}" cache="true">
+
+		<c:set var="block_style" value="#{widgetProperty_block_style}" />
+		
+		<c:if test="#{not empty actions}">
+			<div style="display: none">
+				<span id="js-label.documents.confirm.validationWorkflow_cancel">
+					<h:outputText value="#{messages['label.documents.confirm.validationWorkflow_cancel']}" />
+				</span> 
+				<span id="js-label.documents.confirm.onlineWorkflow_cancel"> 
+					<h:outputText value="#{messages['label.documents.confirm.onlineWorkflow_cancel']}" />
+				</span>
+				<span id="js-label.documents.confirm.setDocumentVersionOnline">
+					<h:outputText value="#{messages['label.documents.confirm.setDocumentVersionOnline']}" />
+				</span>
+			</div>
+
+			<div class="summary_div_header_cartridge">
+				<c:choose>
+					<c:when test="#{widget.translated}">
+						<c:if test="#{!empty widget.label}">
+							<c:set var="widget_title"
+								value="#{nxu:test(!empty widgetProperty_labelParams, documentActions.formatMessages(widget.label, widgetProperty_labelParams), messages[widget.label])}" />
+							<h3 class="summaryTitle">
+								<c:if test="#{!empty widget.helpLabel}">
+									<h:graphicImage value="/icons/lightbulb.png"
+										styleClass="layoutHelpLabel"
+										title="#{messages[widget.helpLabel]}" />
+								</c:if>
+								<h:outputText value="#{messages[widget_title]}" />
+							</h3>
+						</c:if>
+					</c:when>
+					<c:otherwise>
+						<c:if test="#{!empty widget.label}">
+							<h3 class="summaryTitle">
+								<c:if test="#{!empty widget.helpLabel}">
+									<h:graphicImage value="/icons/lightbulb.png"
+										styleClass="layoutHelpLabel" title="#{widget.helpLabel}" />
+								</c:if>
+								<h:outputText value=" #{widget.label}" />
+							</h3>
+						</c:if>
+					</c:otherwise>
+				</c:choose>
+
+				<div class="#{block_style}">
+				
+					<nxu:dataList layout="simple" 
+						var="action" 
+						value="#{actions}">
+
+						<div class="summary_div_header_cartridge_action">
+							<nxh:commandButton action="#{action.getLink()}"
+								id="#{widget.id}_#{action.id}"
+								onclick="#{action.confirm}"
+								immediate="#{action.immediate}"
+								value="#{messages[action.label]}" 
+								styleClass="button #{action.id}Class" />
+						</div>
+
+					</nxu:dataList>
+				</div>
+			</div>
+
+		</c:if>
+
+	</nxu:set>
+
+	<script>
+  jQuery(document).ready(function() {
+    jQuery("img.layoutHelpLabel[title]").tooltip({delay:1000, predelay:250, offset: [0, 100], position: 'center center'});
+  });
+	</script>
+
+</div>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.core.webpage.schemas">
+
+	<require>org.nuxeo.ecm.core.schema.TypeService</require>
+
+	<extension target="org.nuxeo.ecm.core.schema.TypeService"
+		point="schema">
+
+		<schema name="webconfiguration" prefix="wconf"
+			src="schemas/webpage/webconfiguration.xsd" />
+		<schema name="webconfigurationfolder" prefix="webconfigurationfolder"
+			src="schemas/webpage/webconfigurationfolder.xsd" />
+
+        <schema name="regions" prefix="rg" src="schemas/webpage/regions.xsd" />
+		<schema name="fragments" prefix="fgts" src="schemas/webpage/fragments.xsd" />
+		<schema name="html_fragments" prefix="htmlfgt"
+			src="schemas/webpage/html_fragments.xsd" />
+		<schema name="picture_fragments" prefix="pictfgt"
+			src="schemas/webpage/picture_fragments.xsd" />			
+        <schema name="links" prefix="lk"
+            src="schemas/webpage/links.xsd" />
+        <schema name="links_fragments" prefix="lkfgt"
+            src="schemas/webpage/links_fragments.xsd" />   			
+		<schema name="list_fragments" prefix="listfgt"
+			src="schemas/webpage/list_fragments.xsd" />
+		<schema name="newsfeed_links" prefix="nwslk"
+			src="schemas/webpage/newsfeed_links.xsd" />
+		<schema name="portlet_fragments" prefix="ptlfgt"
+			src="schemas/webpage/portlet_fragments.xsd" />
+		<schema name="portlet_properties" prefix="ptlprops"
+			src="schemas/webpage/portlet_properties.xsd" />
+        <schema name="zoom_fragments" prefix="zfgt"
+            src="schemas/webpage/zoom_fragments.xsd" />
+         <schema name="summary_fragments" prefix="smyfgt"
+            src="schemas/webpage/summary_fragments.xsd" />
+         
+	</extension>
+
+</component>

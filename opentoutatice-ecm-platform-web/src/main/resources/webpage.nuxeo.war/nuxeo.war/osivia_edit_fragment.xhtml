@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<nxthemes:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:nxthemes="http://nuxeo.org/nxthemes"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
+	xmlns:nxh="http://nuxeo.org/nxweb/html"
+	xmlns:nxd="http://nuxeo.org/nxweb/document"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:c="http://java.sun.com/jstl/core">
+
+	<ui:define name="stylesheets">
+		<link href="#{baseURL}/css/modepage.css" type="text/css"
+			rel="stylesheet" />
+	</ui:define>
+
+	<ui:define name="header_scripts">
+
+		<script type="text/javascript" src="#{baseURL}/scripts/icons.js"></script>
+	</ui:define>
+
+	<ui:define name="body">
+		<div class="toutatice_edit_top_class">
+			<div class="toutatice_edit_header_class">
+				<h1>
+					<h:outputFormat
+						value="#{messages['osivia.views.edit.fragment.title']}">
+						<c:if test="#{fragmentBean.descriptor != null}">
+							<f:param value="#{messages[fragmentBean.descriptor.title]}" />
+						</c:if>
+						<c:if test="#{fragmentBean.descriptor == null}">
+							<f:param value="" />
+						</c:if>
+					</h:outputFormat>
+				</h1>
+			</div>
+
+
+			<h:form id="fragments_edit_form">
+				<nxu:set var="actions"
+					value="#{webActions.getActionsList('HTML_EDIT_FRAGMENT')}"
+					cache="true">
+
+					<div class="toutatice_edit_actions_class">
+						<c:forEach var="action" items="#{actions}">
+							<div class="savePanelAction">
+								<nxh:commandButton action="#{action.getLink()}"
+									immediate="#{action.immediate}" onclick="#{action.confirm}"
+									id="header_edit_doc_#{action.id}"
+									value="#{messages[action.label]}" class="button" >
+								</nxh:commandButton>
+							</div>
+						</c:forEach>
+					</div>
+
+
+					<div class="toutatice_edit_form_class">
+						<div class="ttcInput">
+
+							<!-- Layout propriétés génériques -->
+							<nxl:layout name="generic_fragment_layout"
+								value="#{currentDocument}" mode="edit" />
+
+							<!-- Layout propriétés spécifiques -->
+							<c:if test="#{fragmentBean.descriptor != null}">
+								<nxl:layout name="#{fragmentBean.descriptor.layout}"
+									value="#{currentDocument}" mode="edit" />
+							</c:if>
+							
+							
+							<h:inputHidden name="fromUrl" value="#{pageBean.fromUrl}" />
+						</div>
+					</div>
+
+					<ui:include src="/incl/message_banner.xhtml" />
+
+					<div class="toutatice_edit_actions_class">
+						<c:forEach var="action" items="#{actions}">
+							<div class="savePanelAction">
+								<nxh:commandButton action="#{action.getLink()}"
+									immediate="#{action.immediate}" onclick="#{action.confirm}"
+									id="footer_edit_doc_#{action.id}"
+									value="#{messages[action.label]}" class="button" >
+								</nxh:commandButton>
+									
+							</div>
+						</c:forEach>
+					</div>
+
+				</nxu:set>
+
+			</h:form>
+		</div>
+	</ui:define>
+
+</nxthemes:composition>

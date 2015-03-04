@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.automation.contrib" version="1.0">
+
+  <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+    point="operations">
+    
+    <operation class="fr.toutatice.ecm.platform.automation.FetchPublishedDocument" />
+    <operation class="fr.toutatice.ecm.platform.automation.FetchLiveDocument" />   
+    <operation class="fr.toutatice.ecm.platform.automation.FetchPublishSpace" />
+    <operation class="fr.toutatice.ecm.platform.automation.FetchVersionDocument" />
+    <operation class="fr.toutatice.ecm.platform.automation.FetchPublicationInfos" />
+	<operation class="fr.toutatice.ecm.platform.automation.FetchWorkspaceOfDocument" />
+	<operation class="fr.toutatice.ecm.platform.automation.CopyACLs" />
+	<operation class="fr.toutatice.ecm.platform.automation.PublishDocument" />
+	<operation class="fr.toutatice.ecm.platform.automation.SetOnLine" />
+	<operation class="fr.toutatice.ecm.platform.automation.RemovePublishedVersions" />
+	<operation class="fr.toutatice.ecm.platform.automation.GetVocabularies" />
+	<operation class="fr.toutatice.ecm.platform.automation.ResizeImageOperation" />
+	<operation class="fr.toutatice.ecm.platform.automation.comments.FetchCommentsOfDocument" />
+	<operation class="fr.toutatice.ecm.platform.automation.comments.AddComment" />
+	<operation class="fr.toutatice.ecm.platform.automation.comments.DeleteComment" />
+	<operation class="fr.toutatice.ecm.platform.automation.comments.CreateChildComment" />
+	<operation class="fr.toutatice.ecm.platform.automation.GetUsersAndGroupsDocument" />
+	<operation class="fr.toutatice.ecm.platform.automation.StartWFProcess" />
+	<operation class="fr.toutatice.ecm.platform.automation.OperateWFProcess" />
+	<operation class="fr.toutatice.ecm.platform.automation.SendTaskNotification" />
+	<operation class="fr.toutatice.ecm.platform.automation.FireSeamEvent" />
+	<operation class="fr.toutatice.ecm.platform.automation.SetSpaceID" />
+	<operation class="fr.toutatice.ecm.platform.automation.SetDomainID" />
+    <operation class="fr.toutatice.ecm.platform.automation.SetWebID" />
+	<operation class="fr.toutatice.ecm.platform.automation.TextExtraction" />
+	<operation class="fr.toutatice.ecm.platform.automation.ReloadMntCfg" />
+	<operation class="fr.toutatice.ecm.platform.automation.PutDocumentInTrash" />
+	<operation class="fr.toutatice.ecm.platform.automation.QueryDocumentBaseOperation" />
+	<operation class="fr.toutatice.ecm.platform.automation.FetchPublishingStatusChildren" />
+    <operation class="fr.toutatice.ecm.platform.automation.SetDocumentACL" />
+	<operation class="fr.toutatice.ecm.platform.automation.RefreshPrincipal" />
+    <operation class="fr.toutatice.ecm.platform.automation.GetUserProfile" />
+    <operation class="fr.toutatice.ecm.platform.automation.GetExtendedTasks" />
+    <operation class="fr.toutatice.ecm.platform.automation.StopWFProcess" />
+    <operation class="fr.toutatice.ecm.platform.automation.AddComplexProperty" />
+    <operation class="fr.toutatice.ecm.platform.automation.FetchDocumentInList" />      
+	
+  </extension>
+
+</component>
