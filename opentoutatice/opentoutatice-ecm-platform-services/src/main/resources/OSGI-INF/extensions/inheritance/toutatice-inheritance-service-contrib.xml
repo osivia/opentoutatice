@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.service.inheritance">
+
+	<service>
+		<provide interface="fr.toutatice.ecm.platform.service.inheritance.ToutaticeInheritanceService" />
+	</service>
+	
+	<implementation class="fr.toutatice.ecm.platform.service.inheritance.ToutaticeInheritanceServiceImpl" />
+	
+	<extension-point name="setters">
+		<object class="fr.toutatice.ecm.platform.service.inheritance.ToutaticeInheritanceSetterDescriptor" />
+	</extension-point>
+	
+</component>

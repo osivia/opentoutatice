@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<nxthemes:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:nxthemes="http://nuxeo.org/nxthemes"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:nxh="http://nuxeo.org/nxweb/html"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout" style="padding:0px">
+
+	<ui:define name="stylesheets">
+		<link href="#{baseURL}/css/modepage.css" type="text/css"
+			rel="stylesheet" />
+	</ui:define>
+
+	<ui:define name="header_scripts">
+		<script type="text/javascript"
+			src="#{baseURL}/scripts/icons.js"></script>	
+		<script type="text/javascript"
+			src="#{baseURL}/tiny_mce/tiny_mce.js"></script>
+		<script type="text/javascript"
+			src="#{baseURL}/tiny_mce/ottc_tiny_mce_init.js"></script>
+	</ui:define>
+	
+	<ui:define name="body">	
+
+		<div class="toutatice_edit_top_class">
+			<div class="toutatice_edit_header_class">
+				<h1>
+					<h:outputText value="#{messages['toutatice.views.edit.title']}" />
+				</h1>
+			</div>
+
+			<ui:include src="/incl/message_banner.xhtml" />
+
+			<h:form enctype="multipart/form-data" id="document_edit">
+				<nxu:set var="actions"
+					value="#{webActions.getActionsList('OSIVIA_EDIT_DOCUMENT_FORM')}"
+					cache="true">
+
+					<div class="toutatice_edit_actions_class">
+
+						<c:forEach var="action" items="#{actions}">
+							<div class="savePanelAction">
+								<nxh:commandButton action="#{action.getLink()}"
+									immediate="#{action.immediate}" onclick="#{action.confirm}"
+									id="header_edit_doc_#{action.id}"
+									value="#{messages[action.label]}" class="button" >
+								</nxh:commandButton>
+									
+							</div>
+						</c:forEach>
+
+					</div>
+
+					<div class="toutatice_edit_form_class">
+						<div class="ttcInput">
+
+							<nxl:layout name="osivia_edit_document_layout" mode="edit"
+								value="#{currentDocument}" />
+
+							<h:inputHidden name="fromUrl" value="#{pageBean.fromUrl}" />
+
+						</div>
+					</div>
+
+					<div class="toutatice_edit_actions_class">
+
+						<c:forEach var="action" items="#{actions}">
+							<div class="savePanelAction">
+								<nxh:commandButton action="#{action.getLink()}"
+									immediate="#{action.immediate}" onclick="#{action.confirm}"
+									id="footer_edit_doc_#{action.id}"
+									value="#{messages[action.label]}" class="button" >
+								</nxh:commandButton>
+							</div>
+						</c:forEach>
+
+					</div>
+
+				</nxu:set>
+
+			</h:form>
+			<div class="toutatice_edit_footer_class"></div>
+		</div>
+		
+	</ui:define>
+
+</nxthemes:composition>

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<component
+	name="fr.toutatice.ecm.platform.web.document.forms.portalviews.layouts">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="layouts">
+
+		<layout name="toutatice_grid_summary_layout">
+			<templates>
+				<template mode="any">
+					/layouts/layout_grid_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<properties mode="any">
+						<property name="nxl_gridStyleClass_0">gridStyle7</property>
+						<property name="nxl_gridStyleClass_1">gridStyle5</property>
+					</properties>
+					<widget>summary_panel_left</widget>
+					<widget>summary_panel_right</widget>
+				</row>
+				<row>
+					<properties mode="any">
+						<property name="nxl_gridStyleClass_0">gridStyle12</property>
+					</properties>
+					<widget>summary_panel_bottom</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<!-- Pour désactivation temporaire du widget de modération dans les vues 
+			portail -->
+		<layout name="layout@Thread_in_PortalView">
+			<templates>
+				<template mode="create">/layouts/layout_default_template.xhtml
+				</template>
+				<template mode="edit">/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>thread_title</widget>
+				</row>
+				<row>
+					<widget>description</widget>
+				</row>
+			</rows>
+		</layout>
+
+	</extension>
+
+</component>

@@ -1,0 +1,12 @@
+<f:subview xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+  	xmlns:c="http://java.sun.com/jstl/core">
+
+	<c:if test="#{widgetProperty_localize}">
+			<h:outputText value="#{messages[nxd:titleOrId(currentDocument)]}" />
+	</c:if>
+	<c:if test="#{!widgetProperty_localize}">
+			<h:outputText value="#{nxd:titleOrId(currentDocument)}" />
+	</c:if>
+
+</f:subview>

@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.local.publishing.filters">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="filters">
+
+		<filter id="proxy">
+			<rule grant="true">
+				<condition>document.isProxy()</condition>
+			</rule>
+		</filter>
+
+		<filter id="not_proxy">
+			<rule grant="false">
+				<condition>document.isProxy()</condition>
+			</rule>
+		</filter>
+
+		<filter id="not_remote_proxy">
+			<rule grant="false">
+				<condition>#{documentActions.isRemoteProxy()}</condition>
+			</rule>
+		</filter>
+
+		<filter id="is_either_version_or_proxy">
+			<rule grant="true">
+				<condition>document.isVersion()</condition>
+			</rule>
+			<rule grant="true">
+				<condition>document.isProxy()</condition>
+			</rule>
+		</filter>
+
+		<filter id="is_version">
+			<rule grant="true">
+				<condition>document.isVersion()</condition>
+			</rule>
+		</filter>
+
+		<filter id="not_version">
+			<rule grant="false">
+				<condition>document.isVersion()</condition>
+			</rule>
+		</filter>
+
+		<filter id="canValidate">
+			<rule grant="true">
+				<permission>validationWorkflow_validation</permission>
+			</rule>
+		</filter>
+
+		<filter id="canNotValidate">
+			<rule grant="false">
+				<permission>validationWorkflow_validation</permission>
+			</rule>
+		</filter>
+
+		<filter id="canValidateOnParent">
+			<rule grant="true">
+				<condition>#{documentActions.checkPermission(currentDocument,
+					'validationWorkflow_validation')}</condition>
+			</rule>
+		</filter>
+
+		<filter id="canNotValidateOnParent">
+			<rule grant="false">
+				<condition>#{documentActions.checkPermission(currentDocument,
+					'validationWorkflow_validation')}</condition>
+			</rule>
+		</filter>
+
+		<filter id="canCreateNSetDocumentOnline">
+			<rule grant="true">
+				<facet>Versionable</facet>
+				<condition>#{documentActions.checkPermission(currentDocument,
+					'Write')}</condition>
+			</rule>
+			<rule grant="false">
+				<type>Root</type>
+				<type>Domain</type>
+			</rule>
+			<rule grant="false">
+				<condition>#{routingActions.isWorkflowRunning()}
+				</condition>
+			</rule>
+		</filter>
+
+		<filter id="canUpdateNSetDocumentOnline">
+			<rule grant="true">
+				<facet>Versionable</facet>
+				<permission>Write</permission>
+			</rule>
+			<rule grant="false">
+				<type>Root</type>
+				<type>Domain</type>
+			</rule>
+			<rule grant="false">
+				<condition>#{routingActions.isWorkflowRunning()}
+				</condition>
+			</rule>
+		</filter>
+
+		<filter id="is_not_creating_form_specific_document">
+			<rule grant="false">
+				<condition>#{changeableDocument.type == 'Thread'}</condition>
+				<condition>#{changeableDocument.type == 'Workspace'}</condition>
+				<condition>#{changeableDocument.type == 'PictureBook'}</condition>
+			</rule>
+		</filter>
+
+		<filter id="canPublishSelection">
+			<rule grant="true">
+				<condition>#{publishActions.canPublishSelection}</condition>
+			</rule>
+			<rule grant="false">
+				<condition>#{routingActions.isWorkflowRunningForSelection()}
+				</condition>
+			</rule>
+		</filter>
+
+		<filter id="canUnPublishSelection">
+			<rule grant="true">
+				<condition>#{publishActions.canUnPublishSelection}</condition>
+			</rule>
+		</filter>
+
+		<filter id="filter@setDocumentOnline">
+			<rule grant="true">
+				<facet>Versionable</facet>
+				<permission>validationWorkflow_validation</permission>
+			</rule>
+			<rule grant="false">
+				<condition>#{routingActions.isWorkflowRunning()}</condition>
+				<condition>#{documentActions.isOnlineWithSameVersion()}
+				</condition>
+			</rule>
+		</filter>
+
+		<filter id="filter@setDocumentOffline">
+			<rule grant="true">
+				<facet>Versionable</facet>
+				<permission>validationWorkflow_validation</permission>
+				<condition>#{documentActions.isOnlineWithSameVersion() == true}
+				</condition>
+			</rule>
+			<rule grant="false">
+				<condition>#{routingActions.isWorkflowRunning()}</condition>
+			</rule>
+		</filter>
+
+		<filter id="filter@requestDocumentOnline">
+			<rule grant="true">
+				<facet>Versionable</facet>
+				<permission>Write</permission>
+			</rule>
+			<rule grant="false">
+				<type>Root</type>
+			</rule>
+			<rule grant="false">
+				<condition>#{routingActions.isWorkflowRunning()}</condition>
+			</rule>
+			<rule grant="false">
+				<condition>#{documentActions.isOnlineWithSameVersion()}
+				</condition>
+			</rule>
+			<rule grant="false">
+				<permission>validationWorkflow_validation</permission>
+			</rule>
+		</filter>
+
+		<filter id="canValidateOnLineWF">
+			<rule grant="true">
+				<permission>validationWorkflow_validation</permission>
+				<condition>#{taskActions.isValidateOnlineActionAuthorized()}
+				</condition>
+			</rule>
+		</filter>
+
+		<filter id="canCancelOnLineWF">
+			<rule grant="true">
+				<facet>Versionable</facet>
+				<permission>Write</permission>
+			</rule>
+			<rule grant="false">
+				<type>Root</type>
+			</rule>
+			<rule grant="false">
+				<condition>#{routingActions.isCancelOnlineActionAuthorized() ==
+					false}
+				</condition>
+			</rule>
+			<rule grant="false">
+				<permission>validationWorkflow_validation</permission>
+			</rule>
+		</filter>
+
+		<!-- L'objectif de ces filtres "ABSTRACT" est de permettre aux projets 
+			clients de surdéfinr plus simplement une feature (mise en ligne, validation...) -->
+		<filter id="ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE" />
+
+	</extension>
+
+</component>
