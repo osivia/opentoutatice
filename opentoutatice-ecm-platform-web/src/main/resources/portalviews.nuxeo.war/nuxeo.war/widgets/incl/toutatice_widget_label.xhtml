@@ -18,10 +18,20 @@ Accepted parameters:
 		<nxu:set var="widgetHelpLabel"
 			value="#{nxu:test(widget.translated, messages[widget.helpLabel], widget.helpLabel)}">
 
-			<c:if test="#{empty widget.helpLabel or hideHelp}">
-				<label
-					class="col-sm-2 control-label #{nxu:test(widget.required and isEditMode, 'required', '')}">#{widgetLabel}</label>
-			</c:if>
+			<c:choose>
+				<!-- studio_header is a label widget -->
+				<c:when test="#{widget.type == 'studio_header'}">
+					<label
+						class="col-sm-2 control-label"/>
+				</c:when>
+				<c:otherwise>
+					<c:if test="#{empty widget.helpLabel or hideHelp}">
+						<label
+							class="col-sm-2 control-label #{nxu:test(widget.required and isEditMode, 'required', '')}">#{widgetLabel}</label>
+					</c:if>
+				</c:otherwise>
+			</c:choose>
+
 			<c:if test="#{not empty widget.helpLabel and not hideHelp}">
 				<div class="widgetHelpLabel">
 					<label
