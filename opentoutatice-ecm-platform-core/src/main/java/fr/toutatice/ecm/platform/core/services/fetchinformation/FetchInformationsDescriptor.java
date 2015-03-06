@@ -18,17 +18,11 @@ public class FetchInformationsDescriptor implements Serializable {
 	protected FetchInformationProvider provider;
 
     @XNode("@providerService")
-    protected Class providerService;
+    protected Class<?> providerService;
 
-
-    
     public void initProvider() throws Exception {
-    	
-    	Object service = Framework.getService(providerService);
-    	
-    	provider = (FetchInformationProvider) service;
+        provider = (FetchInformationProvider) Framework.getService(providerService);
     }
-
 
     /**
      * @return the instance

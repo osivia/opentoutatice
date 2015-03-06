@@ -16,7 +16,7 @@
  *   mberhaut1
  *    
  */
-package fr.toutatice.ecm.platform.automation;
+package fr.toutatice.ecm.platform.automation.workflows;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class SendTaskNotification {
 	public DocumentModel run(DocumentModel document) throws Exception {
 	    Principal principal = getPrincipal();
 	    
-	    Task task = ToutaticeWorkflowHelper.getDocumentTaskByName(taskName, coreSession, document);
+	    Task task = ToutaticeWorkflowHelper.getTaskByName(taskName, coreSession, document);
 	    if(StringUtils.isNotBlank(keyForActors)){
 	        task.setActors(getGivenActors(principal));
 	    }

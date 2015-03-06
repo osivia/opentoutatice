@@ -10,7 +10,16 @@
 	
 	<extension-point name="fetch_infos">
         <documentation>
-            This extension can be used to register new information providers
+            This extension can be used to register new information providers for informations used 
+            in the Document.FetchPublicationInfos operation.
+        </documentation>
+        <object class="fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationsDescriptor" />
+    </extension-point>
+    
+    <extension-point name="extended_fetch_infos">
+        <documentation>
+            This extension can be used to register new information providers for extended informations, i.e. 
+            used in the Document.FetchExtendedInfos.
         </documentation>
         <object class="fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationsDescriptor" />
     </extension-point>

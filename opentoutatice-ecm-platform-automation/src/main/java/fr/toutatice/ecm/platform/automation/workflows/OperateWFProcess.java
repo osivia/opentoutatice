@@ -16,33 +16,23 @@
  *   mberhaut1
  *    
  */
-package fr.toutatice.ecm.platform.automation;
+package fr.toutatice.ecm.platform.automation.workflows;
 
-import java.io.Serializable;
 import java.security.Principal;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.nuxeo.ecm.automation.OperationContext;
-import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoutingService;
-import org.nuxeo.ecm.platform.routing.api.exception.DocumentRouteException;
-import org.nuxeo.ecm.platform.routing.core.impl.GraphNode;
 import org.nuxeo.ecm.platform.task.Task;
 import org.nuxeo.ecm.platform.task.TaskImpl;
 import org.nuxeo.ecm.platform.task.TaskService;
-import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
-import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
@@ -73,7 +63,7 @@ public class OperateWFProcess {
 	@OperationMethod()
 	public DocumentModel run(DocumentModel document) throws Exception {
 		
-		Task task = ToutaticeWorkflowHelper.getDocumentTaskByName(taskName, coreSession, document);
+		Task task = ToutaticeWorkflowHelper.getTaskByName(taskName, coreSession, document);
 		Task taskForNotif = new TaskImpl(task.getDocument());
 		
 		String initiator = ToutaticeWorkflowHelper.getOnLineWorkflowInitiator(document);

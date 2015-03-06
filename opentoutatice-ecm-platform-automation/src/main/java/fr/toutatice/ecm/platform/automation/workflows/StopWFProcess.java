@@ -17,7 +17,7 @@
  * dchevrier
  * lbillon
  */
-package fr.toutatice.ecm.platform.automation;
+package fr.toutatice.ecm.platform.automation.workflows;
 
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationContext;

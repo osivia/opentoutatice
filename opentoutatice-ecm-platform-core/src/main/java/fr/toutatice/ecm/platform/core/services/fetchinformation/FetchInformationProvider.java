@@ -8,6 +8,6 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 
 public interface FetchInformationProvider {
 
-    Map<String, String> fetchInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException;
+    Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException;
 
 }

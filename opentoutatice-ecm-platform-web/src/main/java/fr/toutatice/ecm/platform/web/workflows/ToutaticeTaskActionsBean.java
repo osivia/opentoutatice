@@ -91,7 +91,7 @@ public class ToutaticeTaskActionsBean extends TaskActionsBean {
 
     public Task getValidateOnlineTask() throws ClientException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
-        return ToutaticeWorkflowHelper.getDocumentTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, documentManager, currentDocument);
+        return ToutaticeWorkflowHelper.getTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, documentManager, currentDocument);
     }
 
     public boolean isValidateOnlineTask(Task task) throws ClientException {
@@ -103,7 +103,7 @@ public class ToutaticeTaskActionsBean extends TaskActionsBean {
     
     public Task getTask(String nameTask) throws ClientException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
-        return ToutaticeWorkflowHelper.getDocumentTaskByName(nameTask, documentManager, currentDocument);
+        return ToutaticeWorkflowHelper.getTaskByName(nameTask, documentManager, currentDocument);
     }
     
 }

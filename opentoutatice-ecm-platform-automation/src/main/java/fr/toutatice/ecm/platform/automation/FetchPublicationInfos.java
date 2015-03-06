@@ -30,7 +30,6 @@ import java.util.Map;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,18 +57,15 @@ import org.nuxeo.ecm.core.api.security.Access;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 import org.nuxeo.ecm.core.trash.TrashService;
-import org.nuxeo.ecm.platform.task.Task;
-import org.nuxeo.ecm.platform.task.core.helpers.TaskActorsHelper;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.platform.types.TypeManager;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.automation.helper.TimeDebugger;
-import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
+import fr.toutatice.ecm.platform.automation.helper.WebIdResolver;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
-import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
 import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationsService;
 
 @Operation(id = FetchPublicationInfos.ID, category = Constants.CAT_FETCH, label = "Fetch publish space informations",
@@ -151,26 +147,8 @@ public class FetchPublicationInfos {
         List<Integer> errorsCodes = new ArrayList<Integer>();
 
         // Si on passe non pas un docRef en entrée mais un webId :
-        if (webid != null) {
-            // log.warn("webid : " + webid);
-
-            String[] segments = webid.split("/");
-            String domainIdSegment;
-            String webIdSegment;
-            if (segments.length >= 2) {
-                domainIdSegment = segments[0];
-                webIdSegment = segments[1];
-            } else {
-                throw new NoSuchDocumentException(webid);
-            }
-
-
-            UnrestrictedFecthWebIdRunner fecthWebIdRunner = new UnrestrictedFecthWebIdRunner(coreSession, domainIdSegment, webIdSegment);
-            fecthWebIdRunner.runUnrestricted();
-            document = fecthWebIdRunner.getDoc();
-            if (document == null) {
-                throw new NoSuchDocumentException(webid);
-            }
+        if(StringUtils.isNotBlank(webid)){
+            document = WebIdResolver.getDocumentByWebId(coreSession, webid);
         }
 
         /*
@@ -209,17 +187,9 @@ public class FetchPublicationInfos {
             infosPubli.element("editableByUser", isEditable);
             Object isDeletable = isDeletableByUser(infosPubli, liveDoc);
             infosPubli.element("isDeletableByUser", isDeletable);
-
-            //Task onLineTask = getOnLineTask(liveDoc);
-            //Object isOnLinePending = isValidateOnLineTaskPending(onLineTask);
-            //infosPubli.element("isOnLinePending", isOnLinePending);
-            infosPubli.element("isOnLinePending", Boolean.FALSE);
-            //Object canUserValidate = canUserValidate(onLineTask);
-            Object canUserValidate = canUserValidate(null);
+            
+            Object canUserValidate = canUserValidate();
             infosPubli.element("canUserValidate", canUserValidate);
-            //Object isUserOnLineInitiator = isUserOnLIneWorkflowInitiator(onLineTask);
-            //infosPubli.element("isUserOnLineInitiator", isUserOnLineInitiator);
-            infosPubli.element("isUserOnLineInitiator", Boolean.FALSE);
 
             /*
              * Récupération du path du document - cas où un uuid est donné en
@@ -242,7 +212,7 @@ public class FetchPublicationInfos {
              */
             FetchInformationsService fetchInfosService = Framework.getService(FetchInformationsService.class);
             if (fetchInfosService != null) {
-                Map<String, String> infosSynchro = fetchInfosService.fetchAllInfos(coreSession, liveDoc);
+                Map<String, Object> infosSynchro = fetchInfosService.fetchAllInfos(coreSession, liveDoc);
                 infosPubli.accumulateAll(infosSynchro);
             }
 
@@ -350,36 +320,14 @@ public class FetchPublicationInfos {
      * @throws ServeurException
      * @throws ClientException
      */
-    private Boolean canUserValidate(Task onLineTask) throws ServeurException, ClientException {
+    private Boolean canUserValidate() throws ServeurException, ClientException {
 
         if (log.isDebugEnabled()) {
             TimeDebugger.getInstance("canUserValidate", coreSession.getSessionId()).setStartTime();
         }
 
-        Boolean canValidate = Boolean.FALSE;
-        Boolean isActor = Boolean.FALSE;
-        if (onLineTask != null) {
-
-            List<String> actors = onLineTask.getActors();
-            if (actors != null && !actors.isEmpty()) {
-                
-                NuxeoPrincipal principal = (NuxeoPrincipal) coreSession.getPrincipal();
-                if (principal != null) {
-                    
-                    List<String> taskActors = TaskActorsHelper.getTaskActors(principal);
-                    isActor = CollectionUtils.isSubCollection(actors, taskActors);
-                    
-                }
-            }
-
-            if (isActor) {
-                canValidate = checkValidatePermission();
-            }
-
-        } else {
-            // Direct on/off line
-            canValidate = checkValidatePermission();
-        }
+        // Direct on/off line
+        Boolean canValidate = checkValidatePermission();
 
         if (log.isDebugEnabled()) {
             TimeDebugger timeDebugger = TimeDebugger.getInstance("canUserValidate", coreSession.getSessionId());
@@ -450,59 +398,6 @@ public class FetchPublicationInfos {
         return canBeDelete;
     }
 
-    private Boolean isValidateOnLineTaskPending(Task onLineTask) throws ClientException {
-        Boolean isPending = Boolean.FALSE;
-        if (onLineTask != null) {
-            isPending = onLineTask.isOpened();
-        }
-        return isPending;
-    }
-
-//    private Task getOnLineTask(DocumentModel document) {
-////        Task onLinetask = null;
-////
-////        if (log.isDebugEnabled()) {
-////            TimeDebugger.getInstance("getOnLineTask", coreSession.getSessionId()).setStartTime();
-////        }
-////
-//////        onLinetask = ToutaticeWorkflowHelper.getTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, coreSession, document);
-//////        onLinetask = ToutaticeWorkflowHelper.getDocumentTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, coreSession, document);
-////
-////        if (log.isDebugEnabled()) {
-////            TimeDebugger timeDebugger = TimeDebugger.getInstance("getOnLineTask", coreSession.getSessionId());
-////            long totalTime = timeDebugger.getTotalTime();
-////            log.debug(timeDebugger.getMessage("getOnLineTask", coreSession.getSessionId(), document.getPathAsString(), totalTime));
-////        }
-////
-////        return onLinetask;
-//
-//    }
-
-    private Object isUserOnLIneWorkflowInitiator(Task onLineTask) throws ClientException {
-        Boolean isInitiator = Boolean.FALSE;
-
-        if (log.isDebugEnabled()) {
-            TimeDebugger.getInstance("isUserOnLIneWorkflowInitiator", coreSession.getSessionId()).setStartTime();
-        }
-
-        if (onLineTask != null) {
-            /* Initiator of wf is task initiator */
-            String onLineWorkflowInitiator = onLineTask.getInitiator();
-            if (StringUtils.isNotBlank(onLineWorkflowInitiator)) {
-
-                NuxeoPrincipal currentUser = (NuxeoPrincipal) coreSession.getPrincipal();
-                isInitiator = onLineWorkflowInitiator.equals(currentUser.getName());
-
-            }
-
-            if (log.isDebugEnabled()) {
-                TimeDebugger timeDebugger = TimeDebugger.getInstance("isUserOnLIneWorkflowInitiator", coreSession.getSessionId());
-                long totalTime = timeDebugger.getTotalTime();
-                log.debug(timeDebugger.getMessage("isUserOnLIneWorkflowInitiator", coreSession.getSessionId(), document.getPathAsString(), totalTime));
-            }
-        }
-        return isInitiator;
-    }
 
     /**
      * Méthode permettant de "fetcher" un document live et mettant à faux le

@@ -22,13 +22,11 @@ package fr.toutatice.ecm.platform.core.helper;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.nuxeo.common.utils.Path;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -39,10 +37,9 @@ import org.nuxeo.ecm.platform.ec.notification.NotificationConstants;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoutingConstants;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoutingService;
+import org.nuxeo.ecm.platform.routing.core.impl.DocumentRoutingServiceImpl;
 import org.nuxeo.ecm.platform.task.Task;
-import org.nuxeo.ecm.platform.task.TaskImpl;
-import org.nuxeo.ecm.platform.task.TaskService;
-import org.nuxeo.ecm.platform.task.core.helpers.TaskActorsHelper;
+import org.nuxeo.ecm.platform.task.core.service.DocumentTaskProvider;
 import org.nuxeo.ecm.platform.task.core.service.TaskEventNotificationHelper;
 import org.nuxeo.runtime.api.Framework;
 
@@ -54,10 +51,63 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
  */
 public final class ToutaticeWorkflowHelper {
 
+    public static final String GET_TASKS_BY_NAME_PROVIDER = "GET_TASKS_BY_NAME_FOR_TARGET_DOCUMENT";
+    public static final String GET_WF_BY_NAME_QUERY = "select * from DocumentRoute where dc:title = '%s' and docri:participatingDocuments = '%s' "
+            + "and ecm:currentLifeCycleState IN ('ready','running') order by dc:created";
+
+
     private ToutaticeWorkflowHelper() {
     }
 
-    public static void notifyRecipients(CoreSession documentManager, Task task, DocumentModel document, String initiator, String event) throws ClientException {
+    /**
+     * Get task by name for current document.
+     * 
+     * @param taskName
+     * @param session
+     * @param document
+     * @return task given name and current doc
+     * @throws ClientException
+     */
+    public static Task getTaskByName(String taskName, CoreSession session, DocumentModel currentDoc) throws ClientException {
+        Task searchedTask = null;
+
+        Object[] params = {taskName, currentDoc.getId()};
+        List<Task> tasks = DocumentTaskProvider.getTasks(GET_TASKS_BY_NAME_PROVIDER, session, true, null, params);
+
+        if (CollectionUtils.isNotEmpty(tasks)) {
+            searchedTask = tasks.get(0);
+        }
+
+        return searchedTask;
+
+    }
+    
+    /**
+     * Get workflow (or Route) by name on current document.
+     * 
+     * @param workflowName
+     * @param currentDoc
+     * @return workflow given name and current doc
+     */
+    public static DocumentRoute getWorkflowByName(String workflowName, DocumentModel currentDoc) {
+        DocumentRoute searchedWf = null;
+        
+        CoreSession session = currentDoc.getCoreSession();
+        String query = String.format(GET_WF_BY_NAME_QUERY, workflowName, currentDoc.getId());
+        
+        ToutaticeQueryHelper.UnrestrictedQueryRunner queryRunner = new ToutaticeQueryHelper.UnrestrictedQueryRunner(session, query);
+        DocumentModelList wfs = queryRunner.runQuery();
+        
+        if(CollectionUtils.isNotEmpty(wfs)){
+            DocumentModel wf = wfs.get(0);
+            searchedWf = wf.getAdapter(DocumentRoute.class);
+        }
+
+        return searchedWf;
+    }
+
+    public static void notifyRecipients(CoreSession documentManager, Task task, DocumentModel document, String initiator, String event)
+            throws ClientException {
         NuxeoPrincipal principal = (NuxeoPrincipal) documentManager.getPrincipal();
 
         Map<String, Serializable> eventProperties = new HashMap<String, Serializable>();
@@ -75,22 +125,6 @@ public final class ToutaticeWorkflowHelper {
         return getWorkflowByName(ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE, currentDoc);
     }
 
-    public static DocumentRoute getWorkflowByName(String workflowName, DocumentModel currentDoc) {
-        DocumentRoute wf = null;
-
-        String query = "select * from DocumentRoute where dc:title = '%s' and docri:participatingDocuments = '%s' and ecm:currentLifeCycleState IN ('ready','running') order by dc:created";
-        CoreSession session = currentDoc.getCoreSession();
-
-        DocumentModelList docsRoutes = session.query(String.format(query, workflowName, currentDoc.getId()));
-
-        if (docsRoutes != null && !docsRoutes.isEmpty()) {
-            DocumentModel docRoute = docsRoutes.get(0);
-            wf = docRoute.getAdapter(DocumentRoute.class);
-        }
-
-        return wf;
-    }
-
     public static boolean isOnLineWorkflow(DocumentModel currentDoc) {
         return getOnLineWorkflow(currentDoc) != null;
     }
@@ -102,21 +136,6 @@ public final class ToutaticeWorkflowHelper {
             initiator = (String) route.getDocument().getPropertyValue(DocumentRoutingConstants.INITIATOR);
         }
         return initiator;
-    }
-
-    public static Task getDocumentTaskByName(String name, CoreSession documentManager, DocumentModel currentDoc) throws ClientException {
-        Task validateTask = null;
-
-        String query = "select * from TaskDoc where nt:name = '%s' and nt:targetDocumentId = '%s' and ecm:currentLifeCycleState not in ('ended', 'cancelled') AND ecm:isProxy = 0";
-        DocumentModelList tasksDocs = documentManager.query(String.format(query, name, currentDoc.getId()));
-
-        if (tasksDocs != null && !tasksDocs.isEmpty()) {
-            /* One document can have only one online task at time */
-            DocumentModel taskDoc = tasksDocs.get(0);
-            validateTask = new TaskImpl(taskDoc);
-        }
-
-        return validateTask;
     }
 
 }

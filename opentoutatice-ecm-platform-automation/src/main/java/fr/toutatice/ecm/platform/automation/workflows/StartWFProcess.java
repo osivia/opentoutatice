@@ -16,7 +16,7 @@
  *   mberhaut1
  *    
  */
-package fr.toutatice.ecm.platform.automation;
+package fr.toutatice.ecm.platform.automation.workflows;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -21,37 +21,62 @@ public class FetchInformationsServiceImpl extends DefaultComponent implements Fe
     private static final long serialVersionUID = 3212642773317224973L;
 
     public static final String FETCH_INFOS_EXT_POINT = "fetch_infos";
+    public static final String EXTENDED_FETCH_INFOS_EXT_POINT = "extended_fetch_infos";
 
     private List<FetchInformationProvider> contribs;
+    private List<FetchInformationProvider> extendedContribs;
 
     @Override
     public void activate(ComponentContext context) throws Exception {
         super.activate(context);
-        contribs = new ArrayList<FetchInformationProvider>();
+        contribs = new ArrayList<FetchInformationProvider>(0);
+        extendedContribs = new ArrayList<FetchInformationProvider>(0);
     }
 
     @Override
     public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
+        FetchInformationsDescriptor descriptor = (FetchInformationsDescriptor) contribution;
+        descriptor.initProvider();
         if (FETCH_INFOS_EXT_POINT.equals(extensionPoint)) {
-            FetchInformationsDescriptor descriptor = (FetchInformationsDescriptor) contribution;
-            descriptor.initProvider();
             contribs.add(descriptor.getInstance());
+        } else if(EXTENDED_FETCH_INFOS_EXT_POINT.equals(extensionPoint)){
+            extendedContribs.add(descriptor.getInstance());
         }
     }
 
     @Override
     public void unregisterContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
+        FetchInformationsDescriptor descriptor = (FetchInformationsDescriptor) contribution;
         if (FETCH_INFOS_EXT_POINT.equals(extensionPoint)) {
-            FetchInformationsDescriptor descriptor = (FetchInformationsDescriptor) contribution;
             contribs.remove(descriptor.getInstance());
+        } else if(EXTENDED_FETCH_INFOS_EXT_POINT.equals(extensionPoint)){
+            extendedContribs.remove(descriptor.getInstance());
         }
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<String, Object> fetchAllInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
 
-    public Map<String, String> fetchAllInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
-
-        Map<String, String> infos = new HashMap<String, String>();
+        Map<String, Object> infos = new HashMap<String, Object>(0);
 
         for (FetchInformationProvider contrib : contribs) {
+            infos.putAll(contrib.fetchInfos(coreSession, currentDocument));
+        }
+
+        return infos;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<String, Object> fetchAllExtendedInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
+        Map<String, Object> infos = new HashMap<String, Object>(0);
+
+        for (FetchInformationProvider contrib : extendedContribs) {
             infos.putAll(contrib.fetchInfos(coreSession, currentDocument));
         }
 

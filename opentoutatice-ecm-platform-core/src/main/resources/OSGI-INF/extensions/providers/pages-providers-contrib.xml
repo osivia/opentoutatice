@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<component
+	name="fr.toutatice.ecm.platform.core.page.provider.contrib">
+
+	<extension target="org.nuxeo.ecm.platform.query.api.PageProviderService"
+		point="providers">
+		
+		 <genericPageProvider class="org.nuxeo.elasticsearch.provider.ElasticSearchNxqlPageProvider" name="ToutaticeESPageProvider" />
+
+	</extension>
+
+</component>
