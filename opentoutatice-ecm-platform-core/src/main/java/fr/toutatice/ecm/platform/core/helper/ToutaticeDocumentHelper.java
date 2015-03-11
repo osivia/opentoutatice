@@ -50,6 +50,7 @@ import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.DocumentSecurityException;
 import org.nuxeo.ecm.core.api.Filter;
 import org.nuxeo.ecm.core.api.IdRef;
+import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.VersionModel;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
@@ -75,6 +76,50 @@ public class ToutaticeDocumentHelper {
 	
 	private ToutaticeDocumentHelper() {
 		// static class, cannot be instantiated
+	}
+	
+	/**
+	 * @param session
+	 * @param id
+	 * @return a document fetched with unrestricted session.
+	 */
+	public static DocumentModel getUnrestrictedDocument(CoreSession session, String id) throws ClientException {
+	    
+	    GetUnrestrictedDocument getter = new GetUnrestrictedDocument(session, id);
+	    getter.runUnrestricted();
+	    return getter.getDocument();
+	    
+	}
+	
+	/**
+	 * Alllows to get a document in an unrestricted way.
+	 */
+	public static class GetUnrestrictedDocument extends UnrestrictedSessionRunner {
+	    private String id;
+	    private DocumentModel document;
+	    
+	    public DocumentModel getDocument(){
+	        return this.document;
+	    }
+        
+	    public GetUnrestrictedDocument(CoreSession session, String id){
+            super(session);
+            this.id = id;
+        }
+        
+        @Override
+        public void run() throws ClientException {
+            if(StringUtils.isNotBlank(this.id)){
+                DocumentRef ref = null;
+                if(!StringUtils.contains(this.id, "/")){
+                    ref = new IdRef(this.id);
+                } else {
+                    ref = new PathRef(this.id);
+                }
+                this.document = this.session.getDocument(ref);
+            }
+            
+        }
 	}
 
 	/**
