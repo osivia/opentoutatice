@@ -31,6 +31,7 @@
 	<dependencies>
         <!-- Dépendances sur les addons Nuxeo -->
 		<package>nuxeo-dm:@DISTRIB_VERSION@:@DISTRIB_VERSION@</package>
+		<package>nuxeo-sites-blogs:1.0.0:1.0.0</package>
 		<!-- Dépendance sur les hotfixes -->
 		<package>nuxeo-5.8.0-HF23:1.0.0</package>
 	</dependencies>
