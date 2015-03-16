@@ -8,7 +8,7 @@
 	</parent>
  
 	<artifactId>opentoutatice-ecm-platform-marketplace</artifactId>
-	<version>2.1.0</version>
+	<version>2.1.0-HF01</version>
 	<packaging>zip</packaging>
 	<name>Marketplace package - Open Toutatice platform</name>
 
@@ -317,8 +317,8 @@
 	</distributionManagement>
 
   <scm>
-    <connection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/2.1.0/opentoutatice-ecm-platform-marketplace</connection>
-    <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/2.1.0/opentoutatice-ecm-platform-marketplace</developerConnection>
-    <url>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/2.1.0/opentoutatice-ecm-platform-marketplace</url>
+    <connection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/2.1.0-HF01/opentoutatice-ecm-platform-marketplace</connection>
+    <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/2.1.0-HF01/opentoutatice-ecm-platform-marketplace</developerConnection>
+    <url>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/2.1.0-HF01/opentoutatice-ecm-platform-marketplace</url>
   </scm>
 </project>

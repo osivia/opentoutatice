@@ -5,16 +5,13 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>2.1.0</version>
+		<version>2.1.0-HF01</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-automation</artifactId>
 	<name>Toutatice Automation</name>
 	<description>Partie automation de la plate-forme toutatice
 	</description>
-
-	<!-- <properties> <nuxeo.directory.ldap.version>5.8</nuxeo.directory.ldap.version> 
-		</properties> -->
 
 	<dependencies>
 		<dependency>

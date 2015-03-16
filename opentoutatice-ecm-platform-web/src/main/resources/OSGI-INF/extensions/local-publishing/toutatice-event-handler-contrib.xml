@@ -12,6 +12,7 @@
 			<event>documentCreated</event>
 			<filters>
 				<doctype>PortalSite</doctype>
+				<condition>Document.isVersion() == false</condition>
 			</filters>
 		</handler>
 
