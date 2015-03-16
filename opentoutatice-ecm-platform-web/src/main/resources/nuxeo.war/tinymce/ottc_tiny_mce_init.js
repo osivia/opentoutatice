@@ -3,7 +3,7 @@ var lang = 'fr';
 function createTinyMce(clazz) {
 	var textareas = document.getElementsByClassName(clazz);
 	for ( var index = 0; index < textareas.length; index++) {
-		tinyMCE.execCommand('mceAddControl', false, textareas[index].id);
+		tinyMCE.execCommand('mceAddEditor', false, textareas[index].id);
 	}
 }
 

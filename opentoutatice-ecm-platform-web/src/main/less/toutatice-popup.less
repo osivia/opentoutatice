@@ -5,8 +5,12 @@ body {
 }
 
 .ttc-form-control {
-	& > input, & > textarea, select {
+	& > input, select {
 		.form-control;
+	}
+	& > textarea {
+	   .form-control;
+	   height: 75px; 
 	}
 	
 	& > input[type="checkbox"] {
@@ -54,6 +58,12 @@ body {
 		
 	}
 	
+}
+
+/* Required fields */
+.form-group.required .control-label:after { 
+   content:"  *";
+   color: #bf3730;
 }
 
 /* Keywords widget */
