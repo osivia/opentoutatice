@@ -27,16 +27,21 @@
 		<copy file="${outdir}/artifacts-opentoutatice.properties" todir="${outdir}/nxr" />
 		<copy file="${outdir}/test-artifacts-opentoutatice.properties" todir="${outdir}/nxr" />
 		
-		<!-- Get Nuxeo bundles but not Nuxeo libraries (which groupId starts with"org.nuxeo.lib"), nor bundles with "test" scope -->
+		<unzip dest="${outdir}/nxdistrib">
+			<artifact:resolveFile key="org.nuxeo.ecm.distribution:nuxeo-distribution-cap:${nuxeo.version}:zip" />
+		</unzip>
+		
+		<!-- Get Nuxeo bundles but not Nuxeo libraries (which groupId starts with "org.nuxeo.lib"), nor bundles with "test" scope -->
+		<copy todir="${outdir}/nxr/bundles" overwrite="true">
+			<fileset dir="${outdir}/nxdistrib/bundles"/>
+		</copy>
 		<copy todir="${outdir}/nxr/bundles" overwrite="true">
 			<artifact:set>
 				<includes>
-					<artifact groupId="org.nuxeo*" scope="!test" type="!pom" />
-					<!-- Include your artifacts using their groupId for instance -->
 					<artifact groupId="opentoutatice-ecm.*" scope="!test" type="!pom" />
 				</includes>
 				<excludes>
-					<artifact groupId="org.nuxeo.lib*" />
+					<artifact groupId="org.nuxeo.*" />
 				</excludes>
 			</artifact:set>
 		</copy>
@@ -46,10 +51,12 @@
 		
 		<!-- Third-party libraries -->
 		<copy todir="${outdir}/nxr/lib" overwrite="true">
+			<fileset dir="${outdir}/nxdistrib/lib"/>
+		</copy>
+		<copy todir="${outdir}/nxr/lib" overwrite="true">
 			<artifact:set>
 				<includes>
 					<artifact groupId="!org.nuxeo*" scope="!test" />
-					<artifact groupId="org.nuxeo.lib*" scope="!test" />
 				</includes>
 				<excludes>
 					<!-- Filter out your artifacts using their groupId for instance -->
