@@ -1,168 +1,158 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:s="http://jboss.org/schema/seam/taglib"
-	xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:nxthemes="http://nuxeo.org/nxthemes"
-	xmlns:nxd="http://nuxeo.org/nxweb/document"
-	xmlns:nxu="http://nuxeo.org/nxweb/util"
-	xmlns:nxh="http://nuxeo.org/nxweb/html"
-	xmlns:c="http://java.sun.com/jstl/core"
-	xmlns:oh="http://osivia.org/html">
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:nxthemes="http://nuxeo.org/nxthemes"
+    xmlns:nxd="http://nuxeo.org/nxweb/document"
+    xmlns:nxu="http://nuxeo.org/nxweb/util"
+    xmlns:nxh="http://nuxeo.org/nxweb/html"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:oh="http://osivia.org/html">
 
 <head>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title><h:outputText
-		value="#{messages['title.imageUpload.form']}" /></title>
+        value="#{messages['title.imageUpload.form']}" /></title>
 <link href="#{baseURL}css/plugin-popup.min.css" type="text/css"
-	rel="stylesheet" />
+    rel="stylesheet" />
 <link href="#{baseURL}css/glyphicons/css/glyphicons.css" type="text/css"
-	rel="stylesheet" />
+    rel="stylesheet" />
 <link
-	href="/nuxeo/org.richfaces.resources/javax.faces.resource/org.richfaces.staticResource/4.5.0.Alpha3/PackedCompressed/DEFAULT/packed/packed.css"
-	rel="stylesheet" type="text/css" />
+    href="/nuxeo/org.richfaces.resources/javax.faces.resource/org.richfaces.staticResource/4.5.0.Alpha3/PackedCompressed/DEFAULT/packed/packed.css"
+    rel="stylesheet" type="text/css" />
 <script src="/nuxeo/javax.faces.resource/jsf.js.faces?ln=javax.faces"
-	type="text/javascript" />
+    type="text/javascript" />
 <script src="#{baseURL}nxthemes-lib/jquery.js" />
 <script src="#{baseURL}nxthemes-lib/prototype.js" />
 <script
-	src="/nuxeo/org.richfaces.resources/javax.faces.resource/org.richfaces.staticResource/4.5.0.Alpha3/PackedCompressed/packed/packed.js"
-	type="text/javascript" />
+    src="/nuxeo/org.richfaces.resources/javax.faces.resource/org.richfaces.staticResource/4.5.0.Alpha3/PackedCompressed/packed/packed.js"
+    type="text/javascript" />
 </head>
 
 <body>
-	<div class="container">
+    <div class="container">
 
-		<div class="form-group">
-			<h3>#{messages['title.imageUpload.form']}</h3>
-		</div>
+        <div class="form-group">
+            <h3>#{messages['title.imageUpload.form']}</h3>
+        </div>
 
-		<nav>
-			<ul class="nav nav-tabs" role="tablist">
-				<li
-					class="#{nxu:test(editorImageActions.selectedTab == 'SEARCH', 'active', '')}"
-					role="presentation"><a aria-controls="search" role="tab"
-					data-toggle="tab"
-					href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=SEARCH">#{messages['toutatice.label.imageUpload.searchTab']}</a>
-				</li>
-				<c:if test="#{not(currentDocument.hasFacet('TTCAttachableImages'))}">
-					<li
-						class="#{nxu:test(editorImageActions.selectedTab == 'UPLOAD', 'active', '')}"
-						role="presentation"><a aria-controls="upload" role="tab"
-						data-toggle="tab"
-						href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=UPLOAD">#{messages['toutatice.label.imageUpload.uploadTab']}</a>
-					</li>
-				</c:if>
-				<c:if test="#{currentDocument.hasFacet('TTCAttachableImages')}">
-					<li
-						class="#{nxu:test(editorImageActions.selectedTab == 'ATTACH_IMGS', 'active', '')}"
-						role="presentation"><a aria-controls="attachableImages"
-						role="tab" data-toggle="tab"
-						href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=ATTACH_IMGS">#{messages['toutatice.label.imageUpload.attachableImagesTab']}</a>
-					</li>
-				</c:if>
-			</ul>
-		</nav>
+        <nav>
+            <ul class="nav nav-tabs" role="tablist">
+                <li
+                        class="#{nxu:test(editorImageActions.selectedTab == 'ATTACH_IMGS', 'active', '')}"
+                        role="presentation"><a aria-controls="attachableImages"
+                        role="tab" data-toggle="tab"
+                        href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=ATTACH_IMGS">#{messages['toutatice.label.imageUpload.attachableImagesTab']}</a>
+                    </li>
+                <li
+                    class="#{nxu:test(editorImageActions.selectedTab == 'SEARCH', 'active', '')}"
+                    role="presentation"><a aria-controls="search" role="tab"
+                    data-toggle="tab"
+                    href="#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true&amp;selectedTab=SEARCH">#{messages['toutatice.label.imageUpload.searchTab']}</a>
+                </li>
+            </ul>
+        </nav>
 
-		<div class="tab-content">
+        <div class="tab-content">
 
-			<script type="text/javascript">
-						function getSelectedRadio(buttonGroup) {
-						      if (buttonGroup[0]) {
-						        for (var i=0; i&lt;buttonGroup.length; i++) {
-						          if (buttonGroup[i].checked) {
-						            return buttonGroup[i]
-						          }
-						        }
-						      } else if (buttonGroup.checked) {
-						        return buttonGroup;
-						      }
-						      return null;
-						    }
-												
-							function getSelectedMedia(radioButton) {
-						      ele = radioButton;
-						      while (ele.nodeName != 'div' &amp;&amp; ele.nodeName != 'DIV') {
-						        ele = ele.nextSibling;
-						      }
-						
-						      if (ele.childNodes.length > 0) {
-						        for (var i = 0; i &lt; ele.childNodes.length; ++i) {
-						            e = ele.childNodes[i];
-						            if (e.nodeName == 'input' || e.nodeName == 'INPUT') {
-						              return e;
-						            }
-						         }
-						      }
-						      return null;
-						    }
-						
-						    function getVideoHTML(radioButton) {
-						      ele = radioButton;
-						      while (ele.nodeName != 'div' &amp;&amp; ele.nodeName != 'DIV') {
-						        ele = ele.nextSibling;
-						      }
-						
-						      if (ele.childNodes.length > 0) {
-						        for (var i = 0; i &lt; ele.childNodes.length; ++i) {
-						            e = ele.childNodes[i];
-						            if (e.nodeName == 'video' || e.nodeName == 'VIDEO') {
-						              return e;
-						            }
-						         }
-						      }
-						      return null;
-						    }
-						
-						    function updateEditor(element, type) {
-						      if (window.opener.tinyMCE) {
-						        var tinyMCE = window.opener.tinyMCE;
-						        var button = getSelectedRadio(element);
-						
-						        if (type == 'Picture') {
-						          var media = getSelectedMedia(button);
-						          var html = '&lt;img src="' + media.value + '"/&gt;';
-						          tinyMCE.execCommand('mceInsertContent', false, html);
-						        } else if (type == 'Video') {
-						          var media = getVideoHTML(button);
-						          tinyMCE.execCommand('mceInsertContent', false, media.parentNode.innerHTML);
-						        }
+            <script type="text/javascript">
+                        function getSelectedRadio(buttonGroup) {
+                              if (buttonGroup[0]) {
+                                for (var i=0; i&lt;buttonGroup.length; i++) {
+                                  if (buttonGroup[i].checked) {
+                                    return buttonGroup[i]
+                                  }
+                                }
+                              } else if (buttonGroup.checked) {
+                                return buttonGroup;
+                              }
+                              return null;
+                            }
+                                                
+                            function getSelectedMedia(radioButton) {
+                              ele = radioButton;
+                              while (ele.nodeName != 'div' &amp;&amp; ele.nodeName != 'DIV') {
+                                ele = ele.nextSibling;
+                              }
+                        
+                              if (ele.childNodes.length > 0) {
+                                for (var i = 0; i &lt; ele.childNodes.length; ++i) {
+                                    e = ele.childNodes[i];
+                                    if (e.nodeName == 'input' || e.nodeName == 'INPUT') {
+                                      return e;
+                                    }
+                                 }
+                              }
+                              return null;
+                            }
+                        
+                            function getVideoHTML(radioButton) {
+                              ele = radioButton;
+                              while (ele.nodeName != 'div' &amp;&amp; ele.nodeName != 'DIV') {
+                                ele = ele.nextSibling;
+                              }
+                        
+                              if (ele.childNodes.length > 0) {
+                                for (var i = 0; i &lt; ele.childNodes.length; ++i) {
+                                    e = ele.childNodes[i];
+                                    if (e.nodeName == 'video' || e.nodeName == 'VIDEO') {
+                                      return e;
+                                    }
+                                 }
+                              }
+                              return null;
+                            }
+                        
+                            function updateEditor(element, type) {
+                              if (window.opener.tinyMCE) {
+                                var tinyMCE = window.opener.tinyMCE;
+                                var button = getSelectedRadio(element);
+                        
+                                if (type == 'Picture') {
+                                  var media = getSelectedMedia(button);
+                                  var html = '&lt;img src="' + media.value + '"/&gt;';
+                                  tinyMCE.execCommand('mceInsertContent', false, html);
+                                } else if (type == 'Video') {
+                                  var media = getVideoHTML(button);
+                                  tinyMCE.execCommand('mceInsertContent', false, media.parentNode.innerHTML);
+                                }
 
-								// fragment picture
-								  if (window.opener.$picturePath) {
-									  var picturePathField = window.opener.$picturePath;
-									  var button = getSelectedRadio(element);
-									  var input = getSelectedMedia(button);
-									  var relativeUrl = input.value.replace(/^(?:\/\/|[^\/]+)*\//, "/");
-		
-									  picturePathField.val(relativeUrl);
-									  window.opener.previewImg();
-								  }
+                                // fragment picture
+                                  if (window.opener.$picturePath) {
+                                      var picturePathField = window.opener.$picturePath;
+                                      var button = getSelectedRadio(element);
+                                      var input = getSelectedMedia(button);
+                                      var relativeUrl = input.value.replace(/^(?:\/\/|[^\/]+)*\//, "/");
+        
+                                      picturePathField.val(relativeUrl);
+                                      window.opener.previewImg();
+                                  }
 
-						      }
-						      self.close();
-						    }
-						
-					</script>
+                              }
+                              self.close();
+                            }
+                        
+                    </script>
 
-			<f:subview rendered="#{editorImageActions.selectedTab == 'SEARCH'}">
-				<ui:include src="/incl/editor_media_upload/search_pictures.xhtml" />
-			</f:subview>
+            <f:subview rendered="#{editorImageActions.selectedTab == 'SEARCH'}">
+                <ui:include src="/incl/editor_media_upload/search_pictures.xhtml" />
+            </f:subview>
 
 
-			<f:subview rendered="#{editorImageActions.selectedTab == 'UPLOAD' and not(currentDocument.hasFacet('TTCAttachableImages'))}">
-				<ui:include src="/incl/editor_media_upload/file_upload.xhtml" />
-			</f:subview>
+            <f:subview rendered="#{editorImageActions.selectedTab == 'UPLOAD' and not(currentDocument.hasFacet('TTCAttachableImages'))}">
+                <ui:include src="/incl/editor_media_upload/file_upload.xhtml" />
+            </f:subview>
 
-			<f:subview
-				rendered="#{editorImageActions.selectedTab == 'ATTACH_IMGS'}">
-				<ui:include src="/incl/editor_media_upload/attached_images.xhtml" />
-			</f:subview>
-		</div>
-	</div>
+            <f:subview
+                rendered="#{editorImageActions.selectedTab == 'ATTACH_IMGS'}">
+                <ui:include src="/incl/editor_media_upload/attached_images.xhtml" />
+            </f:subview>
+        </div>
+    </div>
 
 </body>
 

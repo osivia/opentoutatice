@@ -10,10 +10,10 @@
 
 	<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
 		<div class="alert alert-warning">
-					<i class="glyphicons halflings warning-sign"></i> <span
-						class="text-warning">#{messages['label.imageUpload.unableToUpload']}</span>
+			<i class="glyphicons halflings warning-sign"></i> <span
+				class="text-warning">#{messages['label.imageUpload.unableToUpload']}</span>
 
-				</div>
+		</div>
 	</f:subview>
 
 	<f:subview
@@ -31,7 +31,6 @@
 			</c:when>
 			<c:otherwise>
 				<script type="text/javascript">
-
 					function updateEditorWithImagePJ(img) {
 						if (window.opener.tinyMCE) {
 							var tinyMCE = window.opener.tinyMCE;
@@ -45,25 +44,24 @@
 
 					function updateFragment(img) {
 
-							var imgSrc = img.src;
-							var relativeUrl = imgSrc.replace(
-									/^(?:\/\/|[^\/]+)*\//, "/");
-							
-							var picturePathField = window.opener.$picturePath;
-							picturePathField.val(relativeUrl);
-							window.opener.previewImg();
+						var imgSrc = img.src;
+						var relativeUrl = imgSrc.replace(/^(?:\/\/|[^\/]+)*\//,
+								"/");
+
+						var picturePathField = window.opener.$picturePath;
+						picturePathField.val(relativeUrl);
+						window.opener.previewImg();
 
 						self.close();
 					}
 
-					function updateCaller(img){
-						if(window.opener.$picturePath){
+					function updateCaller(img) {
+						if (window.opener.$picturePath) {
 							updateFragment(img);
 						} else {
 							updateEditorWithImagePJ(img)
 						}
 					}
-					
 				</script>
 
 
@@ -102,6 +100,15 @@
 		<div>
 			<ui:include
 				src="/incl/editor_media_upload/upload_attached_images.xhtml" />
+		</div>
+
+	</f:subview>
+
+	<f:subview
+		rendered="#{!editorImageActions.inToutaticeCreationMode and not currentDocument.hasFacet('TTCAttachableImages')}">
+		<div class="alert alert-warning">
+			<i class="glyphicons halflings warning-sign"></i> <span
+				class="text-warning">#{messages['toutatice.label.imageUpload.noImages']}</span>
 		</div>
 
 	</f:subview>
