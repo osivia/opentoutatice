@@ -30,7 +30,7 @@
                         <c:when test="#{widget.type == 'layout'}">
                             <nxl:layout name="#{widget.properties.name}" mode="edit"
                                 template="/layouts/toutatice_div_layout_edit.xhtml"
-                                value="#{doc}" />
+                                value="#{value}" />
                         </c:when>
                         <c:otherwise>
                             <nxl:widget widget="#{widget}" value="#{value}" />

@@ -21,6 +21,7 @@
 package fr.toutatice.ecm.platform.service.portalviews.adapter;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.nuxeo.ecm.platform.forms.layout.api.Widget;
 
@@ -32,6 +33,21 @@ import org.nuxeo.ecm.platform.forms.layout.api.Widget;
  *
  */
 public interface WidgetsAdapterService extends Serializable {
+    
+    /**
+     * @return true if facelet is in PortalView context.
+     */
+    public boolean isInPortalViewContext();
+    
+    /**
+     * Add a portal view id. 
+     */
+    public void addPortalViewId(String viewId);
+    
+    /**
+     * Add list of portal views ids.
+     */
+    public void addPortalViewsIds(String... viewIds);
     
     /**
      * Gives the mapped nuxeo widget for portalView.

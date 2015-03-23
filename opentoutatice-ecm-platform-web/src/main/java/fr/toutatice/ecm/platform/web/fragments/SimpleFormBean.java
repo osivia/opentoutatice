@@ -42,6 +42,7 @@ import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 	@Role(name = "templateSimpleForm", scope = ScopeType.SESSION),
 	@Role(name = "themeSimpleForm", scope = ScopeType.SESSION),
 @Role(name = "pageTemplateSimpleForm", scope = ScopeType.SESSION), @Role(name = "subpageTemplateSimpleForm", scope = ScopeType.SESSION)})
+@Role(name = "field")
 public class SimpleFormBean {
 
     private UIComponent simpleComponent;

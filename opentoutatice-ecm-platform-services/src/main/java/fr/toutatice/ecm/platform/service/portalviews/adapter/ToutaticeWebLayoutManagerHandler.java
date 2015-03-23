@@ -51,10 +51,6 @@ import fr.toutatice.ecm.platform.core.components.ToutaticeAbstractServiceHandler
  */
 public class ToutaticeWebLayoutManagerHandler<T> extends ToutaticeAbstractServiceHandler<T> {
 
-    protected enum PortalViewId {
-        toutatice_edit, toutatice_create;
-    }
-
     @Override
     public T newProxy(T layoutService, Class<T> layoutServiceKlass) {
         setObject(layoutService);
@@ -68,7 +64,7 @@ public class ToutaticeWebLayoutManagerHandler<T> extends ToutaticeAbstractServic
 
             WidgetsAdapterService widgetsAdapterService = Framework.getLocalService(WidgetsAdapterService.class);
 
-            if (isInPortalViewContext()) {
+            if (widgetsAdapterService.isInPortalViewContext()) {
 
                 Layout layout = (Layout) method.invoke(object, args);
 
@@ -93,20 +89,4 @@ public class ToutaticeWebLayoutManagerHandler<T> extends ToutaticeAbstractServic
         return method.invoke(object, args);
     }
 
-    protected boolean isInPortalViewContext() {
-        boolean is = false;
-        RestHelper restHelper = (RestHelper) SeamComponentCallHelper.getSeamComponentByName("restHelper");
-        String viewId = StringUtils.EMPTY;
-        DocumentView documentView = restHelper.getDocumentView();
-        if (documentView != null) {
-            viewId = documentView.getViewId();
-        } else {
-            FacesContext context = FacesContext.getCurrentInstance();
-            viewId = context.getViewRoot().getViewId();
-        }
-        if (StringUtils.isNotBlank(viewId)) {
-            is = (viewId.contains(PortalViewId.toutatice_edit.name())) || (viewId.contains(PortalViewId.toutatice_create.name()));
-        }
-        return is;
-    }
 }

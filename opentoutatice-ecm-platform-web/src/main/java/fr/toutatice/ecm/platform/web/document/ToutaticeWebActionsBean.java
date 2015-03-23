@@ -38,9 +38,11 @@ import org.nuxeo.ecm.platform.actions.Action;
 import org.nuxeo.ecm.platform.actions.ActionContext;
 import org.nuxeo.ecm.webapp.action.WebActionsBean;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
+import fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterService;
 
 @Name("webActions")
 @Scope(ScopeType.CONVERSATION)
@@ -149,5 +151,13 @@ public class ToutaticeWebActionsBean extends WebActionsBean {
         resetSubTabs();
         resetCurrentTab();
 	}
+    
+    /**
+     * @return return true if facelet is in PortalView context.
+     */
+    public boolean isInPortalViewContext(){
+        WidgetsAdapterService widgetsAdapterService = Framework.getLocalService(WidgetsAdapterService.class);
+        return widgetsAdapterService.isInPortalViewContext();
+    }
 	
 }
