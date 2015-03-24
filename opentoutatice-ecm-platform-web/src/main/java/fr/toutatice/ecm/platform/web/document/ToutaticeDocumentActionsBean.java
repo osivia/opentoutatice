@@ -213,6 +213,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         DocumentModel changeableDocument = navigationContext.getChangeableDocument();
         updateDocWithMapSwitch(changeableDocument);
         String view = super.saveDocument(changeableDocument);
+        pageBean.setNotificationKey(PortalConstants.Notifications.SUCCESS_MESSAGE_CREATE.name());
 
         // mise en ligne
         DocumentModel newDocument = navigationContext.getCurrentDocument();
@@ -329,6 +330,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         updateDocWithMapSwitch(currentDocument);
         view = super.updateDocument(currentDocument);
+        pageBean.setNotificationKey(PortalConstants.Notifications.SUCCESS_MESSAGE_MODIFY.name());
 
         // mise en ligne chaînée
         currentDocument = navigationContext.getCurrentDocument();
