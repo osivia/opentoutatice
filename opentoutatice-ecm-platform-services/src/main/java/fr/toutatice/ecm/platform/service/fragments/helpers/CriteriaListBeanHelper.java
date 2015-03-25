@@ -129,7 +129,7 @@ public class CriteriaListBeanHelper implements Serializable {
         }
     }
 
-    public enum DisplayStyle {
+    public enum DisplayStyle implements ListDisplayStyle {
         normal("normal", "osivia.fragment.criteria.list.style.normal.title"), minimal("mini", "osivia.fragment.criteria.list.style.minimal.title"), editorial(
                 "editorial", "osivia.fragment.criteria.list.style.editorial.title");
 
@@ -154,7 +154,7 @@ public class CriteriaListBeanHelper implements Serializable {
         return DocType.values();
     }
 
-    public DisplayStyle[] getStyles() {
+    public ListDisplayStyle[] getStyles() {
         return DisplayStyle.values();
     }
 
