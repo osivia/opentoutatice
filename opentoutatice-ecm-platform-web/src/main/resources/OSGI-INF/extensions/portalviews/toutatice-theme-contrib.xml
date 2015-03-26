@@ -23,6 +23,9 @@
 			<view id="/toutatice_edit_document.xhtml">
 				<theme>toutatice/popup</theme>
 			</view>
+			<view id="/toutatice_view_document.xhtml">
+				<theme>toutatice/popup</theme>
+			</view>
 			<view id="/toutatice_create_document.xhtml">
 				<theme>toutatice/popup</theme>
 			</view>
