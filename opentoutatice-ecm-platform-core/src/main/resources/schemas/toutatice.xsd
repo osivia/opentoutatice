@@ -66,4 +66,5 @@
   <xs:element name="theme" type="xs:string"/>
   <xs:element name="editorialTitle" type="xs:string"/>
   <xs:element name="abstract" type="xs:string"/>
+  <xs:element name="useES" type="xs:boolean" default="false" />
 </xs:schema>
