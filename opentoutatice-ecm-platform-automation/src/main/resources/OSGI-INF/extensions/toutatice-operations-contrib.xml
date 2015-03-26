@@ -36,8 +36,6 @@
     
     <operation class="fr.toutatice.ecm.platform.infos.FetchExtendedDocumentInfos" />
     
-    <operation class="fr.toutatice.ecm.platform.automation.providers.ToutaticePageProvider" />
-    
 	<operation class="fr.toutatice.ecm.platform.automation.workflows.OperateWFProcess" />
 	<operation class="fr.toutatice.ecm.platform.automation.workflows.StartWFProcess" />
 	<operation class="fr.toutatice.ecm.platform.automation.workflows.StopWFProcess" />
