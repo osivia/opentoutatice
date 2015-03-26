@@ -144,6 +144,9 @@
 					<widget>toutatice_widget_page_scope</widget>
 				</row>
 				<row>
+                    <widget>toutatice_widget_use_es</widget>
+                </row>
+				<row>
 					<widget>toutatice_widget_contextualize_internal_contents</widget>
 				</row>
 				<row>

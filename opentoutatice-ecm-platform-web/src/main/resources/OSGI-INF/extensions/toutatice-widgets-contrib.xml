@@ -211,6 +211,26 @@
 				</mode>
 			</widgetModes>
 		</widget>
+        
+        <widget name="toutatice_widget_use_es" type="template">
+            <labels>
+                <label mode="any">toutatice.label.use.es</label>
+            </labels>
+            <translated>true</translated>
+            <fields>
+                <field>ttc:useES</field>
+            </fields>
+            <properties widgetMode="edit">
+                <property name="template">/widgets/toutatice_checkbox.xhtml</property>
+                <property name="title">toutatice.title.use.es</property>
+            </properties>
+            <widgetModes>
+                <mode value="view">hidden</mode>
+                <mode value="any">#{nxu:test(currentDocument.type == 'PortalSite',
+                    layout.mode, 'hidden')}
+                </mode>
+            </widgetModes>
+        </widget>
 
 		<!-- Deprecated since 2.0.0: use Config object of "Page theme" type instead 
 			Keep for compatibility -->
