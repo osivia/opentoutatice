@@ -40,6 +40,7 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
+import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
 
 @Operation(id = FetchCommentsOfDocument.ID, category = Constants.CAT_FETCH, label = "FetchCommentsOfDocument", description = "Fetches comments of a (commentable) document")
@@ -84,7 +85,7 @@ public class FetchCommentsOfDocument {
 				jsonCommentRoot.element("creationDate", commentRoot.getProperty(schemaPrefix, "creationDate"));
 				jsonCommentRoot.element("content", commentRoot.getProperty(schemaPrefix, "text"));
 				jsonCommentRoot.element("modifiedDate", commentRoot.getProperty("dublincore", "modified"));
-				boolean canDelete = canDeleteComment(author);
+				boolean canDelete = canDeleteComment(author, document);
 				jsonCommentRoot.element("canDelete", canDelete);
 				if(AddComment.THREAD_TYPE.equals(document.getType())){
 				    jsonCommentRoot.element("title", commentRoot.getProperty(schemaPrefix, "title"));
@@ -118,7 +119,7 @@ public class FetchCommentsOfDocument {
 				jsonChildComment.element("creationDate", childComment.getProperty(schemaPrefix, "creationDate"));
 				jsonChildComment.element("content", childComment.getProperty(schemaPrefix, "text"));
 				jsonChildComment.element("modifiedDate", childComment.getProperty("dublincore", "modified"));
-				boolean canDelete = canDeleteComment(author);
+				boolean canDelete = canDeleteComment(author, document);
 				jsonChildComment.element("canDelete", canDelete);
 				if(AddComment.THREAD_TYPE.equals(document.getType())){
 				    jsonChildComment.element("title", childComment.getProperty(schemaPrefix, "title"));
@@ -140,13 +141,14 @@ public class FetchCommentsOfDocument {
 		return new StringBlob(json.toString(), "application/json");
 	}
 
-	private boolean canDeleteComment(String author) {
+	private boolean canDeleteComment(String author, DocumentModel document) {
 		boolean canDelete = false;
 		Principal user = session.getPrincipal();
 		if (user != null) {
 			boolean isUserAuthor = user.getName().equals(author);
 			boolean isUserAdmin = ((NuxeoPrincipal) user).isAdministrator();
-			canDelete = isUserAuthor || isUserAdmin;
+			boolean userHasAllRights = session.hasPermission(document.getRef(), SecurityConstants.EVERYTHING);
+			canDelete = isUserAuthor || isUserAdmin || userHasAllRights;
 		}
 		return canDelete;
 	}

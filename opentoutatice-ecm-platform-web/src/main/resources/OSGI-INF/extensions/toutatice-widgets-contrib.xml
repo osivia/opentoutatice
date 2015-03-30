@@ -226,7 +226,27 @@
             </properties>
             <widgetModes>
                 <mode value="view">hidden</mode>
-                <mode value="any">#{nxu:test(currentDocument.type == 'PortalSite',
+                <mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace'),
+                    layout.mode, 'hidden')}
+                </mode>
+            </widgetModes>
+        </widget>
+        
+        <widget name="toutatice_widget_space_comments" type="template">
+            <labels>
+                <label mode="any">toutatice.label.space.comments </label>
+            </labels>
+            <translated>true</translated>
+            <fields>
+                <field>ttcs:spaceCommentable</field>
+            </fields>
+            <properties widgetMode="edit">
+                <property name="template">/widgets/toutatice_checkbox.xhtml</property>
+                <property name="title">toutatice.title.space.comments </property>
+            </properties>
+            <widgetModes>
+                <mode value="view">hidden</mode>
+                <mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace'),
                     layout.mode, 'hidden')}
                 </mode>
             </widgetModes>

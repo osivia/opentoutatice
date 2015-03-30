@@ -28,7 +28,9 @@ targetNamespace="http://www.nuxeo.org/ecm/project/schemas/ACRENNES2/toutatice-sp
   <xs:simpleType name="booleanList"> 
     <xs:list itemType="xs:boolean"/> 
   </xs:simpleType>  
+  
   <xs:element name="hasWebIdEnabled" type="xs:boolean" default="false"/>
+  <xs:element name="spaceCommentable" type="xs:boolean" default="true" />
   
   <xs:element name="lstPublicAuth" type="nxs:lstPublicAuthtype"/>
 		
