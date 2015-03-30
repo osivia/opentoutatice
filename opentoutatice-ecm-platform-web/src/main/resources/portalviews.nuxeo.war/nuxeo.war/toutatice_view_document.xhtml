@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<nxthemes:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:nxthemes="http://nuxeo.org/nxthemes"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:nxh="http://nuxeo.org/nxweb/html"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
+	xmlns:nxd="http://nuxeo.org/nxweb/document">
+
+	<ui:define name="header_scripts">
+		<script src="#{baseURL}scripts/bootstrap/bootstrap-nx-widgets.js"></script>
+		<script src="#{baseURL}tinymce/ottc_tiny_mce_responsive_init.js"></script>
+		<script type="text/javascript"
+            src="#{baseURL}tinymce/custom-init-tinymce.js"></script>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<div class="container">
+
+			<div class="form-group">
+				<h3>
+					<h:outputText
+						value="#{messages['toutatice.views.edit.title']} '#{currentDocument.title}'" />
+				</h3>
+			</div>
+
+			<ui:include src="/incl/pv_message_banner.xhtml" />
+
+			<h:form enctype="multipart/form-data" id="document_edit"
+				class="form form-horizontal" role="form">
+
+				<nxl:documentLayout mode="view" value="#{currentDocument}"
+					template="/layouts/toutatice_div_layout_edit.xhtml" />
+
+
+				<h:inputHidden name="fromUrl" value="#{pageBean.fromUrl}" />
+
+			</h:form>
+
+			<div class="pv-footer"></div>
+		</div>
+	</ui:define>
+
+</nxthemes:composition>
