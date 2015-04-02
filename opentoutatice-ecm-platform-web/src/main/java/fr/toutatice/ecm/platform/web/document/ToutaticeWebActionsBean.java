@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.ScopeType;
@@ -72,34 +73,45 @@ public class ToutaticeWebActionsBean extends WebActionsBean {
 	}
 
 	/**
-	 * Cette méthode est surdéfinie afin de permettre la présentation conditionnelle de certaines actions de la catégorie "Document list Toolbar"
-	 * (ex: les actions de la catégorie "CURRENT_SELECTION_SECTIONS_LIST")
-	 * 
-	 * Les actions de mise en ligne et hors ligne doivent apparaître seulement si le conteneur se trouve dans un espace de type "web container".
-	 * Par défaut, l'implémentation Nuxeo ne permet pas d'afficher de façon conditionnelle une action sur le résultat d'un filtre ou évaluation
-	 * d'une méthode de bean seam.
-	 * 
-	 * Mécanisme:
-	 * 
-	 * @see org.nuxeo.ecm.webapp.action.WebActionsBean#getUnfiltredActionsList(java.lang.String, org.nuxeo.ecm.platform.actions.ActionContext)
-	 */
+     * Cette méthode est surdéfinie afin de permettre la présentation conditionnelle de certaines actions de la catégorie "Document list Toolbar"
+     * (ex: les actions de la catégorie "CURRENT_SELECTION_SECTIONS_LIST")
+     * 
+     * Les actions de mise en ligne et hors ligne doivent apparaître seulement si le conteneur se trouve dans un espace de type "web container".
+     * Par défaut, l'implémentation Nuxeo ne permet pas d'afficher de façon conditionnelle une action sur le résultat d'un filtre ou évaluation
+     * d'une méthode de bean seam.
+     * 
+     * Mécanisme:
+     * 
+     * @see org.nuxeo.ecm.webapp.action.WebActionsBean#getUnfiltredActionsList(java.lang.String, org.nuxeo.ecm.platform.actions.ActionContext)
+     */
 	@Override
-	public List<Action> getUnfiltredActionsList(String category, ActionContext context) {
+    public List<Action> getActionsList(String category, ActionContext context, boolean hideUnavailableAction) {
         List<Action> list = new ArrayList<Action>();
-        
-        List<Action> actions = actionManager.getActions(category, context, false);
-        for (Action action : actions) {
-        	if (action.getId().matches(CST_CONDITIONAL_ACTION_PATTERN)) {
-        		if (isConditionalActionEnabled(context, action)) {
-        			list.add(action);
-        		}
-        	} else {
-        		list.add(action);
-        	}
+        List<String> categories = new ArrayList<String>();
+        if (category != null) {
+            String[] split = category.split(",|\\s");
+            if (split != null) {
+                for (String item : split) {
+                    if (!StringUtils.isBlank(item)) {
+                        categories.add(item.trim());
+                    }
+                }
+            }
         }
-        
+        for (String cat : categories) {
+            List<Action> actions = actionManager.getActions(cat, context, hideUnavailableAction);
+            for (Action action : actions) {
+                if (action.getId().matches(CST_CONDITIONAL_ACTION_PATTERN)) {
+                    if (isConditionalActionEnabled(context, action)) {
+                        list.add(action);
+                    }
+                } else {
+                    list.add(action);
+                }
+            }
+        }
         return list;
-	}
+    }
 	
 	private boolean isConditionalActionEnabled(ActionContext context, Action action) {
 		// extraire le nom de l'action virtuelle/conditionnelle associée à l'action courante
