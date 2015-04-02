@@ -28,7 +28,8 @@
                     
                     <c:choose>
                         <c:when test="#{widget.type == 'layout'}">
-                            <nxl:layout name="#{widget.properties.name}" mode="edit"
+                             <c:set var="lMode" value="#{nxu:test(not empty widget.properties.mode, widget.properties.mode, widget.mode)}" />
+                            <nxl:layout name="#{widget.properties.name}" mode="#{lMode}"
                                 template="/layouts/toutatice_div_layout_edit.xhtml"
                                 value="#{value}" />
                         </c:when>
