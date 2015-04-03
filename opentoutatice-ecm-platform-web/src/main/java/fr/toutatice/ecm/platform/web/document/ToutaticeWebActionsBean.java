@@ -34,9 +34,11 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
+import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.actions.Action;
 import org.nuxeo.ecm.platform.actions.ActionContext;
+import org.nuxeo.ecm.platform.ui.web.directory.DirectoryHelper;
 import org.nuxeo.ecm.webapp.action.WebActionsBean;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
 import org.nuxeo.runtime.api.Framework;
@@ -172,4 +174,32 @@ public class ToutaticeWebActionsBean extends WebActionsBean {
         return widgetsAdapterService.isInPortalViewContext();
     }
 	
+    /**
+     * 
+     * 
+     * @param key
+     * @param directories
+     * @return 
+     */
+    public String getLabel(String key,String... directories)  throws ClientException {
+    	StringBuilder entryLabel = new StringBuilder();
+    	String[]subKeys = key.split("/");
+    	int nbSubKey =subKeys.length;
+    	if(nbSubKey>directories.length){
+    		throw new ClientException("The number of directories is not compatible with the number of key.");
+    	}
+    	for (int i=0; i<nbSubKey; i++) {
+    		DocumentModel entry = DirectoryHelper.getEntry(directories[i], subKeys[i]);
+    		if(entry!=null){    			    			
+    			String schemaName = DirectoryHelper.getDirectoryService().getDirectorySchema(directories[0]);
+    			entryLabel.append( (String) entry.getProperty(schemaName, "label") );
+    		}
+        	if(i<nbSubKey-1){
+        		entryLabel.append(" / ");
+        	}
+		}
+    	
+    	
+    	return entryLabel.toString();
+    }
 }
