@@ -65,6 +65,11 @@ public class FetchExtendedDocumentInfos {
     @Param(name = "webid", required = false)
     protected String webid;
     
+    @Param(name = "navigationPath", required = false)
+    protected String navigationPath;
+    
+    @Param(name = "displayLiveVersion", required = false)
+    protected String displayLiveVersion;
     
     @OperationMethod
     public Blob run() throws Exception {
@@ -73,7 +78,7 @@ public class FetchExtendedDocumentInfos {
         JSONObject docInfos = new JSONObject();
         
         if(StringUtils.isNotBlank(webid)){
-            document = WebIdResolver.getDocumentByWebId(session, webid);
+            document = WebIdResolver.getDocumentByWebId(session, webid, navigationPath, displayLiveVersion);
         }
         
         FetchInformationsService fetchInfosService = Framework.getService(FetchInformationsService.class);

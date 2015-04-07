@@ -131,7 +131,12 @@ public class FetchPublicationInfos {
 
     @Param(name = "webid", required = false)
     protected String webid;
+    
+    @Param(name = "navigationPath", required = false)
+    protected String navigationPath;
 
+    @Param(name = "displayLiveVersion", required = false)
+    protected String displayLiveVersion;
 
     @OperationMethod
     public Object run() throws Exception {
@@ -148,7 +153,7 @@ public class FetchPublicationInfos {
 
         // Si on passe non pas un docRef en entrée mais un webId :
         if(StringUtils.isNotBlank(webid)){
-            document = WebIdResolver.getDocumentByWebId(coreSession, webid);
+            document = WebIdResolver.getDocumentByWebId(coreSession, webid, navigationPath, displayLiveVersion);
         }
 
         /*
@@ -192,14 +197,15 @@ public class FetchPublicationInfos {
             infosPubli.element("canUserValidate", canUserValidate);
 
             /*
-             * Récupération du path du document - cas où un uuid est donné en
+             * Récupération du path du document - cas où un uuid ou un webId est donné en
              * entrée
              */
             String livePath = liveDoc.getPathAsString();
             String docPath = document.getPath().toString();
             String path = docPath;
-            if (docPath.endsWith(TOUTATICE_PUBLI_SUFFIX) && docPath.equals(livePath + TOUTATICE_PUBLI_SUFFIX))
+            if (docPath.endsWith(TOUTATICE_PUBLI_SUFFIX) && docPath.equals(livePath + TOUTATICE_PUBLI_SUFFIX)){
                 path = livePath;
+            }
             infosPubli.element("documentPath", URLEncoder.encode(path, "UTF-8"));
 
             /* Indique une modification du live depuis la dernière publication du proxy */
