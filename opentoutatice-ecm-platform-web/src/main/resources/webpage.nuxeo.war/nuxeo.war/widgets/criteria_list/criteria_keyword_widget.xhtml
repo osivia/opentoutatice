@@ -16,7 +16,7 @@
 							id="#{widget.id}_addKeyWord"
 							action="#{bean.addKeyWord(keyWordProperty, index)}"
 							render="#{widget.id}_keywords_select" styleClass="btn btn-default"
-							title="#{messages[toutatice.label.add.keyword]}">
+							title="#{messages[toutatice.label.add.keyword]}" limitRender="true">
 							<i class="glyphicons halflings plus"></i>
 						</a4j:commandLink>
 					</span>
@@ -33,7 +33,7 @@
 								<span class="input-group-btn"> <a4j:commandLink
 										id="#{widget.id}_keyWord_delete"
 										action="#{bean.removeKeyWord(keyWordProperty, index)}"
-										styleClass="btn btn-default">
+										styleClass="btn btn-default" limitRender="true">
 										<f:param name="keyWordToDel" value="#{keyWord}" />
 										<i class="glyphicons halflings remove"></i>
 									</a4j:commandLink>

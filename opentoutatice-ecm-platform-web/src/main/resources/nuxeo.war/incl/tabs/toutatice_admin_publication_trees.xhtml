@@ -52,7 +52,7 @@
 												<a4j:commandLink immediate="true"
 													rendered="#{canAddSection}"
 													action="#{adminPublishActions.addSection(node.document.id)}"
-													render="sectionList">
+													render="sectionList" limitRender="true">
 													<h:graphicImage value="/icons/back.png" />
 													<h:outputText
 														value="#{messages['label.publish.add.section']}" />

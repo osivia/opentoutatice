@@ -43,7 +43,8 @@
 										<a4j:commandLink id="#{widget.id}_btSwitchok" 
 											immediate="true"
 											render="#{widget.id}_editselect"
-											actionListener="#{documentActions.setIsSwitchState('false', 'ttc:theme')}">
+											actionListener="#{documentActions.setIsSwitchState('false', 'ttc:theme')}"
+											limitRender="true">
 											<h:graphicImage url="/icons/toggle_plus.png" />
 											<h:outputText value="#{messages['toutatice.action.edit.set.theme']}" />
 										</a4j:commandLink>
@@ -53,7 +54,8 @@
 										<a4j:commandLink id="#{widget.id}_btSwitchok" 
 											immediate="true"
 											render="#{widget.id}_editselect"
-											actionListener="#{documentActions.setIsSwitchState('true', 'ttc:theme')}">
+											actionListener="#{documentActions.setIsSwitchState('true', 'ttc:theme')}"
+											limitRender="true">
 											<h:graphicImage url="/icons/toggle_minus.png" />
 											<h:outputText value="#{messages['toutatice.action.edit.unset.theme']}" />
 										</a4j:commandLink>

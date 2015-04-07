@@ -132,7 +132,8 @@
 											items="#{editorImageActions.searchImageResults}">
 										<div class="col-xs-3 col-md-3">
 											<div class="picture">
-												<a4j:commandLink href="#" class="thumbnail" render="feedback" onclick="selectedPictureUrl = '#{nxd:fileUrl('downloadPicture', document, editorImageActions.imageProperty, currentDocument.dublincore.modified)}'"> 
+												<a4j:commandLink href="#" class="thumbnail" render="feedback" onclick="selectedPictureUrl = '#{nxd:fileUrl('downloadPicture', document, editorImageActions.imageProperty, currentDocument.dublincore.modified)}'"
+												limitRender="true"> 
 												<h:graphicImage
 															value="#{oh:preferredImgUrl('downloadPicture', document, 'Thumbnail:content', currentDocument.dublincore.modified)}" />
 												</a4j:commandLink>

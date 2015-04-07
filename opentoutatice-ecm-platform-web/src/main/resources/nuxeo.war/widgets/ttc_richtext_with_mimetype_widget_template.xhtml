@@ -98,7 +98,8 @@
 	      <a4j:commandButton value="#{messages['label.fullscreen.toggle']}"
 	        onclick="return toggleFullscreen(this);" styleClass="button"
 	        id="#{widget.id}_fancybox"
-	        style="#{disableHtmlInit?'display: none;':''}" type="button" />
+	        style="#{disableHtmlInit?'display: none;':''}" type="button" 
+	        limitRender="true"/>
         </c:if>
     </nxu:valueHolder>
 
