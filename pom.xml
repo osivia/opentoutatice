@@ -5,7 +5,7 @@
 
     <groupId>opentoutatice-ecm.platform</groupId>
     <artifactId>opentoutatice-ecm-platform-parent</artifactId>
-    <version>3.0.0-RC17-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>open toutatice plate-forme</name>
 
@@ -20,7 +20,7 @@
     </modules>
 
     <properties>
-        <nuxeo.version>6.0-HF06</nuxeo.version>
+        <nuxeo.version>6.0-HF08</nuxeo.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
