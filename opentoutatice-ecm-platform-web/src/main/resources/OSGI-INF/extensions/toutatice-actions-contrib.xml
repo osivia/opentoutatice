@@ -14,7 +14,26 @@
 			<category>VIEW_ACTION_LIST</category>
 			<filter-id>filter@TTC_TAB_FOLDERISH_VIEW</filter-id>
 		</action>
+		
+		<!-- Configuration of Publish Spaces (comments, ...) for non "super administrators -->
+		<action id="ATAB_TOUTATICE_PUBLISH_SPACE_CONFIG" label="toutatice.label.space.config"
+            order="150" link="/incl/tabs/toutatice_sub_admin_config_publication_space.xhtml">
+            <category>TAB_MANAGE_sub_tab</category>
+            <filter-id>not_version</filter-id>
+            <filter-id>facetTTCPublishSpace</filter-id>                 
+        </action>
 
 	</extension>
+	
+	   <extension target="org.nuxeo.ecm.platform.actions.ActionService"
+        point="filters">
+
+        <filter id="facetTTCPublishSpace">
+            <rule grant="true">
+                <facet>TTCPublishSpace</facet>
+            </rule>
+        </filter>   
+        
+    </extension>
 
 </component>

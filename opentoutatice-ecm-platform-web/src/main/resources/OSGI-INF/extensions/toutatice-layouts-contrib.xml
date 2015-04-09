@@ -71,9 +71,6 @@
 				<row>
 					<widget>content</widget>
 				</row>
-				<!--<row>
-                    <widget>toutatice_widget_space_comments</widget>
-                </row>-->
 			</rows>
 		</layout>
 
@@ -198,6 +195,21 @@
 				</row>
 			</rows>
 		</layout>
+		
+		
+		<!-- layout : metadata for publish space confiuration and non super Administrators -->
+        <layout name="toutatice_sub_metadata_publish_space_config">
+            <templates>
+                <template mode="any">/layouts/toutatice_layout_default_template.xhtml
+                </template>
+            </templates>
+            <rows>
+                <row>
+                    <widget>toutatice_widget_space_comments</widget>
+                </row>
+            </rows>
+        </layout>
+
 
 		<layout name="keywords">
 			<templates>
