@@ -24,7 +24,7 @@
 				<property name="required">false</property>
 			</properties>
 			<widgetModes>
-				<mode value="any">#{nxu:test(currentDocument.type == 'PortalSite'
+				<mode value="any">#{nxu:test((currentDocument.type == 'PortalSite' or currentDocument.type == 'Workspace')
 					and (currentUser.administrator or
 					currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
 					'hidden')}
