@@ -101,6 +101,10 @@
 			<schema name="toutatice_domain" />
 		</doctype>
 		
+		<doctype name="Workspace" append="true">
+            <schema name="toutatice_navigation" />
+        </doctype>
+		
 	</extension>
 	
 	<extension target="org.nuxeo.ecm.platform.types.TypeService"

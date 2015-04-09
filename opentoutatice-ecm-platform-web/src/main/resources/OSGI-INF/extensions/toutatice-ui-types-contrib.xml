@@ -97,6 +97,17 @@
 			</contentViews>
 		</type>
 
+		<type id="Workspace">
+			<layouts mode="any">
+				<layout>heading</layout>
+				<layout>layout@picture</layout>
+			</layouts>
+			<layouts mode="edit">
+				<layout>heading</layout>
+				<layout>layout@picture</layout>
+			</layouts>
+		</type>
+
 	</extension>
 
 
