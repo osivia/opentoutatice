@@ -17,10 +17,10 @@
                     <tr>
                       <td style="background-color:#fff;padding:8px 20px;"><br/>
                         <p style="margin:0;font-size:14px;">
-                        Une t&agrave;che sur le document <a style="color:#22aee8;text-decoration:underline;word-wrap:break-word !important;" href="${docUrl}">${htmlEscape(docTitle)}</a> <strong>vous a &eacute;t&eacute; assign&eacute;</strong> ou au groupe auquel vous appartenez.
+                        Une t&acirc;che sur le document <a style="color:#22aee8;text-decoration:underline;word-wrap:break-word !important;" href="${docUrl}">${htmlEscape(docTitle)}</a> <strong>vous a &eacute;t&eacute; assign&eacute;e</strong> ou au groupe auquel vous appartenez.
                         </p><br/>
                         <p style="margin:0;font-size:13px;">
-                          <a style="color:#22aee8;text-decoration:underline;word-wrap:break-word !important;" href="${docUrl}">&#187; Voir la t&agrave;che sur ${htmlEscape(docTitle)}</a>
+                          <a style="color:#22aee8;text-decoration:underline;word-wrap:break-word !important;" href="${docUrl}">&#187; Voir la t&acirc;che sur ${htmlEscape(docTitle)}</a>
                         </p><br/>
                      </td>
                     </tr>
