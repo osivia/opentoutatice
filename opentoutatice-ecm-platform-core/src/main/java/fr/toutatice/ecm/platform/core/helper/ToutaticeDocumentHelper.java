@@ -841,7 +841,8 @@ public class ToutaticeDocumentHelper {
 		if ("*".equals(aclName)) {
 			aclList = acp.getACLs();
 		} else {
-			aclList = acp.getACL(aclName).toArray(new ACL[1]);			
+			ACL acl = acp.getACL(aclName);
+			aclList = (null != acl) ? acl.toArray(new ACL[1]) : new ACLImpl().toArray(new ACL[1]);			
 		}
 		
 		for (ACL acl : aclList) {
