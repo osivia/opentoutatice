@@ -93,16 +93,25 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
         return null;
     }
 
-    public Task getValidateTask() throws ClientException {
+    public Task getValidateTask(String wfName) throws ClientException {
         Task validate = null;
-        List<Task> currentRouteAllTasks = getCurrentRouteAllTasks();
-        Iterator<Task> iterator = currentRouteAllTasks.iterator();
-        while (iterator.hasNext() && validate == null) {
-            Task task = iterator.next();
-            if (ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE.equalsIgnoreCase(task.getName())) {
-                validate = task;
+
+        String taskName = StringUtils.EMPTY;
+        if (ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE.equals(wfName)) {
+            taskName = ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE;
+        }
+
+        if (StringUtils.isNotBlank(taskName)) {
+            List<Task> currentRouteAllTasks = getCurrentRouteAllTasks();
+            Iterator<Task> iterator = currentRouteAllTasks.iterator();
+            while (iterator.hasNext() && validate == null) {
+                Task task = iterator.next();
+                if (taskName.equalsIgnoreCase(task.getName())) {
+                    validate = task;
+                }
             }
         }
+
         return validate;
     }
 
@@ -238,7 +247,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
         }
         DocumentRoute route = getRunningWorkflowByName(routes, wfName);
 
-        Task validateTask = getValidateTask();
+        Task validateTask = getValidateTask(wfName);
         DocumentModel currentDoc = navigationContext.getCurrentDocument();
         ToutaticeWorkflowHelper.notifyRecipients(documentManager, validateTask, currentDoc, null, ToutaticeGlobalConst.CST_EVENT_ONLINE_WF_CANCELED);
 
