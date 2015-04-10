@@ -832,12 +832,19 @@ public class ToutaticeDocumentHelper {
 	public static ACL getDocumentACL(CoreSession session, DocumentModel doc,String aclName, ToutaticeFilter<ACE> filter) throws ClientException{
 		ACL res = new ACLImpl();
 			
-		if (aclName==null){
+		if (StringUtils.isBlank(aclName)) {
 			aclName=ACL.LOCAL_ACL;
-		}		
+		}
 		    			
-		ACP acp = doc.getACP();		
-		for (ACL acl : acp.getACLs()) {
+		ACP acp = doc.getACP();
+		ACL[] aclList;
+		if ("*".equals(aclName)) {
+			aclList = acp.getACLs();
+		} else {
+			aclList = acp.getACL(aclName).toArray(new ACL[1]);			
+		}
+		
+		for (ACL acl : aclList) {
 			for (ACE ace : acl.getACEs()) {
 				if (filter==null || filter.accept(ace)) {
 					// ajouter les permissions au document doc
@@ -845,6 +852,7 @@ public class ToutaticeDocumentHelper {
 				}
 			}		       
 		}
+		
 		return res;
 	}
 	
