@@ -837,21 +837,26 @@ public class ToutaticeDocumentHelper {
 		}
 		    			
 		ACP acp = doc.getACP();
-		ACL[] aclList;
+		ACL[] aclList = null;
 		if ("*".equals(aclName)) {
 			aclList = acp.getACLs();
 		} else {
 			ACL acl = acp.getACL(aclName);
-			aclList = (null != acl) ? acl.toArray(new ACL[1]) : res.toArray(new ACL[1]);
+			if (null != acl) {
+				aclList = new ACLImpl[1];
+				aclList[0] = acl;
+			}
 		}
 		
-		for (ACL acl : aclList) {
-			for (ACE ace : acl.getACEs()) {
-				if (filter==null || filter.accept(ace)) {
-					// ajouter les permissions au document doc
-					res.add(ace);
-				}
-			}		       
+		if (null != aclList) {
+			for (ACL acl : aclList) {
+				for (ACE ace : acl.getACEs()) {
+					if (filter==null || filter.accept(ace)) {
+						// ajouter les permissions au document doc
+						res.add(ace);
+					}
+				}		       
+			}
 		}
 		
 		return res;
