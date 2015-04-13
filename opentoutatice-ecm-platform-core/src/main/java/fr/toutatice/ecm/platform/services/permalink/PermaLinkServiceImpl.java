@@ -21,6 +21,7 @@ package fr.toutatice.ecm.platform.services.permalink;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -98,6 +99,22 @@ public class PermaLinkServiceImpl extends DefaultComponent implements
 		}
 
 		return defaultPermalinkName;
+	}
+	
+	/**
+	 * Return the portal host.
+	 */
+	public String getPortalHost(){
+	    String permalinkName = getDefaultPermalinkName();
+	    PermalinkDescriptor desc = descriptors.get(permalinkName);
+	    
+	    if (desc == null){
+            log.warn("No permaLink contribution");
+            return StringUtils.EMPTY;
+        }
+	    
+	    return desc.getHostServer();
+	    
 	}
 
 	@Override

@@ -20,6 +20,7 @@ package fr.toutatice.ecm.platform.core.freemarker;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.nuxeo.ecm.automation.features.PlatformFunctions;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -83,6 +84,26 @@ public class ToutaticeFunctions extends PlatformFunctions {
 		}
 		// sinon return null
 		return url;
+	}
+	
+	public String getPortalHost(DocumentModel doc){
+	    String host = StringUtils.EMPTY;
+	    
+	    if (ToutaticeDocumentHelper.isVisibleInPortal(doc, doc.getCoreSession())) {
+	        
+	        if (null == permaLinkService) {
+                try {
+                    permaLinkService = Framework.getService(PermaLinkService.class);
+                } catch (Exception e) {
+                    throw new WebException("Unable to get publicationService");
+                }
+            }
+	        
+	        host = permaLinkService.getPortalHost();
+	        
+	    }
+	    
+	    return host;
 	}
 
 	/**

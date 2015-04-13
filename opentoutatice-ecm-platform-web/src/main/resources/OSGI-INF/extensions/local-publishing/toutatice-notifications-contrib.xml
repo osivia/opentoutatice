@@ -9,7 +9,7 @@
 		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
 		point="notifications">
 
-		<!-- FIXME: désactivation dans les PortalSite aliors que la contrib native 
+		<!-- FIXME: désactivation dans les PortalSite alors que la contrib native 
 			(document routing) est: avalaibleIn=Workspace ... cependant, cette information 
 			ne semble pas être utilisée (pour les autoSubscribed="true"?): getInterstedUsers 
 			méthod of NotificationEventListener -->

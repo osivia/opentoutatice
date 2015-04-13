@@ -84,9 +84,14 @@ public class ToutaticeEmailHelper extends EmailHelper {
 		context.putAll(mail);
 		DocumentModel doc = (DocumentModel) mail.get("document");
 		context.setDocument(doc);
+		
+		ToutaticeFunctions fn = new ToutaticeFunctions();
+		context.put("portalHost", fn.getPortalHost(doc));
 
-		String link = (new ToutaticeFunctions()).getPermalink(doc);
+		String link = (fn.getPermalink(doc));
 		context.put("docPermalink", link);
+		
+		context.put("baseUrl", Framework.getProperty("nuxeo.url"));
 
 		context.put("creator", doc.getPropertyValue("dc:creator"));
 
