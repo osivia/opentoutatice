@@ -22,9 +22,10 @@
                 <c:set var="fileWidgetClass"
                     value="#{nxu:test((widget.type == 'file') or (widget.name == 'file') or (widget.name == 'files'),'fileWidget','')}" />
                 <c:set var="gridSize" value="#{nxu:test(widget.type == 'layout', 'col-sm-12', 'col-sm-10')}" />
+                <c:set var="gridOffSet" value="#{nxu:test(widget.properties.styleClass == 'layoutTitle', 'col-sm-offset-2', '')}" />
 
                 <div
-                    class="#{gridSize} ttc-form-control #{viewClass} #{fileWidgetClass}">
+                    class="#{gridSize} #{gridOffSet} ttc-form-control #{viewClass} #{fileWidgetClass}">
                     
                     <c:choose>
                         <c:when test="#{widget.type == 'layout'}">

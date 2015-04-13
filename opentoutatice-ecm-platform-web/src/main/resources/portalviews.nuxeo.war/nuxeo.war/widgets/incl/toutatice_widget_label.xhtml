@@ -19,7 +19,7 @@ Accepted parameters:
 			value="#{nxu:test(widget.translated, messages[widget.helpLabel], widget.helpLabel)}">
 
 			<c:choose>
-				<c:when test="#{widget.type == 'layout'}">
+				<c:when test="#{widget.type == 'layout' or widget.properties.styleClass == 'layoutTitle'}">
 					<div class="col-sm-12">
 						<fieldset>
 							<legend>
