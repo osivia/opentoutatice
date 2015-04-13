@@ -24,16 +24,11 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.lang.StringUtils;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.web.RequestParameter;
-import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 import org.richfaces.skin.Skin;
-import org.richfaces.skin.SkinBean;
 import org.richfaces.skin.SkinFactory;
-
-import fr.toutatice.ecm.platform.web.fragments.PageBean;
 
 /**
  * @author David Chevrier
