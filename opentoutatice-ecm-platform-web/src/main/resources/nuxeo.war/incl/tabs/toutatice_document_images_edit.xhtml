@@ -158,7 +158,7 @@
 								onclick="document.NXContextKeeper.removeFromKeeper(#{imageBean.index});"
 								oncomplete="document.NXContextKeeper.onReturnAnswer();"
 								actionListener="#{ImageManagerActions.performAction}"
-								render="images_input" bypassUpdates="true" limitRender="true">
+								render="images_input" bypassUpdates="true" limitRender="false">
 								<h:graphicImage value="/icons/action_tag_delete.png" />
 								<f:param name="index" value="#{imageBean.index}" />
 							</a4j:commandLink>
