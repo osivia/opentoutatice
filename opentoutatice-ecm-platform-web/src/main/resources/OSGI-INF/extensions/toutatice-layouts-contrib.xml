@@ -155,11 +155,6 @@
 				<row>
 					<widget>toutatice_widget_contextualize_external_contents</widget>
 				</row>
-				<!-- toutatice_widget_portal_theme deprecated since 2.0.0: use Config 
-					object of "Page theme" type instead Keep for compatibility -->
-				<row>
-					<widget>toutatice_widget_portal_theme</widget>
-				</row>
 				<row>
 					<widget>osivia_page_theme_widget</widget>
 				</row>
@@ -184,11 +179,6 @@
 				</row>
 				<row>
 					<widget>toutatice_widget_show_in_menu</widget>
-				</row>
-				<!-- toutatice_widget_portal_theme deprecated since 2.0.0: use Config 
-					object of "Page theme" type instead Keep for compatibility -->
-				<row>
-					<widget>toutatice_widget_portal_theme</widget>
 				</row>
 				<row>
 					<widget>osivia_page_theme_widget</widget>

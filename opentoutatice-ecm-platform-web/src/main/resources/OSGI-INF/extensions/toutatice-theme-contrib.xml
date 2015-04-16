@@ -20,9 +20,6 @@
 		<style name="images-tab">
 			<src>themes/css/images-tab.css</src>
 		</style>
-		<style name="flavors-configuration">
-			<src>themes/css/flavors-configuration.css</src>
-		</style>
 		<style name="opentoutatice">
 			<src>themes/css/opentoutatice.css</src>
 		</style>
