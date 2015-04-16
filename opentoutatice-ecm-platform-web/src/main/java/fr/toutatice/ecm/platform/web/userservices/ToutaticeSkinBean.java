@@ -27,8 +27,11 @@ import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.web.RequestParameter;
+import org.nuxeo.runtime.api.Framework;
 import org.richfaces.skin.Skin;
 import org.richfaces.skin.SkinFactory;
+
+import fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterService;
 
 /**
  * @author David Chevrier
@@ -37,7 +40,7 @@ import org.richfaces.skin.SkinFactory;
  *
  */
 @Name("skinBean")
-@Scope(ScopeType.SESSION)
+@Scope(ScopeType.CONVERSATION)
 public class ToutaticeSkinBean {
 	
 	public static String NO_SKIN = "plain";
@@ -45,20 +48,21 @@ public class ToutaticeSkinBean {
 	
 	private String skin;
 	
-	@RequestParameter("fromUrl")
-	private String requestedFromUrl;
-	
 	@Create
 	public void startUp() {
 		skin = getConfiguredSkin();
 	}
 
 	public String getSkin() {
-		String skinName = skin;
-		if(StringUtils.isNotBlank(requestedFromUrl)){
-			skinName = NO_SKIN;
+	    String conversationSkean = skin;
+	    
+	    WidgetsAdapterService widgetsAdapterService = Framework.getLocalService(WidgetsAdapterService.class);
+        boolean inPortalViewContext = widgetsAdapterService.isInPortalViewContext();
+        
+		if(inPortalViewContext){
+		    conversationSkean = NO_SKIN;
 		}
-		return skinName;
+		return conversationSkean;
 	}
 
 	public void setSkin(String skin) {
