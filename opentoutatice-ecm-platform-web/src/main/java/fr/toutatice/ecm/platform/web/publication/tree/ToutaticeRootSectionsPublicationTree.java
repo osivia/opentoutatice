@@ -19,29 +19,15 @@
 package fr.toutatice.ecm.platform.web.publication.tree;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.nuxeo.ecm.core.api.ClientException;
-import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
-import org.nuxeo.ecm.core.api.Filter;
-import org.nuxeo.ecm.core.api.LifeCycleConstants;
 import org.nuxeo.ecm.core.api.PathRef;
-import org.nuxeo.ecm.core.api.WrappedException;
-import org.nuxeo.ecm.core.api.impl.CompoundFilter;
-import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
-import org.nuxeo.ecm.core.api.impl.FacetFilter;
-import org.nuxeo.ecm.core.api.impl.LifeCycleFilter;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
-import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.platform.publisher.api.PublicationNode;
-import org.nuxeo.ecm.platform.publisher.api.PublishedDocumentFactory;
-import org.nuxeo.ecm.platform.publisher.impl.core.CoreFolderPublicationNode;
-import org.nuxeo.ecm.platform.publisher.impl.core.EmptyRoot;
 import org.nuxeo.ecm.platform.publisher.impl.core.RootSectionsPublicationTree;
 import org.nuxeo.ecm.platform.publisher.impl.core.VirtualCoreFolderPublicationNode;
 
@@ -113,10 +99,10 @@ public class ToutaticeRootSectionsPublicationTree extends RootSectionsPublicatio
             return false;
         }
         DocumentRef docRef = new PathRef(publicationNode.getPath());
-        boolean canRead = coreSession.hasPermission(docRef, CAN_ASK_FOR_PUBLISHING);
+        boolean canAsk = coreSession.hasPermission(docRef, CAN_ASK_FOR_PUBLISHING);
         DocumentModel document = coreSession.getDocument(docRef);
         boolean notSectionRoot = !SECTION_ROOT_TYPE.equals(document.getType());
-        return canRead && notSectionRoot;
+        return canAsk && notSectionRoot;
     }
 
 }
