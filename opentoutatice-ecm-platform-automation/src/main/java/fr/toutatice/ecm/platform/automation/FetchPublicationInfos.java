@@ -68,6 +68,7 @@ import org.nuxeo.ecm.platform.types.TypeManager;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 import org.nuxeo.runtime.api.Framework;
 
+import fr.toutatice.ecm.platform.automation.helper.WebIdResolver;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
@@ -137,7 +138,12 @@ public class FetchPublicationInfos {
 
     @Param(name = "webid", required = false)
     protected String webid;
+    
+    @Param(name = "navigationPath", required = false)
+    protected String navigationPath;
 
+    @Param(name = "displayLiveVersion", required = false)
+    protected String displayLiveVersion;
 
     @OperationMethod
     public Object run() throws Exception {
@@ -149,26 +155,8 @@ public class FetchPublicationInfos {
         List<Integer> errorsCodes = new ArrayList<Integer>();
 
         // Si on passe non pas un docRef en entrée mais un webId :
-        if (webid != null) {
-            // log.warn("webid : " + webid);
-
-            String[] segments = webid.split("/");
-            String domainIdSegment;
-            String webIdSegment;
-            if (segments.length >= 2) {
-                domainIdSegment = segments[0];
-                webIdSegment = segments[1];
-            } else {
-                throw new NoSuchDocumentException(webid);
-            }
-
-
-            UnrestrictedFecthWebIdRunner fecthWebIdRunner = new UnrestrictedFecthWebIdRunner(coreSession, domainIdSegment, webIdSegment);
-            fecthWebIdRunner.runUnrestricted();
-            document = fecthWebIdRunner.getDoc();
-            if (document == null) {
-                throw new NoSuchDocumentException(webid);
-            }
+        if(StringUtils.isNotBlank(webid)){
+            document = WebIdResolver.getDocumentByWebId(coreSession, webid, navigationPath, displayLiveVersion);
         }
 
         /*
