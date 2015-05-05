@@ -128,10 +128,6 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
             infos.put(TaskInfos.isTaskInitiator.name(), isUserTaskInitiator(coreSession, currentTask));
             infos.put(TaskInfos.canManageTask.name(), canUserManageTask(coreSession, currentTask, currentDocument, permission));
             
-            if(taskFound){
-                
-            }
-            
         }
         return infos;
     }
