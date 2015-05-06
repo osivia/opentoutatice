@@ -32,8 +32,10 @@ import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
 
 
 /**
@@ -51,19 +53,22 @@ public class WidgetsAdapterListener implements EventListener {
     @Override
     public void handleEvent(Event event) throws ClientException {
         if (event.getContext() instanceof DocumentEventContext) {
-            EventContext ctx = event.getContext();
-            DocumentEventContext docCtx = (DocumentEventContext) event.getContext();
-            DocumentModel document = docCtx.getSourceDocument();
-
             String eventName = event.getName();
-            CoreSession session = ctx.getCoreSession();
 
-            if (document != null && !document.isImmutable()) {
-                if (document.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TTC_EVENT)) {
-                    try {
-                        mergeDateNTime(document, session, eventName);
-                    } catch (ParseException e) {
-                        throw new ClientException(e);
+            if (DocumentEventTypes.DOCUMENT_CREATED.equals(eventName) || DocumentEventTypes.BEFORE_DOC_UPDATE.equals(eventName)) {
+
+                EventContext ctx = event.getContext();
+                DocumentEventContext docCtx = (DocumentEventContext) event.getContext();
+                DocumentModel document = docCtx.getSourceDocument();
+
+                CoreSession session = ctx.getCoreSession();
+
+                if (document != null && !document.isImmutable()) {
+                    if (document.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TTC_EVENT)) {
+
+                        TTCDateSilentMerger runner = new TTCDateSilentMerger(session, document, eventName);
+                        runner.silentRun(false);
+
                     }
                 }
             }
@@ -71,39 +76,73 @@ public class WidgetsAdapterListener implements EventListener {
 
     }
 
-    public void mergeDateNTime(DocumentModel document, CoreSession session, String eventName) throws ParseException {
-        boolean isChangeableDocument = DocumentEventTypes.DOCUMENT_CREATED.equals(eventName);
-        boolean toManage = false;
 
-        SimpleDateFormat format = new SimpleDateFormat(DATE_TIME_FORMAT);
+    private class TTCDateSilentMerger extends ToutaticeSilentProcessRunnerHelper {
 
-        String dateBegin = (String) document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TTC_EVT_DATE_BEGIN);
-        String timeBegin = (String) document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TTC_EVT_TIME_BEGIN);
-        if (StringUtils.isNotBlank(dateBegin)) {
-            if (StringUtils.isBlank(timeBegin)) {
-                timeBegin = DEFAULT_TIME;
+        private DocumentModel document;
+        private String eventName;
+
+        public TTCDateSilentMerger(CoreSession session, DocumentModel document, String eventName) {
+            super(session);
+            this.document = document;
+            this.eventName = eventName;
+        }
+
+
+        @Override
+        public void run() throws ClientException {
+            boolean isChangeableDocument = DocumentEventTypes.DOCUMENT_CREATED.equals(this.eventName); 
+            boolean toManage = false;
+
+            WidgetsAdapterService waService = Framework.getService(WidgetsAdapterService.class);
+            
+            if(waService.isInPortalViewContext()){
+                toManage = mergeTTCDatesFields(toManage);
+            } 
+            
+            if (isChangeableDocument && toManage) {
+                this.session.saveDocument(this.document);
             }
-            Date begin = format.parse(new StringBuffer(3).append(dateBegin).append(" ").append(timeBegin).toString());
-            document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TTC_EVT_DATE_TIME_BEGIN, begin);
-            toManage = true;
         }
 
-        String dateEnd = (String) document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TTC_EVT_DATE_END);
-        String timeEnd = (String) document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TTC_EVT_TIME_END);
-        if (StringUtils.isNotBlank(dateEnd)) {
-            if (StringUtils.isBlank(timeEnd)) {
-                timeEnd = DEFAULT_TIME;
+
+        private boolean mergeTTCDatesFields(boolean toManage) {
+            SimpleDateFormat format = new SimpleDateFormat(DATE_TIME_FORMAT);
+
+            String dateBegin = (String) this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TTC_EVT_DATE_BEGIN);
+            String timeBegin = (String) this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TTC_EVT_TIME_BEGIN);
+            if (StringUtils.isNotBlank(dateBegin)) {
+                if (StringUtils.isBlank(timeBegin)) {
+                    timeBegin = DEFAULT_TIME;
+                }
+                Date begin;
+                try {
+                    begin = format.parse(new StringBuffer(3).append(dateBegin).append(" ").append(timeBegin).toString());
+                } catch (ParseException e) {
+                    throw new ClientException(e);
+                }
+                this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TTC_EVT_DATE_TIME_BEGIN, begin);
+                toManage = true;
             }
-            Date end = format.parse(new StringBuffer(3).append(dateEnd).append(" ").append(timeEnd).toString());
-            document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TTC_EVT_DATE_TIME_END, end);
-            toManage = true;
-        }
 
-        if (toManage && isChangeableDocument) {
-            session.saveDocument(document);
+            String dateEnd = (String) this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TTC_EVT_DATE_END);
+            String timeEnd = (String) this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TTC_EVT_TIME_END);
+            if (StringUtils.isNotBlank(dateEnd)) {
+                if (StringUtils.isBlank(timeEnd)) {
+                    timeEnd = DEFAULT_TIME;
+                }
+                Date end;
+                try {
+                    end = format.parse(new StringBuffer(3).append(dateEnd).append(" ").append(timeEnd).toString());
+                } catch (ParseException e) {
+                    throw new ClientException(e);
+                }
+                this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TTC_EVT_DATE_TIME_END, end);
+                toManage = true;
+            }
+            return toManage;
         }
-
+        
     }
-
 
 }
