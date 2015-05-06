@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.services.lock.service">
+
+	<service>
+		<provide interface="fr.toutatice.ecm.platform.service.lock.ToutaticeLockService" />
+	</service>
+	
+	<implementation	class="fr.toutatice.ecm.platform.service.lock.ToutaticeLockServiceImpl" />
+	
+	
+</component>
