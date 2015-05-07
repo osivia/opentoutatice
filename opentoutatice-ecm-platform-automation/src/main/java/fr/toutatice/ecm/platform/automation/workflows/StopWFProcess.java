@@ -30,8 +30,11 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
 import org.nuxeo.ecm.platform.routing.core.api.DocumentRoutingEngineService;
+import org.nuxeo.ecm.platform.task.Task;
+import org.nuxeo.ecm.platform.task.TaskImpl;
 
 import fr.toutatice.ecm.platform.automation.exceptions.WorkflowManagmentException;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
 
 
@@ -46,11 +49,11 @@ public class StopWFProcess {
 
     @Context
     protected CoreSession documentManager;
-    
+
     @Context
     protected OperationContext context;
-    
-    @Context 
+
+    @Context
     protected transient AutomationService automationService;
 
     @Context
@@ -61,18 +64,37 @@ public class StopWFProcess {
 
     @OperationMethod()
     public void run(DocumentModel document) throws Exception {
-        
-//        Map<String, Object> params = new HashMap<String, Object>(1);
-//        params.put("id", inputWorkflowName);
-//        automationService.run(context, CancelWorkflowOperation.ID, params);
 
         DocumentRoute inputWorkflowRoute = ToutaticeWorkflowHelper.getWorkflowByName(inputWorkflowName, document);
         if (inputWorkflowRoute != null) {
+
+            Task currentTask = getCurrentTask(inputWorkflowName, documentManager, document);
+
             engineRoutingService.cancel(inputWorkflowRoute, documentManager);
+            
+            if(currentTask != null){
+                ToutaticeWorkflowHelper.notifyRecipients(documentManager, currentTask, document, null, ToutaticeGlobalConst.CST_EVENT_ONLINE_WF_CANCELED);
+            } else {
+                throw new WorkflowManagmentException("Workflow " + inputWorkflowName + " has no current task");
+            }
+
         } else {
             throw new WorkflowManagmentException("There is no " + inputWorkflowName + " workflow instance to cancel");
         }
 
+    }
+
+    /* Temporary: we must be generic: task as parameter? or ... no need for task? */
+    private Task getCurrentTask(String wfName, CoreSession session, DocumentModel document) {
+        Task currentTask = null;
+        
+        if (ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE.equals(wfName)) {
+
+            Task task = ToutaticeWorkflowHelper.getTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, session, document);
+            currentTask = new TaskImpl(task.getDocument());
+        }
+        
+        return currentTask;
     }
 
 }
