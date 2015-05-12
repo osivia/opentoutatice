@@ -15,13 +15,33 @@ nav {
 
 @picture-height: 100px;
 
+.text-middle {
+    
+}
+
 .pictures-list {
     .picture {
         position: relative;
         height: @picture-height + 2 * @thumbnail-padding + 2px;
         
+        p.indication {
+              color: #31708f;
+              font-size: 12px;
+              white-space: normal;
+                 
+              position: relative;
+              top: 50%;
+              .translate(@x: 0, @y: -50%);
+              
+              .fileinput-button input {
+                    height: 100%;
+                    width: 100%;
+              }
+         }
+        
         .thumbnail {
             position: absolute;
+            top: 0;
             bottom: 0;
             left: 0;
             right: 0;
@@ -32,6 +52,11 @@ nav {
                 max-height: @picture-height;
             }
         }
+        
+        a.dNd:active, a.DnD:hover {
+            text-decoration: none;
+        }
+        
     }
     
     p {
