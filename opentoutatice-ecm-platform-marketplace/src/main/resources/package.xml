@@ -4,12 +4,13 @@
 		<p>This addon implements the opened platform called Open Toutatice
 			(which one is based on the Nuxeo DM distribution)
 
-			Main evolutions:
-			* Initial version compliant with Nuxeo 6.0
-			* Global Web Configurations
-
-			Main fixes provided:
-			* None
+			Main features :
+			* Integration with nuxeo 6.0
+			* new bootstrap views for portal integration and from tinyMCE (insert a picture, insert a link).
+			* new fragment : criteria list, slider
+			* configuration objects can now be global (setted on a repository) or local to a domain 
+			* workspaces have now a tab order and a navigation visual
+			* new operation FetchExtendedInfos : split of fetch operation for structural and optionnal publication informations
 		</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
