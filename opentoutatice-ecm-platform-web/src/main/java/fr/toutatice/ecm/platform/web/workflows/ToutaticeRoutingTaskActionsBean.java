@@ -70,24 +70,23 @@ public class ToutaticeRoutingTaskActionsBean extends RoutingTaskActionsBean {
 	}
 
 	@Override
-	public String endTask(Task task) throws ClientException {
-		DocumentModel currentDoc = navigationContext.getCurrentDocument();
-		Task taskForNotif = new TaskImpl(task.getDocument());
-		String wfInitiator = getWorkFlowInitiator();
-		
-		super.endTask(task);
-		
-		if (isAcceptOnLineButtonCliked()) {
-			ToutaticeWorkflowHelper.notifyRecipients(documentManager, taskForNotif,
-					currentDoc, wfInitiator,
-					ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED);
-		} else {
-			ToutaticeWorkflowHelper.notifyRecipients(documentManager, taskForNotif,
-					currentDoc, wfInitiator,
-					ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_REJECTED);
-		}
-		
-		return MainTabsActions.DEFAULT_VIEW;
-	}
-
+    public String endTask(Task task) throws ClientException {
+        DocumentModel currentDoc = navigationContext.getCurrentDocument();
+        Task taskForNotif = new TaskImpl(task.getDocument());
+        String wfInitiator = getWorkFlowInitiator();
+        
+        String eventName;
+        if(isAcceptOnLineButtonCliked()){
+            eventName = ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED;
+        } else {
+            eventName = ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_REJECTED;
+        }
+        
+        super.endTask(task);
+        
+        ToutaticeWorkflowHelper.notifyRecipients(documentManager, taskForNotif,
+                    currentDoc, wfInitiator, eventName);
+        
+        return MainTabsActions.DEFAULT_VIEW;
+    }
 }
