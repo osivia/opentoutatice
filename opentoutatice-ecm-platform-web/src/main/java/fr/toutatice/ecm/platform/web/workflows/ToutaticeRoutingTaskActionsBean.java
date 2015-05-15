@@ -22,6 +22,9 @@ package fr.toutatice.ecm.platform.web.workflows;
 
 import static org.jboss.seam.ScopeType.CONVERSATION;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
@@ -48,6 +51,14 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
 public class ToutaticeRoutingTaskActionsBean extends RoutingTaskActionsBean {
 
 	private static final long serialVersionUID = -5854741772106895168L;
+	private static final List<String> TOUTATICE_WF_ACTIONS = new ArrayList<String>() {
+		private static final long serialVersionUID = 3710687789887853309L;
+		
+		{
+			add(ToutaticeGlobalConst.CST_WORKFLOW_BUTTON_ONLINE_ACCEPT);
+			add(ToutaticeGlobalConst.CST_WORKFLOW_BUTTON_ONLINE_REJECT);
+		}
+	};
 
 	@In
 	TaskService taskService;
@@ -55,15 +66,9 @@ public class ToutaticeRoutingTaskActionsBean extends RoutingTaskActionsBean {
 	@In(create = true)
 	ToutaticeDocumentRoutingActionsBean routingActions;
 	
-	public String getClickedButton(){
+	public String getClickedButton() {
 		return super.button;
 	}
-
-	public boolean isAcceptOnLineButtonCliked() {
-		return ToutaticeGlobalConst.CST_WORKFLOW_BUTTON_ONLINE_ACCEPT
-				.equalsIgnoreCase(super.button);
-	}
-	
 
 	public String getWorkFlowInitiator() throws ClientException {
 		return routingActions.getCurrentWorkflowInitiator();
@@ -71,22 +76,29 @@ public class ToutaticeRoutingTaskActionsBean extends RoutingTaskActionsBean {
 
 	@Override
     public String endTask(Task task) throws ClientException {
-        DocumentModel currentDoc = navigationContext.getCurrentDocument();
-        Task taskForNotif = new TaskImpl(task.getDocument());
-        String wfInitiator = getWorkFlowInitiator();
+		String view = MainTabsActions.DEFAULT_VIEW;
+		
+		if (TOUTATICE_WF_ACTIONS.contains(getClickedButton())) {
+			DocumentModel currentDoc = navigationContext.getCurrentDocument();
+			Task taskForNotif = new TaskImpl(task.getDocument());
+			String wfInitiator = getWorkFlowInitiator();
+			
+			String eventName;
+			if(ToutaticeGlobalConst.CST_WORKFLOW_BUTTON_ONLINE_ACCEPT.equalsIgnoreCase(getClickedButton())){
+				eventName = ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED;
+			} else {
+				eventName = ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_REJECTED;
+			}
+			
+			super.endTask(task);
+			
+			ToutaticeWorkflowHelper.notifyRecipients(documentManager, taskForNotif, currentDoc, wfInitiator, eventName);
+		} else {
+			//no-op. only forward processing to mother class
+			view = super.endTask(task);
+		}
         
-        String eventName;
-        if(isAcceptOnLineButtonCliked()){
-            eventName = ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED;
-        } else {
-            eventName = ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_REJECTED;
-        }
-        
-        super.endTask(task);
-        
-        ToutaticeWorkflowHelper.notifyRecipients(documentManager, taskForNotif,
-                    currentDoc, wfInitiator, eventName);
-        
-        return MainTabsActions.DEFAULT_VIEW;
+        return view;
     }
+	
 }
