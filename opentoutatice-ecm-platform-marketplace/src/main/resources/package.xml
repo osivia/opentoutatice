@@ -14,6 +14,7 @@
 
 	
 				Main fixes provided:
+			* asynchronous listeners executing "silent" code
 		</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
