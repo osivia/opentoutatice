@@ -5,7 +5,7 @@
 	<extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
 		point="listener">
 		
-		<listener name="toutaticeAsynchronousUpdateListener" async="true" postCommit="false"
+		<listener name="toutaticeAsynchronousUpdateListener" async="true" postCommit="true"
 			class="fr.toutatice.ecm.platform.core.listener.ToutaticeAsynchronousUpdateListener"
 			priority="100">
             <event>documentCreatedByCopy</event>
