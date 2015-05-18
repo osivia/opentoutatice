@@ -44,23 +44,19 @@ public class ToutaticeCoreProxyWithWorkflowFactory extends CoreProxyWithWorkflow
         PublishedDocument newPulishedDoc = null;
         DocumentModel newProxy = null;
         
-        if(doc.isProxy()){
-            
+        if (doc.isProxy()) {
             Map<DocumentModel, List<DocumentModel>> proxyComments = new HashMap<DocumentModel, List<DocumentModel>>();
             proxyComments.putAll(ToutaticeCommentsHelper.getProxyComments(doc));
             newPulishedDoc = super.publishDocument(doc, targetNode, params);
             newProxy = ((SimpleCorePublishedDocument) newPulishedDoc).getProxy();
             ToutaticeCommentsHelper.setComments(super.coreSession, newProxy, proxyComments);
             super.coreSession.saveDocument(newProxy);
-            
-        }else{
-            
+        } else {
             newPulishedDoc = super.publishDocument(doc, targetNode, params); 
             newProxy = ((SimpleCorePublishedDocument) newPulishedDoc).getProxy();
-            
         }
         
-        /* To force ES re-indexing */
+        /* To force ES re-indexing (Ticket Jira Nuxeo: https://jira.nuxeo.com/browse/SUPNXP-13359) */
         ToutaticeNotifyEventHelper.notifyEvent(super.coreSession, DocumentEventTypes.DOCUMENT_CHECKEDIN, newProxy, new HashMap<String,Serializable>(0));
         
         return newPulishedDoc;
