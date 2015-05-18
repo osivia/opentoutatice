@@ -102,6 +102,7 @@
 		</doctype>
 		
 		<doctype name="Workspace" append="true">
+			<facet name="Orderable" />
             <schema name="toutatice_navigation" />
         </doctype>
 		

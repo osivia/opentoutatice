@@ -15,11 +15,9 @@
         <module>opentoutatice-ecm-platform-automation</module>
         <module>opentoutatice-ecm-platform-services</module>
         <module>opentoutatice-ecm-platform-custom</module>
-<!--
         <module>opentoutatice-ecm-platform-marketplace</module>
         <module>opentoutatice-ecm-platform-distribution</module>
 
--->
     </modules>
 
     <properties>
