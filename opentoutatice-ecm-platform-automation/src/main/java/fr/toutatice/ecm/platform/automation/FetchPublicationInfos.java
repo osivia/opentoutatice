@@ -190,6 +190,8 @@ public class FetchPublicationInfos {
             infosPubli.element("liveId", liveDoc.getId());
             Object isEditable = isEditableByUser(infosPubli, liveDoc);
             infosPubli.element("editableByUser", isEditable);
+            Object isManageable = isManageableByUser(infosPubli, liveDoc);
+            infosPubli.element("manageableByUser", isManageable);            
             Object isDeletable = isDeletableByUser(infosPubli, liveDoc);
             infosPubli.element("isDeletableByUser", isDeletable);
             
@@ -320,6 +322,32 @@ public class FetchPublicationInfos {
         return canModify;
     }
 
+    /**
+     * Méthode permettant de vérifier si un document (live) est gérable par
+     * l'utilisateur.
+     * 
+     * @param infos
+     *            pour stocker le résultat du test (booléen)
+     * @param liveDoc
+     *            document testé
+     * @return vrai si le document est gérable par l'utilisateur
+     * @throws ServeurException
+     */
+    private Object isManageableByUser(JSONObject infos, DocumentModel liveDoc) throws ServeurException {
+        Boolean canManage = null;
+        try {
+            canManage = Boolean.valueOf(coreSession.hasPermission(liveDoc.getRef(), SecurityConstants.EVERYTHING));
+        } catch (ClientException e) {
+            if (e instanceof DocumentSecurityException) {
+                return Boolean.FALSE;
+            } else {
+                log.warn("Failed to fetch permissions for document '" + liveDoc.getPathAsString() + "', error:" + e.getMessage());
+                throw new ServeurException(e);
+            }
+        }
+        return canManage;
+    }
+    
     /**
      * Get user validate rigth on document.
      * 
@@ -584,7 +612,7 @@ public class FetchPublicationInfos {
                     String parentSpaceID = "";
                     DocumentModelList spaceParentList = ToutaticeDocumentHelper.getParentSpaceList(this.session, liveDoc, true, true);
                     if (spaceParentList != null && spaceParentList.size() > 0) {
-                        DocumentModel parentSpace = (DocumentModel) spaceParentList.get(0);
+                        DocumentModel parentSpace = spaceParentList.get(0);
                         parentSpaceID = getSpaceID(parentSpace);
                     }
                     this.infosPubli.put("parentSpaceID", parentSpaceID);
