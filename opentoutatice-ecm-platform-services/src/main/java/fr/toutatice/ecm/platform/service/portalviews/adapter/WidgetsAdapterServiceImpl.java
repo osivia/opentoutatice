@@ -61,6 +61,8 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
     private Map<String, String> widgetsMappings = new HashMap<String, String>(0);
 
     private List<String> portalViewIds;
+    
+    private String currentPortalView;
 
     private String fromUrlParam;
 
@@ -73,6 +75,13 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
         super.activate(context);
         portalViewIds = new ArrayList<String>(0);
         fromUrlParam = StringUtils.EMPTY;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public String getCurrentPortalView(){
+        return this.currentPortalView;
     }
 
     /**
@@ -93,6 +102,8 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
             viewId = context.getViewRoot().getViewId();
             fromUrlParamExists = isFromUrlParamExists(context);
         }
+        currentPortalView = viewId;
+        
         is = fromUrlParamExists || isPortalView(viewId);
 
         return is;

@@ -26,11 +26,15 @@ package fr.toutatice.ecm.platform.core.constants;
  */
 public final class PortalConstants {
     
+    /** Notifications send to Portal. */
     public enum Notifications {
     	SUCCESS_MESSAGE_MODIFY,
     	SUCCESS_MESSAGE_CREATE,
     	SUCCESS_MESSAGE_PUBLISH,
     	SUCCESS_MESSAGE_ASK_PUBLISH
     }
+    
+    /** Final Portal View. */
+    public static final String FINAL_PORTAL_VIEW = "done";
 
 }

@@ -31,6 +31,8 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.trash.TrashService;
 import org.nuxeo.runtime.api.Framework;
 
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+
 
 /**
  * @author David Chevrier
@@ -50,6 +52,13 @@ public class PutDocumentInTrash {
     public Object run() throws Exception {
         List<DocumentModel> docs = new ArrayList<DocumentModel>(1);
         docs.add(document);
+        
+//    #3411 delete the local proxy if there
+        DocumentModel proxy = ToutaticeDocumentHelper.getProxy(session, document, null, true);
+        if(proxy!=null){
+        	session.removeDocument(proxy.getRef());
+        }
+        
         
         TrashService trashService = Framework.getService(TrashService.class);
         trashService.trashDocuments(docs);

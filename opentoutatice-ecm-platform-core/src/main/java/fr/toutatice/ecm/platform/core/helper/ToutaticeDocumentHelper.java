@@ -537,23 +537,25 @@ public class ToutaticeDocumentHelper {
 	public static DocumentModel getProxy(CoreSession session, DocumentModel document, String permission, boolean unrestricted) throws ClientException {
 		DocumentModel proxy = null;
 
-		if (document.isProxy()) {
-			proxy = document;
-		} else {
-			UnrestrictedGetProxyRunner runner = new UnrestrictedGetProxyRunner(session, document);
-			if (unrestricted) {
-				runner.runUnrestricted();
+		if (null != document) {
+			if (document.isProxy()) {
+				proxy = document;
 			} else {
-				runner.run();
+				UnrestrictedGetProxyRunner runner = new UnrestrictedGetProxyRunner(session, document);
+				if (unrestricted) {
+					runner.runUnrestricted();
+				} else {
+					runner.run();
+				}
+				proxy = runner.getProxy();
 			}
-			proxy = runner.getProxy();
-		}
-
-		if (null != proxy) {
-			if (StringUtils.isNotBlank(permission) && !session.hasPermission(proxy.getRef(), permission)) {
-				Principal principal = session.getPrincipal();
-				throw new DocumentSecurityException("The user '" + principal.getName() + "' has not the permission '" + permission + "' on the proxy of doucment '"
-						+ document.getTitle() + "'");
+			
+			if (null != proxy) {
+				if (StringUtils.isNotBlank(permission) && !session.hasPermission(proxy.getRef(), permission)) {
+					Principal principal = session.getPrincipal();
+					throw new DocumentSecurityException("The user '" + principal.getName() + "' has not the permission '" + permission + "' on the proxy of doucment '"
+							+ document.getTitle() + "'");
+				}
 			}
 		}
 

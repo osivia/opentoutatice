@@ -35,19 +35,24 @@ import org.nuxeo.ecm.platform.forms.layout.api.Widget;
 public interface WidgetsAdapterService extends Serializable {
     
     /**
+     * @return current Portal View.
+     */
+    String getCurrentPortalView();
+    
+    /**
      * @return true if facelet is in PortalView context.
      */
-    public boolean isInPortalViewContext();
+    boolean isInPortalViewContext();
     
     /**
      * Add a portal view id. 
      */
-    public void addPortalViewId(String viewId);
+    void addPortalViewId(String viewId);
     
     /**
      * Add list of portal views ids.
      */
-    public void addPortalViewsIds(String... viewIds);
+    void addPortalViewsIds(String... viewIds);
     
     /**
      * Gives the mapped nuxeo widget for portalView.

@@ -16,43 +16,21 @@
  *   dchevrier
  *    
  */
-package fr.toutatice.ecm.platform.service.tasks;
+package fr.toutatice.ecm.platform.service.workflows;
 
-import java.io.Serializable;
-
-import org.nuxeo.common.xmap.annotation.XNode;
-import org.nuxeo.common.xmap.annotation.XObject;
+import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationProvider;
 
 
 /**
- * To define tasks used by ToutaticeWorkflowService.
- * 
  * @author david chevrier
  *
  */
-@XObject("task")
-public class TaskDescriptor implements Serializable {
+public interface ToutaticeWorkflowService extends FetchInformationProvider {
     
-    private static final long serialVersionUID = 3371712167362896281L;
+    /** Validation worflow's category. */
+    String VALIDATION_WF_CATEGORY = "validation";
+    /** Key infos of running workflows of category validation. */
+    String VALIDATION_WF_RUNNING_INFOS_KEY = "isValidationWfRunning";
     
-    @XNode("@name")
-    public String taskName;
-    
-    /**
-     * @return names of task.
-     */
-    public String getTaskName(){
-        return this.taskName;
-    }
-    
-    @XNode("@permission")
-    public String permission;
-   
-    /**
-     * @return the permission to manage Task.
-     */
-    public String getPermission(){
-        return this.permission;
-    }
-
 }
+ 

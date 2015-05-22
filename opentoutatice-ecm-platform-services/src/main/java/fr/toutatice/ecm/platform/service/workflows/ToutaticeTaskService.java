@@ -16,15 +16,15 @@
  *   dchevrier
  *    
  */
-package fr.toutatice.ecm.platform.service.tasks;
+package fr.toutatice.ecm.platform.service.workflows;
 
 import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationProvider;
 
 
 /**
- * @author david chevrier
+ * @author David Chevrier.
  *
  */
 public interface ToutaticeTaskService extends FetchInformationProvider {
-    
+
 }

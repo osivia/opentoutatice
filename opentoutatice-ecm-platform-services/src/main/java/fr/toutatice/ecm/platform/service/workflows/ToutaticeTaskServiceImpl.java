@@ -15,7 +15,7 @@
  * Contributors:
  * dchevrier
  */
-package fr.toutatice.ecm.platform.service.tasks;
+package fr.toutatice.ecm.platform.service.workflows;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -127,10 +127,6 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
             infos.put(TaskInfos.isTaskPending.name(), isTaskPending(currentTask));
             infos.put(TaskInfos.isTaskInitiator.name(), isUserTaskInitiator(coreSession, currentTask));
             infos.put(TaskInfos.canManageTask.name(), canUserManageTask(coreSession, currentTask, currentDocument, permission));
-            
-            if(taskFound){
-                
-            }
             
         }
         return infos;
