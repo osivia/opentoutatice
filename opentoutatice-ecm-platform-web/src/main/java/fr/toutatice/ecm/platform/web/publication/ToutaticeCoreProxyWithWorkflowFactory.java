@@ -139,10 +139,13 @@ public class ToutaticeCoreProxyWithWorkflowFactory extends CoreProxyWithWorkflow
                 String rSPath = remoteSection.getPathAsString();
 
                 int rsIndex = ToutaticeWorkflowHelper.getListIndexIfYetPresent(remoteSectionsList, rSPath);
-
+                
+                secInfosProperties.put(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_TITLE_PROP, remoteSection.getTitle());
                 secInfosProperties.put(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_PATH_PROP, rSPath);
-                String rsURL = getSectionURL(remoteSection);
+                String rsURL = getDocumentURL(remoteSection);
                 secInfosProperties.put(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_URL_PROP, rsURL);
+                String proxyURL = getDocumentURL(this.doc);
+                secInfosProperties.put(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_PROXY_URL_PROP, proxyURL);
                 secInfosProperties.put(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_VERSION_PROP, VersioningHelper.getVersionLabelFor(this.doc));
                 Boolean pending = Boolean.valueOf(this.newPulishedDoc.isPending());
                 secInfosProperties.put(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_PENDING_PROP, pending);
@@ -164,17 +167,17 @@ public class ToutaticeCoreProxyWithWorkflowFactory extends CoreProxyWithWorkflow
     }
 
     /**
-     * @param section
+     * @param document
      * @return Nuxeo URL of section.
      */
-    protected String getSectionURL(DocumentModel section){
+    protected String getDocumentURL(DocumentModel document){
         String url = StringUtils.EMPTY;
         
-        String webid = (String) section.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
+        String webid = (String) document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
         if (StringUtils.isNotBlank(webid)) {
-            url = WebIdFunctions.getPreferredLinkUrl(section);
+            url = WebIdFunctions.getPreferredLinkUrl(document);
         } else {
-            url = DocumentModelFunctions.documentUrl(section);
+            url = DocumentModelFunctions.documentUrl(document);
         }
         
         if(StringUtils.isNotBlank(url)){

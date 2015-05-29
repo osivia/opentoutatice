@@ -111,8 +111,10 @@ public class ToutaticeNuxeoStudioConst {
     //Remote sections of published live document
     public static final String CST_DOC_XPATH_REMOTE_SECTIONS = CST_DOC_REMOTE_SECTIONS + ":remoteSections";
     public static final String CST_DOC_REMOTE_SECTIONS_PROP_NAME = "remoteSections";
+    public static final String CST_DOC_REMOTE_SECTIONS_TITLE_PROP = "sectionTitle";
     public static final String CST_DOC_REMOTE_SECTIONS_PATH_PROP = "sectionPath";
     public static final String CST_DOC_REMOTE_SECTIONS_URL_PROP = "sectionURL";
+    public static final String CST_DOC_REMOTE_SECTIONS_PROXY_URL_PROP = "proxyURL";
     public static final String CST_DOC_REMOTE_SECTIONS_VERSION_PROP = "version";
     public static final String CST_DOC_REMOTE_SECTIONS_PENDING_PROP = "pending";
 	 
