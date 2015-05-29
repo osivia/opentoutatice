@@ -34,7 +34,7 @@
 			<parameters>
 				<parameter name="RelativeRootPath">/</parameter>
 				<parameter name="enableSnapshot">true</parameter>
-				<parameter name="iconExpanded"></parameter>
+				<parameter name="iconExpanded">"<span class="fancytree-icon glyphicons glyphicons-folder-open">"</span></parameter>
 				<parameter name="iconCollapsed"></parameter>
 			</parameters>
 		</publicationTreeConfig>

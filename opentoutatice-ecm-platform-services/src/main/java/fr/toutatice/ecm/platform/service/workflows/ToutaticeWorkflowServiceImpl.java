@@ -91,7 +91,7 @@ public class ToutaticeWorkflowServiceImpl extends DefaultComponent implements To
     @Override
     public void unregisterContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
         if (WF_EXT_POINT.equals(extensionPoint)) {
-            
+
             WorkflowDescriptor wfDesc = (WorkflowDescriptor) contribution;
             String wfCategory = wfDesc.getWfCategory();
 
@@ -100,15 +100,15 @@ public class ToutaticeWorkflowServiceImpl extends DefaultComponent implements To
                 String wfName = wfDesc.getWfName();
 
                 if (StringUtils.isNotBlank(wfName)) {
-                    
+
                     List<String> wfNames = wfContribs.get(wfCategory);
                     wfNames.remove(wfName);
                     wfContribs.put(wfCategory, wfNames);
-                    
+
                 }
-            
+
             }
-         
+
         }
     }
 
@@ -119,13 +119,13 @@ public class ToutaticeWorkflowServiceImpl extends DefaultComponent implements To
     @Override
     public Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
         Map<String, Object> infos = new HashMap<String, Object>(0);
-        
-        if(MapUtils.isNotEmpty(wfContribs)){
+
+        if (MapUtils.isNotEmpty(wfContribs)) {
             infos.put(VALIDATION_WF_RUNNING_INFOS_KEY, isWorkflowOfCategoryRunning(VALIDATION_WF_CATEGORY, currentDocument));
         } else {
             infos.put(VALIDATION_WF_RUNNING_INFOS_KEY, false);
         }
-        
+
         return infos;
     }
 
@@ -134,13 +134,13 @@ public class ToutaticeWorkflowServiceImpl extends DefaultComponent implements To
      * @return workflows names of given category
      */
     public List<String> getWfnamesByCategory(String category) {
-        
+
         List<String> wfNames = wfContribs.get(category);
-        
-        if(CollectionUtils.isEmpty(wfNames)){
+
+        if (CollectionUtils.isEmpty(wfNames)) {
             wfNames = new ArrayList<String>(0);
         }
-        
+
         return wfNames;
     }
 
@@ -151,19 +151,18 @@ public class ToutaticeWorkflowServiceImpl extends DefaultComponent implements To
      */
     public boolean isWorkflowOfCategoryRunning(String category, DocumentModel document) {
         boolean running = false;
-        
+
         List<String> wfNames = getWfnamesByCategory(category);
         Iterator<String> it = wfNames.iterator();
-       
-        while(it.hasNext() && !running){
-            
+
+        while (it.hasNext() && !running) {
+
             String wfName = it.next();
             DocumentRoute workflow = ToutaticeWorkflowHelper.getWorkflowByName(wfName, document);
-           
+
             running = workflow != null;
         }
 
-        
         return running;
 
     }

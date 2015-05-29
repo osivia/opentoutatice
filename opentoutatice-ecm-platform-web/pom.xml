@@ -135,6 +135,7 @@
 						<include>plugin-popup.less</include>
 						<include>custom-popup.less</include>
 						<include>fragments-popup.less</include>
+						<include>custom-remote-publishing.less</include>
 					</includes>
 					<outputFileFormat>{fileName}.min.css</outputFileFormat>
 				</configuration>

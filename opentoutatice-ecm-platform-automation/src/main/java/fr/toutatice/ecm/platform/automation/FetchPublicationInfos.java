@@ -19,11 +19,13 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -131,7 +133,7 @@ public class FetchPublicationInfos {
 
     @Param(name = "webid", required = false)
     protected String webid;
-    
+
     @Param(name = "navigationPath", required = false)
     protected String navigationPath;
 
@@ -152,7 +154,7 @@ public class FetchPublicationInfos {
         List<Integer> errorsCodes = new ArrayList<Integer>();
 
         // Si on passe non pas un docRef en entrée mais un webId :
-        if(StringUtils.isNotBlank(webid)){
+        if (StringUtils.isNotBlank(webid)) {
             document = WebIdResolver.getDocumentByWebId(coreSession, webid, navigationPath, displayLiveVersion);
         }
 
@@ -191,10 +193,12 @@ public class FetchPublicationInfos {
             Object isEditable = isEditableByUser(infosPubli, liveDoc);
             infosPubli.element("editableByUser", isEditable);
             Object isManageable = isManageableByUser(infosPubli, liveDoc);
-            infosPubli.element("manageableByUser", isManageable);            
+            infosPubli.element("manageableByUser", isManageable);
+            Boolean isRemotePublishable = isRemotePublishable(liveDoc);
+            infosPubli.put("isRemotePublishable", isRemotePublishable);
             Object isDeletable = isDeletableByUser(infosPubli, liveDoc);
             infosPubli.element("isDeletableByUser", isDeletable);
-            
+
             Object canUserValidate = canUserValidate();
             infosPubli.element("canUserValidate", canUserValidate);
 
@@ -205,7 +209,7 @@ public class FetchPublicationInfos {
             String livePath = liveDoc.getPathAsString();
             String docPath = document.getPath().toString();
             String path = docPath;
-            if (docPath.endsWith(TOUTATICE_PUBLI_SUFFIX) && docPath.equals(livePath + TOUTATICE_PUBLI_SUFFIX)){
+            if (docPath.endsWith(TOUTATICE_PUBLI_SUFFIX) && docPath.equals(livePath + TOUTATICE_PUBLI_SUFFIX)) {
                 path = livePath;
             }
             infosPubli.element("documentPath", URLEncoder.encode(path, "UTF-8"));
@@ -348,6 +352,14 @@ public class FetchPublicationInfos {
         return canManage;
     }
     
+    /**
+     * @param liveDoc given document
+     * @return true if given document is remote publishable
+     */
+    private Boolean isRemotePublishable(DocumentModel liveDoc) {
+        return Boolean.valueOf(!liveDoc.isFolder() && liveDoc.hasFacet("Publishable") && !liveDoc.isImmutable());
+    }
+
     /**
      * Get user validate rigth on document.
      * 
@@ -683,26 +695,33 @@ public class FetchPublicationInfos {
 
                 /* TODO: valeur toujours mise à true pour l'instant */
                 this.infosPubli.element("workspaceInContextualization", Boolean.TRUE);
-
-                /*
-                 * Récupération du document publié et attribution du caractère
-                 * 'publié'
-                 */
-                parameters.clear();
-                parameters.put("value", document);
-
+                
+                // Case of local publication
                 DocumentModel publishedDoc = null;
                 try {
-
-
-                    publishedDoc = (DocumentModel) ToutaticeDocumentHelper.callOperation(automation, ctx, "Document.FetchPublished", parameters);
-
-                    boolean equalVersion = publishedDoc.getVersionLabel().equals(infosPubli.get("liveVersion"));
-                    this.infosPubli.element("isLiveModifiedFromProxy", !equalVersion);
-                    this.infosPubli.element("proxyVersion", publishedDoc.getVersionLabel());
-                    this.infosPubli.element("published", Boolean.TRUE);
+                    
+                    publishedDoc = ToutaticeDocumentHelper.getProxy(session, document, SecurityConstants.READ);
+                    
+                    Boolean isBeingModified = Boolean.FALSE;
+                    if(publishedDoc != null){
+                        // Local proxy
+                        isBeingModified = Boolean.valueOf(!publishedDoc.getVersionLabel().equals(infosPubli.get("liveVersion")));
+                    } else {
+                        // Local Publishing: live is in PublishSpace
+                        String publishSpacePath = URLDecoder.decode(this.infosPubli.getString("publishSpacePath"), "UTF-8");
+                        if(StringUtils.isNotEmpty(publishSpacePath)){
+                            isBeingModified = Boolean.TRUE;
+                        } else {
+                            // Remote publishing
+                            isBeingModified = Boolean.valueOf(isLiveModifiedFromProxies(document));
+                        }
+                    }
+                    
+                    this.infosPubli.element("isLiveModifiedFromProxies", isBeingModified);
+                    this.infosPubli.element("proxyVersion", publishedDoc != null ? publishedDoc.getVersionLabel() : "0.0");
+                    this.infosPubli.element("published", publishedDoc != null ? Boolean.TRUE : Boolean.FALSE); 
                 } catch (Exception e) {
-                    this.infosPubli.element("isLiveModifiedFromProxy", true);
+                    this.infosPubli.element("isLiveModifiedFromProxies", Boolean.TRUE);
                     this.infosPubli.element("published", Boolean.FALSE);
                 }
 
@@ -717,6 +736,34 @@ public class FetchPublicationInfos {
                 throw new ClientException(e);
             }
 
+        }
+        
+        /**
+         * Use in remote publication case.
+         * 
+         * @return true if live is different from all
+         * its published versions.
+         */
+        private Boolean isLiveModifiedFromProxies(DocumentModel liveDoc){
+            Boolean isModified = Boolean.FALSE;
+            
+            if(liveDoc.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_HAS_REMOTE_SECTIONS)){
+                String liveVersion = liveDoc.getVersionLabel();
+                
+                List<Map<String, Object>> remoteSectionsList = (List<Map<String, Object>>) liveDoc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_REMOTE_SECTIONS);
+                Iterator<Map<String, Object>> iterator = remoteSectionsList.iterator();
+                
+                while(iterator.hasNext() && !isModified){
+                    Map<String, Object> remoteSection = iterator.next();
+                    String rsVersion = (String) remoteSection.get(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_VERSION_PROP);
+                    if(!liveVersion.equalsIgnoreCase(rsVersion)){
+                        isModified = Boolean.TRUE;
+                    }
+                }
+                
+            }
+            
+            return isModified;
         }
 
 

@@ -21,6 +21,11 @@
 		<facet name="SpaceNavigationItem" />
 		<facet name="MasterPublishSpace" />
 		
+		<!-- Dynamic facet to store remote sections of live document -->
+		<facet name="HasRemoteSections">
+			<schema name="remoteSectionsInfos" />
+		</facet>
+		
 		<!-- Pour permettre l'import xml d'arborescence contenant des documents publiés:
 		     facette Immutable posée dynamiquement (elle n'existe pas de façon statique,
 		     i.e. définie dans une contribution native Nuxeo) -->

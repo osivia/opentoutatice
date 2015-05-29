@@ -15,6 +15,8 @@
 		<schema name="toutatice_domain"  prefix="ttcd" src="schemas/toutatice-domain.xsd" />
 		
 		<schema name="toutatice_event"  prefix="ttcevt" src="schemas/toutatice-event.xsd" />
+		
+		<schema name="remoteSectionsInfos" prefix="rsi" src="schemas/remote_sections_infos.xsd" />
 
 	</extension>
 

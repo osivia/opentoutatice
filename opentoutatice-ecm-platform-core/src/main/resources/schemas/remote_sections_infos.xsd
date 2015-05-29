@@ -1,0 +1,23 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:nxs="http://www.nuxeo.org/ecm/project/schemas/opentoutatice/remote-sections-infos"
+	targetNamespace="http://www.nuxeo.org/ecm/project/schemas/opentoutatice/remote-sections-infos">
+
+	<xs:complexType name="sectionInfos">
+		<xs:sequence>
+			<xs:element name="sectionPath" type="xs:string" />
+			<xs:element name="sectionURL" type="xs:string" />
+			<xs:element name="version" type="xs:string" />
+			<xs:element name="pending" type="xs:boolean" default="false" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="sectionsInfosList">
+		<xs:sequence>
+			<xs:element name="item" type="nxs:sectionInfos" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="remoteSections" type="nxs:sectionsInfosList" />
+
+</xs:schema>

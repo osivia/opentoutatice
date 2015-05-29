@@ -20,6 +20,7 @@ package fr.toutatice.ecm.platform.service.workflows;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.StringUtils;
 import org.nuxeo.common.xmap.annotation.XNode;
 import org.nuxeo.common.xmap.annotation.XObject;
 
@@ -46,7 +47,7 @@ public class TaskDescriptor implements Serializable {
     }
     
     @XNode("@permission")
-    public String permission;
+    public String permission = StringUtils.EMPTY;
    
     /**
      * @return the permission to manage Task.

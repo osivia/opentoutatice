@@ -22,6 +22,7 @@ package fr.toutatice.ecm.platform.core.helper;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,7 @@ import org.nuxeo.ecm.platform.task.core.service.DocumentTaskProvider;
 import org.nuxeo.ecm.platform.task.core.service.TaskEventNotificationHelper;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
 /**
  * @author David Chevrier
@@ -77,6 +79,21 @@ public final class ToutaticeWorkflowHelper {
 
         return searchedTask;
 
+    }
+    
+    /**
+     * @param taskName
+     * @return true if Task of given name is pending
+     */
+    public static boolean isTaskPending(String taskName, CoreSession session, DocumentModel currentDoc){
+        boolean isPending = false;
+        
+        Task taskByName = getTaskByName(taskName, session, currentDoc);
+        if(taskByName != null){
+            isPending = taskByName.isOpened();
+        }
+        
+        return isPending;
     }
     
     /**
@@ -133,6 +150,72 @@ public final class ToutaticeWorkflowHelper {
             initiator = (String) route.getDocument().getPropertyValue(DocumentRoutingConstants.INITIATOR);
         }
         return initiator;
+    }
+    
+    /**
+     * Use in remote publication case.
+     * 
+     * @param remoteSections
+     * @param rSPath path of searched section
+     * @return the index in the list of section with given path
+     */
+    public static int getListIndexIfYetPresent(List<Map<String, Object>> remoteSections, String rSPath) {
+        int index = -1;
+
+        if (CollectionUtils.isNotEmpty(remoteSections)) {
+            boolean present = false;
+            int listIndex = 0;
+            Iterator<Map<String, Object>> iterator = remoteSections.iterator();
+
+            while (iterator.hasNext() && !present) {
+                Map<String, Object> sectionInfos = iterator.next();
+                if (rSPath.equals(sectionInfos.get(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_PATH_PROP))) {
+                    present = true;
+                    index = listIndex;
+                }
+                listIndex++;
+            }
+        }
+
+        return index;
+    }
+    
+    /**
+     * Remove remote sections infos on live document
+     * (use in remote publication case).
+     * 
+     * @author David Chevrier
+     *
+     */
+    public static class ToutaticeSilentDeleteRSRunner extends ToutaticeSilentProcessRunnerHelper {
+        
+        private DocumentModel document;
+        private String sectionPath;
+        
+        public ToutaticeSilentDeleteRSRunner(CoreSession session, String sectionPath, DocumentModel document){
+            super(session);
+            this.sectionPath = sectionPath;
+            this.document = document;
+        }
+
+        @Override
+        public void run() throws ClientException {
+            if(this.document != null && this.document.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_HAS_REMOTE_SECTIONS)){
+                List<Map<String, Object>> remoteSections =  (List<Map<String, Object>>) this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_REMOTE_SECTIONS);
+                if(CollectionUtils.isNotEmpty(remoteSections)){
+                    
+                    int index = ToutaticeWorkflowHelper.getListIndexIfYetPresent(remoteSections, this.sectionPath);
+                    if(index != -1){
+                        remoteSections.remove(index);
+                    }
+                    
+                }
+                
+                this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_REMOTE_SECTIONS, (Serializable) remoteSections);
+                this.session.saveDocument(this.document);
+             }
+        }
+        
     }
 
 }

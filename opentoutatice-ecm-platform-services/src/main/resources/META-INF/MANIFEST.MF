@@ -23,5 +23,4 @@ Nuxeo-Component: OSGI-INF/extensions/customize-types/customize-types-service.xml
  OSGI-INF/extensions/portalviews/events-listener-contrib.xml,
  OSGI-INF/extensions/workflows/extended-fetchinfos-contrib.xml,
  OSGI-INF/extensions/workflows/workflows-service-framework.xml,
- OSGI-INF/extensions/workflows/tasks-service-contrib.xml,
- OSGI-INF/extensions/workflows/workflows-service-contrib.xml
+ OSGI-INF/extensions/workflows/tasks-service-contrib.xml
