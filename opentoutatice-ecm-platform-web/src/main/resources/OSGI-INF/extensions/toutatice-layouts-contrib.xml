@@ -92,9 +92,9 @@
 				<row>
 					<widget>content</widget>
 				</row>
-				<!--<row>
+				<row>
                     <widget>toutatice_showInMenu_widget</widget>
-                </row>-->
+                </row>
 			</rows>
 		</layout>
 		<layout name="layout@PortalPage-edit">

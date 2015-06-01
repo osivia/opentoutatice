@@ -96,6 +96,7 @@
 			<facet name="FolderishEditable" />
 			<facet name="SpaceNavigationItem" />
 			<facet name="PublishSpace" />
+			<facet name="SpaceContent"/>
 			<prefetch>common.icon, dc:title, dc:description, dc:created,
 				dc:modified,
 				dc:lastContributor, dc:creator
