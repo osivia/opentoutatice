@@ -24,6 +24,31 @@
                     showMeridian: false,
                     defaultTime: false
                 });
+
+                var $allDay = jQuery("[id*='pv_event_all_day']");
+                if(typeof($allDay) !== "undefined"){
+
+                    if($allDay.is(':checked')){
+                            jQuery(".date-picker").attr("disabled", "disabled");
+                            jQuery(".time-picker").attr("disabled", "disabled");
+
+                            jQuery("[id*='pv_event_dtstart_date-picker']").removeAttr("disabled");
+                        }
+
+                    $allDay.click(function(){
+                        
+                        if($allDay.is(':checked')){
+                            jQuery(".date-picker").attr("disabled", "disabled");
+                            jQuery(".time-picker").attr("disabled", "disabled");
+
+                            jQuery("[id*='pv_event_dtstart_date-picker']").removeAttr("disabled");
+                        } else {
+                            jQuery(".date-picker").removeAttr("disabled");
+                            jQuery(".time-picker").removeAttr("disabled");
+                        }
+
+                    });
+                }
             
             });
      </script>
