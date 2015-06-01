@@ -717,11 +717,11 @@ public class FetchPublicationInfos {
                         }
                     }
                     
-                    this.infosPubli.element("isLiveModifiedFromProxies", isBeingModified);
+                    this.infosPubli.element("isLiveModifiedFromProxy", isBeingModified);
                     this.infosPubli.element("proxyVersion", publishedDoc != null ? publishedDoc.getVersionLabel() : "0.0");
                     this.infosPubli.element("published", publishedDoc != null ? Boolean.TRUE : Boolean.FALSE); 
                 } catch (Exception e) {
-                    this.infosPubli.element("isLiveModifiedFromProxies", Boolean.TRUE);
+                    this.infosPubli.element("isLiveModifiedFromProxy", Boolean.TRUE);
                     this.infosPubli.element("published", Boolean.FALSE);
                 }
 
