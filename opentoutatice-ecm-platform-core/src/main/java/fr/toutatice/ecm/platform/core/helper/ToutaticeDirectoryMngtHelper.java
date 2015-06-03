@@ -18,9 +18,14 @@
  */
 package fr.toutatice.ecm.platform.core.helper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -169,7 +174,55 @@ public class ToutaticeDirectoryMngtHelper {
 				
 		return list;
 	}
-	
+
+    /**
+     * Return elements from a directory (might be LDAP type). Items are generic (document models).
+     *  
+     * @param directoryName the directory to search into
+     * @param fieldName the element field to use as filter
+     * @param pattern the pattern that is used to check the field value applies
+     * @return the list of directory item
+     * @throws ToutaticeException if any processing exception occurs
+     */
+    public DocumentModelList getItems(String directoryName, String fieldName, String pattern) throws ToutaticeException {
+		Map<String, Serializable> filter = new HashMap<String, Serializable>();
+		filter.put(fieldName, pattern);
+		Set<String> fulltext = new HashSet<String>();
+		fulltext.add(fieldName);
+		return getItems(directoryName, filter, fulltext, null);
+    }
+    
+    public DocumentModelList getItems(String directoryName, Map<String, Serializable> filter, Set<String> fulltext, Map<String, String> orderBy) throws ToutaticeException {
+    	DocumentModelList items = null;
+    	Session session = null;
+
+    	try {
+    		session = getService().open(directoryName);
+    	} catch (DirectoryException e) {
+    		throw new ToutaticeException("could not open session on directory '" + directoryName + "', error: " + e.getMessage());
+    	}
+
+    	if (null != session) {
+    		try {
+    			items = session.query(filter, fulltext, orderBy);
+    		} catch (Exception e) {
+    			throw new ToutaticeException("could not query on directory '" + directoryName + "', error: " + e.getMessage());
+    		} finally {
+    			try {
+    				if (null != session) {
+    					session.close();
+    				}
+    			} catch (DirectoryException ce) {
+    				log.error("Could not close directory session", ce);
+    			}
+    		}
+    	} else {
+    		throw new ToutaticeException("could not open session on directory: " + directoryName);
+    	}
+    	
+    	return items;
+    }
+
 	private static String translate(String label, Locale locale) {
 		String localizedLabel = label;
 		if (null != locale) {
