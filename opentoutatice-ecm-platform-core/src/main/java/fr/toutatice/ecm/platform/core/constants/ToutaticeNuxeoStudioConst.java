@@ -68,8 +68,6 @@ public class ToutaticeNuxeoStudioConst {
 	public static final String CST_FACET_SPACE = "Space";
 	public static final String CST_FACET_SPACE_NAVIGATION_ITEM = "SpaceNavigationItem";
 	public static final String CST_FACET_SPACE_CONTENT = "SpaceContent";
-	public static final String CST_FACET_HAS_REMOTE_SECTIONS = "HasRemoteSections";
-
 
 	// meta-data
 	public final static String CST_DOC_SCHEMA_NUXEO_WEBCONTAINER_EMAIL = "email";
@@ -109,16 +107,6 @@ public class ToutaticeNuxeoStudioConst {
     public static final String CST_DOC_XPATH_TTC_EVT_TIME_END = CST_DOC_SCHEMA_TTC_EVENT_PREFIX + ":timeEnd";
     public static final String CST_DOC_XPATH_TTC_EVT_DATE_TIME_BEGIN = CST_DOC_SCHEMA_TTC_EVENT_PREFIX + ":dateTimeBegin";
     public static final String CST_DOC_XPATH_TTC_EVT_DATE_TIME_END = CST_DOC_SCHEMA_TTC_EVENT_PREFIX + ":dateTimeEnd";
-    
-    //Remote sections of published live document
-    public static final String CST_DOC_XPATH_REMOTE_SECTIONS = CST_DOC_REMOTE_SECTIONS + ":remoteSections";
-    public static final String CST_DOC_REMOTE_SECTIONS_PROP_NAME = "remoteSections";
-    public static final String CST_DOC_REMOTE_SECTIONS_TITLE_PROP = "sectionTitle";
-    public static final String CST_DOC_REMOTE_SECTIONS_PATH_PROP = "sectionPath";
-    public static final String CST_DOC_REMOTE_SECTIONS_URL_PROP = "sectionURL";
-    public static final String CST_DOC_REMOTE_SECTIONS_PROXY_URL_PROP = "proxyURL";
-    public static final String CST_DOC_REMOTE_SECTIONS_VERSION_PROP = "version";
-    public static final String CST_DOC_REMOTE_SECTIONS_PENDING_PROP = "pending";
 	 
 	// life cycle states
 	public final static String CST_DOC_STATE_PROJECT = "project";

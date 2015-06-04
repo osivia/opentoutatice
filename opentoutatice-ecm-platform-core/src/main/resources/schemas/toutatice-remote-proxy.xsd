@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:nxs="http://www.nuxeo.org/ecm/project/schemas/opentoutatice/toutatice-remote-proxy"
+	targetNamespace="http://www.nuxeo.org/ecm/project/schemas/opentoutatice/toutatice-remote-proxy">
+
+	<xs:element name="publishSpaceWebId" type="xs:string" />
+	<xs:element name="publishSpacePath" type="xs:string" />
+	
+	<xs:element name="livePath" type="xs:string" />
+
+</xs:schema>

@@ -25,13 +25,14 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,6 +52,7 @@ import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.DocumentSecurityException;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
+import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.core.api.model.impl.primitives.BooleanProperty;
@@ -59,6 +61,10 @@ import org.nuxeo.ecm.core.api.security.Access;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 import org.nuxeo.ecm.core.trash.TrashService;
+import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
+import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
+import org.nuxeo.ecm.platform.publisher.api.PublisherService;
+import org.nuxeo.ecm.platform.publisher.impl.core.SimpleCorePublishedDocument;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.platform.types.TypeManager;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
@@ -73,10 +79,6 @@ import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformation
 @Operation(id = FetchPublicationInfos.ID, category = Constants.CAT_FETCH, label = "Fetch publish space informations",
         description = "Fetch informations about the publish space, worksapce, proxy status, ... of a given document.")
 public class FetchPublicationInfos {
-
-    private static final String WEB_ID_QUERY = "select * from Document Where ttc:domainID = '%s'"
-            + " AND ttc:webid = '%s' %s AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
-
 
     private static final Log log = LogFactory.getLog(FetchPublicationInfos.class);
 
@@ -118,7 +120,7 @@ public class FetchPublicationInfos {
      */
     @Context
     protected TypeManager typeService;
-
+    
     /**
      * Service gérant les utilisateurs.
      */
@@ -745,22 +747,26 @@ public class FetchPublicationInfos {
          * its published versions.
          */
         private Boolean isLiveModifiedFromProxies(DocumentModel liveDoc){
-            Boolean isModified = Boolean.FALSE;
+            Boolean isModified = Boolean.TRUE;
             
-            if(liveDoc.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_HAS_REMOTE_SECTIONS)){
-                String liveVersion = liveDoc.getVersionLabel();
-                
-                List<Map<String, Object>> remoteSectionsList = (List<Map<String, Object>>) liveDoc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_REMOTE_SECTIONS);
-                Iterator<Map<String, Object>> iterator = remoteSectionsList.iterator();
-                
-                while(iterator.hasNext() && !isModified){
-                    Map<String, Object> remoteSection = iterator.next();
-                    String rsVersion = (String) remoteSection.get(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_VERSION_PROP);
-                    if(!liveVersion.equalsIgnoreCase(rsVersion)){
-                        isModified = Boolean.TRUE;
+            PublisherService publisherService = (PublisherService) Framework.getService(PublisherService.class);
+            Map<String, String> availablePublicationTrees = publisherService.getAvailablePublicationTrees();
+
+            if (MapUtils.isNotEmpty(availablePublicationTrees)) {
+                for (Entry<String, String> treeInfo : availablePublicationTrees.entrySet()) {
+                    String treeName = treeInfo.getKey();
+
+                    PublicationTree tree = publisherService.getPublicationTree(treeName, this.session, null);
+                    List<PublishedDocument> publishedDocuments = tree.getExistingPublishedDocument(new DocumentLocationImpl(this.document));
+                    
+                    for(PublishedDocument publishedDoc : publishedDocuments){
+                        DocumentModel proxy = ((SimpleCorePublishedDocument) publishedDoc).getProxy();
+                        if(liveDoc.getVersionLabel().equals(proxy.getVersionLabel())){
+                            isModified &= Boolean.FALSE;
+                        }
                     }
+                    
                 }
-                
             }
             
             return isModified;
@@ -817,7 +823,7 @@ public class FetchPublicationInfos {
             BooleanProperty property = (BooleanProperty) doc.getProperty(IN_CONTEXTUALIZATON_PROPERTY);
             return property;
         }
-
+        
         /**
          * Gère le traitement d'une ClientException
          * 
@@ -860,48 +866,6 @@ public class FetchPublicationInfos {
             }
 
             return spaceID;
-        }
-
-    }
-
-    /**
-     * Get doc by webid in unrestricted mode (admin)
-     */
-    private class UnrestrictedFecthWebIdRunner extends UnrestrictedSessionRunner {
-
-        String webIdSegment;
-        String domainIdSegment;
-        DocumentModel docResolved;
-
-        private static final String PROXY_FILTER = " AND ecm:isProxy = 1 ";
-        private static final String LIVE_FILTER = " AND ecm:isProxy = 0 ";
-
-        protected UnrestrictedFecthWebIdRunner(CoreSession session, String domainId, String webId) {
-            super(session);
-            this.webIdSegment = webId;
-            this.domainIdSegment = domainId;
-
-        }
-
-        @Override
-        public void run() throws ClientException {
-            DocumentModelList liveDocs = session.query(String.format(WEB_ID_QUERY, domainIdSegment, webIdSegment, LIVE_FILTER));
-            if (liveDocs.size() == 1) {
-                docResolved = liveDocs.get(0);
-            } else if (liveDocs.size() == 0) {
-                DocumentModelList proxiesDocs = session.query(String.format(WEB_ID_QUERY, domainIdSegment, webIdSegment, PROXY_FILTER));
-                if (proxiesDocs.size() == 1) {
-                    docResolved = proxiesDocs.get(0);
-                } else if (proxiesDocs.size() > 1) {
-                    throw new ClientException("Two or more published documents have the webid : " + webid);
-                }
-            } else if (liveDocs.size() > 1) {
-                throw new ClientException("Two or more live documents have the webid : " + webid);
-            }
-        }
-
-        public DocumentModel getDoc() {
-            return docResolved;
         }
 
     }

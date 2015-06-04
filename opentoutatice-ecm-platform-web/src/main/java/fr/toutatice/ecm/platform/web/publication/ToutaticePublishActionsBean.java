@@ -223,26 +223,6 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
     }
     
     /**
-     * Override to remove remote section Infos
-     * on live document.
-     */
-    @Override
-    public String unPublish(PublishedDocument publishedDocument)
-            throws ClientException {
-        String viewId = super.unPublish(publishedDocument); 
-        
-        DocumentRef sourceDocumentRef = ((SimpleCorePublishedDocument) publishedDocument).getSourceDocumentRef();
-        DocumentModel workingCopy = this.documentManager.getWorkingCopy(sourceDocumentRef);
-        
-        String sectionPath = ((SimpleCorePublishedDocument) publishedDocument).getParentPath();
-        
-        ToutaticeWorkflowHelper.ToutaticeSilentDeleteRSRunner rsRunner = new ToutaticeWorkflowHelper.ToutaticeSilentDeleteRSRunner(this.documentManager, sectionPath, workingCopy);
-        rsRunner.silentRun(false, FILTERED_SERVICES_LIST);
-        
-        return viewId;
-    }
-    
-    /**
      * Service filtered by silent runner.
      */
     private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {

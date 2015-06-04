@@ -60,9 +60,8 @@ public class ToutaticeCoreProxyWithWorkflowFactory extends CoreProxyWithWorkflow
             proxyComments.putAll(ToutaticeCommentsHelper.getProxyComments(doc));
 
             newPulishedDoc = super.publishDocument(doc, targetNode, params);
-
             newProxy = ((SimpleCorePublishedDocument) newPulishedDoc).getProxy();
-
+            
             ToutaticeCommentsHelper.setComments(super.coreSession, newProxy, proxyComments);
 
             super.coreSession.saveDocument(newProxy);
@@ -71,9 +70,6 @@ public class ToutaticeCoreProxyWithWorkflowFactory extends CoreProxyWithWorkflow
 
             newPulishedDoc = super.publishDocument(doc, targetNode, params);
             newProxy = ((SimpleCorePublishedDocument) newPulishedDoc).getProxy();
-            
-            ToutaticeSilentSaveRSRunner rsRunner = new ToutaticeSilentSaveRSRunner(this.coreSession, doc, targetNode, newPulishedDoc);
-            rsRunner.silentRun(false, FILTERED_SERVICES_LIST);
 
         }
 
@@ -85,107 +81,5 @@ public class ToutaticeCoreProxyWithWorkflowFactory extends CoreProxyWithWorkflow
         return newPulishedDoc;
     }
 
-    private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
-
-        private static final long serialVersionUID = 1L;
-
-        {
-            add(EventService.class);
-            add(VersioningService.class);
-        }
-    };
-
-    /**
-     * Allows to save remote sections infos on live document.
-     * 
-     * @author David Chevrier.
-     *
-     */
-    protected class ToutaticeSilentSaveRSRunner extends ToutaticeSilentProcessRunnerHelper {
-
-        private DocumentModel doc;
-        private PublicationNode targetNode;
-        private PublishedDocument newPulishedDoc;
-
-        public ToutaticeSilentSaveRSRunner(CoreSession session, DocumentModel doc, PublicationNode targetNode, PublishedDocument newPulishedDoc) {
-            super(session);
-            this.doc = doc;
-            this.targetNode = targetNode;
-            this.newPulishedDoc = newPulishedDoc;
-        }
-
-        /**
-         * Save remote sections where live document is published.
-         * 
-         * @param doc live documentcd
-         * @param targetNode remote node section
-         */
-        @Override
-        public void run() throws ClientException {
-            DocumentModel remoteSection = this.session.getDocument(new PathRef(targetNode.getPath()));
-
-            if (!this.doc.isFolder()) {
-
-                if (!this.doc.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_HAS_REMOTE_SECTIONS)) {
-                    this.doc.addFacet(ToutaticeNuxeoStudioConst.CST_FACET_HAS_REMOTE_SECTIONS);
-                }
-                
-                List<Map<String, Object>> remoteSectionsList = (List<Map<String, Object>>) this.doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_REMOTE_SECTIONS);
-                if(remoteSectionsList == null){
-                    remoteSectionsList = new ArrayList<Map<String, Object>>();
-                }
-                
-                Map<String, Object> secInfosProperties = new HashMap<String, Object>(3); 
-                String rSPath = remoteSection.getPathAsString();
-
-                int rsIndex = ToutaticeWorkflowHelper.getListIndexIfYetPresent(remoteSectionsList, rSPath);
-                
-                secInfosProperties.put(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_TITLE_PROP, remoteSection.getTitle());
-                secInfosProperties.put(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_PATH_PROP, rSPath);
-                String rsURL = getDocumentURL(remoteSection);
-                secInfosProperties.put(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_URL_PROP, rsURL);
-                String proxyURL = getDocumentURL(this.doc);
-                secInfosProperties.put(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_PROXY_URL_PROP, proxyURL);
-                secInfosProperties.put(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_VERSION_PROP, VersioningHelper.getVersionLabelFor(this.doc));
-                Boolean pending = Boolean.valueOf(this.newPulishedDoc.isPending());
-                secInfosProperties.put(ToutaticeNuxeoStudioConst.CST_DOC_REMOTE_SECTIONS_PENDING_PROP, pending);
-                
-                if (rsIndex != -1) {
-                    /* Override presnet section */
-                    remoteSectionsList.remove(rsIndex);
-                    remoteSectionsList.add(rsIndex, secInfosProperties);
-                } else {
-                    remoteSectionsList.add(secInfosProperties); 
-                }
-                
-                this.doc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_REMOTE_SECTIONS, (Serializable) remoteSectionsList);
-                this.session.saveDocument(this.doc);
-
-            }
-        }
-
-    }
-
-    /**
-     * @param document
-     * @return Nuxeo URL of section.
-     */
-    protected String getDocumentURL(DocumentModel document){
-        String url = StringUtils.EMPTY;
-        
-        String webid = (String) document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
-        if (StringUtils.isNotBlank(webid)) {
-            url = WebIdFunctions.getPreferredLinkUrl(document);
-        } else {
-            url = DocumentModelFunctions.documentUrl(document);
-        }
-        
-        if(StringUtils.isNotBlank(url)){
-            url = StringUtils.remove(url, BaseURL.getServerURL());
-            url = "/" + url;
-        }
-        
-        return url;
-    }
 
 }

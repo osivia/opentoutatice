@@ -118,28 +118,10 @@ public class RemovePublishedVersions {
                 DocumentModelList proxies = this.session.getProxies(baseDocRef, targetRef);
                 for (DocumentModel proxy : proxies) {
                     //Case of remote publication
-                    removeRemoteStoredSection(this.session, this.target, proxy);
                     this.session.removeDocument(proxy.getRef());
                 }
             } else {
                 throw new ClientException("Failed to get the target document reference");
-            }
-        }
-
-        /**
-         * In case of remote publishing,
-         * remove stored sections on live document.
-         */
-        public void removeRemoteStoredSection(CoreSession session, DocumentModel section, DocumentModel remoteProxy) {
-
-            DocumentModel sourceDocument = session.getSourceDocument(remoteProxy.getRef());
-            DocumentModel workingCopy = session.getWorkingCopy(sourceDocument.getRef());
-
-            if (workingCopy.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_HAS_REMOTE_SECTIONS)) {
-
-                ToutaticeWorkflowHelper.ToutaticeSilentDeleteRSRunner rsRunner = new ToutaticeWorkflowHelper.ToutaticeSilentDeleteRSRunner(session, section.getPathAsString(), workingCopy);
-                rsRunner.silentRun(false, FILTERED_SERVICES_LIST);
-
             }
         }
 
