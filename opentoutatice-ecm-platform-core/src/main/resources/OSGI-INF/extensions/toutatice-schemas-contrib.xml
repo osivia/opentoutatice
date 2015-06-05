@@ -16,6 +16,8 @@
 		
 		<schema name="toutatice_event"  prefix="ttcevt" src="schemas/toutatice-event.xsd" />
 
+        <schema name="toutatice_remote_proxy"  prefix="ttcrp" src="schemas/toutatice-remote-proxy.xsd" />
+
 	</extension>
 
 </component>

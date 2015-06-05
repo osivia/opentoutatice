@@ -86,7 +86,10 @@ public class ToutaticeEmailHelper extends EmailHelper {
 		context.setDocument(doc);
 		
 		ToutaticeFunctions fn = new ToutaticeFunctions();
-		context.put("portalHost", fn.getPortalHost(doc));
+		
+		String portalHost = fn.getPortalHost(doc);
+		context.put("portalHost", portalHost);
+		context.put("shortPortalHost", fn.getShortPortalHost(portalHost));
 
 		String link = (fn.getPermalink(doc));
 		context.put("docPermalink", link);

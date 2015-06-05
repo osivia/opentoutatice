@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>3.0.0-RC19</version>
+		<version>3.1.0-RC01</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-web</artifactId>
@@ -135,6 +135,7 @@
 						<include>plugin-popup.less</include>
 						<include>custom-popup.less</include>
 						<include>fragments-popup.less</include>
+						<include>custom-remote-publishing.less</include>
 					</includes>
 					<outputFileFormat>{fileName}.min.css</outputFileFormat>
 				</configuration>
@@ -165,7 +166,7 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/3.0.0" />
+										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/3.1.0" />
 									</tasks>
 								</configuration>
 								<phase>package</phase>
@@ -176,4 +177,5 @@
 			</build>
 		</profile>
 	</profiles>
+	
 </project>

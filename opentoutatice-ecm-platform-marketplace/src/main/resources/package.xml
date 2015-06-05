@@ -26,11 +26,11 @@
 	</platforms>
 	<dependencies>
 		<!-- Dépendances sur les addons Nuxeo -->
-		<package>nuxeo-dam:6.0.0</package>
+		<package>nuxeo-dam:6.0.0:6.0.0</package>
 		<!-- FIXME: just for schema webpage of PortalSite et PortalPage... -->
-		<package>nuxeo-sites-blogs:1.2.0</package>
+		<package>nuxeo-sites-blogs:1.2.0:1.2.0</package>
 		<!-- Dépendance sur les hotfixes -->
-		<package>nuxeo-6.0-HF09:1.0.0</package>
+		<package>nuxeo-6.0-HF11:1.0.0</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>

@@ -2,12 +2,13 @@
 
 <component name="fr.toutatice.ecm.platform.services.tasks.service.contrib">
 
-	<require>fr.toutatice.ecm.platform.services.tasks.service</require>
+	<require>fr.toutatice.ecm.platform.services.workflows.infos.service</require>
 
-	<extension target="fr.toutatice.ecm.platform.services.tasks.service"
+	<extension target="fr.toutatice.ecm.platform.services.workflows.infos.service"
 		point="tasks">
 
 		<task name="validate-online" permission="validationWorkflow_validation" />
+		<task name="org.nuxeo.ecm.platform.publisher.task.CoreProxyWithWorkflowFactory" permission="RemotePublish" />
 
 	</extension>
 

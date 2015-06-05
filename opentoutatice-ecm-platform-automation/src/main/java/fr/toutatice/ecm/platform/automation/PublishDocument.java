@@ -18,6 +18,7 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jboss.seam.core.Events;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -39,10 +41,12 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.impl.VersionModelImpl;
+import org.nuxeo.ecm.webapp.helpers.EventNames;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeCommentsHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeNotifyEventHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
 
 @Operation(
@@ -173,6 +177,10 @@ public class PublishDocument {
                 DocumentModel srcDoc = this.session.getDocument(new IdRef(srcDocId));
                 srcDoc.setPropertyValue("dc:issued", new Date());
                 srcDoc = this.session.saveDocument(srcDoc);
+                
+                /* Notify publication */
+                //ToutaticeNotifyEventHelper.notifyEvent(session, EventNames.DOCUMENT_PUBLISHED, this.newProxy, new HashMap<String, Serializable>());
+                
             } else {
                 throw new ClientException("Failed to get the target document reference");
             }

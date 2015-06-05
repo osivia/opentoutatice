@@ -25,7 +25,7 @@
 		     facette Immutable posée dynamiquement (elle n'existe pas de façon statique,
 		     i.e. définie dans une contribution native Nuxeo) -->
 		<facet name="Immutable" />
-
+		     
 		<doctype name="PortalSite" extends="Document">
 			<schema name="common" />
 			<schema name="dublincore" />
@@ -91,6 +91,7 @@
 			<facet name="FolderishEditable" />
 			<facet name="SpaceNavigationItem" />
 			<facet name="PublishSpace" />
+			<facet name="SpaceContent"/>
 			<prefetch>common.icon, dc:title, dc:description, dc:created,
 				dc:modified,
 				dc:lastContributor, dc:creator
@@ -102,6 +103,7 @@
 		</doctype>
 		
 		<doctype name="Workspace" append="true">
+			<facet name="Orderable" />
             <schema name="toutatice_navigation" />
         </doctype>
 		

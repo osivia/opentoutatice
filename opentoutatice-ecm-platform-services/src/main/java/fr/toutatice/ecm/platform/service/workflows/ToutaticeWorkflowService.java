@@ -16,7 +16,7 @@
  *   dchevrier
  *    
  */
-package fr.toutatice.ecm.platform.service.tasks;
+package fr.toutatice.ecm.platform.service.workflows;
 
 import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationProvider;
 
@@ -25,6 +25,12 @@ import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformation
  * @author david chevrier
  *
  */
-public interface ToutaticeTaskService extends FetchInformationProvider {
+public interface ToutaticeWorkflowService extends FetchInformationProvider {
+    
+    /** Validation worflow's category. */
+    String VALIDATION_WF_CATEGORY = "validation";
+    /** Key infos of running workflows of category validation. */
+    String VALIDATION_WF_RUNNING_INFOS_KEY = "isValidationWfRunning";
     
 }
+ 

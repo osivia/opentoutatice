@@ -104,7 +104,7 @@
 					<widget>glyphicon</widget>
 				</row>
 				<row>
-					<widget>web_conf_picture</widget>
+					<widget>summary_web_conf_picture</widget>
 				</row>
 				<row>
 					<widget>enabled</widget>

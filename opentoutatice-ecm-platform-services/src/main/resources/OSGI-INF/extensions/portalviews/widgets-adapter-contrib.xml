@@ -9,6 +9,7 @@
 		point="adapter">
 		
 		<mappings>
+		    <mapping nxWidget="vevent_all_day" pvWidget="pv_event_all_day" />
 			<mapping nxWidget="vevent_dtstart" pvWidget="pv_event_dtstart" />
 			<mapping nxWidget="vevent_dtend" pvWidget="pv_event_dtend" />
 		</mappings>

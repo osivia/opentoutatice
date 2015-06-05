@@ -37,9 +37,10 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.services.permalink.PermaLinkService;
 
 public class ToutaticeFunctions extends PlatformFunctions {
-	// private static final Log log = LogFactory.getLog(ToutaticeFunctions.class);
+    
+    private static final String PROTOCOL_BASE_URL = "http://";
+    
 	private static CommentManager commentManager;
-
 	private static PermaLinkService permaLinkService;
 
 	/**
@@ -68,7 +69,7 @@ public class ToutaticeFunctions extends PlatformFunctions {
 	 * @throws ClientException
 	 */
 	public String getPermalink(DocumentModel doc) throws PropertyException, ClientException {
-		String url = "";
+		String url = StringUtils.EMPTY;
 		// verification : le document doit pouvoir être visible dans toutatice
 		if (ToutaticeDocumentHelper.isVisibleInPortal(doc, doc.getCoreSession())) {
 
@@ -82,7 +83,7 @@ public class ToutaticeFunctions extends PlatformFunctions {
 			}
 			url = permaLinkService.getPermalink(doc);
 		}
-		// sinon return null
+		
 		return url;
 	}
 	
@@ -104,6 +105,16 @@ public class ToutaticeFunctions extends PlatformFunctions {
 	    }
 	    
 	    return host;
+	}
+	
+	public String getShortPortalHost(String portalHost){
+	    String shortHost = StringUtils.EMPTY;
+	    
+	    if(StringUtils.isNotBlank(portalHost)){
+	        shortHost = StringUtils.substring(portalHost, PROTOCOL_BASE_URL.length());
+	    }
+	    
+	    return shortHost;
 	}
 
 	/**

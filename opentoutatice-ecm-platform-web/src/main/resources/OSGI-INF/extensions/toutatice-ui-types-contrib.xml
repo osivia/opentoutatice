@@ -106,6 +106,10 @@
 				<layout>heading</layout>
 				<layout>layout@picture</layout>
 			</layouts>
+			<contentViews category="content">
+				<contentView showInExportView="false">cv_ContentOrderedReadNWrite
+				</contentView>
+			</contentViews>			
 		</type>
 
 	</extension>

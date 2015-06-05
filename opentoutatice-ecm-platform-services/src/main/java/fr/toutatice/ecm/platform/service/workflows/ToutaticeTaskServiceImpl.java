@@ -15,7 +15,7 @@
  * Contributors:
  * dchevrier
  */
-package fr.toutatice.ecm.platform.service.tasks;
+package fr.toutatice.ecm.platform.service.workflows;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -128,10 +128,6 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
             infos.put(TaskInfos.isTaskInitiator.name(), isUserTaskInitiator(coreSession, currentTask));
             infos.put(TaskInfos.canManageTask.name(), canUserManageTask(coreSession, currentTask, currentDocument, permission));
             
-            if(taskFound){
-                
-            }
-            
         }
         return infos;
     }
@@ -140,7 +136,7 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
         return ToutaticeWorkflowHelper.getTaskByName(taskName, coreSession, document);
     }
 
-    private Boolean isTaskPending(Task task) throws ClientException {
+    public Boolean isTaskPending(Task task) throws ClientException {
         Boolean isPending = Boolean.FALSE;
         if (task != null) {
             isPending = task.isOpened();
@@ -153,11 +149,11 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
 
         if (task != null) {
             /* Initiator of wf is task initiator too */
-            String onLineWorkflowInitiator = task.getInitiator();
-            if (StringUtils.isNotBlank(onLineWorkflowInitiator)) {
+            String taskInitiator = task.getInitiator();
+            if (StringUtils.isNotBlank(taskInitiator)) {
 
                 NuxeoPrincipal currentUser = (NuxeoPrincipal) coreSession.getPrincipal();
-                isInitiator = onLineWorkflowInitiator.equals(currentUser.getName());
+                isInitiator = taskInitiator.equals(currentUser.getName());
 
             }
         }
@@ -197,6 +193,11 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
     }
 
     private Boolean checkPermission(CoreSession coreSession, DocumentModel currentDocument, String permission) throws ClientException {
+        /* Case of no contributed permission. */
+        if(StringUtils.isBlank(permission)){
+            return Boolean.TRUE;
+        }
+        
         Boolean can = Boolean.FALSE;
         try {
             can = Boolean.valueOf(coreSession.hasPermission(currentDocument.getRef(), permission));

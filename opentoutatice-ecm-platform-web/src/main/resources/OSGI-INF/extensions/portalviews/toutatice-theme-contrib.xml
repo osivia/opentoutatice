@@ -29,6 +29,16 @@
 			<view id="/toutatice_create_document.xhtml">
 				<theme>toutatice/popup</theme>
 			</view>
+			
+			<!-- <view id="/pv_workflows/remote_publishing.xhtml">
+				<theme>toutatice/popup</theme>
+			</view> -->
+			<view id="/pv_workflows/remote_publishing.xhtml">
+				<theme>galaxy/popup</theme>
+			</view>
+			<view id="/pv_workflows/validate_remote_publishing.xhtml">
+				<theme>toutatice/popup</theme>
+			</view>
 
 		</application>
 

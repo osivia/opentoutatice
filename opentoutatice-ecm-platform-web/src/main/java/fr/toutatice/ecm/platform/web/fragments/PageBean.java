@@ -71,6 +71,9 @@ public class PageBean implements Serializable {
 	 */
 	@RequestParameter("fromUrl")
 	private String requestedFromUrl;
+	
+	@RequestParameter("callBackContext")
+	private String callBackContext;
 
 	@RequestParameter("docId")
 	private String inputDocId;
@@ -107,8 +110,16 @@ public class PageBean implements Serializable {
 	public void setFromUrl(String fromUrl) {
 		this.fromUrl = fromUrl;
 	}
+    
+    public String getCallBackContext() {
+        return callBackContext;
+    }
 
-	public String getLiveEditLink() {
+    public void setCallBackContext(String callBackContext) {
+        this.callBackContext = callBackContext;
+    }
+
+    public String getLiveEditLink() {
 		DocumentRef docRef = new IdRef(this.inputDocId);
 		try {
 			DocumentModel document = documentManager.getDocument(docRef);

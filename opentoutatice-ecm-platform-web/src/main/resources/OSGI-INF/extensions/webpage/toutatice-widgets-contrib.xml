@@ -95,6 +95,22 @@
 				<property name="iconRendered">true</property>
 			</properties>
 		</widget>
+		<widget name="summary_web_conf_picture" type="summary_picture_type">
+		  <labels>
+                <label mode="any">osivia.webconfig.picture</label>
+            </labels>
+            <helpLabels>
+                <label mode="any">osivia.webconfig.picture.help</label>
+            </helpLabels>
+            <translated>true</translated>
+            <fields>
+                <field>wconf:picture</field>
+                <field>wconf:picture/filename</field>
+            </fields>
+            <properties widgetMode="any">
+                <property name="hideLabel">true</property>
+            </properties>
+		</widget>
 		<widget name="enabled" type="checkbox">
 			<labels>
 				<label mode="any">osivia.webconfig.enabled</label>

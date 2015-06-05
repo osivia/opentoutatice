@@ -22,6 +22,7 @@ package fr.toutatice.ecm.platform.core.helper;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,14 +37,12 @@ import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.platform.ec.notification.NotificationConstants;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoutingConstants;
-import org.nuxeo.ecm.platform.routing.api.DocumentRoutingService;
-import org.nuxeo.ecm.platform.routing.core.impl.DocumentRoutingServiceImpl;
 import org.nuxeo.ecm.platform.task.Task;
 import org.nuxeo.ecm.platform.task.core.service.DocumentTaskProvider;
 import org.nuxeo.ecm.platform.task.core.service.TaskEventNotificationHelper;
-import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
 /**
  * @author David Chevrier
@@ -80,6 +79,21 @@ public final class ToutaticeWorkflowHelper {
 
         return searchedTask;
 
+    }
+    
+    /**
+     * @param taskName
+     * @return true if Task of given name is pending
+     */
+    public static boolean isTaskPending(String taskName, CoreSession session, DocumentModel currentDoc){
+        boolean isPending = false;
+        
+        Task taskByName = getTaskByName(taskName, session, currentDoc);
+        if(taskByName != null){
+            isPending = taskByName.isOpened();
+        }
+        
+        return isPending;
     }
     
     /**
@@ -137,5 +151,5 @@ public final class ToutaticeWorkflowHelper {
         }
         return initiator;
     }
-
+    
 }

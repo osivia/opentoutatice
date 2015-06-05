@@ -113,8 +113,8 @@ public class GetVocabularies {
 		JSONArray rows = new JSONArray();
 		String voc = "";
 		if (i < indexVoc.size()) {
-			voc = (String) indexVoc.get(i);
-			ArrayList<VocabularyEntry> entries = (ArrayList<VocabularyEntry>) listVoc.get(voc);
+			voc = indexVoc.get(i);
+			ArrayList<VocabularyEntry> entries = listVoc.get(voc);
 			i++;
 			for (VocabularyEntry entry : entries) {
 				String valkey = entry.getTitle();
@@ -125,6 +125,7 @@ public class GetVocabularies {
 					JSONObject obj = new JSONObject();
 					obj.element("key", valkey);
 					obj.element("value", vali18n);
+					obj.element("parent", valparent);
 					if(i != indexVoc.size()) {
 						obj.element("children", getChildren(valkey, i));
 					}

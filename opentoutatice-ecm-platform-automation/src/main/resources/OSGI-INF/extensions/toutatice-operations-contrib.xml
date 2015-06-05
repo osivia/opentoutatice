@@ -15,7 +15,7 @@
 	<operation class="fr.toutatice.ecm.platform.automation.SetOnLine" />
 	<operation class="fr.toutatice.ecm.platform.automation.RemovePublishedVersions" />
 	<operation class="fr.toutatice.ecm.platform.automation.GetVocabularies" />
-	<operation class="fr.toutatice.ecm.platform.automation.ResizeImageOperation" />
+	<operation class="fr.toutatice.ecm.platform.automation.ResizeImageOperation"/>
 	<operation class="fr.toutatice.ecm.platform.automation.GetUsersAndGroupsDocument" />
 	<operation class="fr.toutatice.ecm.platform.automation.FireSeamEvent" />
 	<operation class="fr.toutatice.ecm.platform.automation.SetSpaceID" />
@@ -35,6 +35,7 @@
     <operation class="fr.toutatice.ecm.platform.automation.GetWebConfigurations" />
     
     <operation class="fr.toutatice.ecm.platform.infos.FetchExtendedDocumentInfos" />
+    <operation class="fr.toutatice.ecm.platform.infos.GetPublishedDocumentsInfos" />
     
 	<operation class="fr.toutatice.ecm.platform.automation.workflows.OperateWFProcess" />
 	<operation class="fr.toutatice.ecm.platform.automation.workflows.StartWFProcess" />
