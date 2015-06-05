@@ -40,7 +40,7 @@
 		</widget>
 
 		<!-- PostalSite, PortalPage widgets -->
-		<widget name="title" type="text">
+		<widget name="ttc_title" type="text">
 			<labels>
 				<label mode="any">toutatice.label.title</label>
 			</labels>

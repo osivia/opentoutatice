@@ -16,7 +16,7 @@
 			</templates>
 			<rows>
 				<row>
-					<widget>title</widget>
+					<widget>ttc_title</widget>
 				</row>
 				<row>
 					<widget>description</widget>

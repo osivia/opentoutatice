@@ -58,6 +58,7 @@ public class ToutaticeNuxeoStudioConst {
 	public static final String CST_DOC_SCHEMA_WEB_CONF = "wconf";
 	public static final String CST_DOC_REMOTE_SECTIONS = "rsi";
 	public static final String CST_DOC_REMOTE_SECTIONS_SCHEMA = "remoteSectionsInfos";
+	public static final String CST_DOC_FILE_SCHEMA = "file";
 	
 	public static final String CST_DOC_SCHEMA_TTC_EVENT = "toutatice_event";
 	public static final String CST_DOC_SCHEMA_TTC_EVENT_PREFIX = "ttcevt";
@@ -88,6 +89,8 @@ public class ToutaticeNuxeoStudioConst {
 	public static final String CST_DOC_XPATH_NUXEO_SECTIONS_PROPERTY_NAME = CST_DOC_SCHEMA_NUXEO_PUBLISH_PREFIX + ":sections";
 	public static final String CST_DOC_XPATH_NUXEO_MAIL_RECIPIENTS = CST_DOC_SCHEMA_NUXEO_MAIL_PREFIX + ":recipients";
 	public static final String CST_DOC_XPATH_NUXEO_PICTURE_BOOK_TEMPLATES = CST_DOC_SCHEMA_PICTURE_BOOK_PREFIX + ":picturetemplates";
+	public static final String CST_DOC_XPATH_NUXEO_FILE_NAME = CST_DOC_FILE_SCHEMA + ":filename";
+	public static final String CST_DOC_XPATH_NUXEO_FILE_CONTENT = CST_DOC_FILE_SCHEMA + ":content";
 	public static final String CST_DOC_XPATH_NUXEO_FILES = CST_DOC_SCHEMA_NUXEO_FILES_PREFIX + ":files";
 	public static final String CST_DOC_XPATH_DC_KEYWORDS = CST_DOC_SCHEMA_DC_PREFIX + ":subjects";
 	public final static String CST_DOC_XPATH_DC_PUBLISHER = CST_DOC_SCHEMA_DC_PREFIX + ":publisher";
