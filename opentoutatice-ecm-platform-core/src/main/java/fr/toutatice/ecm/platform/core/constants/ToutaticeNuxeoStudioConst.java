@@ -64,6 +64,7 @@ public class ToutaticeNuxeoStudioConst {
 	public final static String CST_DOC_FACET_WEB_VIEW = "WebView";
 	public final static String CST_DOC_FACET_TTC_PUBLISH_SPACE = "TTCPublishSpace";
 	public static final String CST_FACET_SPACE = "Space";
+	public static final String CST_FACET_SUPERSPACE = "SuperSpace";
 	public static final String CST_FACET_SPACE_NAVIGATION_ITEM = "SpaceNavigationItem";
 	public static final String CST_FACET_SPACE_CONTENT = "SpaceContent";
 

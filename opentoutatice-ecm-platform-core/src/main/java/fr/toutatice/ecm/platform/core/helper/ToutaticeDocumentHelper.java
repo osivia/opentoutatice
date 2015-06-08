@@ -606,6 +606,10 @@ public class ToutaticeDocumentHelper {
 	public static boolean isASpaceDocument(DocumentModel document) {
 		return document.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_SPACE);
 	}
+	
+	public static boolean isASuperSpaceDocument(DocumentModel document) {
+		return document.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_SUPERSPACE);
+	}
 
 	public static boolean isAPublicationSpaceDocument(DocumentModel document) {
 		boolean status = false;
