@@ -39,11 +39,11 @@ public class ToutaticeEventFilterHandler<T> extends ToutaticeAbstractServiceHand
     @Override
     public T newProxy(T eventService, Class<T> eventServiceKlass) {
         setObject(eventService);
-        gethandledMethods(eventServiceKlass);
+        getHandledMethods(eventServiceKlass);
         return eventServiceKlass.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class<?>[]{eventServiceKlass}, this));
     }
 
-    protected void gethandledMethods(Class<T> eventServiceKlass) {
+    protected void getHandledMethods(Class<T> eventServiceKlass) {
         try {
             handledMethods = new Method[2];
             Method firstFireEvent = eventServiceKlass.getMethod(HANDLED_METHOD_NAME, Event.class);

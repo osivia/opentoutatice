@@ -5,7 +5,7 @@
 	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
 		point="chains">
 		
-		<!-- Called only in workflow from Nuxeo (not from Portal) -->
+		<!-- Called only in workflow from Nuxeo (not from Portal) DCH: why??-->
 		<chain id="setOnLineInWF">
 			<operation id="Fetch.DocumentInList" >
 				<param type="integer" name="index">0</param>
@@ -149,6 +149,11 @@
 			<operation id="Context.StartWorkflow">
 				<param type="string" name="id">toutatice_online_approbation</param>
 			</operation>
+			<operation id="Notification.SendTaskNotification">
+              <param type="string" name="task name">validate-online</param>
+              <param type="string" name="event">workflowOnlineTaskAssigned</param>
+              <param type="string" name="actors">WorkflowVariables["assignedTo"]</param>
+            </operation>
 		</chain>
 		
 		<chain id="setOnLine">

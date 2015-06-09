@@ -98,10 +98,8 @@ public class ToutaticeEmailHelper extends EmailHelper {
 
 		context.put("creator", doc.getPropertyValue("dc:creator"));
 
-		boolean isOnLineWF = ToutaticeWorkflowHelper.isOnLineWorkflow(doc);
-		context.put("isOnLineWF", isOnLineWF);
 		String initiator = ToutaticeWorkflowHelper
-				.getOnLineWorkflowInitiator(doc);
+				.getCurrentWorkflowInitiator(doc);
 		context.put("initiator", initiator);
 
 		context.put("Runtime", Framework.getRuntime());

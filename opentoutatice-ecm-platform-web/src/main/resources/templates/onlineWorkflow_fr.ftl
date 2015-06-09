@@ -19,7 +19,7 @@
                     <tr>
                       <td style="background-color:#fff;padding:8px 20px;">
                         
-                        <p><#if isOnLineWF && eventId == "workflowTaskAssigned">
+                        <p><#if eventId == "workflowOnlineTaskAssigned">
                         Une <strong>demande de mise en ligne</strong> du document suivant a &eacute;t&eacute; &eacute;mise par ${initiator} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}:
                         <#elseif eventId == "workflowOnlineTaskApproved">
                         Le document suivant a &eacute;t&eacute; <strong>mis en ligne</strong> par ${author} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}:
@@ -34,7 +34,7 @@
                             <tr>
                               <td style="border:1px solid #eee;color:#888;font-size:13px;white-space:nowrap;">Document</td>
                               <td style="border:1px solid #eee;color:#000;font-size:13px;">
-                                  <#if isOnLineWF && eventId == "workflowTaskAssigned">
+                                  <#if eventId == "workflowOnlineTaskAssigned">
                                   <a href="${docPermalink}?displayContext=proxy_preview" style="color:#22aee8;text-decoration:underline;word-wrap:break-word!important;">
                                   ${htmlEscape(docTitle)}</a>
                                   <#elseif eventId == "workflowOnlineTaskApproved">

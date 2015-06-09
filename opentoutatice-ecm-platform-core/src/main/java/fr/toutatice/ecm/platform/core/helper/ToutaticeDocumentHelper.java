@@ -592,11 +592,12 @@ public class ToutaticeDocumentHelper {
 		res = (null != getProxy(session, doc, SecurityConstants.READ));
 
 		if (!res) {
-			// le document est dans un workspace ?
+			// le document est dans un workspace ou est en attenete de publication dans un PortalSite
 			DocumentModelList spaceDocsList = ToutaticeDocumentHelper.getParentSpaceList(session, doc, true, true, true);
 			if(spaceDocsList!=null && !spaceDocsList.isEmpty()){
 				DocumentModel space = spaceDocsList.get(0);
-				res = ToutaticeDocumentHelper.isAWorkSpaceDocument(space);
+				res = ToutaticeDocumentHelper.isAWorkSpaceDocument(space)
+				        || ToutaticeDocumentHelper.isAPublicationSpaceDocument(space);
 			}
 		}
 

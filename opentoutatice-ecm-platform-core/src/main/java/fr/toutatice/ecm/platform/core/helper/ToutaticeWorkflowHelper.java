@@ -37,9 +37,11 @@ import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.platform.ec.notification.NotificationConstants;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoutingConstants;
+import org.nuxeo.ecm.platform.routing.api.DocumentRoutingService;
 import org.nuxeo.ecm.platform.task.Task;
 import org.nuxeo.ecm.platform.task.core.service.DocumentTaskProvider;
 import org.nuxeo.ecm.platform.task.core.service.TaskEventNotificationHelper;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
@@ -149,6 +151,25 @@ public final class ToutaticeWorkflowHelper {
         if (route != null) {
             initiator = (String) route.getDocument().getPropertyValue(DocumentRoutingConstants.INITIATOR);
         }
+        return initiator;
+    }
+    
+    /**
+     * @param currenDoc
+     * @return initiator of current workflow on current document.
+     */
+    public static String getCurrentWorkflowInitiator(DocumentModel currentDoc){
+        String initiator = StringUtils.EMPTY;
+        
+        DocumentRoutingService routing = (DocumentRoutingService) Framework.getService(DocumentRoutingService.class);
+        currentDoc.getSessionId();
+        List<DocumentRoute> documentRoutesForAttachedDocument = routing.getDocumentRoutesForAttachedDocument(currentDoc.getCoreSession(), currentDoc.getId());
+        
+        if(CollectionUtils.isNotEmpty(documentRoutesForAttachedDocument)){
+            DocumentModel documentModel = documentRoutesForAttachedDocument.get(0).getDocument();
+            initiator = (String) documentModel.getPropertyValue(DocumentRoutingConstants.INITIATOR);
+        }
+        
         return initiator;
     }
     
