@@ -47,6 +47,7 @@
 	<operation class="fr.toutatice.ecm.platform.automation.comments.DeleteComment" />
 	<operation class="fr.toutatice.ecm.platform.automation.comments.CreateChildComment" />
 	
+	<operation class="fr.toutatice.ecm.platform.automation.users.SuggestUserEntriesWithPermission" />
 	
 	
   </extension>
