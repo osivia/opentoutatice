@@ -501,7 +501,8 @@
 
 		<widgetType name="multipleUsersSuggestionWithPermission">
 			<configuration>
-				<title>Multiple users/groups suggestion with given permission</title>
+				<title>Multiple users/groups suggestion with given permission
+				</title>
 				<sinceVersion>6.0</sinceVersion>
 				<supportedModes>
 					<mode>edit</mode>
@@ -523,6 +524,7 @@
 					</defaultValues>
 					<defaultValues mode="edit">
 						<property name="minChars">3</property>
+						<property name="operationId">UserGroup.SuggestUserEntriesWithPermission</property>
 					</defaultValues>
 					<layouts mode="view">
 						<layout name="multipleUsersSuggestion_widget_type_properties_view">
@@ -575,8 +577,8 @@
 									<widget category="widgetTypeConf">permission</widget>
 								</row>
 								<row>
-                                    <widget category="widgetTypeConf">documentId</widget>
-                                </row>
+									<widget category="widgetTypeConf">documentId</widget>
+								</row>
 								<row>
 									<widget category="widgetTypeConf">placeholder</widget>
 								</row>
@@ -648,6 +650,89 @@
 			<property name="template">
 				/widgets/toutatice_user_suggestion_widget_template.xhtml
 			</property>
+		</widgetType>
+
+		<!-- display only a message -->
+		<widgetType name="message">
+			<configuration>
+				<title>Message</title>
+				<description>
+					The Message widget just displays a message.
+				</description>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>false</list>
+					<complex>false</complex>
+					<supportedTypes />
+					<defaultTypes />
+				</fields>
+				<handlingLabels>true</handlingLabels>
+				<categories>
+					<category>document</category>
+				</categories>
+				<properties>
+					<layouts mode="any">
+						<layout name="message_widget_type_properties_any">
+							<rows> 
+							    <row>
+                                    <widget>message</widget>
+                                </row>
+                                <row>
+                                    <widget>translated</widget>
+                                </row>
+								<row>
+                                    <widget>classes</widget>
+                                </row>
+								<row>
+									<widget>style</widget>
+								</row>
+							</rows>
+							<widget name="message" type="text">
+                                <labels>
+                                    <label mode="any">Message</label>
+                                </labels>
+                                <fields>
+                                    <field>message</field>
+                                </fields>
+                            </widget>
+                            <widget name="translated" type="checkbox">
+                                <labels>
+                                    <label mode="any">Translated</label>
+                                </labels>
+                                <fields>
+                                    <field>translated</field>
+                                </fields>
+                            </widget>
+							<widget name="classes" type="text">
+                                <labels>
+                                    <label mode="any">CSS classes</label>
+                                </labels>
+                                <fields>
+                                    <field>classes</field>
+                                </fields>
+                            </widget>
+							<widget name="style" type="text">
+								<labels>
+									<label mode="any">Style</label>
+								</labels>
+								<fields>
+									<field>style</field>
+								</fields>
+							</widget>
+						</layout>
+					</layouts>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/message_widget.xhtml
+			</property>
+
 		</widgetType>
 
 

@@ -197,9 +197,6 @@
 
     // determine operation name
     var opName = getOperationName(params);
-    if(opName == "UserGroup.Suggestion"){
-		opName = "UserGroup.SuggestUserEntriesWithPermission";
-	}
 
     // define automation params
     var automationParams = {
@@ -246,7 +243,6 @@
       query : function(query) {
 
         var serverCall = function() {
-			requestInProgress = false;
           if (!requestInProgress) {
             requestInProgress = true;
             configureOperationParameters(op, params, query);
