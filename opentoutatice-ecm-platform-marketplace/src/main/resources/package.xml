@@ -5,11 +5,11 @@
 			(which one is based on the Nuxeo DM distribution)
 
 			Main evolutions:
-			* Initial version compliant with Nuxeo 6.0
-			* Global Web Configurations
+			* Remote sections informations available for Portal
+			* Suggest Users Widget filtering on permission on current document
 
 			Main fixes provided:
-			* None
+			* Multi-levels vocabularies cycles
 		</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
@@ -25,9 +25,9 @@
 		<platform>cap-@DISTRIB_VERSION@</platform>
 	</platforms>
 	<dependencies>
-		<!-- Dépendances sur les addons Nuxeo -->
+		<!-- Dépendances sur les addons Nuxeo: fixed versions for cap-6.0 compatibility -->
 		<package>nuxeo-dam:6.0.0:6.0.0</package>
-		<!-- FIXME: just for schema webpage of PortalSite et PortalPage... -->
+		<!-- FIXME: just for schema webpage of PortalSite and PortalPage... -->
 		<package>nuxeo-sites-blogs:1.2.0:1.2.0</package>
 		<!-- Dépendance sur les hotfixes -->
 		<package>nuxeo-6.0-HF11:1.0.0</package>
