@@ -8,14 +8,42 @@
 
             jQuery(document).ready(function () {
                 
-                jQuery('.date-picker').datepicker({
+                var $startDateInput = jQuery("input[id*='nxw_pv_event_dtstart_date-picker']")[0];
+                var $endDateInput = jQuery("input[id*='nxw_pv_event_dtend_date-picker']")[0];
+                
+                var startDate = jQuery("input[id*='nxw_pv_event_dtstart_date-picker']").datepicker({
                     language: "fr",
                     autoclose: true,
                     todayHighlight: true,
                     //startDate: "Beginning of time",
                     clearBtn: true
-                });  
-                
+                }).on('changeDate', function(ev) {
+                    var endDateValue = endDate.getDate();
+                    if(endDateValue != null){
+                        if (ev.date.valueOf() &gt; endDateValue.valueOf()) {
+                            var newDate = new Date(ev.date)
+                            newDate.setDate(newDate.getDate());
+                            endDate.setStartDate(newDate);
+                            startDate.hide();
+                            $endDateInput.focus();
+                        }
+                    } else {
+                        var newDate = new Date(ev.date)
+                        newDate.setDate(newDate.getDate());
+                        endDate.setStartDate(newDate);
+                    }
+                }).data('datepicker'); 
+
+                var endDate = jQuery("input[id*='nxw_pv_event_dtend_date-picker']").datepicker({
+                    language: "fr",
+                    autoclose: true,
+                    todayHighlight: true,
+                    startDate:  $startDateInput.valueOf(),
+                    clearBtn: true,
+                }).on('changeDate', function(ev) {
+                    endDate.hide();
+                }).data('datepicker');
+
                 jQuery('.time-picker').timepicker({
                     minuteStep: 1,
                     template: 'modal',
