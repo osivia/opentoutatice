@@ -26,6 +26,7 @@ import org.apache.commons.collections.MapUtils;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
 import org.nuxeo.ecm.platform.ec.notification.NotificationListenerVeto;
+import org.nuxeo.ecm.platform.task.TaskConstants;
 
 
 /**

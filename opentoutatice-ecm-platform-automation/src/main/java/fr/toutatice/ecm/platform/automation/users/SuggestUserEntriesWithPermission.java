@@ -18,6 +18,7 @@
 package fr.toutatice.ecm.platform.automation.users;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,6 +33,7 @@ import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
+import org.nuxeo.ecm.automation.features.PrincipalHelper;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -40,6 +42,10 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.NuxeoGroup;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
+import org.nuxeo.ecm.core.api.security.ACE;
+import org.nuxeo.ecm.core.api.security.ACL;
+import org.nuxeo.ecm.core.api.security.ACP;
+import org.nuxeo.ecm.core.api.security.PermissionProvider;
 import org.nuxeo.ecm.core.schema.SchemaManager;
 import org.nuxeo.ecm.core.schema.types.Field;
 import org.nuxeo.ecm.core.schema.types.QName;
@@ -48,7 +54,6 @@ import org.nuxeo.ecm.directory.Directory;
 import org.nuxeo.ecm.directory.SizeLimitExceededException;
 import org.nuxeo.ecm.directory.api.DirectoryService;
 import org.nuxeo.ecm.platform.ui.select2.common.Select2Common;
-import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 import org.nuxeo.ecm.platform.usermanager.UserAdapter;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 
@@ -69,11 +74,14 @@ public class SuggestUserEntriesWithPermission {
     protected OperationContext ctx;
 
     @Context
+    protected PermissionProvider permissionProvider;
+
+    @Context
     protected SchemaManager schemaManager;
-    
+
     @Param(name = "searchTerm", alias = "prefix", required = false)
     protected String prefix;
-    
+
     @Param(name = "documentId")
     protected DocumentModel document;
 
@@ -181,27 +189,35 @@ public class SuggestUserEntriesWithPermission {
                 }
             }
             if (!userOnly) {
+
                 Schema schema = schemaManager.getSchema(userManager.getGroupSchemaName());
                 groupList = userManager.searchGroups(prefix);
+
+                List<String> groupsForPermission = getGroupsForPermission(document, permission);
+
                 for (DocumentModel group : groupList) {
-                    NuxeoGroup nxGroup = userManager.getGroup(group.getTitle());
-                    //if(session.hasPermission(nxGroup, document.getRef(), permission)){
-                    JSONObject obj = new JSONObject();
-                    for (Field field : schema.getFields()) {
-                        QName fieldName = field.getName();
-                        String key = fieldName.getLocalName();
-                        Serializable value = group.getPropertyValue(fieldName.getPrefixedName());
-                        obj.element(key, value);
+                    
+                    String groupName = (String) group.getPropertyValue("group:groupname");
+                    
+                    if (groupsForPermission.contains(groupName)) {
+
+                        JSONObject obj = new JSONObject();
+                        for (Field field : schema.getFields()) {
+                            QName fieldName = field.getName();
+                            String key = fieldName.getLocalName();
+                            Serializable value = group.getPropertyValue(fieldName.getPrefixedName());
+                            obj.element(key, value);
+                        }
+                        String groupId = group.getId();
+                        obj.put(Select2Common.ID, groupId);
+                        // If the group hasn't an label, let's put the groupid
+                        Select2Common.computeGroupLabel(obj, groupId, userManager.getGroupLabelField(), hideFirstLabel);
+                        obj.put(Select2Common.TYPE_KEY_NAME, Select2Common.GROUP_TYPE);
+                        obj.put(Select2Common.PREFIXED_ID_KEY_NAME, NuxeoGroup.PREFIX + groupId);
+                        Select2Common.computeUserGroupIcon(obj, hideIcon);
+                        result.add(obj);
+
                     }
-                    String groupId = group.getId();
-                    obj.put(Select2Common.ID, groupId);
-                    // If the group hasn't an label, let's put the groupid
-                    Select2Common.computeGroupLabel(obj, groupId, userManager.getGroupLabelField(), hideFirstLabel);
-                    obj.put(Select2Common.TYPE_KEY_NAME, Select2Common.GROUP_TYPE);
-                    obj.put(Select2Common.PREFIXED_ID_KEY_NAME, NuxeoGroup.PREFIX + groupId);
-                    Select2Common.computeUserGroupIcon(obj, hideIcon);
-                    result.add(obj);
-                //}
                 }
             }
 
@@ -220,6 +236,46 @@ public class SuggestUserEntriesWithPermission {
         }
 
         return new StringBlob(result.toString(), "application/json");
+    }
+
+    /**
+     * @param document
+     * @param permission
+     * @return names of groups with given permission.
+     */
+    protected List<String> getGroupsForPermission(DocumentModel document, String permission) {
+        List<String> groups = new ArrayList<String>();
+
+        PrincipalHelper principalHelper = new PrincipalHelper(userManager, permissionProvider);
+        String[] perms = principalHelper.getPermissionsToCheck(permission);
+
+        ACP acp = document.getACP();
+        for (ACL acl : acp.getACLs()) {
+            for (ACE ace : acl.getACEs()) {
+                if (ace.isGranted() && permissionMatch(perms, ace.getPermission())) {
+                    NuxeoGroup group = userManager.getGroup(ace.getUsername());
+                    if(group != null){
+                        groups.add(group.getName());
+                    }
+                }
+            }
+        }
+
+        return groups;
+    }
+
+    /**
+     * @param perms
+     * @param perm
+     * @return true if perms contains perm.
+     */
+    public boolean permissionMatch(String[] perms, String perm) {
+        for (String p : perms) {
+            if (p.equals(perm)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

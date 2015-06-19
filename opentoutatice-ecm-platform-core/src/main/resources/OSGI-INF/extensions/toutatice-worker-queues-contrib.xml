@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.core.queues">
+
+	<documentation>
+		Isolate toutaticeAsynchronousUpdateListener execution because it executes silent processes.
+	</documentation>
+
+	<require>org.nuxeo.ecm.core.work.config</require>
+
+	<extension target="org.nuxeo.ecm.core.work.service" point="queues">
+		<queue id="silent">
+			<name>Silent queue</name>
+			<maxThreads>4</maxThreads>
+			<category>toutaticeAsynchronousUpdateListener</category>
+			<clearCompletedAfterSeconds>3600</clearCompletedAfterSeconds>
+		</queue>
+	</extension>
+
+</component>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<component name="fr.toutatice.ecm.platform.web.picturebook.types">
+<component name="fr.toutatice.ecm.platform.web.picturebook.ui.types">
 
 	<require>org.nuxeo.ecm.core.schema.TypeService</require>
 	<require>org.nuxeo.ecm.platform.types.TypeService</require>
