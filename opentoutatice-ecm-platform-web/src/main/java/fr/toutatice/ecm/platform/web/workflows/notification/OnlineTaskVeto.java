@@ -36,7 +36,7 @@ import org.nuxeo.ecm.platform.task.TaskConstants;
 public class OnlineTaskVeto implements NotificationListenerVeto {
 
     /**
-     * Disable "workflowTaskAssigned for Online Workflow.
+     * Disable "workflowTaskAssigned" for Online Workflow.
      */
     @Override
     public boolean accept(Event event) throws Exception {

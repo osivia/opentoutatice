@@ -18,16 +18,17 @@
 package fr.toutatice.ecm.platform.automation.comments;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.security.Principal;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.plexus.util.StringUtils;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -40,7 +41,12 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
+import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
 import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
+import org.nuxeo.ecm.platform.dublincore.NXDublinCore;
+import org.nuxeo.ecm.platform.dublincore.service.DublinCoreStorageService;
+
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 @Operation(id = FetchCommentsOfDocument.ID, category = Constants.CAT_FETCH, label = "FetchCommentsOfDocument",
         description = "Fetches comments of a (commentable) document")
@@ -149,18 +155,35 @@ public class FetchCommentsOfDocument {
     }
 
     /**
-     * Upadte comments number on document if necessary.
+     * Update comments number on document if necessary.
      */
+    // DCH: FIXME: temporary wainting better Forum model.
     private void updateDocument() {
-        if (document.hasSchema("thread_toutatice")) {
 
-            Long nbComments = (Long) document.getPropertyValue("ttcth:nbComments");
+        if (this.document.hasSchema("thread_toutatice")) {
+
+            Long nbComments = (Long) this.document.getPropertyValue("ttcth:nbComments");
             Long newNbComments = Long.valueOf(this.nbRootsComments + this.nbChildrenComments);
 
             if (!nbComments.equals(newNbComments)) {
-                document.setPropertyValue("ttcth:nbComments", newNbComments);
-
-                this.session.saveDocument(document);
+                // Update of Thread to be correctly ordered
+                
+                this.document.setPropertyValue("ttcth:nbComments", newNbComments);
+                // Done in unrestricted way because a user can add post
+                // even if he has no write permission on Thread
+                ToutaticeDocumentHelper.saveDocumentSilently(this.session, this.document, true);
+                
+                DublinCoreStorageService service = NXDublinCore.getDublinCoreStorageService();
+                
+                Calendar modificationDate = Calendar.getInstance();
+                modificationDate.setTime(new Date());
+                
+                service.setModificationDate(this.document, modificationDate, null);
+                
+                // "Virtual" event to pass principal to method
+                DocumentEventContext ctx = new DocumentEventContext(session, this.session.getPrincipal(),
+                        this.document);
+                service.addContributor(this.document, ctx.newEvent(StringUtils.EMPTY));
             }
 
         }

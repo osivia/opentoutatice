@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.core.notifications">
+
+	<extension
+		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
+		point="notificationListenerVeto">
+		
+		<veto name="toutaticeNotificationsVeto" class="fr.toutatice.ecm.platform.core.notifications.ToutaticeNotificationsVeto" />
+		
+	</extension>
+
+</component>
