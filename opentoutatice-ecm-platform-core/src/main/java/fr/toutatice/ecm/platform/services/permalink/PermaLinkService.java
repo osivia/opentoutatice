@@ -26,5 +26,9 @@ public interface PermaLinkService  extends Serializable
 {
     public abstract String getPermalink(DocumentModel documentmodel);
     
+    public abstract String getPermalink(DocumentModel documentmodel,String codec);
+    
     public abstract String getPortalHost();
+    
+    public abstract String getPortalHost(String codec);
 }

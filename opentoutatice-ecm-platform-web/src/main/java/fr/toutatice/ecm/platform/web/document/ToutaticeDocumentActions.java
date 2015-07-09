@@ -33,6 +33,7 @@ public interface ToutaticeDocumentActions extends DocumentActions {
 	 public boolean belongToPublishSpace();
 	 public boolean belongToWorkSpace();
 	 public String getDocumentPermalink() throws ClientException;
+	 public String getPermalink(String codec) throws ClientException;
 	 public boolean hasChildrenWithType(String type) throws ClientException;
 	 public void updateDocWithMapSwitch(DocumentModel document) throws PropertyException, ClientException;
 	 public String updateNUpgradeCurrentDocument(String version) throws ClientException;

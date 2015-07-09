@@ -33,6 +33,7 @@
     <operation class="fr.toutatice.ecm.platform.automation.AddComplexProperty" />
     <operation class="fr.toutatice.ecm.platform.automation.FetchDocumentInList" />      
     <operation class="fr.toutatice.ecm.platform.automation.GetWebConfigurations" />
+    <operation class="fr.toutatice.ecm.platform.automation.GetPermalink" />
     
     <operation class="fr.toutatice.ecm.platform.infos.FetchExtendedDocumentInfos" />
     
