@@ -56,9 +56,6 @@ public class ToutaticeCoreProxyWithWorkflowFactory extends CoreProxyWithWorkflow
             newProxy = ((SimpleCorePublishedDocument) newPulishedDoc).getProxy();
         }
         
-        /* To force ES re-indexing (Ticket Jira Nuxeo: https://jira.nuxeo.com/browse/SUPNXP-13359) */
-        ToutaticeNotifyEventHelper.notifyEvent(super.coreSession, DocumentEventTypes.DOCUMENT_CHECKEDIN, newProxy, new HashMap<String,Serializable>(0));
-        
         return newPulishedDoc;
     }
     

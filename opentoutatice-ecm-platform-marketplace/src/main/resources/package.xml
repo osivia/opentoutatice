@@ -4,13 +4,12 @@
 		<p>This addon implements the opened platform called Open Toutatice
 			(which one is based on the Nuxeo DM distribution)
 
+			Bug fixes :
+			* #3802 - Prise en compte de la date de publication dans requêtes de type Listes
+			* #3540 - Intégration HF 12 de Nuxeo (index proxies & page providers)
+			
 			Main features :
-			* Integration with nuxeo 6.0
-			* new bootstrap views for portal integration and from tinyMCE (insert a picture, insert a link).
-			* new fragment : criteria list, slider
-			* configuration objects can now be global (setted on a repository) or local to a domain 
-			* workspaces have now a tab order and a navigation visual
-			* new operation FetchExtendedInfos : split of fetch operation for structural and optionnal publication informations
+			* Integration HF12-1.0.1
 		</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
@@ -31,7 +30,7 @@
 		<!-- FIXME: just for schema webpage of PortalSite et PortalPage... -->
 		<package>nuxeo-sites-blogs:1.2.0</package>
 		<!-- Dépendance sur les hotfixes -->
-		<package>nuxeo-6.0-HF09:1.0.0</package>
+		<package>nuxeo-6.0-HF12:1.0.1</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
