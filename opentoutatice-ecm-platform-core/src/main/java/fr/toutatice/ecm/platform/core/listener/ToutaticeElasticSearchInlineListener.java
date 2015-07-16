@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.EventListener;
@@ -59,14 +60,18 @@ public class ToutaticeElasticSearchInlineListener implements EventListener {
 				
 				log.debug("ElasticSearch: re-indexed the document '" + document.getPathAsString() + "'");
 				
-				// forcer la ré-indexation du proxy du document courant si ce dernier est une version publiée localement
+				/* Forcer la ré-indexation du proxy du document courant si ce dernier est une version publiée.
+				 * À noter: la recherche de proxy est globale afin de prendre en compte toutes les pucations distantes également.
+				 */
 				if (document.isVersion()) {
-					DocumentModel proxy = ToutaticeDocumentHelper.getProxy(ctx.getCoreSession(), document, null);
-					if (null != proxy) {
-						EventContext proxyCtx = new DocumentEventContext(ctx.getCoreSession(), ctx.getPrincipal(), proxy);
-						EventImpl proxyEvt = new EventImpl(originalEvtName, proxyCtx);
-						listenerDesc.asEventListener().handleEvent(proxyEvt);
-						log.debug("ElasticSearch: re-indexed the document's proxy'" + proxy.getPathAsString() + "'");
+					DocumentModelList proxies = ToutaticeDocumentHelper.getProxies(ctx.getCoreSession(), document, ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE.GLOBAL, null, true);					
+					if (null != proxies && 0 < proxies.size()) {
+						for (DocumentModel proxy : proxies) {
+							EventContext proxyCtx = new DocumentEventContext(ctx.getCoreSession(), ctx.getPrincipal(), proxy);
+							EventImpl proxyEvt = new EventImpl(originalEvtName, proxyCtx);
+							listenerDesc.asEventListener().handleEvent(proxyEvt);
+							log.debug("ElasticSearch: re-indexed the document's proxy'" + proxy.getPathAsString() + "'");
+						}
 					}
 				}
 			}

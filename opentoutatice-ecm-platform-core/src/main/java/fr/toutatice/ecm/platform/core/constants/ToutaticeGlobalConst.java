@@ -90,6 +90,11 @@ public class ToutaticeGlobalConst {
 	// Others
 	public final static String CST_PROXY_NAME_SUFFIX = ".proxy";
 	
+	public static enum CST_TOUTATICE_PROXY_LOOKUP_SCOPE {
+		LOCAL,
+		GLOBAL;
+	};
+	
 	/**
 	 * Cette définition est utilisée pour la gestion du cache (cf: ToutaticeNavigationContext.java) pour distinguer le cas
 	 * où le cache retourne aucun résultat parce qu'aucune recherche n'a pas encore été faite du cas où la recherche 
