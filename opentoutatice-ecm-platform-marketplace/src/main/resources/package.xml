@@ -6,7 +6,7 @@
 
 			Bug fixes :
 			* #3802 - Prise en compte de la date de publication dans requêtes de type Listes
-			* #3540 - Intégration HF 12 de Nuxeo (index proxies & page providers)
+			* #3540 - Intégration HF 12 de Nuxeo (index proxies, page providers)
 			
 			Main features :
 			* Integration HF12-1.0.1
