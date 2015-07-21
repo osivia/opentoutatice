@@ -22,6 +22,7 @@ package fr.toutatice.ecm.platform.service.portalviews.adapter;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import org.nuxeo.ecm.platform.forms.layout.api.Widget;
 
@@ -33,6 +34,11 @@ import org.nuxeo.ecm.platform.forms.layout.api.Widget;
  *
  */
 public interface WidgetsAdapterService extends Serializable {
+    
+    /**
+     * @return the Nuxeo/Portal widgets mapping.
+     */
+    Map<String, String> getWidgetsMappings();
     
     /**
      * @return true if facelet is in PortalView context.
@@ -56,5 +62,11 @@ public interface WidgetsAdapterService extends Serializable {
      * @return portalview widget
      */
     Widget getPortalViewWidget(Widget nxWidget);
+    
+    /**
+     * @param nxWidgetName
+     * @return metada fields of given Nuxeo widget.
+     */
+    List<String> getNxFields(String nxWidgetName);
 
 }

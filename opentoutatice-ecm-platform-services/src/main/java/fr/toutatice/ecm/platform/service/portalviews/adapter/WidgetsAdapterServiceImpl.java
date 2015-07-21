@@ -20,6 +20,7 @@
 package fr.toutatice.ecm.platform.service.portalviews.adapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -33,8 +34,10 @@ import javax.faces.view.facelets.FaceletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.nuxeo.ecm.platform.forms.layout.api.FieldDefinition;
 import org.nuxeo.ecm.platform.forms.layout.api.Widget;
 import org.nuxeo.ecm.platform.forms.layout.facelets.FaceletHandlerHelper;
 import org.nuxeo.ecm.platform.forms.layout.service.WebLayoutManager;
@@ -59,6 +62,9 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
     private static final String FROM_URL_PARAM = "fromUrl";
 
     private Map<String, String> widgetsMappings = new HashMap<String, String>(0);
+    
+    /** Metadata mapped to Nuxeo widget. */
+    private Map<String, List<String>> fieldsOfNxWidgets = new HashMap<String, List<String>>(0);
 
     private List<String> portalViewIds;
 
@@ -74,6 +80,14 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
         portalViewIds = new ArrayList<String>(0);
         fromUrlParam = StringUtils.EMPTY;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, String> getWidgetsMappings(){
+        return this.widgetsMappings;
+    }
+    
 
     /**
      * {@inheritDoc}
@@ -139,6 +153,19 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
         return is;
 
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> getNxFields(String nxWidgetName){
+        List<String> fields = new ArrayList<String>(0);
+        
+        if(MapUtils.isNotEmpty(this.fieldsOfNxWidgets)){
+            fields = this.fieldsOfNxWidgets.get(nxWidgetName);
+        }
+        
+        return fields;
+    }
 
     /**
      * {@inheritDoc}
@@ -146,12 +173,23 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
     @Override
     public Widget getPortalViewWidget(Widget nxWidget) {
         Widget pvWidget = nxWidget;
+        
+        String nxWidgetName = nxWidget.getName();
+        String pvWidgetName = widgetsMappings.get(nxWidgetName);
+        
+        FieldDefinition[] nxFieldDefinitions = nxWidget.getFieldDefinitions();
+        if (nxFieldDefinitions != null) {
 
-        String pvWidgetName = widgetsMappings.get(nxWidget.getName());
+            List<String> nxFields = new ArrayList<String>();
+            for(FieldDefinition nxFieldDef : nxFieldDefinitions){
+                nxFields.add(nxFieldDef.getFieldName());
+            }
+            fieldsOfNxWidgets.put(nxWidgetName, nxFields);
+        }
+        
 
         if (StringUtils.isNotBlank(pvWidgetName)) {
             WebLayoutManager layoutManager = Framework.getLocalService(WebLayoutManager.class);
-            // layoutManager.getWidgetTypeHandler("", "")
 
             FacesContext context = FacesContext.getCurrentInstance();
             ELContext elContext = (ELContext) context.getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
