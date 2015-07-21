@@ -39,6 +39,10 @@ import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
+import org.nuxeo.ecm.core.schema.SchemaManager;
+import org.nuxeo.ecm.core.schema.types.Field;
+import org.nuxeo.ecm.core.schema.types.Schema;
+import org.nuxeo.ecm.core.schema.types.Type;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
@@ -56,10 +60,6 @@ public class WidgetsDatesAdapterListener implements EventListener {
     public static final String TIME_FORMAT = "HH:mm";
     public static final String VEVENT_START_WIDGET = "vevent_dtstart";
     public static final String VEVENT_END_WIDGET = "vevent_dtend";
-    
-    public static final String CST_DOC_SCHEMA_EVENT = "vevent";
-    public static final String CST_DOC_XPATH_EVENT_START = CST_DOC_SCHEMA_EVENT + ":dtstart";
-    public static final String CST_DOC_XPATH_EVENT_END = CST_DOC_SCHEMA_EVENT + ":dtend";
 
     protected static WidgetsAdapterService waSrv;
 
@@ -79,7 +79,7 @@ public class WidgetsDatesAdapterListener implements EventListener {
 
                 CoreSession session = ctx.getCoreSession();
                 if (document != null && !document.isImmutable()) {
-                    if (document.hasSchema(CST_DOC_SCHEMA_EVENT) && document.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TTC_EVENT)) {
+                    if (document.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TTC_EVENT)) {
 
                         DateNTimeSilentFiller runner = new DateNTimeSilentFiller(session, document, eventName);
                         runner.silentRun(false);
@@ -116,20 +116,22 @@ public class WidgetsDatesAdapterListener implements EventListener {
 
                     String nxWidgetName = widgetMapEntry.getKey();
 
-                    if (VEVENT_START_WIDGET.equals(nxWidgetName) || VEVENT_END_WIDGET.equals(nxWidgetName)) {
+                    if (hasDateLikeSchema(nxWidgetName)) {
 
-                        if (widgetsAdapterService.isInPortalViewContext()) {
-                            fromTTCToNxDate(nxWidgetName);
-                        } else {
-                            fromNxToTTCDate(nxWidgetName);
+                        if (VEVENT_START_WIDGET.equals(nxWidgetName) || VEVENT_END_WIDGET.equals(nxWidgetName)) {
+
+                            if (widgetsAdapterService.isInPortalViewContext()) {
+                                fromTTCToNxDate(nxWidgetName);
+                            } else {
+                                fromNxToTTCDate(nxWidgetName);
+                            }
+
+                            if (isChangeableDocument) {
+                                this.session.saveDocument(this.document);
+                            }
+
                         }
-
-                        if (isChangeableDocument) {
-                            this.session.saveDocument(this.document);
-                        }
-
                     }
-
                 }
 
             }
@@ -153,7 +155,7 @@ public class WidgetsDatesAdapterListener implements EventListener {
                 Calendar ttcDateTimeEnd = (GregorianCalendar) this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TTC_EVT_DATE_TIME_END);
                 if (null != ttcDateTimeEnd) {
                     List<String> nxFields = getWidgetsAdapterService().getNxFields(nxWidgetName);
-                    
+
                     if (CollectionUtils.isNotEmpty(nxFields) && nxFields.size() == 1) {
                         this.document.setPropertyValue(nxFields.get(0), ttcDateTimeEnd.getTime());
                     }
@@ -193,7 +195,7 @@ public class WidgetsDatesAdapterListener implements EventListener {
 
                 if (CollectionUtils.isNotEmpty(nxFields) && nxFields.size() == 1) {
 
-                    Calendar nxDateTimeEnd = (GregorianCalendar) this.document.getPropertyValue(CST_DOC_XPATH_EVENT_END);
+                    Calendar nxDateTimeEnd = (GregorianCalendar) this.document.getPropertyValue(nxFields.get(0));
                     if (null != nxDateTimeEnd) {
 
                         Date ttcDateTimeEnd = nxDateTimeEnd.getTime();
@@ -210,6 +212,44 @@ public class WidgetsDatesAdapterListener implements EventListener {
                 }
             }
         }
+    }
+
+    protected boolean hasDateLikeSchema(String nxWidgetName) {
+        boolean has = false;
+
+        List<String> nxFields = getWidgetsAdapterService().getNxFields(nxWidgetName);
+        if (nxFields != null) {
+            
+            int nbFields = 0;
+            for (String nxField : nxFields) {
+                String[] split = StringUtils.split(nxField, ":");
+
+                if (split != null && split.length > 0) {
+                    String schemaPrefix = split[0];
+
+                    SchemaManager schemaManager = (SchemaManager) Framework.getService(SchemaManager.class);
+                    Schema schemaFromPrefix = schemaManager.getSchemaFromPrefix(schemaPrefix);
+
+                    if (schemaFromPrefix != null) {
+                        Field field = schemaFromPrefix.getField(nxField);
+                        Type fieldType = field.getType();
+                        
+                        if(nbFields == 0){
+                            has = "date".equals(fieldType.getName());
+                        } else {
+                            has &= "date".equals(fieldType.getName());
+                        }
+                    }
+
+                }
+                nbFields++;
+            }
+
+
+        }
+
+
+        return has;
     }
 
     public static WidgetsAdapterService getWidgetsAdapterService() {
