@@ -41,9 +41,11 @@
 					<artifact groupId="opentoutatice-ecm.*" scope="!test" type="!pom" />
 				</includes>
 				<excludes>
-					<artifact groupId="org.nuxeo.*" />
+					<artifact groupId="org.nuxeo.*"/>
 				</excludes>
 			</artifact:set>
+			<!-- Necessary for Portal connection (content automation) with SSO authentication -->
+			<artifact:resolveFile key="org.nuxeo.ecm.platform:nuxeo-platform-login-portal-sso:${nuxeo.version}:jar" />
 		</copy>
 		
 		<!-- Remove duplicates: keep only more recent version for each library -->
