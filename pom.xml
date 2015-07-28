@@ -20,8 +20,8 @@
     </modules>
 
     <properties>
-        <nuxeo.version>6.0-HF09</nuxeo.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <nuxeo.version>6.0-HF16</nuxeo.version>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
     <build>
