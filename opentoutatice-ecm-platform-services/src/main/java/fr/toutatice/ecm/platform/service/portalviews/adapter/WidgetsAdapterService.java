@@ -68,5 +68,11 @@ public interface WidgetsAdapterService extends Serializable {
      * @return metada fields of given Nuxeo widget.
      */
     List<String> getNxFields(String nxWidgetName);
+    
+    /**
+     * @param pvWidgetName
+     * @return metada fields of given portal view widget.
+     */
+    public List<String> getPvFields(String pvWidgetName);
 
 }
