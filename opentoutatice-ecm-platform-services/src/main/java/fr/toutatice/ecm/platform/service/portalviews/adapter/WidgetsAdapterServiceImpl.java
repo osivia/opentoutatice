@@ -30,12 +30,19 @@ import java.util.Set;
 import javax.el.ELContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.FaceletContext;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.nuxeo.ecm.platform.forms.layout.api.FieldDefinition;
+import org.nuxeo.ecm.platform.forms.layout.api.LayoutDefinition;
+import org.nuxeo.ecm.platform.forms.layout.api.LayoutTypeDefinition;
 import org.nuxeo.ecm.platform.forms.layout.api.Widget;
+import org.nuxeo.ecm.platform.forms.layout.api.WidgetDefinition;
+import org.nuxeo.ecm.platform.forms.layout.api.service.LayoutStore;
 import org.nuxeo.ecm.platform.forms.layout.facelets.FaceletHandlerHelper;
 import org.nuxeo.ecm.platform.forms.layout.service.WebLayoutManager;
 import org.nuxeo.ecm.platform.ui.web.rest.RestHelper;
@@ -55,10 +62,18 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
 
     private static final long serialVersionUID = 4780443408803007026L;
 
+    private static final Log log = LogFactory.getLog(WidgetsAdapterService.class);
+
     protected static final String ADAPTER_EXT_PT = "adapter";
     private static final String FROM_URL_PARAM = "fromUrl";
 
     private Map<String, String> widgetsMappings = new HashMap<String, String>(0);
+
+    /** Metadata mapped to Nuxeo widgets. */
+    private Map<String, List<String>> fieldsOfNxWidgets;
+    
+    /** Metadata mapped to portal view widgets. */
+    private Map<String, List<String>> fieldsOfPvWidgets;
 
     private List<String> portalViewIds;
 
@@ -69,11 +84,27 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
     }
 
     @Override
+    public int getApplicationStartedOrder() {
+        // After WebLayoutManager
+        return 2000;
+    }
+
+    @Override
     public void activate(ComponentContext context) throws Exception {
         super.activate(context);
         portalViewIds = new ArrayList<String>(0);
         fromUrlParam = StringUtils.EMPTY;
+        fieldsOfNxWidgets = new HashMap<String, List<String>>(0);
+        fieldsOfPvWidgets = new HashMap<String, List<String>>(0);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, String> getWidgetsMappings() {
+        return this.widgetsMappings;
+    }
+
 
     /**
      * {@inheritDoc}
@@ -121,7 +152,7 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
     private boolean isFromUrlParamExists(FacesContext context) {
         boolean is = false;
         if (StringUtils.isNotBlank(fromUrlParam)) {
-            
+
             Map<String, String> requestParameterMap = context.getExternalContext().getRequestParameterMap();
             Set<Entry<String, String>> params = requestParameterMap.entrySet();
             Iterator<Entry<String, String>> iterator = params.iterator();
@@ -134,10 +165,36 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
                     is = fromUrlParamExists;
                 }
             }
-            
+
         }
         return is;
 
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> getNxFields(String nxWidgetName) {
+        List<String> fields = new ArrayList<String>(0);
+
+        if (MapUtils.isNotEmpty(this.fieldsOfNxWidgets)) {
+            fields = this.fieldsOfNxWidgets.get(nxWidgetName);
+        }
+
+        return fields;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> getPvFields(String pvWidgetName){
+        List<String> fields = new ArrayList<String>(0);
+        
+        if (MapUtils.isNotEmpty(this.fieldsOfPvWidgets)) {
+            fields = this.fieldsOfPvWidgets.get(pvWidgetName);
+        }        
+        
+        return fields;
     }
 
     /**
@@ -147,11 +204,11 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
     public Widget getPortalViewWidget(Widget nxWidget) {
         Widget pvWidget = nxWidget;
 
-        String pvWidgetName = widgetsMappings.get(nxWidget.getName());
+        String nxWidgetName = nxWidget.getName();
+        String pvWidgetName = widgetsMappings.get(nxWidgetName);
 
         if (StringUtils.isNotBlank(pvWidgetName)) {
             WebLayoutManager layoutManager = Framework.getLocalService(WebLayoutManager.class);
-            // layoutManager.getWidgetTypeHandler("", "")
 
             FacesContext context = FacesContext.getCurrentInstance();
             ELContext elContext = (ELContext) context.getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
@@ -177,11 +234,69 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
     }
 
     protected void fillMappings(WidgetMappingDescriptor[] mappings) {
+        LayoutStore lStore = (LayoutStore) Framework.getService(LayoutStore.class);
+        WebLayoutManager wlMng = (WebLayoutManager) Framework.getService(WebLayoutManager.class);
+
         for (WidgetMappingDescriptor mapping : mappings) {
             String nxWidget = mapping.getNxWidget();
             String pvWidget = mapping.getPvWidget();
             this.widgetsMappings.put(nxWidget, pvWidget);
+            
+            WidgetDefinition pvWidgetDefinition = wlMng.getWidgetDefinition(pvWidget);
+
+            WidgetDefinition nxWidgetDefinition = wlMng.getWidgetDefinition(nxWidget);
+            // Search in layouts definitions if null
+            if (nxWidgetDefinition == null) {
+                List<String> categories = lStore.getCategories();
+
+                for (String category : categories) {
+                    List<String> layoutDefinitionNames = lStore.getLayoutDefinitionNames(category);
+
+                    boolean defined = false;
+                    Iterator<String> iterator = layoutDefinitionNames.iterator();
+
+                    while (iterator.hasNext() && !defined) {
+                        String layoutDefinitionName = iterator.next();
+                        LayoutDefinition layoutDefinition = wlMng.getLayoutDefinition(layoutDefinitionName);
+
+                        if (layoutDefinition != null) {
+                            nxWidgetDefinition = layoutDefinition.getWidgetDefinition(nxWidget);
+                            if (nxWidgetDefinition != null) {
+                                defined = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (nxWidgetDefinition == null) {
+                log.error(nxWidget + " widget mapped with " + pvWidget + " not found");
+            } else {
+                List<String> nxFields = storeWidgetFields(nxWidget, nxWidgetDefinition);
+                fieldsOfNxWidgets.put(nxWidget, nxFields);
+                
+                List<String> pvFields = storeWidgetFields(pvWidget, pvWidgetDefinition);
+                fieldsOfPvWidgets.put(pvWidget, pvFields);
+            }
         }
+    }
+
+    /**
+     * @param widgetName
+     * @param widgetDefinition
+     */
+    private List<String> storeWidgetFields(String widgetName, WidgetDefinition widgetDefinition) {
+        List<String> fields = new ArrayList<String>();
+        
+        FieldDefinition[] fieldDefinitions = widgetDefinition.getFieldDefinitions();
+        if (fieldDefinitions != null) {
+
+            for (FieldDefinition nxFieldDef : fieldDefinitions) {
+                fields.add(nxFieldDef.getFieldName());
+            }
+        }
+        
+        return fields;
     }
 
     @Override

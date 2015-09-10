@@ -1,20 +1,20 @@
 /*
  * (C) Copyright 2014 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- *
+ * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- *
+ * 
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
- *
+ * 
+ * 
  * Contributors:
- *   mberhaut1
- *    
+ * mberhaut1
+ * dchevrier
  */
 package fr.toutatice.ecm.platform.service.customize.ui;
 
@@ -110,8 +110,8 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
      */
     @Override
     public void adaptContentViews() throws Exception {
-        
-        if (allowedTypesUnderPortalSite != null) {           
+
+        if (allowedTypesUnderPortalSite != null) {
             Collection<Type> types = typeManager.getTypes();
             for (Type type : types) {
                 if (allowedTypesUnderPortalSite.contains(type)) {
@@ -162,32 +162,39 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
 
         String[] typeContentViewNames = type.getContentViews(CONTENT_CATEGORY);
         if (typeContentViewNames != null && typeContentViewNames.length > 0) {
+
             for (String typeContentViewName : typeContentViewNames) {
                 ContentView contentView = contentViewService.getContentView(typeContentViewName);
-                if (contentView != null) {
-                    ContentViewLayout currentResultLayout = contentView.getCurrentResultLayout();              
-                    String layoutName = currentResultLayout.getName();
-                    if (!modifiedContentViewsLayouts.contains(layoutName) && !PORTAL_LAYOUT.equals(layoutName)) {
-                        modifiedContentViewsLayouts.add(layoutName);
-                        
-                        LayoutDefinition layoutDefinition = webLayoutManager.getLayoutDefinition(layoutName);   
-                        LayoutRowDefinition[] rows = layoutDefinition.getRows();
-                        
-                        List<WidgetReference> widgets = new ArrayList<WidgetReference>(1);
-                        WidgetReference widgetRef = new WidgetReferenceImpl("publishing_status");
-                        widgets.add(widgetRef);
-                        
-                        Map<String, Map<String, Serializable>> properties = new HashMap<String, Map<String, Serializable>>();
-                        Map<String, Serializable> property = new HashMap<String, Serializable>();
-                        property.put("useFirstWidgetLabelAsColumnHeader", true);
-                        property.put("columnStyleClass", "iconColumn");
-                        properties.put("any", property);
-                        
-                        LayoutRowDefinitionImpl layoutRowDefinitionImpl = new LayoutRowDefinitionImpl("publishing_status", properties, widgets, true, true);
-                        LayoutRowDefinition[] modifiedRows = (LayoutRowDefinition[]) Arrays.copyOf(rows, rows.length + 1);
-                        modifiedRows[rows.length] = layoutRowDefinitionImpl;
 
-                        layoutDefinition.setRows(modifiedRows);
+                if (contentView != null) {
+                    List<ContentViewLayout> resultLayouts = contentView.getResultLayouts();
+
+                    for (ContentViewLayout resultLayout : resultLayouts) {
+
+                        String layoutName = resultLayout.getName();
+
+                        if (!modifiedContentViewsLayouts.contains(layoutName) && !PORTAL_LAYOUT.equals(layoutName)) {
+                            modifiedContentViewsLayouts.add(layoutName);
+
+                            LayoutDefinition layoutDefinition = webLayoutManager.getLayoutDefinition(layoutName);
+                            LayoutRowDefinition[] rows = layoutDefinition.getRows();
+
+                            List<WidgetReference> widgets = new ArrayList<WidgetReference>(1);
+                            WidgetReference widgetRef = new WidgetReferenceImpl("publishing_status");
+                            widgets.add(widgetRef);
+
+                            Map<String, Map<String, Serializable>> properties = new HashMap<String, Map<String, Serializable>>();
+                            Map<String, Serializable> property = new HashMap<String, Serializable>();
+                            property.put("useFirstWidgetLabelAsColumnHeader", true);
+                            property.put("columnStyleClass", "iconColumn");
+                            properties.put("any", property);
+
+                            LayoutRowDefinitionImpl layoutRowDefinitionImpl = new LayoutRowDefinitionImpl("publishing_status", properties, widgets, true, true);
+                            LayoutRowDefinition[] modifiedRows = (LayoutRowDefinition[]) Arrays.copyOf(rows, rows.length + 1);
+                            modifiedRows[rows.length] = layoutRowDefinitionImpl;
+
+                            layoutDefinition.setRows(modifiedRows);
+                        }
                     }
                 } else {
                     log.error(typeContentViewName + " not defined for type " + type.getLabel());
@@ -201,12 +208,13 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
      * des requêtes de toutes les contentViews
      */
     private void setNoProxyQueryToContentViews(Type type) throws Exception {
-        
+
         /*
          * Pour éviter les logs d'erreur "FacesContext null" au démarrage
          * de Nuxeo.
-         */       
+         */
         ToutaticeMockFacesContext mockFacesContext = new ToutaticeMockFacesContext() {
+
             @Override
             public Object evaluateExpressionGet(FacesContext context, String expression, Class expectedType) throws ELException {
                 if (expression.startsWith("#{")) {
@@ -216,7 +224,7 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
             }
         };
         mockFacesContext.setCurrent();
-        
+
         String[] typeContentViewNames = type.getContentViews(CONTENT_CATEGORY);
 
         if (typeContentViewNames != null && typeContentViewNames.length > 0) {

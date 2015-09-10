@@ -27,6 +27,9 @@ import java.security.Principal;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.EventService;
+import org.nuxeo.ecm.core.event.impl.EventImpl;
+
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 
 public class ToutaticeEventFilterHandler<T> extends ToutaticeAbstractServiceHandler<T> {
 
@@ -70,16 +73,27 @@ public class ToutaticeEventFilterHandler<T> extends ToutaticeAbstractServiceHand
                 if (handledMethods != null && handledMethods.length > 0) {
                     if (null != args && args.length > 0) {
                         Principal principal = null;
+                        EventContext evtCtx = null;
+                        String evtName = null;
                         if (handledMethods[0] != null && handledMethods[0].equals(method)) {
-                            Event evt = (Event) args[0];
+                        	Event evt = (Event) args[0];
+                        	evtName = evt.getName();
+                        	evtCtx = evt.getContext();
                             principal = evt.getContext().getPrincipal();
                         } else if (handledMethods[1] != null && handledMethods[1].equals(method)) {
-                            EventContext evtCtx = (EventContext) args[1];
+                        	evtName = (String) args[0];
+                            evtCtx = (EventContext) args[1];
                             principal = evtCtx.getPrincipal();
                         }
+                        
                         if (null != principal && ToutaticeServiceProvider.instance().isRegistered(EventService.class, principal.getName())) {
-                            // do filter invocation
-                            return null;
+                            /* do filter invocation and update the ElasticSearch index
+                             * (http://redmine.toutatice.fr/issues/3802) 
+                             */
+                        	evtCtx.setProperty(ToutaticeGlobalConst.CST_EVENT_OPTION_KEY_ORIGINAL_EVENT_NAME, evtName);
+                        	Event event = new EventImpl(ToutaticeGlobalConst.CST_EVENT_ELASTICSEARCH_INDEX, evtCtx);
+                        	((EventService) this.object).fireEvent(event);
+                        	return null;
                         }
                     }
                 }

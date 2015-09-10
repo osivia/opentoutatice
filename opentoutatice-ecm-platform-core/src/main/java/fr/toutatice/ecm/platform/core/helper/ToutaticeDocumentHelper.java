@@ -67,6 +67,7 @@ import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
 import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
 
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
 public class ToutaticeDocumentHelper {
@@ -510,7 +511,8 @@ public class ToutaticeDocumentHelper {
 	}
 
 	/**
-	 * Retourne le proxy d'un document s'il existe DANS UN MODE UNRESTRICTED. 
+	 * Retourne le proxy d'un document s'il existe. Recherche réalisée en MODE UNRESTRICTED. 
+	 * La recherche est effectuée uniquement sur le périmètre du container direct du document (local).
 	 * Si une permission est précisée en paramètre elle sera contrôlée.
 	 * 
 	 * @param session la session utilisateur connecté courant
@@ -525,6 +527,7 @@ public class ToutaticeDocumentHelper {
 
 	/**
 	 * Retourne le proxy d'un document s'il existe. 
+	 * La recherche est effectuée uniquement sur le périmètre du container direct du document (local).
 	 * Si une permission est précisée en paramètre elle sera contrôlée.
 	 * 
 	 * @param session la session utilisateur connecté courant
@@ -536,30 +539,50 @@ public class ToutaticeDocumentHelper {
 	 */
 	public static DocumentModel getProxy(CoreSession session, DocumentModel document, String permission, boolean unrestricted) throws ClientException {
 		DocumentModel proxy = null;
+		
+		DocumentModelList proxies = getProxies(session, document, ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE.LOCAL, permission, unrestricted);
+		if (null != proxies && 0 < proxies.size()) {
+			proxy = proxies.get(0);
+			if (StringUtils.isNotBlank(permission) && !session.hasPermission(proxy.getRef(), permission)) {
+				Principal principal = session.getPrincipal();
+				throw new DocumentSecurityException("The user '" + principal.getName() + "' has not the permission '" + permission + "' on the proxy of document '"
+						+ document.getTitle() + "'");
+			}
+		}
+		
+		return proxy;
+	}
+	
+	/**
+	 * Retourne les proxies d'un document s'ils existent. 
+	 * 
+	 * @param session la session utilisateur connecté courant
+	 * @param document le document pour lequel la recherche est faite
+	 * @param scope le périmètre de la recherche: enumeration {@link ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE}
+	 * @param unrestricted true si le proxy doit être récupéré en mode unrestricted. False s'il doit être récupéré avec la session utilisateur courante
+	 * @return le proxy associé ou null si aucun proxy existe ou une exception
+	 *         de sécurité si les droits sont insuffisants.
+	 * @throws ClientException
+	 */
+	public static DocumentModelList getProxies(CoreSession session, DocumentModel document, ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE scope, String permission, boolean unrestricted) throws ClientException {
+		DocumentModelList proxies = null;
 
 		if (null != document) {
 			if (document.isProxy()) {
-				proxy = document;
+				proxies = new DocumentModelListImpl();
+				proxies.add(document);
 			} else {
-				UnrestrictedGetProxyRunner runner = new UnrestrictedGetProxyRunner(session, document);
+				UnrestrictedGetProxyRunner runner = new UnrestrictedGetProxyRunner(session, document, scope);
 				if (unrestricted) {
 					runner.runUnrestricted();
 				} else {
 					runner.run();
 				}
-				proxy = runner.getProxy();
-			}
-			
-			if (null != proxy) {
-				if (StringUtils.isNotBlank(permission) && !session.hasPermission(proxy.getRef(), permission)) {
-					Principal principal = session.getPrincipal();
-					throw new DocumentSecurityException("The user '" + principal.getName() + "' has not the permission '" + permission + "' on the proxy of doucment '"
-							+ document.getTitle() + "'");
-				}
-			}
+				proxies = runner.getProxies();
+			}			
 		}
 
-		return proxy;
+		return proxies;
 	}
 
 	/**
@@ -636,23 +659,40 @@ public class ToutaticeDocumentHelper {
 	    return parentPublishSpaceList != null && !parentPublishSpaceList.isEmpty();
 	}
 	
+	@SuppressWarnings("unused")
 	private static class UnrestrictedGetProxyRunner extends UnrestrictedSessionRunner {
 		private DocumentModel document;
 		private DocumentModelList proxies;
+		private ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE scope;
 
 		public UnrestrictedGetProxyRunner(CoreSession session, DocumentModel document) {
+			this(session, document, ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE.LOCAL);
+		}
+
+		public UnrestrictedGetProxyRunner(CoreSession session, DocumentModel document, ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE scope) {
 			super(session);
 			this.proxies = null;
 			this.document = document;
+			this.scope = scope;
 		}
 
 		public DocumentModel getProxy() throws ClientException {
 			return (null != this.proxies && 0 < this.proxies.size()) ? this.proxies.get(0) : null;
 		}
 
+		public DocumentModelList getProxies() throws ClientException {
+			return (null != this.proxies && 0 < this.proxies.size()) ? this.proxies : null;
+		}
+		
 		@Override
 		public void run() throws ClientException {
-			this.proxies = this.session.getProxies(document.getRef(), document.getParentRef());
+			if (null == scope || ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE.GLOBAL.equals(scope)) {
+				// lookup all proxies of the document (wherever they are placed in the repository) 
+				this.proxies = this.session.getProxies(document.getRef(), null);
+			} else {
+				// lookup only the proxies of the document placed in the parent folder
+				this.proxies = this.session.getProxies(document.getRef(), document.getParentRef());
+			}
 		}
 
 	}

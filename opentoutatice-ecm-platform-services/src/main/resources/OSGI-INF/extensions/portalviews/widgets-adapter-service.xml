@@ -2,6 +2,8 @@
 
 <component name="fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterService">
 
+    <require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
 	<service>
 		<provide interface="fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterService" />
 	</service>

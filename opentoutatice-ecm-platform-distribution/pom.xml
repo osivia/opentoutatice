@@ -51,13 +51,6 @@
 			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>
-		<!-- Necessary for Portal -->
-		<dependency>
-			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-login-portal-sso</artifactId>
-			<version>${nuxeo.version}</version>
-			<type>jar</type>
-		</dependency>
 	</dependencies>
 
 	<profiles>

@@ -17,7 +17,7 @@
  * lbillon
  * dchevrier
  */
-package fr.toutatice.ecm.platform.service.portalviews.adapter;
+package fr.toutatice.ecm.platform.service.portalviews.adapter.dates;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,13 +36,14 @@ import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
+import fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterService;
 
 
 /**
  * @author david chevrier.
  *
  */
-public class WidgetsAdapterListener implements EventListener {
+public class WidgetsTTCDatesMergeListener implements EventListener {
 
     public static final String DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm";
     public static final String DEFAULT_TIME = "12:00";

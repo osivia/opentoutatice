@@ -1139,6 +1139,16 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         return getDocumentPermalink(currentDoc);
 
     }
+    
+    @Override
+    public String getPermalink(String codec){
+    	DocumentModel currentDoc = navigationContext.getCurrentDocument();
+    	return getPermaLinkService().getPermalink(currentDoc, codec);
+    }
+    
+    public String getPermalink(DocumentModel doc, String codec){
+    	return getPermaLinkService().getPermalink(doc, codec);
+    }
 
     public String getDocumentPermalink(DocumentModel doc) throws ClientException {
         return getPermaLinkService().getPermalink(doc);

@@ -65,6 +65,8 @@ public class ToutaticeGlobalConst {
 	// Events
 	public final static String CST_EVENT_SUB_TAB_SELECTION_CHANGED = "subTabSelectionChanged";
 	public final static String CST_EVENT_PROPAGATE_SECTIONS = "propagateSections";
+	public final static String CST_EVENT_ELASTICSEARCH_INDEX = "toutaticeElasticSearchDocumentIndexation";
+	
 	/* Online workflow events */
 	public final static String CST_EVENT_ONLINE_TASK_APPROVED_ASSIGNED = "workflowOnlineTaskAssigned";
 	public final static String CST_EVENT_ONLINE_TASK_APPROVED = "workflowOnlineTaskApproved";
@@ -81,11 +83,17 @@ public class ToutaticeGlobalConst {
 	public final static String CST_EVENT_OPTION_KEY_APPEND = "append";
 	public final static String CST_EVENT_OPTION_KEY_OVERWRITE = "overwrite";
 	public final static String CST_EVENT_OPTION_KEY_SECTION_ID = CST_EVENT_OPTION_VALUE_ALL;
+	public final static String CST_EVENT_OPTION_KEY_ORIGINAL_EVENT_NAME = "originalEventName";
 	
 	// Audit events
 	
 	// Others
 	public final static String CST_PROXY_NAME_SUFFIX = ".proxy";
+	
+	public static enum CST_TOUTATICE_PROXY_LOOKUP_SCOPE {
+		LOCAL,
+		GLOBAL;
+	};
 	
 	/**
 	 * Cette définition est utilisée pour la gestion du cache (cf: ToutaticeNavigationContext.java) pour distinguer le cas

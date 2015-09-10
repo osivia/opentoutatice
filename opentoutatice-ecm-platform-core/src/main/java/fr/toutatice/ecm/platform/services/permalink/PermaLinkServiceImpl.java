@@ -54,66 +54,19 @@ public class PermaLinkServiceImpl extends DefaultComponent implements
 		this.permalinkImpls = new HashMap<String, Permalink>();
 	}
 
+	
 	@Override
 	public String getPermalink(DocumentModel doc) {
-		String res = null;
-		String permalinkName = getDefaultPermalinkName();
-		Permalink permalinkImpl = (Permalink) permalinkImpls.get(permalinkName);
-		
-		PermalinkDescriptor desc = (PermalinkDescriptor) descriptors.get(permalinkName);
-		
-		if (desc == null){
-		    log.warn("No permaLink contribution");
-		    return "";
-		}
-	
-		if (permalinkImpl == null) {
-			String classPathImpl = desc.getClasspath();
-			if (classPathImpl == null)
-				throw new IllegalArgumentException(String.format(
-						"Unknown classpath for '%s'", permalinkName));
-			try {
-				permalinkImpl = (Permalink) Permalink.class.getClassLoader().loadClass(classPathImpl).newInstance();
-			} catch (Exception e) {
-				String msg = String.format("Caught error when instantiating permalink '%s' with class '%s' ",
-								permalinkName, classPathImpl);
-				throw new IllegalArgumentException(msg, e);
-			}
-			permalinkImpls.put(permalinkName, permalinkImpl);
-						
-		}		
-		
-		res = permalinkImpl.getPermalink(doc, desc.getHostServer(), desc.getParameters());
-		return res;
-	}
-
-	public String getDefaultPermalinkName() {
-
-		if (defaultPermalinkName != null) {
-			for (String name : descriptors.keySet()) {
-				if (descriptors.get(name).getEnabled()) {
-					defaultPermalinkName = name;
-					break;
-				}
-			}
-		}
-
-		return defaultPermalinkName;
+				return this.getPermalink(doc, getDefaultPermalinkName());
 	}
 	
 	/**
 	 * Return the portal host.
 	 */
+	@Override
 	public String getPortalHost(){
-	    String permalinkName = getDefaultPermalinkName();
-	    PermalinkDescriptor desc = descriptors.get(permalinkName);
-	    
-	    if (desc == null){
-            log.warn("No permaLink contribution");
-            return StringUtils.EMPTY;
-        }
-	    
-	    return desc.getHostServer();
+	    	    
+	    return getPortalHost(getDefaultPermalinkName());
 	    
 	}
 
@@ -153,6 +106,70 @@ public class PermaLinkServiceImpl extends DefaultComponent implements
 					.append(permalinkName).toString());
 		}
 		log.debug("<-- PublicationServiceImpl.unregisterContribution");
+	}
+
+
+	@Override
+	public String getPermalink(DocumentModel doc, String codec) {
+		String res = null;
+		String permalinkName = codec;
+		Permalink permalinkImpl = (Permalink) permalinkImpls.get(permalinkName);
+		
+		PermalinkDescriptor desc = (PermalinkDescriptor) descriptors.get(permalinkName);
+		
+		if (desc == null){
+		    log.warn("No permaLink contribution");
+		    return "";
+		}
+	
+		if (permalinkImpl == null) {
+			String classPathImpl = desc.getClasspath();
+			if (classPathImpl == null)
+				throw new IllegalArgumentException(String.format(
+						"Unknown classpath for '%s'", permalinkName));
+			try {
+				permalinkImpl = (Permalink) Permalink.class.getClassLoader().loadClass(classPathImpl).newInstance();
+			} catch (Exception e) {
+				String msg = String.format("Caught error when instantiating permalink '%s' with class '%s' ",
+								permalinkName, classPathImpl);
+				throw new IllegalArgumentException(msg, e);
+			}
+			permalinkImpls.put(permalinkName, permalinkImpl);
+						
+		}		
+		
+		res = permalinkImpl.getPermalink(doc, desc.getHostServer(), desc.getParameters());
+		return res;
+	
+	}
+
+
+	@Override
+	public String getPortalHost(String codec) {
+		  
+		    PermalinkDescriptor desc = descriptors.get(codec);
+		    
+		    if (desc == null){
+	            log.warn("No permaLink contribution");
+	            return StringUtils.EMPTY;
+	        }
+		    
+		    return desc.getHostServer();
+	
+	}
+	
+	public String getDefaultPermalinkName() {
+
+		if (defaultPermalinkName != null) {
+			for (String name : descriptors.keySet()) {
+				if (descriptors.get(name).getDefaultPermalink()) {
+					defaultPermalinkName = name;
+					break;
+				}
+			}
+		}
+
+		return defaultPermalinkName;
 	}
 
 }

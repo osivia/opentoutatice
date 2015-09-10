@@ -16,7 +16,6 @@ Nuxeo-Component: OSGI-INF/extensions/customize-types/customize-types-service.xml
  OSGI-INF/extensions/inheritance/toutatice-inheritance-listeners-contrib.xml,
  OSGI-INF/extensions/webid/toutatice-url-service-contrib.xml,
  OSGI-INF/extensions/portalviews/widgets-adapter-service.xml,
- OSGI-INF/extensions/portalviews/widgets-adapter-contrib.xml,
  OSGI-INF/extensions/portalviews/proxy-services-contrib.xml,
  OSGI-INF/extensions/portalviews/events-listener-contrib.xml,
  OSGI-INF/extensions/workflows/extended-fetchinfos-contrib.xml,
