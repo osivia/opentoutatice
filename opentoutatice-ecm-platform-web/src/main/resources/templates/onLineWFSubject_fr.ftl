@@ -1,7 +1,9 @@
-<#if eventId == "workflowOnlineTaskApproved">
-Document mis en ligne: ${docTitle}
+<#if eventId == "workflowOnlineTaskAssigned">
+Demande de mise en ligne du document ${docTitle}
+<#elseif eventId == "workflowOnlineTaskApproved">
+Document ${docTitle} mis en ligne 
 <#elseif eventId == "workflowOnlineTaskRejected">
-Rejet de la demande de mise en ligne de: ${docTitle}
+Rejet de la demande de mise en ligne du document ${docTitle}
 <#elseif eventId == "workflowOnlineCanceled">
-Annulation de la demande de mise en ligne de: ${docTitle}
+Annulation de la demande de mise en ligne du document ${docTitle}
 </#if>

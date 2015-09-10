@@ -56,13 +56,14 @@
 				<permission>validationWorkflow_validation</permission>
 			</rule>
 		</filter>
-		
+
 		<filter id="canValidateOnParent">
 			<rule grant="true">
-				<condition>#{documentActions.checkPermission(currentDocument, 'validationWorkflow_validation')}</condition>
+				<condition>#{documentActions.checkPermission(currentDocument,
+					'validationWorkflow_validation')}</condition>
 			</rule>
 		</filter>
-		
+
 		<filter id="canNotValidateOnParent">
 			<rule grant="false">
 				<condition>#{documentActions.checkPermission(currentDocument,
@@ -73,7 +74,8 @@
 		<filter id="canCreateNSetDocumentOnline">
 			<rule grant="true">
 				<facet>Versionable</facet>
-				<condition>#{documentActions.checkPermission(currentDocument, 'Write')}</condition>
+				<condition>#{documentActions.checkPermission(currentDocument,
+					'Write')}</condition>
 			</rule>
 			<rule grant="false">
 				<type>Root</type>

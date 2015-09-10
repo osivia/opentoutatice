@@ -7,11 +7,16 @@
 	<extension target="org.nuxeo.ecm.core.schema.TypeService"
 		point="schema">
 
-		<schema name="var_Task3a8" prefix="var_Task3a8" src="workflows/schemas/var_Task3a8.xsd"/>
-	    <schema name="var_Task439" prefix="var_Task439" src="workflows/schemas/var_Task439.xsd"/>
-	    <schema name="var_Task4bf" prefix="var_Task4bf" src="workflows/schemas/var_Task4bf.xsd"/>
-	    <schema name="var_Task6a6" prefix="var_Task6a6" src="workflows/schemas/var_Task6a6.xsd"/>
-	    <schema name="var_toutatice_online_approbation" prefix="var_toutatice_online_approbation" src="workflows/schemas/var_toutatice_online_approbation.xsd"/>
+		<schema name="var_Task3a8" prefix="var_Task3a8"
+			src="workflows/schemas/var_Task3a8.xsd" />
+		<schema name="var_Task439" prefix="var_Task439"
+			src="workflows/schemas/var_Task439.xsd" />
+		<schema name="var_Task4bf" prefix="var_Task4bf"
+			src="workflows/schemas/var_Task4bf.xsd" />
+		<schema name="var_Task6a6" prefix="var_Task6a6"
+			src="workflows/schemas/var_Task6a6.xsd" />
+		<schema name="var_toutatice_online_approbation" prefix="var_toutatice_online_approbation"
+			src="workflows/schemas/var_toutatice_online_approbation.xsd" />
 
 	</extension>
 

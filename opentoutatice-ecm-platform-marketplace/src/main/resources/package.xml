@@ -5,11 +5,13 @@
 			(which one is based on the Nuxeo DM distribution)
 
 			Bug fixes :
-			* #3802 - Prise en compte de la date de publication dans requêtes de type Listes
+			* #3802 - Prise en compte de la date de publication dans requêtes de type	Listes
 			* #3540 - Intégration HF 12 de Nuxeo (index proxies, page providers)
-			
+            * Multi-levels vocabularies cycles
+
 			Main features :
 			* Integration HF12-1.0.1
+            * Widget filtering on permission on current document
 		</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
@@ -27,10 +29,10 @@
 	<dependencies>
 		<!-- Dépendances sur les addons Nuxeo -->
 		<package>nuxeo-dam:6.0.0</package>
-		<!-- FIXME: just for schema webpage of PortalSite et PortalPage... -->
+		<!-- FIXME: just for schema webpage of PortalSite and PortalPage... -->
 		<package>nuxeo-sites-blogs:1.2.0</package>
 		<!-- Dépendance sur les hotfixes -->
-		<package>nuxeo-6.0-HF16:1.0.0</package>
+		<package>nuxeo-6.0-HF19:1.0.0</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>

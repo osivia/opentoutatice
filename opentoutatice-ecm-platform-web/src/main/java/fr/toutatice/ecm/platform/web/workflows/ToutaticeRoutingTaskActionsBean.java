@@ -51,7 +51,7 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
 public class ToutaticeRoutingTaskActionsBean extends RoutingTaskActionsBean {
 
 	private static final long serialVersionUID = -5854741772106895168L;
-	private static final List<String> TOUTATICE_WF_ACTIONS = new ArrayList<String>() {
+	private static final List<String> TOUTATICE_WF_ONLINE_ACTIONS = new ArrayList<String>() {
 		private static final long serialVersionUID = 3710687789887853309L;
 		
 		{
@@ -78,7 +78,7 @@ public class ToutaticeRoutingTaskActionsBean extends RoutingTaskActionsBean {
     public String endTask(Task task) throws ClientException {
 		String view = MainTabsActions.DEFAULT_VIEW;
 		
-		if (TOUTATICE_WF_ACTIONS.contains(getClickedButton())) {
+		if (TOUTATICE_WF_ONLINE_ACTIONS.contains(getClickedButton())) {
 			DocumentModel currentDoc = navigationContext.getCurrentDocument();
 			Task taskForNotif = new TaskImpl(task.getDocument());
 			String wfInitiator = getWorkFlowInitiator();

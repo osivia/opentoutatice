@@ -55,31 +55,15 @@ public class FetchExtendedDocumentInfos {
     @Context
     protected CoreSession session;
     
-    // TODO: webId resolution to have only one id parameter!!
-    
     /** Id of document: path, id, webId */
     @Param(name = "path", required = false)
     protected DocumentModel document;
-    
-    /** WebId of document (if exists) */
-    @Param(name = "webid", required = false)
-    protected String webid;
-    
-    @Param(name = "navigationPath", required = false)
-    protected String navigationPath;
-    
-    @Param(name = "displayLiveVersion", required = false)
-    protected String displayLiveVersion;
     
     @OperationMethod
     public Blob run() throws Exception {
         
         JSONArray rowDocInfos= new JSONArray();
         JSONObject docInfos = new JSONObject();
-        
-        if(StringUtils.isNotBlank(webid)){
-            document = WebIdResolver.getDocumentByWebId(session, webid, navigationPath, displayLiveVersion);
-        }
         
         FetchInformationsService fetchInfosService = Framework.getService(FetchInformationsService.class);
         if (fetchInfosService != null) {

@@ -18,10 +18,11 @@
 		</directory>
 
 	</extension>
-	
-    <extension target="org.nuxeo.ecm.directory.ui.DirectoryUIManager"
-        point="directories">
-        <directory name="webconfiguration-types" layout="vocabulary" sortField="id" />
-    </extension>	
+
+	<extension target="org.nuxeo.ecm.directory.ui.DirectoryUIManager"
+		point="directories">
+		<directory name="webconfiguration-types" layout="vocabulary"
+			sortField="id" />
+	</extension>
 
 </component>

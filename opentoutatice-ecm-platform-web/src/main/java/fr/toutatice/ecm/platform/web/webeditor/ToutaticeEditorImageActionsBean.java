@@ -297,8 +297,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 		}
 
 		constraints.add("ecm:primaryType = 'Picture'");
-		constraints
-				.add("ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'");
+		constraints.add("ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'");
 
 		final String query = String.format(SEARCH_QUERY,
 				StringUtils.join(constraints, " AND "));

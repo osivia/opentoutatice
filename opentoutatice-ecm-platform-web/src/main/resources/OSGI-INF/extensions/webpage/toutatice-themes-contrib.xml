@@ -2,32 +2,30 @@
 
 <component name="fr.toutatice.ecm.platform.webpage.theme">
 
-    <require>org.nuxeo.theme.nuxeo.default</require>
+	<require>org.nuxeo.theme.nuxeo.default</require>
 
-    <extension
-        target="org.nuxeo.theme.services.ThemeService"
-        point="applications">
-        
-        <application
-            root="${org.nuxeo.ecm.contextPath}"
-            template-engine="jsf-facelets">
+	<extension target="org.nuxeo.theme.services.ThemeService"
+		point="applications">
 
-            <view id="/osivia_create_document.xhtml">
-                <theme>galaxy/popup</theme>
-            </view>
-            <view id="/osivia_edit_document.xhtml">
-                <theme>galaxy/popup</theme>
-            </view> 
-            
-            <view id="/osivia_create_fragment.xhtml">
-                <theme>toutatice/popup</theme>
-            </view> 
-            <view id="/osivia_edit_fragment.xhtml">
+		<application root="${org.nuxeo.ecm.contextPath}"
+			template-engine="jsf-facelets">
+
+			<view id="/osivia_create_document.xhtml">
+				<theme>galaxy/popup</theme>
+			</view>
+			<view id="/osivia_edit_document.xhtml">
+				<theme>galaxy/popup</theme>
+			</view>
+
+			<view id="/osivia_create_fragment.xhtml">
 				<theme>toutatice/popup</theme>
 			</view>
-            
-        </application>
-        
-    </extension>
+			<view id="/osivia_edit_fragment.xhtml">
+				<theme>toutatice/popup</theme>
+			</view>
+
+		</application>
+
+	</extension>
 </component>
  

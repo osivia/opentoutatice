@@ -238,6 +238,15 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
         return cancelWorkflow(ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE);
     }
 
+    /**
+     * To allow fir of beforeWorkflowProcessCanceled event.
+     */
+    @Override
+    public String cancelRoute() throws ClientException {
+        Events.instance().raiseEvent(ToutaticeGlobalConst.BEFORE_WF_CANCELED_EVENT);
+        return super.cancelRoute();
+    }
+
     /* "Fork" of cancelRoute() */
     public String cancelWorkflow(String wfName) throws ClientException {
         List<DocumentRoute> routes = getRelatedRoutes();

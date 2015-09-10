@@ -40,6 +40,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -172,6 +173,17 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public boolean checkPermission(DocumentModel document, String permission) throws ClientException {
         return documentManager.hasPermission(document.getRef(), permission);
+    }
+
+    public DocumentModel getParent(DocumentModel document, boolean unrestricted){
+        DocumentModel parent = null;
+        
+        DocumentModelList parentList = ToutaticeDocumentHelper.getParentList(this.documentManager, document, null, unrestricted, true);
+        if(CollectionUtils.isNotEmpty(parentList)){
+            parent = parentList.get(0);
+        }
+        
+        return parent;
     }
 
     public boolean isRemoteProxy() {

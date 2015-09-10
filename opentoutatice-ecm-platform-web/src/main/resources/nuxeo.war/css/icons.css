@@ -1,8 +1,8 @@
-.radio-inline.text-overflow.ttcInputradio > input {
-    width:auto;
+.radio-inline.text-overflow.ttcInputradio>input {
+	width: auto;
 }
 
-.radio-inline.text-overflow.ttcInputradio > img {
-     vertical-align: middle;
-     width: 20%;
+.radio-inline.text-overflow.ttcInputradio>img {
+	vertical-align: middle;
+	width: 20%;
 }

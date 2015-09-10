@@ -3,12 +3,13 @@
 <component name="fr.toutatice.ecm.platform.core.images.search.doctypes">
 
 	<require>org.nuxeo.ecm.core.schema.TypeService</require>
-	
+
 	<extension target="org.nuxeo.ecm.core.schema.TypeService"
 		point="schema">
-		
-		<schema name="sch_toutatice_image_search" prefix="img_srch" src="schemas/sch_toutatice_image_search.xsd" />
-		
+
+		<schema name="sch_toutatice_image_search" prefix="img_srch"
+			src="schemas/sch_toutatice_image_search.xsd" />
+
 	</extension>
 
 	<extension target="org.nuxeo.ecm.core.schema.TypeService"
@@ -17,7 +18,7 @@
 		<doctype name="doc_toutatice_image_search" extends="Document">
 			<schema name="sch_toutatice_image_search" />
 		</doctype>
-		
+
 	</extension>
 
 </component>

@@ -29,8 +29,7 @@
 
 .summary_version {
 	background-color: #0000ff;
-	color : #ffffff;
-	
+	color: #ffffff;
 }
 
 .summary_draft {
@@ -42,38 +41,33 @@
 }
 
 /* Visuel vue résumé d'un PortalSite */
-
-.widgetPanel.actionsWidgetPanel > img {
+.widgetPanel.actionsWidgetPanel>img {
 	width: 100%;
 }
 
-
 /* Actions dans la vue résumé */
-
 .gridBox.gridStyle12 {
-    width: 100%;
+	width: 100%;
 }
 
 .gridStyle12 .summaryActions .actionsWidgetPanel {
-    display: inline;
+	display: inline;
 }
 
 .gridStyle12 .summaryActions .widgetPanel {
-    padding: 0;
+	padding: 0;
 }
 
 .widgetPanel {
-    padding: 0 2% 2%;
+	padding: 0 2% 2%;
 }
 
 /* Actions dans la vue Contenu */
-
 .summary_div_header_cartridge_action {
 	display: inline;
 }
 
 /* Vue "Configuration Portail" */
-
 .savePanelAction {
-    display: inline;
+	display: inline;
 }

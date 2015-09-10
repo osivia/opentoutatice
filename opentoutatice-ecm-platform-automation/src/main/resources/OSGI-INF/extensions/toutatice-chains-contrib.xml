@@ -4,12 +4,12 @@
 
 	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
 		point="chains">
-		
+
 		<!-- Called only in workflow from Nuxeo (not from Portal) -->
 		<chain id="setOnLineInWF">
-			<operation id="Fetch.DocumentInList" >
+			<operation id="Fetch.DocumentInList">
 				<param type="integer" name="index">0</param>
-			</operation> 
+			</operation>
 			<operation id="Document.SetOnLineOperation" />
 			<operation id="Seam.AddInfoMessage">
 				<param type="string" name="message">expr:Le document en version
@@ -58,9 +58,9 @@
 		</chain>
 
 		<chain id="SetAssignees">
-			<operation id="Fetch.DocumentInList" >
+			<operation id="Fetch.DocumentInList">
 				<param type="integer" name="index">0</param>
-			</operation> 
+			</operation>
 			<operation id="Document.GetUsersAndGroups">
 				<param type="string" name="permission">validationWorkflow_validation
 				</param>
@@ -72,7 +72,7 @@
 			<operation id="Context.SetWorkflowVar">
 				<param type="string" name="name">assignedTo</param>
 				<param type="object" name="value">expr:Context["assignedTo"]</param>
-			</operation> 
+			</operation>
 		</chain>
 
 		<chain id="createOp">
@@ -149,8 +149,13 @@
 			<operation id="Context.StartWorkflow">
 				<param type="string" name="id">toutatice_online_approbation</param>
 			</operation>
+			<operation id="Notification.SendTaskNotification">
+				<param type="string" name="task name">validate-online</param>
+				<param type="string" name="event">workflowOnlineTaskAssigned</param>
+				<param type="string" name="actors">WorkflowVariables["assignedTo"]</param>
+			</operation>
 		</chain>
-		
+
 		<chain id="setOnLine">
 			<operation id="Context.FetchDocument" />
 			<operation id="Document.SetOnLineOperation" />

@@ -39,9 +39,19 @@ public class ToutaticeQueryHelper {
     private ToutaticeQueryHelper(){};
     
     /**
+     * Execute a query in unrestricted mode.
+     * @param query
+     * @return DocumentModelList
+     */
+    public static DocumentModelList queryUnrestricted(CoreSession session, String query){
+        UnrestrictedQueryRunner runner = new UnrestrictedQueryRunner(session, query);
+        return runner.runQuery();
+    }
+    
+    /**
      * To query in unrestricted mode.
      * 
-     * @author david
+     * @author David Chevrier.
      *
      */
     public static class UnrestrictedQueryRunner extends UnrestrictedSessionRunner {

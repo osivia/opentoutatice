@@ -1,11 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>3.0.4-SNAPSHOT</version>
+		<version>3.1.3-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-web</artifactId>
@@ -116,7 +117,7 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.0.1</version>
-		</dependency>		 
+		</dependency>
 
 	</dependencies>
 
@@ -135,6 +136,7 @@
 						<include>plugin-popup.less</include>
 						<include>custom-popup.less</include>
 						<include>fragments-popup.less</include>
+						<include>custom-remote-publishing.less</include>
 					</includes>
 					<outputFileFormat>{fileName}.min.css</outputFileFormat>
 				</configuration>
@@ -165,7 +167,8 @@
 								</goals>
 								<configuration>
 									<tasks>
-										<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/3.0.0" />
+										<copy file="${basedir}/target/${project.build.finalName}.jar"
+											todir="${build.toutatice.ecm.modules.dir}/3.1.0" />
 									</tasks>
 								</configuration>
 								<phase>package</phase>
@@ -176,4 +179,5 @@
 			</build>
 		</profile>
 	</profiles>
+
 </project>

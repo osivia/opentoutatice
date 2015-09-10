@@ -72,6 +72,15 @@
 			<to-view-id>/editor_link_search_document.xhtml</to-view-id>
 		</navigation-case>
 
+		<navigation-case>
+			<from-outcome>remote_publishing</from-outcome>
+			<to-view-id>/pv_workflows/remote_publishing.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>validate_remote_publishing</from-outcome>
+			<to-view-id>/pv_workflows/validate_remote_publishing.xhtml</to-view-id>
+		</navigation-case>
+
 	</extension>
 
 	<extension target="pages#PAGES">
@@ -103,7 +112,7 @@
 			<param-name>org.richfaces.skin</param-name>
 			<param-value>#{skinBean.skin}</param-value>
 		</context-param>
-		
+
 	</extension>
 
 	<install>

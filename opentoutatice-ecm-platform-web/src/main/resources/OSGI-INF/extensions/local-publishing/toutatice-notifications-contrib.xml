@@ -2,38 +2,17 @@
 
 <component name="fr.toutatice.ecm.platform.local.publishing.notifications">
 
-	<require>org.nuxeo.ecm.platform.notification.service.NotificationContrib
+	<require>org.nuxeo.ecm.platform.notification.document.routing.NotificationContrib
 	</require>
 
 	<extension
 		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
 		point="notifications">
 
-		<!-- FIXME: désactivation dans les PortalSite alors que la contrib native 
-			(document routing) est: avalaibleIn=Workspace ... cependant, cette information 
-			ne semble pas être utilisée (pour les autoSubscribed="true"?): getInterstedUsers 
-			méthod of NotificationEventListener -->
-		<notification autoSubscribed="true" availableIn="Workspace"
-			channel="email" enabled="false" label="label.nuxeo.notifications.appReviewStarted"
-			name="Task assigned" subject="Task Assigned for ${docTitle}"
-			template="workflowTaskAssigned"
-			templateExpr="NotificationContext['taskInstance'].getVariable('taskNotificationTemplate')">
-			<event name="workflowTaskAssigned" />
-		</notification>
-		
-		<!-- Called by Content Routing workflows and "integrated" remote publication workflow -->
-		<notification autoSubscribed="true" availableIn="Section,PortalSite"
-			channel="email" enabled="true" name="OnLineWFAndOther" label="Publication distante"
-			subjectTemplate="onlineWorkflowAndOtherSubject"
-			template="automaticWorkflowTaskAssigned"
-			templateExpr="NotificationContext['taskInstance'].getVariable('taskNotificationTemplate')">
-			<event name="workflowTaskAssigned" />
-		</notification>
-		
 		<notification autoSubscribed="true" availableIn="PortalSite"
-			channel="email" enabled="true" name="OnLineWF"
-			subjectTemplate="onlineWorkflowSubject"
+			channel="email" enabled="true" name="OnLineWF" subjectTemplate="onlineWorkflowSubject"
 			template="onlineWorkflow">
+			<event name="workflowOnlineTaskAssigned" />
 			<event name="workflowOnlineCanceled" />
 			<event name="workflowOnlineTaskApproved" />
 			<event name="workflowOnlineTaskRejected" />
@@ -47,9 +26,18 @@
 
 		<template name="workflow" src="templates/workflow_fr.ftl" />
 		<template name="onlineWorkflow" src="templates/onlineWorkflow_fr.ftl" />
-		<template name="onlineWorkflowAndOtherSubject" src="templates/onLineWFNOtherSubject_fr.ftl" />
 		<template name="onlineWorkflowSubject" src="templates/onLineWFSubject_fr.ftl" />
-		<template name="automaticWorkflowTaskAssigned" src="templates/automaticWorkflowTaskAssigned_fr.ftl" />
+		<template name="automaticWorkflowTaskAssigned"
+			src="templates/automaticWorkflowTaskAssigned_fr.ftl" />
+
+	</extension>
+
+	<extension
+		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
+		point="notificationListenerVeto">
+
+		<veto name="onlineVeto"
+			class="fr.toutatice.ecm.platform.web.workflows.notification.OnlineTaskVeto" />
 
 	</extension>
 

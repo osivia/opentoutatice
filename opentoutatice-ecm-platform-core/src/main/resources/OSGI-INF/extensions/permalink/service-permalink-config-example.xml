@@ -7,7 +7,8 @@
 	<extension target="fr.toutatice.ecm.platform.core.services.permalink"
 		point="permalinks">
 
-		<permalink name="permalinkByPath" classpath="fr.toutatice.ecm.platform.services.permalink.PermalinkByPathDoc"
+		<permalink name="permalinkByPath"
+			classpath="fr.toutatice.ecm.platform.services.permalink.PermalinkByPathDoc"
 			default="true" enabled="true">
 			<host>www.toutatice.fr</host>
 			<parameters>
@@ -16,5 +17,5 @@
 			</parameters>
 		</permalink>
 	</extension>
-	
+
 </component>

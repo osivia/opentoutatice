@@ -7,8 +7,9 @@
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="layouts">
-		
-		<!-- cartridge summary layout: pour ne pas avoir un tableau label/field de généré -->
+
+		<!-- cartridge summary layout: pour ne pas avoir un tableau label/field 
+			de généré -->
 		<layout name="toutatice_header_cartridge_summary_actions_layout">
 			<templates>
 				<template mode="any">/layouts/layout_summary_template.xhtml
@@ -20,7 +21,7 @@
 				</row>
 			</rows>
 		</layout>
-		
+
 		<!-- Layout de présentation d'un PortalSite ou d'une PortalPage -->
 		<layout name="cv_ContentOrderedReadNWrite@cvListingLayout">
 			<templates>

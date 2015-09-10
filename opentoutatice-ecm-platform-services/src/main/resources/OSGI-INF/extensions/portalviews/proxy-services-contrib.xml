@@ -2,14 +2,14 @@
 <component name="fr.toutatice.ecm.platform.services.proxyfactory">
 
 	<require>fr.toutatice.ecm.platform.core.services.proxyfactory</require>
-	
+
 	<extension target="fr.toutatice.ecm.platform.core.services.proxyfactory"
 		point="handlers">
 
 		<handler enabled="true"
 			serviceClass="org.nuxeo.ecm.platform.forms.layout.service.WebLayoutManager"
 			handlerClass="fr.toutatice.ecm.platform.service.portalviews.adapter.ToutaticeWebLayoutManagerHandler" />
-			
+
 	</extension>
-	
+
 </component>

@@ -4,7 +4,7 @@
 
 	<require>org.nuxeo.ecm.directory.sql.SQLDirectoryFactory</require>
 	<require>org.nuxeo.ecm.directory.ui.DirectoryUIManager</require>
-	
+
 	<!-- TODO: remplacé par objet conf? -->
 	<extension target="org.nuxeo.ecm.directory.sql.SQLDirectoryFactory"
 		point="directories">

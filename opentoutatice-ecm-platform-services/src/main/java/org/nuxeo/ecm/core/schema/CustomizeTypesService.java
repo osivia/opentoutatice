@@ -27,8 +27,7 @@ import java.io.Serializable;
 public interface CustomizeTypesService extends Serializable {
 	
     /**
-     * Ajout des schémas toutatice, uid et de la facet Versionable
-     * à tous les types de document.
+     * Add facets and schemas to all documents.
      */
     void addToutaticeDocType(DocumentTypeDescriptor baseDocTypeDescriptor) throws Exception;
 	

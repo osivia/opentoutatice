@@ -19,7 +19,6 @@
  */
 package fr.toutatice.ecm.platform.web.userservices;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -54,7 +53,6 @@ import org.nuxeo.ecm.webapp.contentbrowser.DocumentActions;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
-import fr.toutatice.ecm.platform.core.local.configuration.WebConfsConfigurationAdapter;
 import fr.toutatice.ecm.platform.core.local.configuration.WebConfsConfigurationConstants;
 import fr.toutatice.ecm.platform.web.document.ToutaticeDocumentActionsBean;
 import fr.toutatice.ecm.platform.web.local.configuration.WebConfsConfigurationActions;
@@ -72,8 +70,8 @@ public class ToutaticeValidatorBean {
 
     private static final String DOMAIN_ID_UNICITY_QUERY = "select * from Domain where ecm:uuid <> '%s' and ttc:domainID = '%s' and ecm:currentLifeCycleState <> 'deleted'";
 
-    private static final String WEB_ID_UNICITY_QUERY = "select * from Document Where ttc:domainID = '%s'"
-            + " AND ttc:webid = '%s' AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+    private static final String WEB_ID_UNICITY_QUERY = "select * from Document Where ttc:webid = '%s'"
+            + " AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
     @In(create = true, required = true)
     protected transient CoreSession documentManager;
@@ -140,7 +138,6 @@ public class ToutaticeValidatorBean {
      */
     public void validateWebId(FacesContext context, UIComponent component, Object value) throws ValidatorException {
 
-
         String webID = (String) value;
         if (StringUtils.isNotBlank(webID)) {
             String msg = null;
@@ -160,9 +157,7 @@ public class ToutaticeValidatorBean {
 
 
                     if (doc != null) {
-                        Serializable domainID = doc.getPropertyValue("ttc:domainID");
-
-                        DocumentModelList doubles = documentManager.query(String.format(WEB_ID_UNICITY_QUERY, domainID, webID, doc.getId()));
+                        DocumentModelList doubles = documentManager.query(String.format(WEB_ID_UNICITY_QUERY, webID, doc.getId()));
 
                         if (doubles.size() > 0) {
                             msg = ComponentUtils.translate(context, "label.toutatice.validator.webid.no.unicity");

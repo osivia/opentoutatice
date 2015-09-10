@@ -14,7 +14,8 @@
  *
  * Contributors:
  *   mberhaut1
- *    
+ *   dchevrier
+ *   lbillon
  */
 package fr.toutatice.ecm.platform.core.helper;
 
@@ -42,6 +43,7 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeUtilsConst;
 import fr.toutatice.ecm.platform.core.utils.exception.ToutaticeException;
 
 public class ToutaticeDirectoryMngtHelper {
+
 	private static final Log log = LogFactory.getLog(ToutaticeDirectoryMngtHelper.class);
 	
 	private static ToutaticeDirectoryMngtHelper instance;
@@ -67,34 +69,56 @@ public class ToutaticeDirectoryMngtHelper {
 	 * @throws ToutaticeException if any error occurs while requesting the directory service
 	 */
 	public String getDirectoryEntryLabel(String directory, String entryKey) {
-		String entryLabel = "";
-		Session directorySession = null;
-		
-		if (StringUtils.isNotBlank(directory) && StringUtils.isNotBlank(entryKey)) {
-			try {
-				directorySession = getService().open(directory);
-				if (null != directorySession) {
-					DocumentModel entry = directorySession.getEntry(entryKey);
-					String schemaName = getService().getDirectorySchema(directory.toString());
-					entryLabel = (String) entry.getProperty(schemaName, "label");
-				} else {
-					log.error("Failed to obtain a session to the the directory '" + directory + "'");
-				}
-			} catch (Exception e) {
-				log.warn("Failed to either get a session to the directory '" + directory + "' or failed to get the entry '" + entryKey + "', error: " + e.getMessage());
-			} finally {
-				if (null != directorySession) {
-					try {
-						directorySession.close();
-					} catch (DirectoryException e) {
-						log.error("Failed to close the session to the directory '" + directory + "', error: " + e.getMessage());
-					}
-				}
-			}
-		}
-
-		return entryLabel;
+        return getDirectoryEntryLabel(directory, entryKey, Locale.FRENCH);
 	}
+
+    /**
+     * Return the label of a directory entry
+     * 
+     * @param directory the directory name that contains the entry
+     * @param entryKey the key of the entry
+     * @param the locale to apply to get the translated label
+     * @return the entry label if found inside the directory. Otherwise will return an empty string
+     * @throws ToutaticeException if any error occurs while requesting the directory service
+     */
+    public String getDirectoryEntryLabel(String directory, String entryKey, Locale locale) {
+        String entryLabel = StringUtils.EMPTY;
+        Session directorySession = null;
+
+        if (StringUtils.isNotBlank(directory) && StringUtils.isNotBlank(entryKey)) {
+            try {
+                directorySession = getService().open(directory);
+                if (null != directorySession) {
+                    DocumentModel entry = directorySession.getEntry(entryKey);
+                    String schemaName = getService().getDirectorySchema(directory.toString());
+
+                    String labelProperty = "label";
+                    try {
+                        entryLabel = (String) entry.getProperty(schemaName, labelProperty);
+                    } catch (Exception el) {
+                        labelProperty = new StringBuffer(3).append(labelProperty).append("_").append(locale.getLanguage()).toString();
+                        entryLabel = (String) entry.getProperty(schemaName, labelProperty);
+                    }
+
+                } else {
+                    log.error("Failed to obtain a session to the the directory '" + directory + "'");
+                }
+            } catch (Exception e) {
+                log.warn("Failed to either get a session to the directory '" + directory + "' or failed to get the entry '" + entryKey + "', error: "
+                        + e.getMessage());
+            } finally {
+                if (null != directorySession) {
+                    try {
+                        directorySession.close();
+                    } catch (DirectoryException e) {
+                        log.error("Failed to close the session to the directory '" + directory + "', error: " + e.getMessage());
+                    }
+                }
+            }
+        }
+
+        return entryLabel;
+    }
 	
 	public DocumentModelList getEntries(String directory) throws ToutaticeException {
 		DocumentModelList entries = null;
@@ -132,7 +156,7 @@ public class ToutaticeDirectoryMngtHelper {
 	 * @return the localized entry label if found inside the directory. Otherwise will return an empty string
 	 */
 	public String getDirectoryEntryLocalizedLabel(String directory, String entryKey, Locale locale) {
-		String label = getDirectoryEntryLabel(directory, entryKey);
+        String label = getDirectoryEntryLabel(directory, entryKey, locale);
 		return translate(label, locale);
 	}
 

@@ -19,19 +19,23 @@
  */
 package fr.toutatice.ecm.platform.automation.helper;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.BooleanUtils;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
+import org.nuxeo.ecm.core.api.Filter;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
+import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
+
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeQueryHelper;
+import fr.toutatice.ecm.platform.service.url.ToutaticeWebIdHelper;
 
 
 /**
@@ -42,43 +46,60 @@ import org.nuxeo.ecm.core.model.NoSuchDocumentException;
  */
 public class WebIdResolver {
 
-    /** Itility class. */
+    /** Utility class. */
     private WebIdResolver() {
     };
 
     /** Query to get document according to its webId. */
-    private static final String WEB_ID_QUERY = "select * from Document Where ttc:domainID = '%s'"
-            + " AND ttc:webid = '%s' %s AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+    private static final String WEB_ID_QUERY = "select * from Document where ttc:webid = '%s'"
+            + " %s AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
-    public static DocumentModel getDocumentByWebId(CoreSession coreSession, String webid, String navigationPath, String displayLiveVersion)
+    /** Query to get unique live with given webid. */
+    private static final String LIVE_DOC_WEB_ID_QUERY = "select * from Document where ttc:webid = '%s'"
+            + " AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0";
+
+    /**
+     * @param coreSession
+     * @param webId
+     * @return unique live document given its webid.
+     */
+    public static DocumentModel getLiveDocumentByWebId(CoreSession coreSession, String webId) {
+        DocumentModel live = null;
+
+        String query = String.format(LIVE_DOC_WEB_ID_QUERY, webId);
+        DocumentModelList lives = ToutaticeQueryHelper.queryUnrestricted(coreSession, query);
+        if (CollectionUtils.isNotEmpty(lives) && lives.size() == 1) {
+            live = lives.get(0);
+        }
+
+        return live;
+    }
+
+    /**
+     * @param coreSession
+     * @param webId
+     * @return documents matching given webid (live or proxy, proxies).
+     * @throws NoSuchDocumentException
+     */
+    public static DocumentModelList getDocumentsByWebId(CoreSession coreSession, String parentId, String parentPath, boolean draft, String webId)
             throws NoSuchDocumentException {
 
-        DocumentModel document = null;
+        DocumentModelList documents = null;
 
-        if (webid != null) {
-
-            String[] segments = webid.split("/");
-            String domainIdSegment;
-            String webIdSegment;
-            if (segments.length >= 2) {
-                domainIdSegment = segments[0];
-                webIdSegment = segments[1];
-            } else {
-                throw new NoSuchDocumentException(webid);
-            }
+        if (StringUtils.isNotBlank(webId)) {
 
 
-            UnrestrictedFecthWebIdRunner fecthWebIdRunner = new UnrestrictedFecthWebIdRunner(coreSession, displayLiveVersion, navigationPath, domainIdSegment,
-                    webIdSegment);
+            UnrestrictedFecthWebIdRunner fecthWebIdRunner = new UnrestrictedFecthWebIdRunner(coreSession, parentId, parentPath, draft, webId);
             fecthWebIdRunner.runUnrestricted();
-            document = fecthWebIdRunner.getDoc();
-            if (document == null) {
-                throw new NoSuchDocumentException(webid);
+            documents = fecthWebIdRunner.getDocuments();
+
+            if (CollectionUtils.isEmpty(documents)) {
+                throw new NoSuchDocumentException(webId);
             }
 
         }
 
-        return document;
+        return documents;
 
     }
 
@@ -87,92 +108,108 @@ public class WebIdResolver {
      */
     private static class UnrestrictedFecthWebIdRunner extends UnrestrictedSessionRunner {
 
-        String displayLiveVersion;
-        String navigationPath;
-        String webIdSegment;
-        String domainIdSegment;
-        DocumentModel docResolved;
+        String parentId;
+        String parentPath;
+        boolean draft;
+        String webId;
+        DocumentModelList documents;
 
         private static final String PROXY_FILTER = " AND ecm:isProxy = 1 ";
         private static final String LIVE_FILTER = " AND ecm:isProxy = 0 ";
 
-        public UnrestrictedFecthWebIdRunner(CoreSession session, String displayLiveVersion, String navigationPath, String domainId, String webId) {
+        public UnrestrictedFecthWebIdRunner(CoreSession session, String parentId, String parentPath, boolean draft, String webId) {
             super(session);
-            this.displayLiveVersion = displayLiveVersion;
-            this.navigationPath = navigationPath;
-            this.webIdSegment = webId;
-            this.domainIdSegment = domainId;
-
+            this.parentPath = parentPath;
+            this.parentId = parentId;
+            this.draft = draft;
+            this.webId = webId;
+            this.documents = new DocumentModelListImpl();
         }
 
         @Override
         public void run() throws ClientException {
-            List<DocumentModel> documents = new ArrayList<DocumentModel>(0);
-          //TODO: clientException
-            if ("1".equals(this.displayLiveVersion)) {
-                DocumentModelList liveDocs = this.session.query(String.format(WEB_ID_QUERY, this.domainIdSegment, this.webIdSegment, LIVE_FILTER));
-                if (CollectionUtils.isNotEmpty(liveDocs) && liveDocs.size() == 1) {
-                    this.docResolved = liveDocs.get(0);
-                }  
-            } else {
+            /*
+             * Parent id given: we try to resolve document with webid
+             * according to it.
+             * Note: we are necessary in case of many remote publications.
+             */
+            if (StringUtils.isNotBlank(this.parentId)) {
+                DocumentModelList proxies = this.session.query(String.format(WEB_ID_QUERY, this.webId, PROXY_FILTER));
 
-                DocumentModelList proxiesDocs = this.session.query(String.format(WEB_ID_QUERY, this.domainIdSegment, this.webIdSegment, PROXY_FILTER));
-                if (CollectionUtils.isNotEmpty(proxiesDocs)) {
-                    documents.addAll(proxiesDocs);
-                }
+                if (CollectionUtils.isNotEmpty(proxies)) {
+                    boolean parentIdFound = false;
+                    Iterator<DocumentModel> iterator = proxies.iterator();
 
-                DocumentModelList liveDocs = this.session.query(String.format(WEB_ID_QUERY, this.domainIdSegment, this.webIdSegment, LIVE_FILTER));
-                if (CollectionUtils.isNotEmpty(liveDocs)) {
-                    documents.addAll(liveDocs);
-                }
+                    while (iterator.hasNext() && !parentIdFound) {
+                        DocumentModel proxy = iterator.next();
 
-                if (CollectionUtils.isNotEmpty(documents)) {
+                        DocumentModelList parentList = ToutaticeDocumentHelper.getParentList(proxy.getCoreSession(), proxy, null, true, true);
+                        if (CollectionUtils.isNotEmpty(parentList)) {
+                            DocumentModel firstParent = parentList.get(0);
+                            String parentWebId = (String) firstParent.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
 
-                    if (StringUtils.isNotBlank(this.navigationPath)) {
-
-                        Iterator<DocumentModel> iterator = documents.iterator();
-
-                        while (iterator.hasNext() && this.docResolved == null) {
-                            DocumentModel document = iterator.next();
-                            String docPath = document.getPathAsString();
-                            if (docPath.contains(this.navigationPath)) {
-                                this.docResolved = document;
+                            if (StringUtils.isNotBlank(parentWebId) && this.parentId.equals(parentWebId)) {
+                                this.documents.add(proxy);
+                                parentIdFound = true;
                             }
                         }
-
                     }
+                }
+            } else if (StringUtils.isNotBlank(this.parentPath)) {
 
-                    if (this.docResolved == null) {
-                        if (CollectionUtils.isNotEmpty(proxiesDocs)) {
-                            this.docResolved = proxiesDocs.get(0);
-                        } else if (CollectionUtils.isNotEmpty(liveDocs)) {
-                            this.docResolved = liveDocs.get(0);
+                DocumentModelList proxies = this.session.query(String.format(WEB_ID_QUERY, this.webId, PROXY_FILTER));
+
+                if (CollectionUtils.isNotEmpty(proxies)) {
+                    boolean parentPathFound = false;
+                    Iterator<DocumentModel> iterator = proxies.iterator();
+
+                    while (iterator.hasNext() && !parentPathFound) {
+                        DocumentModel proxy = iterator.next();
+
+                        DocumentModel parentDocument = this.session.getParentDocument(proxy.getRef());
+                        if (this.parentPath.equals(parentDocument.getPathAsString())) {
+                            this.documents.add(proxy);
+                            parentPathFound = true;
                         }
                     }
 
                 }
-            }
-        }
 
+            } else if (draft) {
+                getLive();
+            } else {
+
+                /*
+                 * Defaul RG:
+                 * published -> proxies (for witch user has read permission)
+                 * not published -> live (for witch user has read permission)
+                 */
+                DocumentModelList proxies = this.session.query(String.format(WEB_ID_QUERY, this.webId, PROXY_FILTER));
+                if (CollectionUtils.isEmpty(proxies)) {
+
+                    getLive();
+
+                } else {
+                    this.documents.addAll(proxies);
+                }
+
+            }
+
+        }
 
         /**
-         * @param proxies
+         * Get live with given webId.
          */
-        private DocumentModel resolveProxies(DocumentModelList proxies) {
-            DocumentModel resolvedProxy = null;
-            if (StringUtils.isNotBlank(this.navigationPath)) {
-                for (DocumentModel proxy : proxies) {
-                    String proxyPath = proxy.getPathAsString();
-                    if (proxyPath.contains(this.navigationPath)) {
-                        resolvedProxy = proxy;
-                    }
-                }
+        private void getLive() {
+            DocumentModelList lives = this.session.query(String.format(WEB_ID_QUERY, this.webId, LIVE_FILTER));
+            if (CollectionUtils.isNotEmpty(lives) && lives.size() == 1) {
+                this.documents.add(lives.get(0));
             }
-            return resolvedProxy;
         }
 
-        public DocumentModel getDoc() {
-            return this.docResolved;
+
+        public DocumentModelList getDocuments() {
+            return this.documents;
         }
 
     }

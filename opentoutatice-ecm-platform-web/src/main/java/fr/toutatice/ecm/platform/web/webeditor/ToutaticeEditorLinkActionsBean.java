@@ -41,6 +41,7 @@ import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.webapp.action.EditorLinkActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSorterHelper;
 
 @Name("editorLinkActions")
@@ -285,6 +286,14 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
             return stg;
         }
 
+    }
+
+   /**
+    * @param document
+    * @return list of remote proxies of document (if any).
+    */
+    public DocumentModelList getRemotePublishedDocuments(DocumentModel document) {
+        return ToutaticeDocumentHelper.getRemotePublishedDocuments(this.documentManager, document);
     }
 
 }

@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component
-    name="fr.toutatice.ecm.platform.web.event.handler">
+<component name="fr.toutatice.ecm.platform.web.event.handler">
 
-    <require>org.nuxeo.ecm.core.operation.OperationServiceComponent
-    </require>
+	<require>org.nuxeo.ecm.core.operation.OperationServiceComponent
+	</require>
 
-    <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
-        point="event-handlers">
-        
-         <handler chainId="createOp">
-            <event>documentCreated</event>
-            <event>documentImported</event>
-            <filters>
-                <attribute>Mutable Document</attribute>
-                <condition>Document.hasSchema('toutatice')</condition>
-            </filters>
-        </handler>
+	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+		point="event-handlers">
+
+		<handler chainId="createOp">
+			<event>documentCreated</event>
+			<event>documentImported</event>
+			<filters>
+				<attribute>Mutable Document</attribute>
+				<condition>Document.hasSchema('toutatice')</condition>
+			</filters>
+		</handler>
 
 		<!-- WebURL -->
-        <handler chainId="webIdUnicity">
-            <event>documentCreatedByCopy</event>
-            <event>documentMoved</event>
-            <event>lifecycle_transition_event</event> <!-- for put in trash and restauration -->
-            <filters>
-                <attribute>Mutable Document</attribute>
-                <condition>Document.hasSchema('toutatice')</condition>
-            </filters>
-        </handler>
+		<handler chainId="webIdUnicity">
+			<event>documentCreatedByCopy</event>
+			<event>documentMoved</event>
+			<event>lifecycle_transition_event</event> <!-- for put in trash and restauration -->
+			<filters>
+				<attribute>Mutable Document</attribute>
+				<condition>Document.hasSchema('toutatice')</condition>
+			</filters>
+		</handler>
 
-    </extension>
+	</extension>
 
 </component>

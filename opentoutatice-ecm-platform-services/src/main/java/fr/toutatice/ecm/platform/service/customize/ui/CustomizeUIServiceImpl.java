@@ -162,10 +162,8 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
 
         String[] typeContentViewNames = type.getContentViews(CONTENT_CATEGORY);
         if (typeContentViewNames != null && typeContentViewNames.length > 0) {
-
             for (String typeContentViewName : typeContentViewNames) {
                 ContentView contentView = contentViewService.getContentView(typeContentViewName);
-
                 if (contentView != null) {
                     List<ContentViewLayout> resultLayouts = contentView.getResultLayouts();
 

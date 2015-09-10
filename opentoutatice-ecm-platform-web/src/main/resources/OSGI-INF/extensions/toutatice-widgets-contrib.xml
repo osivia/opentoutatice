@@ -40,7 +40,7 @@
 		</widget>
 
 		<!-- PostalSite, PortalPage widgets -->
-		<widget name="title" type="text">
+		<widget name="ttc_title" type="text">
 			<labels>
 				<label mode="any">toutatice.label.title</label>
 			</labels>
@@ -171,11 +171,7 @@
 					/widgets/toutatice_removewebid_widget.xhtml
 				</property>
 			</properties>
-			<!-- <widgetModes> <mode value="edit">#{nxu:test(!toutaticeValidator.spaceSupportsWebId, 
-				layout.mode, 'hidden')}</mode> </widgetModes> -->
 		</widget>
-
-
 
 		<widget name="toutatice_explicitUrl_widget" type="text">
 			<labels>
@@ -194,7 +190,7 @@
 		</widget>
 
 		<!-- Widget en vue Modifier (ou Créer) -->
-		<widget name="toutatice_space_enable_webId_widget" type="checkbox">
+		<widget name="toutatice_space_enable_webId_widget" type="template">
 			<labels>
 				<label mode="any">toutatice.label.webid.activate</label>
 			</labels>
@@ -202,8 +198,8 @@
 			<fields>
 				<field>ttcs:hasWebIdEnabled</field>
 			</fields>
-			<properties widgetMode="edit">
-				<property name="immediate">true</property>
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_webid_enable_widget.xhtml</property>
 			</properties>
 			<widgetModes>
 				<mode value="any">#{nxu:test(currentDocument.hasFacet('Space'),
@@ -211,44 +207,44 @@
 				</mode>
 			</widgetModes>
 		</widget>
-        
-        <widget name="toutatice_widget_use_es" type="template">
-            <labels>
-                <label mode="any">toutatice.label.use.es</label>
-            </labels>
-            <translated>true</translated>
-            <fields>
-                <field>ttc:useES</field>
-            </fields>
-            <properties widgetMode="edit">
-                <property name="template">/widgets/toutatice_checkbox.xhtml</property>
-                <property name="title">toutatice.title.use.es</property>
-            </properties>
-            <widgetModes>
-                <mode value="view">hidden</mode>
-                <mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace'),
-                    layout.mode, 'hidden')}
-                </mode>
-            </widgetModes>
-        </widget>
-        
-        <widget name="toutatice_widget_space_comments" type="checkbox">
-            <labels>
-                <label mode="any">toutatice.label.space.comments</label>
-            </labels>
-            <translated>true</translated>
-            <fields>
-                <field>ttcs:spaceCommentable</field>
-            </fields>
-            <properties widgetMode="edit">
-                <property name="immediate">true</property>
-            </properties>
-            <widgetModes>
-                <mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace'),
-                    layout.mode, 'hidden')}
-                </mode>
-            </widgetModes>
-        </widget>
+
+		<widget name="toutatice_widget_use_es" type="template">
+			<labels>
+				<label mode="any">toutatice.label.use.es</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:useES</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="template">/widgets/toutatice_checkbox.xhtml</property>
+				<property name="title">toutatice.title.use.es</property>
+			</properties>
+			<widgetModes>
+				<mode value="view">hidden</mode>
+				<mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace'),
+					layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<widget name="toutatice_widget_space_comments" type="checkbox">
+			<labels>
+				<label mode="any">toutatice.label.space.comments</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttcs:spaceCommentable</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="immediate">true</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace'),
+					layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
 
 	</extension>
 
@@ -316,7 +312,8 @@
 				<title>Richtext</title>
 				<description>
 					<p>
-						This widget displays an html text editor or a textarea in create or
+						This widget displays an html text editor or a textarea in create
+						or
 						edit mode, depending on the mimetype defined.
 					</p>
 					<p>
@@ -415,7 +412,8 @@
 								<helpLabels>
 									<label mode="any">
 										The cols attribute sets the number of
-										columns to display.
+										columns
+										to display.
 										Available since 5.3.1.
 									</label>
 								</helpLabels>
@@ -430,7 +428,8 @@
 								<helpLabels>
 									<label mode="any">
 										The rows attribute sets the number of rows
-										to display.
+										to
+										display.
 										Available since 5.3.1.
 									</label>
 								</helpLabels>
@@ -462,7 +461,8 @@
 								</labels>
 								<helpLabels>
 									<label mode="any">
-										Disable the tiny MCE init from tiny_mce_init.js
+										Disable the tiny MCE init from
+										tiny_mce_init.js
 									</label>
 								</helpLabels>
 								<fields>
@@ -493,6 +493,244 @@
 				/widgets/ttc_richtext_with_mimetype_widget_template.xhtml
 			</property>
 		</widgetType>
+
+
+		<widgetType name="multipleUsersSuggestionWithPermission">
+			<configuration>
+				<title>Multiple users/groups suggestion with given permission
+				</title>
+				<sinceVersion>6.0</sinceVersion>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>true</list>
+					<complex>false</complex>
+					<supportedTypes>
+						<type>string</type>
+					</supportedTypes>
+				</fields>
+				<categories>
+					<category>document</category>
+				</categories>
+				<properties>
+					<defaultValues mode="any">
+						<property name="width">100%</property>
+					</defaultValues>
+					<defaultValues mode="edit">
+						<property name="minChars">3</property>
+						<property name="operationId">UserGroup.SuggestUserEntriesWithPermission</property>
+					</defaultValues>
+					<layouts mode="view">
+						<layout name="multipleUsersSuggestion_widget_type_properties_view">
+							<rows>
+								<row>
+									<widget category="widgetTypeConf">userSuggestion_prefixed</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestionSearchType</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestion_firstLabelField
+									</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestion_secondLabelField
+									</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestion_thirdLabelField
+									</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestion_hideFirstLabel</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestion_hideSecondLabel
+									</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestion_hideThirdLabel</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestion_displayAction</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestion_displayEmailInSuggestion
+									</widget>
+								</row>
+							</rows>
+						</layout>
+					</layouts>
+					<layouts mode="edit">
+						<layout name="multipleUsersSuggestion_widget_type_properties_edit">
+							<rows>
+								<row>
+									<widget category="widgetTypeConf">required</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">permission</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">documentId</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">placeholder</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">suggestion_width</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">suggestion_minChars</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">suggestion_orderable</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestionSearchType</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestion_groupRestriction
+									</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestion_prefixed</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestionMaxSearchResults
+									</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">ajaxReRender</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">userSuggestion_displayEmailInSuggestion
+									</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">suggestion_helpLabel</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">suggestion_hideHelpLabel</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">select2_containerCssClass</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">select2_dropdownCssClass</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">select2_inlinejs</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">select2_inlinejsDemoPreview</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">select2_selectionFormatter</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">select2_suggestionFormatter</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">select2_separator</widget>
+								</row>
+							</rows>
+						</layout>
+					</layouts>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/toutatice_user_suggestion_widget_template.xhtml
+			</property>
+		</widgetType>
+
+		<!-- display only a message -->
+		<widgetType name="message">
+			<configuration>
+				<title>Message</title>
+				<description>
+					The Message widget just displays a message.
+				</description>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>false</list>
+					<complex>false</complex>
+					<supportedTypes />
+					<defaultTypes />
+				</fields>
+				<handlingLabels>true</handlingLabels>
+				<categories>
+					<category>document</category>
+				</categories>
+				<properties>
+					<layouts mode="any">
+						<layout name="message_widget_type_properties_any">
+							<rows>
+								<row>
+									<widget>message</widget>
+								</row>
+								<row>
+									<widget>translated</widget>
+								</row>
+								<row>
+									<widget>classes</widget>
+								</row>
+								<row>
+									<widget>style</widget>
+								</row>
+							</rows>
+							<widget name="message" type="text">
+								<labels>
+									<label mode="any">Message</label>
+								</labels>
+								<fields>
+									<field>message</field>
+								</fields>
+							</widget>
+							<widget name="translated" type="checkbox">
+								<labels>
+									<label mode="any">Translated</label>
+								</labels>
+								<fields>
+									<field>translated</field>
+								</fields>
+							</widget>
+							<widget name="classes" type="text">
+								<labels>
+									<label mode="any">CSS classes</label>
+								</labels>
+								<fields>
+									<field>classes</field>
+								</fields>
+							</widget>
+							<widget name="style" type="text">
+								<labels>
+									<label mode="any">Style</label>
+								</labels>
+								<fields>
+									<field>style</field>
+								</fields>
+							</widget>
+						</layout>
+					</layouts>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/message_widget.xhtml
+			</property>
+
+		</widgetType>
+
 
 	</extension>
 

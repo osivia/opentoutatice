@@ -2,7 +2,7 @@
 <component name="fr.toutatice.ecm.platform.web.thumbnail.widgets">
 
 	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
-	
+
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgettypes">
 
@@ -53,7 +53,7 @@
 				<property name="required">false</property>
 				<property name="iconRendered">true</property>
 			</properties>
-		</widget> 
+		</widget>
 
 	</extension>
 

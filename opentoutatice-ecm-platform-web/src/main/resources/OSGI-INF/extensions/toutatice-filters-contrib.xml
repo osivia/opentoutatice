@@ -55,7 +55,7 @@
 				</condition>
 			</rule>
 		</filter>
-		
+
 		<filter id="isVersionable">
 			<rule grant="true">
 				<facet>Versionable</facet>
@@ -96,15 +96,9 @@
 			</rule>
 		</filter>
 
-		<!-- <filter id="importFile" append="true">
-			<rule grant="true">
-				<permission>AddChildren</permission>
-				<type>Domain</type>
-				<type>WorkspaceRoot</type>
-				<type>PortalSite</type>
-				<type>PortalPage</type>
-			</rule>
-		</filter> -->
+		<!-- <filter id="importFile" append="true"> <rule grant="true"> <permission>AddChildren</permission> 
+			<type>Domain</type> <type>WorkspaceRoot</type> <type>PortalSite</type> <type>PortalPage</type> 
+			</rule> </filter> -->
 
 	</extension>
 

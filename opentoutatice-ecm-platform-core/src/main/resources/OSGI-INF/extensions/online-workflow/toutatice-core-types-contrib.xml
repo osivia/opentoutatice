@@ -9,20 +9,20 @@
 		point="doctype">
 
 		<facet name="facet-var_Task3a8">
-	      <schema name="var_Task3a8"/>
-	    </facet>
-	    <facet name="facet-var_Task439">
-	      <schema name="var_Task439"/>
-	    </facet>
-	    <facet name="facet-var_Task4bf">
-	      <schema name="var_Task4bf"/>
-	    </facet>
-	    <facet name="facet-var_Task6a6">
-	      <schema name="var_Task6a6"/>
-	    </facet>
-	    <facet name="facet-var_toutatice_online_approbation">
-	      <schema name="var_toutatice_online_approbation"/>
-	    </facet>
+			<schema name="var_Task3a8" />
+		</facet>
+		<facet name="facet-var_Task439">
+			<schema name="var_Task439" />
+		</facet>
+		<facet name="facet-var_Task4bf">
+			<schema name="var_Task4bf" />
+		</facet>
+		<facet name="facet-var_Task6a6">
+			<schema name="var_Task6a6" />
+		</facet>
+		<facet name="facet-var_toutatice_online_approbation">
+			<schema name="var_toutatice_online_approbation" />
+		</facet>
 
 	</extension>
 

@@ -17,7 +17,8 @@
 		<!-- Notification Custom -->
 		<notification name="ToutaticePublication" channel="email"
 			enabled="true" availableIn="Section,PortalSite" autoSubscribed="false"
-			template="publish" subject="Publication du document ${docTitle}" label="label.nuxeo.notifications.publish">
+			template="publish" subject="Publication du document ${docTitle}"
+			label="label.nuxeo.notifications.publish">
 			<event name="documentPublicationApproved" />
 			<event name="documentPublished" />
 		</notification>

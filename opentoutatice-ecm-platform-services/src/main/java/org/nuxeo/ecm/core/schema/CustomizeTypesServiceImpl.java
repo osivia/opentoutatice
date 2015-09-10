@@ -88,7 +88,11 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements
 			setExcludedRules(rulesDescriptor);
 		}
 		if (BASE_TYPE_EXT_POINT.equals(extensionPoint)) {
-			baseDocTypeDescriptor = (DocumentTypeDescriptor) contribution;
+		    if(baseDocTypeDescriptor == null){
+		        baseDocTypeDescriptor = (DocumentTypeDescriptor) contribution;
+		    } else {
+		        baseDocTypeDescriptor.merge((DocumentTypeDescriptor) contribution);
+		    }
 		}
 	}
 	

@@ -113,8 +113,8 @@ public class GetVocabularies {
 		JSONArray rows = new JSONArray();
 		String voc = "";
 		if (i < indexVoc.size()) {
-			voc = (String) indexVoc.get(i);
-			ArrayList<VocabularyEntry> entries = (ArrayList<VocabularyEntry>) listVoc.get(voc);
+			voc = indexVoc.get(i);
+			ArrayList<VocabularyEntry> entries = listVoc.get(voc);
 			i++;
 			for (VocabularyEntry entry : entries) {
 				String valkey = entry.getTitle();
@@ -125,6 +125,7 @@ public class GetVocabularies {
 					JSONObject obj = new JSONObject();
 					obj.element("key", valkey);
 					obj.element("value", vali18n);
+					obj.element("parent", valparent);
 					if(i != indexVoc.size()) {
 						obj.element("children", getChildren(valkey, i));
 					}
@@ -152,7 +153,12 @@ public class GetVocabularies {
 				this.title = URLEncoder.encode(entry.getTitle(),"UTF-8");
 				String localizedEntryLabel = ToutaticeDirectoryMngtHelper.instance().getDirectoryEntryLocalizedLabel(vocabulary, entry.getId(), locale);
 				this.label = URLEncoder.encode(localizedEntryLabel,"UTF-8");
-				this.parent = ("xvocabulary".equals(schema)) ? (String) entry.getProperty(schema, "parent") : "";
+				try {
+				    this.parent = (String) entry.getProperty(schema, "parent");
+				} catch(Exception e){
+				   // If schema does not contain parent field
+				   this.parent = StringUtils.EMPTY;
+				}
 			} catch (Exception e) {
 				log.error("Failed to instanciate VocabularyEntry, vocabulary:'" + vocabulary + "', entry:'" + entry.getId() + "', error:" + e.getMessage());
 				throw new ClientException(e);

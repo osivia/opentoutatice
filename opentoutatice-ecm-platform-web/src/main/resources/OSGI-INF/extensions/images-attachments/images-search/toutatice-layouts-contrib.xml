@@ -5,7 +5,7 @@
 	<require>fr.toutatice.ecm.platform.web.widgets</require>
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
-		point="layouts">	
+		point="layouts">
 
 		<layout name="toutatice_image_search_layout">
 			<templates>

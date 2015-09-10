@@ -24,24 +24,29 @@
 			<src>themes/css/opentoutatice.css</src>
 		</style>
 	</extension>
-	
-	<extension target="org.nuxeo.theme.services.ThemeService" point="applications">	
-		<application root="${org.nuxeo.ecm.contextPath}" template-engine="jsf-facelets">
+
+	<extension target="org.nuxeo.theme.services.ThemeService"
+		point="applications">
+
+		<application root="${org.nuxeo.ecm.contextPath}"
+			template-engine="jsf-facelets">
+
 			<view id="/toutatice_create_relation_search_document_popup.xhtml">
 				<theme>galaxy/popup</theme>
 			</view>
-            
+
 		</application>
 	</extension>
-	
+
 	<extension target="org.nuxeo.theme.services.ThemeService"
 		point="views">
-		
-		<view name="nuxeo5 includes" template-engine="jsf-facelets" merge="true">
+
+		<view name="nuxeo5 includes" template-engine="jsf-facelets"
+			merge="true">
 			<format-type>widget</format-type>
 			<resource>glyphicons.css</resource>
 		</view>
-		
+
 	</extension>
 
 </component>

@@ -297,7 +297,7 @@
 				/widgets/task/toutatice_custom_validate_task_actions_widget_template.xhtml
 			</property>
 		</widgetType>
-		
+
 		<!-- Widget type to display layout and buttons of accept/reject validate 
 			task in summary and content view -->
 		<widgetType name="custom_validate_task_actions_layout">

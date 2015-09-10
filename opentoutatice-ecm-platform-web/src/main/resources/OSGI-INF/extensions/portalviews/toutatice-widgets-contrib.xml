@@ -4,6 +4,18 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
 
+		<widget name="pv_event_all_day" type="checkbox">
+			<labels>
+				<label mode="any">toutatice.label.event.all.day</label>
+			</labels>
+			<fields>
+				<field>ttcevt:allDay</field>
+			</fields>
+			<properties mode="any">
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
 		<widget name="pv_event_dtstart" type="ttc_datetime">
 			<labels>
 				<label mode="any">toutatice.label.date.begin</label>

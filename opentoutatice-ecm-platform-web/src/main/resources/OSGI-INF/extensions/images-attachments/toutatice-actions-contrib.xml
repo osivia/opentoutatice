@@ -24,7 +24,7 @@
 				</property>
 			</properties>
 		</action>
-		
+
 		<!-- Stamp creation -->
 		<action id="TOUTATICE_IMAGES_CREATE_STAMP" label="toutatice.label.images.create.stamp"
 			link="#{ImageManagerActions.createImageStamp}">

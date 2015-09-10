@@ -7,16 +7,15 @@
 	<service>
 		<provide interface="org.nuxeo.ecm.core.schema.CustomizeTypesService" />
 	</service>
-	
-	<implementation
-		class="org.nuxeo.ecm.core.schema.CustomizeTypesServiceImpl" />
-		
+
+	<implementation class="org.nuxeo.ecm.core.schema.CustomizeTypesServiceImpl" />
+
 	<extension-point name="basettc">
 		<object class="org.nuxeo.ecm.core.schema.BaseTypeDescriptor" />
-  	</extension-point>
-  	
-  	<extension-point name="excludedrules">
+	</extension-point>
+
+	<extension-point name="excludedrules">
 		<object class="org.nuxeo.ecm.core.schema.RulesDescriptor" />
-  	</extension-point>
+	</extension-point>
 
 </component>

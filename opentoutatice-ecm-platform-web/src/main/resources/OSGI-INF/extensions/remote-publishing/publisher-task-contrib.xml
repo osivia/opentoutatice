@@ -7,8 +7,9 @@
 
 	<!-- Utilisé pour l'arbre de publication d'une feuille basé sur l'arbre 
 		de configuration des sections d'un Workspace -->
-		
-	<extension target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
+
+	<extension
+		target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
 		point="factory">
 
 		<publishedDocumentFactory name="ToutaticeCoreProxyWithWorkflow"
@@ -16,8 +17,9 @@
 			validatorsRule="CoreValidatorsRule" />
 
 	</extension>
-		
-	<extension target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
+
+	<extension
+		target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
 		point="tree">
 
 		<publicationTree name="RootSectionsCoreTree"
@@ -25,7 +27,8 @@
 
 	</extension>
 
-	<extension target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
+	<extension
+		target="org.nuxeo.ecm.platform.publisher.impl.service.PublisherServiceImpl"
 		point="treeInstance">
 
 		<publicationTreeConfig name="DefaultSectionsTree"

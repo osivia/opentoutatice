@@ -17,6 +17,7 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,9 +63,10 @@ public class SetWebID {
 
 
     private static final String CREATE_OP = "createOp";
+    private static final String OTHER_CHAIN = "other";
 
-    private static final String WEB_ID_UNICITY_QUERY = "select * from Document Where ttc:domainID = '%s'"
-            + " AND ttc:webid = '%s' AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+    private static final String WEB_ID_UNICITY_QUERY = "select * from Document Where ttc:webid = '%s'"
+            + " AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
     private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
 
@@ -157,7 +159,7 @@ public class SetWebID {
             // if space does not supports webid or if we can not verify it.
             if (!isSpaceSupportsWebId(this.document)) {
 
-                Object currentWebId = this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
+                Object currentWebId = getWebId();
                 if (currentWebId != null) { // in case of import, copy, move or restauration
                     if (StringUtils.isNotEmpty(currentWebId.toString())) {
 
@@ -172,22 +174,16 @@ public class SetWebID {
             }
 
             // webid setted in the document, we use it
-            if (this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID) != null) {
-                webid = this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID).toString();
+            if (getWebId() != null) {
+                webid = getWebId().toString();
 
                 // clean if needed
                 webid = IdUtils.generateId(webid, "-", true, 24);
             }
             // else in creation or import, try to generate it.
-            else if (CREATE_OP.equals(chainSource)) {
-                // else new id is ganarated
-                String[] arrayPath = this.document.getPathAsString().split("/");
-                webid = arrayPath[arrayPath.length - 1];
-
-                // for docs whose ecm:name may be identical, nuxeo add a .timestamp, remove it
-                if (webid.contains(".")) {
-                    webid = webid.substring(0, webid.indexOf("."));
-                }
+            else if (CREATE_OP.equals(chainSource) || (OTHER_CHAIN.equals(chainSource) && getWebId() == null)) {
+                // else new id is generated
+                webid = generateNewWebId();
 
                 // for Files or Pictures : put the extension of the file if exists
                 if ("File".equals(this.document.getType()) || "Picture".equals(this.document.getType())) {
@@ -203,50 +199,45 @@ public class SetWebID {
                 }
 
                 hasToBeUpdated = true;
+
             }
 
-            Object domainID = this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID);
-
             // if webid is defined
-            if ((webid != null && webid.length() > 0) && domainID != null) {
+            if (webid != null && webid.length() > 0) {
 
-                if (StringUtils.isNotEmpty(domainID.toString())) {
+                // [others ops like move, restore, ...] don't throw an exception, put a suffix after the id
+                boolean unicity = true;
+                Integer suffix = null;
+                String webidconcat = webid;
+                do {
 
-                    // [others ops like move, restore, ...] don't throw an exception, put a suffix after the id
-                    boolean unicity = true;
-                    Integer suffix = null;
-                    String webidconcat = webid;
-                    do {
+                    DocumentModelList query = coreSession.query(String.format(WEB_ID_UNICITY_QUERY, webidconcat, this.document.getId()));
 
-                        DocumentModelList query = coreSession
-                                .query(String.format(WEB_ID_UNICITY_QUERY, domainID.toString(), webidconcat, this.document.getId()));
+                    if (query.size() > 0) {
+                        unicity = false;
+                        if (suffix == null)
+                            suffix = 1;
+                        else
+                            suffix = suffix + 1;
+                        webidconcat = webid.concat(suffix.toString());
+                    } else {
+                        unicity = true;
 
-                        if (query.size() > 0) {
-                            unicity = false;
-                            if (suffix == null)
-                                suffix = 1;
-                            else
-                                suffix = suffix + 1;
-                            webidconcat = webid.concat(suffix.toString());
-                        } else {
-                            unicity = true;
-
-                            if (!webid.equals(webidconcat)) {
-                                webid = webidconcat;
-                                hasToBeUpdated = true;
-                            }
+                        if (!webid.equals(webidconcat)) {
+                            webid = webidconcat;
+                            hasToBeUpdated = true;
                         }
-                    } while (!unicity);
-
-                    // save weburl
-                    if (hasToBeUpdated) {
-                        log.warn("Id relocated to " + webid + " for document " + this.document.getPathAsString());
-                        this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, webid);
-                        if (extension != null) {
-                            this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXTENSION_URL, extension);
-                        }
-                        this.session.saveDocument(this.document);
                     }
+                } while (!unicity);
+
+                // save weburl
+                if (hasToBeUpdated) {
+                    log.warn("Id relocated to " + webid + " for document " + this.document.getPathAsString());
+                    this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, webid);
+                    if (extension != null) {
+                        this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXTENSION_URL, extension);
+                    }
+                    this.session.saveDocument(this.document);
                 }
             }
 
@@ -261,6 +252,28 @@ public class SetWebID {
                 }
             }
 
+        }
+
+        /**
+         * @return
+         */
+        private Serializable getWebId() {
+            return this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
+        }
+
+        /**
+         * @return new webId basedon path.
+         */
+        private String generateNewWebId() {
+            String webid;
+            String[] arrayPath = this.document.getPathAsString().split("/");
+            webid = arrayPath[arrayPath.length - 1];
+
+            // for docs whose ecm:name may be identical, nuxeo add a .timestamp, remove it
+            if (webid.contains(".")) {
+                webid = webid.substring(0, webid.indexOf("."));
+            }
+            return webid;
         }
 
 

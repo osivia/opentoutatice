@@ -58,17 +58,13 @@ public class ToutaticeDocumentResolver {
 
 	protected static DocumentModel resolveDocumentByWebId(CoreSession session, WedIdRef webIdRef) throws ClientException {
 		String webId = (String) webIdRef.reference();
-		String domainId = webIdRef.getDomainId();
 		
 		DocumentModel document = null;
 		DocumentModelList docs = null;
         try {
             docs = session
                     .query("SELECT * FROM Document where ttc:webid = '"
-                            + webId
-                            + "' AND ttc:domainID = '"
-                            + domainId
-                            + "'"
+                            + webId + "'" 
                             + " AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0 AND ecm:isCheckedInVersion = 0");
         } catch (ClientException e) {
             log.error("Impossible de déterminer le webID " + e);

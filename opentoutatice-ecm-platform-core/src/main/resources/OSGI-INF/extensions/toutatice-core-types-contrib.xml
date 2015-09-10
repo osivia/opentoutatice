@@ -9,21 +9,25 @@
 		point="doctype">
 
 		<facet name="Space">
-            <schema name="toutatice_space" />
-        </facet>			
-		<facet name="TTCPublishSpace" >
-			<schema name="toutatice_space"/>
+			<schema name="toutatice_space" />
 		</facet>
+		<facet name="TTCPublishSpace">
+			<schema name="toutatice_space" />
+		</facet>
+
+		<facet name="isLocalPublishLive" />
+		<facet name="isRemoteProxy" />
+
 		<facet name="TTCAttachableImages" />
 		<facet name="FolderishEditable" />
 		<facet name="TTCPortalConfigurable" />
-		<facet name="SpaceContent"/>
+		<facet name="SpaceContent" />
 		<facet name="SpaceNavigationItem" />
 		<facet name="MasterPublishSpace" />
-		
-		<!-- Pour permettre l'import xml d'arborescence contenant des documents publiés:
-		     facette Immutable posée dynamiquement (elle n'existe pas de façon statique,
-		     i.e. définie dans une contribution native Nuxeo) -->
+
+		<!-- Pour permettre l'import xml d'arborescence contenant des documents 
+			publiés: facette Immutable posée dynamiquement (elle n'existe pas de façon 
+			statique, i.e. définie dans une contribution native Nuxeo) -->
 		<facet name="Immutable" />
 
 		<doctype name="PortalSite" extends="Document">
@@ -33,20 +37,20 @@
 			<schema name="portalsite" />
 			<schema name="toutatice_navigation" />
 			<schema name="webpage" />
-            <schema name="regions" />
+			<schema name="regions" />
 			<schema name="fragments" />
-            <schema name="html_fragments" />
-            <schema name="picture_fragments" />
-            <schema name="zoom_fragments" />
-            <schema name="links" />
-            <schema name="links_fragments" />
-            <schema name="list_fragments" />
-            <schema name="summary_fragments" />
-            <schema name="portlet_fragments" />
-            <schema name="rss_fragments" />
-            <schema name="criteria_list_fragments" />
-            <schema name="slider_list_fragments" />
-            <schema name="portlet_properties" />
+			<schema name="html_fragments" />
+			<schema name="picture_fragments" />
+			<schema name="zoom_fragments" />
+			<schema name="links" />
+			<schema name="links_fragments" />
+			<schema name="list_fragments" />
+			<schema name="summary_fragments" />
+			<schema name="portlet_fragments" />
+			<schema name="rss_fragments" />
+			<schema name="criteria_list_fragments" />
+			<schema name="slider_list_fragments" />
+			<schema name="portlet_properties" />
 			<facet name="Space" />
 			<facet name="Folderish" />
 			<facet name="Orderable" />
@@ -70,20 +74,20 @@
 			<schema name="portalpage" />
 			<schema name="toutatice_navigation" />
 			<schema name="webpage" />
-            <schema name="regions" />
+			<schema name="regions" />
 			<schema name="fragments" />
-            <schema name="html_fragments" />
-			<schema name="picture_fragments" />            
-            <schema name="zoom_fragments" />
-            <schema name="links" />
-            <schema name="links_fragments" />
-            <schema name="list_fragments" />
-            <schema name="summary_fragments" />
-            <schema name="portlet_fragments" />
-            <schema name="rss_fragments" />
-            <schema name="criteria_list_fragments" />
-            <schema name="slider_list_fragments" />
-            <schema name="portlet_properties" />
+			<schema name="html_fragments" />
+			<schema name="picture_fragments" />
+			<schema name="zoom_fragments" />
+			<schema name="links" />
+			<schema name="links_fragments" />
+			<schema name="list_fragments" />
+			<schema name="summary_fragments" />
+			<schema name="portlet_fragments" />
+			<schema name="rss_fragments" />
+			<schema name="criteria_list_fragments" />
+			<schema name="slider_list_fragments" />
+			<schema name="portlet_properties" />
 			<facet name="Folderish" />
 			<facet name="Orderable" />
 			<facet name="TTCPortalConfigurable" />
@@ -91,25 +95,27 @@
 			<facet name="FolderishEditable" />
 			<facet name="SpaceNavigationItem" />
 			<facet name="PublishSpace" />
+			<facet name="SpaceContent" />
 			<prefetch>common.icon, dc:title, dc:description, dc:created,
 				dc:modified,
 				dc:lastContributor, dc:creator
 			</prefetch>
 		</doctype>
-		
+
 		<doctype name="Domain" append="true">
 			<schema name="toutatice_domain" />
 		</doctype>
-		
+
 		<doctype name="Workspace" append="true">
-            <schema name="toutatice_navigation" />
-        </doctype>
-		
+			<facet name="Orderable" />
+			<schema name="toutatice_navigation" />
+		</doctype>
+
 	</extension>
-	
+
 	<extension target="org.nuxeo.ecm.platform.types.TypeService"
 		point="types">
-		
+
 		<type id="Domain">
 			<subtypes>
 				<type>PortalSite</type>
@@ -125,7 +131,7 @@
 				<type>PortalSite</type>
 			</subtypes>
 		</type>
-		
+
 		<type id="PortalSite">
 			<subtypes>
 				<type>PortalPage</type>
@@ -136,18 +142,18 @@
 				<type>Note</type>
 			</subtypes>
 		</type>
-		
+
 		<type id="PortalPage">
 			<subtypes>
 				<type>PortalPage</type>
 				<type>Folder</type>
 				<type>OrderedFolder</type>
-				<type>PictureBook</type> 
+				<type>PictureBook</type>
 				<type>File</type>
 				<type>Note</type>
 			</subtypes>
 		</type>
-		
+
 	</extension>
 
 </component>

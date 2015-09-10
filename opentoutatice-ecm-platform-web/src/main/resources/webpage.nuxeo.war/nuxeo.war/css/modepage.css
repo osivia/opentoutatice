@@ -52,7 +52,7 @@
 	padding: 4px 0;
 	cursor: pointer;
 	/*float: left;*/
-	display:inline-block;
+	display: inline-block;
 	list-style: none;
 	width: 200px;
 	/*text-align: center;*/
@@ -62,13 +62,12 @@
 	margin-bottom: 0px;
 }
 
-
-
 .ui-state-hover {
-	border : 1px solid grey;	
+	border: 1px solid grey;
 }
+
 .ui-state-active {
-	border : 1px solid red;	
+	border: 1px solid red;
 }
 
 .newFragList {
@@ -93,6 +92,7 @@
 	background-color: white;
 	border: 1px solid #555555;
 }
+
 .newFragList li img {
 	margin-right: 2em;
 }
@@ -116,4 +116,3 @@
 	height: 24px;
 	padding-right: 5px;
 }
-

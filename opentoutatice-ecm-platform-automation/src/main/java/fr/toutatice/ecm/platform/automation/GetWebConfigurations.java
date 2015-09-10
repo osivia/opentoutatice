@@ -20,11 +20,14 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
+import org.nuxeo.ecm.automation.jsf.OperationHelper;
+import org.nuxeo.ecm.automation.seam.operations.SeamOperationFilter;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -43,6 +46,12 @@ public class GetWebConfigurations {
     
     public static final String ID = "Context.GetWebConfigurations";
     
+    /** Default conversation id. */
+    public static final String CONVERSATION_ID = "0NXMAIN0";
+    
+    @Context
+    protected OperationContext ctx;
+    
     @Context
     protected CoreSession coreSession;
     
@@ -55,11 +64,27 @@ public class GetWebConfigurations {
     @OperationMethod
     public DocumentModelList run() throws Exception {
         
-        ConfigurationBeanHelper configHelper = (ConfigurationBeanHelper) SeamComponentCallHelper.getSeamComponentByName("config");
+        if (!OperationHelper.isSeamContextAvailable()) {
+            SeamOperationFilter.handleBeforeRun(ctx, CONVERSATION_ID);
+            try {
+                return getConfigs();
+            } finally {
+                SeamOperationFilter.handleAfterRun(ctx, CONVERSATION_ID);
+            }
+        } else {
+            return getConfigs();
+        }
+        
+    }
+
+    /**
+     * @return configs.
+     */
+    private DocumentModelList getConfigs() {
+        ConfigurationBeanHelper configHelper = ConfigurationBeanHelper.getBean();
         DocumentModel domain = coreSession.getDocument(new PathRef(domainPath));
         
         return configHelper.getConfigs(confType, coreSession, domain);
-        
     }
     
 }

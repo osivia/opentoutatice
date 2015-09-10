@@ -14,7 +14,7 @@
 				<major />
 			</options>
 		</versioningRule>
-		
+
 		<versioningRule typeName="PortalPage">
 			<initialState major="0" minor="0" />
 			<options lifeCycleState="*">

@@ -20,12 +20,20 @@
  */
 package fr.toutatice.ecm.platform.service.url;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.DocumentModelList;
+import org.nuxeo.ecm.core.api.Filter;
 import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 /**
  * @author David Chevrier
@@ -39,6 +47,7 @@ public class ToutaticeDocumentLocation extends DocumentLocationImpl {
 	
 	private String serverName;
 	private WedIdRef webIdRef;
+	private Map<String, String> parameters;
 	
 	public String getServerName() {
 		return serverName;
@@ -46,6 +55,10 @@ public class ToutaticeDocumentLocation extends DocumentLocationImpl {
 	
 	public WedIdRef getWebIdRef() {
 		return webIdRef;
+	}
+	
+	public Map<String, String> getParameters(){
+	    return this.parameters;
 	}
 
 	public ToutaticeDocumentLocation(final String serverName,
@@ -60,13 +73,40 @@ public class ToutaticeDocumentLocation extends DocumentLocationImpl {
 		try {
 			String webId = (String) doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
 			String explicitUrl = (String) doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXPLICIT_URL);
-			String domainId = (String) doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID);
 			String extensionUrl = (String) doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXTENSION_URL);
-			this.webIdRef = new WedIdRef(domainId, explicitUrl, webId, extensionUrl);
+			this.webIdRef = new WedIdRef(explicitUrl, webId, extensionUrl);
+			setLocationParameters(doc);
 		} catch (Exception e) {
 			log.error("Can not get webId property: " + e.getMessage());
 		} 
          
+	}
+	
+	protected void setLocationParameters(DocumentModel doc){
+	    this.parameters = new HashMap<String, String>(0);
+	    
+	    // Case of remote proxy in publish space
+	    if(doc.isProxy() && ToutaticeDocumentHelper.isInPublishSpace(doc.getCoreSession(), doc)){
+	        
+	        String publishedLocalState = (String) doc.getPropertyValue("ttcpls:state");
+	        if(StringUtils.isEmpty(publishedLocalState)){
+	                
+	                // If document has firstparent with webId, we take it
+	                // otherwise we take parent path
+	            DocumentModelList parentList = ToutaticeDocumentHelper.getParentList(doc.getCoreSession(), doc, null, true, true);
+	            if(CollectionUtils.isNotEmpty(parentList)){
+	                DocumentModel firstParent = parentList.get(0);
+	            
+	                String parentWebId = (String) firstParent.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
+	                
+	                if(StringUtils.isNotEmpty(parentWebId)){
+	                    this.parameters.put("parentId", parentWebId);
+	                } else {
+	                    this.parameters.put("parentPath", firstParent.getPathAsString());
+	                }
+	            }  
+	        }
+	    }
 	}
 
 }

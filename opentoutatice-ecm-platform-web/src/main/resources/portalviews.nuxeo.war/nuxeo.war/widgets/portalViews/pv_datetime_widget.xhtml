@@ -2,31 +2,121 @@
     xmlns:c="http://java.sun.com/jstl/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:a4j="http://richfaces.org/a4j"
-    xmlns:nxu="http://nuxeo.org/nxweb/util" id="#{widget.id}">
+    xmlns:nxu="http://nuxeo.org/nxweb/util" 
+    xmlns:ui="http://java.sun.com/jsf/facelets" id="#{widget.id}">
 
-    <script type="text/javascript">
+   <script type="text/javascript">
 
-            jQuery(document).ready(function () {
+    jQuery(document).ready(function () { 
+
+                //====================================================
+                // Management of dates
                 
-                jQuery('.date-picker').datepicker({
+                var $startDateInput = jQuery("input[id*='nxw_pv_event_dtstart_date-picker']")[0];
+                var $endDateInput = jQuery("input[id*='nxw_pv_event_dtend_date-picker']")[0];
+                
+                var startDate = jQuery("input[id*='nxw_pv_event_dtstart_date-picker']").datepicker({
                     language: "fr",
                     autoclose: true,
                     todayHighlight: true,
-                    //startDate: "Beginning of time",
                     clearBtn: true
-                });  
-                
-                jQuery('.time-picker').timepicker({
+                }).on('changeDate', function(ev) {
+                    var endDateValue = endDate.getDate();
+                    if(endDateValue != null){
+                        var newDate = new Date(ev.date)
+                        newDate.setDate(newDate.getDate());
+                        endDate.setStartDate(newDate);
+                        if (ev.date.valueOf() &gt; endDateValue.valueOf()) {
+                            startDate.hide();
+                            $endDateInput.focus();
+                        }
+                    } else {
+                        var newDate = new Date(ev.date)
+                        newDate.setDate(newDate.getDate());
+                        endDate.setStartDate(newDate);
+                    }
+                }).data('datepicker'); 
+
+                var endDate = jQuery("input[id*='nxw_pv_event_dtend_date-picker']").datepicker({
+                    language: "fr",
+                    autoclose: true,
+                    todayHighlight: true,
+                    startDate:  $startDateInput.valueOf(),
+                    clearBtn: true,
+                }).on('changeDate', function(ev) {
+                    updateEndTime();
+                    endDate.hide();
+                }).data('datepicker');
+
+                //=====================================================================
+                // Mangement of Time
+
+                var startTime = jQuery("input[id*='nxw_pv_event_dtstart_time-picker']").timepicker({
                     minuteStep: 1,
                     template: 'modal',
                     appendWidgetTo: 'body',
                     showSeconds: false,
                     showMeridian: false,
                     defaultTime: false
+                }).data('timepicker'); 
+
+                var endTime = jQuery("input[id*='nxw_pv_event_dtend_time-picker']").timepicker({
+                    minuteStep: 1,
+                    template: 'modal',
+                    appendWidgetTo: 'body',
+                    showSeconds: false,
+                    showMeridian: false,
+                    defaultTime: false
+                }).data('timepicker'); 
+
+                var $startTimeInput = jQuery("input[id*='nxw_pv_event_dtstart_time-picker']")[0];
+                var $endTimeInput = jQuery("input[id*='nxw_pv_event_dtend_time-picker']")[0];
+
+                function updateEndTime(){
+                    if(startDate.getDate().valueOf() == endDate.getDate().valueOf()){
+                        if(endTime.getTime().valueOf() &lt; startTime.getTime().valueOf()){
+                            endTime.setTime(startTime.hour + ":" + (startTime.minute + 1));
+                            $endTimeInput.focus();
+                        }
+                    }
+                }
+
+                jQuery("input[id*='nxw_pv_event_dtstart_time-picker']").change(function(){
+                    updateEndTime();
                 });
+
+                jQuery("input[id*='nxw_pv_event_dtend_time-picker']").change(function(){
+                    updateEndTime();
+                });
+                
+                //=======================================================================
+                //Management of fullDay
+
+                function disableTimeFields(){
+                    jQuery(".time-picker").attr("disabled", "disabled");
+                }
+
+                var $allDay = jQuery("[id*='pv_event_all_day']");
+                if(typeof($allDay) !== "undefined"){
+
+                    if($allDay.is(':checked')){
+                        disableTimeFields();
+                    }
+
+                    $allDay.click(function(){
+                        
+                        if($allDay.is(':checked')){
+                            disableTimeFields()
+                        } else {
+                            jQuery(".time-picker").removeAttr("disabled");
+                        }
+
+                    });
+                }
             
             });
-     </script>
+
+   </script>    
 
     <div class="row">
         

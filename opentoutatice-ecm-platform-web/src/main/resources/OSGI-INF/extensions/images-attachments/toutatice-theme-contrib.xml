@@ -3,10 +3,12 @@
 
 	<require>org.nuxeo.theme.services.ThemeService</require>
 	<require>org.nuxeo.theme.styling.service</require>
-	
-	<extension target="org.nuxeo.theme.services.ThemeService" point="applications">
-	
-		<application root="${org.nuxeo.ecm.contextPath}" template-engine="jsf-facelets">
+
+	<extension target="org.nuxeo.theme.services.ThemeService"
+		point="applications">
+
+		<application root="${org.nuxeo.ecm.contextPath}"
+			template-engine="jsf-facelets">
 			<negotiation>
 				<strategy>nuxeo5</strategy>
 				<default-engine>default</default-engine>
@@ -17,7 +19,7 @@
 				<theme>galaxy/popup</theme>
 			</view>
 		</application>
-		
-	</extension>  	
-	
+
+	</extension>
+
 </component>

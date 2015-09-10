@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <component name="fr.toutatice.ecm.platform.custom.doctypes">
-	
+
 	<!-- Do not delete this require! -->
 	<require>fr.toutatice.ecm.platform.services.doctypes</require>
 
@@ -12,7 +12,7 @@
 			<facet name="TTCAttachableImages" />
 			<facet name="SpaceContent" />
 		</doctype>
-		
+
 	</extension>
 
 </component>

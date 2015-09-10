@@ -19,20 +19,27 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.nuxeo.common.utils.Path;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.Constants;
@@ -48,7 +55,10 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.DocumentSecurityException;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
+import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
+import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
+import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.core.api.model.impl.primitives.BooleanProperty;
@@ -57,6 +67,10 @@ import org.nuxeo.ecm.core.api.security.Access;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 import org.nuxeo.ecm.core.trash.TrashService;
+import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
+import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
+import org.nuxeo.ecm.platform.publisher.api.PublisherService;
+import org.nuxeo.ecm.platform.publisher.impl.core.SimpleCorePublishedDocument;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.platform.types.TypeManager;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
@@ -71,10 +85,6 @@ import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformation
 @Operation(id = FetchPublicationInfos.ID, category = Constants.CAT_FETCH, label = "Fetch publish space informations",
         description = "Fetch informations about the publish space, worksapce, proxy status, ... of a given document.")
 public class FetchPublicationInfos {
-
-    private static final String WEB_ID_QUERY = "select * from Document Where ttc:domainID = '%s'"
-            + " AND ttc:webid = '%s' %s AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
-
 
     private static final Log log = LogFactory.getLog(FetchPublicationInfos.class);
 
@@ -131,12 +141,18 @@ public class FetchPublicationInfos {
 
     @Param(name = "webid", required = false)
     protected String webid;
-    
+
     @Param(name = "navigationPath", required = false)
     protected String navigationPath;
 
     @Param(name = "displayLiveVersion", required = false)
-    protected String displayLiveVersion;
+    protected boolean draft;
+
+    @Param(name = "parentId", required = false)
+    protected String parentId;
+    
+    @Param(name = "parentPath", required = false)
+    protected String parentPath;
 
     @OperationMethod
     public Object run() throws Exception {
@@ -151,10 +167,52 @@ public class FetchPublicationInfos {
 
         List<Integer> errorsCodes = new ArrayList<Integer>();
 
-        // Si on passe non pas un docRef en entrée mais un webId :
-        if(StringUtils.isNotBlank(webid)){
-            document = WebIdResolver.getDocumentByWebId(coreSession, webid, navigationPath, displayLiveVersion);
+        // WebId given
+        if (StringUtils.isNotBlank(webid)) {
+            // The WebIdResolver resoltion politic is, for instance, applicable
+            // for referenced links only (e.g. link in a rich text).
+
+            DocumentModelList documentsByWebId = WebIdResolver.getDocumentsByWebId(coreSession, parentId, parentPath, draft, webid);
+            if (CollectionUtils.isNotEmpty(documentsByWebId) && documentsByWebId.size() == 1) {
+                document = documentsByWebId.get(0);
+                
+            } else if(CollectionUtils.isNotEmpty(documentsByWebId) && documentsByWebId.size() > 1) {
+                // Filter proxies with Read permission
+                DocumentModelList readableRemoteProxies = getReadableRemoteProxies(documentsByWebId);
+                
+                if (readableRemoteProxies.size() == 0) {
+                    
+                    errorsCodes.add(Integer.valueOf(ERROR_CONTENT_FORBIDDEN));
+                    infosPubli.element("errorCodes", errorsCodes);
+                    rowInfosPubli.add(infosPubli); 
+                    return createBlob(rowInfosPubli);
+
+                } else if(readableRemoteProxies.size() == 1){
+                    document = readableRemoteProxies.get(0);
+                    
+                } else if(readableRemoteProxies.size() > 1) {
+                    
+                    // We store live document with given webId.
+                    DocumentModel liveDocumentByWebId = WebIdResolver.getLiveDocumentByWebId(coreSession, webid);
+                    if (liveDocumentByWebId == null) {
+                        
+                        errorsCodes.add(Integer.valueOf(ERROR_CONTENT_NOT_FOUND));
+                        infosPubli.element("errorCodes", errorsCodes);
+                        
+                    } else {
+                        
+                        infosPubli.element("hasManyProxies", Boolean.TRUE);
+                        infosPubli.element("documentPath", URLEncoder.encode(liveDocumentByWebId.getPathAsString(), "UTF-8"));
+                        infosPubli.element("liveId", StringUtils.EMPTY);
+                    }
+
+                    rowInfosPubli.add(infosPubli);
+                    return createBlob(rowInfosPubli);
+
+                }
+            }
         }
+
 
         /*
          * Récupération du DocumentModel dont le path ou uuid est donné en
@@ -182,7 +240,7 @@ public class FetchPublicationInfos {
         if (isError(liveDocRes)) {
             infosPubli = (JSONObject) liveDocRes;
             infosPubli.element("documentPath", URLEncoder.encode(document.getPath().toString(), "UTF-8"));
-            infosPubli.element("liveId", "");
+            infosPubli.element("liveId", StringUtils.EMPTY);
             infosPubli.element("editableByUser", Boolean.FALSE);
             infosPubli.element("isDeletableByUser", Boolean.FALSE);
         } else {
@@ -190,9 +248,11 @@ public class FetchPublicationInfos {
             infosPubli.element("liveId", liveDoc.getId());
             Object isEditable = isEditableByUser(infosPubli, liveDoc);
             infosPubli.element("editableByUser", isEditable);
+            Object isManageable = isManageableByUser(infosPubli, liveDoc);
+            infosPubli.element("manageableByUser", isManageable);
             Object isDeletable = isDeletableByUser(infosPubli, liveDoc);
             infosPubli.element("isDeletableByUser", isDeletable);
-            
+
             Object canUserValidate = canUserValidate();
             infosPubli.element("canUserValidate", canUserValidate);
 
@@ -203,7 +263,7 @@ public class FetchPublicationInfos {
             String livePath = liveDoc.getPathAsString();
             String docPath = document.getPath().toString();
             String path = docPath;
-            if (docPath.endsWith(TOUTATICE_PUBLI_SUFFIX) && docPath.equals(livePath + TOUTATICE_PUBLI_SUFFIX)){
+            if (docPath.endsWith(TOUTATICE_PUBLI_SUFFIX) && docPath.equals(livePath + TOUTATICE_PUBLI_SUFFIX)) {
                 path = livePath;
             }
             infosPubli.element("documentPath", URLEncoder.encode(path, "UTF-8"));
@@ -271,6 +331,22 @@ public class FetchPublicationInfos {
     }
 
     /**
+     * @param documentsByWebId
+     * @return readable remote proxies by current user.
+     */
+    public DocumentModelList getReadableRemoteProxies(DocumentModelList proxies) {
+        DocumentModelList readableProxies = new DocumentModelListImpl();
+        
+        for(DocumentModel proxy : proxies){
+            if(this.coreSession.hasPermission(proxy.getRef(), "Read")){
+                readableProxies.add(proxy);
+            }
+        }
+         
+        return readableProxies;
+    }
+
+    /**
      * Récupère un code d'erreur.
      * 
      * @param operationRes
@@ -318,6 +394,32 @@ public class FetchPublicationInfos {
             }
         }
         return canModify;
+    }
+
+    /**
+     * Méthode permettant de vérifier si un document (live) est gérable par
+     * l'utilisateur.
+     * 
+     * @param infos
+     *            pour stocker le résultat du test (booléen)
+     * @param liveDoc
+     *            document testé
+     * @return vrai si le document est gérable par l'utilisateur
+     * @throws ServeurException
+     */
+    private Object isManageableByUser(JSONObject infos, DocumentModel liveDoc) throws ServeurException {
+        Boolean canManage = null;
+        try {
+            canManage = Boolean.valueOf(coreSession.hasPermission(liveDoc.getRef(), SecurityConstants.EVERYTHING));
+        } catch (ClientException e) {
+            if (e instanceof DocumentSecurityException) {
+                return Boolean.FALSE;
+            } else {
+                log.warn("Failed to fetch permissions for document '" + liveDoc.getPathAsString() + "', error:" + e.getMessage());
+                throw new ServeurException(e);
+            }
+        }
+        return canManage;
     }
 
     /**
@@ -584,7 +686,7 @@ public class FetchPublicationInfos {
                     String parentSpaceID = "";
                     DocumentModelList spaceParentList = ToutaticeDocumentHelper.getParentSpaceList(this.session, liveDoc, true, true);
                     if (spaceParentList != null && spaceParentList.size() > 0) {
-                        DocumentModel parentSpace = (DocumentModel) spaceParentList.get(0);
+                        DocumentModel parentSpace = spaceParentList.get(0);
                         parentSpaceID = getSpaceID(parentSpace);
                     }
                     this.infosPubli.put("parentSpaceID", parentSpaceID);
@@ -655,28 +757,45 @@ public class FetchPublicationInfos {
 
                 /* TODO: valeur toujours mise à true pour l'instant */
                 this.infosPubli.element("workspaceInContextualization", Boolean.TRUE);
+                
+                if (!isError(liveDocRes)) {
+                    DocumentModel liveDoc = (DocumentModel) this.liveDocRes;
+                    Boolean isRemotePublishable = isRemotePublishable(liveDoc, workspaceRes);
+                    infosPubli.put("isRemotePublishable", isRemotePublishable);
+                }
 
-                /*
-                 * Récupération du document publié et attribution du caractère
-                 * 'publié'
-                 */
-                parameters.clear();
-                parameters.put("value", document);
-
+                // Case of local publication
+                // and "mono" remote publication
+                // (cause in this case, this.document path is remote published path
+                // and getProxy return it).
                 DocumentModel publishedDoc = null;
                 try {
 
+                    publishedDoc = ToutaticeDocumentHelper.getProxy(session, document, SecurityConstants.READ);
 
-                    publishedDoc = (DocumentModel) ToutaticeDocumentHelper.callOperation(automation, ctx, "Document.FetchPublished", parameters);
+                    Boolean isBeingModified = Boolean.FALSE;
+                    if (publishedDoc != null) {
+                        // Local proxy
+                        isBeingModified = Boolean.valueOf(!publishedDoc.getVersionLabel().equals(infosPubli.get("liveVersion")));
+                    } else {
+                        // Local Publishing: live is in PublishSpace
+                        String publishSpacePath = URLDecoder.decode(this.infosPubli.getString("publishSpacePath"), "UTF-8");
+                        if (StringUtils.isNotEmpty(publishSpacePath)) {
+                            isBeingModified = Boolean.TRUE;
+                        } else {
+                            // Remote publishing
+                            isBeingModified = Boolean.valueOf(isLiveModifiedFromProxies(document));
+                        }
+                    }
 
-                    boolean equalVersion = publishedDoc.getVersionLabel().equals(infosPubli.get("liveVersion"));
-                    this.infosPubli.element("isLiveModifiedFromProxy", !equalVersion);
-                    this.infosPubli.element("proxyVersion", publishedDoc.getVersionLabel());
-                    this.infosPubli.element("published", Boolean.TRUE);
+                    this.infosPubli.element("isLiveModifiedFromProxy", isBeingModified);
+                    this.infosPubli.element("proxyVersion", publishedDoc != null ? publishedDoc.getVersionLabel() : "0.0");
+                    this.infosPubli.element("published", publishedDoc != null ? Boolean.TRUE : Boolean.FALSE);
                 } catch (Exception e) {
-                    this.infosPubli.element("isLiveModifiedFromProxy", true);
+                    this.infosPubli.element("isLiveModifiedFromProxy", Boolean.TRUE);
                     this.infosPubli.element("published", Boolean.FALSE);
                 }
+
 
                 Object isAnonymousRes = isAnonymous(this.session, this.userManager, this.document, this.infosPubli);
                 if (isError(isAnonymousRes)) {
@@ -689,6 +808,53 @@ public class FetchPublicationInfos {
                 throw new ClientException(e);
             }
 
+        }
+        
+        /**
+         * @param liveDoc given document
+         * @return true if given document is remote publishable
+         */
+        private Boolean isRemotePublishable(DocumentModel liveDoc, Object workspaceRes) {
+            boolean is = false;
+
+            // live is in workspace
+            if (workspaceRes instanceof DocumentModel) {
+                is = Boolean.valueOf(!liveDoc.isFolder() && liveDoc.hasFacet("Publishable") && !liveDoc.isImmutable());
+            }
+
+            return is;
+        }
+
+        /**
+         * Use in remote publication case.
+         * 
+         * @return true if live is different from all
+         *         its published versions.
+         */
+        private Boolean isLiveModifiedFromProxies(DocumentModel liveDoc) {
+            Boolean isModified = Boolean.TRUE;
+
+            PublisherService publisherService = (PublisherService) Framework.getService(PublisherService.class);
+            Map<String, String> availablePublicationTrees = publisherService.getAvailablePublicationTrees();
+
+            if (MapUtils.isNotEmpty(availablePublicationTrees)) {
+                for (Entry<String, String> treeInfo : availablePublicationTrees.entrySet()) {
+                    String treeName = treeInfo.getKey();
+
+                    PublicationTree tree = publisherService.getPublicationTree(treeName, this.session, null);
+                    List<PublishedDocument> publishedDocuments = tree.getExistingPublishedDocument(new DocumentLocationImpl(this.document));
+
+                    for (PublishedDocument publishedDoc : publishedDocuments) {
+                        DocumentModel proxy = ((SimpleCorePublishedDocument) publishedDoc).getProxy();
+                        if (liveDoc.getVersionLabel().equals(proxy.getVersionLabel())) {
+                            isModified &= Boolean.FALSE;
+                        }
+                    }
+
+                }
+            }
+
+            return isModified;
         }
 
 
@@ -785,48 +951,6 @@ public class FetchPublicationInfos {
             }
 
             return spaceID;
-        }
-
-    }
-
-    /**
-     * Get doc by webid in unrestricted mode (admin)
-     */
-    private class UnrestrictedFecthWebIdRunner extends UnrestrictedSessionRunner {
-
-        String webIdSegment;
-        String domainIdSegment;
-        DocumentModel docResolved;
-
-        private static final String PROXY_FILTER = " AND ecm:isProxy = 1 ";
-        private static final String LIVE_FILTER = " AND ecm:isProxy = 0 ";
-
-        protected UnrestrictedFecthWebIdRunner(CoreSession session, String domainId, String webId) {
-            super(session);
-            this.webIdSegment = webId;
-            this.domainIdSegment = domainId;
-
-        }
-
-        @Override
-        public void run() throws ClientException {
-            DocumentModelList liveDocs = session.query(String.format(WEB_ID_QUERY, domainIdSegment, webIdSegment, LIVE_FILTER));
-            if (liveDocs.size() == 1) {
-                docResolved = liveDocs.get(0);
-            } else if (liveDocs.size() == 0) {
-                DocumentModelList proxiesDocs = session.query(String.format(WEB_ID_QUERY, domainIdSegment, webIdSegment, PROXY_FILTER));
-                if (proxiesDocs.size() == 1) {
-                    docResolved = proxiesDocs.get(0);
-                } else if (proxiesDocs.size() > 1) {
-                    throw new ClientException("Two or more published documents have the webid : " + webid);
-                }
-            } else if (liveDocs.size() > 1) {
-                throw new ClientException("Two or more live documents have the webid : " + webid);
-            }
-        }
-
-        public DocumentModel getDoc() {
-            return docResolved;
         }
 
     }

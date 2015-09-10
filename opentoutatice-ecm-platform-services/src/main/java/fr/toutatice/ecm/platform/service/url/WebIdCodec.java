@@ -32,6 +32,8 @@ import org.nuxeo.ecm.platform.url.DocumentViewImpl;
 import org.nuxeo.ecm.platform.url.api.DocumentView;
 import org.nuxeo.ecm.platform.url.service.AbstractDocumentViewCodec;
 
+import fr.toutatice.ecm.platform.core.constants.ToutaticeUtilsConst;
+
 /**
  * 
  * Codec and Uncodec for webid : url pattern is /web/domain-id/resource-name
@@ -58,6 +60,7 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
     public static final String DOC_TYPE = "DOC_TYPE";
     public static final String FILE_PROPERTY_PATH_KEY = "FILE_PROPERTY_PATH";
     public static final String FILENAME_KEY = "FILENAME";
+    
 
     public WebIdCodec() {
     }
@@ -79,8 +82,7 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
             url = url.substring(PREFIX.length());
 
             String[] segments = url.split("/");
-            if (segments.length >= 2) {
-                String domainID = segments[0];
+            if (segments.length >= 1) {
                 String lastSegment = segments[segments.length - 1];
                 String webid;
                 String extensionUrl = null;
@@ -143,7 +145,7 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
                 }
 
                 /* FIXME: replace DEFAULT_REPO by server name? */
-                final ToutaticeDocumentLocation docLoc = new ToutaticeDocumentLocation(DEFAULT_REPO, new WedIdRef(domainID, explicitUrl, webid, extensionUrl));
+                final ToutaticeDocumentLocation docLoc = new ToutaticeDocumentLocation(DEFAULT_REPO, new WedIdRef(explicitUrl, webid, extensionUrl));
                 /* FIXME: find view instead hard coding view_documents */
                 DocumentViewImpl documentViewImpl = new DocumentViewImpl(docLoc, "view_documents", parameters);
                 return documentViewImpl;
@@ -162,25 +164,21 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
         String extensionUrl = webIdRef.getExtensionUrl();
         String webId = (String) webIdRef.reference();
         String explicitUrl = webIdRef.getExplicitUrl();
-        String domainId = webIdRef.getDomainId();
 
-        if (domainId != null && webId != null) {
+        if (StringUtils.isNotBlank(webId)) {
             List<String> items = new ArrayList<String>();
             items.add(getPrefix());
-            items.add(domainId);
             if (StringUtils.isNotBlank(explicitUrl)) {
                 items.add(explicitUrl);
             }
             items.add(webId);
 
-			String uri = StringUtils.join(items, "/");
+			String uri = StringUtils.join(items, ToutaticeUtilsConst.PATH_SEPARATOR);
+			
+			Map<String, String> locParameters = docLoc.getParameters();
+			locParameters.putAll(docView.getParameters());
 
-            if (StringUtils.isNotBlank(extensionUrl)) {
-				uri = uri.concat(".").concat(extensionUrl);
-            }
-
-            String ret = URIUtils.addParametersToURIQuery(uri, docView.getParameters());
-            return ret;
+            return URIUtils.addParametersToURIQuery(uri, locParameters);
         }
 
         return null;

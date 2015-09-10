@@ -36,6 +36,7 @@ import org.nuxeo.ecm.platform.url.codec.DocumentFileCodec;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeUtilsConst;
 import fr.toutatice.ecm.platform.service.url.ToutaticeDocumentLocation;
 import fr.toutatice.ecm.platform.service.url.WebIdCodec;
 
@@ -84,14 +85,14 @@ public class WebIdFunctions {
      */
     public static String getPreferredLinkUrl(DocumentModel doc) {
 
-        String url = "";
+        String url = StringUtils.EMPTY;
 
         try {
-            Object webid = doc.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID).getValue();
-            if (webid != null && StringUtils.isNotBlank(webid.toString())) {
+            String webid = (String) doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
+            if (StringUtils.isNotBlank(webid)) {
                 url = callCodec(doc, null);
             } else {
-                return doc.getPathAsString();
+                return StringUtils.substringAfter(doc.getPathAsString(), "/");
             }
 
         } catch (ClientException e) {
@@ -111,11 +112,11 @@ public class WebIdFunctions {
      */
     public static String getPreferredImgUrl(String patternName, DocumentModel doc, String blobPropertyName, String filename) {
 
-        String url = "";
+        String url = StringUtils.EMPTY;
 
         try {
-            Object webid = doc.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID).getValue();
-            if (webid != null && StringUtils.isNotBlank(webid.toString())) {
+            String webid = (String) doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
+            if (StringUtils.isNotBlank(webid)) {
                 url = callCodec(doc, blobPropertyName);
             } else {
                 return DocumentModelFunctions.fileUrl(patternName, doc, blobPropertyName, filename);
@@ -126,6 +127,27 @@ public class WebIdFunctions {
             log.error("Erreur génération webid " + e);
         }
         return url;
+    }
+    
+    /**
+     * @param document
+     * @return the webid or path of a document.
+     */
+    public static String getPreferredDisplayId(DocumentModel doc){
+        String id = StringUtils.EMPTY;
+
+        try {
+            String webid = (String) doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
+            if (StringUtils.isNotBlank(webid)) {
+                id = webid;
+            } else {
+                id = doc.getPathAsString();
+            }
+
+        } catch (ClientException e) {
+            log.error("Erreur génération webid " + e);
+        }
+        return id;
     }
 
 	/**
@@ -145,7 +167,7 @@ public class WebIdFunctions {
             Map<String, String> parameters = new HashMap<String, String>();
             if ("Picture".equals(doc.getType())) {
                 if (StringUtils.isNotBlank(blobPropertyName)) {
-                    parameters.put(WebIdCodec.CONTENT_PARAM, StringUtils.replace(blobPropertyName, ":content", ""));
+                    parameters.put(WebIdCodec.CONTENT_PARAM, StringUtils.replace(blobPropertyName, ":content", StringUtils.EMPTY));
                 }
             }
 

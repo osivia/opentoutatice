@@ -3,11 +3,12 @@
 <component name="fr.toutatice.ecm.platform.core.audit.events">
 
 	<require>org.nuxeo.ecm.platform.audit.service.NXAuditEventsService</require>
-	
-	<extension target="org.nuxeo.ecm.platform.audit.service.NXAuditEventsService" point="event">
 
-		<event name="logout" enabled="false"/>
-		
+	<extension target="org.nuxeo.ecm.platform.audit.service.NXAuditEventsService"
+		point="event">
+
+		<event name="logout" enabled="false" />
+
 	</extension>
-	
+
 </component>

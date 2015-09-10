@@ -7,9 +7,9 @@
 
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
-		
+
 		<!-- Ajout de l'onglet de gestion de l'espace de publication -->
-		
+
 		<!-- Dans un document appartenant à un espace de publication -->
 		<action id="ATAB_ADMIN_PUBLICATION_SPACE" link="/incl/tabs/toutatice_admin_publication_space.xhtml"
 			order="120" label="toutatice.action.admin.publication.space" icon="/icons/file.gif">
@@ -29,8 +29,9 @@
 		</action>
 
 		<!-- Dans un document appartenant à un espace de travail -->
-		<action id="ATAB_ADMIN_WS_PUBLICATION_SPACE" link="/incl/tabs/toutatice_admin_ws_publication_space.xhtml"
-			order="125" label="toutatice.action.admin.publication.space" icon="/icons/file.gif">
+		<action id="ATAB_ADMIN_WS_PUBLICATION_SPACE"
+			link="/incl/tabs/toutatice_admin_ws_publication_space.xhtml" order="125"
+			label="toutatice.action.admin.publication.space" icon="/icons/file.gif">
 			<category>VIEW_ACTION_LIST</category>
 			<filter-id>belong_to_work_space</filter-id>
 			<filter-id>hasToutaticeSchema</filter-id>
@@ -45,7 +46,7 @@
 			</filter>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
 		</action>
-		
+
 	</extension>
 
 </component>

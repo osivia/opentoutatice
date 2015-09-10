@@ -19,6 +19,10 @@
 package fr.toutatice.ecm.platform.core.constants;
 
 public class ToutaticeUtilsConst {
+    
+    private ToutaticeUtilsConst(){};
+    
 	public final static String CST_DEFAULT_DIRECTORIES_SEPARATE_CHARACTER = "/";
 	public final static String CST_DEFAULT_BUNDLE_NAME = "messages";
+	public final static String PATH_SEPARATOR = "/";
 }

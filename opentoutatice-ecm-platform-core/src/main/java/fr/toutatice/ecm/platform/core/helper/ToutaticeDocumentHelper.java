@@ -31,7 +31,10 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,6 +56,7 @@ import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.VersionModel;
+import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.api.impl.LifeCycleFilter;
 import org.nuxeo.ecm.core.api.impl.VersionModelImpl;
@@ -65,7 +69,12 @@ import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.api.security.impl.ACLImpl;
 import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
 import org.nuxeo.ecm.core.schema.FacetNames;
+import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
+import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
+import org.nuxeo.ecm.platform.publisher.api.PublisherService;
+import org.nuxeo.ecm.platform.publisher.impl.core.SimpleCorePublishedDocument;
 import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
@@ -93,9 +102,10 @@ public class ToutaticeDocumentHelper {
 	}
 	
 	/**
-	 * Alllows to get a document in an unrestricted way.
+     * Allows to get a document in an unrestricted way.
 	 */
 	public static class GetUnrestrictedDocument extends UnrestrictedSessionRunner {
+
 	    private String id;
 	    private DocumentModel document;
 	    
@@ -124,6 +134,37 @@ public class ToutaticeDocumentHelper {
 	}
 
 	/**
+     * Save a document in an silent unrestricted or not way.
+     */
+    public static void saveDocumentSilently(CoreSession session, DocumentModel document, boolean unrestricted) {
+        SilentSave save = new SilentSave(session, document);
+        if (unrestricted) {
+            save.runUnrestricted();
+        } else {
+            save.run();
+        }
+    }
+
+    /**
+     * Save a document in an silent way.
+     */
+    public static class SilentSave extends ToutaticeSilentProcessRunnerHelper {
+
+        private DocumentModel document;
+
+        protected SilentSave(CoreSession session, DocumentModel document) {
+            super(session);
+            this.document = document;
+        }
+
+        @Override
+        public void run() throws ClientException {
+            this.session.saveDocument(this.document);
+        }
+
+    }
+
+    /**
 	 * Retourne la dernière version valide du document passé en paramètre.
 	 * 
 	 * @param document
@@ -174,6 +215,7 @@ public class ToutaticeDocumentHelper {
 	}
 
 	public static class DocumentVersionComparator implements Comparator<DocumentModel> {
+
 		private DocumentVersionComparator() {
 		}
 
@@ -284,8 +326,7 @@ public class ToutaticeDocumentHelper {
 	 *            est-ce que le document courant est examiné s'il est un folder
 	 * @return La liste des parents filtrée
 	 */
-	public static DocumentModelList getParentList(CoreSession session, DocumentModel document, Filter filter, boolean runInUnrestrictedMode, boolean immediateOnly,
-			boolean thisInluded) {
+	public static DocumentModelList getParentList(CoreSession session, DocumentModel document, Filter filter, boolean runInUnrestrictedMode, boolean immediateOnly, boolean thisInluded) {
 		DocumentModelList parent = null;
 
 		try {
@@ -341,6 +382,7 @@ public class ToutaticeDocumentHelper {
 	 */
 	public static DocumentModelList getParentSpaceList(CoreSession session, DocumentModel document, boolean runInUnrestrictedMode, boolean immediateOnly, boolean thisIncluded) {
 		Filter filter = new Filter() {
+
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -469,6 +511,7 @@ public class ToutaticeDocumentHelper {
 	 */
 	public static DocumentModelList getParentPublishSpaceList(CoreSession session, DocumentModel document, boolean runInUnrestrictedMode, boolean immediateOnly) {
 		Filter filter = new Filter() {
+
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -615,11 +658,11 @@ public class ToutaticeDocumentHelper {
 		res = (null != getProxy(session, doc, SecurityConstants.READ));
 
 		if (!res) {
-			// le document est dans un workspace ?
+            // le document est dans un workspace ou est en attente de publication dans un PortalSite
 			DocumentModelList spaceDocsList = ToutaticeDocumentHelper.getParentSpaceList(session, doc, true, true, true);
 			if(spaceDocsList!=null && !spaceDocsList.isEmpty()){
 				DocumentModel space = spaceDocsList.get(0);
-				res = ToutaticeDocumentHelper.isAWorkSpaceDocument(space);
+                res = ToutaticeDocumentHelper.isAWorkSpaceDocument(space) || ToutaticeDocumentHelper.isAPublicationSpaceDocument(space);
 			}
 		}
 
@@ -698,6 +741,7 @@ public class ToutaticeDocumentHelper {
 	}
 
 	private static class UnrestrictedGetProxyVersionLabelRunner extends UnrestrictedSessionRunner {
+
 		private DocumentModel proxy;
 		private String versionLabel;
 
@@ -721,6 +765,7 @@ public class ToutaticeDocumentHelper {
 	}
 	
 	private static class GetParentPropertiesRunner extends UnrestrictedSessionRunner{
+
 		private DocumentModel doc;
 		private Filter filter;		
 		private boolean included;
@@ -736,6 +781,7 @@ public class ToutaticeDocumentHelper {
 			this.included = included;
 			this.runInUnrestrictedMode = runInUnrestrictedMode;
 		}
+
 		public Map<String,Property> getProperties(){
 			return mapPpties;
 		}
@@ -757,6 +803,7 @@ public class ToutaticeDocumentHelper {
 	}
 
 	private static class UnrestrictedGetParentsListRunner extends UnrestrictedSessionRunner {
+
 		private DocumentModel baseDoc;
 		private DocumentModelList parentDocList;
 		private Filter filter = null;
@@ -836,6 +883,7 @@ public class ToutaticeDocumentHelper {
 	}
 
 	private static class UnrestrictedGetSameDocsListRunner extends UnrestrictedSessionRunner {
+
 		private int count;
 		private Filter filter = null;
 		private DocumentModel document;
@@ -910,6 +958,7 @@ public class ToutaticeDocumentHelper {
 	
 	/**
 	 * ajout une ace sur un document
+     * 
 	 * @param session
 	 * @param ref
 	 * @param ace
@@ -958,8 +1007,7 @@ public class ToutaticeDocumentHelper {
 	 * @deprecated use {@link #ToutaticeOperationHelper.callOperation()} instead. 
 	 */
 	@Deprecated
-	public static Object callOperation(AutomationService automation, OperationContext ctx, String operationId,
-			Map<String, Object> parameters) throws Exception {
+    public static Object callOperation(AutomationService automation, OperationContext ctx, String operationId, Map<String, Object> parameters) throws Exception {
 		InvokableMethod operationMethod = getRunMethod(automation, operationId);
 		Object operationRes = operationMethod.invoke(ctx, parameters);
 		return operationRes;
@@ -1024,6 +1072,45 @@ public class ToutaticeDocumentHelper {
         }
 
         return mediaSpace;
+    }
+    
+    /**
+     * @param document
+     * @return list of remote proxies of document (if any).
+     */
+     public static DocumentModelList getRemotePublishedDocuments(CoreSession session, DocumentModel document) {
+         DocumentModelList remoteProxies = new DocumentModelListImpl();
+
+         if (!document.isProxy()) {
+
+             PublisherService publisherService = (PublisherService) Framework.getService(PublisherService.class);
+             Map<String, String> availablePublicationTrees = publisherService.getAvailablePublicationTrees();
+
+             if (MapUtils.isNotEmpty(availablePublicationTrees)) {
+                 for (Entry<String, String> treeInfo : availablePublicationTrees.entrySet()) {
+                     String treeName = treeInfo.getKey();
+
+                     PublicationTree tree = publisherService.getPublicationTree(treeName, session, null);
+                     List<PublishedDocument> publishedDocuments = tree.getExistingPublishedDocument(new DocumentLocationImpl(document));
+                     
+                     if (CollectionUtils.isNotEmpty(publishedDocuments)) {
+                         
+                         for(PublishedDocument publishedDoc : publishedDocuments){
+                             DocumentModel publishedDocModel = ((SimpleCorePublishedDocument) publishedDoc).getProxy();
+                             
+                             remoteProxies.add(publishedDocModel);
+                         }
+                         
+                     }
+
+                 }
+
+             }
+
+         }
+         
+        return remoteProxies;
+
     }
 
 }

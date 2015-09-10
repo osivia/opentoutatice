@@ -6,10 +6,11 @@
 
 		<coreQueryPageProvider name="GET_TASKS_BY_NAME_FOR_TARGET_DOCUMENT">
 			<pattern>
-				SELECT * FROM TaskDoc WHERE nt:name = ? AND 
+				SELECT * FROM TaskDoc WHERE nt:name = ? AND
 				nt:targetDocumentId = ? AND
 				ecm:currentLifeCycleState
-				NOT IN ('ended', 'cancelled') AND ecm:isProxy = 0
+				NOT IN ('ended',
+				'cancelled') AND ecm:isProxy = 0
 			</pattern>
 			<pageSize>0</pageSize>
 			<maxPageSize>0</maxPageSize>

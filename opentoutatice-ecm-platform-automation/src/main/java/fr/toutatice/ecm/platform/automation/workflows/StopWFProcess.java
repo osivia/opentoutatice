@@ -49,11 +49,11 @@ public class StopWFProcess {
 
     @Context
     protected CoreSession documentManager;
-
+    
     @Context
     protected OperationContext context;
-
-    @Context
+    
+    @Context 
     protected transient AutomationService automationService;
 
     @Context

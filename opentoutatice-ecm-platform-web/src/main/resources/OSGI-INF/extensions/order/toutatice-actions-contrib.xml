@@ -5,7 +5,7 @@
 
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
-		
+
 		<action id="MOVE_TOP" link="#{orderableDocumentActions.moveToTop}"
 			enabled="true" label="command.order.movetotop" icon="">
 			<category>ORDERABLE_CURRENT_SELECTION_LIST</category>

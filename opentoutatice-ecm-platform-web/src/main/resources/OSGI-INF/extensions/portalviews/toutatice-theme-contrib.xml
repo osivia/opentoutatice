@@ -30,6 +30,20 @@
 				<theme>toutatice/popup</theme>
 			</view>
 
+			<view id="/osivia_create_document.xhtml">
+				<theme>toutatice/popup</theme>
+			</view>
+			<view id="/osivia_edit_document.xhtml">
+				<theme>toutatice/popup</theme>
+			</view>
+
+			<view id="/pv_workflows/remote_publishing.xhtml">
+				<theme>galaxy/popup</theme>
+			</view>
+			<view id="/pv_workflows/validate_remote_publishing.xhtml">
+				<theme>toutatice/popup</theme>
+			</view>
+
 		</application>
 
 	</extension>
@@ -49,7 +63,7 @@
 			<!-- FIXME: necessary? -->
 			<require>nxthemes.css</require>
 		</view>
-		
+
 	</extension>
 
 	<extension target="org.nuxeo.theme.services.ThemeService"
@@ -64,7 +78,7 @@
 		<resource name="custom-popup.min.css">
 			<path>css/custom-popup.min.css</path>
 		</resource>
-		
+
 		<resource name="bootstrap-datepicker.js">
 			<path>scripts/bootstrap/bootstrap-datepicker.js</path>
 		</resource>
@@ -74,7 +88,7 @@
 		<resource name="bootstrap-timepicker.js">
 			<path>scripts/bootstrap/bootstrap-timepicker.js</path>
 		</resource>
-		
+
 	</extension>
 
 </component>

@@ -7,8 +7,7 @@
 	<require>fr.toutatice.ecm.platform.core.doctypes</require>
 	<require>fr.toutatice.ecm.platform.core.schemas</require>
 
-	<extension
-		target="org.nuxeo.ecm.core.schema.CustomizeTypesService"
+	<extension target="org.nuxeo.ecm.core.schema.CustomizeTypesService"
 		point="excludedrules">
 
 		<rules>
@@ -19,7 +18,7 @@
 			<facet name="RouteStep" />
 			<facet name="StepFolder" />
 			<facet name="Task" />
-            <facet name="HiddenInNavigation" />
+			<facet name="HiddenInNavigation" />
 			<types>
 				<type>AdministrativeStatus</type>
 			</types>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.services.lock.extended.fetchinfos"
+	version="1.0">
+
+	<require>fr.toutatice.ecm.platform.core.services.fetchinformation</require>
+	<require>fr.toutatice.ecm.platform.services.lock.service</require>
+
+	<extension target="fr.toutatice.ecm.platform.core.services.fetchinformation"
+		point="extended_fetch_infos">
+
+		<fetchInfos
+			providerService="fr.toutatice.ecm.platform.service.lock.ToutaticeLockService" />
+
+	</extension>
+</component>

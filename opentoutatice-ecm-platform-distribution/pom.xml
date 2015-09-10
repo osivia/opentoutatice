@@ -1,21 +1,22 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>3.0.4-SNAPSHOT</version>
+		<version>3.1.3-SNAPSHOT</version>
 	</parent>
-	
+
 	<artifactId>opentoutatice-ecm-platform-distribution</artifactId>
 	<packaging>zip</packaging>
 	<name>NXR archive - Open Toutatice platform</name>
-	
+
 	<properties />
-    
+
 	<dependencyManagement>
 		<dependencies>
-		<!-- Import Nuxeo BOM -->
+			<!-- Import Nuxeo BOM -->
 			<dependency>
 				<groupId>org.nuxeo.ecm.distribution</groupId>
 				<artifactId>nuxeo-distribution</artifactId>
@@ -25,7 +26,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
@@ -57,7 +58,7 @@
 
 		<profile>
 			<id>PROD</id>
-        
+
 			<properties>
 				<profileName>PROD</profileName>
 			</properties>
@@ -100,7 +101,7 @@
 								<buildFile>${basedir}/src/main/assemble/assembly.xml</buildFile>
 							</buildFiles>
 						</configuration>
-					</plugin>				
+					</plugin>
 				</plugins>
 			</build>
 		</profile>

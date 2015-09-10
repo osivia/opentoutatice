@@ -58,7 +58,7 @@ public class RemovePublishedVersions {
 		private DocumentModel returnedDocument;
 		
 		public DocumentModel getReturnedDocument() {
-			return returnedDocument;
+            return this.returnedDocument;
 		}
 
 		public UnrestrictedRemovePublishedVersionsRunner(CoreSession session, DocumentModel document, DocumentModel target) {
@@ -71,24 +71,26 @@ public class RemovePublishedVersions {
 		public void run() throws ClientException {
 			DocumentRef targetRef = this.target.getRef();
 			DocumentRef baseDocRef = document.getRef();
-			returnedDocument = this.document;
+            this.returnedDocument = this.document;
 
 			if (this.document.isVersion()) {
 				String sourceDocId = this.document.getSourceId();
 				baseDocRef = new IdRef(sourceDocId);
 			}
 			
-			/* gérer le cas où le document à retirer est un document proxy.
+            /*
+             * gérer le cas où le document à retirer est un document proxy.
 			 * Comme le document sera supprimé, il faut retourner sur le document
 			 * parent (navigation).
 			*/
 			if (this.document.isProxy()) {
-				returnedDocument = this.target;
+                this.returnedDocument = this.target;
 			}
 			
 			if (null != targetRef) {
 				DocumentModelList proxies = this.session.getProxies(baseDocRef, targetRef);
 				for (DocumentModel proxy : proxies) {
+                    //Case of remote publication
 					this.session.removeDocument(proxy.getRef());
 				}
 			} else {

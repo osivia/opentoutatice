@@ -28,8 +28,8 @@
 
 	<xs:complexType name="requestCriteria">
 		<xs:sequence>
- 			<xs:element name="currentDocId" type="xs:string" />
- 			<xs:element name="currentSpaceId" type="xs:string" />
+			<xs:element name="currentDocId" type="xs:string" />
+			<xs:element name="currentSpaceId" type="xs:string" />
 			<xs:element name="docTypes" type="nxs:stringList" />
 			<xs:element name="docType" type="xs:string" />
 			<xs:element name="keyWords" type="nxs:stringList" />

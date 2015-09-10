@@ -31,13 +31,11 @@ public class WedIdRef implements DocumentRef {
 	private static final long serialVersionUID = -3531204028673068100L;
 
 	public final static int WEBID = 3;
-	public final String domainId;
 	public final String explicitUrl;
 	public final String value;
 	public final String extensionUrl;
 
-	public WedIdRef(String domainId, String explicitUrl, String value, String extensionUrl) {
-		this.domainId = domainId;
+	public WedIdRef(String explicitUrl, String value, String extensionUrl) {
 		this.explicitUrl = explicitUrl;
 		this.value = value;
 		this.extensionUrl = extensionUrl;
@@ -51,10 +49,6 @@ public class WedIdRef implements DocumentRef {
 	@Override
 	public Object reference() {
 		return value;
-	}
-
-	public String getDomainId() {
-		return domainId;
 	}
 	
 	public String getExplicitUrl(){

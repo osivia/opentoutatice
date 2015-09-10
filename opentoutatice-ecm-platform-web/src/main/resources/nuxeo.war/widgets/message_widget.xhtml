@@ -1,0 +1,16 @@
+<c:if test="true" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:nxu="http://nuxeo.org/nxweb/util">
+
+    <c:set var="message" value="#{widget.properties.message}" />
+
+    <c:set var="translatedMessage"
+        value="#{nxu:test(widget.properties.translated, messages[message], message)}" />
+
+        <div class="#{widget.properties.classes}">
+            <h:outputText value="#{translatedMessage}"
+                style="#{widget.properties.style}" />
+        </div>
+</c:if>

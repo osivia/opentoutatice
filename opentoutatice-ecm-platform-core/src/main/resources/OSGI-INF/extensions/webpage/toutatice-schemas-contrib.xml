@@ -11,7 +11,7 @@
 			src="schemas/webpage/webconfiguration.xsd" />
 		<schema name="webconfigurationfolder" prefix="webconfigurationfolder"
 			src="schemas/webpage/webconfigurationfolder.xsd" />
-		<schema name="web_configurations_configuration" prefix="webconfs" 
+		<schema name="web_configurations_configuration" prefix="webconfs"
 			src="schemas/webpage/web_configurations_config.xsd" />
 
 		<schema name="regions" prefix="rg" src="schemas/webpage/regions.xsd" />
@@ -38,9 +38,9 @@
 		<schema name="rss_fragments" prefix="rssfgt"
 			src="schemas/webpage/rss_fragments.xsd" />
 		<schema name="criteria_list_fragments" prefix="crtlistfgt"
- 			src="schemas/webpage/criteria_list_fragments.xsd" />
- 		<schema name="slider_list_fragments" prefix="sldlistfgt"
- 			src="schemas/webpage/slider_list_fragments.xsd" />
+			src="schemas/webpage/criteria_list_fragments.xsd" />
+		<schema name="slider_list_fragments" prefix="sldlistfgt"
+			src="schemas/webpage/slider_list_fragments.xsd" />
 	</extension>
 
 </component>

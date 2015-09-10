@@ -1,67 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>opentoutatice-ecm.platform</groupId>
-    <artifactId>opentoutatice-ecm-platform-parent</artifactId>
-    <version>3.0.4-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>open toutatice plate-forme</name>
+	<groupId>opentoutatice-ecm.platform</groupId>
+	<artifactId>opentoutatice-ecm-platform-parent</artifactId>
+	<version>3.1.3-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>open toutatice plate-forme</name>
 
-    <modules>
-        <module>opentoutatice-ecm-platform-core</module>
-        <module>opentoutatice-ecm-platform-web</module>
-        <module>opentoutatice-ecm-platform-automation</module>
-        <module>opentoutatice-ecm-platform-services</module>
-        <module>opentoutatice-ecm-platform-custom</module>
-        <module>opentoutatice-ecm-platform-marketplace</module>
-        <module>opentoutatice-ecm-platform-distribution</module>
-    </modules>
+	<modules>
+		<module>opentoutatice-ecm-platform-core</module>
+		<module>opentoutatice-ecm-platform-web</module>
+		<module>opentoutatice-ecm-platform-automation</module>
+		<module>opentoutatice-ecm-platform-services</module>
+		<module>opentoutatice-ecm-platform-custom</module>
+		<module>opentoutatice-ecm-platform-marketplace</module>
+		<module>opentoutatice-ecm-platform-distribution</module>
+	</modules>
 
-    <properties>
-        <nuxeo.version>6.0-HF16</nuxeo.version>
-	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-    
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.2.1</version>
-                <configuration>
-                    <tagBase>http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags</tagBase>
-                    <releaseProfiles>unpack,pack</releaseProfiles>
-                    <preparationGoals>clean install</preparationGoals>
-                    <goals>deploy</goals>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <archive>
-                        <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-                        <manifestEntries>
-                            <Bundle-Version>${eclipseVersion}-t${buildNumber}</Bundle-Version>
-                            <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-        </plugins>
+	<properties>
+		<nuxeo.version>6.0-HF19</nuxeo.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<tagBase>http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags</tagBase>
+					<releaseProfiles>unpack,pack</releaseProfiles>
+					<preparationGoals>clean install</preparationGoals>
+					<goals>deploy</goals>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<archive>
+						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+						<manifestEntries>
+							<Bundle-Version>${eclipseVersion}-t${buildNumber}</Bundle-Version>
+							<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -72,21 +73,21 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-    </build>
+	</build>
 
-    <scm>
-        <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/trunk</developerConnection>
-    </scm>
+	<scm>
+		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/trunk</developerConnection>
+	</scm>
 
-    <distributionManagement>
-        <repository>
-            <id>toutatice-releases</id>
-            <url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>toutatice-snapshots</id>
-            <url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+	<distributionManagement>
+		<repository>
+			<id>toutatice-releases</id>
+			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>toutatice-snapshots</id>
+			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
