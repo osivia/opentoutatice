@@ -36,6 +36,11 @@ import org.nuxeo.ecm.platform.forms.layout.api.Widget;
 public interface WidgetsAdapterService extends Serializable {
     
     /**
+     * @return current Portal View.
+     */
+    String getCurrentPortalView();
+    
+    /**
      * @return the Nuxeo/Portal widgets mapping.
      */
     Map<String, String> getWidgetsMappings();

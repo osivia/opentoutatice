@@ -77,10 +77,12 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
 
     private List<String> portalViewIds;
 
+	private String currentPortalView;
+
     private String fromUrlParam;
 
     protected enum DefaultPortalViewId {
-        toutatice_edit, toutatice_create;
+        toutatice_edit, toutatice_create, osivia_edit_document, osivia_create_document;
     }
 
     @Override
@@ -105,7 +107,13 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
         return this.widgetsMappings;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
+    public String getCurrentPortalView(){
+        return this.currentPortalView;
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -124,6 +132,8 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
             viewId = context.getViewRoot().getViewId();
             fromUrlParamExists = isFromUrlParamExists(context);
         }
+        currentPortalView = viewId;
+        
         is = fromUrlParamExists || isPortalView(viewId);
 
         return is;
