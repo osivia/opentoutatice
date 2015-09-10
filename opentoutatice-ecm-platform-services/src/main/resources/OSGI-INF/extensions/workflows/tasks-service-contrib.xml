@@ -12,9 +12,7 @@
 		point="tasks">
 
 		<task name="validate-online" permission="validationWorkflow_validation" />
-		<task
-			name="org.nuxeo.ecm.platform.publisher.task.CoreProxyWithWorkflowFactory"
-			permission="RemotePublish" />
+		<task name="org.nuxeo.ecm.platform.publisher.task.CoreProxyWithWorkflowFactory" permission="RemotePublish" />
 
 	</extension>
 

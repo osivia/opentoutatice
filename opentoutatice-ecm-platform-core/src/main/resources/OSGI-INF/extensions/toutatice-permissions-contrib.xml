@@ -22,6 +22,11 @@
 			<include>Write</include>
 		</permission>
 
+		<permission name="RemotePublish">
+			<include>CanAskForPublishing</include>
+			<include>Write</include>
+		</permission>
+
 	</extension>
 
 

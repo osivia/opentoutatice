@@ -12,7 +12,7 @@ window.onload = function(e){
 tinyMCE.init({
 	editor_selector : "mceEditorMinimalInLine",
 	mode : "specific_textareas",
-	theme : "advanced",
+	theme : "modern",
 	plugins : "",
 	language : lang,
 	theme_advanced_resizing : true,
@@ -35,8 +35,7 @@ tinyMCE.init({
 	// Img insertion fixes
 	relative_urls : false,
 	remove_script_host : false,
-	skin : "o2k7",
-	skin_variant : "silver",
+
 	theme_advanced_buttons1 : "bold,italic,underline",
 	theme_advanced_buttons2 : "",
 	theme_advanced_buttons3 : ""
@@ -49,7 +48,7 @@ tinyMCE
 .init({
 	editor_selector : "mceEditorMinimal",
 	mode : "specific_textareas",
-	theme : "advanced",
+	theme : "modern",
 	plugins : "",
 	language : lang,
 	theme_advanced_resizing : true,
@@ -68,8 +67,7 @@ tinyMCE
 	// Img insertion fixes
 	relative_urls : false,
 	remove_script_host : false,
-	skin : "o2k7",
-	skin_variant : "silver",
+
 	theme_advanced_buttons1 : "bold,italic,underline",
 	theme_advanced_buttons2 : "",
 	theme_advanced_buttons3 : "",
