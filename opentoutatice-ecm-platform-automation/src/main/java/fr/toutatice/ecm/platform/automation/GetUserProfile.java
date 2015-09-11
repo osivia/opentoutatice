@@ -17,6 +17,7 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.OperationContext;
@@ -47,19 +48,16 @@ public class GetUserProfile {
     @Context
     protected UserProfileService userProfileService;
 
-
     @OperationMethod
     public Object run() throws Exception {
         DocumentModel userProfile = null;
         NuxeoPrincipal principal = (NuxeoPrincipal) ctx.getPrincipal();
         try {
-            if (username != null) {
+            if (StringUtils.isNotBlank(username)) {
                 userProfile = userProfileService.getUserProfileDocument(username, ctx.getCoreSession());
             } else {
                 userProfile = userProfileService.getUserProfileDocument(ctx.getCoreSession());
             }
-
-
         } catch (Exception e) {
             log.error("Failed to get the user profil document for user '" + principal.getName() + "', error: " + e.getMessage());
             throw new ClientException("Failed to get the user profil document");
