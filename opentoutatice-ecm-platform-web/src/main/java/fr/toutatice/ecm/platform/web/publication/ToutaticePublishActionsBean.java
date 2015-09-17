@@ -20,6 +20,7 @@ package fr.toutatice.ecm.platform.web.publication;
 import static org.nuxeo.ecm.webapp.documentsLists.DocumentsListsManager.CURRENT_DOCUMENT_SELECTION;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,6 +40,7 @@ import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.publisher.api.PublicationNode;
 import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
+import org.nuxeo.ecm.platform.publisher.api.PublicationTreeNotAvailable;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
 import org.nuxeo.ecm.platform.publisher.impl.core.SimpleCorePublishedDocument;
 import org.nuxeo.ecm.platform.publisher.impl.service.ProxyNode;
@@ -264,6 +266,40 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
             }
         }
         return has;
+    }
+    
+    /**
+     * Type of tree changed (RootSectionsPublicationTree to ToutaticeRootSectionsPublicationTree)
+     * to be coherent with publisher-task-contrib.xml.
+     */
+    @Override
+    protected List<String> filterEmptyTrees(Collection<String> trees)
+            throws PublicationTreeNotAvailable, ClientException {
+        List<String> filteredTrees = new ArrayList<>();
+
+        for (String tree : trees) {
+            try {
+                PublicationTree pTree = publisherService.getPublicationTree(
+                        tree, documentManager, null,
+                        navigationContext.getCurrentDocument());
+                if (pTree != null) {
+                    if (pTree.getTreeType().equals(
+                            "ToutaticeRootSectionsPublicationTree")) {
+                        if (pTree.getChildrenNodes().size() > 0) {
+                            filteredTrees.add(tree);
+                        }
+                    } else {
+                        filteredTrees.add(tree);
+                    }
+                }
+            } catch (PublicationTreeNotAvailable e) {
+                log.warn("Publication tree " + tree
+                        + " is not available : check config");
+                log.debug("Publication tree " + tree
+                        + " is not available : root cause is ", e);
+            }
+        }
+        return filteredTrees;
     }
 
 }
