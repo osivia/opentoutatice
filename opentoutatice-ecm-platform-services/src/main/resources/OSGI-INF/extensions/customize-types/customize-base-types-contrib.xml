@@ -38,6 +38,10 @@
 		<doctype name="Domain" append="true">
 			<facet name="Space" />
 		</doctype>
+		
+		<doctype name="Note" append="true">
+               <facet name="TTCAttachableImages" />
+         </doctype>
 
 	</extension>
 
