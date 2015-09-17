@@ -198,6 +198,16 @@ public class FetchPublicationInfos {
             infosPubli.element("manageableByUser", isManageable);
             Boolean isRemotePublishable = isRemotePublishable(liveDoc);
             infosPubli.put("isRemotePublishable", isRemotePublishable);
+            
+            // LBI #923
+            if(isRemotePublishable) {
+            	Boolean isRemotePublished = isRemotePublished(liveDoc);
+            	infosPubli.put("isRemotePublished", isRemotePublished);
+            }
+            else {
+            	infosPubli.put("isRemotePublished", Boolean.FALSE);
+            }
+            
             Object isDeletable = isDeletableByUser(infosPubli, liveDoc);
             infosPubli.element("isDeletableByUser", isDeletable);
 
@@ -277,6 +287,8 @@ public class FetchPublicationInfos {
 
         return createBlob(rowInfosPubli);
     }
+
+
 
     /**
      * Récupère un code d'erreur.
@@ -363,6 +375,18 @@ public class FetchPublicationInfos {
     }
 
     /**
+     * @param liveDoc given document
+     * @return true if given document is remote published
+     */
+	private boolean isRemotePublished(DocumentModel liveDoc) {
+		DocumentModelList remotePublishedDocuments = ToutaticeDocumentHelper.getRemotePublishedDocuments(coreSession, liveDoc);
+		if(remotePublishedDocuments.size() > 0) {
+			return true;
+		}
+		else return false;
+	}
+    
+    /**
      * Get user validate rigth on document.
      * 
      * @throws ServeurException
@@ -428,8 +452,9 @@ public class FetchPublicationInfos {
             if (canBeDelete) {
                 DocumentModel proxy = ToutaticeDocumentHelper.getProxy(coreSession, liveDoc, null);
                 boolean hasProxy = (null != proxy);
-                boolean isApproved = ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(liveDoc.getCurrentLifeCycleState());
-                if (isApproved || hasProxy) {
+                // LBI #923 - pas de contrôle sur l'état validé
+                //boolean isApproved = ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(liveDoc.getCurrentLifeCycleState());
+                if (hasProxy) {
                     boolean canValidate = coreSession.hasPermission(liveDoc.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE);
                     canBeDelete = Boolean.valueOf(canValidate);
                 }

@@ -30,7 +30,10 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,6 +55,7 @@ import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.VersionModel;
+import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.api.impl.LifeCycleFilter;
 import org.nuxeo.ecm.core.api.impl.VersionModelImpl;
@@ -64,7 +68,12 @@ import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.api.security.impl.ACLImpl;
 import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
 import org.nuxeo.ecm.core.schema.FacetNames;
+import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
+import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
+import org.nuxeo.ecm.platform.publisher.api.PublisherService;
+import org.nuxeo.ecm.platform.publisher.impl.core.SimpleCorePublishedDocument;
 import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
@@ -1025,4 +1034,43 @@ public class ToutaticeDocumentHelper {
         return mediaSpace;
     }
 
+    /**
+     * @param document
+     * @return list of remote proxies of document (if any).
+     */
+     public static DocumentModelList getRemotePublishedDocuments(CoreSession session, DocumentModel document) {
+         DocumentModelList remoteProxies = new DocumentModelListImpl();
+
+         if (!document.isProxy()) {
+
+             PublisherService publisherService = (PublisherService) Framework.getService(PublisherService.class);
+             Map<String, String> availablePublicationTrees = publisherService.getAvailablePublicationTrees();
+
+             if (MapUtils.isNotEmpty(availablePublicationTrees)) {
+                 for (Entry<String, String> treeInfo : availablePublicationTrees.entrySet()) {
+                     String treeName = treeInfo.getKey();
+
+                     PublicationTree tree = publisherService.getPublicationTree(treeName, session, null);
+                     List<PublishedDocument> publishedDocuments = tree.getExistingPublishedDocument(new DocumentLocationImpl(document));
+                     
+                     if (CollectionUtils.isNotEmpty(publishedDocuments)) {
+                         
+                         for(PublishedDocument publishedDoc : publishedDocuments){
+                             DocumentModel publishedDocModel = ((SimpleCorePublishedDocument) publishedDoc).getProxy();
+                             
+                             remoteProxies.add(publishedDocModel);
+                         }
+                         
+                     }
+
+                 }
+
+             }
+
+         }
+         
+        return remoteProxies;
+
+    }
+    
 }

@@ -163,10 +163,11 @@ public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 				for (DocumentModel doc : docs) {
 					DocumentModelList proxies = documentManager.getProxies(doc.getRef(), doc.getParentRef());
 
-					boolean isApproved = ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(doc.getCurrentLifeCycleState());
+					// LBI #923
+					//boolean isApproved = ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(doc.getCurrentLifeCycleState());
 					boolean hasProxy = (null != proxies && !proxies.isEmpty());
 					
-					if (isApproved || hasProxy) {
+					if (hasProxy) {
 						if (!documentManager.hasPermission(doc.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE)) {
 							status = false;
 							break;
