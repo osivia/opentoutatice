@@ -22,7 +22,6 @@ package fr.toutatice.ecm.platform.core.helper;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +43,6 @@ import org.nuxeo.ecm.platform.task.core.service.TaskEventNotificationHelper;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
-import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
 /**
  * @author David Chevrier
@@ -53,12 +51,39 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 public final class ToutaticeWorkflowHelper {
 
     public static final String GET_TASKS_BY_NAME_PROVIDER = "GET_TASKS_BY_NAME_FOR_TARGET_DOCUMENT";
+    
     public static final String GET_WF_BY_NAME_QUERY = "select * from DocumentRoute where dc:title = '%s' and docri:participatingDocuments = '%s' "
+            + "and ecm:currentLifeCycleState IN ('ready','running') order by dc:created";
+
+    public static final String GET_WF_ON_DOCUMENT_QUERY = "select * from DocumentRoute where docri:participatingDocuments = '%s' "
             + "and ecm:currentLifeCycleState IN ('ready','running') order by dc:created";
 
 
     private ToutaticeWorkflowHelper() {
     }
+    
+    /**
+     * @param currentDoc
+     * @return workflows on document.
+     */
+    public static List<DocumentRoute> getWorkflowsOnDocument(DocumentModel currentDoc){
+        List<DocumentRoute> routes = new ArrayList<DocumentRoute>(1);
+        
+        CoreSession session = currentDoc.getCoreSession();
+        String query = String.format(GET_WF_ON_DOCUMENT_QUERY, currentDoc.getId());
+        
+        ToutaticeQueryHelper.UnrestrictedQueryRunner queryRunner = new ToutaticeQueryHelper.UnrestrictedQueryRunner(session, query);
+        DocumentModelList wfs = queryRunner.runQuery();
+        
+        if(CollectionUtils.isNotEmpty(wfs)){
+            for(DocumentModel wf : wfs){
+              routes.add(wf.getAdapter(DocumentRoute.class));
+            }
+        }
+
+        return routes;
+    }
+    
 
     /**
      * Get task by name for current document.
