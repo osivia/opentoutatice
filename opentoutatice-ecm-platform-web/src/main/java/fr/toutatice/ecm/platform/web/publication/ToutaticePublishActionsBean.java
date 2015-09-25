@@ -19,7 +19,6 @@ package fr.toutatice.ecm.platform.web.publication;
 
 import static org.nuxeo.ecm.webapp.documentsLists.DocumentsListsManager.CURRENT_DOCUMENT_SELECTION;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,8 +34,6 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.PathRef;
-import org.nuxeo.ecm.core.event.EventService;
-import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.publisher.api.PublicationNode;
 import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
@@ -49,7 +46,7 @@ import org.richfaces.component.UITree;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
-import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
 
 
@@ -229,7 +226,7 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
 
     public boolean isPending(DocumentModel document) throws ClientException {
         boolean isPending = false;
-        if (document.isProxy()) {
+        if (ToutaticeDocumentHelper.isDocStillExists(documentManager, document) && document.isProxy()) {
             PublicationTree tree = publisherService.getPublicationTreeFor(document, documentManager);
             PublishedDocument publishedDocument = tree.wrapToPublishedDocument(document);
             isPending = publishedDocument.isPending();

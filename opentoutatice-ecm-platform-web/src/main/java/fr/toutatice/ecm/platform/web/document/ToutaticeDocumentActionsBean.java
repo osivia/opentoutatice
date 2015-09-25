@@ -464,7 +464,9 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     public boolean isOnlineDocument(DocumentModel document) throws ClientException {
     	boolean res = false;
     	try{
-    		res = hasProxy(document);
+    	    if(ToutaticeDocumentHelper.isDocStillExists(documentManager, document)){
+                res = hasProxy(document);
+            }
     	}catch(DocumentSecurityException se){
     		// dans le cadre de la publication profilée 
     		// re-visualisation d'un contentview contenant un document qui n'est plus visible par l'utilisateur courant

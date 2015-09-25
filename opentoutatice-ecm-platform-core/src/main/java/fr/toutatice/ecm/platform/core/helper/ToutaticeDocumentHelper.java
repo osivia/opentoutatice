@@ -68,6 +68,7 @@ import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.api.security.impl.ACLImpl;
 import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
+import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
@@ -1112,5 +1113,34 @@ public class ToutaticeDocumentHelper {
         return remoteProxies;
 
     }
+     
+     /**
+      * @param document
+      * @return true if document still exists.
+      * @throws ClientException 
+      */
+     public static boolean isDocStillExists(CoreSession session,
+             DocumentModel document) throws ClientException {
+         boolean exists = false;
+
+         if (document != null) {
+             try {
+
+                 session.getDocument(document.getRef());
+                 exists = true;
+
+             } catch (ClientException ce) {
+                 
+                 if (ce.getCause() instanceof NoSuchDocumentException) {
+                     exists = false;
+                 } else {
+                     throw ce;
+                 }
+                 
+             }
+         }
+
+         return exists;
+     }
 
 }
