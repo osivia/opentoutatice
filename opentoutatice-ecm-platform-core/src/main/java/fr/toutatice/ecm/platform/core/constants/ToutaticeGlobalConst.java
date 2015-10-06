@@ -18,8 +18,13 @@
  */
 package fr.toutatice.ecm.platform.core.constants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.DocumentModelImpl;
+import org.nuxeo.ecm.core.event.EventService;
+import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
 
 import fr.toutatice.ecm.platform.core.publish.ToutaticeNullPublishedDocument;
@@ -96,6 +101,15 @@ public class ToutaticeGlobalConst {
 		LOCAL,
 		GLOBAL;
 	};
+	
+	public final static List<Class<?>> EVENT_N_VERSIONING_FILTERD_SERVICE = new ArrayList<Class<?>>() {
+        private static final long serialVersionUID = 1L;
+
+        {
+            add(EventService.class);
+            add(VersioningService.class);
+        }
+    }; 
 	
 	/**
 	 * Cette définition est utilisée pour la gestion du cache (cf: ToutaticeNavigationContext.java) pour distinguer le cas

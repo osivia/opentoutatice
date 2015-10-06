@@ -17,6 +17,7 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
@@ -25,8 +26,11 @@ import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.PathRef;
+
+import com.sun.faces.util.CollectionsUtils;
 
 
 /**
@@ -34,7 +38,8 @@ import org.nuxeo.ecm.core.api.PathRef;
  *
  */
 @Operation(id = OrderDocument.ID, category = Constants.CAT_DOCUMENT, label = "Order input Documents",
-        description = "Order the given documents in the given container. The orderd document will become the input of the next operation.")
+        description = "Order the given documents in the given container. The orderd document will become the input of the next operation."
+                    + "Manage associated local proxies if any.")
 public class OrderDocument {
 
     public static final String ID = "Document.OrderDocument";
@@ -62,14 +67,21 @@ public class OrderDocument {
         }
 
         if (StringUtils.equalsIgnoreCase("before", position)) {
+            
             session.orderBefore(parentDocument.getRef(), source.getName(), targetName);
+            orderProxyBefore(parentDocument, targetName);
+            
         } else if (StringUtils.equalsIgnoreCase("after", position)) {
+            
             session.orderBefore(parentDocument.getRef(), targetName, source.getName());
+            orderProxyAfter(parentDocument, targetName);
+            
         }
 
         return source;
 
     }
+
 
     /**
      * @return the target DocumentModel given its id or path.
@@ -88,6 +100,34 @@ public class OrderDocument {
             }
         }
         return target;
+    }
+    
+    /**
+     * @param parentDocument
+     * @param target
+     */
+    private void orderProxyBefore(DocumentModel parentDocument, String targetName) {
+        // Case of local proxies
+        DocumentModelList localProxies = session.getProxies(source.getRef(), parentDocument.getRef());
+        if (CollectionUtils.isNotEmpty(localProxies)) {
+            for (DocumentModel proxy : localProxies) {
+                this.session.orderBefore(parentDocument.getRef(), proxy.getName(), targetName);
+            }
+        }
+    }
+    
+    /**
+     * @param parentDocument
+     * @param target
+     */
+    private void orderProxyAfter(DocumentModel parentDocument, String targetName) {
+        // Case of local proxies
+        DocumentModelList localProxies = session.getProxies(source.getRef(), parentDocument.getRef());
+        if (CollectionUtils.isNotEmpty(localProxies)) {
+            for (DocumentModel proxy : localProxies) {
+                this.session.orderBefore(parentDocument.getRef(), targetName, proxy.getName());
+            }
+        }
     }
 
 }

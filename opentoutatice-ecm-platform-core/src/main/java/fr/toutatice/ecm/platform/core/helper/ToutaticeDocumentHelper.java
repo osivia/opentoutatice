@@ -140,9 +140,9 @@ public class ToutaticeDocumentHelper {
     public static void saveDocumentSilently(CoreSession session, DocumentModel document, boolean unrestricted) {
         SilentSave save = new SilentSave(session, document);
         if (unrestricted) {
-            save.runUnrestricted();
+            save.silentRun(true, ToutaticeGlobalConst.EVENT_N_VERSIONING_FILTERD_SERVICE);
         } else {
-            save.run();
+            save.silentRun(false, ToutaticeGlobalConst.EVENT_N_VERSIONING_FILTERD_SERVICE);
         }
     }
 
@@ -1142,5 +1142,41 @@ public class ToutaticeDocumentHelper {
 
          return exists;
      }
+     
+    /**
+     * 
+     * @param document
+     * @return true if document is a remote proxy.
+     */
+    public static boolean isRemoteProxy(DocumentModel document) {
+        return document.isProxy() && !StringUtils.endsWith(document.getName(), ToutaticeGlobalConst.CST_PROXY_NAME_SUFFIX);
+    }
+    
+    /**
+     * @param document
+     * @return true if document is local proxy.
+     */
+    public static boolean isLocaProxy(DocumentModel document){
+        return document.isProxy() && StringUtils.endsWith(document.getName(), ToutaticeGlobalConst.CST_PROXY_NAME_SUFFIX);
+    }
+    
+    /**
+     * @param session
+     * @param document
+     * @return true if working copy of document is different from last version.
+     */
+    public static boolean isBeingModified(CoreSession session, DocumentModel document) {
+        boolean is = false;
+        
+        String versionLabel = document.getVersionLabel();
+        
+        DocumentModel lastDocumentVersion = session.getLastDocumentVersion(document.getRef());
+        if(lastDocumentVersion != null){
+            String lastDocumentVersionLabel = lastDocumentVersion.getVersionLabel();
+            is = !StringUtils.equals(versionLabel, lastDocumentVersionLabel);
+        }
+        
+        return is;
+    }
 
 }

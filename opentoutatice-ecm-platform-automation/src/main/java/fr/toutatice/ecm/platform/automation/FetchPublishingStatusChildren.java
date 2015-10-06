@@ -55,6 +55,28 @@ public class FetchPublishingStatusChildren {
     public static final String ID = "Fetch.PublishingStatusChildren";
 
     private static final Log log = LogFactory.getLog(FetchPublishingStatusChildren.class);
+    
+    /**
+     * Manage status on children filters.
+     * 
+     * @author david
+     *
+     */
+    public enum PublishStatus {
+        
+        live ("1"), published (""), notLocalLives ("2"), liveNRemotePublished ("3");
+        
+        private String status;
+        
+        private PublishStatus(String status){
+            this.status = status;
+        }
+        
+        public String getStatus(){
+            return this.status;
+        }
+        
+    }
 
     @Context
     protected CoreSession documentManager;
@@ -62,43 +84,85 @@ public class FetchPublishingStatusChildren {
     @Param(name = "documentId", required = true)
     protected DocumentModel document;
 
-    @Param(name = "liveStatus", required = true)
-    protected boolean liveStatus;
+    @Param(name = "publishStatus", required = true)
+    protected String publishStatus;
 
     @OperationMethod
     public Object run() throws ClientException, ServeurException, UnsupportedEncodingException {
+
         JSONArray childrenWithStatus = new JSONArray();
         if (document.isProxy()) {
             log.warn("Document " + document.getId() + " is proxy: can't access children.");
             return childrenWithStatus;
         }
+
         DocumentModelList children = documentManager.getChildren(document.getRef());
+
         for (DocumentModel child : children) {
             boolean isDeleted = DELETED_STATE.equals(child.getCurrentLifeCycleState());
             JSONObject childWithStatus = new JSONObject();
-            if (liveStatus && !child.isProxy() && !isDeleted && isEditableByUser(child)) {
+
+            if (PublishStatus.live.getStatus().equals(publishStatus) && !child.isProxy() && !isDeleted && isEditableByUser(child)) {
+
                 // Live children
-                String publishedChildVersionLabel = ToutaticeDocumentHelper.getProxyVersion(documentManager, child);
-                boolean isPublished = publishedChildVersionLabel != null;
-                childWithStatus.element("isPublished", isPublished);
-                if (isPublished) {
-                    boolean isLiveModifiedFromProxy = !child.getVersionLabel().equals(publishedChildVersionLabel);
-                    childWithStatus.element("isLiveModifiedFromProxy", isLiveModifiedFromProxy);
-                } else {
-                    childWithStatus.element("isLiveModifiedFromProxy", false);
-                }
-                childrenWithStatus = fillGlobalProperties(childrenWithStatus, child, childWithStatus);
-            } else if (!liveStatus && child.isProxy() && !isDeleted) {
+                childrenWithStatus = getInfosFromLive(childrenWithStatus, child, childWithStatus);
+
+            } else if (PublishStatus.published.getStatus().equals(publishStatus) && child.isProxy() && !isDeleted) {
+
                 // Proxies children
-                childWithStatus.element("isPublished", true);
-                DocumentModel srcDocument = documentManager.getSourceDocument(child.getRef());
-                DocumentModel liveDocument = documentManager.getWorkingCopy(srcDocument.getRef());
-                boolean isLiveModifiedFromProxy = !child.getVersionLabel().equals(liveDocument.getVersionLabel());
-                childWithStatus.element("isLiveModifiedFromProxy", isLiveModifiedFromProxy);
-                childrenWithStatus = fillGlobalProperties(childrenWithStatus, child, childWithStatus);
+                childrenWithStatus = getInfosFromPublished(childrenWithStatus, child, childWithStatus);
+
+            } else if (PublishStatus.liveNRemotePublished.getStatus().equals(publishStatus) && !isDeleted) {
+                if (!child.isProxy()) {
+
+                    childrenWithStatus = getInfosFromLive(childrenWithStatus, child, childWithStatus);
+
+                } else if (ToutaticeDocumentHelper.isRemoteProxy(child)) {
+
+                    childrenWithStatus = getInfosFromPublished(childrenWithStatus, child, childWithStatus);
+
+                }
             }
         }
         return new StringBlob(childrenWithStatus.toString(), "application/json");
+    }
+
+    /**
+     * @param childrenWithStatus
+     * @param child
+     * @param childWithStatus
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    private JSONArray getInfosFromPublished(JSONArray childrenWithStatus, DocumentModel child, JSONObject childWithStatus) throws UnsupportedEncodingException {
+        childWithStatus.element("isPublished", true);
+        DocumentModel srcDocument = documentManager.getSourceDocument(child.getRef());
+        DocumentModel liveDocument = documentManager.getWorkingCopy(srcDocument.getRef());
+        boolean isLiveModifiedFromProxy = !child.getVersionLabel().equals(liveDocument.getVersionLabel());
+        childWithStatus.element("isLiveModifiedFromProxy", isLiveModifiedFromProxy);
+        childrenWithStatus = fillGlobalProperties(childrenWithStatus, child, childWithStatus);
+        return childrenWithStatus;
+    }
+
+    /**
+     * @param childrenWithStatus
+     * @param child
+     * @param childWithStatus
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    private JSONArray getInfosFromLive(JSONArray childrenWithStatus, DocumentModel child, JSONObject childWithStatus) throws UnsupportedEncodingException {
+        String publishedChildVersionLabel = ToutaticeDocumentHelper.getProxyVersion(documentManager, child);
+        boolean isPublished = publishedChildVersionLabel != null;
+        childWithStatus.element("isPublished", isPublished);
+        if (isPublished) {
+            boolean isLiveModifiedFromProxy = !child.getVersionLabel().equals(publishedChildVersionLabel);
+            childWithStatus.element("isLiveModifiedFromProxy", isLiveModifiedFromProxy);
+        } else {
+            childWithStatus.element("isLiveModifiedFromProxy", false);
+        }
+        childrenWithStatus = fillGlobalProperties(childrenWithStatus, child, childWithStatus);
+        return childrenWithStatus;
     }
 
     /**

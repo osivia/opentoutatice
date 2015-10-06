@@ -43,6 +43,7 @@
 		<operation class="fr.toutatice.ecm.platform.automation.GetWebConfigurations" />
 		<operation class="fr.toutatice.ecm.platform.automation.GetPermalink" />
         <operation class="fr.toutatice.ecm.platform.automation.OrderDocument" />
+        <operation class="fr.toutatice.ecm.platform.automation.MoveDocument" replace="true"/>
 
 		<operation
 			class="fr.toutatice.ecm.platform.infos.FetchExtendedDocumentInfos" />
