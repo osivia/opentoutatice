@@ -17,7 +17,7 @@
  * lbillon
  * dchevrier
  */
-package fr.toutatice.ecm.platform.automation.helper;
+package fr.toutatice.ecm.platform.service.url;
 
 import java.util.Iterator;
 
@@ -35,7 +35,6 @@ import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeQueryHelper;
-import fr.toutatice.ecm.platform.service.url.ToutaticeWebIdHelper;
 
 
 /**
@@ -178,7 +177,6 @@ public class WebIdResolver {
             } else if (draft) {
                 getLive();
             } else {
-
                 /*
                  * Defaul RG:
                  * published -> proxies (for witch user has read permission)
@@ -186,9 +184,7 @@ public class WebIdResolver {
                  */
                 DocumentModelList proxies = this.session.query(String.format(WEB_ID_QUERY, this.webId, PROXY_FILTER));
                 if (CollectionUtils.isEmpty(proxies)) {
-
                     getLive();
-
                 } else {
                     this.documents.addAll(proxies);
                 }

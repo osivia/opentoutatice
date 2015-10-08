@@ -49,13 +49,12 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
     public static final String PREFIX = "web/";
     private static final String DEFAULT_REPO = "default";
 
-    // /web/domain-id/resource-name
+    // /web/resource-name
     // public static final String URLPattern = "/" +
-    // "([a-zA-Z_0-9\\-]+)/" + // domain
     // "([a-zA-Z_0-9\\-\\.]+)" + // weburl
     // "(/)?" + "(.*)?"; // params
 
-    // web/domain-id/path/or/string/explicit/webid{.extension}{?param=value}
+    // web/path/or/string/explicit/webid{.extension}{?param=value}
 
     public static final String DOC_TYPE = "DOC_TYPE";
     public static final String FILE_PROPERTY_PATH_KEY = "FILE_PROPERTY_PATH";
@@ -77,7 +76,7 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
     public DocumentView getDocumentViewFromUrl(String url) {
 
         // Pattern :
-        // web/domain-id/path/or/string/explicit/webid{.extension}{?param=value}
+        // web/path/or/string/explicit/webid{.extension}{?param=value}
         if (url.startsWith(PREFIX)) {
             url = url.substring(PREFIX.length());
 
@@ -145,7 +144,7 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
                 }
 
                 /* FIXME: replace DEFAULT_REPO by server name? */
-                final ToutaticeDocumentLocation docLoc = new ToutaticeDocumentLocation(DEFAULT_REPO, new WedIdRef(explicitUrl, webid, extensionUrl));
+                final ToutaticeDocumentLocation docLoc = new ToutaticeDocumentLocation(DEFAULT_REPO, new WedIdRef(explicitUrl, webid, extensionUrl, parameters));
                 /* FIXME: find view instead hard coding view_documents */
                 DocumentViewImpl documentViewImpl = new DocumentViewImpl(docLoc, "view_documents", parameters);
                 return documentViewImpl;
@@ -161,7 +160,7 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
 
         ToutaticeDocumentLocation docLoc = (ToutaticeDocumentLocation) docView.getDocumentLocation();
         WedIdRef webIdRef = docLoc.getWebIdRef();
-        String extensionUrl = webIdRef.getExtensionUrl();
+        //String extensionUrl = webIdRef.getExtensionUrl();
         String webId = (String) webIdRef.reference();
         String explicitUrl = webIdRef.getExplicitUrl();
 

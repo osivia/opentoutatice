@@ -24,6 +24,7 @@ import static org.jboss.seam.ScopeType.CONVERSATION;
 
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
@@ -32,6 +33,7 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentLocation;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.model.Property;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.platform.picture.web.PictureManagerBean;
@@ -78,18 +80,19 @@ public class ToutaticePictureManagerBean extends PictureManagerBean {
         }
 	
 	/* FIXME: fork */
-	protected void downloadWebIdFile(DocumentView docView, ToutaticeDocumentLocation docLoc) throws PropertyException, ClientException, DocumentException{
-		// fix for NXP-1799
+    protected void downloadWebIdFile(DocumentView docView, ToutaticeDocumentLocation docLoc) throws PropertyException, ClientException, DocumentException {
+        // fix for NXP-1799
         if (documentManager == null) {
-            RepositoryLocation loc = new RepositoryLocation(
-                    docLoc.getServerName());
+            RepositoryLocation loc = new RepositoryLocation(docLoc.getServerName());
             navigationContext.setCurrentServerLocation(loc);
             documentManager = navigationContext.getOrCreateDocumentManager();
         }
-        DocumentModel doc = ToutaticeDocumentResolver.resolveReference(documentManager, docLoc.getWebIdRef());
-        if (doc != null) {
-            String[] propertyPath = docView.getParameter(
-                    DocumentFileCodec.FILE_PROPERTY_PATH_KEY).split(":");
+        DocumentModelList docs = ToutaticeDocumentResolver.resolveReference(documentManager, docLoc.getWebIdRef());
+        if (CollectionUtils.isNotEmpty(docs) && docs.size() > 0) {
+            // FIXME: As we just want binary, we take arbitrary the first one
+            DocumentModel doc = docs.get(0);
+
+            String[] propertyPath = docView.getParameter(DocumentFileCodec.FILE_PROPERTY_PATH_KEY).split(":");
             String title = null;
             String field = null;
             Property datamodel = null;
@@ -126,6 +129,7 @@ public class ToutaticePictureManagerBean extends PictureManagerBean {
             FacesContext context = FacesContext.getCurrentInstance();
 
             ComponentUtils.download(context, blob, filename);
-	}
-	}
+        }
+
+    }
 }

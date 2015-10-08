@@ -36,8 +36,8 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.runtime.api.Framework;
 
-import fr.toutatice.ecm.platform.automation.helper.WebIdResolver;
 import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationsService;
+import fr.toutatice.ecm.platform.service.url.WebIdResolver;
 
 
 /**

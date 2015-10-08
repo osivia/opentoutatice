@@ -20,6 +20,8 @@
  */
 package fr.toutatice.ecm.platform.service.url;
 
+import java.util.Map;
+
 import org.nuxeo.ecm.core.api.DocumentRef;
 
 /**
@@ -31,15 +33,23 @@ public class WedIdRef implements DocumentRef {
 	private static final long serialVersionUID = -3531204028673068100L;
 
 	public final static int WEBID = 3;
-	public final String explicitUrl;
-	public final String value;
-	public final String extensionUrl;
+	private final String explicitUrl;
+	private final String value;
+	private final String extensionUrl;
+	private Map<String, String> parameters;
 
 	public WedIdRef(String explicitUrl, String value, String extensionUrl) {
 		this.explicitUrl = explicitUrl;
 		this.value = value;
 		this.extensionUrl = extensionUrl;
 	}
+	
+	public WedIdRef(String explicitUrl, String value, String extensionUrl, Map<String, String> parameters) {
+        this.explicitUrl = explicitUrl;
+        this.value = value;
+        this.extensionUrl = extensionUrl;
+        this.parameters = parameters;
+    }
 
 	@Override
 	public int type() {
@@ -58,5 +68,19 @@ public class WedIdRef implements DocumentRef {
 	public String getExtensionUrl(){
 		return this.extensionUrl;
 	}
+    
+    /**
+     * @return the parameters
+     */
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
 
+    /**
+     * @param parameters the parameters to set
+     */
+    public void setParameters(Map<String, String> parameters) {
+        this.parameters = parameters;
+    }
+	
 }

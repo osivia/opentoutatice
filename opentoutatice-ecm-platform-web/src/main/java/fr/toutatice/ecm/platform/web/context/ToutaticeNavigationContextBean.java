@@ -25,12 +25,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.ClientRuntimeException;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -54,12 +60,19 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.service.url.ToutaticeDocumentResolver;
+import fr.toutatice.ecm.platform.service.url.WebIdResolver;
 import fr.toutatice.ecm.platform.service.url.WedIdRef;
 
 @Name("navigationContext")
 @Scope(CONVERSATION)
 @Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeNavigationContextBean extends NavigationContextBean implements ToutaticeNavigationContext {
+    
+    @In(create = true, required = false)
+    protected FacesMessages facesMessages;
+
+    @In(create = true)
+    protected Map<String, String> messages;
 
     /**
      * Olivier Adam, Rectorat de Rennes
@@ -87,22 +100,65 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
     
     @Override
     public String navigateToRef(DocumentRef docRef) throws ClientException {
+        String goTo = "view";
+
         if (documentManager == null) {
             throw new IllegalStateException("documentManager not initialized");
         }
         DocumentModel doc = null;
-        if(docRef instanceof WedIdRef){
-        	try {
-				doc = ToutaticeDocumentResolver.resolveReference(documentManager, (WedIdRef) docRef);
-			} catch (DocumentException e) {
-				throw new ClientException(e);
-			} catch (DocumentSecurityException dse){
-			    throw new ClientException(dse);
-			}
-        }else{
-        	doc = documentManager.getDocument(docRef);
+        DocumentModelList docs = null;
+        if (docRef instanceof WedIdRef) {
+            try {
+                docs = ToutaticeDocumentResolver.resolveReference(documentManager, (WedIdRef) docRef);
+            } catch (DocumentException e) {
+                throw new ClientException(e);
+            } catch (DocumentSecurityException dse) {
+                throw new ClientException(dse);
+            }
+        } else {
+            doc = documentManager.getDocument(docRef);
+            goTo = navigateToDocument(doc, "view");
         }
-        return navigateToDocument(doc, "view");
+
+        if (CollectionUtils.isNotEmpty(docs)) {
+            // Case of  one local proxy or one live
+            if(docs.size() == 1){
+                DocumentModel foundDoc = docs.get(0);
+                if(ToutaticeDocumentHelper.isLocaProxy(foundDoc)){
+                    
+                    DocumentModel liveDoc = getLive((WedIdRef) docRef);
+                    goTo = navigateToDocument(liveDoc);
+                    
+                } else {
+                    goTo = navigateToDocument(foundDoc);
+                }
+                
+            // Case of many remote proxies
+            } else if(docs.size() > 1){
+                
+                DocumentModel liveDoc = getLive((WedIdRef) docRef);
+                goTo = navigateToDocument(liveDoc);
+                
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, messages.get("toutatice.label.many.webid.proxies"), null);
+                FacesContext faces = FacesContext.getCurrentInstance();
+                faces.addMessage(null, message);
+                
+            }
+        }
+
+        return goTo;
+    }
+
+    /**
+     * @param docRef
+     * @return live document with given webId
+     */
+    protected DocumentModel getLive(WedIdRef webIdRef) {
+        String webId = (String) webIdRef.reference();
+        DocumentModel liveDoc = WebIdResolver.getLiveDocumentByWebId(documentManager, webId);
+        liveDoc.detach(true); // liveDoc is fetch with unrestricted session
+        liveDoc.attach(documentManager.getSessionId());
+        return liveDoc;
     }
 
     public DocumentModel getDocumentDomain(DocumentModel document) {

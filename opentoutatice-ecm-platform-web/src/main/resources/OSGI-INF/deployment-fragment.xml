@@ -61,7 +61,7 @@
 			<from-outcome>osivia_create_document</from-outcome>
 			<to-view-id>/osivia_create_document.xhtml</to-view-id>
 		</navigation-case>
-
+		
 		<!-- Front Office (Portal) cases -->
 		<navigation-case>
 			<from-outcome>editor_image_upload</from-outcome>

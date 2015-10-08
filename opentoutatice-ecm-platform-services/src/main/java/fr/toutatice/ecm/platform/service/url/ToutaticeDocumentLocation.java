@@ -88,8 +88,7 @@ public class ToutaticeDocumentLocation extends DocumentLocationImpl {
 	    // Case of remote proxy in publish space
 	    if(doc.isProxy() && ToutaticeDocumentHelper.isInPublishSpace(doc.getCoreSession(), doc)){
 	        
-	        String publishedLocalState = (String) doc.getPropertyValue("ttcpls:state");
-	        if(StringUtils.isEmpty(publishedLocalState)){
+	        if(ToutaticeDocumentHelper.isRemoteProxy(doc)){
 	                
 	                // If document has firstparent with webId, we take it
 	                // otherwise we take parent path

@@ -86,7 +86,6 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
         /* Events for Observers and listeners */
         Events.instance().raiseEvent(EventNames.DOCUMENT_CHILDREN_CHANGED, workflow);
 
-        /* UI Seam events */
         FacesMessages.instance().addFromResourceBundle(msgKey);
 
         webActions.resetTabList();

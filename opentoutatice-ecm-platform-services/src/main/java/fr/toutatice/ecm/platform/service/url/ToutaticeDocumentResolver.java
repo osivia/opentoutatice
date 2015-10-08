@@ -20,6 +20,10 @@
  */
 package fr.toutatice.ecm.platform.service.url;
 
+import java.util.Map;
+
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -28,6 +32,7 @@ import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentSecurityException;
+import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 
 
 /**
@@ -43,7 +48,7 @@ public class ToutaticeDocumentResolver {
 
 	}
 
-	public static DocumentModel resolveReference(CoreSession session, WedIdRef webIdRef)
+	public static DocumentModelList resolveReference(CoreSession session, WedIdRef webIdRef)
 			throws DocumentException, ClientException {
 		if (webIdRef == null) {
 			throw new DocumentException("Invalid reference (null)");
@@ -52,29 +57,32 @@ public class ToutaticeDocumentResolver {
 		if (ref == null) {
 			throw new DocumentException("Invalid reference (null)");
 		}
-		DocumentModel document = resolveDocumentByWebId(session, webIdRef);
-		return document;
+		
+		return resolveDocumentByWebId(session, webIdRef);
 	}
 
-	protected static DocumentModel resolveDocumentByWebId(CoreSession session, WedIdRef webIdRef) throws ClientException {
+	protected static DocumentModelList resolveDocumentByWebId(CoreSession session, WedIdRef webIdRef) throws ClientException {
+	    
 		String webId = (String) webIdRef.reference();
+		String parentId = null;
+		String parentPath = null;
+		Map<String, String> parameters = webIdRef.getParameters();
+		if(MapUtils.isNotEmpty(parameters)){
+		    parentId = parameters.get("parentId");
+		    parentPath = parameters.get("parentPath");
+		    if(StringUtils.isNotBlank(parentPath)){
+		        parentPath = StringUtils.replace(parentPath, "%2F", "/");
+		    }
+		}
 		
-		DocumentModel document = null;
-		DocumentModelList docs = null;
-        try {
-            docs = session
-                    .query("SELECT * FROM Document where ttc:webid = '"
-                            + webId + "'" 
-                            + " AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0 AND ecm:isCheckedInVersion = 0");
-        } catch (ClientException e) {
-            log.error("Impossible de déterminer le webID " + e);
+		DocumentModelList documents = null;
+		try {
+		    documents = WebIdResolver.getDocumentsByWebId(session, parentId, parentPath, false, webId);
+        } catch (NoSuchDocumentException de) {
+           throw new ClientException(de);
         }
-        if (docs != null && docs.size() == 1) {
-            document = docs.get(0);
-        } else {
-            throw new DocumentSecurityException("You don't have read right on ressource with webId: " + webId);
-        }
-		return document;
+		
+		return documents;
 	}
 	
 	protected static final void checkPermission(CoreSession session, DocumentModel doc, String permission)
