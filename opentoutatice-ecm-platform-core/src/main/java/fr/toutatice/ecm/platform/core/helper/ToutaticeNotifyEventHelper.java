@@ -26,6 +26,7 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.event.Event;
+import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.EventProducer;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
 import org.nuxeo.ecm.core.event.impl.EventImpl;
@@ -56,10 +57,18 @@ public class ToutaticeNotifyEventHelper {
     }
     
     public static void notifyAuditEvent(CoreSession session, String eventName, DocumentModel document, String comment) throws ClientException {
+    	notifyAuditEvent(session, null, eventName, document, comment);
+    }
+
+    public static void notifyAuditEvent(CoreSession session, String category, String eventName, DocumentModel document, String comment) throws ClientException {
     	NuxeoPrincipal principal = (NuxeoPrincipal) session.getPrincipal();
     	DocumentEventContext ctx = new DocumentEventContext(session, principal, document);
-    	
-    	ctx.setComment(comment);
+    	notifyAuditEvent(ctx, null, eventName, comment);
+    }
+    
+    public static void notifyAuditEvent(EventContext ctx, String category, String eventName, String comment) throws ClientException {
+    	ctx.setProperty("category", category);
+    	ctx.setProperty("comments", comment);
     	Logs auditProducer = getAuditEventProducer();
     	Event entry = new EventImpl(eventName, ctx);
     	auditProducer.logEvent(entry);
