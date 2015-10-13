@@ -68,7 +68,7 @@ public class ToutaticeNotifyEventHelper {
     
     public static void notifyAuditEvent(EventContext ctx, String category, String eventName, String comment) throws ClientException {
     	ctx.setProperty("category", category);
-    	ctx.setProperty("comments", comment);
+    	ctx.setProperty("comment", comment);
     	Logs auditProducer = getAuditEventProducer();
     	Event entry = new EventImpl(eventName, ctx);
     	auditProducer.logEvent(entry);
