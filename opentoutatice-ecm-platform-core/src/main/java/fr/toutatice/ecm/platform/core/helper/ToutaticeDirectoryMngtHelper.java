@@ -250,7 +250,7 @@ public class ToutaticeDirectoryMngtHelper {
 	private static String translate(String label, Locale locale) {
 		String localizedLabel = label;
 		if (null != locale) {
-			label = I18NUtils.getMessageString(ToutaticeUtilsConst.CST_DEFAULT_BUNDLE_NAME, label, null, locale);
+		    localizedLabel = I18NUtils.getMessageString(ToutaticeUtilsConst.CST_DEFAULT_BUNDLE_NAME, label, null, locale);
 		}
         return localizedLabel;
 		
