@@ -145,6 +145,18 @@ public class ToutaticeDocumentHelper {
             save.silentRun(false, ToutaticeGlobalConst.EVENT_N_VERSIONING_FILTERD_SERVICE);
         }
     }
+    
+    /**
+     * Save document with no versioning.
+     */
+    public static void saveDocumentWithNoVersioning(CoreSession session, DocumentModel document, boolean unrestricted){
+        SilentSave save = new SilentSave(session, document);
+        if (unrestricted) {
+            save.silentRun(true, ToutaticeGlobalConst.VERSIONING_FILTERD_SERVICE);
+        } else {
+            save.silentRun(false, ToutaticeGlobalConst.VERSIONING_FILTERD_SERVICE);
+        }
+    }
 
     /**
      * Save a document in an silent way.

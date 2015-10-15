@@ -110,6 +110,14 @@ public class ToutaticeGlobalConst {
             add(VersioningService.class);
         }
     }; 
+    
+    public final static List<Class<?>> VERSIONING_FILTERD_SERVICE = new ArrayList<Class<?>>() {
+        private static final long serialVersionUID = 1L;
+
+        {
+            add(VersioningService.class);
+        }
+    }; 
 	
 	/**
 	 * Cette définition est utilisée pour la gestion du cache (cf: ToutaticeNavigationContext.java) pour distinguer le cas

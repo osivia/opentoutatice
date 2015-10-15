@@ -32,6 +32,9 @@ import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
 
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeQueryHelper;
+
 public class ToutaticeDocumentMoved implements EventListener {
 
 	@Override
@@ -45,6 +48,10 @@ public class ToutaticeDocumentMoved implements EventListener {
 			if (!movedDocument.isProxy()) {
 				UnrestrictedSessionRunner runner = new UnrestrictedMoveProxyRunner(session, ctx, movedDocument);
 				runner.runUnrestricted();
+				
+				DocumentModel movedproxy = ((UnrestrictedMoveProxyRunner) runner).getMovedproxy();
+				movedproxy.detach(true);
+				movedproxy.attach(session.getSessionId());
 			}
 		}
 	}
@@ -52,6 +59,11 @@ public class ToutaticeDocumentMoved implements EventListener {
 	private class UnrestrictedMoveProxyRunner extends UnrestrictedSessionRunner {
 		private EventContext ctx;
 		private DocumentModel movedDocument;
+		private DocumentModel movedProxy;
+		
+		public DocumentModel getMovedproxy(){
+		    return this.movedProxy;
+		}
 
 		public UnrestrictedMoveProxyRunner(CoreSession session, EventContext ctx, DocumentModel document) {
 			super(session);
@@ -72,7 +84,7 @@ public class ToutaticeDocumentMoved implements EventListener {
 				// déplacer les proxies (et juxtaposition avec la cible) 
 				if (null != proxies && 0 < proxies.size()) {
 					for (DocumentModel proxy : proxies) {
-						this.session.move(proxy.getRef(), dstFolderRef, null);
+					    this.movedProxy = this.session.move(proxy.getRef(), dstFolderRef, null);
 						this.session.orderBefore(dstFolderRef, proxy.getName(), this.movedDocument.getName());
 					}
 				}
