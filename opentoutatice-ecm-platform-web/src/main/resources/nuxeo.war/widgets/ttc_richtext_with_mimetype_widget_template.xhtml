@@ -75,7 +75,7 @@
           <nxu:editor id="#{widget.id}_editor" value="#{field_0}"
             width="#{width}" cols="#{cols}" height="#{height}"
             rows="#{rows}" editorSelector="#{editorSelector}"
-            disableHtmlInit="#{disableBinding}" />
+            disableHtmlInit="#{disableBinding}" required="#{widgetProperty_required}"/>
         </a4j:outputPanel>
       </nxu:set>
 
@@ -102,7 +102,7 @@
 	        limitRender="true"/>
         </c:if>
     </nxu:valueHolder>
-
+ 	<h:message styleClass="errorMessage" for="#{widget.id}_editor" id="#{widget.id}_message"/>
     <script>
           function changeEditorType(cbo) {
             var value = cbo.value;
