@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -210,7 +211,7 @@ public class SetWebID {
                 Integer suffix = null;
                 String webidconcat = webid;
                 do {
-
+                    webidconcat = StringEscapeUtils.escapeJava(webidconcat);
                     DocumentModelList query = coreSession.query(String.format(WEB_ID_UNICITY_QUERY, webidconcat, this.document.getId()));
 
                     if (query.size() > 0) {
