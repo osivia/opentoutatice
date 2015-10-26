@@ -66,7 +66,7 @@ public interface WidgetsAdapterService extends Serializable {
      * @param nxWidget
      * @return portalview widget
      */
-    Widget getPortalViewWidget(Widget nxWidget);
+    Widget getPortalViewWidget(Widget nxWidget) throws Exception;
     
     /**
      * @param nxWidgetName

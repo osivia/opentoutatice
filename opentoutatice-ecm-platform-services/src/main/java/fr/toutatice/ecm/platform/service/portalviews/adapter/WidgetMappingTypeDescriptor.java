@@ -22,33 +22,39 @@ package fr.toutatice.ecm.platform.service.portalviews.adapter;
 
 import java.io.Serializable;
 
+import org.nuxeo.common.xmap.annotation.XNode;
 import org.nuxeo.common.xmap.annotation.XNodeList;
 import org.nuxeo.common.xmap.annotation.XObject;
 
 
 /**
- * Class to map portalView widget with nuxeo widget.
- * 
- * @author david chevrier
+ * @author David Chevrier
  *
  */
-@XObject("mappings")
-public class WidgetsAdapterDescriptor implements Serializable {
+@XObject("mappingType")
+public class WidgetMappingTypeDescriptor implements Serializable {
+    
+    private static final long serialVersionUID = -6459546022626099601L;
 
-    private static final long serialVersionUID = -4387448031957793330L;
+    @XNode("@nxType")
+    String nxType;
     
-    @XNodeList(value = "mapping", type = WidgetMappingDescriptor[].class, componentType = WidgetMappingDescriptor.class)
-    WidgetMappingDescriptor[] nameMappings = new WidgetMappingDescriptor[0];
-    
-    public WidgetMappingDescriptor[] getWidgetsNamesMapping(){
-        return this.nameMappings;
+    public String getType(){
+        return this.nxType;
     }
     
-    @XNodeList(value = "mappingType", type = WidgetMappingTypeDescriptor[].class, componentType = WidgetMappingTypeDescriptor.class)
-    WidgetMappingTypeDescriptor[] typeMappings = new WidgetMappingTypeDescriptor[0];
+    @XNodeList(value = "properties/property", type = PVPropertyDescriptor[].class, componentType = PVPropertyDescriptor.class)
+    PVPropertyDescriptor[] pvProperties = new PVPropertyDescriptor[0];
+
+    public PVPropertyDescriptor[] getPvProperties(){
+        return this.pvProperties;
+    }
     
-    public WidgetMappingTypeDescriptor[] getWidgetsTypesMapping(){
-        return this.typeMappings;
+    @XNode("@pvType")
+    String pvType;
+    
+    public String getPvType(){
+        return this.pvType;
     }
 
 }

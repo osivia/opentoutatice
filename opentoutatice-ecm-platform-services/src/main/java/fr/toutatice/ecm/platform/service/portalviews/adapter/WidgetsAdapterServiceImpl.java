@@ -34,6 +34,7 @@ import javax.faces.view.facelets.FaceletContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -65,8 +66,12 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
 
     protected static final String ADAPTER_EXT_PT = "adapter";
     private static final String FROM_URL_PARAM = "fromUrl";
-
-    private Map<String, String> widgetsMappings = new HashMap<String, String>(0);
+    
+    /** Widgets name mapping. */
+    private Map<String, String> widgetsNamesMappings = new HashMap<String, String>(0);
+    
+    /** Widgets type mapping. */
+    private Map<String, Map<String, PVPropertyDescriptor[]>> widgetsTypesMappings = new HashMap<String, Map<String, PVPropertyDescriptor[]>>(0);
 
     /** Metadata mapped to Nuxeo widgets. */
     private Map<String, List<String>> fieldsOfNxWidgets;
@@ -103,7 +108,7 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
      * {@inheritDoc}
      */
     public Map<String, String> getWidgetsMappings() {
-        return this.widgetsMappings;
+        return this.widgetsNamesMappings;
     }
 
     /**
@@ -210,14 +215,15 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
      * {@inheritDoc}
      */
     @Override
-    public Widget getPortalViewWidget(Widget nxWidget) {
+    public Widget getPortalViewWidget(Widget nxWidget) throws Exception {
         Widget pvWidget = nxWidget;
 
         String nxWidgetName = nxWidget.getName();
-        String pvWidgetName = widgetsMappings.get(nxWidgetName);
+        String pvWidgetName = widgetsNamesMappings.get(nxWidgetName);
+        
+        WebLayoutManager layoutManager = Framework.getLocalService(WebLayoutManager.class);
 
         if (StringUtils.isNotBlank(pvWidgetName)) {
-            WebLayoutManager layoutManager = Framework.getLocalService(WebLayoutManager.class);
 
             FacesContext context = FacesContext.getCurrentInstance();
             ELContext elContext = (ELContext) context.getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
@@ -228,17 +234,97 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
                 pvWidget.setId(FaceletHandlerHelper.WIDGET_ID_PREFIX + pvWidgetName);
 
             }
+        } else {
+            WidgetDefinition widgetDefinition = nxWidget.getDefinition();
+            String type = widgetDefinition.getType();
+            
+            Set<String> mappedTypes = widgetsTypesMappings.keySet();
+            if(mappedTypes != null && mappedTypes.contains(type)){
+                
+                Map<String, PVPropertyDescriptor[]> mappedPvproperties = widgetsTypesMappings.get(type);
+                Set<String> mappedPvTypes = mappedPvproperties.keySet();
+                
+                if(mappedPvTypes != null && mappedPvTypes.size() == 1){
+                    
+                    if(canOverride(nxWidget)){
+                    
+                        String pvType = mappedPvTypes.iterator().next();
+                        if(!StringUtils.equals(type, pvType)){
+                            
+                            widgetDefinition.setType(pvType);
+                            
+                            FacesContext context = FacesContext.getCurrentInstance();
+                            ELContext elContext = (ELContext) context.getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
+    
+                            if (elContext != null) {
+                                pvWidget = layoutManager.createWidget((FaceletContext) elContext, widgetDefinition, nxWidget.getMode(), nxWidget.getValueName(), new Widget[0]);
+                            }
+                            
+                            // Restore widget definition
+                            widgetDefinition.setType(type);
+                        }
+                        
+                        PVPropertyDescriptor[] pvPropertyDescriptors = mappedPvproperties.get(pvType);
+                    
+                        if(pvPropertyDescriptors != null && pvPropertyDescriptors.length > 0){
+                            for(PVPropertyDescriptor pvProp : pvPropertyDescriptors){
+                                pvWidget.setProperty(pvProp.getName(), pvProp.getValue());
+                            }
+                        }
+                    
+                    }
+                
+                } else {
+                    throw new Exception("Widget type can be mapped with only one PortalView widget type");
+                }
+                
+            }
         }
 
         return pvWidget;
+    }
+    
+    /**
+     * @param nxWidget
+     * @return true if nxWidget can be override in PortalView context.
+     */
+    protected boolean canOverride(Widget nxWidget) {
+        String override = (String) nxWidget.getProperty("pvOverride");
+        if(StringUtils.isBlank(override)){
+            return true;
+        }
+        return BooleanUtils.isTrue(BooleanUtils.toBoolean(override));
     }
 
     @Override
     public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
         if (ADAPTER_EXT_PT.equals(extensionPoint)) {
-            WidgetsAdapterDescriptor widgetsAdapterDesc = (WidgetsAdapterDescriptor) contribution;
-            WidgetMappingDescriptor[] mappings = widgetsAdapterDesc.getWidgetsMapping();
-            fillMappings(mappings);
+            if(contribution instanceof WidgetsAdapterDescriptor){
+                WidgetsAdapterDescriptor widgetsAdapterDesc = (WidgetsAdapterDescriptor) contribution;
+                WidgetMappingDescriptor[] mappings = widgetsAdapterDesc.getWidgetsNamesMapping();
+                fillMappings(mappings);
+                
+                WidgetMappingTypeDescriptor[] widgetsTypesMapping = widgetsAdapterDesc.getWidgetsTypesMapping();
+                fillTypeMappings(widgetsTypesMapping);
+            }
+        }
+    }
+    
+    protected void fillTypeMappings(WidgetMappingTypeDescriptor[] widgetsTypesMapping){
+        if(widgetsTypesMapping.length > 0){
+            for(WidgetMappingTypeDescriptor mappingDesc : widgetsTypesMapping){
+                String type = mappingDesc.getType();
+                String pvType = mappingDesc.getPvType();
+                if(StringUtils.isEmpty(pvType)){
+                    pvType = type;
+                }
+                PVPropertyDescriptor[] pvPropertiesDesc = mappingDesc.getPvProperties();
+                
+                Map<String, PVPropertyDescriptor[]> pvProperties = new HashMap<String, PVPropertyDescriptor[]>(0);
+                pvProperties.put(pvType, pvPropertiesDesc);
+                
+                widgetsTypesMappings.put(type, pvProperties);
+            }
         }
     }
 
@@ -249,7 +335,7 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
         for (WidgetMappingDescriptor mapping : mappings) {
             String nxWidget = mapping.getNxWidget();
             String pvWidget = mapping.getPvWidget();
-            this.widgetsMappings.put(nxWidget, pvWidget);
+            this.widgetsNamesMappings.put(nxWidget, pvWidget);
             
             WidgetDefinition pvWidgetDefinition = wlMng.getWidgetDefinition(pvWidget);
 
