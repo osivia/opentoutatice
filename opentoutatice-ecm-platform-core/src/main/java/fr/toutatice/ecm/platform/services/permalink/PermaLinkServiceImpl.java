@@ -125,21 +125,26 @@ public class PermaLinkServiceImpl extends DefaultComponent implements
 	
 		if (permalinkImpl == null) {
 			String classPathImpl = desc.getClasspath();
-			if (classPathImpl == null)
-				throw new IllegalArgumentException(String.format(
-						"Unknown classpath for '%s'", permalinkName));
+			if (classPathImpl == null){
+				throw new IllegalArgumentException(String.format("Unknown classpath for '%s'", permalinkName));
+			}	
 			try {
-				permalinkImpl = (Permalink) Permalink.class.getClassLoader().loadClass(classPathImpl).newInstance();
+				permalinkImpl = (Permalink) Permalink.class.getClassLoader().loadClass(classPathImpl).newInstance();			
+				permalinkImpls.put(permalinkName, permalinkImpl);
+				
 			} catch (Exception e) {
 				String msg = String.format("Caught error when instantiating permalink '%s' with class '%s' ",
 								permalinkName, classPathImpl);
-				throw new IllegalArgumentException(msg, e);
+				log.error(e.getMessage());
+				log.error(msg);			
 			}
-			permalinkImpls.put(permalinkName, permalinkImpl);
-						
+					
 		}		
-		
-		res = permalinkImpl.getPermalink(doc, desc.getHostServer(), desc.getParameters());
+		if(permalinkImpl == null){
+			res =  "";
+		}else{
+			res = permalinkImpl.getPermalink(doc, desc.getHostServer(), desc.getParameters());
+		}
 		return res;
 	
 	}
