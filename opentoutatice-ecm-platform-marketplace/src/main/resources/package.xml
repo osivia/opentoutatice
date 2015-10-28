@@ -5,14 +5,10 @@
 			(which one is based on the Nuxeo DM distribution)
 
 			Bug fixes :
-			* #3802 - Prise en compte de la date de publication dans requêtes de type Listes
-			* #3540 - Intégration HF 12 de Nuxeo (index proxies, page providers)
-			* #3493 - Logs d'erreur au démarrage de Nuxeo
-			* #4074 - Mapping FO/BO of arbitrary date
+			* # 4442 
 			
 			Main features :
-			* Integration HF12-1.0.1
-			* Evolution du service permalink pour le lot3 de cartoun
+			* 
 		</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
