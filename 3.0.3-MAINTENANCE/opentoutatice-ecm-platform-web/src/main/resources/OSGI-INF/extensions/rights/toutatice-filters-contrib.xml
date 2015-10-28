@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.rights.filters">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="filters">
+		
+		<!-- Permet l'ajout de l'onglet "Droits" sur un document feuille -->
+		<filter id="rights">
+			<rule grant="true">
+				<permission>WriteSecurity</permission>
+			</rule>
+		</filter>
+
+	</extension>
+
+</component>

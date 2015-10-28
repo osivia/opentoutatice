@@ -1,0 +1,77 @@
+<project name="open-toutatice-nxr"
+         default="build"
+         xmlns:nx="urn:nuxeo-build"
+         xmlns:artifact="urn:nuxeo-artifact">
+	<taskdef resource="org/nuxeo/build/antlib.xml" uri="urn:nuxeo-build" />
+	<taskdef resource="org/nuxeo/build/artifact/antlib.xml" uri="urn:nuxeo-artifact" />
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+	
+	<target name="build" description="Build the Nuxeo open toutatice platform NXR archive">
+		<property name="outdir" value="${maven.project.build.directory}" />
+		<mkdir dir="${outdir}" />	
+		
+		<!-- Build the dependency tree, including the "test" scope, resolving artifacts if needed -->
+		<artifact:nuxeo-expand includeTestScope="true" groupPrefixes="org.nuxeo" />
+
+		<!-- Create specific optional files for use by Nuxeo SDK -->
+		<artifact:print output="${outdir}/artifacts-opentoutatice.properties" mode="sdk" />
+		<artifact:print output="${outdir}/test-artifacts-opentoutatice.properties" mode="sdk" scopes="test" />
+
+		<!-- Output the dependency tree for debugging purpose -->
+		<artifact:print output="${outdir}/dependency-tree.log" />
+		<tstamp />
+		
+		<delete failonerror="false" dir="${outdir}/nxr" />
+		<mkdir dir="${outdir}/nxr" />
+				
+		<copy file="${outdir}/artifacts-opentoutatice.properties" todir="${outdir}/nxr" />
+		<copy file="${outdir}/test-artifacts-opentoutatice.properties" todir="${outdir}/nxr" />
+		
+		<unzip dest="${outdir}/nxdistrib">
+			<artifact:resolveFile key="org.nuxeo.ecm.distribution:nuxeo-distribution-cap:${nuxeo.version}:zip" />
+		</unzip>
+		
+		<!-- Get Nuxeo bundles but not Nuxeo libraries (which groupId starts with "org.nuxeo.lib"), nor bundles with "test" scope -->
+		<copy todir="${outdir}/nxr/bundles" overwrite="true">
+			<fileset dir="${outdir}/nxdistrib/bundles"/>
+		</copy>
+		<copy todir="${outdir}/nxr/bundles" overwrite="true">
+			<artifact:set>
+				<includes>
+					<artifact groupId="opentoutatice-ecm.*" scope="!test" type="!pom" />
+				</includes>
+				<excludes>
+					<artifact groupId="org.nuxeo.*"/>
+				</excludes>
+			</artifact:set>
+			<!-- Necessary for Portal connection (content automation) with SSO authentication -->
+			<artifact:resolveFile key="org.nuxeo.ecm.platform:nuxeo-platform-login-portal-sso:${nuxeo.version}:jar" />
+		</copy>
+		
+		<!-- Remove duplicates: keep only more recent version for each library -->
+		<nx:rmdups dir="${outdir}/nxr/bundles" />
+		
+		<!-- Third-party libraries -->
+		<copy todir="${outdir}/nxr/lib" overwrite="true">
+			<fileset dir="${outdir}/nxdistrib/lib"/>
+		</copy>
+		<copy todir="${outdir}/nxr/lib" overwrite="true">
+			<artifact:set>
+				<includes>
+					<artifact groupId="!org.nuxeo*" scope="!test" />
+				</includes>
+				<excludes>
+					<!-- Filter out your artifacts using their groupId for instance -->
+					<artifact groupId="opentoutatice-ecm.*" />
+				</excludes>
+			</artifact:set>
+		</copy>
+		
+		<!-- Remove duplicates: keep only more recent version for each library -->
+		<nx:rmdups dir="${outdir}/nxr/lib" />
+		
+		<zip destfile="${outdir}/opentoutatice-ecm-platform-nxr-${maven.project.version}-${profileName}.zip" basedir="${outdir}/nxr" />
+		<artifact:attach file="${outdir}/opentoutatice-ecm-platform-nxr-${maven.project.version}-${profileName}.zip" type="zip" />
+	</target>
+
+</project>

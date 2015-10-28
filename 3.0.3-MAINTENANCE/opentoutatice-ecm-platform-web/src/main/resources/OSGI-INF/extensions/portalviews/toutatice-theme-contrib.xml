@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.responsive.portalviews.theme">
+
+	<require>org.nuxeo.theme.services.ThemeService</require>
+	<require>org.nuxeo.theme.nuxeo.default</require>
+
+	<extension target="org.nuxeo.theme.services.ThemeService"
+		point="themes">
+		<theme>
+			<src>themes/theme-toutatice-popup.xml</src>
+		</theme>
+	</extension>
+
+	<extension target="org.nuxeo.theme.services.ThemeService"
+		point="applications">
+
+		<application root="${org.nuxeo.ecm.contextPath}"
+			template-engine="jsf-facelets">
+
+			<view id="/osivia_done.xhtml">
+				<theme>toutatice/popup</theme>
+			</view>
+			<view id="/toutatice_edit_document.xhtml">
+				<theme>toutatice/popup</theme>
+			</view>
+			<view id="/toutatice_view_document.xhtml">
+				<theme>toutatice/popup</theme>
+			</view>
+			<view id="/toutatice_create_document.xhtml">
+				<theme>toutatice/popup</theme>
+			</view>
+
+		</application>
+
+	</extension>
+
+	<extension target="org.nuxeo.theme.services.ThemeService"
+		point="views">
+
+		<view name="includes-pv" template-engine="jsf-facelets">
+			<format-type>widget</format-type>
+			<template>incl/pv_includes.xhtml</template>
+			<resource>glyphicons.css</resource>
+			<resource>toutatice-popup.min.css</resource>
+			<resource>custom-popup.min.css</resource>
+			<resource>bootstrap-datepicker.js</resource>
+			<resource>bootstrap-datepicker.fr.js</resource>
+			<resource>bootstrap-timepicker.js</resource>
+			<!-- FIXME: necessary? -->
+			<require>nxthemes.css</require>
+		</view>
+		
+	</extension>
+
+	<extension target="org.nuxeo.theme.services.ThemeService"
+		point="resources">
+
+		<resource name="glyphicons.css">
+			<path>css/glyphicons/css/glyphicons.css</path>
+		</resource>
+		<resource name="toutatice-popup.min.css">
+			<path>css/toutatice-popup.min.css</path>
+		</resource>
+		<resource name="custom-popup.min.css">
+			<path>css/custom-popup.min.css</path>
+		</resource>
+		
+		<resource name="bootstrap-datepicker.js">
+			<path>scripts/bootstrap/bootstrap-datepicker.js</path>
+		</resource>
+		<resource name="bootstrap-datepicker.fr.js">
+			<path>scripts/bootstrap/locales/bootstrap-datepicker.fr.js</path>
+		</resource>
+		<resource name="bootstrap-timepicker.js">
+			<path>scripts/bootstrap/bootstrap-timepicker.js</path>
+		</resource>
+		
+	</extension>
+
+</component>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.service.fragments.FragmentService">
+    <documentation>
+        Service to define specific fragment types
+    </documentation>
+    <implementation class="fr.toutatice.ecm.platform.service.fragments.FragmentServiceImpl" />
+    <service>
+        <provide interface="fr.toutatice.ecm.platform.service.fragments.FragmentService" />
+    </service>
+    
+    <extension-point name="fragment">
+        <documentation>
+            This extension can be used to register new fragment types
+        </documentation>
+        <object class="fr.toutatice.ecm.platform.service.fragments.FragmentDescriptor" />
+    </extension-point>
+
+
+</component>

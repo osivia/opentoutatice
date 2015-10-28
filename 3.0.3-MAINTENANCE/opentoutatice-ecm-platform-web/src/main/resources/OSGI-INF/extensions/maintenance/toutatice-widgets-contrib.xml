@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.maintenance.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+			<widget name="maintenance_title" type="text">
+				<labels>
+					<label mode="any">Title</label>
+				</labels>
+				<translated>false</translated>
+				<fields>
+					<field>dc:title</field>
+				</fields>
+				<properties widgetMode="edit">
+					<property name="styleClass">dataInputText</property>
+					<property name="required">true</property>
+				</properties>
+			</widget>
+			
+			<widget name="maintenance_description" type="textarea">
+				<labels>
+					<label mode="any">Description</label>
+				</labels>
+				<translated>false</translated>
+				<fields>
+					<field>dc:description</field>
+				</fields>
+				<properties widgetMode="edit">
+					<property name="styleClass">dataInputText</property>
+				</properties>
+			</widget>
+
+	</extension>
+
+</component>

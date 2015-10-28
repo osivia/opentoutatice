@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.remote.publishing.treemanager">
+
+	<require>org.nuxeo.ecm.platform.publisher.treeManager.contrib</require>
+	<require>fr.toutatice.ecm.platform.remote.publishing.pageproviders</require>
+	
+	<extension target="org.nuxeo.ecm.platform.treeManager" point="plugin">
+
+		<!-- Utilisé pour l'arbre de configuration des Sections de publication distante -->
+		<treeManagerPlugin name="publication">
+			<pageProvider>TOUTATICE_PUBLISH_TREE_CHILDREN</pageProvider>			
+		</treeManagerPlugin>
+
+	</extension>
+
+</component>

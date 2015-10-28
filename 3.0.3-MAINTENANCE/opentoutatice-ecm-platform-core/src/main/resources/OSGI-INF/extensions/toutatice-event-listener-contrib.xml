@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.core.eventlistener">
+
+	<extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
+		point="listener">
+		
+		<listener name="toutaticeAsynchronousUpdateListener" 
+			async="true" 
+			postCommit="false"
+			enabled="true" 
+			class="fr.toutatice.ecm.platform.core.listener.ToutaticeAsynchronousUpdateListener"
+			priority="100">
+            <event>documentCreatedByCopy</event>
+            <event>documentMoved</event>
+            <event>documentRestored</event>
+            <event>documentModified</event>
+		</listener>
+
+		<listener name="toutaticeDeletelistener" 
+			async="false" 
+			postCommit="false"
+			enabled="true" 
+			class="fr.toutatice.ecm.platform.core.listener.ToutaticeDeleteEventListener"
+			priority="120">
+			<event>aboutToRemove</event>
+			<event>aboutToRemoveVersion</event>
+		</listener>
+		
+		<listener name="toutaticeDocumentMoved" 
+			async="true"
+			postCommit="false"
+			enabled="true" 
+			class="fr.toutatice.ecm.platform.core.listener.ToutaticeDocumentMoved"
+			priority="123">
+			<event>documentMoved</event>
+		</listener>
+
+		<!--
+		  Faire en sorte que les documents modifiés en mode dit "silencieux" soient bien indexés par ElasticSearch.
+		  (http://redmine.toutatice.fr/issues/3802)
+		 -->
+		<listener name="toutaticeElasticSearchInlineListener"
+			async="true"
+			class="fr.toutatice.ecm.platform.core.listener.ToutaticeElasticSearchInlineListener"
+			enabled="true" 
+			postCommit="false"
+			priority="500">
+			<event>toutaticeElasticSearchDocumentIndexation</event>
+		</listener>
+    
+	</extension>
+
+</component>
+
+

@@ -1,0 +1,7 @@
+#nuxeo.template.includes=
+opentoutatice.target=.
+
+# default properties values
+nuxeo.permalink.service.portal.url=localhost
+nuxeo.permalink.service.param1=portail
+nuxeo.permalink.service.param2=cms
