@@ -88,6 +88,8 @@ public class PortletFragment implements Fragment {
                         newEntry.put("refURI", uri);
                         newEntry.put("key", option.get(ConfigurationConstants.KEY_OPTION));
                         newEntry.put("value", option.get(ConfigurationConstants.VALUE_OPTION));
+                        newEntry.put("editable", option.get(ConfigurationConstants.EDITABLE_OPTION));
+                        newEntry.put("label", option.get(ConfigurationConstants.LABEL_OPTION));
 
                         listeData.add(newEntry);
                     }

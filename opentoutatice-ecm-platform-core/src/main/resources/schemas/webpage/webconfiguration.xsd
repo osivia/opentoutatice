@@ -49,6 +49,8 @@
 		<xs:sequence>
 			<xs:element name="propertyName" type="xs:string" />
 			<xs:element name="propertyDefaultValue" type="xs:string" />
+			<xs:element name="propertyEditable" type="xs:boolean" />
+			<xs:element name="propertyLabel" type="xs:string" />
 		</xs:sequence>
 	</xs:complexType>
 	<xs:element name="order" type="xs:integer" />

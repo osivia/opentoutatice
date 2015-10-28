@@ -28,5 +28,7 @@ public interface ConfigurationConstants {
 	
 	String KEY_OPTION = "propertyName";
 	String VALUE_OPTION = "propertyDefaultValue";
+	String EDITABLE_OPTION = "propertyEditable";
+	String LABEL_OPTION = "propertyLabel";
 
 }

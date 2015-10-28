@@ -180,6 +180,32 @@
 						<field>propertyDefaultValue</field>
 					</fields>
 				</widget>
+				<widget name="sub2" type="checkbox">
+					<labels>
+						<label mode="any">osivia.webconfig.options.editable</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.webconfig.options.editable.help
+						</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>propertyEditable</field>
+					</fields>
+				</widget>
+				<widget name="sub3" type="text">
+					<labels>
+						<label mode="any">osivia.webconfig.options.label</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.webconfig.options.label.help
+						</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>propertyLabel</field>
+					</fields>
+				</widget>
 			</subWidgets>
 		</widget>
 
