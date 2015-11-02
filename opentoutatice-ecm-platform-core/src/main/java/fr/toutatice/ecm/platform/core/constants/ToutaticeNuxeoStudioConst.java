@@ -37,6 +37,7 @@ public class ToutaticeNuxeoStudioConst {
 	public final static String CST_DOC_TYPE_DOMAIN = "Domain";
 	public final static String CST_DOC_TYPE_ROOT = "Root";
 	public final static String CST_DOC_TYPE_WEB_CONFIGURATION = "WebConfiguration";
+	public final static String CST_DOC_TYPE_TEMPLATE_ROOT = "TemplateRoot";
 
 	// schemas
 	public final static String CST_DOC_SCHEMA_NUXEO_WEBCONTAINER = "webcontainer";

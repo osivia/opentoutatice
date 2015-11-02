@@ -35,9 +35,12 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.Filter;
 import org.nuxeo.ecm.core.api.Sorter;
+import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
+import org.nuxeo.ecm.core.schema.SchemaManager;
 import org.nuxeo.ecm.platform.publisher.web.AdministrationPublishActions;
 import org.nuxeo.ecm.webapp.tree.DocumentTreeNode;
 import org.nuxeo.ecm.webapp.tree.DocumentTreeNodeImpl;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSorterHelper;
@@ -70,6 +73,30 @@ public class ToutaticeAdministrationPublishActions extends AdministrationPublish
         DocumentModelList sectionRoots = rootFinder.getDefaultSectionRoots(false, true);
         Collections.sort(sectionRoots, new SectionRootsComparator());
         return sectionRoots;
+    }
+    
+    /*
+     * Fixes loops on parent.
+     */
+    @Override
+    public String getDomainNameFor(final DocumentModel sectionRoot) throws ClientException {
+        final List<String> domainName = new ArrayList<>();
+        new UnrestrictedSessionRunner(documentManager) {
+            @Override
+            public void run() throws ClientException {
+                DocumentModel parent = session.getParentDocument(sectionRoot.getRef());
+                SchemaManager schemaManager = Framework.getLocalService(SchemaManager.class);
+                while (parent != null && !"/".equals(parent.getPathAsString())) {
+                    if (schemaManager.hasSuperType(parent.getType(), "Domain")) {
+                        domainName.add(parent.getTitle());
+                        return;
+                    } else {
+                        parent = session.getParentDocument(parent.getRef());  
+                    }
+                }
+            }
+        }.runUnrestricted();
+        return domainName.isEmpty() ? null : domainName.get(0);
     }
 
     @Override

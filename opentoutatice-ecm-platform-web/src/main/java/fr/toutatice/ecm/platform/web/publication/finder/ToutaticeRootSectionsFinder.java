@@ -29,11 +29,14 @@ import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.platform.publisher.impl.finder.DefaultRootSectionsFinder;
 
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
+
 public class ToutaticeRootSectionsFinder extends DefaultRootSectionsFinder {
 
     private static final Log log = LogFactory.getLog(ToutaticeRootSectionsFinder.class);
 
     private static String CST_QUERY_LIST_PUBLISH_SPACES = "SELECT * FROM %s WHERE ecm:mixinType != 'HiddenInNavigation' AND ecm:isCheckedInVersion = 0 AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0";
+                
 
     public ToutaticeRootSectionsFinder(CoreSession userSession) {
         super(userSession);
@@ -82,7 +85,8 @@ public class ToutaticeRootSectionsFinder extends DefaultRootSectionsFinder {
             for (DocumentModel sectionRoot : list) {
                 try {
                     DocumentModel sectionRootParent = this.session.getParentDocument(sectionRoot.getRef());
-                    if (!sectionRootParent.hasFacet(FacetNames.MASTER_PUBLISH_SPACE)) {
+                    // Templates Roots can have PortalSite models that we don't want in tree
+                    if (!sectionRootParent.hasFacet(FacetNames.MASTER_PUBLISH_SPACE) && (!ToutaticeNuxeoStudioConst.CST_DOC_TYPE_TEMPLATE_ROOT.equals(sectionRootParent.getType()))) {
                         this.sectionRoots.add(sectionRoot);
                     }
                 } catch (Exception e) {
