@@ -20,6 +20,8 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -28,7 +30,6 @@ import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.DocumentSecurityException;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
@@ -41,7 +42,7 @@ public class FetchLiveDocument {
 
 	public static final String ID = "Document.FetchLiveDocument";
 
-//	private static final Log log = LogFactory.getLog(FetchLiveDocument.class);
+	private static final Log log = LogFactory.getLog(FetchLiveDocument.class);
 
 	@Context
 	protected CoreSession session;
@@ -89,7 +90,9 @@ public class FetchLiveDocument {
 		}
 		// vérifier la permission
 		if (!isAllowed) {
-			throw new DocumentSecurityException(String.format("Privilege(s) '%s' is not granted to user '%s' on document '%s'", permission, session.getPrincipal().getName(), liveDocument.getPathAsString()));
+			log.warn(String.format("Privilege(s) '%s' is not granted to user '%s' on document '%s'", permission, session.getPrincipal().getName(), liveDocument.getPathAsString()));
+			liveDocument = null;
+//			throw new DocumentSecurityException(String.format("Privilege(s) '%s' is not granted to user '%s' on document '%s'", permission, session.getPrincipal().getName(), liveDocument.getPathAsString()));
 		}
 
 		return liveDocument;
