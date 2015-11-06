@@ -12,7 +12,13 @@
 		class="fr.toutatice.ecm.platform.service.customize.ui.CustomizeUIServiceImpl" />
 		
 	<extension-point name="layouts">
-		<object class="fr.toutatice.ecm.platform.service.customize.ui.LayoutsDescriptor" />
+		<object
+			class="fr.toutatice.ecm.platform.service.customize.ui.LayoutsDescriptor" />
+	</extension-point>
+	
+	<extension-point name="categories">
+        <object
+            class="fr.toutatice.ecm.platform.service.customize.ui.CategoryDescriptor" />
   	</extension-point>
 
 </component>
