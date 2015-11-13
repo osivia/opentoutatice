@@ -12,7 +12,7 @@
 			
 		<!-- Disabled since it leads to fail the hot reload process while the marketplace installation
 		(see support ticket: https://jira.nuxeo.com/browse/SUPNXP-11255 -->
-		<handler enabled="false"
+		<handler enabled="true"
 			serviceClass="org.nuxeo.ecm.automation.AutomationService"
 			handlerClass="fr.toutatice.ecm.platform.core.components.ToutaticeAutomationServiceHandler" />
 			
