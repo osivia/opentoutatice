@@ -10,46 +10,65 @@
 	xmlns:oh="http://osivia.org/html" id="#{widget.id}">
 	<c:set var="mode" value="#{layout.mode}" />
 
-	<div class="titre2">
-		<img src="theme/images/icone_fragment.gif" /><span>Propriétés
-			du zooms</span>
+	<div class="col-sm-12">
+		<fieldset>
+			<legend>
+				<i class="glyphicons halflings play"></i>
+				<h:outputText
+					value="#{messages['osivia.fragment.zoom.title']}" />
+			</legend>
+		</fieldset>
 	</div>
+	
+	
+	<div class="form-group">
+	
+	
+		<c:forEach id="props" items="#{currentDocument.zfgt.zoomFragment}" var="zoom">
 
-	<nxu:dataList id="props" value="#{currentDocument.zfgt.zoomFragment}"
-		var="zoom">
-
-
-		<s:div rendered="#{zoom.refURI eq fragmentBean.uri}">
-
-			<p>
-				<h:outputLabel value="URL : " />
-				<nxl:widgetType id="zl_href" name="text" mode="edit"
-					title="URL du lien." value="#{zoom.href}" />
-			</p>
 			
-			<p>
-				<h:outputLabel value="Référence image : "  />
-				<nxl:widgetType id="zl_picture" name="text" mode="edit"
-					title="Image"
-					value="#{zoom.picture}"  />
-			</p>
-		
-			<p>
-				<h:outputLabel value="Description : " />
-				<nxl:widgetType id="zl_desc" name="htmltext" mode="edit"
-					title="Texte du lien." value="#{zoom.content}" />
-			</p>
+			<c:if test="#{zoom.refURI eq fragmentBean.uri}">
 			
-			<p>
-				<h:outputLabel value="Présentation du zoom : " />
-				<oh:icons id="selectZoomTemplate" src="#{config.zoomTemplates}"
-					value="#{zoom.zoomTemplate}" ulStyleClass="cssStyleList"
-					binding="#{templateSimpleForm.simpleComponent}"
-					inputClientId="#{templateSimpleForm.simpleComponentClientId}"
-					multiSelect="false" iconsGroup="zoomTypesGroup" />
-			</p>			
-
-		</s:div>
-	</nxu:dataList>
+			
+				<div class="form-group">
+					<h:outputLabel value="#{messages['osivia.fragment.zoom.form.url']}" class="control-label col-sm-2" />
+					<div class="col-sm-8">
+						<nxl:widgetType id="zl_href" name="text" mode="edit"
+							value="#{zoom.href}" class="form-control"  />
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<h:outputLabel value="#{messages['osivia.fragment.zoom.form.picture']}"  class="control-label col-sm-2" />
+					<div class="col-sm-8">
+						<nxl:widgetType id="zl_picture" name="text" mode="edit"
+							title="Image" class="form-control" 
+							value="#{zoom.picture}"  />
+					</div>
+				</div>
+			
+				<div class="form-group">
+					<h:outputLabel value="#{messages['osivia.fragment.zoom.form.description']}" class="control-label col-sm-2" />
+					<div class="col-sm-8">
+						<nxl:widgetType id="zl_desc" name="htmltext" mode="edit" class="form-control" 
+							title="Texte du lien." value="#{zoom.content}" />
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<h:outputLabel value="#{messages['osivia.fragment.zoom.form.template']}" class="control-label col-sm-2" />
+					<div class="col-sm-8">
+						<oh:icons id="selectZoomTemplate" src="#{config.zoomTemplates}"
+							value="#{zoom.zoomTemplate}" ulStyleClass="cssStyleList"
+							binding="#{templateSimpleForm.simpleComponent}"
+							inputClientId="#{templateSimpleForm.simpleComponentClientId}"
+							multiSelect="false" iconsGroup="zoomTypesGroup" />
+					</div>
+				</div>
+			
+			</c:if>
+		</c:forEach>
+	
+	</div>
 
 </f:subview>
