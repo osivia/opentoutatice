@@ -236,48 +236,50 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
             }
         } else {
             WidgetDefinition widgetDefinition = nxWidget.getDefinition();
-            String type = widgetDefinition.getType();
-            
-            Set<String> mappedTypes = widgetsTypesMappings.keySet();
-            if(mappedTypes != null && mappedTypes.contains(type)){
+            if(widgetDefinition != null){
+                String type = widgetDefinition.getType();
                 
-                Map<String, PVPropertyDescriptor[]> mappedPvproperties = widgetsTypesMappings.get(type);
-                Set<String> mappedPvTypes = mappedPvproperties.keySet();
-                
-                if(mappedPvTypes != null && mappedPvTypes.size() == 1){
+                Set<String> mappedTypes = widgetsTypesMappings.keySet();
+                if(mappedTypes != null && mappedTypes.contains(type)){
                     
-                    if(canOverride(nxWidget)){
+                    Map<String, PVPropertyDescriptor[]> mappedPvproperties = widgetsTypesMappings.get(type);
+                    Set<String> mappedPvTypes = mappedPvproperties.keySet();
                     
-                        String pvType = mappedPvTypes.iterator().next();
-                        if(!StringUtils.equals(type, pvType)){
-                            
-                            widgetDefinition.setType(pvType);
-                            
-                            FacesContext context = FacesContext.getCurrentInstance();
-                            ELContext elContext = (ELContext) context.getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
-    
-                            if (elContext != null) {
-                                pvWidget = layoutManager.createWidget((FaceletContext) elContext, widgetDefinition, nxWidget.getMode(), nxWidget.getValueName(), new Widget[0]);
-                            }
-                            
-                            // Restore widget definition
-                            widgetDefinition.setType(type);
-                        }
+                    if(mappedPvTypes != null && mappedPvTypes.size() == 1){
                         
-                        PVPropertyDescriptor[] pvPropertyDescriptors = mappedPvproperties.get(pvType);
-                    
-                        if(pvPropertyDescriptors != null && pvPropertyDescriptors.length > 0){
-                            for(PVPropertyDescriptor pvProp : pvPropertyDescriptors){
-                                pvWidget.setProperty(pvProp.getName(), pvProp.getValue());
+                        if(canOverride(nxWidget)){
+                        
+                            String pvType = mappedPvTypes.iterator().next();
+                            if(!StringUtils.equals(type, pvType)){
+                                
+                                widgetDefinition.setType(pvType);
+                                
+                                FacesContext context = FacesContext.getCurrentInstance();
+                                ELContext elContext = (ELContext) context.getAttributes().get(FaceletContext.FACELET_CONTEXT_KEY);
+        
+                                if (elContext != null) {
+                                    pvWidget = layoutManager.createWidget((FaceletContext) elContext, widgetDefinition, nxWidget.getMode(), nxWidget.getValueName(), new Widget[0]);
+                                }
+                                
+                                // Restore widget definition
+                                widgetDefinition.setType(type);
                             }
+                            
+                            PVPropertyDescriptor[] pvPropertyDescriptors = mappedPvproperties.get(pvType);
+                        
+                            if(pvPropertyDescriptors != null && pvPropertyDescriptors.length > 0){
+                                for(PVPropertyDescriptor pvProp : pvPropertyDescriptors){
+                                    pvWidget.setProperty(pvProp.getName(), pvProp.getValue());
+                                }
+                            }
+                        
                         }
                     
+                    } else {
+                        throw new Exception("Widget type can be mapped with only one PortalView widget type");
                     }
-                
-                } else {
-                    throw new Exception("Widget type can be mapped with only one PortalView widget type");
+                    
                 }
-                
             }
         }
 
