@@ -1,38 +1,38 @@
 <f:subview xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:c="http://java.sun.com/jstl/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:s="http://jboss.org/schema/seam/taglib"
-    xmlns:nxu="http://nuxeo.org/nxweb/util"
-    xmlns:nxl="http://nuxeo.org/nxforms/layout"
-    xmlns:nxh="http://nuxeo.org/nxweb/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:a4j="http://richfaces.org/a4j">
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
+	xmlns:nxh="http://nuxeo.org/nxweb/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j">
 
-    <f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
-        <div class="alert alert-warning">
-            <i class="glyphicons halflings warning-sign"></i> <span
-                class="text-warning">#{messages['label.imageUpload.unableToUpload']}</span>
+	<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
+		<div class="alert alert-warning">
+			<i class="glyphicons halflings warning-sign"></i> <span
+				class="text-warning">#{messages['label.imageUpload.unableToUpload']}</span>
 
-        </div>
-    </f:subview>
+		</div>
+	</f:subview>
 
-    <f:subview
-        rendered="#{!editorImageActions.inToutaticeCreationMode and currentDocument.hasFacet('TTCAttachableImages')}">
+	<f:subview
+		rendered="#{!editorImageActions.inToutaticeCreationMode and currentDocument.hasFacet('TTCAttachableImages')}">
 
-<h:form enctype="multipart/form-data" id="uploadForm"
-            class="form form-horizontal" disableDoubleClickShield="true">
+		<h:form enctype="multipart/form-data" id="uploadForm"
+			class="form form-horizontal" disableDoubleClickShield="true">
 
-        <script type="text/javascript">
-            function updateEditorWithImagePJ(img) {
+			<script type="text/javascript">
+            function updateEditorWithImagePJ(img, klass) {
                 if (window.opener.tinyMCE) {
                     var tinyMCE = window.opener.tinyMCE;
-                    var html = '&lt;img src="' + img.src + '"/&gt;';
+                    var html = '&lt;img src="' + img.src + '" class="' + klass + '"/&gt;';
                     tinyMCE.execCommand('mceInsertContent', false, html);
                     self.close();
                 }
             }
 
-            function updateFragment(img) {
+            function updateFragment(img, klass) {
 
                 var imgSrc = img.src;
                 var relativeUrl = imgSrc.replace(/^(?:\/\/|[^\/]+)*\//, "/");
@@ -44,81 +44,89 @@
                 self.close();
             }
 
-            function updateCaller(img) {
+            function updateCaller(img, klass) {
                 if (window.opener.$picturePath) {
-                    updateFragment(img);
+                    updateFragment(img, klass);
                 } else {
-                    updateEditorWithImagePJ(img)
+                    updateEditorWithImagePJ(img, klass)
                 }
             }
         </script>
 
-        <c:choose>
-            <c:when test="#{empty currentDocument.toutatice.images}">
+			<c:choose>
+				<c:when test="#{empty currentDocument.toutatice.images}">
 
-                <div class="alert alert-warning">
-                    <i class="glyphicons halflings warning-sign"></i> <span
-                        class="text-warning">#{messages['toutatice.label.imageUpload.choose.NoattachedImage']}</span>
+					<div class="alert alert-warning">
+						<i class="glyphicons halflings warning-sign"></i> <span
+							class="text-warning">#{messages['toutatice.label.imageUpload.choose.NoattachedImage']}</span>
 
-                </div>
+					</div>
 
-                <div>
-                    <ui:include
-                        src="/incl/editor_media_upload/upload_attached_images.xhtml" />
-                </div>
+					<div>
+						<ui:include
+							src="/incl/editor_media_upload/upload_attached_images.xhtml" />
+					</div>
 
-            </c:when>
-            <c:otherwise>
+				</c:when>
+				<c:otherwise>
 
-                <div class="alert alert-info">
-                    <i class="glyphicons halflings info-sign"></i> <span
-                        class="text-info">#{messages['toutatice.label.attached.images.select']}</span>
+					<div class="alert alert-info">
+						<i class="glyphicons halflings info-sign"></i> <span
+							class="text-info">#{messages['toutatice.label.attached.images.select']}</span>
 
-                </div>
+					</div>
 
-                <div class="row">
-                    <div class="pictures-list">
+					<div id="img_style_value_checkbox" class="checkbox">
+						<label> <input id="img_style_value" checked="checked"
+							type="checkbox" value="enlargeable" />#{messages['toutatice.label.attached.image.style.enlargeable']}
+						</label>
+					</div>
 
-                    <ui:repeat var="img" value="#{currentDocument.toutatice.images}" varStatus="status">
-                            <ui:fragment rendered="#{not empty img.filename}">
-                                <div class="col-xs-3 col-md-3"
-                                    onclick="javascript:updateCaller(jQuery(this).find('img')[0]);">
-                                    <div class="picture">
-                                        <a href="#" class="thumbnail"> <h:graphicImage
-                                                value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', status.index, 'file', img.filename)}" />
-                                        </a>
-                                    </div>
-                                    <p class="text-center">#{img.filename}</p>
+					<div class="row">
 
-                                </div>
-                            </ui:fragment>
+						<div class="pictures-list">
 
-                        </ui:repeat>
+							<ui:repeat var="img" value="#{currentDocument.toutatice.images}"
+								varStatus="status">
+								<ui:fragment rendered="#{not empty img.filename}">
+									<div class="col-xs-3 col-md-3"
+										onclick="javascript:updateCaller(jQuery(this).find('img')[0], jQuery('#img_style_value').val());;">
+										<div class="picture">
+											<a href="#" class="thumbnail"> <h:graphicImage
+													value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', status.index, 'file', img.filename)}" />
+											</a>
+										</div>
+										<p class="text-center">#{img.filename}</p>
 
-                        <div>
-                            <ui:include
-                                src="/incl/editor_media_upload/upload_attached_images.xhtml" />
-                        </div>
+									</div>
+								</ui:fragment>
 
-                    </div>
-                    
-                </div>
+							</ui:repeat>
 
-            </c:otherwise>
+							<div>
+								<ui:include
+									src="/incl/editor_media_upload/upload_attached_images.xhtml" />
+							</div>
 
-        </c:choose>
+						</div>
 
-</h:form>
+					</div>
 
-    </f:subview>
+				</c:otherwise>
 
-    <f:subview
-        rendered="#{!editorImageActions.inToutaticeCreationMode and not currentDocument.hasFacet('TTCAttachableImages')}">
-        <div class="alert alert-warning">
-            <i class="glyphicons halflings warning-sign"></i> <span
-                class="text-warning">#{messages['toutatice.label.imageUpload.noImages']}</span>
-        </div>
+			</c:choose>
 
-    </f:subview>
+		</h:form>
+
+	</f:subview>
+
+	<f:subview
+		rendered="#{!editorImageActions.inToutaticeCreationMode and not currentDocument.hasFacet('TTCAttachableImages')}">
+		<div class="alert alert-warning">
+			<i class="glyphicons halflings warning-sign"></i> <span
+				class="text-warning">#{messages['toutatice.label.imageUpload.noImages']}</span>
+		</div>
+
+	</f:subview>
 
 </f:subview>
