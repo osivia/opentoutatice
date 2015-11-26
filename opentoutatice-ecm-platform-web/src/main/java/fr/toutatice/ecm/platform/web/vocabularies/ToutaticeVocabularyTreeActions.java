@@ -73,59 +73,6 @@ public class ToutaticeVocabularyTreeActions extends VocabularyTreeActions {
         return !nodeId.equalsIgnoreCase(currentEntryId);
     }
 
-//    /**
-//     * To fix possibility to have circular dependencies
-//     * when modify an entry with parent.
-//     */
-//    @Override
-//    public List<VocabularyTreeNode> getRoots(String vocabularyName, boolean displayObsoleteEntries, char keySeparator, String orderingField) {
-//
-//        List<VocabularyTreeNode> treeNodes = super.getRoots(vocabularyName, displayObsoleteEntries, keySeparator, orderingField);
-//
-//        FacesContext context = FacesContext.getCurrentInstance();
-//        UIViewRoot viewRoot = context.getViewRoot();
-//
-//        DirectoryService directoryService = Framework.getLocalService(DirectoryService.class);
-//        String vocabularySchema = directoryService.getDirectorySchema(vocabularyName);
-//
-//        String currentEntryId = getCurrentEntryValue(viewRoot, vocabularyName, vocabularySchema);
-//
-//        if (StringUtils.isNotBlank(currentEntryId)) {
-//
-//            VocabularyTreeNode rootToDel = null;
-//            Iterator<VocabularyTreeNode> iterator = treeNodes.iterator();
-//
-//            while (iterator.hasNext() && rootToDel == null) {
-//                VocabularyTreeNode vocabularyTreeNode = iterator.next();
-//                String rootId = vocabularyTreeNode.getId();
-//                if (currentEntryId.equalsIgnoreCase(rootId)) {
-//                    rootToDel = vocabularyTreeNode;
-//                }
-//            }
-//
-//            if (rootToDel != null) {
-//                treeNodes.remove(rootToDel);
-//                clearTreeNode(vocabularyName);
-//            }
-//
-//        }
-//
-//        return treeNodes;
-//    }
-//
-//    /**
-//     * Clear the current tree nodes
-//     * to re-calculate this one
-//     * (but bad for performances...)
-//     */
-//    private void clearTreeNode(String vocabularyName) {
-//
-//        VocabularyTreeNode vocabularyTreeNode = super.treeModels.get(vocabularyName);
-//        if (vocabularyTreeNode != null) {
-//            super.treeModels.remove(vocabularyName);
-//        }
-//
-//    }
 
     /**
      * Find current entry value we want to modify.
