@@ -171,6 +171,12 @@
 					/widgets/toutatice_removewebid_widget.xhtml
 				</property>
 			</properties>
+			<properties widgetMode="edit">
+                <property name="validator">#{toutaticeValidator.validateWebId}
+                </property>
+                <property name="disabled">#{!toutaticeValidator.spaceSupportsWebId}
+                </property>
+            </properties>
 		</widget>
 
 		<widget name="toutatice_explicitUrl_widget" type="text">
@@ -308,24 +314,7 @@
 
 		<widgetType name="ttc_richtext_with_mimetype">
 			<configuration>
-				<sinceVersion>5.3.1</sinceVersion>
-				<title>Richtext</title>
-				<description>
-					<p>
-						This widget displays an html text editor or a textarea in create
-						or
-						edit mode, depending on the mimetype defined.
-					</p>
-					<p>
-						It accepts two fields bindings:
-						<ul>
-							<li>first field holds the text content</li>
-							<li>second field holds the text mimetype (text/plain,
-								text/html...)
-							</li>
-						</ul>
-					</p>
-				</description>
+				<title>TTCRichtext</title>
 				<categories>
 					<!-- do not export with documents -->
 					<category>configuration_not_ready</category>
@@ -343,6 +332,9 @@
 					</supportedTypes>
 				</fields>
 				<properties>
+				    <defaultValues mode="any">
+                        <property name="showFormat">false</property>
+                    </defaultValues>
 					<layouts mode="view">
 						<layout name="richtext_widget_type_properties_view">
 							<rows>
