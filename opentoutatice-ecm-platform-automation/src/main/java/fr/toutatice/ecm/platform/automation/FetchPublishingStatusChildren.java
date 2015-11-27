@@ -183,7 +183,7 @@ public class FetchPublishingStatusChildren {
         return childrenWithStatus;
     }
     
-    /* FIXME: duplicate code with FetchPubliInfos: to mutualise in Helrper class */
+    /* FIXME: duplicate code with FetchPubliInfos: to mutualise in Helper class */
     private boolean isEditableByUser(DocumentModel liveDoc) throws ServeurException {
         boolean canModify = false;
         try {

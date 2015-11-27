@@ -56,8 +56,7 @@ public class PermaLinkServiceImpl extends DefaultComponent implements
 
 	
 	@Override
-	public String getPermalink(DocumentModel doc) {
-		
+	public String getPermalink(DocumentModel doc) {		
 		return this.getPermalink(doc, getDefaultPermalinkName());
 	}
 	

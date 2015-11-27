@@ -12,6 +12,8 @@
 			Main features :
 			* Integration HF12-1.0.1
             * Widget filtering on permission on current document
+			* Remote sections informations available for Portal
+			* Suggest Users Widget filtering on permission on current document
 		</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
@@ -28,7 +30,7 @@
 	</platforms>
 	<dependencies>
 		<!-- Dépendances sur les addons Nuxeo -->
-		<package>nuxeo-dam:6.0.0</package>
+		<package>nuxeo-dam:6.0.0:6.0.0</package>
 		<!-- FIXME: just for schema webpage of PortalSite and PortalPage... -->
 		<package>nuxeo-sites-blogs:1.2.0</package>
 		<!-- Dépendance sur les hotfixes -->

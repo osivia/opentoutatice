@@ -484,8 +484,7 @@ public class FetchPublicationInfos {
             if (canBeDelete) {
                 DocumentModel proxy = ToutaticeDocumentHelper.getProxy(coreSession, liveDoc, null);
                 boolean hasProxy = (null != proxy);
-                boolean isApproved = ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(liveDoc.getCurrentLifeCycleState());
-                if (isApproved || hasProxy) {
+                if (hasProxy) {
                     boolean canValidate = coreSession.hasPermission(liveDoc.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE);
                     canBeDelete = Boolean.valueOf(canValidate);
                 }
@@ -758,6 +757,13 @@ public class FetchPublicationInfos {
                     DocumentModel liveDoc = (DocumentModel) this.liveDocRes;
                     Boolean isRemotePublishable = isRemotePublishable(liveDoc, workspaceRes);
                     infosPubli.put("isRemotePublishable", isRemotePublishable);
+					if(isRemotePublishable) {
+				    	Boolean isRemotePublished = isRemotePublished(liveDoc);
+				    	infosPubli.put("isRemotePublished", isRemotePublished);
+				    }
+				    else {
+				    	infosPubli.put("isRemotePublished", Boolean.FALSE);
+				    }
                 }
 
                 // Case of local publication
@@ -820,6 +826,18 @@ public class FetchPublicationInfos {
 
             return is;
         }
+
+		/**
+		 * @param liveDoc given document
+		 * @return true if given document is remote published
+		 */
+		private boolean isRemotePublished(DocumentModel liveDoc) {
+			DocumentModelList remotePublishedDocuments = ToutaticeDocumentHelper.getRemotePublishedDocuments(this.session, liveDoc);
+			if(remotePublishedDocuments.size() > 0) {
+				return true;
+			}
+			else return false;
+		}
 
         /**
          * Use in remote publication case.

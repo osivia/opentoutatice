@@ -37,7 +37,6 @@ public class ToutaticeRootSectionsFinder extends DefaultRootSectionsFinder {
 
     private static String CST_QUERY_LIST_PUBLISH_SPACES = "SELECT * FROM %s WHERE ecm:mixinType != 'HiddenInNavigation' AND ecm:isCheckedInVersion = 0 AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0";
                 
-
     public ToutaticeRootSectionsFinder(CoreSession userSession) {
         super(userSession);
     }

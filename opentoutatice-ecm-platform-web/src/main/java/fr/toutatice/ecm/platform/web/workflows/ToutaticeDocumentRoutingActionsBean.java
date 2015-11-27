@@ -83,7 +83,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
 
         getDocumentRoutingService().createNewInstance(workflow.getName(), currentDocIds, documentManager, true);
 
-        /* Events for Observers and listeners */
+        /* Events for Observers (and listeners?) */
         Events.instance().raiseEvent(EventNames.DOCUMENT_CHILDREN_CHANGED, workflow);
 
         FacesMessages.instance().addFromResourceBundle(msgKey);
@@ -238,7 +238,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
     }
 
     /**
-     * To allow fir of beforeWorkflowProcessCanceled event.
+     * To allow to fire beforeWorkflowProcessCanceled event.
      */
     @Override
     public String cancelRoute() throws ClientException {
