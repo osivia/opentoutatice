@@ -2,18 +2,31 @@
 	<title>Open Toutatice</title>
 	<description>
 		<p>This addon implements the opened platform called Open Toutatice
-			(which one is based on the Nuxeo DM distribution)
-
-			Bug fixes :
-			* #3802 - Prise en compte de la date de publication dans requêtes de type	Listes
-			* #3540 - Intégration HF 12 de Nuxeo (index proxies, page providers)
-            * Multi-levels vocabularies cycles
-
+		   (which one is based on the Nuxeo DM distribution)
+			
 			Main features :
-			* Integration HF12-1.0.1
-            * Widget filtering on permission on current document
+            * Possibility to contribute on widget type for widget BO-FO mapping service
+			* Move and reorder of documents in publish spaces
+			* New webIds policy
 			* Remote sections informations available for Portal
 			* Suggest Users Widget filtering on permission on current document
+			* Publication date taken into account in list requests
+
+			Bug fixes :
+			* #929: Error on contentView after asynchronous treatment which can have removed documents
+			* #963, #970: refactoring of fragments portlet
+			* #971: loop on sub tab Administration -> Publication
+			* #1000: custom of multiple vocabulary widget
+			* #1000: simplified PortalViews
+			* #1002: Enlargeable Images
+			* #1013: webids activated on Spaces by default
+			* Fixes nullPointer in WidgetAdapterServiceImpl in web mode
+			* Fixes theme and template saving in web mode
+			* Fixes duplication of publishing_status widget insertion
+			* Fixes permissions for imports of zip
+			* Fixes escape of "bad" webids (because a good webid has no character to escape)
+			* Fixes internationalization of vocabularies entries label
+			* Fixes Multi-levels vocabularies cycles
 		</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
@@ -29,11 +42,11 @@
 		<platform>cap-@DISTRIB_VERSION@</platform>
 	</platforms>
 	<dependencies>
-		<!-- Dépendances sur les addons Nuxeo -->
+		<!-- Dependencies on Nuxeo's addon -->
 		<package>nuxeo-dam:6.0.0:6.0.0</package>
 		<!-- FIXME: just for schema webpage of PortalSite and PortalPage... -->
-		<package>nuxeo-sites-blogs:1.2.0</package>
-		<!-- Dépendance sur les hotfixes -->
+		<package>nuxeo-sites-blogs:1.2.0:1.2.0</package>
+		<!-- HF dependencies -->
 		<package>nuxeo-6.0-HF19:1.0.0</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
