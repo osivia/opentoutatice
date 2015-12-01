@@ -153,7 +153,7 @@
 			<properties widgetMode="edit">
 				<property name="validator">#{toutaticeValidator.validateWebId}
 				</property>
-				<property name="disabled">#{!toutaticeValidator.spaceSupportsWebId}
+				<property name="disabled">#{!toutaticeValidator.spaceSupportsWebId or currentDocument.hasFacet('WebidDisabled')}
 				</property>
 			</properties>
 
@@ -174,7 +174,7 @@
 			<properties widgetMode="edit">
                 <property name="validator">#{toutaticeValidator.validateWebId}
                 </property>
-                <property name="disabled">#{!toutaticeValidator.spaceSupportsWebId}
+                <property name="disabled">#{!toutaticeValidator.spaceSupportsWebId or currentDocument.hasFacet('WebidDisabled')}
                 </property>
             </properties>
 		</widget>

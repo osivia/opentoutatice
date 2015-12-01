@@ -24,6 +24,8 @@
 		<facet name="SpaceContent" />
 		<facet name="SpaceNavigationItem" />
 		<facet name="MasterPublishSpace" />
+		
+		<facet name="WebidDisabled" />
 
 		<!-- Pour permettre l'import xml d'arborescence contenant des documents 
 			publiés: facette Immutable posée dynamiquement (elle n'existe pas de façon 
