@@ -19,6 +19,8 @@
  */
 package fr.toutatice.ecm.platform.core.listener;
 
+import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -28,6 +30,9 @@ import org.nuxeo.ecm.core.event.EventBundle;
 import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.PostCommitEventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
+import org.nuxeo.ecm.core.work.WorkManagerImpl;
+import org.nuxeo.ecm.core.work.api.WorkManager;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeOperationHelper;
@@ -63,9 +68,17 @@ public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListe
 				
 				try {                       
 					if (DOCUMENT_MODIFIED.equals(event.getName()) && ToutaticeNuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(document.getType())) {
-						ToutaticeOperationHelper.runOperationChain(session, UPDATE_DOMAIN_CHAIN, document);
+						
+						if(defaultWorksEnded()){
+							ToutaticeOperationHelper.runOperationChain(session, UPDATE_DOMAIN_CHAIN, document);
+						}
+						
 					} else if (ArrayUtils.contains(SELECTED_EVENTS, event.getName())) {
-						ToutaticeOperationHelper.runOperationChain(session, MOVE_OP_CHAIN, document);
+						
+						if(defaultWorksEnded()){
+							ToutaticeOperationHelper.runOperationChain(session, MOVE_OP_CHAIN, document);
+						}
+						
 					}
 				} catch (ToutaticeException e) {
 					throw new ClientException(e);
@@ -73,6 +86,28 @@ public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListe
 			}
 		}
 	}
-
+	
+	/**
+	 * @return true if all works of default queue are ended.
+	 * @throws ToutaticeException 
+	 * @throws Exception 
+	 */
+	protected boolean defaultWorksEnded() throws ToutaticeException {
+		boolean ended = false;
+		
+		try {
+			WorkManager mngWk = (WorkManager) Framework.getService(WorkManager.class);
+			
+			Long timeout = Long.valueOf(Framework.getProperty("nuxeo.db.transactiontimeout"));
+			Long delay = Long.valueOf(timeout);
+					
+			ended = mngWk.awaitCompletion(WorkManagerImpl.DEFAULT_QUEUE_ID, delay, TimeUnit.SECONDS);
+			
+		} catch (Exception e) {
+			throw new ToutaticeException(e);
+		}
+		
+		return ended;
+	}
 
 }

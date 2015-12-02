@@ -7,7 +7,7 @@
 		
 		<listener name="toutaticeAsynchronousUpdateListener" 
 			async="true" 
-			postCommit="false"
+			postCommit="true"
 			enabled="true" 
 			class="fr.toutatice.ecm.platform.core.listener.ToutaticeAsynchronousUpdateListener"
 			priority="100">
