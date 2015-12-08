@@ -7,4 +7,4 @@ window.onload = function(e) {
 	jQuery('.select2-search-field > input').removeAttr("style");
 	jQuery('.select2-drop').removeAttr("style");
 	jQuery('li.select2-search-field > input.select2-input').removeAttr("style");
-}
+};
