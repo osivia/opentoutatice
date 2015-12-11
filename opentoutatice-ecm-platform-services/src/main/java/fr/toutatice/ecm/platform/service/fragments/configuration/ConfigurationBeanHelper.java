@@ -60,7 +60,7 @@ public class ConfigurationBeanHelper {
     private static final Log log = LogFactory.getLog(ConfigurationBeanHelper.class);
 
     private static final String WEB_CONFS_QUERY = "select * from WebConfiguration where ecm:ancestorId = '%s' and wconf:type = '%s' "
-            + "AND wconf:enabled=1 AND ecm:mixinType != 'HiddenInNavigation'  AND ecm:currentLifeCycleState <> 'deleted' ORDER BY wconf:order";
+            + "AND wconf:enabled=1 AND ecm:mixinType != 'HiddenInNavigation'  AND ecm:currentLifeCycleState <> 'deleted' ORDER BY ecm:pos";
 
     /** nagivation context for nuxeo queries */
     @In(create = true)

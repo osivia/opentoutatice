@@ -34,7 +34,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
-import fr.toutatice.ecm.platform.service.fragments.types.CriteriaListFragment;
+import fr.toutatice.ecm.platform.service.editablewindows.types.CriteriaListFragment;
 
 /**
  * Criteria bean for CriteriaListFragment.

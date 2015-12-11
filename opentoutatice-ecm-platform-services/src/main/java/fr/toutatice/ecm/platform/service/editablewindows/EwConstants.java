@@ -14,28 +14,18 @@
  *
  * Contributors:
  *   mberhaut1
+ *   dchevrier
+ *   lbillon
  *    
  */
-package fr.toutatice.ecm.platform.service.fragments;
+package fr.toutatice.ecm.platform.service.editablewindows;
 
+/**
+ * @author david
+ *
+ */
+public interface EwConstants {
+	
+	String REF_URI = "refURI";
 
-
-public class FragmentServiceException extends Exception {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1895063574496443379L;
-
-    public FragmentServiceException(String message) {
-        super(message);
-    }
-
-    public FragmentServiceException(Exception e) {
-        super(e);
-    }
-
-    public FragmentServiceException(Exception e, String message) {
-        super(message, e);
-    }
 }

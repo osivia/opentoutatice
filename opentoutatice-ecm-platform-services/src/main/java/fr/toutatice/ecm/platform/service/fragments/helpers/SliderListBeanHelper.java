@@ -26,7 +26,7 @@ import org.jboss.seam.annotations.Role;
 import org.jboss.seam.annotations.Scope;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
-import fr.toutatice.ecm.platform.service.fragments.types.SliderListFragment;
+import fr.toutatice.ecm.platform.service.editablewindows.types.SliderListFragment;
 
 
 /**

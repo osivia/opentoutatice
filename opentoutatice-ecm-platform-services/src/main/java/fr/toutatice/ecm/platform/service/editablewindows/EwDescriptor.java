@@ -16,27 +16,27 @@
  *   mberhaut1
  *    
  */
-package fr.toutatice.ecm.platform.service.fragments;
+package fr.toutatice.ecm.platform.service.editablewindows;
 
 import java.io.Serializable;
 
 import org.nuxeo.common.xmap.annotation.XNode;
 import org.nuxeo.common.xmap.annotation.XObject;
 
-import fr.toutatice.ecm.platform.service.fragments.types.Fragment;
+import fr.toutatice.ecm.platform.service.editablewindows.types.EditableWindow;
 
-@XObject("fragment")
-public class FragmentDescriptor implements Serializable {
+@XObject("editablewindow")
+public class EwDescriptor implements Serializable {
 
     /**
      * 
      */
     private static final long serialVersionUID = 7956864563251815573L;
 
-    protected Fragment instance;
+    protected EditableWindow instance;
 
     @XNode("@class")
-    protected Class fragmentClass;
+    protected Class ew;
 
     @XNode("@code")
     protected String code;
@@ -48,14 +48,14 @@ public class FragmentDescriptor implements Serializable {
     protected String title;
 
     public void initFragment() throws Exception {
-        instance = (Fragment) fragmentClass.newInstance();
+        instance = (EditableWindow) ew.newInstance();
     }
 
 
     /**
      * @return the instance
      */
-    public Fragment getInstance() {
+    public EditableWindow getInstance() {
         return instance;
     }
 

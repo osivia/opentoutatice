@@ -16,7 +16,7 @@
  *   mberhaut1
  *    
  */
-package fr.toutatice.ecm.platform.service.fragments;
+package fr.toutatice.ecm.platform.service.editablewindows;
 
 import java.util.Collection;
 import java.util.Date;
@@ -32,19 +32,19 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.runtime.model.ComponentInstance;
 import org.nuxeo.runtime.model.DefaultComponent;
 
-import fr.toutatice.ecm.platform.service.fragments.types.Fragment;
+import fr.toutatice.ecm.platform.service.editablewindows.types.EditableWindow;
 
 /**
  * Generic fragment class
  * 
  */
-public class FragmentServiceImpl extends DefaultComponent implements FragmentService {
+public class EditableWindowServiceImpl extends DefaultComponent implements EditableWindowService {
 
 
-    private static final Log log = LogFactory.getLog(FragmentServiceImpl.class);
+    private static final Log log = LogFactory.getLog(EditableWindowServiceImpl.class);
 
     /** Map of all fragment types */
-    private static final Map<FragmentDescriptor, Fragment> fragments = new HashMap<FragmentDescriptor, Fragment>();
+    private static final Map<EwDescriptor, EditableWindow> ewMap = new HashMap<EwDescriptor, EditableWindow>();
 
     /** Main nuxeo schema shared by all fragments */
     public static String SCHEMA = "fragments";
@@ -53,58 +53,58 @@ public class FragmentServiceImpl extends DefaultComponent implements FragmentSer
     @Override
     public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
 
-        FragmentDescriptor contribDescriptor = (FragmentDescriptor) contribution;
+        EwDescriptor contribDescriptor = (EwDescriptor) contribution;
 
         contribDescriptor.initFragment();
 
-        addFragmentType(contribDescriptor);
+        addEwType(contribDescriptor);
     }
 
 
     @Override
     public void unregisterContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
 
-        FragmentDescriptor contribDescriptor = (FragmentDescriptor) contribution;
+        EwDescriptor contribDescriptor = (EwDescriptor) contribution;
 
-        removeFragmentType(contribDescriptor);
+        removeEwType(contribDescriptor);
     }
 
 
 
-    public void addFragmentType(FragmentDescriptor contribution) {
-        if (fragments.get(contribution) == null) {
-            fragments.put(contribution, contribution.getInstance());
+    private void addEwType(EwDescriptor contribution) {
+        if (ewMap.get(contribution) == null) {
+            ewMap.put(contribution, contribution.getInstance());
 
         } else {
             log.warn("Contribution " + contribution.code + " has already been registered.");
         }
     }
 
-    public void removeFragmentType(FragmentDescriptor contribution) {
-        fragments.remove(contribution);
+    private void removeEwType(EwDescriptor contribution) {
+        ewMap.remove(contribution);
 
     }
 
     @Override
-	public Map.Entry<FragmentDescriptor, Fragment> findByCode(String code) throws FragmentServiceException {
-        for (Map.Entry<FragmentDescriptor, Fragment> entry : fragments.entrySet()) {
+	public Map.Entry<EwDescriptor, EditableWindow> findByCode(String code) throws EwServiceException {
+        for (Map.Entry<EwDescriptor, EditableWindow> entry : ewMap.entrySet()) {
             if (entry.getKey().getCode().equals(code)) {
                 return entry;
             }
         }
-        throw new FragmentServiceException("osivia.error.fragment_not_found");
+        throw new EwServiceException("osivia.error.fragment_not_found");
 
     }
 
     /**
      * @param doc nuxeo document
-     * @param uri id of the fragment
-     * @return the fragmentCategory
+     * @param uri id of the EW
+     * @return the category
      */
     @Override
-	public Entry<FragmentDescriptor, Fragment> getFragmentCategory(DocumentModel doc, String uri) throws FragmentServiceException {
+	public Entry<EwDescriptor, EditableWindow> getEwEntry(DocumentModel doc, String uri) throws EwServiceException {
 
-        String fgtCategory = null;
+        String category = null;
         Map<String, Object> properties;
 
         try {
@@ -116,24 +116,24 @@ public class FragmentServiceImpl extends DefaultComponent implements FragmentSer
             Object liste = values.iterator().next();
 
             if (liste instanceof List) {
-                List<Map<String, Object>> listeFragments = (List<Map<String, Object>>) liste;
+                List<Map<String, Object>> listeEw = (List<Map<String, Object>>) liste;
 
-                for (Map<String, Object> fragment : listeFragments) {
-                    if (uri.equals(fragment.get("uri"))) {
+                for (Map<String, Object> ew : listeEw) {
+                    if (uri.equals(ew.get("uri"))) {
 
-                        fgtCategory = fragment.get("fragmentCategory").toString();
+                        category = ew.get("fragmentCategory").toString();
                         break;
                     }
                 }
             }
         } catch (ClientException e) {
-            throw new FragmentServiceException(e);
+            throw new EwServiceException(e);
         }
 
-        if (fgtCategory == null)
-            throw new FragmentServiceException("osivia.error.fragment_not_found");
+        if (category == null)
+            throw new EwServiceException("osivia.error.fragment_not_found");
 
-        Entry<FragmentDescriptor, Fragment> findByCode = findByCode(fgtCategory);
+        Entry<EwDescriptor, EditableWindow> findByCode = findByCode(category);
 
 
         return findByCode;
@@ -142,7 +142,7 @@ public class FragmentServiceImpl extends DefaultComponent implements FragmentSer
 
 
     /**
-     * Initialize a default entry in the main fragments schema
+     * Initialize a default entry in the main EW schema
      * 
      * @param doc the current simplepage
      * @param region the cms region
@@ -151,8 +151,8 @@ public class FragmentServiceImpl extends DefaultComponent implements FragmentSer
      * @return the new id (timestamp)
      */
     @Override
-	public String prepareCreation(DocumentModel doc, Fragment specific, String fragmentCategory, String region, String belowUri, String code2)
-            throws FragmentServiceException {
+	public String prepareCreation(DocumentModel doc, EditableWindow specific, String category, String region, String belowUri, String code2)
+            throws EwServiceException {
 
         String uri = null;
 
@@ -167,7 +167,7 @@ public class FragmentServiceImpl extends DefaultComponent implements FragmentSer
             Object liste = values.iterator().next();
 
             if (liste instanceof List) {
-                List<Map<String, Object>> listeFragments = (List<Map<String, Object>>) liste;
+                List<Map<String, Object>> listeEw = (List<Map<String, Object>>) liste;
 
                 // ================== Calcul des propriétés du schéma
                 // Génération d'une URI
@@ -180,10 +180,10 @@ public class FragmentServiceImpl extends DefaultComponent implements FragmentSer
                 // Si l'uri du fragment au dessus est précisé, récupération de
                 // la position et de la région du fragment
                 if (belowUri != null) {
-                    for (Map<String, Object> fragment : listeFragments) {
-                        if (belowUri.equals(fragment.get("uri"))) {
-                            regionId = fragment.get("regionId").toString();
-                            String orderStr = fragment.get("order").toString();
+                    for (Map<String, Object> window : listeEw) {
+                        if (belowUri.equals(window.get("uri"))) {
+                            regionId = window.get("regionId").toString();
+                            String orderStr = window.get("order").toString();
                             order = Integer.parseInt(orderStr) + 1;
                             break;
                         }
@@ -192,19 +192,19 @@ public class FragmentServiceImpl extends DefaultComponent implements FragmentSer
 
 
                 // ================== Décalage des autres fragments de cette région
-                for (Map<String, Object> fragment : listeFragments) {
-                    String regionCompare = fragment.get("regionId").toString();
-                    String orderCompare = fragment.get("order").toString();
+                for (Map<String, Object> window : listeEw) {
+                    String regionCompare = window.get("regionId").toString();
+                    String orderCompare = window.get("order").toString();
                     if (regionId.equals(regionCompare) && Integer.parseInt(orderCompare) >= order) {
                         Integer newOrder = Integer.parseInt(orderCompare) + 1;
-                        fragment.put("order", newOrder.toString());
+                        window.put("order", newOrder.toString());
                     }
                 }
 
                 // ================== Ajout d'une nouvelle entrée au schéma
                 Map<String, Object> newEntry = new HashMap<String, Object>();
 
-                newEntry.put("fragmentCategory", fragmentCategory);
+                newEntry.put("fragmentCategory", category);
                 newEntry.put("order", order.toString());
                 newEntry.put("regionId", regionId);
                 newEntry.put("uri", uri);
@@ -214,13 +214,13 @@ public class FragmentServiceImpl extends DefaultComponent implements FragmentSer
 				newEntry.put("collapsed", Boolean.FALSE.toString());
                 newEntry.put("style", "");
 
-                listeFragments.add(newEntry);
+                listeEw.add(newEntry);
 
                 doc.setProperties(SCHEMA, properties);
 
             }
         } catch (ClientException e) {
-            throw new FragmentServiceException(e);
+            throw new EwServiceException(e);
         }
 
         specific.prepareCreation(doc, uri, region, belowUri, code2);

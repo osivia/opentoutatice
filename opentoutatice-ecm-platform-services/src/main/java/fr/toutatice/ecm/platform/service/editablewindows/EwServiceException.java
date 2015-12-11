@@ -16,23 +16,26 @@
  *   mberhaut1
  *    
  */
-package fr.toutatice.ecm.platform.service.fragments;
-
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.nuxeo.ecm.core.api.DocumentModel;
-
-import fr.toutatice.ecm.platform.service.fragments.types.Fragment;
+package fr.toutatice.ecm.platform.service.editablewindows;
 
 
-public interface FragmentService {
 
-    public Map.Entry<FragmentDescriptor, Fragment> findByCode(String code) throws FragmentServiceException;
+public class EwServiceException extends Exception {
 
-    public Entry<FragmentDescriptor, Fragment> getFragmentCategory(DocumentModel doc, String uri) throws FragmentServiceException;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1895063574496443379L;
 
-    public String prepareCreation(DocumentModel doc, Fragment specific, String fragmentCategory, String region, String belowUri, String code2)
-            throws FragmentServiceException;
+    public EwServiceException(String message) {
+        super(message);
+    }
 
+    public EwServiceException(Exception e) {
+        super(e);
+    }
+
+    public EwServiceException(Exception e, String message) {
+        super(message, e);
+    }
 }
