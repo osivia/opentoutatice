@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:nxs="http://www.nuxeo.org/ecm/project/schemas/ACRENNES5/zoom_fragments"
-	targetNamespace="http://www.nuxeo.org/ecm/project/schemas/ACRENNES5/zoom_fragments">
-	<!-- helper XSD definitions for zoom fragments -->
+	xmlns:nxs="http://www.nuxeo.org/ecm/project/schemas/ACRENNES5/portlet_properties"
+	targetNamespace="http://www.nuxeo.org/ecm/project/schemas/ACRENNES5/portlet_properties">
+	<!-- helper XSD definitions for list types -->
 	<xs:complexType name="content">
 		<xs:sequence>
 			<xs:element name="encoding" type="xs:string" />
@@ -35,21 +35,24 @@
 				maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="zoomFragment" type="nxs:listfgt_zoomFragmentListType" />
-	<xs:complexType name="listfgt_zoomFragmentListType">
+	
+	
+	
+	
+	<xs:element name="ewFragmentProperties" type="nxs:ewFragmentPropertiesType" />
+	<xs:complexType name="ewFragmentPropertiesType">
 		<xs:sequence>
-			<xs:element name="item" type="nxs:listfgt_zoomFragmentType"
+			<xs:element name="item" type="nxs:ewFragmentPropertyType"
 				minOccurs="0" maxOccurs="unbounded" />
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="listfgt_zoomFragmentType">
+	<xs:complexType name="ewFragmentPropertyType">
 		<xs:sequence>
 			<xs:element name="refURI" type="xs:string" />
-			<xs:element name="zoomTemplate" type="xs:string" />
-			<xs:element name="href" type="xs:string" />
-			<xs:element name="hrefTitle" type="xs:string" />
-			<xs:element name="content" type="xs:string" />
-			<xs:element name="picture" type="xs:string" />
+			<xs:element name="key" type="xs:string" />
+			<xs:element name="value" type="xs:string" />
+			<xs:element name="label" type="xs:string" />
+			<xs:element name="editable" type="xs:boolean" />			
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>

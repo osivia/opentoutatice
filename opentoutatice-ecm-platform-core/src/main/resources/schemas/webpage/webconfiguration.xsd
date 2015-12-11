@@ -53,7 +53,7 @@
 			<xs:element name="propertyLabel" type="xs:string" />
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="order" type="xs:integer" />
+	<!-- <xs:element name="order" type="xs:integer" />  -->
 	<xs:element name="picture" type="nxs:content" />
 	<xs:element name="glyphicon" type="xs:string" />
 	<xs:element name="type" type="xs:string" />

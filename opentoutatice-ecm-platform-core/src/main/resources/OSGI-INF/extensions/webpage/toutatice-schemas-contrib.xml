@@ -41,6 +41,11 @@
 			src="schemas/webpage/criteria_list_fragments.xsd" />
 		<schema name="slider_list_fragments" prefix="sldlistfgt"
 			src="schemas/webpage/slider_list_fragments.xsd" />
+			
+		<schema name="ew_fragments" prefix="ewf"
+			src="schemas/webpage/ew_fragments.xsd" />
+		<schema name="ew_fragments_properties" prefix="ewfp"
+			src="schemas/webpage/ew_fragments_properties.xsd" />
 	</extension>
 
 </component>
