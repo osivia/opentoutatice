@@ -1,7 +1,7 @@
 <f:subview xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:nxdir="http://nuxeo.org/nxdirectory"
 	xmlns:nxl="http://nuxeo.org/nxforms/layout" id="#{widget.id}">
@@ -26,16 +26,20 @@
 			<nxu:dataList id="html_fgts"
 				value="#{currentDocument.htmlfgt.htmlFragment}" var="html_fgt"
 				class="fgts">
+				
+				<s:div rendered="#{html_fgt.refURI eq fragmentBean.uri}">
 
-				<div class="form-group">
-					<div class="col-sm-12 fgt-html">
-
-						<nxl:widgetType name="htmltext" mode="edit"
-							value="#{html_fgt.data}"
-							rendered="#{html_fgt.refURI eq fragmentBean.uri}" />
-
+					<div class="form-group">
+						<div class="col-sm-12 fgt-html">
+	
+							<nxl:widgetType name="ttc_richtext_with_mimetype" mode="edit"
+								value="#{html_fgt.data}"
+								rendered="#{html_fgt.refURI eq fragmentBean.uri}" />
+	
+						</div>
 					</div>
-				</div>
+				
+				</s:div>
 
 			</nxu:dataList>
 

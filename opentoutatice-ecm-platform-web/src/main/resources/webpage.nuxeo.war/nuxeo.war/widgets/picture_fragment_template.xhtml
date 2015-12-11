@@ -1,60 +1,12 @@
 <f:subview xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:c="http://java.sun.com/jstl/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:s="http://jboss.com/products/seam/taglib"
-	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:nxdir="http://nuxeo.org/nxdirectory"
 	xmlns:nxl="http://nuxeo.org/nxforms/layout" id="#{widget.id}">
 	<c:set var="isEditMode" value="#{nxl:isBoundToEditMode(layout.mode)}" />
 
-	<script type="text/javascript">
-		// FIXME: use Loïc's method (it certainly doesn't work here becaus of bad jquery js import
-		var $JQry = jQuery.noConflict();
-		var $picturePath = "text";
-		var $targetPath = "text";
-		var $targetTitle = "text";
-		$JQry(window).load(function() {
-			var $inputPath = $JQry("input[type=hidden][id*='picturePath']")[0];
-			$picturePath = $JQry($inputPath);
-
-			if ($picturePath.val()) {
-				previewImg();
-			}
-
-			var $inputLink = $JQry("input[type=hidden][id*='targetPath']")[0];
-			$targetPath = $JQry($inputLink);
-
-			var $inputTitle = $JQry("[id*='targetTitle']")[0];
-			$inputTitle.addEventListener("blur", setManualPath);
-
-			$targetTitle = $JQry($inputTitle);
-			
-			// It is not an external URL
-			if(!$targetTitle.val().contains("/") &amp;&amp; $targetTitle.val() != ""){
-				$targetTitle.attr("readonly","readonly");
-			}
-		});
-
-		function previewImg() {
-			$JQry("#imagePreview").attr("src", $picturePath.val());
-		}
-
-		function removeTarget() {
-			$targetPath.val("");
-			$targetTitle.val("");
-
-			if($targetTitle.prop("readonly")){
-				$targetTitle.removeAttr("readonly");
-			}
-		}
-
-		function setManualPath() {
-			if($targetTitle.val() != "" &amp;&amp; $targetTitle.val().contains("/")){
-				$targetPath.val($targetTitle.val());
-			}
-		}
-	</script>
 
 	<div class="form-group">
 		<div class="col-sm-12">

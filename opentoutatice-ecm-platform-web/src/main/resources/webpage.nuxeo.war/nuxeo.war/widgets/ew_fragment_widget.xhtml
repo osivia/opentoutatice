@@ -12,7 +12,7 @@
 	<div class="form-group">
 		
 		<c:set var="showTitle" value="true" />
-		<c:forEach id="props" items="#{currentDocument.ptlprops.properties}" var="prop">
+		<c:forEach id="props" items="#{currentDocument.ewfp.ewFragmentProperties}" var="prop">
 
 			
 			<c:if test="#{(prop.refURI eq fragmentBean.uri) and (prop.editable eq 'true')}">
@@ -24,7 +24,7 @@
 							<legend>
 								<i class="glyphicons halflings play"></i>
 								<h:outputText
-									value="#{messages['osivia.fragment.portlet.form.title']}" />
+									value="#{messages['osivia.ew.fragment.form.title']}" />
 							</legend>
 						</fieldset>
 					</div>
