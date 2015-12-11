@@ -34,10 +34,11 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.web.RequestParameter;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.runtime.api.Framework;
-import fr.toutatice.ecm.platform.service.fragments.types.Fragment;
-import fr.toutatice.ecm.platform.service.fragments.FragmentDescriptor;
-import fr.toutatice.ecm.platform.service.fragments.FragmentService;
-import fr.toutatice.ecm.platform.service.fragments.FragmentServiceException;
+
+import fr.toutatice.ecm.platform.service.editablewindows.EditableWindowService;
+import fr.toutatice.ecm.platform.service.editablewindows.EwDescriptor;
+import fr.toutatice.ecm.platform.service.editablewindows.EwServiceException;
+import fr.toutatice.ecm.platform.service.editablewindows.types.EditableWindow;
 
 
 /**
@@ -123,10 +124,23 @@ public class FragmentActionBean extends GenericActionBean {
     public void setBelowUri(String belowUri) {
         this.belowUri = belowUri;
     }
+    
+    /** In création mode, user can go back and change fragment type */
+    private boolean canCancel = false;
+    
+
+    /**
+	 * @return the canCancel
+	 */
+	public boolean isCanCancel() {
+		return canCancel;
+	}
+	
 
     /* ======================================= */
 
-    /** Paramètres du widget selectOneDirectory, référence le vocabulaire list-views */
+
+	/** Paramètres du widget selectOneDirectory, référence le vocabulaire list-views */
     private Map<String, String> listViewsParam = new HashMap<String, String>();
 
     /**
@@ -145,13 +159,13 @@ public class FragmentActionBean extends GenericActionBean {
     /* ======================================= */
 
     /** current fragment descriptor */
-    private FragmentDescriptor descriptor;
+    private EwDescriptor descriptor;
 
 
     /**
      * @return the descriptor
      */
-    public FragmentDescriptor getDescriptor() {
+    public EwDescriptor getDescriptor() {
         if (descriptor == null) {
             initDescriptor();
         }
@@ -162,21 +176,21 @@ public class FragmentActionBean extends GenericActionBean {
      * Prepare and display the creation view
      * 
      * @param code the code of the nuxeo fragment object
-     * @return ????
+     * @return osivia_create_fragment_2
      */
     public String dispatchCreation(String code, String code2) {
 
         try {
-            Entry<FragmentDescriptor, Fragment> fragmentInfos = getFragmentService().findByCode(code);
+            Entry<EwDescriptor, EditableWindow> fragmentInfos = getFragmentService().findByCode(code);
 
             if (fragmentInfos != null) {
 
-                Fragment fragment = fragmentInfos.getValue();
+                EditableWindow fragment = fragmentInfos.getValue();
 
                 descriptor = fragmentInfos.getKey();
 
                 FacesContext context = FacesContext.getCurrentInstance();
-                DocumentModel doc = (DocumentModel) context.getApplication().evaluateExpressionGet(context, "#{currentDocument}", DocumentModel.class);
+                DocumentModel doc = context.getApplication().evaluateExpressionGet(context, "#{currentDocument}", DocumentModel.class);
 
                 if (region != null || belowUri != null) {
 
@@ -188,22 +202,35 @@ public class FragmentActionBean extends GenericActionBean {
             } else {
                 addMessage("osivia.error.fragment_not_found");
             }
-        } catch (FragmentServiceException e) {
+        } catch (EwServiceException e) {
             addMessage(e.getMessage());
         }
 
 
+        canCancel = true;
         return "osivia_create_fragment_2";
 
     }
+    
+    /**
+     * Cancel the creation an back to the window selector
+     * @return osivia_create_fragment
+     */
+    public String cancelCreation() {
+    	
+    	descriptor = null;
+    	uri = null;
+    	
+    	return "osivia_create_fragment";
+    }
 
-    private FragmentService service;
+    private EditableWindowService service;
 
-    private FragmentService getFragmentService() {
+    private EditableWindowService getFragmentService() {
 
         if (service == null) {
             try {
-                service = Framework.getService(FragmentService.class);
+                service = Framework.getService(EditableWindowService.class);
             } catch (Exception e) {
                 addMessage(e.getMessage());
             }
@@ -222,18 +249,18 @@ public class FragmentActionBean extends GenericActionBean {
                 // Créer les schémas
                 FacesContext context = FacesContext.getCurrentInstance();
 
-                DocumentModel doc = (DocumentModel) context.getApplication().evaluateExpressionGet(context, "#{currentDocument}", DocumentModel.class);
+                DocumentModel doc = context.getApplication().evaluateExpressionGet(context, "#{currentDocument}", DocumentModel.class);
 
                 // Déterminer le type, cf navigation-rule
 
-                Entry<FragmentDescriptor, Fragment> fragmentInfos = getFragmentService().getFragmentCategory(doc, uri);
+                Entry<EwDescriptor, EditableWindow> fragmentInfos = getFragmentService().getEwEntry(doc, uri);
                 descriptor = fragmentInfos.getKey();
 
             } else {
                 addMessage("osivia.error.fragment_not_found"); // this fragment is unknown
 
             }
-        } catch (FragmentServiceException e) {
+        } catch (EwServiceException e) {
             addMessage(e.getMessage());
         }
 

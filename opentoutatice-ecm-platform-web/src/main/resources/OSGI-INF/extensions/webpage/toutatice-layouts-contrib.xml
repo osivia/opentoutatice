@@ -37,9 +37,11 @@
 				<row>
 					<widget>enabled</widget>
 				</row>
+				<!-- 
 				<row>
 					<widget>order</widget>
 				</row>
+				 -->
 				<row>
 					<widget>options</widget>
 				</row>
@@ -73,9 +75,11 @@
 				<row>
 					<widget>enabled</widget>
 				</row>
+				<!-- 
 				<row>
 					<widget>order</widget>
 				</row>
+				 -->
 				<row>
 					<widget>options</widget>
 				</row>
@@ -109,9 +113,11 @@
 				<row>
 					<widget>enabled</widget>
 				</row>
+				<!-- 
 				<row>
 					<widget>order</widget>
 				</row>
+				 -->
 				<row>
 					<widget>options</widget>
 				</row>
@@ -370,6 +376,22 @@
 			<rows>
 				<row>
 					<widget>slider_list_fragment_widget</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<!-- EW fragment -->
+		<layout name="ew_fragment_layout">
+			<templates>
+				<template mode="any">/layouts/simple_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<properties mode="any">
+						<property name="nxl_colspan_0">1</property>
+					</properties>
+					<widget>ew_fragment_widget</widget>
 				</row>
 			</rows>
 		</layout>

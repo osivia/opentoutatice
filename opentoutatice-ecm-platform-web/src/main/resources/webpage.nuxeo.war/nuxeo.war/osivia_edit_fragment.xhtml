@@ -31,6 +31,8 @@
 	<script type="text/javascript"
 		src="#{baseURL}/scripts/generic-properties.js"></script>
 	<script type="text/javascript"
+		src="#{baseURL}/scripts/images-links.js"></script>		
+	<script type="text/javascript"
 		src="#{baseURL}/scripts/icons.js"></script>
 	<script type="text/javascript">
 		var nxContextPath = "/nuxeo";
@@ -78,8 +80,9 @@
 							value="#{webActions.getActionsList('HTML_EDIT_FRAGMENT')}"
 							cache="true">
 
-							<c:forEach var="action" items="#{actions}">
-								<div class="savePanelAction">
+							<div class="savePanelAction">
+								<c:forEach var="action" items="#{actions}">
+
 									<nxh:commandButton action="#{action.getLink()}"
 										immediate="#{action.immediate}" onclick="#{action.confirm}"
 										id="footer_edit_doc_#{action.id}"
@@ -87,8 +90,17 @@
 										class="btn btn-primary navbar-btn">
 									</nxh:commandButton>
 
-								</div>
-							</c:forEach>
+								
+								</c:forEach>
+							
+								<h:commandLink action="#{fragmentBean.cancelCreation}"
+									id="footer_edit_doc_cancel" immediate="true"
+									value="#{messages['command.cancel']}"
+									class="btn btn-default navbar-btn" rendered="#{fragmentBean.canCancel}">
+								</h:commandLink>
+
+							</div>
+							
 						</nxu:set>
 					</div>
 				</div>

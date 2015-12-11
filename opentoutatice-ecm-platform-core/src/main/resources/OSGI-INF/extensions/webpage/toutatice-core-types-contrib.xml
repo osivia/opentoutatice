@@ -23,6 +23,7 @@
 			<schema name="common" />
 			<schema name="dublincore" />
 			<facet name="Folderish" />
+			<facet name="Orderable" />			
 		</doctype>
 
 	</extension>

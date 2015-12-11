@@ -25,7 +25,7 @@
 			</layouts>
 			<layouts mode="view" />
 			<contentViews category="content">
-				<contentView showInExportView="false">document_content
+				<contentView showInExportView="false">orderable_document_content
 				</contentView>
 			</contentViews>
 			<contentViews category="trash_content">
