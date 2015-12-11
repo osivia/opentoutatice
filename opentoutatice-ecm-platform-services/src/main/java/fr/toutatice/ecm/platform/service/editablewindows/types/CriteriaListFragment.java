@@ -18,7 +18,7 @@
  *   mberhaut1
  *    
  */
-package fr.toutatice.ecm.platform.service.fragments.types;
+package fr.toutatice.ecm.platform.service.editablewindows.types;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,15 +30,15 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
-import fr.toutatice.ecm.platform.service.fragments.FragmentConstants;
-import fr.toutatice.ecm.platform.service.fragments.FragmentServiceException;
+import fr.toutatice.ecm.platform.service.editablewindows.EwConstants;
+import fr.toutatice.ecm.platform.service.editablewindows.EwServiceException;
 import fr.toutatice.ecm.platform.service.fragments.helpers.CriteriaListBeanHelper;
 
 /**
  * @author david
  *
  */
-public class CriteriaListFragment implements Fragment {
+public class CriteriaListFragment implements EditableWindow {
 	
 	public static final String CRITERIA_LIST_SCHEMA = "criteria_list_fragments";
 	public static final String CRITERIA_LIST_XPATH = "crtlistfgt:criteriaListFragment";
@@ -48,7 +48,7 @@ public class CriteriaListFragment implements Fragment {
 	 */
 	@Override
 	public String prepareCreation(DocumentModel document, String uri, String region,
-			String belowUri, String code2) throws FragmentServiceException {
+			String belowUri, String code2) throws EwServiceException {
 		try {
 
 			Map<String, Object> properties = document.getProperties(CRITERIA_LIST_SCHEMA);
@@ -61,7 +61,7 @@ public class CriteriaListFragment implements Fragment {
 				List<Map<String, Object>> listeData = (List<Map<String, Object>>) liste;
 
 				Map<String, Object> newEntry = new HashMap<String, Object>(1);
-				newEntry.put(FragmentConstants.REF_URI, uri);
+				newEntry.put(EwConstants.REF_URI, uri);
 				
 				// Criteria request
 				Map<String, String> criteriaRequest = new HashMap<String, String>(3);
@@ -86,7 +86,7 @@ public class CriteriaListFragment implements Fragment {
 			}
 
 		} catch (ClientException e) {
-			throw new FragmentServiceException(e);
+			throw new EwServiceException(e);
 		}
 		return uri;
 	}

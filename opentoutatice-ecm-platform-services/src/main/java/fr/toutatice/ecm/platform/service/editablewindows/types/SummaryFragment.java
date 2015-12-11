@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.toutatice.ecm.platform.service.fragments.types;
+package fr.toutatice.ecm.platform.service.editablewindows.types;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,19 +11,19 @@ import java.util.Map;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
-import fr.toutatice.ecm.platform.service.fragments.FragmentServiceException;
+import fr.toutatice.ecm.platform.service.editablewindows.EwServiceException;
 
 
 /**
  * @author David Chevrier
  *
  */
-public class SummaryFragment implements Fragment {
+public class SummaryFragment implements EditableWindow {
     
     private static final String SUMMARY_SCHEMA = "summary_fragments";
 
     @Override
-    public String prepareCreation(DocumentModel doc, String uri, String region, String belowUri, String code2) throws FragmentServiceException {
+    public String prepareCreation(DocumentModel doc, String uri, String region, String belowUri, String code2) throws EwServiceException {
         Map<String, Object> properties;
         try {
             properties = doc.getProperties(SUMMARY_SCHEMA);
@@ -48,7 +48,7 @@ public class SummaryFragment implements Fragment {
             }
 
         } catch (ClientException e) {
-            throw new FragmentServiceException(e);
+            throw new EwServiceException(e);
         }
         return uri;
     }

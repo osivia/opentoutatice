@@ -18,15 +18,15 @@
  *   mberhaut1
  *    
  */
-package fr.toutatice.ecm.platform.service.fragments.types;
+package fr.toutatice.ecm.platform.service.editablewindows.types;
 
 import org.nuxeo.ecm.core.api.DocumentModel;
 
-import fr.toutatice.ecm.platform.service.fragments.FragmentServiceException;
+import fr.toutatice.ecm.platform.service.editablewindows.EwServiceException;
 
 
-public interface Fragment {
+public interface EditableWindow {
 
-    public String prepareCreation(DocumentModel doc, String uri, String region, String belowUri, String code2) throws FragmentServiceException;
+    public String prepareCreation(DocumentModel doc, String uri, String region, String belowUri, String code2) throws EwServiceException;
 
 }

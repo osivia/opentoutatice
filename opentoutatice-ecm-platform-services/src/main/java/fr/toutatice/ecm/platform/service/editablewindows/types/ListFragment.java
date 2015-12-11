@@ -16,7 +16,7 @@
  *   mberhaut1
  *    
  */
-package fr.toutatice.ecm.platform.service.fragments.types;
+package fr.toutatice.ecm.platform.service.editablewindows.types;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,14 +26,14 @@ import java.util.Map;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
-import fr.toutatice.ecm.platform.service.fragments.FragmentServiceException;
+import fr.toutatice.ecm.platform.service.editablewindows.EwServiceException;
 
 /**
  * 
  * Service dédié aux listes
  *
  */
-public class ListFragment implements Fragment {
+public class ListFragment implements EditableWindow {
 
 	private static final String LIST_SCHEMA = "list_fragments";
 
@@ -41,7 +41,7 @@ public class ListFragment implements Fragment {
 	
 	@Override
     public String prepareCreation(DocumentModel doc, String uri, String region,
- String belowUri, String code2) throws FragmentServiceException {
+ String belowUri, String code2) throws EwServiceException {
 		Map<String, Object> properties;
 		try {
 			properties = doc.getProperties(LIST_SCHEMA);
@@ -69,7 +69,7 @@ public class ListFragment implements Fragment {
 			}
 
 		} catch (ClientException e) {
-            throw new FragmentServiceException(e);
+            throw new EwServiceException(e);
 		}
 		return uri;
 	}

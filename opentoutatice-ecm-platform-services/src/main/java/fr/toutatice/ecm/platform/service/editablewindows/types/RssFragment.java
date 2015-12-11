@@ -17,7 +17,7 @@
  *   dchevrier
  *    
  */
-package fr.toutatice.ecm.platform.service.fragments.types;
+package fr.toutatice.ecm.platform.service.editablewindows.types;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,14 +27,14 @@ import java.util.Map;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
-import fr.toutatice.ecm.platform.service.fragments.FragmentConstants;
-import fr.toutatice.ecm.platform.service.fragments.FragmentServiceException;
+import fr.toutatice.ecm.platform.service.editablewindows.EwConstants;
+import fr.toutatice.ecm.platform.service.editablewindows.EwServiceException;
 
 /**
  * @author david
  *
  */
-public class RssFragment implements Fragment {
+public class RssFragment implements EditableWindow {
 
 	public static final String RSS_SCHEMA = "rss_fragments";
 
@@ -43,7 +43,7 @@ public class RssFragment implements Fragment {
 	 */
 	@Override
 	public String prepareCreation(DocumentModel doc, String uri, String region,
-			String belowUri, String code2) throws FragmentServiceException {
+			String belowUri, String code2) throws EwServiceException {
 
 		try {
 
@@ -59,7 +59,7 @@ public class RssFragment implements Fragment {
 
 				Map<String, String> newEntry = new HashMap<String, String>();
 
-				newEntry.put(FragmentConstants.REF_URI, uri);
+				newEntry.put(EwConstants.REF_URI, uri);
 
 				listeData.add(newEntry);
 
@@ -67,7 +67,7 @@ public class RssFragment implements Fragment {
 			}
 
 		} catch (ClientException e) {
-			throw new FragmentServiceException(e);
+			throw new EwServiceException(e);
 		}
 		return uri;
 	}
