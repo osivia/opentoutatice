@@ -6,23 +6,23 @@
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:nxu="http://nuxeo.org/nxweb/util"
 	xmlns:nxd="http://nuxeo.org/nxweb/document"
-    xmlns:oh="http://osivia.org/html"
-    xmlns:c="http://java.sun.com/jstl/core">
+	xmlns:oh="http://osivia.org/html"
+	xmlns:c="http://java.sun.com/jstl/core">
 
 <head>
-<meta charset="utf-8"></meta>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
-<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-<title><h:outputText
-		value="#{nuxeoApplicationName} - #{messages['toutatice.label.nx.link.window.title']}" /></title>
-
-<script src="#{baseURL}nxthemes-lib/jquery.js" />
-<script src="#{baseURL}nxthemes-lib/prototype.js" />
-
-<link href="#{baseURL}css/toutatice-popup.min.css" type="text/css"
-	rel="stylesheet" />
-<link href="#{baseURL}css/plugin-popup.min.css" type="text/css"
-	rel="stylesheet" />
+	<meta charset="utf-8"></meta>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+	<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+	<title><h:outputText
+			value="#{nuxeoApplicationName} - #{messages['toutatice.label.nx.link.window.title']}" /></title>
+	
+	<script src="#{baseURL}nxthemes-lib/jquery.js" />
+	<script src="#{baseURL}nxthemes-lib/prototype.js" />
+	
+	<link href="#{baseURL}css/toutatice-popup.min.css" type="text/css"
+		rel="stylesheet" />
+	<link href="#{baseURL}css/plugin-popup.min.css" type="text/css"
+		rel="stylesheet" />
 </head>
 
 <body>
@@ -110,13 +110,13 @@
 								</f:facet>
 
 								<h:outputLink value="#{oh:preferredLinkUrl(document)}"
-                                    target="_blank" rendered="#{oh:hasWebId(document)}">
+									target="_blank" rendered="#{oh:hasWebId(document)}">
 									<h:outputText value="#{nxd:titleOrId(document)}" />
 								</h:outputLink>
 
 								<nxd:restDocumentLink document="#{document}"
-                                    rendered="#{!oh:hasWebId(document)}"
-									newConversation="true" target="_blank">
+									rendered="#{!oh:hasWebId(document)}" newConversation="true"
+									target="_blank">
 									<h:outputText value="#{nxd:titleOrId(document)}" />
 								</nxd:restDocumentLink>
 
@@ -132,18 +132,20 @@
 							<!--  Path -->
 							<h:column>
 								<f:facet name="header">
-                                    <h:outputText value="#{messages['toutatice.label.content.header.pathOrId']}" />
+									<h:outputText
+										value="#{messages['toutatice.label.content.header.pathOrId']}" />
 								</f:facet>
-                                <h:outputText value="#{oh:preferredDisplayId(document)}" />
-                            </h:column>
-                            <!-- Published sections -->
-                            <h:column>
-                                <f:facet name="header">
-                                    <h:outputText value="#{messages['toutatice.label.remote.proxies.list']}" />
-                                </f:facet>
-                                <ui:include src="/incl/remote_proxies_list.xhtml">
-                                    <ui:param name="document" value="#{document}" />
-                                </ui:include>
+								<h:outputText value="#{oh:preferredDisplayId(document)}" />
+							</h:column>
+							<!-- Published sections -->
+							<h:column>
+								<f:facet name="header">
+									<h:outputText
+										value="#{messages['toutatice.label.remote.proxies.list']}" />
+								</f:facet>
+								<ui:include src="/incl/remote_proxies_list.xhtml">
+									<ui:param name="document" value="#{document}" />
+								</ui:include>
 							</h:column>
 						</nxu:dataTable>
 					</div>
@@ -151,83 +153,79 @@
 				</h:selectOneRadio>
 
 				<script language="javascript">
-          function getSelectedRadio(buttonGroup) {
-            if (buttonGroup[0]) {
-              for (var i=0; i&lt;buttonGroup.length; i++) {
-                if (buttonGroup[i].checked) {
-                  return buttonGroup[i]
-                }
-              }
-            } else if (buttonGroup.checked) {
-              return buttonGroup;
-            }
-            return null;
-          }
-
-          function getDocumentLink(radioButton) {
-            if (radioButton) {
-              var ele = radioButton.parentNode.nextSibling;
-              while(ele != null) {
-                for (var i = 0; i &lt; ele.childNodes.length; ++i) {
-                  e = ele.childNodes[i];
-                  if (e.nodeName == 'A' || e.nodeName == 'a') {
-                    var docLink = e;
-                    return docLink;
+                  function getSelectedRadio(buttonGroup) {
+                    if (buttonGroup[0]) {
+                      for (var i=0; i&lt;buttonGroup.length; i++) {
+                        if (buttonGroup[i].checked) {
+                          return buttonGroup[i]
+                        }
+                      }
+                    } else if (buttonGroup.checked) {
+                      return buttonGroup;
+                    }
+                    return null;
                   }
-                }
-                ele = ele.nextSibling;
-              }
-            }
-            return null;
-          }
 
-          function updateEditor(form) {
-            var button = getSelectedRadio(form.elements.selection);
-            var docLink = getDocumentLink(button);
+                  function getDocumentLink(radioButton) {
+                    if (radioButton) {
+                      var ele = radioButton.parentNode.nextSibling;
+                      while(ele != null) {
+                        for (var i = 0; i &lt; ele.childNodes.length; ++i) {
+                          e = ele.childNodes[i];
+                          if (e.nodeName == 'A' || e.nodeName == 'a') {
+                            var docLink = e;
+                            return docLink;
+                          }
+                        }
+                        ele = ele.nextSibling;
+                      }
+                    }
+                    return null;
+                  }
 
-            
-            if (docLink != null) {
-              if (window.opener.FCK) {
-                var FCK = window.opener.FCK;
-                FCK.InsertElement(docLink);
-              } 
-              
-              if (window.opener.tinyMCE) {
-                var tinyMCE = window.opener.tinyMCE;
-				var linkContent = docLink.childNodes[0].nodeValue;
-				
-				if(tinyMCE.activeEditor) {
-			        var selectionContent = tinyMCE.activeEditor.selection.getContent();
-					if(selectionContent != ""){
-			                  linkContent = selectionContent;
-					}
-				}
+                  function updateFragment(docLink){
+                        var targetPathField = window.opener.$targetPath;
+                        var relativeUrl = docLink.href.replace(/^(?:\/\/|[^\/]+)*\//, "/");
+                        var paramIndex = relativeUrl.indexOf("@");
+                        if(paramIndex != -1){
+                            relativeUrl = relativeUrl.substr(0,paramIndex);
+                        }
+                        targetPathField.val(relativeUrl);
 
-				var html = '&lt;a href="' + docLink.href + '"&gt;' + linkContent + '&lt;/a&gt;';
-				tinyMCE.execCommand('mceInsertContent', false, html);
-              }
-              
-              // for fragment picture
-              if (window.opener.$targetPath) {
-                var targetPathField = window.opener.$targetPath;
-  				var relativeUrl = docLink.href.replace(/^(?:\/\/|[^\/]+)*\//, "/");
-				var paramIndex = relativeUrl.indexOf("@");
-				if(paramIndex != -1){
-					relativeUrl = relativeUrl.substr(0,paramIndex);
-				}
-				targetPathField.val(relativeUrl);
+                        var targetTitleField = window.opener.$targetTitle;
+                        var title = jQuery(docLink).text();
+                        targetTitleField.val(title);
 
-				var targetTitleField = window.opener.$targetTitle;
-				var title = jQuery(docLink).text();
-				targetTitleField.val(title);
+                        targetTitleField.attr("readonly","readonly");
+                  }
 
-				targetTitleField.attr("readonly","readonly");
-                }
-              
-            }
-            self.close();
-          }
-        </script>
+                  function updateEditor(docLink){
+                        var tinyMCE = window.opener.tinyMCE;
+                        var linkContent = docLink.childNodes[0].nodeValue;
+                        if(tinyMCE.activeEditor) {
+                            var selectionContent = tinyMCE.activeEditor.selection.getContent();
+                            if(selectionContent != ""){
+                                      linkContent = selectionContent;
+                            }
+                        }
+                        var html = '&lt;a href="' + docLink.href + '"&gt;' + linkContent + '&lt;/a&gt;';
+                        tinyMCE.execCommand('mceInsertContent', false, html);
+                  }
+
+                  function updateCaller(form) {
+                    var button = getSelectedRadio(form.elements.selection);
+                    var docLink = getDocumentLink(button);
+                    if (docLink != null) {
+                      if (window.opener.origin_ == "ew") {
+                        updateFragment(docLink);
+                      } else { 
+                        updateEditor(docLink);
+                      }
+                      window.opener.origin_ = "none";
+                      self.close();
+                    }
+                  }
+                </script>
 
 				<nav class="navbar navbar-default navbar-fixed-bottom">
 					<div class="container-fluid">
@@ -235,7 +233,7 @@
 							<input type="submit" id="button_update"
 								class="btn btn-primary navbar-btn"
 								value="#{messages['toutatice.label.command.insert']}"
-								onclick="javascript:updateEditor(this.form);" />
+								onclick="javascript:updateCaller(this.form);" />
 						</div>
 					</div>
 				</nav>

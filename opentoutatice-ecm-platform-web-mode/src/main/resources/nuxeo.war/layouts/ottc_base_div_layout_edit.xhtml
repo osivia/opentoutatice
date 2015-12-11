@@ -1,0 +1,47 @@
+<f:subview xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:nxl="http://nuxeo.org/nxforms/layout"
+    xmlns:nxu="http://nuxeo.org/nxweb/util"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:nxd="http://nuxeo.org/nxweb/document" id="#{layout.id}">
+
+    <c:set var="editorJs" value="#{layout.properties.editorJs}" />
+    <c:if test="#{not empty editorJs}">
+        <script type="text/javascript" src="#{baseURL}/#{editorJs}" />
+    </c:if>
+
+    <nxl:layoutRow>
+        <nxl:layoutRowWidget>
+            <c:set var="requiredClass" value="#{nxu:test(widget.required, 'required', '')}" />
+            <div class="form-group #{requiredClass}">
+                <ui:include src="/widgets/incl/toutatice_widget_label.xhtml" />
+
+                <c:set var="viewClass"
+                    value="#{nxu:test(widget.mode == 'view','form-control-static','')}" />
+                <c:set var="fileWidgetClass"
+                    value="#{nxu:test((widget.type == 'file') or (widget.name == 'file') or (widget.name == 'files'),'fileWidget','')}" />
+                <c:set var="gridSize" value="#{nxu:test(widget.type == 'layout', 'col-sm-12', 'col-sm-10')}" />
+                <c:set var="gridOffSet" value="#{nxu:test(widget.properties.styleClass == 'layoutTitle', 'col-sm-offset-2', '')}" />
+
+                <div
+                    class="#{gridSize} #{gridOffSet} ttc-form-control #{viewClass} #{fileWidgetClass}">
+                    
+                    <c:choose>
+                        <c:when test="#{widget.type == 'layout'}">
+                             <c:set var="lMode" value="#{nxu:test(not empty widget.properties.mode, widget.properties.mode, widget.mode)}" />
+                            <nxl:layout name="#{widget.properties.name}" mode="#{lMode}"
+                                template="/layouts/ottc_base_div_layout_edit.xhtml"
+                                value="#{value}" />
+                        </c:when>
+                        <c:otherwise>
+                            <nxl:widget widget="#{widget}" value="#{value}" />
+                        </c:otherwise>
+                    </c:choose>
+                
+                </div>
+            </div>
+        </nxl:layoutRowWidget>
+    </nxl:layoutRow>
+
+</f:subview>

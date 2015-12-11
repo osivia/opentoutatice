@@ -13,10 +13,9 @@
     xmlns:c="http://java.sun.com/jstl/core">
 
     <ui:define name="header_scripts">
-        <script src="#{baseURL}scripts/bootstrap/bootstrap-nx-widgets.js"></script>
-        <script src="#{baseURL}tinymce/ottc_tiny_mce_init.js"></script>
-        <script src="#{baseURL}tinymce/ottc_tiny_mce_responsive_init.js"></script>
-        <script type="text/javascript" src="#{baseURL}/scripts/icons.js"></script>
+         <script
+            src="#{baseURL}org.richfaces.resources/javax.faces.resource/org.richfaces.staticResource/4.5.0.Alpha3/PackedCompressed/org.richfaces/jquery.js"
+            type="text/javascript"></script>
     </ui:define>
 
     <ui:define name="body">
@@ -41,7 +40,7 @@
                         <h:form enctype="multipart/form-data" id="document_create"
                             class="form-horizontal">
 
-                            <nxl:layout name="osivia_create_document_layout" mode="create"
+                            <nxl:layout name="ottc_webpage_layout" mode="create"
                                                 value="#{doc}" template="/layouts/toutatice_div_layout_edit.xhtml"/>
                             
                             <h:inputHidden name="fromUrl" value="#{pageBean.fromUrl}" />

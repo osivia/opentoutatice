@@ -1,8 +1,12 @@
-// FIXME: use Loïc's method (it certainly doesn't work here becaus of bad jquery js import
+// FIXME: use Loïc's method (it certainly doesn't work here becaus of bad jquery js import)
 var $JQry = jQuery.noConflict();
-var $picturePath = "text";
-var $targetPath = "text";
-var $targetTitle = "text";
+
+// EditableWindow or TinyMCE
+var origin_ = "none";
+
+var $picturePath;
+var $targetPath;
+var $targetTitle;
 
 $JQry(window).load(function() {
 	var $inputPath = $JQry("input[type=hidden][id*='picturePath']")[0];

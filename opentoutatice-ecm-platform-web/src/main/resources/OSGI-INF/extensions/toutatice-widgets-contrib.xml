@@ -91,7 +91,7 @@
 			</fields>
 		</widget>
 
-		<widget name="content" type="htmltext">
+		<widget name="ottc_content" type="htmltext">
 			<labels>
 				<label mode="any">toutatice.label.content</label>
 			</labels>
@@ -99,6 +99,10 @@
 			<fields>
 				<field>webp:content</field>
 			</fields>
+			<properties mode="edit">
+				<property name="disableHtmlInit">true</property>
+				<property name="editorSelector">mceSimpleEditorResponsive</property>
+			</properties>
 		</widget>
 
 		<widget name="summary_content" type="summary_content_type">
@@ -153,7 +157,8 @@
 			<properties widgetMode="edit">
 				<property name="validator">#{toutaticeValidator.validateWebId}
 				</property>
-				<property name="disabled">#{!toutaticeValidator.spaceSupportsWebId or currentDocument.hasFacet('WebidDisabled')}
+				<property name="disabled">#{!toutaticeValidator.spaceSupportsWebId or
+					currentDocument.hasFacet('WebidDisabled')}
 				</property>
 			</properties>
 
@@ -172,11 +177,12 @@
 				</property>
 			</properties>
 			<properties widgetMode="edit">
-                <property name="validator">#{toutaticeValidator.validateWebId}
-                </property>
-                <property name="disabled">#{!toutaticeValidator.spaceSupportsWebId or currentDocument.hasFacet('WebidDisabled')}
-                </property>
-            </properties>
+				<property name="validator">#{toutaticeValidator.validateWebId}
+				</property>
+				<property name="disabled">#{!toutaticeValidator.spaceSupportsWebId or
+					currentDocument.hasFacet('WebidDisabled')}
+				</property>
+			</properties>
 		</widget>
 
 		<widget name="toutatice_explicitUrl_widget" type="text">
@@ -205,7 +211,8 @@
 				<field>ttcs:hasWebIdEnabled</field>
 			</fields>
 			<properties mode="any">
-				<property name="template">/widgets/toutatice_webid_enable_widget.xhtml</property>
+				<property name="template">/widgets/toutatice_webid_enable_widget.xhtml
+				</property>
 			</properties>
 			<widgetModes>
 				<mode value="any">#{nxu:test(currentDocument.hasFacet('Space'),
@@ -250,6 +257,42 @@
 					layout.mode, 'hidden')}
 				</mode>
 			</widgetModes>
+		</widget>
+
+		<widget name="ottc_page_template_widget" type="template">
+			<labels>
+				<label mode="any">toutatice.document.pagetemplate</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">toutatice.document.pagetemplate.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:pageTemplate</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">/widgets/ottc_page_template_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="ottc_page_theme_widget" type="template">
+			<labels>
+				<label mode="any">toutatice.document.pagetheme</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">toutatice.document.pagetheme.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:theme</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">/widgets/ottc_page_theme_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
 		</widget>
 
 	</extension>
@@ -312,13 +355,14 @@
 			</property>
 		</widgetType>
 
-		<widgetType name="ttc_richtext_with_mimetype">
+		<widgetType name="ottc_htmltext">
 			<configuration>
-				<title>TTCRichtext</title>
+				<title>HTML text</title>
+				<description>
+					<p>Pre-configured Nx htmltext</p>
+				</description>
 				<categories>
-					<!-- do not export with documents -->
-					<category>configuration_not_ready</category>
-					<!-- <category>document</category> -->
+					<category>document</category>
 				</categories>
 				<supportedModes>
 					<mode>edit</mode>
@@ -332,150 +376,45 @@
 					</supportedTypes>
 				</fields>
 				<properties>
-				    <defaultValues mode="any">
-                        <property name="showFormat">false</property>
-                    </defaultValues>
-					<layouts mode="view">
-						<layout name="richtext_widget_type_properties_view">
-							<rows>
-								<row>
-									<widget>cssClass</widget>
-								</row>
-							</rows>
-							<widget name="cssClass" type="text">
-								<labels>
-									<label mode="any">Style class</label>
-								</labels>
-								<fields>
-									<field>cssClass</field>
-								</fields>
-							</widget>
-						</layout>
-					</layouts>
-					<layouts mode="edit">
-						<layout name="richtext_widget_type_properties_edit">
-							<rows>
-								<row>
-									<widget>height</widget>
-								</row>
-								<row>
-									<widget>width</widget>
-								</row>
-								<row>
-									<widget>cols</widget>
-								</row>
-								<row>
-									<widget>rows</widget>
-								</row>
-								<row>
-									<widget>editorSelector</widget>
-								</row>
-							</rows>
-							<widget name="width" type="int">
-								<labels>
-									<label mode="any">Width</label>
-								</labels>
-								<helpLabels>
-									<label mode="any">
-										The textarea width. Defaults to "700".
-									</label>
-								</helpLabels>
-								<fields>
-									<field>width</field>
-								</fields>
-							</widget>
-							<widget name="height" type="int">
-								<labels>
-									<label mode="any">Height</label>
-								</labels>
-								<helpLabels>
-									<label mode="any">
-										The textarea height. Defaults to "400".
-									</label>
-								</helpLabels>
-								<fields>
-									<field>height</field>
-								</fields>
-							</widget>
-							<widget name="cols" type="int">
-								<labels>
-									<label mode="any">Number of columns</label>
-								</labels>
-								<helpLabels>
-									<label mode="any">
-										The cols attribute sets the number of
-										columns
-										to display.
-										Available since 5.3.1.
-									</label>
-								</helpLabels>
-								<fields>
-									<field>cols</field>
-								</fields>
-							</widget>
-							<widget name="rows" type="int">
-								<labels>
-									<label mode="any">Number of rows</label>
-								</labels>
-								<helpLabels>
-									<label mode="any">
-										The rows attribute sets the number of rows
-										to
-										display.
-										Available since 5.3.1.
-									</label>
-								</helpLabels>
-								<fields>
-									<field>rows</field>
-								</fields>
-							</widget>
-							<widget name="editorSelector" type="text">
-								<labels>
-									<label mode="any">Editor selector</label>
-								</labels>
-								<helpLabels>
-									<label mode="any">
-										The class to use to identify text areas to
-										turn into html
-										editors. Defaults to "mceEditor". See the
-										editor_selector
-										option in tiny_mce
-										(http://wiki.moxiecode.com/index.php/TinyMCE:Configuration/editor_selector).
-									</label>
-								</helpLabels>
-								<fields>
-									<field>editorSelector</field>
-								</fields>
-							</widget>
-							<widget name="disableHTMLInit" type="boolean">
-								<labels>
-									<label mode="any">Disable HTML init</label>
-								</labels>
-								<helpLabels>
-									<label mode="any">
-										Disable the tiny MCE init from
-										tiny_mce_init.js
-									</label>
-								</helpLabels>
-								<fields>
-									<field>disableHTMLInit</field>
-								</fields>
-							</widget>
-							<widget name="alternateTinyMCEjs" type="text">
-								<labels>
-									<label mode="any">Alternate Rich tiny MCE</label>
-								</labels>
-								<helpLabels>
-									<label mode="any">
-										Definition of new tiny MCE js
-									</label>
-								</helpLabels>
-								<fields>
-									<field>alternateTinyMCEjs</field>
-								</fields>
-							</widget>
-						</layout>
-					</layouts>
+					<defaultValues mode="any">
+						<property name="disableHmlInit">true</property>
+						<property name="editorSelector">mceSimpleEditorResponsive</property>
+					</defaultValues>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.HtmlTextWidgetTypeHandler
+			</handler-class>
+		</widgetType>
+
+		<widgetType name="ttc_richtext_with_mimetype">
+			<configuration>
+				<title>TTCRichtext</title>
+				<description>
+                    <p>Configurable Nx richtext_with_mimetype</p>
+                </description>
+				<categories>
+					<!-- do not export with documents -->
+					<!-- <category>configuration_not_ready</category> -->
+					<category>document</category>
+				</categories>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>false</list>
+					<complex>false</complex>
+					<supportedTypes>
+						<type>string</type>
+					</supportedTypes>
+				</fields>
+				<properties>
+					<defaultValues mode="any">
+						<property name="showFormat">false</property>
+						<property name="editorSelector">mceSimpleEditorResponsive</property>
+						<property name="disableHTMLInit">true</property>
+					</defaultValues>
 				</properties>
 			</configuration>
 			<handler-class>
@@ -485,7 +424,6 @@
 				/widgets/ttc_richtext_with_mimetype_widget_template.xhtml
 			</property>
 		</widgetType>
-
 
 		<widgetType name="multipleUsersSuggestionWithPermission">
 			<configuration>
@@ -512,124 +450,9 @@
 					</defaultValues>
 					<defaultValues mode="edit">
 						<property name="minChars">3</property>
-						<property name="operationId">UserGroup.SuggestUserEntriesWithPermission</property>
+						<property name="operationId">UserGroup.SuggestUserEntriesWithPermission
+						</property>
 					</defaultValues>
-					<layouts mode="view">
-						<layout name="multipleUsersSuggestion_widget_type_properties_view">
-							<rows>
-								<row>
-									<widget category="widgetTypeConf">userSuggestion_prefixed</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestionSearchType</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestion_firstLabelField
-									</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestion_secondLabelField
-									</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestion_thirdLabelField
-									</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestion_hideFirstLabel</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestion_hideSecondLabel
-									</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestion_hideThirdLabel</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestion_displayAction</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestion_displayEmailInSuggestion
-									</widget>
-								</row>
-							</rows>
-						</layout>
-					</layouts>
-					<layouts mode="edit">
-						<layout name="multipleUsersSuggestion_widget_type_properties_edit">
-							<rows>
-								<row>
-									<widget category="widgetTypeConf">required</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">permission</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">documentId</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">placeholder</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">suggestion_width</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">suggestion_minChars</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">suggestion_orderable</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestionSearchType</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestion_groupRestriction
-									</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestion_prefixed</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestionMaxSearchResults
-									</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">ajaxReRender</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">userSuggestion_displayEmailInSuggestion
-									</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">suggestion_helpLabel</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">suggestion_hideHelpLabel</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">select2_containerCssClass</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">select2_dropdownCssClass</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">select2_inlinejs</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">select2_inlinejsDemoPreview</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">select2_selectionFormatter</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">select2_suggestionFormatter</widget>
-								</row>
-								<row>
-									<widget category="widgetTypeConf">select2_separator</widget>
-								</row>
-							</rows>
-						</layout>
-					</layouts>
 				</properties>
 			</configuration>
 			<handler-class>
@@ -661,58 +484,7 @@
 				<categories>
 					<category>document</category>
 				</categories>
-				<properties>
-					<layouts mode="any">
-						<layout name="message_widget_type_properties_any">
-							<rows>
-								<row>
-									<widget>message</widget>
-								</row>
-								<row>
-									<widget>translated</widget>
-								</row>
-								<row>
-									<widget>classes</widget>
-								</row>
-								<row>
-									<widget>style</widget>
-								</row>
-							</rows>
-							<widget name="message" type="text">
-								<labels>
-									<label mode="any">Message</label>
-								</labels>
-								<fields>
-									<field>message</field>
-								</fields>
-							</widget>
-							<widget name="translated" type="checkbox">
-								<labels>
-									<label mode="any">Translated</label>
-								</labels>
-								<fields>
-									<field>translated</field>
-								</fields>
-							</widget>
-							<widget name="classes" type="text">
-								<labels>
-									<label mode="any">CSS classes</label>
-								</labels>
-								<fields>
-									<field>classes</field>
-								</fields>
-							</widget>
-							<widget name="style" type="text">
-								<labels>
-									<label mode="any">Style</label>
-								</labels>
-								<fields>
-									<field>style</field>
-								</fields>
-							</widget>
-						</layout>
-					</layouts>
-				</properties>
+				<properties />
 			</configuration>
 			<handler-class>
 				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler

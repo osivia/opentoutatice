@@ -49,7 +49,7 @@
 					<widget>picture</widget>
 				</row>
 				<row>
-					<widget>content</widget>
+					<widget>ottc_content</widget>
 				</row>
 			</rows>
 		</layout>
@@ -69,7 +69,7 @@
 					<widget>picture</widget>
 				</row>
 				<row>
-					<widget>content</widget>
+					<widget>ottc_content</widget>
 				</row>
 			</rows>
 		</layout>
@@ -90,7 +90,7 @@
 					<widget>picture</widget>
 				</row>
 				<row>
-					<widget>content</widget>
+					<widget>ottc_content</widget>
 				</row>
 				<row>
 					<widget>toutatice_showInMenu_widget</widget>
@@ -113,7 +113,7 @@
 					<widget>picture</widget>
 				</row>
 				<row>
-					<widget>content</widget>
+					<widget>ottc_content</widget>
 				</row>
 				<row>
 					<widget>toutatice_showInMenu_widget</widget>
@@ -156,7 +156,7 @@
 					<widget>toutatice_widget_contextualize_external_contents</widget>
 				</row>
 				<row>
-					<widget>osivia_page_theme_widget</widget>
+					<widget>ottc_page_theme_widget</widget>
 				</row>
 			</rows>
 		</layout>
@@ -181,7 +181,7 @@
 					<widget>toutatice_widget_show_in_menu</widget>
 				</row>
 				<row>
-					<widget>osivia_page_theme_widget</widget>
+					<widget>ottc_page_theme_widget</widget>
 				</row>
 			</rows>
 		</layout>

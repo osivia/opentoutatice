@@ -1,0 +1,20 @@
+<div xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:nxl="http://nuxeo.org/nxforms/layout"
+    xmlns:nxu="http://nuxeo.org/nxweb/util"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:nxd="http://nuxeo.org/nxweb/document" id="#{layout.id}">
+
+    <c:set var="editorJs" value="#{layout.properties.editorJs}" />
+    <c:if test="#{not empty editorJs}">
+        <script type="text/javascript" src="#{baseURL}/#{editorJs}" />
+    </c:if>
+
+	<c:if test="#{layout.name != 'ottc_metadata' and layout.name != 'ottc_empty_edit_layout'}">
+
+	   <ui:include src="/layouts/ottc_base_div_layout_edit.xhtml"/>
+
+	</c:if>
+
+</div>

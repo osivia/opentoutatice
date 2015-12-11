@@ -12,25 +12,25 @@
     xmlns:oh="http://osivia.org/html">
 
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title><h:outputText
-        value="#{messages['title.imageUpload.form']}" /></title>
-<link href="#{baseURL}css/plugin-popup.min.css" type="text/css"
-    rel="stylesheet" />
-<link href="#{baseURL}css/glyphicons/css/glyphicons.css" type="text/css"
-    rel="stylesheet" />
-<link
-    href="/nuxeo/org.richfaces.resources/javax.faces.resource/org.richfaces.staticResource/4.5.0.Alpha3/PackedCompressed/DEFAULT/packed/packed.css"
-    rel="stylesheet" type="text/css" />
-<script src="/nuxeo/javax.faces.resource/jsf.js.faces?ln=javax.faces"
-    type="text/javascript" />
-<script src="#{baseURL}nxthemes-lib/jquery.js" />
-<script src="#{baseURL}nxthemes-lib/prototype.js" />
-<script
-    src="/nuxeo/org.richfaces.resources/javax.faces.resource/org.richfaces.staticResource/4.5.0.Alpha3/PackedCompressed/packed/packed.js"
-    type="text/javascript" />
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title><h:outputText
+	        value="#{messages['title.imageUpload.form']}" /></title>
+	<link href="#{baseURL}css/plugin-popup.min.css" type="text/css"
+	    rel="stylesheet" />
+	<link href="#{baseURL}css/glyphicons/css/glyphicons.css" type="text/css"
+	    rel="stylesheet" />
+	<link
+	    href="#{baseURL}org.richfaces.resources/javax.faces.resource/org.richfaces.staticResource/4.5.0.Alpha3/PackedCompressed/DEFAULT/packed/packed.css"
+	    rel="stylesheet" type="text/css" />
+	<script src="#{baseURL}javax.faces.resource/jsf.js.faces?ln=javax.faces"
+	    type="text/javascript" />
+	<script src="#{baseURL}nxthemes-lib/jquery.js" />
+	<script src="#{baseURL}nxthemes-lib/prototype.js" />
+	<script
+	    src="#{baseURL}org.richfaces.resources/javax.faces.resource/org.richfaces.staticResource/4.5.0.Alpha3/PackedCompressed/packed/packed.js"
+	    type="text/javascript" />
 </head>
 
 <body>
@@ -59,84 +59,7 @@
 
         <div class="tab-content">
 
-            <script type="text/javascript">
-                        function getSelectedRadio(buttonGroup) {
-                              if (buttonGroup[0]) {
-                                for (var i=0; i&lt;buttonGroup.length; i++) {
-                                  if (buttonGroup[i].checked) {
-                                    return buttonGroup[i]
-                                  }
-                                }
-                              } else if (buttonGroup.checked) {
-                                return buttonGroup;
-                              }
-                              return null;
-                            }
-                                                
-                            function getSelectedMedia(radioButton) {
-                              ele = radioButton;
-                              while (ele.nodeName != 'div' &amp;&amp; ele.nodeName != 'DIV') {
-                                ele = ele.nextSibling;
-                              }
-                        
-                              if (ele.childNodes.length > 0) {
-                                for (var i = 0; i &lt; ele.childNodes.length; ++i) {
-                                    e = ele.childNodes[i];
-                                    if (e.nodeName == 'input' || e.nodeName == 'INPUT') {
-                                      return e;
-                                    }
-                                 }
-                              }
-                              return null;
-                            }
-                        
-                            function getVideoHTML(radioButton) {
-                              ele = radioButton;
-                              while (ele.nodeName != 'div' &amp;&amp; ele.nodeName != 'DIV') {
-                                ele = ele.nextSibling;
-                              }
-                        
-                              if (ele.childNodes.length > 0) {
-                                for (var i = 0; i &lt; ele.childNodes.length; ++i) {
-                                    e = ele.childNodes[i];
-                                    if (e.nodeName == 'video' || e.nodeName == 'VIDEO') {
-                                      return e;
-                                    }
-                                 }
-                              }
-                              return null;
-                            }
-                        
-                            function updateEditor(element, type) {
-                              if (window.opener.tinyMCE) {
-                                var tinyMCE = window.opener.tinyMCE;
-                                var button = getSelectedRadio(element);
-                        
-                                if (type == 'Picture') {
-                                  var media = getSelectedMedia(button);
-                                  var html = '&lt;img src="' + media.value + '"/&gt;';
-                                  tinyMCE.execCommand('mceInsertContent', false, html);
-                                } else if (type == 'Video') {
-                                  var media = getVideoHTML(button);
-                                  tinyMCE.execCommand('mceInsertContent', false, media.parentNode.innerHTML);
-                                }
-
-                                // fragment picture
-                                  if (window.opener.$picturePath) {
-                                      var picturePathField = window.opener.$picturePath;
-                                      var button = getSelectedRadio(element);
-                                      var input = getSelectedMedia(button);
-                                      var relativeUrl = input.value.replace(/^(?:\/\/|[^\/]+)*\//, "/");
-        
-                                      picturePathField.val(relativeUrl);
-                                      window.opener.previewImg();
-                                  }
-
-                              }
-                              self.close();
-                            }
-                        
-                    </script>
+           
 
             <f:subview rendered="#{editorImageActions.selectedTab == 'SEARCH'}">
                 <ui:include src="/incl/editor_media_upload/search_pictures.xhtml" />

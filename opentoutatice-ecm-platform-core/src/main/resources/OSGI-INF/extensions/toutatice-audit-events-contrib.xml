@@ -6,7 +6,8 @@
 
 	<extension target="org.nuxeo.ecm.platform.audit.service.NXAuditEventsService"
 		point="event">
-
+    
+        <event name="loginFailed" enabled="false"/>
 		<event name="logout" enabled="false" />
 
 	</extension>

@@ -11,19 +11,19 @@
 		<mappings>
 		    
 		    <!-- By widget type -->
-		    <mappingType nxType="richtext_with_mimetype" pvType="ttc_richtext_with_mimetype">
+		    <!-- <mappingType nxType="richtext_with_mimetype" pvType="ttc_richtext_with_mimetype"> 
 		      <properties>
 		          <property name="editorSelector" value="mceEditorResponsive" />
 		          <property name="disableHTMLInit" value="true" />
-		      </properties>
-		    </mappingType>
+		      </properties> 
+		    </mappingType> -->
 		    
-		    <mappingType nxType="htmltext" pvType="htmltext">
+		    <!-- <mappingType nxType="htmltext" pvType="htmltext">
               <properties>
                   <property name="editorSelector" value="mceEditorResponsive" />
                   <property name="disableHtmlInit" value="true" />
               </properties>
-            </mappingType>  
+            </mappingType> -->
 		    
 		</mappings>
 		

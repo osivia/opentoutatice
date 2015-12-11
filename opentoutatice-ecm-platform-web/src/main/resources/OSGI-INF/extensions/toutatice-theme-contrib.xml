@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <component name="fr.toutatice.ecm.platform.web.theme">
 
-	<require>fr.toutatice.ecm.platform.responsive.portalviews.theme</require>
+	<require>org.nuxeo.theme.services.ThemeService</require>
+    <require>org.nuxeo.theme.nuxeo.default</require>
 
 	<extension target="org.nuxeo.theme.styling.service" point="pages">
 		<themePage name="*">
@@ -38,13 +39,28 @@
 		</application>
 	</extension>
 
+
+	<extension target="org.nuxeo.theme.services.ThemeService"
+		point="resources">
+
+		<resource name="ottc.custom.tinymce.init.js">
+			<path>tinymce/ottc_custom_tinymce_init.js</path>
+		</resource>
+
+		<resource name="ottc.simple.tinymce.init.js">
+			<path>tinymce/ottc_simple_tinymce_responsive_init.js</path>
+		</resource>
+
+	</extension>
+
 	<extension target="org.nuxeo.theme.services.ThemeService"
 		point="views">
 
-		<view name="nuxeo5 includes" template-engine="jsf-facelets"
-			merge="true">
+		<view name="nuxeo5 includes" template-engine="jsf-facelets" merge="true">
 			<format-type>widget</format-type>
 			<resource>glyphicons.css</resource>
+			<resource>ottc.custom.tinymce.init.js</resource>
+			<resource>ottc.simple.tinymce.init.js</resource>
 		</view>
 
 	</extension>

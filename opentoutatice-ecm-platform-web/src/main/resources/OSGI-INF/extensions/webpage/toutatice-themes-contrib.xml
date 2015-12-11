@@ -10,13 +10,6 @@
 		<application root="${org.nuxeo.ecm.contextPath}"
 			template-engine="jsf-facelets">
 
-			<view id="/osivia_create_document.xhtml">
-				<theme>galaxy/popup</theme>
-			</view>
-			<view id="/osivia_edit_document.xhtml">
-				<theme>galaxy/popup</theme>
-			</view>
-
 			<view id="/osivia_create_fragment.xhtml">
 				<theme>toutatice/popup</theme>
 			</view>

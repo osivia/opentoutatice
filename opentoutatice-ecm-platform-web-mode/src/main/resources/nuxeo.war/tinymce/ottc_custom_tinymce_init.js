@@ -7,7 +7,7 @@ function createTinyMce(clazz) {
 	}
 }
 
-window.onload = function(e){
+function createEditorMinimalInLine(){
 
 tinyMCE.init({
 	editor_selector : "mceEditorMinimalInLine",
@@ -25,6 +25,8 @@ tinyMCE.init({
 			exact : false
 		}
 	},
+	
+	content_css: "/nuxeo/css/toutatice-popup.min.css?" + new Date().getTime(),
 
 	// Disable <p> and <br> tag generation
 	force_p_newlines : false,
@@ -36,13 +38,17 @@ tinyMCE.init({
 	relative_urls : false,
 	remove_script_host : false,
 
-	theme_advanced_buttons1 : "bold,italic,underline",
-	theme_advanced_buttons2 : "",
-	theme_advanced_buttons3 : ""
+	toolbar1 : "bold,italic,underline",
+	menubar: false,
+	statusbar: false
 
 });
 
 createTinyMce("mceEditorMinimalInLine,disableMCEInit");
+
+}
+
+function createEditorMinimal(){
 
 tinyMCE
 .init({
@@ -61,6 +67,8 @@ tinyMCE
 			exact : false
 		}
 	},
+	
+	content_css: "/nuxeo/css/toutatice-popup.min.css?" + new Date().getTime(),
 
 	valid_elements : "p,br,strong/b,em,u,span[style<text-decoration: underline;]",
 
@@ -68,12 +76,17 @@ tinyMCE
 	relative_urls : false,
 	remove_script_host : false,
 
-	theme_advanced_buttons1 : "bold,italic,underline",
-	theme_advanced_buttons2 : "",
-	theme_advanced_buttons3 : "",
+	toolbar1 : "bold,italic,underline",
+	menubar: false,
+	statusbar: false
 
 });
 
 createTinyMce("mceEditorMinimal,disableMCEInit");
 
 }
+
+window.addEventListener("load", createEditorMinimalInLine);
+window.addEventListener("load", createEditorMinimal);
+
+

@@ -835,7 +835,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      * 
      * @return le document nouvellement créé
      */
-    public DocumentModel getOrCreateChangeableDocument() throws ClientException, IOException, ClassNotFoundException {
+    public DocumentModel getOrCreateChangeableDocument() throws ClientException {
         DocumentModel changeableDocument = navigationContext.getChangeableDocument();
 
         if (changeableDocument == null && typeName != null) {
@@ -871,11 +871,9 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
                         changeableDocument.setPropertyValue(xpath, (Serializable) params.get(xpath));
                     }
                 } catch (ClassNotFoundException cnfe) {
-                    log.error("*** ERROR " + cnfe.getMessage());
-                    new ClientException("Impossible de lire le(s) logiciel(s) sélectionné(s)");
+                    throw new ClientException(cnfe.getMessage());
                 } catch (IOException ioe) {
-                    log.error("*** ERROR " + ioe.getMessage());
-                    new ClientException("Impossible de lire le(s) logiciel(s) sélectionné(s)");
+                    throw new ClientException(ioe.getMessage());
                 }
 
             }

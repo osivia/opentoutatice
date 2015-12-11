@@ -19,7 +19,8 @@
 			<dependency>
 				<groupId>org.nuxeo.ecm.distribution</groupId>
 				<artifactId>nuxeo-distribution</artifactId>
-				<version>${nuxeo.version}</version>
+				<!-- Distrib HF23 doesn't exist yet -->
+                <version>6.0-HF21</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

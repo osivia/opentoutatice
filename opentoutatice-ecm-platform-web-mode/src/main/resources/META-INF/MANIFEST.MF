@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-Vendor: Nuxeo
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Bundle-Version: 1.0
+Bundle-Name: opentoutatice-web-mode
+Nuxeo-Component: OSGI-INF/extensions/webpage/layouts-contrib.xml,
+ OSGI-INF/extensions/webpage/core-types-contrib.xml,
+ OSGI-INF/extensions/webpage/metadata-layouts-contrib.xml,
+ OSGI-INF/extensions/webpage/theme-contrib.xml,
+ OSGI-INF/extensions/webpage/actions-contrib.xml,
+ OSGI-INF/extensions/widgets-contrib.xml,
+ OSGI-INF/extensions/layouts-contrib.xml
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.osivia.opentoutatice.web.mode
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+

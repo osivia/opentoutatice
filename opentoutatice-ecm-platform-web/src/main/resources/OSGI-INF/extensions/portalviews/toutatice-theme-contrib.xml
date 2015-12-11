@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <component name="fr.toutatice.ecm.platform.responsive.portalviews.theme">
 
-	<require>org.nuxeo.theme.services.ThemeService</require>
-	<require>org.nuxeo.theme.nuxeo.default</require>
+	<require>fr.toutatice.ecm.platform.web.theme</require>
 
 	<extension target="org.nuxeo.theme.services.ThemeService"
 		point="themes">
@@ -30,13 +29,6 @@
 				<theme>toutatice/popup</theme>
 			</view>
 
-			<view id="/osivia_create_document.xhtml">
-				<theme>toutatice/popup</theme>
-			</view>
-			<view id="/osivia_edit_document.xhtml">
-				<theme>toutatice/popup</theme>
-			</view>
-
 			<view id="/pv_workflows/remote_publishing.xhtml">
 				<theme>galaxy/popup</theme>
 			</view>
@@ -45,24 +37,6 @@
 			</view>
 
 		</application>
-
-	</extension>
-
-	<extension target="org.nuxeo.theme.services.ThemeService"
-		point="views">
-
-		<view name="includes-pv" template-engine="jsf-facelets">
-			<format-type>widget</format-type>
-			<template>incl/pv_includes.xhtml</template>
-			<resource>glyphicons.css</resource>
-			<resource>toutatice-popup.min.css</resource>
-			<resource>custom-popup.min.css</resource>
-			<resource>bootstrap-datepicker.js</resource>
-			<resource>bootstrap-datepicker.fr.js</resource>
-			<resource>bootstrap-timepicker.js</resource>
-			<!-- FIXME: necessary? -->
-			<require>nxthemes.css</require>
-		</view>
 
 	</extension>
 
@@ -88,6 +62,49 @@
 		<resource name="bootstrap-timepicker.js">
 			<path>scripts/bootstrap/bootstrap-timepicker.js</path>
 		</resource>
+
+		<resource name="bootstrap.nx.widgets.js">
+			<path>scripts/bootstrap/bootstrap-nx-widgets.js</path>
+		</resource>
+
+		<resource name="bootstrap.tab.js">
+			<path>scripts/bootstrap/bootstrap-tab.js</path>
+		</resource>
+
+		<resource name="custom.tinymce.modals.js">
+			<path>scripts/custom-tinymce-modals.js</path>
+		</resource>
+
+		<resource name="forms.errors.manager.js">
+			<path>scripts/forms-errors-manager.js</path>
+		</resource>
+
+		<resource name="icons.js">
+			<path>scripts/icons.js</path>
+		</resource>
+
+	</extension>
+
+	<extension target="org.nuxeo.theme.services.ThemeService"
+		point="views">
+
+		<view name="includes-pv" template-engine="jsf-facelets">
+			<format-type>widget</format-type>
+			<template>incl/pv_includes.xhtml</template>
+			<resource>glyphicons.css</resource>
+			<resource>toutatice-popup.min.css</resource>
+			<resource>custom-popup.min.css</resource>
+			<resource>bootstrap-datepicker.js</resource>
+			<resource>bootstrap-datepicker.fr.js</resource>
+			<resource>bootstrap-timepicker.js</resource>
+			<resource>bootstrap.nx.widgets.js</resource>
+			<resource>bootstrap.tab.js</resource>
+			<resource>custom.tinymce.modals.js</resource>
+			<resource>forms.errors.manager.js</resource>
+			<resource>ottc.custom.tinymce.init.js</resource>
+			<resource>ottc.simple.tinymce.init.js</resource>
+			<resource>icons.js</resource>
+		</view>
 
 	</extension>
 

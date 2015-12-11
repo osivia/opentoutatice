@@ -23,35 +23,30 @@
 			class="form form-horizontal" disableDoubleClickShield="true">
 
 			<script type="text/javascript">
-            function updateEditorWithImagePJ(img, klass) {
-                if (window.opener.tinyMCE) {
-                    var tinyMCE = window.opener.tinyMCE;
-                    var html = '&lt;img src="' + img.src + '" class="' + klass + '"/&gt;';
-                    tinyMCE.execCommand('mceInsertContent', false, html);
+                function updateEditorWithImagePJ(img, klass) {
+                        var tinyMCE = window.opener.tinyMCE;
+                        var html = '&lt;img src="' + img.src + '" class="' + klass + '"/&gt;';
+                        tinyMCE.execCommand('mceInsertContent', false, html);
+                }
+
+                function updateFragment(img, klass) {
+                    var imgSrc = img.src;
+                    var relativeUrl = imgSrc.replace(/^(?:\/\/|[^\/]+)*\//, "/");
+                    var picturePathField = window.opener.$picturePath;
+                    picturePathField.val(relativeUrl);
+                    window.opener.previewImg();
+                }
+
+                function updateCaller(img, klass) {
+                    if (window.opener.origin_ == "ew") {
+                        updateFragment(img, klass);
+                    } else {
+                        updateEditorWithImagePJ(img, klass);
+                    } 
+                    window.opener.origin_ = "none";
                     self.close();
                 }
-            }
-
-            function updateFragment(img, klass) {
-
-                var imgSrc = img.src;
-                var relativeUrl = imgSrc.replace(/^(?:\/\/|[^\/]+)*\//, "/");
-
-                var picturePathField = window.opener.$picturePath;
-                picturePathField.val(relativeUrl);
-                window.opener.previewImg();
-
-                self.close();
-            }
-
-            function updateCaller(img, klass) {
-                if (window.opener.$picturePath) {
-                    updateFragment(img, klass);
-                } else {
-                    updateEditorWithImagePJ(img, klass)
-                }
-            }
-        </script>
+            </script>
 
 			<c:choose>
 				<c:when test="#{empty currentDocument.toutatice.images}">
@@ -90,7 +85,7 @@
 								varStatus="status">
 								<ui:fragment rendered="#{not empty img.filename}">
 									<div class="col-xs-3 col-md-3"
-										onclick="javascript:updateCaller(jQuery(this).find('img')[0], jQuery('#img_style_value').val());;">
+										onclick="javascript:updateCaller(jQuery(this).find('img')[0], jQuery('#img_style_value').val());">
 										<div class="picture">
 											<a href="#" class="thumbnail"> <h:graphicImage
 													value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', status.index, 'file', img.filename)}" />

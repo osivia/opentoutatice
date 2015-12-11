@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<component
+	name="org.osivia.opentoutatice.webpage.metadata.layouts">
+
+	<require>fr.toutatice.ecm.platform.web.document.forms.layouts.webpage</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="layouts">
+
+		<layout name="ottc_web_metadata">
+			<templates>
+				<template mode="any">/layouts/ottc_base_div_layout_edit.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>web_flow</widget>
+				</row>
+				<row>
+					<widget>web_navigation</widget>
+				</row>
+			</rows>
+		</layout>
+		
+		<layout name="web_flow">
+			<templates>
+				<template mode="any">
+					/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>osivia_widget_description</widget>
+				</row>
+				<row>
+					<widget>metadata_toutatice_keywords_widget</widget>
+				</row>
+				<row>
+					<widget>osivia_widget_thumbnail</widget>
+				</row>
+				<row>
+					<widget>osivia_widget_abstract</widget>
+				</row>
+			</rows>
+		</layout>
+		
+		<layout name="web_navigation">
+			<templates>
+				<template mode="any">
+					/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>toutatice_showInMenu_widget</widget>
+				</row>
+
+				<row>
+					<widget>ottc_weburl</widget>
+				</row>
+			</rows>
+		</layout>
+
+	</extension>
+	
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+		
+		<widget name="ottc_weburl" type="text">
+			<labels>
+				<label mode="any">webmode.label.weburl</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ottcweb:segment</field>
+			</fields>
+			<properties widgetMode="edit">
+				<!-- <property name="validator">#{toutaticeValidator.validateWebId}
+				</property>
+				<property name="disabled">#{!toutaticeValidator.spaceSupportsWebId or currentDocument.hasFacet('WebidDisabled')}
+				</property>
+				<property name="required">#{!toutaticeValidator.spaceSupportsWebId or currentDocument.hasFacet('WebidDisabled')}
+				</property> -->
+			</properties>
+
+		</widget>
+		
+		<widget name="web_flow" type="layout">
+			<labels>
+				<label mode="any">webmode.metadata.flow.title</label>
+			</labels>
+			<translated>true</translated>
+			<properties widgetMode="any">
+				<property name="name">web_flow</property>
+			</properties>
+		</widget>
+		
+		<widget name="web_navigation" type="layout">
+			<labels>
+				<label mode="any">webmode.metadata.navigation.title</label>
+			</labels>
+			<translated>true</translated>
+			<properties widgetMode="any">
+				<property name="name">web_navigation</property>
+			</properties>
+			<widgetModes>
+				<mode value="any"> #{documentActions.showShowInMenu()
+					? layout.mode :
+					'hidden'}
+				</mode>
+			</widgetModes>
+		</widget>
+		
+	</extension>
+
+
+</component>

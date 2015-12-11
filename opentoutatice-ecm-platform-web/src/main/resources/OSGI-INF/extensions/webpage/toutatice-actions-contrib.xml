@@ -28,23 +28,6 @@
 			<filter-id>is_not_thread_document</filter-id>
 		</action>
 
-		<!-- =========== gestion de la page : Actions -->
-
-		<!-- Vue portail : Création d'un document n'exigeant pas d'action de sauvegarde 
-			spécifique -->
-		<action id="OSIVIA_CREATE_DOCUMENT_FORM" link="#{documentActions.saveDocument('done')}"
-			order="1" label="command.create">
-			<category>OSIVIA_CREATE_DOCUMENT_FORM</category>
-			<filter-id>is_not_creating_form_specific_document</filter-id>
-		</action>
-
-		<!-- Vue front office : Edition d'un document n'exigeant pas d'action de 
-			sauvegarde spécifique -->
-		<action id="OSIVIA_EDIT_CURRENT_DOCUMENT" link="#{documentActions.updateCurrentDocument('done')}"
-			order="0" label="command.save.draft">
-			<category>OSIVIA_EDIT_DOCUMENT_FORM</category>
-			<filter-id>is_not_thread_document</filter-id>
-		</action>
 
 		<!-- ============= Configuration Folder creation : Actions -->
 		<!-- Ability to create Configuration Folder under repo -->
