@@ -111,6 +111,25 @@
 			</widgetModes>
 		</widget>
 		
+		<widget name="metadata_toutatice_keywords_widget" type="template">
+            <labels>
+                <label mode="any">toutatice.label.keywords</label>
+            </labels>
+            <translated>true</translated>
+            <fields>
+                <field>ttc:keywords</field>
+            </fields>
+            <properties mode="any">
+                <property name="template">
+                    /widgets/toutatice_keyword_widget.xhtml
+                </property>
+            </properties>
+            <widgetModes>
+                <mode value="any">#{nxu:test(currentDocument.type != 'BlogSite', layout.mode, 'hidden')}
+                </mode>
+            </widgetModes>
+        </widget>
+		
 	</extension>
 
 
