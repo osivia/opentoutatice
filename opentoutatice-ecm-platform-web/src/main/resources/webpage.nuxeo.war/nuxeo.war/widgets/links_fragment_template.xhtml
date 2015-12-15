@@ -9,43 +9,85 @@
 	xmlns:oh="http://osivia.org/html" id="#{widget.id}">
 	<c:set var="mode" value="#{layout.mode}" />
 
-	<div class="titre2">
-		<img src="theme/images/icone_fragment.gif" /><span>Propriétés
-			des liens</span>
+	<div class="form-group">
+		<div class="col-sm-12">
+
+			<fieldset>
+				<legend>
+					<i class="glyphicons halflings list"></i>
+					<h:outputText
+						value="#{messages['osivia.fragment.links.title']}" />
+				</legend>
+			</fieldset>
+		</div>
 	</div>
 
 	<nxu:dataList id="link" value="#{currentDocument.lkfgt.linksFragment}"
-		var="frag">
-
+		var="frag" rowKeyVar="index" first="0" class="fgts">
 
 		<s:div rendered="#{frag.refURI eq fragmentBean.uri}">
 		
-			<p>
-				<h:outputLabel value="Présentation des liens : " />
-				<oh:icons id="selectLinksTemplate" src="#{config.linksTemplates}"
-					value="#{frag.linksTemplate}" ulStyleClass="cssStyleList"
-					binding="#{templateSimpleForm.simpleComponent}"
-					inputClientId="#{templateSimpleForm.simpleComponentClientId}"
-					multiSelect="false" iconsGroup="linksTemplateGroup" />
-			</p>
+			<div class="form-group">
+				<label class="control-label col-sm-2"
+					for="#{widget.id}_style">#{messages['osivia.fragment.links.form.style']}</label>
+				<div class="col-sm-10">
+					<oh:icons id="selectLinksTemplate" src="#{config.linksTemplates}"
+						value="#{frag.linksTemplate}" ulStyleClass="cssStyleList"
+						binding="#{templateSimpleForm.simpleComponent}"
+						inputClientId="#{templateSimpleForm.simpleComponentClientId}"
+						multiSelect="false" iconsGroup="linksTemplateGroup" />					
+				</div>
+			</div>
 		
 		</s:div>
 	</nxu:dataList>
+	
 
+	
 	<nxu:dataList id="links" value="#{currentDocument.lk.links}"
-		var="link">
-
-
+		var="link" rowKeyVar="index" first="0" class="fgts">
 		<s:div rendered="#{link.refURI eq fragmentBean.uri}">
-			<li><h:outputLabel value="URL : "/> <nxl:widgetType
-					id="href" name="text" mode="edit" title="URL du lien."
-					value="#{link.href}" /></li>
-			<li><h:outputLabel value="Titre : "/> <nxl:widgetType
-					id="title" name="text" mode="edit" title="Titre du lien."
-					value="#{link.title}" /></li>
-			<li><h:outputLabel value="Icône : "/> <nxl:widgetType
-					id="icon" name="text" mode="edit" title="Icone du lien."
-					value="#{link.icon}" /></li>
+		
+		
+			<div class="form-group">
+				<div class="col-sm-12">
+		
+					<fieldset>
+						<legend>
+							<h:outputText
+								value="#{messages['osivia.fragment.links.item']} " />
+						</legend>
+					</fieldset>
+				</div>
+			</div>
+		
+			<div class="form-group">
+				<label class="control-label col-sm-2"
+					for="href#{index}">#{messages['osivia.fragment.links.form.url']}</label>
+				<div class="col-sm-10">
+					<h:inputText id="href#{index}" class="form-control"
+						value="#{link.href}" />
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2"
+					for="title#{index}">#{messages['osivia.fragment.links.form.title']}</label>
+				<div class="col-sm-10">
+					<h:inputText id="title#{index}" class="form-control"
+						value="#{link.title}" />
+				</div>
+			</div>
+				
+			<div class="form-group">
+				<label class="control-label col-sm-2"
+					for="icon#{index}">#{messages['osivia.fragment.links.form.icon']}</label>
+				<div class="col-sm-10">
+					<h:inputText id="icon#{index}" class="form-control"
+						value="#{link.icon}" />
+				</div>
+			</div>
+
 
 			<hr />
 		</s:div>
