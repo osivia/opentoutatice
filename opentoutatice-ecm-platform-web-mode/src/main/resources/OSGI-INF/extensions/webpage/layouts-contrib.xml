@@ -40,6 +40,11 @@
 				<property name="editorSelector">mceEditorMinimalInLine</property>
 				<property name="disableHtmlInit">true</property>
 			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(config.getWebsiteParam("enableEditorialtitle"), layout.mode,
+					'hidden')}
+				</mode>
+			</widgetModes>
 		</widget>
 
 		<widget name="osivia_widget_abstract" type="htmltext">
@@ -58,6 +63,11 @@
 				<property name="editorSelector">mceEditorMinimal</property>
 				<property name="disableHtmlInit">true</property>
 			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(config.getWebsiteParam("enableAbstract"), layout.mode,
+					'hidden')}
+				</mode>
+			</widgetModes>
 		</widget>
 
 		<widget name="osivia_widget_description" type="textarea">
@@ -85,6 +95,11 @@
 				<field>ttcn:picture</field>
 				<field>ttcn:picture/filename</field>
 			</fields>
+			<widgetModes>
+				<mode value="any">#{nxu:test(config.getWebsiteParam("enablePicture"), layout.mode,
+					'hidden')}
+				</mode>
+			</widgetModes>
 		</widget>
 		
 		<widget name="osivia_widget_thumbnail" type="file">
@@ -135,6 +150,11 @@
 				<property name="disableHtmlInit">true</property>
 				<property name="editorSelector">mceSimpleEditorResponsive</property>
 			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(config.getWebsiteParam("enableContent"), layout.mode,
+					'hidden')}
+				</mode>
+			</widgetModes>			
 		</widget>
 
 		<widget name="web_presentation" type="layout">

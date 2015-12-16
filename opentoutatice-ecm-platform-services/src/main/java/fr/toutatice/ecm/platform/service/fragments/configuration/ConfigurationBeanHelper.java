@@ -24,8 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
-
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.ScopeType;
@@ -57,7 +56,12 @@ import fr.toutatice.ecm.platform.core.local.configuration.WebConfsConfigurationC
 @Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ConfigurationBeanHelper {
 
-    private static final Log log = LogFactory.getLog(ConfigurationBeanHelper.class);
+    /**
+	 * 
+	 */
+	private static final String WCONF_OPTIONS = "wconf:options";
+
+	private static final Log log = LogFactory.getLog(ConfigurationBeanHelper.class);
 
     private static final String WEB_CONFS_QUERY = "select * from WebConfiguration where ecm:ancestorId = '%s' and wconf:type = '%s' "
             + "AND wconf:enabled=1 AND ecm:mixinType != 'HiddenInNavigation'  AND ecm:currentLifeCycleState <> 'deleted' ORDER BY ecm:pos";
@@ -290,9 +294,6 @@ public class ConfigurationBeanHelper {
         try {
             CoreSession session = navigationContext.getOrCreateDocumentManager();
 
-            // get current document
-            FacesContext context = FacesContext.getCurrentInstance();
-
             String type = doc.getType();
             String confPath = null;
 
@@ -328,8 +329,8 @@ public class ConfigurationBeanHelper {
 
                 Map<String, Object> properties = config.getProperties("webconfiguration");
 
-                if (properties.containsKey("wconf:options") && properties.get("wconf:options") != null)
-                    return (List<Map<String, String>>) properties.get("wconf:options");
+                if (properties.containsKey(WCONF_OPTIONS) && properties.get(WCONF_OPTIONS) != null)
+                    return (List<Map<String, String>>) properties.get(WCONF_OPTIONS);
 
             }
 
@@ -339,5 +340,35 @@ public class ConfigurationBeanHelper {
         }
 
         return null;
+    }
+    
+    /**
+     * Evaluate a configuration option on website options
+     * 
+     * @param paramName the param name
+     * @return true or false
+     */
+    public boolean getWebsiteParam(String paramName) {
+    	
+    	boolean conf = false;
+    	
+    	DocumentModelList configs = getConfigs("websiteConfig");
+    	
+    	if(configs.size() > 0) {
+    		DocumentModel websiteconfig = configs.get(0);
+    		
+    		Map<String, Object> properties = websiteconfig.getProperties("webconfiguration");
+    		
+    		List<Map<String, String>> options = (List<Map<String, String>>) properties.get(WCONF_OPTIONS);
+    		for(Map<String, String> option : options) {
+    			if(option.get("propertyName").equals(paramName)) {
+    				conf = BooleanUtils.toBoolean(option.get("propertyDefaultValue"));
+    				break;
+    			}
+    		}
+
+    	}
+   	
+    	return conf;
     }
 }
