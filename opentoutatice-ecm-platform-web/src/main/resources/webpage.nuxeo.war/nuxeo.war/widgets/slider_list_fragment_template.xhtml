@@ -47,6 +47,17 @@
 							<h:message id="#{widget.id}_sldlistDocType_message"
 								styleClass="text-danger" for="#{widget.id}_sldlistDocType" />
 						</div>
+						
+						<label class="control-label col-sm-2"
+							for="#{widget.id}_style">#{messages['osivia.fragment.criteria.list.style.title']}</label>
+						<div class="col-sm-10">
+							<oh:icons id="#{widget.id}_sldlistStyle" src="#{config.sliderTemplates}"
+								value="#{sldlist_fgt.displaySlider.style}" ulStyleClass="cssStyleList"
+								binding="#{templateSimpleForm.simpleComponent}"
+								inputClientId="#{templateSimpleForm.simpleComponentClientId}"
+								multiSelect="false" iconsGroup="sliderTemplateGroup" />					
+						</div>
+						
 					</div>
 
 					<div class="form-group">

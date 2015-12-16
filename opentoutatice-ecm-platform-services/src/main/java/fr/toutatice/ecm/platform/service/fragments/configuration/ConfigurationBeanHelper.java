@@ -278,6 +278,14 @@ public class ConfigurationBeanHelper {
 
     /**
      * 
+     * @return a list of slider templates who can be setted on the carousel fragment
+     */
+    public DocumentModelList getSliderTemplates() {
+        return getConfigs("slidertemplate");
+    }
+    
+    /**
+     * 
      * @return the avaliable regions layouts
      */
     public DocumentModelList getRegionLayouts() {
