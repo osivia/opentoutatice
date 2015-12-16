@@ -38,10 +38,10 @@
                                 <h:inputHidden id="targetPath" class="targetPath"
                                     value="#{zoom.href}" />
                                 <h:inputText id="targetTitle" class="targetTitle form-control"
-                                    value="#{zoom.hrefTitle}"/>
+                                    value="#{zoom.hrefTitle}" onblur="setManualPath(1);"/>
                                 <span class="input-group-btn"> <a href="#targetPath"
                                     id="delete_target" class="btn btn-default"
-                                    onclick="removeTarget();"> <i
+                                    onclick="removeTarget(1);"> <i
                                         class="glyphicons delete"></i>
                                 </a>
                                 </span>
@@ -50,7 +50,7 @@
                         </div>
                         <div class="col-sm-3">
                             <a href="#" class="btn btn-default"
-                                onclick="origin_='ew'; window.open('#{baseURL}editor_link_search_document.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true', '_blank','toolbar=0,location=1,directories=0,status=1,menubar=0,scrollbars=1,resizable=1,width=640,height=480'); return false;"><i
+                                onclick="origin_='ew'; window.open('#{baseURL}editor_link_search_document.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true', '_blank','toolbar=0,location=1,directories=0,status=1,menubar=0,scrollbars=1,resizable=1,width=800,height=480'); return false;"><i
                                 class="glyphicons halflings search"></i></a>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
                         </div>
                         <div class="col-sm-3">
                             <a href="#" class="btn btn-default"
-                                onclick="origin_='ew'; window.open('#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true', '_blank','toolbar=0,location=1,directories=0,status=1,menubar=0,scrollbars=1,resizable=1,width=640,height=480'); return false;"><i
+                                onclick="origin_='ew'; window.open('#{baseURL}editor_image_upload.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true', '_blank','toolbar=0,location=1,directories=0,status=1,menubar=0,scrollbars=1,resizable=1,width=800,height=480'); return false;"><i
                                 class="glyphicons halflings pencil"></i></a>
                         </div>
                     </div>

@@ -47,6 +47,7 @@
 			<xs:element name="refURI" type="xs:string" />
 			<xs:element name="href" type="xs:string" />
 			<xs:element name="title" type="xs:string" />
+			<xs:element name="targetTitle" type="xs:string" />
 			<xs:element name="icon" type="xs:string" />
 		</xs:sequence>
 	</xs:complexType>

@@ -6,7 +6,7 @@
 
 	<groupId>opentoutatice-ecm.platform</groupId>
 	<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-	<version>3.2.0-SNAPSHOT</version>
+	<version>3.2.0-a-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>open toutatice plate-forme</name>
 
@@ -39,6 +39,14 @@
 	<dependencyManagement>
 		<dependencies>
 			<!-- Nx dependencies -->
+			<dependency>
+				<groupId>org.nuxeo.ecm.distribution</groupId>
+				<artifactId>nuxeo-distribution</artifactId>
+				<version>${nuxeo.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
 			<dependency>
 				<groupId>org.nuxeo.ecm.core</groupId>
 				<artifactId>nuxeo-core</artifactId>
@@ -207,25 +215,25 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-                <groupId>org.nuxeo.ecm.platform</groupId>
-                <artifactId>nuxeo-platform-ui-web</artifactId>
-                <version>${nuxeo.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.nuxeo.ecm.platform</groupId>
-                <artifactId>nuxeo-platform-webapp-core</artifactId>
-                <version>${nuxeo.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.nuxeo.ecm.platform</groupId>
-                <artifactId>nuxeo-platform-notification-api</artifactId>
-                <version>${nuxeo.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.nuxeo.ecm.platform</groupId>
-                <artifactId>nuxeo-platform-publisher-web</artifactId>
-                <version>${nuxeo.version}</version>
-            </dependency>
+				<groupId>org.nuxeo.ecm.platform</groupId>
+				<artifactId>nuxeo-platform-ui-web</artifactId>
+				<version>${nuxeo.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.nuxeo.ecm.platform</groupId>
+				<artifactId>nuxeo-platform-webapp-core</artifactId>
+				<version>${nuxeo.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.nuxeo.ecm.platform</groupId>
+				<artifactId>nuxeo-platform-notification-api</artifactId>
+				<version>${nuxeo.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.nuxeo.ecm.platform</groupId>
+				<artifactId>nuxeo-platform-publisher-web</artifactId>
+				<version>${nuxeo.version}</version>
+			</dependency>
 
 			<!-- Opentoutatice dependencies -->
 			<dependency>
@@ -239,10 +247,20 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-                <groupId>opentoutatice-ecm.platform</groupId>
-                <artifactId>opentoutatice-ecm-platform-web</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+				<groupId>opentoutatice-ecm.platform</groupId>
+				<artifactId>opentoutatice-ecm-platform-web</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>opentoutatice-ecm.platform</groupId>
+				<artifactId>opentoutatice-ecm-platform-web-mode</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>opentoutatice-ecm.platform</groupId>
+				<artifactId>opentoutatice-ecm-platform-automation</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<!-- Librairies dependencies -->
 			<dependency>
@@ -330,50 +348,92 @@
 	</dependencyManagement>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.2.1</version>
-				<configuration>
-					<tagBase>http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags</tagBase>
-					<releaseProfiles>unpack,pack</releaseProfiles>
-					<preparationGoals>clean install</preparationGoals>
-					<goals>deploy</goals>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<archive>
-						<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-						<manifestEntries>
-							<Bundle-Version>${eclipseVersion}-t${buildNumber}</Bundle-Version>
-							<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+						<source>1.7</source>
+						<target>1.7</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.2.1</version>
+					<configuration>
+						<tagBase>http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags</tagBase>
+						<releaseProfiles>unpack,pack</releaseProfiles>
+						<preparationGoals>clean install</preparationGoals>
+						<goals>deploy</goals>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.3</version>
+					<configuration>
+						<archive>
+							<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+							<manifestEntries>
+								<Bundle-Version>${eclipseVersion}-t${buildNumber}</Bundle-Version>
+								<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+							</manifestEntries>
+						</archive>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>org.nuxeo.build</groupId>
 					<artifactId>ant-assembly-maven-plugin</artifactId>
 					<version>2.0.1</version>
 					<extensions>true</extensions>
+				</plugin>
+				<plugin>
+	                <groupId>org.lesscss</groupId>
+	                <artifactId>lesscss-maven-plugin</artifactId>
+	                <version>1.7.0.1.1</version>
+	                <configuration>
+	                    <sourceDirectory>${project.basedir}/src/main/less</sourceDirectory>
+	                    <outputDirectory>${project.basedir}/src/main/resources/nuxeo.war/css</outputDirectory>
+	                    <compress>true</compress>
+	                    <includes>
+	                        <include>toutatice-popup.less</include>
+	                        <include>plugin-popup.less</include>
+	                        <include>custom-popup.less</include>
+	                        <include>fragments-popup.less</include>
+	                        <include>custom-remote-publishing.less</include>
+	                    </includes>
+	                    <outputFileFormat>{fileName}.min.css</outputFileFormat>
+	                </configuration>
+	                <executions>
+	                    <execution>
+	                        <goals>
+	                            <goal>compile</goal>
+	                        </goals>
+	                    </execution>
+	                </executions>
+	            </plugin>
+	            <plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>copy-jar</id>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<tasks>
+									<copy file="${basedir}/target/${project.build.finalName}.jar"
+										todir="${build.toutatice.ecm.modules.dir}/3.1.0" />
+								</tasks>
+							</configuration>
+							<phase>package</phase>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>

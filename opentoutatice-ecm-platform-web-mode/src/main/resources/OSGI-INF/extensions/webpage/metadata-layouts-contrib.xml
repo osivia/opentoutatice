@@ -54,10 +54,12 @@
 				<row>
 					<widget>toutatice_showInMenu_widget</widget>
 				</row>
-
-				<row>
+                <row>
+                    <widget>toutatice_removeWebId_widget</widget>
+                </row>
+				<!-- <row>
 					<widget>ottc_weburl</widget>
-				</row>
+				</row> -->
 			</rows>
 		</layout>
 

@@ -14,7 +14,7 @@
 		</action>
 
 		<action id="OSIVIA_EDIT_CURRENT_DOCUMENT" link="#{documentActions.updateCurrentDocument('done')}"
-			order="0" label="command.save.draft">
+			order="0" label="command.save">
 			<category>OSIVIA_EDIT_DOCUMENT_FORM</category>
 		</action>
 

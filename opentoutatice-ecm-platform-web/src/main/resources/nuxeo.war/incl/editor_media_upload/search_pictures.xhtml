@@ -12,10 +12,6 @@
 
     <div>
 
-    <script type="text/javascript">
-        var selectedPictureUrl = "";
-    </script>
-
         <h:form class="form-horizontal" role="form">
 
             <p class="h4">
@@ -74,34 +70,6 @@
 
         <div id="content">
 
-            <a4j:outputPanel id="feedback">
-                <script type="text/javascript">
-            if(selectedPictureUrl != ""){
-                if (window.opener.tinyMCE) {
-                    var tinyMCE = window.opener.tinyMCE;
-                    var enlargeable = jQuery('#picture_style_value').val();
-                    var klass = "";
-                    if(enlargeable){
-                        klass = "enlargeable";
-                    }
-                    var html = '&lt;img class="' + klass + '" src="' + selectedPictureUrl + '"/&gt;';
-                    tinyMCE.execCommand('mceInsertContent', false, html);
-                    self.close();
-                }
-                // For Fragment
-                if(window.opener.$targetPath){
-                    var relativeUrl = selectedPictureUrl.replace(
-                                    /^(?:\/\/|[^\/]+)*\//, "/");
-                            
-                    var picturePathField = window.opener.$picturePath;
-                    picturePathField.val(relativeUrl);
-                    window.opener.previewImg();
-                    self.close();
-                }
-            }
-                </script>
-            </a4j:outputPanel>
-
             <p class="h4">
                 <h:outputText
                     value="#{messages['toutatice.label.imageUpload.search.results']}" />
@@ -146,7 +114,7 @@
                                             items="#{editorImageActions.searchImageResults}">
                                         <div class="col-xs-3 col-md-3">
                                             <div class="picture">
-                                                <a4j:commandLink href="#" class="thumbnail" render="feedback" onclick="selectedPictureUrl = '#{oh:preferredImgUrl('downloadPicture', document, editorImageActions.imageProperty, currentDocument.dublincore.modified)}'"
+                                                <a4j:commandLink href="#" class="thumbnail" render="feedback" onclick="javascript:updateCaller(jQuery(this).find('img')[0], jQuery('#img_style_value').val());"
                                                 limitRender="true"> 
                                                 <h:graphicImage
                                                             value="#{oh:preferredImgUrl('downloadPicture', document, 'Thumbnail:content', currentDocument.dublincore.modified)}" />

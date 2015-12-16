@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>3.2.0-SNAPSHOT</version>
+		<version>3.2.0-a-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-marketplace</artifactId>
@@ -14,20 +14,6 @@
 	<properties>
 		<nuxeo.cap.distribution.version>6.0</nuxeo.cap.distribution.version>
 	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<!-- Import Nuxeo BOM -->
-			<dependency>
-				<groupId>org.nuxeo.ecm.distribution</groupId>
-				<artifactId>nuxeo-distribution</artifactId>
-				<!-- Distrib HF23 doesn't exist yet -->
-				<version>6.0-HF21</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<dependencies>
 		<!-- Base distribution(s) for the MP -->
@@ -41,27 +27,24 @@
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
-			<version>${project.version}</version>
-			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-automation</artifactId>
-			<version>${project.version}</version>
-			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-services</artifactId>
-			<version>${project.version}</version>
-			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-web</artifactId>
-			<version>${project.version}</version>
-			<type>jar</type>
 		</dependency>
+		<dependency>
+            <groupId>opentoutatice-ecm.platform</groupId>
+            <artifactId>opentoutatice-ecm-platform-web-mode</artifactId>
+        </dependency>
+		
 		<!-- Necessary for Portal -->
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
@@ -101,6 +84,10 @@
 		</profile>
 		<profile>
 			<id>QUALIF</id>
+			
+			<activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
 
 			<properties>
 				<profileName>QUALIF</profileName>
@@ -116,9 +103,9 @@
 		<profile>
 			<id>PROD</id>
 
-			<activation>
+			<!-- activation>
 				<activeByDefault>true</activeByDefault>
-			</activation>
+			</activation -->
 
 			<properties>
 				<profileName>PROD</profileName>

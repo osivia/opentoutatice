@@ -22,32 +22,6 @@
 		<h:form enctype="multipart/form-data" id="uploadForm"
 			class="form form-horizontal" disableDoubleClickShield="true">
 
-			<script type="text/javascript">
-                function updateEditorWithImagePJ(img, klass) {
-                        var tinyMCE = window.opener.tinyMCE;
-                        var html = '&lt;img src="' + img.src + '" class="' + klass + '"/&gt;';
-                        tinyMCE.execCommand('mceInsertContent', false, html);
-                }
-
-                function updateFragment(img, klass) {
-                    var imgSrc = img.src;
-                    var relativeUrl = imgSrc.replace(/^(?:\/\/|[^\/]+)*\//, "/");
-                    var picturePathField = window.opener.$picturePath;
-                    picturePathField.val(relativeUrl);
-                    window.opener.previewImg();
-                }
-
-                function updateCaller(img, klass) {
-                    if (window.opener.origin_ == "ew") {
-                        updateFragment(img, klass);
-                    } else {
-                        updateEditorWithImagePJ(img, klass);
-                    } 
-                    window.opener.origin_ = "none";
-                    self.close();
-                }
-            </script>
-
 			<c:choose>
 				<c:when test="#{empty currentDocument.toutatice.images}">
 

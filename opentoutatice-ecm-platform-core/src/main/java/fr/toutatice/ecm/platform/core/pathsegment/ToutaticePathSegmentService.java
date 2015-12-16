@@ -20,6 +20,7 @@ package fr.toutatice.ecm.platform.core.pathsegment;
 
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.nuxeo.common.utils.IdUtils;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -33,7 +34,7 @@ public class ToutaticePathSegmentService implements PathSegmentService {
 	public String generatePathSegment(DocumentModel doc) throws ClientException {
 		String s = doc.getTitle();
 		if (s == null) {
-			s = "";
+			s = StringUtils.EMPTY;
 		}
 		
 		return IdUtils.generateId(s, "-", true, 24);		

@@ -1,14 +1,15 @@
-// FIXME: use Loïc's method (it certainly doesn't work here becaus of bad jquery js import)
 var $JQry = jQuery.noConflict();
 
 // EditableWindow or TinyMCE
 var origin_ = "none";
 
 var $picturePath;
-var $targetPath;
-var $targetTitle;
+var $targetPath = new Array();
+var $targetTitle = new Array();
+var index_ = 1;
 
 $JQry(window).load(function() {
+
 	var $inputPath = $JQry("input[type=hidden][id*='picturePath']")[0];
 	$picturePath = $JQry($inputPath);
 
@@ -16,35 +17,41 @@ $JQry(window).load(function() {
 		previewImg();
 	}
 
-	var $inputLink = $JQry("input[type=hidden][id*='targetPath']")[0];
-	$targetPath = $JQry($inputLink);
+	var $inputLinks = $JQry("input[type=hidden][id*='targetPath']");
+	var $inputTitles = $JQry("[id*='targetTitle']");
 
-	var $inputTitle = $JQry("[id*='targetTitle']")[0];
-	$inputTitle.addEventListener("blur", setManualPath);
+	for(var incr = 0; incr < $inputLinks.length; incr++){
 
-	$targetTitle = $JQry($inputTitle);
+		$targetPath[incr] = $JQry($inputLinks)[incr];	
+		//$inputTitles[incr].addEventListener("blur", setManualPath);
+
+		$targetTitle[incr] = $JQry($inputTitles[incr]);
 	
-	// It is not an external URL
-	if(!$targetTitle.val().contains("/") && $targetTitle.val() != ""){
-		$targetTitle.attr("readonly","readonly");
+		// It is not an external URL
+		if(!$targetTitle[incr].val().contains("/") && $targetTitle[incr].val() != ""){
+			$targetTitle[incr].attr("readonly","readonly");
+		}
 	}
+	
 });
 
 function previewImg() {
 	$JQry("#imagePreview").attr("src", $picturePath.val());
 }
 
-function removeTarget() {
-	$targetPath.val("");
-	$targetTitle.val("");
+function removeTarget(index) {
+	var indx = index - 1;
+	$JQry($targetPath[indx]).val("");
+	$JQry($targetTitle[indx]).val("");
 
-	if($targetTitle.prop("readonly")){
-		$targetTitle.removeAttr("readonly");
+	if($JQry($targetTitle[indx]).prop("readonly")){
+		$JQry($targetTitle[indx]).removeAttr("readonly");
 	}
 }
 
-function setManualPath() {
-	if($targetTitle.val() != "" && $targetTitle.val().contains("/")){
-		$targetPath.val($targetTitle.val());
+function setManualPath(index) {
+	var indx = index - 1;
+	if($JQry($targetTitle[indx]).val() != "" && $JQry($targetTitle[indx]).val().contains("/")){
+		$JQry($targetPath[indx]).val($JQry($targetTitle[indx]).val());
 	}
 }
