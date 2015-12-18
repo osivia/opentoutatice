@@ -6,7 +6,7 @@
 
 	<groupId>opentoutatice-ecm.platform</groupId>
 	<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-	<version>3.2.0-a-SNAPSHOT</version>
+	<version>3.2.0-b-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>open toutatice plate-forme</name>
 
@@ -305,11 +305,6 @@
 				<groupId>org.richfaces</groupId>
 				<artifactId>richfaces-a4j</artifactId>
 				<version>${org.richfaces.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>javax.servlet-api</artifactId>
-				<version>${javax.servlet.version}</version>
 			</dependency>
 
 			<!-- Tests -->
