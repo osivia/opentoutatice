@@ -54,12 +54,9 @@
 				<row>
 					<widget>toutatice_showInMenu_widget</widget>
 				</row>
-                <row>
-                    <widget>toutatice_removeWebId_widget</widget>
-                </row>
-				<!-- <row>
+				<row>
 					<widget>ottc_weburl</widget>
-				</row> -->
+				</row> 
 			</rows>
 		</layout>
 
@@ -77,9 +74,8 @@
 				<field>ottcweb:segment</field>
 			</fields>
 			<properties widgetMode="edit">
-				<!-- <property name="validator">#{toutaticeValidator.validateWebId}
-				</property>
-				<property name="disabled">#{!toutaticeValidator.spaceSupportsWebId or currentDocument.hasFacet('WebidDisabled')}
+				<property name="validator">#{webModeValidator.validateSegment}</property>
+				<!-- <property name="disabled">#{!toutaticeValidator.spaceSupportsWebId or currentDocument.hasFacet('WebidDisabled')}
 				</property>
 				<property name="required">#{!toutaticeValidator.spaceSupportsWebId or currentDocument.hasFacet('WebidDisabled')}
 				</property> -->
@@ -105,12 +101,6 @@
 			<properties widgetMode="any">
 				<property name="name">web_navigation</property>
 			</properties>
-			<widgetModes>
-				<mode value="any"> #{documentActions.showShowInMenu()
-					? layout.mode :
-					'hidden'}
-				</mode>
-			</widgetModes>
 		</widget>
 		
 		<widget name="metadata_toutatice_keywords_widget" type="template">

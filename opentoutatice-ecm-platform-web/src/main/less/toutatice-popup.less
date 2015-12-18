@@ -10,15 +10,21 @@ body {
 }
 
 .ttc-form-control {
-	& > input, select {
+	input {
 		.form-control;
 	}
+	
+	select {
+        .form-control;
+        height: auto;
+    }
+	
 	& > textarea {
 	   .form-control;
 	   height: 75px; 
 	}
 	
-	& > input[type="checkbox"] {
+	input[type="checkbox"] {
 		width: auto;
 		box-shadow: none;
 	}

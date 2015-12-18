@@ -11,6 +11,7 @@
 			* Remote sections informations available for Portal
 			* Suggest Users Widget filtering on permission on current document
 			* Publication date taken into account in list requests
+			* Part of web mode in opentoutatice-web-mode plugin henceforth
 
 			Bug fixes :
 			* #929: Error on contentView after asynchronous treatment which can have removed documents

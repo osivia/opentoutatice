@@ -24,7 +24,7 @@
 					<widget>picture</widget>
 				</row>
 				<row>
-					<widget>content</widget>
+					<widget>ottc_content</widget>
 				</row>
 				<row>
 					<widget>enable_weburl</widget>
@@ -47,7 +47,7 @@
 					<widget>picture</widget>
 				</row>
 				<row>
-					<widget>content</widget>
+					<widget>ottc_content</widget>
 				</row>
 				<row>
 					<widget>enable_weburl</widget>
