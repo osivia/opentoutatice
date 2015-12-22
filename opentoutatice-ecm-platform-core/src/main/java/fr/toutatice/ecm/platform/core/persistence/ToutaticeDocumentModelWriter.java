@@ -57,27 +57,23 @@ public class ToutaticeDocumentModelWriter extends DocumentModelWriter {
 
 	}
 	
-    private void adaptACPs(DocumentModel createDocument) {
+	private void adaptACPs(DocumentModel createDocument) {
 
-        if (this.session.hasPermission(createDocument.getRef(),
-                SecurityConstants.WRITE)) {
+        if (this.session.hasPermission(createDocument.getRef(), SecurityConstants.WRITE)) {
 
-                ACP acp = super.session.getACP(createDocument.getRef());
-                if (acp != null) {
-                    ACL inheritedAcl = acp.getACL(ACL.LOCAL_ACL);
-                    if(CollectionUtils.isNotEmpty(inheritedAcl)){
-                        adaptACEs(createDocument, super.session, acp, inheritedAcl);
-                        
-                        
-                        if(!inheritedAcl.contains(ACE.BLOCK)){
-                            ACL localAces = acp.getACL(ACL.LOCAL_ACL);
-                            if (CollectionUtils.isNotEmpty(localAces)) {
-                                adaptACEs(createDocument, super.session, acp, localAces);
-                            }
-                        }
+            ACP acp = super.session.getACP(createDocument.getRef());
+            if (acp != null) {
+                ACL inheritedAcl = acp.getACL(ACL.INHERITED_ACL);
+                if (CollectionUtils.isNotEmpty(inheritedAcl)) {
+                    adaptACEs(createDocument, super.session, acp, inheritedAcl);
+
+                    ACL localAces = acp.getACL(ACL.LOCAL_ACL);
+                    if (CollectionUtils.isNotEmpty(localAces)) {
+                        adaptACEs(createDocument, super.session, acp, localAces);
                     }
-                    
                 }
+
+            }
 
         }
 
