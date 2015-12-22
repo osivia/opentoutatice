@@ -66,10 +66,10 @@
             <div class="col-sm-12">
                 <div class="col-sm-10">
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="href#{index}">#{messages['osivia.fragment.links.form.url']}</label>
+                        <label class="control-label col-sm-2" for="href#{index}">#{messages['osivia.fragment.links.form.url']}<span style="display:none"> #{index}</span></label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <h:inputHidden id="targetPath_#{index}" value="#{link.href}" />
+                                <h:inputHidden id="targetPath_#{index}" value="#{link.href}" validator="#{fgtsValidator.validateExternelURLField}"/>
                                 <h:inputText id="targetTitle_#{index}" class="form-control"
                                     value="#{link.targetTitle}" onblur="setManualPath(#{index});">
                                 </h:inputText>
@@ -80,6 +80,7 @@
                                 </a>
                                 </span>
                             </div>
+                            <h:message for="targetPath_#{index}" styleClass="errorMessage" />
                         </div>
                     </div>
 

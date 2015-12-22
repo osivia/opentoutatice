@@ -36,7 +36,7 @@
                         <div class="col-sm-7">
                             <div class="input-group ">
                                 <h:inputHidden id="targetPath" class="targetPath"
-                                    value="#{zoom.href}" />
+                                    value="#{zoom.href}" validator="#{fgtsValidator.validateExternelURLField}" />
                                 <h:inputText id="targetTitle" class="targetTitle form-control"
                                     value="#{zoom.hrefTitle}" onblur="setManualPath(1);"/>
                                 <span class="input-group-btn"> <a href="#targetPath"
@@ -53,6 +53,7 @@
                                 onclick="origin_='ew'; window.open('#{baseURL}editor_link_search_document.faces?conversationId=#{org.jboss.seam.core.manager.currentConversationId}&amp;conversationIsLongRunning=true', '_blank','toolbar=0,location=1,directories=0,status=1,menubar=0,scrollbars=1,resizable=1,width=800,height=480'); return false;"><i
                                 class="glyphicons halflings search"></i></a>
                         </div>
+                        <h:message for="targetPath" styleClass="errorMessage" />
                     </div>
                 </div>              
                 
@@ -81,7 +82,7 @@
                 <div class="form-group">
                     <h:outputLabel value="#{messages['osivia.fragment.zoom.form.description']}" class="control-label col-sm-2" />
                     <div class="col-sm-8">
-                        <nxl:widgetType id="zl_desc" name="ottc_htmltext" mode="edit" class="form-control" 
+                        <nxl:widgetType id="zl_desc" name="ottc_inline_htmltext" mode="edit" class="form-control" 
                             title="Texte du lien." value="#{zoom.content}" />
                     </div>
                 </div>

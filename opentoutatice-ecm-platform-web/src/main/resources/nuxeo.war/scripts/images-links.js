@@ -1,3 +1,4 @@
+// FIXME: rewrite...
 var $JQry = jQuery.noConflict();
 
 // EditableWindow or TinyMCE
@@ -28,7 +29,7 @@ $JQry(window).load(function() {
 		$targetTitle[incr] = $JQry($inputTitles[incr]);
 	
 		// It is not an external URL
-		if(!$targetTitle[incr].val().contains("/") && $targetTitle[incr].val() != ""){
+		if($JQry($targetPath[incr]).val().contains("/nuxeo/")){
 			$targetTitle[incr].attr("readonly","readonly");
 		}
 	}
@@ -51,7 +52,25 @@ function removeTarget(index) {
 
 function setManualPath(index) {
 	var indx = index - 1;
-	if($JQry($targetTitle[indx]).val() != "" && $JQry($targetTitle[indx]).val().contains("/")){
-		$JQry($targetPath[indx]).val($JQry($targetTitle[indx]).val());
+	if(!$JQry($targetTitle[indx]).prop("readonly")){
+		if($JQry($targetTitle[indx]).val() != ""){
+			var targetTitleValue = $JQry($targetTitle[indx]).val();
+
+			var parts = targetTitleValue.split("/");
+			var partsLenght = parts.length;
+			if(partsLenght > 0){
+				var domainsParts = parts[0].split(".");
+				partsLenght = domainsParts.length;
+			}
+
+			// Defaults behaviours
+			if(partsLenght < 3){
+				targetTitleValue = "www.".concat(targetTitleValue);
+			}
+			if(targetTitleValue.search("http//") != 0){
+				targetTitleValue = "http://".concat(targetTitleValue);
+			}
+			$JQry($targetPath[indx]).val(targetTitleValue);
+		}
 	}
 }
