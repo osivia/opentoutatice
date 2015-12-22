@@ -19,6 +19,7 @@
  */
 package fr.toutatice.ecm.platform.web.userservices;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -64,7 +65,9 @@ import fr.toutatice.ecm.platform.web.local.configuration.WebConfsConfigurationAc
 @Name("toutaticeValidator")
 @Scope(ScopeType.SESSION)
 @Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
-public class ToutaticeValidatorBean {
+public class ToutaticeValidatorBean implements Serializable {
+
+    private static final long serialVersionUID = -6136329151688755416L;
 
     private static final Log log = LogFactory.getLog(ToutaticeValidatorBean.class);
 
