@@ -41,16 +41,14 @@
 			<event>toutaticeElasticSearchDocumentIndexation</event>
 		</listener>
 
-        <listener name="toutaticePublishLocalStateListener" async="false"
+        <listener name="toutaticeLocalPublishLiveListener" async="false"
 			postCommit="false"
-			class="fr.toutatice.ecm.platform.core.listener.ToutaticePublishLocalStateListener"
+			class="fr.toutatice.ecm.platform.core.listener.ToutaticeLocalPublishLiveListener"
 			priority="90">
 			<event>documentCreated</event>
 			<event>documentCreatedByCopy</event>
 			<event>documentImported</event>
 			<event>documentMoved</event>
-			<event>documentLocallyPublished</event>
-			<event>documentPublished</event>
 		</listener>
 
 	</extension>

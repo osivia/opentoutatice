@@ -14,7 +14,6 @@
 		<doctype name="*" append="true">
 			<schema name="uid" />
 			<schema name="toutatice" />
-			<schema name="publish_local_state" />
 			<facet name="Versionable" />
 		</doctype>
 
@@ -22,10 +21,6 @@
 
 	<extension target="org.nuxeo.ecm.core.schema.TypeService"
 		point="doctype">
-
-		<proxies>
-			<schema name="publish_local_state" />
-		</proxies>
 
 		<doctype name="Workspace" append="true">
 			<facet name="Space" />

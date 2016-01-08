@@ -138,24 +138,22 @@ public class FetchPublicationInfos {
     @Param(name = "webid", required = false)
     protected String webid;
 
-    @Param(name = "navigationPath", required = false)
-    protected String navigationPath;
-
-    @Param(name = "displayLiveVersion", required = false)
-    protected boolean draft;
-
     @Param(name = "parentId", required = false)
     protected String parentId;
     
     @Param(name = "parentPath", required = false)
     protected String parentPath;
+    
+    @Deprecated
+    @Param(name = "displayLiveVersion", required = false)
+    protected boolean draft;
+    
+    @Deprecated
+    @Param(name = "navigationPath", required = false)
+    protected String navigationPath;
 
     @OperationMethod
     public Object run() throws Exception {
-
-        if (log.isDebugEnabled()) {
-            TimeDebugger.getInstance("run", coreSession.getSessionId()).setStartTime();
-        }
 
         /* Réponse de l'opération sous forme de flux JSon */
         JSONArray rowInfosPubli = new JSONArray();
@@ -165,50 +163,18 @@ public class FetchPublicationInfos {
 
         // WebId given
         if (StringUtils.isNotBlank(webid)) {
-            // The WebIdResolver resoltion politic is, for instance, applicable
-            // for referenced links only (e.g. link in a rich text).
-
-            DocumentModelList documentsByWebId = WebIdResolver.getDocumentsByWebId(coreSession, parentId, parentPath, draft, webid);
-            if (CollectionUtils.isNotEmpty(documentsByWebId) && documentsByWebId.size() == 1) {
-                document = documentsByWebId.get(0);
-                
-            } else if(CollectionUtils.isNotEmpty(documentsByWebId) && documentsByWebId.size() > 1) {
-                // Filter proxies with Read permission
-                DocumentModelList readableRemoteProxies = getReadableRemoteProxies(documentsByWebId);
-                
-                if (readableRemoteProxies.size() == 0) {
-                    
-                    errorsCodes.add(Integer.valueOf(ERROR_CONTENT_FORBIDDEN));
-                    infosPubli.element("errorCodes", errorsCodes);
-                    rowInfosPubli.add(infosPubli); 
-                    return createBlob(rowInfosPubli);
-
-                } else if(readableRemoteProxies.size() == 1){
-                    document = readableRemoteProxies.get(0);
-                    
-                } else if(readableRemoteProxies.size() > 1) {
-                    
-                    // We store live document with given webId.
-                    DocumentModel liveDocumentByWebId = WebIdResolver.getLiveDocumentByWebId(coreSession, webid);
-                    if (liveDocumentByWebId == null) {
-                        
-                        errorsCodes.add(Integer.valueOf(ERROR_CONTENT_NOT_FOUND));
-                        infosPubli.element("errorCodes", errorsCodes);
-                        
-                    } else {
-                        
-                        infosPubli.element("hasManyProxies", Boolean.TRUE);
-                        infosPubli.element("documentPath", URLEncoder.encode(liveDocumentByWebId.getPathAsString(), "UTF-8"));
-                        infosPubli.element("liveId", StringUtils.EMPTY);
-                    }
-
-                    rowInfosPubli.add(infosPubli);
-                    return createBlob(rowInfosPubli);
-
-                }
+            
+            Object documentByWebIdRes = getDocumentByWebId(webid);
+            if (isError(documentByWebIdRes)) {
+                errorsCodes.add((Integer) documentByWebIdRes);
+                infosPubli.element("errorCodes", errorsCodes);
+                rowInfosPubli.add(infosPubli);
+                return createBlob(rowInfosPubli);
+            } else {
+                document = (DocumentModel) documentByWebIdRes;
             }
+            
         }
-
 
         /*
          * Récupération du DocumentModel dont le path ou uuid est donné en
@@ -317,29 +283,7 @@ public class FetchPublicationInfos {
         infosPubli.element("errorCodes", errorsCodes);
         rowInfosPubli.add(infosPubli);
 
-        if (log.isDebugEnabled()) {
-            TimeDebugger timeDebugger = TimeDebugger.getInstance("run", coreSession.getSessionId());
-            long totalTime = timeDebugger.getTotalTime();
-            log.debug(timeDebugger.getMessage("run", coreSession.getSessionId(), document.getPathAsString(), totalTime));
-        }
-
         return createBlob(rowInfosPubli);
-    }
-
-    /**
-     * @param documentsByWebId
-     * @return readable remote proxies by current user.
-     */
-    public DocumentModelList getReadableRemoteProxies(DocumentModelList proxies) {
-        DocumentModelList readableProxies = new DocumentModelListImpl();
-        
-        for(DocumentModel proxy : proxies){
-            if(this.coreSession.hasPermission(proxy.getRef(), "Read")){
-                readableProxies.add(proxy);
-            }
-        }
-         
-        return readableProxies;
     }
 
     /**
@@ -425,21 +369,8 @@ public class FetchPublicationInfos {
      * @throws ClientException
      */
     private Boolean canUserValidate() throws ServeurException, ClientException {
-
-        if (log.isDebugEnabled()) {
-            TimeDebugger.getInstance("canUserValidate", coreSession.getSessionId()).setStartTime();
-        }
-
         // Direct on/off line
-        Boolean canValidate = checkValidatePermission();
-
-        if (log.isDebugEnabled()) {
-            TimeDebugger timeDebugger = TimeDebugger.getInstance("canUserValidate", coreSession.getSessionId());
-            long totalTime = timeDebugger.getTotalTime();
-            log.debug(timeDebugger.getMessage("canUserValidate", coreSession.getSessionId(), document.getPathAsString(), totalTime));
-        }
-
-        return canValidate;
+        return checkValidatePermission();
     }
 
     private Boolean checkValidatePermission() throws ServeurException {
@@ -568,6 +499,25 @@ public class FetchPublicationInfos {
         if (doc == null) {
             return ERROR_CONTENT_NOT_FOUND;
         }
+        return doc;
+    }
+    
+    /**
+     * @param webid
+     * @return document if found, error otherwise.
+     * @throws ServeurException
+     */
+    private Object getDocumentByWebId(String webid) {
+        DocumentModel doc = null;
+        try {
+            DocumentModelList documentsByWebId = WebIdResolver.getDocumentsByWebId(coreSession, parentId, parentPath, webid);
+            if (CollectionUtils.isNotEmpty(documentsByWebId) && documentsByWebId.size() == 1) {
+                doc = documentsByWebId.get(0);
+            }
+        } catch (NoSuchDocumentException e) {
+            return ERROR_CONTENT_NOT_FOUND;
+        }
+        
         return doc;
     }
 

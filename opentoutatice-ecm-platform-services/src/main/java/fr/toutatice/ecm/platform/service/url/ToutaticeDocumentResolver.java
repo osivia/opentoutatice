@@ -77,7 +77,7 @@ public class ToutaticeDocumentResolver {
 		
 		DocumentModelList documents = null;
 		try {
-		    documents = WebIdResolver.getDocumentsByWebId(session, parentId, parentPath, false, webId);
+		    documents = WebIdResolver.getDocumentsByWebId(session, parentId, parentPath, webId);
         } catch (NoSuchDocumentException de) {
            throw new ClientException(de);
         }

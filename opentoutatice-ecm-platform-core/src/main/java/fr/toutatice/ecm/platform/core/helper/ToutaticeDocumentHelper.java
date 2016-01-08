@@ -710,9 +710,15 @@ public class ToutaticeDocumentHelper {
 		return status;
 	}
 	
+	/**
+	 * 
+	 * @param session
+	 * @param document
+	 * @return true if document is in publish space.
+	 */
 	public static boolean isInPublishSpace(CoreSession session, DocumentModel document){
 	    DocumentModelList parentPublishSpaceList = getParentPublishSpaceList(session, document, true, true);
-	    return parentPublishSpaceList != null && !parentPublishSpaceList.isEmpty();
+	    return CollectionUtils.isNotEmpty(parentPublishSpaceList);
 	}
 	
 	@SuppressWarnings("unused")
@@ -1093,33 +1099,12 @@ public class ToutaticeDocumentHelper {
      */
      public static DocumentModelList getRemotePublishedDocuments(CoreSession session, DocumentModel document) {
          DocumentModelList remoteProxies = new DocumentModelListImpl();
-
-         if (!document.isProxy()) {
-
-             PublisherService publisherService = (PublisherService) Framework.getService(PublisherService.class);
-             Map<String, String> availablePublicationTrees = publisherService.getAvailablePublicationTrees();
-
-             if (MapUtils.isNotEmpty(availablePublicationTrees)) {
-                 for (Entry<String, String> treeInfo : availablePublicationTrees.entrySet()) {
-                     String treeName = treeInfo.getKey();
-
-                     PublicationTree tree = publisherService.getPublicationTree(treeName, session, null);
-                     List<PublishedDocument> publishedDocuments = tree.getExistingPublishedDocument(new DocumentLocationImpl(document));
-                     
-                     if (CollectionUtils.isNotEmpty(publishedDocuments)) {
-                         
-                         for(PublishedDocument publishedDoc : publishedDocuments){
-                             DocumentModel publishedDocModel = ((SimpleCorePublishedDocument) publishedDoc).getProxy();
-                             
-                             remoteProxies.add(publishedDocModel);
-                         }
-                         
-                     }
-
-                 }
-
+         
+         if(!ToutaticeDocumentHelper.isInPublishSpace(session, document)){
+             DocumentModelList remoteProxiesFound = ToutaticeDocumentHelper.getProxies(session, document, ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE.GLOBAL, StringUtils.EMPTY, false);
+             if(CollectionUtils.isNotEmpty(remoteProxiesFound)){
+                 remoteProxies.addAll(remoteProxiesFound);
              }
-
          }
          
         return remoteProxies;

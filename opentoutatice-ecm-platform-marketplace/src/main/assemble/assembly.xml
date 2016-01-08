@@ -111,7 +111,8 @@
 			</then>
 		</if>
 
-		<!-- Build the property that lists the third party libraries to include -->
+		<!-- Build the property that lists the third party libraries to include 
+		FIXME: javax.servlet version
 		<var name="install.libs" value="" />
 		<if>
 			<available file="${outdir}/marketplace/install/lib" />
@@ -119,7 +120,7 @@
 				<var name="install.libs"
 					value="${line.separator}&lt;update file=&quot;${package.root}/install/lib&quot; todir=&quot;${env.lib}&quot; /&gt;" />
 			</then>
-		</if>
+		</if> -->
 
 		<!-- No SDK property files -->
 		<var name="install.properties" value="" />

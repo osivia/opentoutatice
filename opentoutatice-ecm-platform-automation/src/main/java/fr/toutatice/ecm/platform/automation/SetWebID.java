@@ -233,7 +233,7 @@ public class SetWebID {
 
                 // save weburl
                 if (hasToBeUpdated) {
-                    log.warn("Id relocated to " + webid + " for document " + this.document.getPathAsString());
+                    log.info("Id relocated to " + webid + " for document " + this.document.getPathAsString());
                     this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, webid);
                     if (extension != null) {
                         this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXTENSION_URL, extension);

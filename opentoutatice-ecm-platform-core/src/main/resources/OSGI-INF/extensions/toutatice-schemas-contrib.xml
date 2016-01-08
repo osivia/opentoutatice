@@ -20,9 +20,6 @@
 		<schema name="toutatice_event" prefix="ttcevt"
 			src="schemas/toutatice-event.xsd" />
 
-		<schema name="publish_local_state" prefix="ttcpls"
-			src="schemas/publish-local-state.xsd" />
-
 	</extension>
 
 </component>

@@ -11,7 +11,7 @@
                         <nxu:dataTable id="pubDataTable"
                             value="#{editorLinkActions.getRemotePublishedDocuments(document)}" var="publishedDoc"
                             rowClasses="dataRowEven,dataRowOdd" styleClass="table" 
-                            rendered="#{editorLinkActions.getRemotePublishedDocuments(document).size() > 1}">
+                            rendered="#{editorLinkActions.getRemotePublishedDocuments(document).size() > 0}">
                             
                             <nxu:column styleClass="iconColumn">
                                 <input type="radio" id="selection" name="selection"

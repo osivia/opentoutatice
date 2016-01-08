@@ -80,7 +80,7 @@ public class WebIdResolver {
      * @return documents matching given webid (live or proxy, proxies).
      * @throws NoSuchDocumentException
      */
-    public static DocumentModelList getDocumentsByWebId(CoreSession coreSession, String parentId, String parentPath, boolean draft, String webId)
+    public static DocumentModelList getDocumentsByWebId(CoreSession coreSession, String parentId, String parentPath, String webId)
             throws NoSuchDocumentException {
 
         DocumentModelList documents = null;
@@ -88,11 +88,11 @@ public class WebIdResolver {
         if (StringUtils.isNotBlank(webId)) {
 
 
-            UnrestrictedFecthWebIdRunner fecthWebIdRunner = new UnrestrictedFecthWebIdRunner(coreSession, parentId, parentPath, draft, webId);
+            UnrestrictedFecthWebIdRunner fecthWebIdRunner = new UnrestrictedFecthWebIdRunner(coreSession, parentId, parentPath, webId);
             fecthWebIdRunner.runUnrestricted();
             documents = fecthWebIdRunner.getDocuments();
 
-            if (CollectionUtils.isEmpty(documents)) {
+            if (CollectionUtils.isEmpty(documents) || (CollectionUtils.isNotEmpty(documents) && documents.size() > 1)) {
                 throw new NoSuchDocumentException(webId);
             }
 
@@ -109,18 +109,16 @@ public class WebIdResolver {
 
         String parentId;
         String parentPath;
-        boolean draft;
         String webId;
         DocumentModelList documents;
 
         private static final String PROXY_FILTER = " AND ecm:isProxy = 1 ";
         private static final String LIVE_FILTER = " AND ecm:isProxy = 0 ";
 
-        public UnrestrictedFecthWebIdRunner(CoreSession session, String parentId, String parentPath, boolean draft, String webId) {
+        public UnrestrictedFecthWebIdRunner(CoreSession session, String parentId, String parentPath, String webId) {
             super(session);
             this.parentPath = parentPath;
             this.parentId = parentId;
-            this.draft = draft;
             this.webId = webId;
             this.documents = new DocumentModelListImpl();
         }
@@ -174,22 +172,10 @@ public class WebIdResolver {
 
                 }
 
-            } else if (draft) {
-                getLive();
             } else {
-                /*
-                 * Defaul RG:
-                 * published -> proxies (for witch user has read permission)
-                 * not published -> live (for witch user has read permission)
-                 */
-                DocumentModelList proxies = this.session.query(String.format(WEB_ID_QUERY, this.webId, PROXY_FILTER));
-                if (CollectionUtils.isEmpty(proxies)) {
-                    getLive();
-                } else {
-                    this.documents.addAll(proxies);
-                }
-
-            }
+                // If no parent parameter, document is in live space
+                getLive();
+            } 
 
         }
 

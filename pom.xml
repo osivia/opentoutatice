@@ -30,6 +30,7 @@
 		<org.freemarker.version>2.3.11</org.freemarker.version>
 		<javax.mail.version>1.4</javax.mail.version>
 		<org.richfaces.version>4.5.0.Alpha3</org.richfaces.version>
+		<!-- FIXME: find version in Nx -->
 		<javax.servlet.version>3.0.1</javax.servlet.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

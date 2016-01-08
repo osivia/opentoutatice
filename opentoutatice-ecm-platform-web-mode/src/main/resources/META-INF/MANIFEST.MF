@@ -3,7 +3,7 @@ Bundle-Vendor: Nuxeo
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Bundle-Version: 1.0
-Bundle-Name: opentoutatice-web-mode
+Bundle-Name: fr.toutatice.ecm.platform.web.mode
 Nuxeo-Component: OSGI-INF/extensions/webpage/layouts-contrib.xml,
  OSGI-INF/extensions/webpage/core-types-contrib.xml,
  OSGI-INF/extensions/webpage/metadata-layouts-contrib.xml,

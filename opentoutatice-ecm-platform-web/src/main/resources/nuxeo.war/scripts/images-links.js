@@ -24,7 +24,6 @@ $JQry(window).load(function() {
 	for(var incr = 0; incr < $inputLinks.length; incr++){
 
 		$targetPath[incr] = $JQry($inputLinks)[incr];	
-		//$inputTitles[incr].addEventListener("blur", setManualPath);
 
 		$targetTitle[incr] = $JQry($inputTitles[incr]);
 	
@@ -55,21 +54,6 @@ function setManualPath(index) {
 	if(!$JQry($targetTitle[indx]).prop("readonly")){
 		if($JQry($targetTitle[indx]).val() != ""){
 			var targetTitleValue = $JQry($targetTitle[indx]).val();
-
-			var parts = targetTitleValue.split("/");
-			var partsLenght = parts.length;
-			if(partsLenght > 0){
-				var domainsParts = parts[0].split(".");
-				partsLenght = domainsParts.length;
-			}
-
-			// Defaults behaviours
-			if(partsLenght < 3){
-				targetTitleValue = "www.".concat(targetTitleValue);
-			}
-			if(targetTitleValue.search("http//") != 0){
-				targetTitleValue = "http://".concat(targetTitleValue);
-			}
 			$JQry($targetPath[indx]).val(targetTitleValue);
 		}
 	}
