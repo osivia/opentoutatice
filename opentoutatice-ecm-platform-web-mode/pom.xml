@@ -27,27 +27,6 @@
 			<artifactId>opentoutatice-ecm-platform-services</artifactId>
 		</dependency>
 		
-		<!-- TO DEL: for sources -->
-		<dependency>
-		   <groupId>org.nuxeo.ecm</groupId>
- <artifactId>nuxeo-drive-jsf</artifactId>
-<version>6.0-HF21</version>
-		</dependency>
-		<dependency>
-           <groupId>org.nuxeo.ecm</groupId>
- <artifactId>nuxeo-drive-core</artifactId>
-<version>6.0-HF21</version>
-        </dependency>
-        <dependency>
-           <groupId>org.nuxeo.ecm</groupId>
- <artifactId>nuxeo-drive-operations</artifactId>
-<version>6.0-HF21</version>
-        </dependency>
-        <dependency>
-           <groupId>org.nuxeo.ecm</groupId>
- <artifactId>nuxeo-drive-elasticsearch</artifactId>
-<version>6.0-HF21</version>
-        </dependency>
 	</dependencies>
 	
 	<profiles>
