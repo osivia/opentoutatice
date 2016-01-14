@@ -114,7 +114,7 @@
                                             items="#{editorImageActions.searchImageResults}">
                                         <div class="col-xs-3 col-md-3">
                                             <div class="picture">
-                                                <a4j:commandLink href="#" class="thumbnail" render="feedback" onclick="javascript:updateCaller(jQuery(this).find('img')[0], jQuery('#img_style_value').val());"
+                                                <a4j:commandLink href="#" class="thumbnail" render="feedback" onclick="javascript:updateCaller(jQuery(this).find('img')[0], jQuery('#picture_style_value').val());"
                                                 limitRender="true"> 
                                                 <h:graphicImage
                                                             value="#{oh:preferredImgUrl('downloadPicture', document, editorImageActions.selectedSize.concat(':content'), currentDocument.dublincore.modified)}" />
