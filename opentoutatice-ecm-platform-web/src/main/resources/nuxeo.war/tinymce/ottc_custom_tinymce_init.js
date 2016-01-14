@@ -38,7 +38,7 @@ tinyMCE.init({
 	relative_urls : false,
 	remove_script_host : false,
 
-	toolbar1 : "bold,italic,underline",
+	toolbar1 : "bold italic underline",
 	menubar: false,
 	statusbar: false
 
@@ -76,7 +76,7 @@ tinyMCE
 	relative_urls : false,
 	remove_script_host : false,
 
-	toolbar1 : "bold,italic,underline",
+	toolbar1 : "bold italic underline",
 	menubar: false,
 	statusbar: false
 
