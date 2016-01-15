@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.service.customize.ui.CustomizeUIService">
+
+	<require>fr.toutatice.ecm.platform.core.doctypes</require>
+
+	<service>
+		<provide interface="fr.toutatice.ecm.platform.service.customize.ui.CustomizeUIService" />
+	</service>
+	
+	<implementation
+		class="fr.toutatice.ecm.platform.service.customize.ui.CustomizeUIServiceImpl" />
+		
+	<extension-point name="layouts">
+		<object
+			class="fr.toutatice.ecm.platform.service.customize.ui.LayoutsDescriptor" />
+	</extension-point>
+	
+	<extension-point name="categories">
+        <object
+            class="fr.toutatice.ecm.platform.service.customize.ui.CategoryDescriptor" />
+  	</extension-point>
+
+</component>

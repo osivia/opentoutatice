@@ -1,0 +1,499 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+		<!-- Domaind ID -->
+		<widget name="domainId" type="text">
+			<labels>
+				<label mode="any">toutatice.label.domain.id</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:domainID</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">false</property>
+				<property name="validator">#{toutaticeValidator.validateDomainIdUnicity}
+				</property>
+			</properties>
+		</widget>
+
+		<widget name="domainIdRequired" type="text">
+			<labels>
+				<label mode="any">toutatice.label.domain.id</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:domainID</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">true</property>
+				<property name="validator">#{toutaticeValidator.validateDomainIdUnicity}
+				</property>
+			</properties>
+		</widget>
+
+		<!-- PostalSite, PortalPage widgets -->
+		<widget name="title" type="text">
+			<labels>
+				<label mode="any">toutatice.label.title</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>dc:title</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">true</property>
+				<property name="disabled">false</property>
+			</properties>
+		</widget>
+
+		<widget name="description" type="textarea">
+			<labels>
+				<label mode="any">toutatice.label.description</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>dc:description</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="required">false</property>
+				<property name="disabled">false</property>
+			</properties>
+		</widget>
+
+		<widget name="picture" type="file">
+			<labels>
+				<label mode="any">Visuel</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>toutatice_navigation:picture</field>
+				<field>toutatice_navigation:picture/filename</field>
+			</fields>
+		</widget>
+
+		<widget name="summary_picture" type="summary_picture_type">
+			<labels>
+				<label mode="any">toutatice.label.visual</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>toutatice_navigation:picture</field>
+				<field>toutatice_navigation:picture/filename</field>
+			</fields>
+		</widget>
+
+		<widget name="content" type="htmltext">
+			<labels>
+				<label mode="any">toutatice.label.content</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>webp:content</field>
+			</fields>
+		</widget>
+
+		<widget name="summary_content" type="summary_content_type">
+			<labels>
+				<label mode="any">toutatice.label.content</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>webp:content</field>
+			</fields>
+			<properties mode="view">
+				<property name="translatedHtml">
+					#{noteActions.translateImageLinks(field_0)}
+				</property>
+				<property name="cssClass">note_content_block</property>
+			</properties>
+		</widget>
+
+		<!-- KeyWords widget -->
+		<widget name="toutatice_keywords_widget" type="template">
+			<labels>
+				<label mode="any">toutatice.label.keywords</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:keywords</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">
+					/widgets/toutatice_keyword_widget.xhtml
+				</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(currentDocument.type != 'BlogSite' and
+					(currentUser.administrator or
+					currentNuxeoPrincipal.isMemberOf('Administrators')) ,
+					layout.mode,
+					'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<!-- Widget en vue Modifier (ou Créer) -->
+		<widget name="toutatice_webId_widget" type="text">
+			<labels>
+				<label mode="any">toutatice.label.title.webid.widget</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:webid</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="validator">#{toutaticeValidator.validateWebId}
+				</property>
+				<property name="disabled">#{!toutaticeValidator.spaceSupportsWebId}
+				</property>
+			</properties>
+
+		</widget>
+		<widget name="toutatice_removeWebId_widget" type="template">
+			<labels>
+				<label mode="any">toutatice.label.title.remove.webid.widget</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:webid</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">
+					/widgets/toutatice_removewebid_widget.xhtml
+				</property>
+			</properties>
+			<!-- <widgetModes> <mode value="edit">#{nxu:test(!toutaticeValidator.spaceSupportsWebId, 
+				layout.mode, 'hidden')}</mode> </widgetModes> -->
+		</widget>
+
+
+
+		<widget name="toutatice_explicitUrl_widget" type="text">
+			<labels>
+				<label mode="any">toutatice.label.webid.url</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:explicitUrl</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="validator">#{toutaticeValidator.validateExplicitUrl}
+				</property>
+				<property name="disabled">#{!toutaticeValidator.spaceSupportsWebId}
+				</property>
+			</properties>
+		</widget>
+
+		<!-- Widget en vue Modifier (ou Créer) -->
+		<widget name="toutatice_space_enable_webId_widget" type="checkbox">
+			<labels>
+				<label mode="any">toutatice.label.webid.activate</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttcs:hasWebIdEnabled</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="immediate">true</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(currentDocument.hasFacet('Space'),
+					layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+        
+        <widget name="toutatice_widget_use_es" type="template">
+            <labels>
+                <label mode="any">toutatice.label.use.es</label>
+            </labels>
+            <translated>true</translated>
+            <fields>
+                <field>ttc:useES</field>
+            </fields>
+            <properties widgetMode="edit">
+                <property name="template">/widgets/toutatice_checkbox.xhtml</property>
+                <property name="title">toutatice.title.use.es</property>
+            </properties>
+            <widgetModes>
+                <mode value="view">hidden</mode>
+                <mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace'),
+                    layout.mode, 'hidden')}
+                </mode>
+            </widgetModes>
+        </widget>
+        
+        <widget name="toutatice_widget_space_comments" type="checkbox">
+            <labels>
+                <label mode="any">toutatice.label.space.comments</label>
+            </labels>
+            <translated>true</translated>
+            <fields>
+                <field>ttcs:spaceCommentable</field>
+            </fields>
+            <properties widgetMode="edit">
+                <property name="immediate">true</property>
+            </properties>
+            <widgetModes>
+                <mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace'),
+                    layout.mode, 'hidden')}
+                </mode>
+            </widgetModes>
+        </widget>
+
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgettypes">
+
+		<!-- Widget se basant sur le layout en mode view -->
+		<widgetType name="custom_summary_current_document_view">
+			<configuration>
+				<sinceVersion>5.3.1</sinceVersion>
+				<title>View layout</title>
+				<categories>
+					<category>summary</category>
+				</categories>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+				no configurable properties
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/summary/metadata_custom_widget_template.xhtml
+			</property>
+		</widgetType>
+
+		<widgetType name="summary_content_type">
+			<configuration>
+				<categories>
+					<category>summary</category>
+				</categories>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/summary/toutatice_summary_content_widget.xhtml
+			</property>
+		</widgetType>
+
+		<widgetType name="summary_picture_type">
+			<configuration>
+				<categories>
+					<category>summary</category>
+				</categories>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/summary/toutatice_summary_image_widget.xhtml
+			</property>
+		</widgetType>
+
+		<widgetType name="ttc_richtext_with_mimetype">
+			<configuration>
+				<sinceVersion>5.3.1</sinceVersion>
+				<title>Richtext</title>
+				<description>
+					<p>
+						This widget displays an html text editor or a textarea in create or
+						edit mode, depending on the mimetype defined.
+					</p>
+					<p>
+						It accepts two fields bindings:
+						<ul>
+							<li>first field holds the text content</li>
+							<li>second field holds the text mimetype (text/plain,
+								text/html...)
+							</li>
+						</ul>
+					</p>
+				</description>
+				<categories>
+					<!-- do not export with documents -->
+					<category>configuration_not_ready</category>
+					<!-- <category>document</category> -->
+				</categories>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>false</list>
+					<complex>false</complex>
+					<supportedTypes>
+						<type>string</type>
+					</supportedTypes>
+				</fields>
+				<properties>
+					<layouts mode="view">
+						<layout name="richtext_widget_type_properties_view">
+							<rows>
+								<row>
+									<widget>cssClass</widget>
+								</row>
+							</rows>
+							<widget name="cssClass" type="text">
+								<labels>
+									<label mode="any">Style class</label>
+								</labels>
+								<fields>
+									<field>cssClass</field>
+								</fields>
+							</widget>
+						</layout>
+					</layouts>
+					<layouts mode="edit">
+						<layout name="richtext_widget_type_properties_edit">
+							<rows>
+								<row>
+									<widget>height</widget>
+								</row>
+								<row>
+									<widget>width</widget>
+								</row>
+								<row>
+									<widget>cols</widget>
+								</row>
+								<row>
+									<widget>rows</widget>
+								</row>
+								<row>
+									<widget>editorSelector</widget>
+								</row>
+							</rows>
+							<widget name="width" type="int">
+								<labels>
+									<label mode="any">Width</label>
+								</labels>
+								<helpLabels>
+									<label mode="any">
+										The textarea width. Defaults to "700".
+									</label>
+								</helpLabels>
+								<fields>
+									<field>width</field>
+								</fields>
+							</widget>
+							<widget name="height" type="int">
+								<labels>
+									<label mode="any">Height</label>
+								</labels>
+								<helpLabels>
+									<label mode="any">
+										The textarea height. Defaults to "400".
+									</label>
+								</helpLabels>
+								<fields>
+									<field>height</field>
+								</fields>
+							</widget>
+							<widget name="cols" type="int">
+								<labels>
+									<label mode="any">Number of columns</label>
+								</labels>
+								<helpLabels>
+									<label mode="any">
+										The cols attribute sets the number of
+										columns to display.
+										Available since 5.3.1.
+									</label>
+								</helpLabels>
+								<fields>
+									<field>cols</field>
+								</fields>
+							</widget>
+							<widget name="rows" type="int">
+								<labels>
+									<label mode="any">Number of rows</label>
+								</labels>
+								<helpLabels>
+									<label mode="any">
+										The rows attribute sets the number of rows
+										to display.
+										Available since 5.3.1.
+									</label>
+								</helpLabels>
+								<fields>
+									<field>rows</field>
+								</fields>
+							</widget>
+							<widget name="editorSelector" type="text">
+								<labels>
+									<label mode="any">Editor selector</label>
+								</labels>
+								<helpLabels>
+									<label mode="any">
+										The class to use to identify text areas to
+										turn into html
+										editors. Defaults to "mceEditor". See the
+										editor_selector
+										option in tiny_mce
+										(http://wiki.moxiecode.com/index.php/TinyMCE:Configuration/editor_selector).
+									</label>
+								</helpLabels>
+								<fields>
+									<field>editorSelector</field>
+								</fields>
+							</widget>
+							<widget name="disableHTMLInit" type="boolean">
+								<labels>
+									<label mode="any">Disable HTML init</label>
+								</labels>
+								<helpLabels>
+									<label mode="any">
+										Disable the tiny MCE init from tiny_mce_init.js
+									</label>
+								</helpLabels>
+								<fields>
+									<field>disableHTMLInit</field>
+								</fields>
+							</widget>
+							<widget name="alternateTinyMCEjs" type="text">
+								<labels>
+									<label mode="any">Alternate Rich tiny MCE</label>
+								</labels>
+								<helpLabels>
+									<label mode="any">
+										Definition of new tiny MCE js
+									</label>
+								</helpLabels>
+								<fields>
+									<field>alternateTinyMCEjs</field>
+								</fields>
+							</widget>
+						</layout>
+					</layouts>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/ttc_richtext_with_mimetype_widget_template.xhtml
+			</property>
+		</widgetType>
+
+	</extension>
+
+</component>

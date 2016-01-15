@@ -1,0 +1,63 @@
+<f:subview xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:nxthemes="http://nuxeo.org/nxthemes"
+    xmlns:nxd="http://nuxeo.org/nxweb/document"
+    xmlns:nxu="http://nuxeo.org/nxweb/util"
+    xmlns:nxh="http://nuxeo.org/nxweb/html"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:rich="http://richfaces.org/rich">
+
+    <link rel="stylesheet"
+        href="#{baseURL}css/jqyFileupload/jquery.fileupload.css" />
+    <link rel="stylesheet"
+        href="#{baseURL}css/jqyFileupload/jquery.fileupload-ui.css" />
+
+    <script src="#{baseURL}scripts/jqyFileupload/jquery.fileupload.js"></script>
+    <script src="#{baseURL}scripts/jqyFileupload/jquery.fileupload-ui.js"></script>
+
+    <c:if test="#{editorImageActions.inToutaticeCreationMode}">
+        <div class="alert alert-warning">
+            <i class="glyphicons halflings warning-sign"></i> 
+            <span class="text-warning">#{messages['label.imageUpload.unableToUpload']}</span>
+        </div>
+    </c:if>
+
+    <f:subview rendered="#{!editorImageActions.inToutaticeCreationMode}">
+
+        
+
+
+            <div class="col-xs-3 col-md-3">
+                <div class="picture">
+
+                <a href="#" class="dNd thumbnail text-center">
+                    <p class="indication fileinput-button text-middle"> 
+                            <i class="glyphicons halflings plus"></i> 
+                            <span><em>#{messages['toutatice.label.media.plugin.add.image']}</em></span> 
+                            <h:inputFile class="imgsFileUpload" type="file"
+                            value="#{editorImageActions.uploadedImage}">
+                            <f:ajax listener="#{editorImageActions.uploadImage()}"
+                                render="@all" />
+                            </h:inputFile>
+                    </p>
+                    </a>
+
+                </div>
+            </div>
+
+
+        
+
+        <c:if test="#{!editorImageActions.isImage}">
+
+            <div class="alert alert-warning">
+                <i class="glyphicons halflings warning-sign"></i> <span
+                    class="text-warning">#{messages['label.imageUpload.isNotImage']}</span>
+            </div>
+        </c:if>
+
+    </f:subview>
+</f:subview>

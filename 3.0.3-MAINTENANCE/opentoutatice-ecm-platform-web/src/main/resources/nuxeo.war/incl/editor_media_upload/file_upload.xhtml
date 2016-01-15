@@ -1,0 +1,79 @@
+<div xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
+	xmlns:nxh="http://nuxeo.org/nxweb/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+	<f:subview rendered="#{editorImageActions.inToutaticeCreationMode}">
+
+		<div class="alert alert-warning">
+			<i class="glyphicons halflings warning-sign"></i> <span
+				class="text-warning">#{messages['label.imageUpload.unableToUpload']}</span>
+		</div>
+
+	</f:subview>
+
+	<f:subview rendered="#{!editorImageActions.inToutaticeCreationMode}">
+
+		<f:subview rendered="#{editorImageActions.isImageUploaded}">
+			<script type="text/javascript">
+							if (window.opener.tinyMCE) {
+								var tinyMCE = window.opener.tinyMCE;
+								var html = '&lt;img src="'
+										+ '#{editorImageActions.urlForImage}'
+										+ '"/&gt;';
+								tinyMCE.execCommand('mceInsertContent', false,
+										html);
+							}
+
+							// fragment picture
+							if (window.opener.$picturePath) {
+								var picturePathField = window.opener.$picturePath;
+
+								var relativeUrl = "#{editorImageActions.urlForImage}"
+										.replace(/^(?:\/\/|[^\/]+)*\//, "/")
+
+								picturePathField.val(relativeUrl);
+								window.opener.previewImg();
+							}
+
+							self.close();
+						</script>
+		</f:subview>
+
+		<h3>
+			<h:outputText value="#{messages['toutatice.label.imageUpload.upload']}" />
+		</h3>
+
+		<h:form enctype="multipart/form-data" id="uploadForm"
+			rendered="#{!editorImageActions.isImageUploaded}"
+			class="form form-horizontal">
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="size">#{messages['label.imageUpload.image']}</label>
+				<div class="col-sm-6">
+					<h:inputFile value="#{editorImageActions.uploadedImage}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 col-sm-offset-2">
+					<h:commandButton value="#{messages['command.imageUpload.send']}"
+						action="#{editorImageActions.uploadImage}" class="btn btn-primary" />
+				</div>
+			</div>
+
+		</h:form>
+
+		<c:if test="#{!editorImageActions.isImage}">
+
+			<div class="alert alert-warning">
+				<i class="glyphicons halflings warning-sign"></i> <span
+					class="text-warning">#{messages['label.imageUpload.isNotImage']}</span>
+			</div>
+		</c:if>
+
+	</f:subview>
+
+</div>

@@ -1,0 +1,169 @@
+@import "bootstrap/bootstrap.less";
+
+body {
+	background-color: transparent;
+}
+
+/* Global table (nx theme) */
+.themeSectionFrame.nxMainContainer {
+    width: 100%;
+}
+
+.ttc-form-control {
+	& > input, select {
+		.form-control;
+	}
+	& > textarea {
+	   .form-control;
+	   height: 75px; 
+	}
+	
+	& > input[type="checkbox"] {
+		width: 0;
+		box-shadow: none;
+	}
+	
+	/* Widget Rich Calendar */
+	table.rf-cal-extr {
+		width: 80%;
+	}
+	
+	.rf-cal-inp {
+		.form-control;
+		width:40%;
+		display: inline;
+		/*& > & >i {
+			padding-left: 10px;
+			cursor: pointer;
+		}*/
+	}
+	
+	& > .select2-container {
+		width: 100%;
+		
+		& > a {
+			.form-control;
+		}
+		
+		& > ul.select2-choices {
+			border: none;
+			background: none;
+			
+			li {
+				float: none;
+				
+				input {
+					.form-control;
+					width: inherit;
+					font-family: inherit;
+				}
+				
+			}
+		}
+		
+	}
+	
+}
+
+/* Required fields */
+.form-group.required .control-label:after { 
+   content:"  *";
+   color: #bf3730;
+}
+
+/* Keywords widget */
+div.ctrl-fgt-keywords-list {
+	margin-top: 5px;
+	& > ul {
+		.list-unstyled;
+		.list-inline;
+	}
+}
+
+.navbar-fixed-bottom {
+	/* FIXME: due to bad structure? */
+	.btn {
+		margin-right: 8px;
+		margin-left: -2px;
+	}
+}
+
+.pv-footer {
+	/* FIXME: fixed height... */
+	height: 45px;
+}
+
+.errorMessage {
+	.text-danger;
+}
+
+#select2-drop-mask {
+	width: inherit;
+}
+
+.fileWidget {
+	td {
+		padding: 0 10px 6px 0;
+		vertical-align: top;
+		
+		input[type="radio"] {
+			margin: 0;
+		}
+		
+		img{
+			margin: 0 3px 0 7px;
+		}
+		
+		input[type="file"] {
+			.form-control;
+			height: auto;
+			white-space: normal;
+		}
+		
+	}
+	
+	& > a {
+		.btn;
+		.btn-default;
+		white-space: normal;
+			
+		img {
+			display:none;
+		}
+	}
+	
+}
+
+#tabpanel-container {
+	padding-bottom: 20px;
+}
+
+input[type="file"] {
+	.form-control;
+	height: auto;
+	white-space: normal;			
+}
+
+/* Do not show help labels for moment: position pb next RTE */
+.tooltip {
+	display: none;
+}
+
+#waiter {
+	height: 25px;
+	width: 25px;
+}
+
+
+table.ttcImgTable td {
+	padding: 0 20px 10px 0;
+}
+
+/*.mceToolbar td {
+    display:table-row;
+    float: left;
+}
+
+table.mceLayout, textarea.tinyMCE {
+    width: 100% !important;
+} */

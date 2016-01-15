@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.core.picturebook.doctypes">
+
+	<require>org.nuxeo.ecm.core.schema.TypeService</require>
+	<require>fr.toutatice.ecm.platform.core.schemas</require>
+
+	<extension target="org.nuxeo.ecm.platform.types.TypeService"
+		point="types">
+		
+		<type id="Workspace">
+			<subtypes>
+				<type>PictureBook</type>
+			</subtypes>
+		</type>
+		<type id="Folder">
+			<subtypes>
+				<type>PictureBook</type>
+			</subtypes>
+		</type>
+		<type id="PictureBook">
+			<subtypes>
+				<type>PictureBook</type>
+			</subtypes>
+		</type>
+		
+	</extension>
+
+</component>

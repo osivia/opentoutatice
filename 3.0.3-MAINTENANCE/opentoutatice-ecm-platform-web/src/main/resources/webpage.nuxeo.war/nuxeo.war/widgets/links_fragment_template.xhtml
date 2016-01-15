@@ -1,0 +1,56 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:t="http://myfaces.apache.org/tomahawk"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxdir="http://nuxeo.org/nxdirectory"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
+	xmlns:oh="http://osivia.org/html" id="#{widget.id}">
+	<c:set var="mode" value="#{layout.mode}" />
+
+	<div class="titre2">
+		<img src="theme/images/icone_fragment.gif" /><span>Propriétés
+			des liens</span>
+	</div>
+
+	<nxu:dataList id="link" value="#{currentDocument.lkfgt.linksFragment}"
+		var="frag">
+
+
+		<s:div rendered="#{frag.refURI eq fragmentBean.uri}">
+		
+			<p>
+				<h:outputLabel value="Présentation des liens : " />
+				<oh:icons id="selectLinksTemplate" src="#{config.linksTemplates}"
+					value="#{frag.linksTemplate}" ulStyleClass="cssStyleList"
+					binding="#{templateSimpleForm.simpleComponent}"
+					inputClientId="#{templateSimpleForm.simpleComponentClientId}"
+					multiSelect="false" iconsGroup="linksTemplateGroup" />
+			</p>
+		
+		</s:div>
+	</nxu:dataList>
+
+	<nxu:dataList id="links" value="#{currentDocument.lk.links}"
+		var="link">
+
+
+		<s:div rendered="#{link.refURI eq fragmentBean.uri}">
+			<li><h:outputLabel value="URL : "/> <nxl:widgetType
+					id="href" name="text" mode="edit" title="URL du lien."
+					value="#{link.href}" /></li>
+			<li><h:outputLabel value="Titre : "/> <nxl:widgetType
+					id="title" name="text" mode="edit" title="Titre du lien."
+					value="#{link.title}" /></li>
+			<li><h:outputLabel value="Icône : "/> <nxl:widgetType
+					id="icon" name="text" mode="edit" title="Icone du lien."
+					value="#{link.icon}" /></li>
+
+			<hr />
+		</s:div>
+
+	</nxu:dataList>
+
+</f:subview>

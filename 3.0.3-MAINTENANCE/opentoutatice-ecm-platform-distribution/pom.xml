@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>opentoutatice-ecm.platform</groupId>
+		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
+		<version>3.0.5-RC06</version>
+	</parent>
+	
+	<artifactId>opentoutatice-ecm-platform-distribution</artifactId>
+	<packaging>zip</packaging>
+	<name>NXR archive - Open Toutatice platform</name>
+	
+	<properties />
+    
+	<dependencyManagement>
+		<dependencies>
+		<!-- Import Nuxeo BOM -->
+			<dependency>
+				<groupId>org.nuxeo.ecm.distribution</groupId>
+				<artifactId>nuxeo-distribution</artifactId>
+				<version>${nuxeo.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+	<dependencies>
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-platform-core</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-platform-automation</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-platform-services</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-platform-web</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+
+		<profile>
+			<id>PROD</id>
+        
+			<properties>
+				<profileName>PROD</profileName>
+			</properties>
+
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+
+			<repositories>
+				<repository>
+					<id>private-releases</id>
+					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>private-snapshots</id>
+					<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>always</updatePolicy>
+					</snapshots>
+				</repository>
+			</repositories>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.nuxeo.build</groupId>
+						<artifactId>ant-assembly-maven-plugin</artifactId>
+						<configuration>
+							<buildFiles>
+								<buildFile>${basedir}/src/main/assemble/assembly.xml</buildFile>
+							</buildFiles>
+						</configuration>
+					</plugin>				
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
+
+	<distributionManagement>
+		<repository>
+			<id>toutatice-releases</id>
+			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>toutatice-snapshots</id>
+			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+</project>

@@ -1,0 +1,157 @@
+<div xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:s="http://jboss.org/schema/seam/taglib"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:nxthemes="http://nuxeo.org/nxthemes"
+	xmlns:nxd="http://nuxeo.org/nxweb/document"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxh="http://nuxeo.org/nxweb/html"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:oh="http://osivia.org/html">
+
+	<div>
+
+	<script type="text/javascript">
+		var selectedPictureUrl = "";
+	</script>
+
+		<h:form class="form-horizontal" role="form">
+
+			<p class="h4">
+				<h:outputText
+					value="#{messages['toutatice.label.imageUpload.search.criterion']}" />
+			</p>
+
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="keywords">#{messages['toutatice.label.imageUpload.search.keywords']}</label>
+				<div class="col-sm-10">
+					<h:inputText id="keywords"
+						value="#{editorImageActions.searchKeywords}" class="form-control"
+						onkeydown="if (event.keyCode == 13) {this.nextSibling.click()} else return true" />
+
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="space">#{messages['toutatice.label.imageUpload.search.space']}</label>
+				<div class="col-sm-10">
+
+					<h:selectOneMenu id="space"
+						value="#{editorImageActions.searchInSpace}" class="form-control">
+						<c:if test="#{editorImageActions.mediaSpaceName != null}">
+							<f:selectItem
+								itemLabel="#{messages['toutatice.label.imageUpload.search.space.library']} : #{editorImageActions.mediaSpaceName}"
+								itemValue="0"
+								rendered="#{editorImageActions.mediaSpaceName != null}" />
+						</c:if>
+						<f:selectItem
+							itemLabel="#{messages['toutatice.label.imageUpload.search.space.space']} : #{editorImageActions.spaceName}"
+							itemValue="1" />
+						<f:selectItem
+							itemLabel="#{messages['toutatice.label.imageUpload.search.space.all']}"
+							itemValue="2" />
+
+					</h:selectOneMenu>
+
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 col-sm-offset-2">
+					<h:commandButton value="#{messages['command.search']}"
+						action="#{editorImageActions.searchImages('editor_image_upload')}"
+						class="btn btn-primary" />
+				</div>
+			</div>
+
+		</h:form>
+	</div>
+
+
+	<a4j:region>
+
+		<div id="content">
+
+			<a4j:outputPanel id="feedback">
+				<script type="text/javascript">
+			if(selectedPictureUrl != ""){
+				if (window.opener.tinyMCE) {
+				    var tinyMCE = window.opener.tinyMCE;
+					var html = '&lt;img src="' + selectedPictureUrl + '"/&gt;';
+					tinyMCE.execCommand('mceInsertContent', false, html);
+					self.close();
+				}
+				// For Fragment
+				if(window.opener.$targetPath){
+					var relativeUrl = selectedPictureUrl.replace(
+									/^(?:\/\/|[^\/]+)*\//, "/");
+							
+					var picturePathField = window.opener.$picturePath;
+					picturePathField.val(relativeUrl);
+					window.opener.previewImg();
+					self.close();
+				}
+			}
+				</script>
+			</a4j:outputPanel>
+
+			<p class="h4">
+				<h:outputText
+					value="#{messages['toutatice.label.imageUpload.search.results']}" />
+			</p>
+
+
+				<h:outputText value="#{messages['label.content.emptyFolder']}"
+					rendered="#{!editorImageActions.hasSearchResults}" />
+
+				<f:subview rendered="#{editorImageActions.hasSearchResults}">
+
+					<h:form id="search_results" role="form"
+						rendered="#{editorImageActions.hasSearchResults}">
+
+						<div class="form-group">
+							<label for="size">#{messages['label.imageUpload.chooseSize']}</label>
+
+							<h:selectOneMenu id="size"
+								value="#{editorImageActions.selectedSize}" class="form-control">
+								<nxu:selectItems value="#{editorImageActions.sizes}" var="item"
+									itemValue="#{item.value}" itemLabel="#{messages[item.label]}" />
+								<a4j:ajax event="change" render="pictures-list" />
+							</h:selectOneMenu>
+
+						</div>
+
+						<div class="form-group">
+							<label for="result">#{messages['label.imageUpload.chooseFile']}</label>
+							<a4j:outputPanel id="pictures-list">
+							<div class="row">
+								<div class="pictures-list">
+									<c:forEach var="document"
+											items="#{editorImageActions.searchImageResults}">
+										<div class="col-xs-3 col-md-3">
+											<div class="picture">
+												<a4j:commandLink href="#" class="thumbnail" render="feedback" onclick="selectedPictureUrl = '#{nxd:fileUrl('downloadPicture', document, editorImageActions.imageProperty, currentDocument.dublincore.modified)}'"
+												limitRender="true"> 
+												<h:graphicImage
+															value="#{oh:preferredImgUrl('downloadPicture', document, 'Thumbnail:content', currentDocument.dublincore.modified)}" />
+												</a4j:commandLink>
+											</div>
+											<p class="text-center">#{nxd:titleOrId(document)}</p>
+
+										</div>
+
+									</c:forEach>
+								</div>
+							</div>
+							</a4j:outputPanel>
+						</div>
+					</h:form>
+					
+				</f:subview>
+			
+			
+		</div>
+	</a4j:region>
+</div>
