@@ -8,6 +8,7 @@
             * Possibility to contribute on widget type for widget BO-FO mapping service
 			* Move and reorder of documents in publish spaces
 			* New webIds policy
+			* First step of webURL implementation
 			* Remote sections informations available for Portal
 			* Suggest Users Widget filtering on permission on current document
 			* Publication date taken into account in list requests
