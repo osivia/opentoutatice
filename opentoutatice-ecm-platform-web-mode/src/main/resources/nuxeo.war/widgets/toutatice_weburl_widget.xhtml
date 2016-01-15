@@ -1,0 +1,28 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:nxu="http://nuxeo.org/nxweb/util"
+    xmlns:nxdir="http://nuxeo.org/nxdirectory"
+    xmlns:nxl="http://nuxeo.org/nxforms/layout" id="#{widget.id}">
+
+    <c:if test="#{widget.mode == 'edit'}">
+
+		<div class="controls form-inline">
+ 			#{documentActions.getCurrentUrl()} <h:inputText id="#{widget.id}_weburl" value="#{field_0}"
+							required="false" style="display:inline; width:auto;"
+							validator="#{webModeValidator.validateSegment}" validatorMessage="#{messages['webmode.label.weburl.validator']}"/>
+			
+		</div>
+		<h:message styleClass="errorMessage" for="#{widget.id}_weburl"></h:message>
+    </c:if>
+    
+	<br />
+
+	<p class="alert alert-info">
+		<i class="glyphicons halflings info-sign"></i> <span
+			class="text-info">#{messages['webmode.label.weburl.help']}</span>
+
+	</p>
+
+</f:subview>

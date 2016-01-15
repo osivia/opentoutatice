@@ -57,6 +57,9 @@
 				<row>
 					<widget>ottc_weburl</widget>
 				</row> 
+				<row>
+					<widget>ottc_webid</widget>
+				</row>
 			</rows>
 		</layout>
 
@@ -65,7 +68,7 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
 		
-		<widget name="ottc_weburl" type="text">
+		<widget name="ottc_weburl" type="template">
 			<labels>
 				<label mode="any">webmode.label.weburl</label>
 			</labels>
@@ -80,7 +83,27 @@
 				<property name="required">#{!toutaticeValidator.spaceSupportsWebId or currentDocument.hasFacet('WebidDisabled')}
 				</property> -->
 			</properties>
+			
+            <properties mode="any">
+                <property name="template">
+                    /widgets/toutatice_weburl_widget.xhtml
+                </property>
+            </properties>			
 
+		</widget>
+		
+		<widget name="ottc_webid" type="text">
+			<labels>
+				<label mode="any">webmode.label.webid</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:webid</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="disabled">true
+				</property>
+			</properties>
 		</widget>
 		
 		<widget name="web_flow" type="layout">
