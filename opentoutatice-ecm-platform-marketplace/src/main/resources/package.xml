@@ -5,10 +5,12 @@
 			(which one is based on the Nuxeo DM distribution)
 
 			Bug fixes :
-			* # 4224 
-			* # 5269 
+			* #5269: Reduire la taille d'une image dans une note n'est plus possible
+			* #3802: Prise en compte de la date de publication dans requêtes de type Listes
+			
 			Main features :
-			* Restaure the automation profiler (disabled as default)
+			* Évolution classe helper de notification dans le journal (audit logs): accepte un evenement non associé à un document.
+			* #3867: evolution cartoun; lien entre cartoun et viaeduc
 		</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
@@ -29,7 +31,7 @@
 		<!-- FIXME: just for schema webpage of PortalSite et PortalPage... -->
 		<package>nuxeo-sites-blogs:1.2.0</package>
 		<!-- Dépendance sur les hotfixes -->
-		<package>nuxeo-6.0-HF19:1.0.0</package>
+		<package>nuxeo-6.0-HF21:1.0.0</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
