@@ -14,7 +14,7 @@
 		
 		<listener name="toutaticeWidgetsDatesAdapterListener" async="false" postCommit="false"
             class="fr.toutatice.ecm.platform.service.portalviews.adapter.dates.WidgetsDatesAdapterListener"
-            priority="2000">
+            priority="150">
             <event>documentCreated</event>
             <event>beforeDocumentModification</event>
         </listener>
