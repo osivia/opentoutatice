@@ -74,7 +74,7 @@
 
                 function updateEndTime(){
                     if(startDate.getDate().valueOf() == endDate.getDate().valueOf()){
-                        if(endTime.getTime().valueOf() &lt; startTime.getTime().valueOf()){
+                        if((endTime.hour &lt; startTime.hour) || ((endTime.hour == startTime.hour) &amp;&amp; (endTime.minute &lt; startTime.minute))){
                             endTime.setTime(startTime.hour + ":" + (startTime.minute + 1));
                             $endTimeInput.focus();
                         }
