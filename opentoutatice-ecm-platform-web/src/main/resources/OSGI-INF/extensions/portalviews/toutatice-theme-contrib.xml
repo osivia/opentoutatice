@@ -105,8 +105,6 @@
 			<resource>bootstrap.tab.js</resource>
 			<resource>custom.tinymce.modals.js</resource>
 			<resource>forms.errors.manager.js</resource>
-			<resource>ottc.custom.tinymce.init.js</resource>
-			<resource>ottc.simple.tinymce.init.js</resource>
 			<resource>icons.js</resource>
 		</view>
 
