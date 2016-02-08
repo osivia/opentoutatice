@@ -85,9 +85,9 @@
 		<profile>
 			<id>QUALIF</id>
 			
-			<activation>
+			<!-- <activation>
                 <activeByDefault>true</activeByDefault>
-            </activation>
+            </activation> -->
 
 			<properties>
 				<profileName>QUALIF</profileName>
@@ -103,9 +103,9 @@
 		<profile>
 			<id>PROD</id>
 
-			<!-- <activation>
+			<activation>
 				<activeByDefault>true</activeByDefault>
-			</activation> -->
+			</activation>
 
 			<properties>
 				<profileName>PROD</profileName>
