@@ -5,9 +5,9 @@
 	<extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
 		point="listener">
 		
-		<listener name="widgetsTTCDatesMergeListener" async="false" postCommit="true"
+		<listener name="widgetsTTCDatesMergeListener" async="false" postCommit="false"
 			class="fr.toutatice.ecm.platform.service.portalviews.adapter.dates.WidgetsTTCDatesMergeListener"
-			priority="100">
+			priority="1000">
             <event>documentCreated</event>
             <event>beforeDocumentModification</event>
 		</listener>

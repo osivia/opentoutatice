@@ -22,11 +22,12 @@ package fr.toutatice.ecm.platform.core.components;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.security.Principal;
 
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.EventService;
+import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
 import org.nuxeo.ecm.core.event.impl.EventImpl;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
@@ -72,21 +73,25 @@ public class ToutaticeEventFilterHandler<T> extends ToutaticeAbstractServiceHand
 
                 if (handledMethods != null && handledMethods.length > 0) {
                     if (null != args && args.length > 0) {
-                        Principal principal = null;
+                        CoreSession session = null;
                         EventContext evtCtx = null;
                         String evtName = null;
                         if (handledMethods[0] != null && handledMethods[0].equals(method)) {
                         	Event evt = (Event) args[0];
                         	evtName = evt.getName();
                         	evtCtx = evt.getContext();
-                            principal = evt.getContext().getPrincipal();
+                        	if(evtCtx instanceof DocumentEventContext){
+                                session = ((DocumentEventContext) evtCtx).getCoreSession();
+                            }
                         } else if (handledMethods[1] != null && handledMethods[1].equals(method)) {
                         	evtName = (String) args[0];
                             evtCtx = (EventContext) args[1];
-                            principal = evtCtx.getPrincipal();
+                            if(evtCtx instanceof DocumentEventContext){
+                                session = ((DocumentEventContext) evtCtx).getCoreSession();
+                            }
                         }
                         
-                        if (null != principal && ToutaticeServiceProvider.instance().isRegistered(EventService.class, principal.getName())) {
+                        if (session != null && ToutaticeServiceProvider.instance().isRegistered(EventService.class, session.getSessionId())) {
                             /* do filter invocation and update the ElasticSearch index
                              * (http://redmine.toutatice.fr/issues/3802) 
                              */

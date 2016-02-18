@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.runtime.api.DefaultServiceProvider;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.api.ServiceProvider;
@@ -48,7 +49,7 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 	private boolean installed;
 	private ServiceProvider nextProvider;
 	private static ToutaticeServiceProvider instance = null;
-	private static Map<String, List<String>> filteredUsersMap = null;
+	private static Map<String, List<String>> filteredUsersSessionsMap = null;
 	
 	protected final Map<Class<?>, Entry<?>> registry = new HashMap<Class<?>, Entry<?>>();
 
@@ -58,7 +59,7 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 	// singleton
 	private ToutaticeServiceProvider() {
 		installed = false;
-		filteredUsersMap = Collections.synchronizedMap(new HashMap<String, List<String>>());
+		filteredUsersSessionsMap = Collections.synchronizedMap(new HashMap<String, List<String>>());
 	}
 	
 	public static ToutaticeServiceProvider instance() {
@@ -84,28 +85,28 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 		installed = false;
 	}
 	
-	public void register(Class<?> service, String principalId) {
+	public void register(Class<?> service, String sessionId) {
 		String serviceName = service.getName();
 		
-		synchronized (filteredUsersMap) {
-			if (!filteredUsersMap.containsKey(serviceName)) {
-				filteredUsersMap.put(serviceName, new ArrayList<String>());
+		synchronized (filteredUsersSessionsMap) {
+			if (!filteredUsersSessionsMap.containsKey(serviceName)) {
+				filteredUsersSessionsMap.put(serviceName, new ArrayList<String>());
 			}
 			
-			List<String> usersList = filteredUsersMap.get(serviceName);
+			List<String> usersSessionList = filteredUsersSessionsMap.get(serviceName);
 			/**
 			 * For multi-threading purpose, the expression to test whether the user is already registered is commented.
 			 * Hence, multiple asynchronous processing ran for one connected user will keep in silent mode. The first thread
 			 * to unregister won't unregister the other threads. 
 			 */
 //			if (!usersList.contains(principalId)) {
-				usersList.add(principalId);
+			    usersSessionList.add(sessionId);
 //			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public void registerAll(String principalId) {
+	public void registerAll(String sessionId) {
 		List<Class<?>> services = Collections.emptyList();
 		
 		try {
@@ -115,23 +116,23 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 		}
 		
 		for (Class<?> service : services) {
-			register(service, principalId);
+			register(service, sessionId);
 		}
 	}
 
-	public void unregister(Class<?> service, String principalId) {
+	public void unregister(Class<?> service, String sessionId) {
 		String serviceName = service.getName();
 
-		synchronized (filteredUsersMap) {
-			if (filteredUsersMap.containsKey(serviceName)) {
-				List<String> usersList = filteredUsersMap.get(serviceName);
-				usersList.remove(principalId);
+		synchronized (filteredUsersSessionsMap) {
+			if (filteredUsersSessionsMap.containsKey(serviceName)) {
+				List<String> usersSessionsList = filteredUsersSessionsMap.get(serviceName);
+				usersSessionsList.remove(sessionId);
 			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public void unregisterAll(String principalId) {
+	public void unregisterAll(String sessionId) {
 		List<Class<?>> services = Collections.emptyList();
 		
 		try {
@@ -141,18 +142,18 @@ public class ToutaticeServiceProvider implements ServiceProvider {
 		}
 		
 		for (Class<?> service : services) {
-			unregister(service, principalId);
+			unregister(service, sessionId);
 		}
 	}
 
-	public boolean isRegistered(Class<?> service, String principalId) {
+	public boolean isRegistered(Class<?> service, String sessionId) {
 		boolean status = false;
 
 		String serviceName = service.getName();
-		synchronized (filteredUsersMap) {
-			if (filteredUsersMap.containsKey(serviceName)) {
-				List<String> usersList = filteredUsersMap.get(serviceName);
-				status = usersList.contains(principalId);
+		synchronized (filteredUsersSessionsMap) {
+			if (filteredUsersSessionsMap.containsKey(serviceName)) {
+				List<String> usersSessionsList = filteredUsersSessionsMap.get(serviceName);
+				status = usersSessionsList.contains(sessionId);
 			}
 		}		
 		return status;

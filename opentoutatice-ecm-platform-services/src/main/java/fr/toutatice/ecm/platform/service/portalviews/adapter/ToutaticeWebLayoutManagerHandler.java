@@ -74,7 +74,9 @@ public class ToutaticeWebLayoutManagerHandler<T> extends ToutaticeAbstractServic
                     Widget[] nxWidgets = row.getWidgets();
                     List<Widget> pvWidgets = new ArrayList<Widget>(0);
                     for (Widget nxWidget : nxWidgets) {
-                        pvWidgets.add(widgetsAdapterService.getPortalViewWidget(nxWidget));
+                        if(nxWidget != null){
+                        	pvWidgets.add(widgetsAdapterService.getPortalViewWidget(nxWidget));
+                        }
                     }
                     pvRows.add(new LayoutRowImpl(row.getName(), row.isSelectedByDefault(), row.isAlwaysSelected(), pvWidgets, row.getProperties(), row
                             .getTagConfigId()));
