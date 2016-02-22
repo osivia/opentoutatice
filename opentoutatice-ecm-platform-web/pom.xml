@@ -13,14 +13,15 @@
 	<name>Partie web de la plate-forme toutatice</name>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-services</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
@@ -42,7 +43,6 @@
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-publisher-task</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.nuxeo.ecm.routing</groupId>
 			<artifactId>nuxeo-routing-api</artifactId>
@@ -58,12 +58,10 @@
 		<dependency>
 			<groupId>org.nuxeo.ecm.automation</groupId>
 			<artifactId>nuxeo-automation-core</artifactId>
-			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.ecm.automation</groupId>
 			<artifactId>nuxeo-automation-jsf</artifactId>
-			<version>${nuxeo.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
@@ -82,6 +80,10 @@
 			<artifactId>nuxeo-platform-task-core</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.nuxeo.ecm.webengine</groupId>
+			<artifactId>nuxeo-webengine-core</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.richfaces</groupId>
 			<artifactId>richfaces-core</artifactId>
 		</dependency>
@@ -98,7 +100,10 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>${javax.servlet.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-rest-api-server</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

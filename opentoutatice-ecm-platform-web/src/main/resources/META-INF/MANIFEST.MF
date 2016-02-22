@@ -6,6 +6,7 @@ Bundle-Version: 2.0.0
 Bundle-Localization: plugin
 Bundle-Vendor: Académie de Rennes 
 Bundle-Category: web
+Nuxeo-WebModule: org.nuxeo.ecm.restapi.server.jaxrs.APIModule;name=api;extends=automation;package=fr/toutatice/ecm/platform/web/restapi/server/jaxrs;headless=true
 Nuxeo-Component: OSGI-INF/extensions/toutatice-actions-contrib.xml,
  OSGI-INF/extensions/toutatice-filters-contrib.xml,
  OSGI-INF/extensions/toutatice-layouts-contrib.xml,
