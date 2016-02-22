@@ -14,7 +14,10 @@
  *
  * Contributors:
  *   mberhaut1
- *    
+ *   
+ * Add the capability to use the WebID permalink within the REST API requests (GET POST PUT DELETE).
+ * Path syntax is:
+ *    <host>/nuxeo/api/toutatice/v1{/repo/default}/web/<webId>
  */
 package fr.toutatice.ecm.platform.web.restapi.server.jaxrs;
 
