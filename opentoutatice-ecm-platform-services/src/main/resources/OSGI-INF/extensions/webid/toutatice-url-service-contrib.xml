@@ -24,7 +24,7 @@
 			<needRedirectFilter>true</needRedirectFilter>
 			<needFilterPreprocessing>true</needFilterPreprocessing>
 			<codecName>webid</codecName>
-			<actionBinding>#{restHelper.initContextFromRestRequest}</actionBinding>
+			<actionBinding>#{restHelper.switchBehaviour}</actionBinding>
 			<documentViewBinding>#{restHelper.documentView}</documentViewBinding>
 			<newDocumentViewBinding>#{restHelper.newDocumentView}</newDocumentViewBinding>
 			<bindings>
