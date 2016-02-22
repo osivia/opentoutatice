@@ -18,6 +18,9 @@
  * Add the capability to use the WebID permalink within the REST API requests (GET POST PUT DELETE).
  * Path syntax is:
  *    <host>/nuxeo/api/toutatice/v1{/repo/default}/web/<webId>
+ *    
+ * A noter: le bug identifié par le ticket JIRA https://jira.nuxeo.com/browse/NXP-17701 conduit à un flux JSON contenant une erreur
+ *    en réponse à une requête de type DELETE. Sera corrigé avec le HF-25.
  */
 package fr.toutatice.ecm.platform.web.restapi.server.jaxrs;
 
