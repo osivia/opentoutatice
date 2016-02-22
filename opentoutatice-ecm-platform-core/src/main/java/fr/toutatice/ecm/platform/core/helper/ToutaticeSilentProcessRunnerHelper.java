@@ -21,13 +21,19 @@ package fr.toutatice.ecm.platform.core.helper;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.NuxeoPrincipal;
+import org.nuxeo.ecm.core.api.SystemPrincipal;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
-import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.event.EventService;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.components.ToutaticeServiceProvider;
 
@@ -42,7 +48,7 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
 			add(EventService.class);
 		}
 	};
-		
+	
 	public ToutaticeSilentProcessRunnerHelper(CoreSession session) {
 		super(session);
 	}
@@ -75,49 +81,121 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
      * @throws ClientException
      */
     public void silentRun(boolean runInUnrestrictedMode, List<Class<?>> filteredServices) throws ClientException {
-    	String userName = session.getPrincipal().getName();
-		
-    	log.debug("Démarrage de l'exécution d'un processus en mode silencieux");
-    	
-    	if (runInUnrestrictedMode && !isUnrestricted(session)) {
-    		/* prendre en compte le passage en utilisateur "system" quand un utilisateur lambda demande l'exécution en mode unrestricted
-    		 * d'un traitement.
-    		 * 
-    		 * Quand un utilisateur est de type "administrateur" (c'est à dire appartenant au groupe des administrateurs déclaré par le 
-    		 * fichier "usermanager-config.xml" via le tag "<administratorsGroup>...</administratorsGroup>") le  mode unrestricted est 
-    		 * déjà actif. Donc l'usager n'est pas reloggé en "system". 
-    		 */
-    		userName = SecurityConstants.SYSTEM_USERNAME;
-    	}
-    	
-		try {
-			// installer le service de filtrage pour l'utilisateur
-			if (null != filteredServices) {
-				for (Class<?> service : filteredServices) {
-					ToutaticeServiceProvider.instance().register(service, userName);
-				}
-			} else {
-				ToutaticeServiceProvider.instance().registerAll(userName);
-			}
-			
-			// Exécuter le coprs du traitement
-			if (runInUnrestrictedMode) {
-				runUnrestricted();
-			} else {
-				run();
-			}
-		} finally {
-			// désinstaller le service de filtrage pour l'utilisateur
-			if (null != filteredServices) {
-				for (Class<?> service : filteredServices) {
-					ToutaticeServiceProvider.instance().unregister(service, userName);
-				}
-			} else {
-				ToutaticeServiceProvider.instance().unregisterAll(userName);
-			}
-			
-	    	log.debug("Fin de l'exécution d'un processus en mode silencieux");
-		}
+
+        log.debug("Démarrage de l'exécution d'un processus en mode silencieux");
+        
+        if (runInUnrestrictedMode) {
+            runUnrestricted(filteredServices);
+        } else {
+            run(filteredServices);
+        }
+
+        log.debug("Fin de l'exécution d'un processus en mode silencieux");
+    }
+    
+    private void runUnrestricted(List<Class<?>> filteredServices) {
+        isUnrestricted = true;
+        try {
+            if (sessionIsAlreadyUnrestricted) {
+                run(filteredServices);
+                return;
+            }
+
+            LoginContext loginContext;
+            try {
+                loginContext = Framework.loginAs(originatingUsername);
+            } catch (LoginException e) {
+                throw new ClientException(e);
+            }
+            try {
+                CoreSession baseSession = session;
+                if (baseSession != null
+                        && !baseSession.isStateSharedByAllThreadSessions()) {
+                    // save base session state for unrestricted one
+                    baseSession.save();
+                }
+                try {
+                    session = CoreInstance.openCoreSession(repositoryName);
+                    if (loginContext == null && Framework.isTestModeSet()) {
+                        NuxeoPrincipal principal = (NuxeoPrincipal) session.getPrincipal();
+                        if (principal instanceof SystemPrincipal) {
+                            // we are in a test that is not using authentication
+                            // =>
+                            // we're not stacking the originating user in the
+                            // authentication stack
+                            // so we're setting manually now
+                            principal.setOriginatingUser(originatingUsername);
+                        }
+                    }
+                } catch (ClientException e) {
+                    throw e;
+                } catch (Exception e) {
+                    throw new ClientException(e);
+                }
+                try {
+                    run(filteredServices);
+                } finally {
+                    try {
+                        if (!session.isStateSharedByAllThreadSessions()) {
+                            // save unrestricted state for base session
+                            session.save();
+                        }
+                        session.close();
+                    } catch (Exception e) {
+                        throw new ClientException(e);
+                    } finally {
+                        if (baseSession != null
+                                && !baseSession.isStateSharedByAllThreadSessions()) {
+                            // process invalidations from unrestricted session
+                            baseSession.save();
+                        }
+                        session = baseSession;
+                    }
+                }
+            } finally {
+                try {
+                    // loginContext may be null in tests
+                    if (loginContext != null) {
+                        loginContext.logout();
+                    }
+                } catch (LoginException e) {
+                    throw new ClientException(e);
+                }
+            }
+        } finally {
+            isUnrestricted = false;
+            if (Framework.isTestModeSet() && sessionIsAlreadyUnrestricted) {
+                session.save();
+            }
+        }
+    }
+
+    private void run(List<Class<?>> filteredServices) throws ClientException {
+        String sessionId = session.getSessionId();
+        try {
+            // installer le service de filtrage pour l'utilisateur
+            if (filteredServices != null) {
+                for (Class<?> service : filteredServices) {
+                    ToutaticeServiceProvider.instance().register(service, sessionId);
+                }
+            } else {
+                ToutaticeServiceProvider.instance().registerAll(sessionId);
+            }
+            
+            run();
+        } finally {
+            // désinstaller le service de filtrage pour l'utilisateur
+            
+            if (null != filteredServices) {
+                for (Class<?> service : filteredServices) {
+                    ToutaticeServiceProvider.instance().unregister(service, sessionId);
+                }
+            } else {
+                ToutaticeServiceProvider.instance().unregisterAll(sessionId);
+            }
+            
+            log.debug("Fin de l'exécution d'un processus en mode silencieux");
+        }
     }
     
 }

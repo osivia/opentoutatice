@@ -22,7 +22,7 @@ public class ToutaticeInheritanceAsynchListener implements PostCommitEventListen
         		try {
         			getInheritanceService().run(event, false);
         		} catch (Exception e) {
-        			log.error("Failed to request the data inheriatnce service, error: " + e.getMessage());
+        			log.error("Failed to request the data inheritance service, error: " + e.getMessage());
         		}
         	}
 		}
