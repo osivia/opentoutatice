@@ -59,7 +59,7 @@ public class ToutaticeRouteModelsZipImporter extends ExportedZipImporter {
             }
         }
 
-        DocumentWriter writer = new ToutaticeDocumentModelWriter(session, path, 10);
+        DocumentWriter writer = new DocumentModelWriter(session, path, 10);
         reader.close();
         reader = new ToutaticeNuxeoArchiveReader(tmp);
 
