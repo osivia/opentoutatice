@@ -25,6 +25,7 @@ import org.jsoup.Jsoup;
 import org.nuxeo.ecm.automation.features.PlatformFunctions;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.core.api.model.impl.primitives.BlobProperty;
 import org.nuxeo.ecm.core.storage.sql.coremodel.SQLBlob;
@@ -162,4 +163,19 @@ public class ToutaticeFunctions extends PlatformFunctions {
 	public String extractTextFromHTML(String html) {
 		return Jsoup.parse(html).text();
 	}
+	
+	/**
+	 * @param username
+	 * @return firstName + lastName of user.
+	 * @throws Exception 
+	 * @throws ClientException 
+	 */
+	public String getUserFullName(String username) throws ClientException, Exception{
+	    NuxeoPrincipal principal = (NuxeoPrincipal) super.getUserManager().getPrincipal(username);
+	    if(principal != null){
+	        return principal.getFirstName().concat(" ").concat(principal.getLastName());
+	    }
+	    return StringUtils.EMPTY;
+	}
+	
 }
