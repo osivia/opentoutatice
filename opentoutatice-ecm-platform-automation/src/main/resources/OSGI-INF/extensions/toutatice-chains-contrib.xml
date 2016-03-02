@@ -23,6 +23,9 @@
 			<operation id="Document.RemovePublishedVersions">
 				<param type="document" name="target">expr:Document.parent.doc</param>
 			</operation>
+			<operation id="Notification.SendEvent">
+			 <param type="string" name="name">documentLocallyUnPublished</param>
+			</operation>
 			<operation id="Audit.Log">
 				<param type="string" name="event">Mise hors ligne</param>
 				<param type="string" name="category">Automation</param>

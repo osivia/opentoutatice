@@ -36,6 +36,7 @@ import javax.security.auth.login.LoginContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.platform.ec.notification.NotificationConstants;
 import org.nuxeo.ecm.platform.ec.notification.email.EmailHelper;
 import org.nuxeo.ecm.platform.ec.notification.email.NotificationsRenderingEngine;
@@ -86,6 +87,9 @@ public class ToutaticeEmailHelper extends EmailHelper {
 		context.setDocument(doc);
 		
 		ToutaticeFunctions fn = new ToutaticeFunctions();
+		
+		String lastContributor = fn.getUserFullName((String) doc.getPropertyValue("dc:lastContributor")); 
+		context.put("lastContributor", lastContributor);
 		
 		String portalHost = fn.getPortalHost(doc);
 		context.put("portalHost", portalHost);

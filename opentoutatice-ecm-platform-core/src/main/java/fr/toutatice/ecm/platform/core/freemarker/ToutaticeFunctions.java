@@ -170,12 +170,18 @@ public class ToutaticeFunctions extends PlatformFunctions {
 	 * @throws Exception 
 	 * @throws ClientException 
 	 */
-	public String getUserFullName(String username) throws ClientException, Exception{
-	    NuxeoPrincipal principal = (NuxeoPrincipal) super.getUserManager().getPrincipal(username);
-	    if(principal != null){
-	        return principal.getFirstName().concat(" ").concat(principal.getLastName());
-	    }
-	    return StringUtils.EMPTY;
+	public String getUserFullName(String username) {
+	    String fullName = StringUtils.EMPTY;
+	    NuxeoPrincipal principal;
+        try {
+            principal = (NuxeoPrincipal) super.getUserManager().getPrincipal(username);
+            if(principal != null){
+                fullName = principal.getFirstName().concat(" ").concat(principal.getLastName());
+            }
+        } catch (Exception e) {
+            return fullName;
+        }
+        return fullName;
 	}
 	
 }
