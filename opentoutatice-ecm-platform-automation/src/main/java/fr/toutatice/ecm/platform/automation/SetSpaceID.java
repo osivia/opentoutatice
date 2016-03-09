@@ -31,6 +31,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.core.event.EventService;
+import org.nuxeo.ecm.core.versioning.VersioningService;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
@@ -45,8 +46,8 @@ public class SetSpaceID {
 	
 	private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
         private static final long serialVersionUID = 1L;
-        /* FIXME: VersioningService necessary? */
         {
+        	add(VersioningService.class);
             add(EventService.class);
         }
     };
