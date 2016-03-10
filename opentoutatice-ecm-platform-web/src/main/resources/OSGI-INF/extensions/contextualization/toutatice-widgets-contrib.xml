@@ -7,32 +7,30 @@
 		point="widgets">
 
 		<widget name="toutatice_widget_tab_order" type="int">
-			<labels>
-				<label mode="any">toutatice.tab.order</label>
-			</labels>
-			<helpLabels>
-				<label mode="any">
-					Défini l'ordre d'affichage de l'onglet associé à
-					cette page dans la liste des onglets existants
-				</label>
-			</helpLabels>
-			<translated>true</translated>
-			<fields>
-				<field>ttc:tabOrder</field>
-			</fields>
-			<properties widgetMode="any">
-				<property name="required">false</property>
-			</properties>
-			<widgetModes>
-				<mode value="any">#{nxu:test((currentDocument.type == 'PortalSite' or
-					currentDocument.type == 'Workspace')
-					and (currentUser.administrator
-					or
-					currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
-					'hidden')}
-				</mode>
-			</widgetModes>
-		</widget>
+            <labels>
+                <label mode="any">toutatice.tab.order</label>
+            </labels>
+            <helpLabels>
+                <label mode="any">
+                    Défini l'ordre d'affichage de l'onglet associé à
+                    cette page dans la liste des onglets existants
+                </label>
+            </helpLabels>
+            <translated>true</translated>
+            <fields>
+                <field>ttc:tabOrder</field>
+            </fields>
+            <properties widgetMode="any">
+                <property name="required">false</property>
+            </properties>
+            <widgetModes>
+                <mode value="any">#{nxu:test((currentUser.administrator
+                    or
+                    currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
+                    'hidden')}
+                </mode>
+            </widgetModes>
+        </widget>
 
 		<widget name="toutatice_widget_preload_on_login" type="checkbox">
 			<labels>

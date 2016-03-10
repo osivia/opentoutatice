@@ -12,8 +12,6 @@
             <include>ReadWrite</include>
         </permission>
 
-		<permission name="validationWorkflow_validation" />
-
 		<permission name="Read">
 			<remove>CanAskForPublishing</remove>
 		</permission>
@@ -24,7 +22,7 @@
 
 		<permission name="validationWorkflow_validation">
 			<include>Write</include>
-		</permission>
+		</permission> 
 
 		<permission name="RemotePublish">
 			<include>CanAskForPublishing</include>

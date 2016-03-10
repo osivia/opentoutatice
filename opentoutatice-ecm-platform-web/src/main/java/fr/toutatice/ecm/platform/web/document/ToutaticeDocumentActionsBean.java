@@ -105,7 +105,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     protected transient NavigationContext navigationContext;
 
     @In(create = true)
-    PageBean pageBean;
+    protected PageBean pageBean;
 
     @In(create = true)
     protected transient PictureBookManager pictureBookManager;
@@ -599,7 +599,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         return output;
     }
 
-    private void setDocumentOnline(DocumentModel document) {
+    protected void setDocumentOnline(DocumentModel document) {
         try {
             String proxyVersionLabel = getProxyVersion(document);
             if (!document.getVersionLabel().equals(proxyVersionLabel)) {

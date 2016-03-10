@@ -50,7 +50,7 @@ public class ToutaticeDocumentMoved implements EventListener {
 				runner.runUnrestricted();
 				
 				DocumentModel movedproxy = ((UnrestrictedMoveProxyRunner) runner).getMovedproxy();
-				if(movedproxy != null){//FIXME: detach ans attach necessary?
+				if(movedproxy != null){//FIXME: detach and attach necessary?
     				movedproxy.detach(true);
     				movedproxy.attach(session.getSessionId());
 				}

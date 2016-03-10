@@ -106,11 +106,6 @@
 	<extension target="org.nuxeo.ecm.core.lifecycle.LifeCycleService"
 		point="types">
 
-		<documentation>
-			Nuxeo core default document types to life cycles
-			mapping
-		</documentation>
-
 		<types>
 			<type name="PortalPage">default_toutatice</type>
 			<type name="PortalSite">default_toutatice</type>

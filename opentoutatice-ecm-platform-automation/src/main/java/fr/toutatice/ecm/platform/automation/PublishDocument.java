@@ -180,7 +180,7 @@ public class PublishDocument {
                 srcDoc = this.session.saveDocument(srcDoc);
                 
                 /* Notify local publication */
-                ToutaticeNotifyEventHelper.notifyEvent(session, ToutaticeGlobalConst.CST_EVENT_DOC_LOCALLY_PUBLISHED, this.newProxy, new HashMap<String, Serializable>());
+                //ToutaticeNotifyEventHelper.notifyEvent(session, ToutaticeGlobalConst.CST_EVENT_DOC_LOCALLY_PUBLISHED, this.newProxy, new HashMap<String, Serializable>());
                 
             } else {
                 throw new ClientException("Failed to get the target document reference");
