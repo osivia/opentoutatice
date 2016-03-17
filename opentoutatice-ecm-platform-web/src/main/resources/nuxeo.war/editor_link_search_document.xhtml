@@ -195,11 +195,11 @@
                         if(paramIndex != -1){
                             relativeUrl = relativeUrl.substr(0,paramIndex);
                         }
-                        $targetPathField.val(relativeUrl);
+                        $targetPathField.val(relativeUrl).trigger("change");
 
                         var $targetTitleField = jQuery(window.opener.$targetTitle[index - 1]);
                         var title = jQuery(docLink).text();
-                        $targetTitleField.val(title);
+                        $targetTitleField.val(title).trigger("change");
 
                         $targetTitleField.attr("readonly","readonly");
                   }
@@ -216,6 +216,25 @@
                         var html = '&lt;a href="' + docLink.href + '"&gt;' + linkContent + '&lt;/a&gt;';
                         tinyMCE.execCommand('mceInsertContent', false, html);
                   }
+                  
+                  function updateFunction(docLink){
+                	  var index = 1;
+                      if(typeof window.opener.index_ != "undefined"){
+                          index = window.opener.index_;
+                      }
+
+                      var $targetPathField = jQuery(window.opener.$targetPath[index - 1]);
+                      var relativeUrl = docLink.href.replace(/^(?:\/\/|[^\/]+)*\//, "/");
+                      var paramIndex = relativeUrl.indexOf("@");
+                      if(paramIndex != -1){
+                          relativeUrl = relativeUrl.substr(0,paramIndex);
+                      }
+
+                      var $targetTitleField = jQuery(window.opener.$targetTitle[index - 1]);
+                      var title = jQuery(docLink).text();
+
+                      window.opener.updateFunction(relativeUrl, title);
+                  }
 
                   function updateCaller(form) {
                     var button = getSelectedRadio(form.elements.selection);
@@ -223,7 +242,9 @@
                     if (docLink != null) {
                       if (window.opener.origin_ == "ew") {
                         updateFragment(docLink);
-                      } else { 
+                      } else if (window.opener.origin_ == "updateFunction"){
+                    	  updateFunction(docLink);
+                      }else { 
                         updateEditor(docLink);
                       }
                       window.opener.origin_ = "none";

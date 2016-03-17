@@ -41,6 +41,8 @@
 			src="schemas/webpage/criteria_list_fragments.xsd" />
 		<schema name="slider_list_fragments" prefix="sldlistfgt"
 			src="schemas/webpage/slider_list_fragments.xsd" />
+        <schema name="set_fragments" prefix="setfgt"
+            src="schemas/webpage/set_fragments.xsd" />
 			
 		<schema name="ew_fragments" prefix="ewf"
 			src="schemas/webpage/ew_fragments.xsd" />

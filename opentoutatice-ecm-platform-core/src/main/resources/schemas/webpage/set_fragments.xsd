@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:nxs="http://www.nuxeo.org/ecm/project/schemas/opentoutatice/set_fragments"
+    targetNamespace="http://www.nuxeo.org/ecm/project/schemas/opentoutatice/set_fragments">
+
+    <xs:complexType name="setfgt_setItemType">
+		<xs:sequence>
+			<xs:element name="setWebId" type="xs:string" />
+			<xs:element name="setName" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+    <xs:complexType name="setfgt_setItemListType">
+        <xs:sequence>
+            <xs:element name="setItem" type="nxs:setfgt_setItemType"
+                minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="setfgt_setFragmentListType">
+        <xs:sequence>
+            <xs:element name="item" type="nxs:setfgt_setFragmentType"
+                minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="setfgt_setFragmentType">
+        <xs:sequence>
+            <xs:element name="refURI" type="xs:string" />
+            <xs:element name="style" type="xs:string" />
+            <xs:element name="setItems" type="nxs:setfgt_setItemListType" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="setFragment" type="nxs:setfgt_setFragmentListType" />
+    
+</xs:schema>

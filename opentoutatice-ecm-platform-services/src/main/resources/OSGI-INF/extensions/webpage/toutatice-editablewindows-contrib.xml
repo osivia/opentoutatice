@@ -50,6 +50,10 @@
 		<editablewindow code="ew.fragment"
 			class="fr.toutatice.ecm.platform.service.editablewindows.types.FragmentEditableWindow"
 			title="osivia.ew.fragment.title" layout="ew_fragment_layout" />
+            
+        <editablewindow code="fgt.set"
+            class="fr.toutatice.ecm.platform.service.editablewindows.types.SetFragment"
+            title="osivia.fragment.set.title" layout="set_fragment_layout" />
 
 	</extension>
 
