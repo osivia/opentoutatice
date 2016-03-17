@@ -44,8 +44,6 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
-import org.nuxeo.ecm.core.api.model.Property;
-import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 import org.nuxeo.ecm.platform.ui.web.util.ComponentUtils;
 import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
@@ -53,7 +51,6 @@ import org.nuxeo.ecm.webapp.contentbrowser.DocumentActions;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
-import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.local.configuration.WebConfsConfigurationConstants;
 import fr.toutatice.ecm.platform.web.document.ToutaticeDocumentActionsBean;
 import fr.toutatice.ecm.platform.web.local.configuration.WebConfsConfigurationActions;
@@ -72,9 +69,6 @@ public class ToutaticeValidatorBean implements Serializable {
     private static final Log log = LogFactory.getLog(ToutaticeValidatorBean.class);
 
     private static final String DOMAIN_ID_UNICITY_QUERY = "select * from Domain where ecm:uuid <> '%s' and ttc:domainID = '%s' and ecm:currentLifeCycleState <> 'deleted'";
-
-    private static final String WEB_ID_UNICITY_QUERY = "select * from Document Where ttc:webid = '%s'"
-            + " AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
     @In(create = true, required = true)
     protected transient CoreSession documentManager;
@@ -124,85 +118,6 @@ public class ToutaticeValidatorBean implements Serializable {
                     msg = ComponentUtils.translate(context, "label.toutatice.validator.no.domain");
                 }
             }
-            if (msg != null) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
-                throw new ValidatorException(message);
-            }
-        }
-    }
-
-
-    /**
-     * 
-     * @param context
-     * @param component
-     * @param value
-     * @throws ValidatorException
-     */
-    public void validateWebId(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-
-        String webID = (String) value;
-        if (StringUtils.isNotBlank(webID)) {
-            String msg = null;
-
-
-            // format control
-            Matcher m = patternId.matcher(webID);
-            if (!m.matches()) {
-                msg = ComponentUtils.translate(context, "label.toutatice.validator.malformed.webid");
-            } else {
-
-
-                // unicity control
-                DocumentModel doc = null;
-                try {
-                    doc = ((ToutaticeDocumentActionsBean) documentActions).getCurrentDocument();
-
-
-                    if (doc != null) {
-                        DocumentModelList doubles = documentManager.query(String.format(WEB_ID_UNICITY_QUERY, webID, doc.getId()));
-
-                        if (doubles.size() > 0) {
-                            msg = ComponentUtils.translate(context, "label.toutatice.validator.webid.no.unicity");
-                        }
-
-
-                    } else {
-                        msg = ComponentUtils.translate(context, "label.toutatice.validator.no.doc");
-                    }
-                } catch (ClientException ce) {
-                    msg = ce.getMessage();
-                }
-
-            }
-
-            if (msg != null) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
-                throw new ValidatorException(message);
-            }
-        }
-    }
-
-    /**
-     * 
-     * @param context
-     * @param component
-     * @param value
-     * @throws ValidatorException
-     */
-    public void validateExplicitUrl(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-
-
-        String explicitUrl = (String) value;
-        if (StringUtils.isNotBlank(explicitUrl)) {
-            String msg = null;
-
-            // format control
-            Matcher m = patternExplicit.matcher(explicitUrl);
-            if (!m.matches()) {
-                msg = ComponentUtils.translate(context, "label.toutatice.validator.malformed.explicit");
-            }
-
             if (msg != null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
                 throw new ValidatorException(message);
@@ -282,65 +197,6 @@ public class ToutaticeValidatorBean implements Serializable {
                     }
                 }
             }
-
-        }
-
-    }
-
-    /**
-     * Get the parent space and look at the property "ttcs:hasWebIdEnabled"
-     * 
-     * @param doc
-     * @return true if webid are enabled
-     * @throws PropertyException
-     * @throws ClientException
-     */
-    public Boolean getSpaceSupportsWebId() throws PropertyException, ClientException {
-
-        DocumentModel doc = navigationContext.getCurrentDocument();
-
-        // check if document belong to a space whose supports webid
-        UnrestrictedSpaceSupportsWebId runner = new UnrestrictedSpaceSupportsWebId(documentManager, doc);
-        runner.runUnrestricted();
-        return runner.isSupports();
-
-    }
-
-    private class UnrestrictedSpaceSupportsWebId extends UnrestrictedSessionRunner {
-
-        private Boolean supports;
-        private DocumentModel document;
-
-        public Boolean isSupports() {
-            return this.supports;
-        }
-
-        protected UnrestrictedSpaceSupportsWebId(CoreSession session, DocumentModel document) {
-            super(session);
-            this.document = document;
-        }
-
-        @Override
-        public void run() throws ClientException {
-            boolean spaceSupportsWebId = true;
-            DocumentModelList spaces = ToutaticeDocumentHelper.getParentSpaceList(this.session, this.document, false, true, true);
-            if (spaces != null && spaces.size() > 0) {
-
-                DocumentModel space = spaces.get(0);
-
-                Property hasWebIdEnabled = space.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICESPACE_WEBID_ENABLED);
-
-                if (hasWebIdEnabled != null) {
-                    if (hasWebIdEnabled.getValue(Boolean.class) == false) {
-                        spaceSupportsWebId = false;
-                    }
-                } else {
-                    spaceSupportsWebId = false; // param in space is set to false
-                }
-            } else {
-                spaceSupportsWebId = false; // space is not found
-            }
-            this.supports = spaceSupportsWebId;
 
         }
 

@@ -137,8 +137,7 @@
 			</properties>
 			<widgetModes>
 				<mode value="any">#{nxu:test(currentDocument.type != 'BlogSite' and
-					(currentUser.administrator or
-					currentNuxeoPrincipal.isMemberOf('Administrators')) ,
+					currentUser.administrator ,
 					layout.mode,
 					'hidden')}
 				</mode>
@@ -155,14 +154,12 @@
 				<field>ttc:webid</field>
 			</fields>
 			<properties widgetMode="edit">
-				<property name="validator">#{toutaticeValidator.validateWebId}
-				</property>
-				<property name="disabled">#{!toutaticeValidator.spaceSupportsWebId or
-					currentDocument.hasFacet('WebidDisabled')}
-				</property>
-			</properties>
-
+                <property name="disabled">#{!currentUser.administrator 
+                        or currentDocument.hasFacet('WebidDisabled')}
+                </property>
+            </properties>
 		</widget>
+		
 		<widget name="toutatice_removeWebId_widget" type="template">
 			<labels>
 				<label mode="any">toutatice.label.title.remove.webid.widget</label>
@@ -177,48 +174,10 @@
 				</property>
 			</properties>
 			<properties widgetMode="edit">
-				<property name="validator">#{toutaticeValidator.validateWebId}
-				</property>
-				<property name="disabled">#{!toutaticeValidator.spaceSupportsWebId or
-					currentDocument.hasFacet('WebidDisabled')}
-				</property>
-			</properties>
-		</widget>
-
-		<widget name="toutatice_explicitUrl_widget" type="text">
-			<labels>
-				<label mode="any">toutatice.label.webid.url</label>
-			</labels>
-			<translated>true</translated>
-			<fields>
-				<field>ttc:explicitUrl</field>
-			</fields>
-			<properties widgetMode="edit">
-				<property name="validator">#{toutaticeValidator.validateExplicitUrl}
-				</property>
-				<property name="disabled">#{!toutaticeValidator.spaceSupportsWebId}
-				</property>
-			</properties>
-		</widget>
-
-		<!-- Widget en vue Modifier (ou Créer) -->
-		<widget name="toutatice_space_enable_webId_widget" type="template">
-			<labels>
-				<label mode="any">toutatice.label.webid.activate</label>
-			</labels>
-			<translated>true</translated>
-			<fields>
-				<field>ttcs:hasWebIdEnabled</field>
-			</fields>
-			<properties mode="any">
-				<property name="template">/widgets/toutatice_webid_enable_widget.xhtml
-				</property>
-			</properties>
-			<widgetModes>
-				<mode value="any">#{nxu:test(currentDocument.hasFacet('Space'),
-					layout.mode, 'hidden')}
-				</mode>
-			</widgetModes>
+                <property name="disabled">#{!currentUser.administrator 
+                        or currentDocument.hasFacet('WebidDisabled')}
+                </property>
+            </properties>
 		</widget>
 
 		<widget name="toutatice_widget_use_es" type="template">

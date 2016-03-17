@@ -220,12 +220,8 @@
 			</templates>
 			<rows>
 				<row>
-					<widget>toutatice_space_enable_webId_widget</widget>
-				</row>
-				<row>
 					<widget>toutatice_removeWebId_widget</widget>
 				</row>
-				<!-- <row> <widget>toutatice_explicitUrl_widget</widget> </row> -->
 			</rows>
 
 		</layout>

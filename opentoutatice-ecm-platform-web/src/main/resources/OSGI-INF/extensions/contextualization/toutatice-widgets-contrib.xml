@@ -24,9 +24,7 @@
                 <property name="required">false</property>
             </properties>
             <widgetModes>
-                <mode value="any">#{nxu:test((currentUser.administrator
-                    or
-                    currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
+                <mode value="any">#{nxu:test(currentUser.administrator, layout.mode,
                     'hidden')}
                 </mode>
             </widgetModes>
@@ -52,9 +50,7 @@
 				<mode value="any">#{nxu:test((currentDocument.hasFacet('TTCPublishSpace')
 					or
 					currentDocument.type == 'Workspace') and
-					(currentUser.administrator
-					or
-					currentNuxeoPrincipal.isMemberOf('Administrators')),
+					currentUser.administrator,
 					layout.mode,
 					'hidden')}
 				</mode>
@@ -107,9 +103,7 @@
 			<widgetModes>
 				<mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace')
 					and
-					(currentUser.administrator
-					or
-					currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
+					currentUser.administrator, layout.mode,
 					'hidden')}
 				</mode>
 			</widgetModes>
@@ -137,9 +131,7 @@
 			<widgetModes>
 				<mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace')
 					and
-					(currentUser.administrator
-					or
-					currentNuxeoPrincipal.isMemberOf('Administrators')), layout.mode,
+					currentUser.administrator, layout.mode,
 					'hidden')}
 				</mode>
 			</widgetModes>

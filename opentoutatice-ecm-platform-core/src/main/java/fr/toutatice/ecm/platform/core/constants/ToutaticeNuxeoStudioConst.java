@@ -103,7 +103,6 @@ public class ToutaticeNuxeoStudioConst {
 	public final static String CST_DOC_XPATH_MNT_AUTOMATION_LOGS_STATUS = CST_DOC_SCHEMA_MNT_PREFIX + ":automationLogsStatus";
 	public final static String CST_DOC_XPATH_MNT_AUTOMATION_LOGS_THRESHOLD = CST_DOC_SCHEMA_MNT_PREFIX + ":automationLogsThreshold";
 	public static final String CST_DOC_SCHEMA_TOUTATICE_WEBID = CST_DOC_SCHEMA_TOUTATICE_PREFIX + ":webid";
-    public static final String CST_DOC_XPATH_TOUTATICESPACE_WEBID_ENABLED = CST_DOC_SCHEMA_TOUTATICE_SPACE_PREFIX + ":hasWebIdEnabled";
     public static final String CST_DOC_XPATH_WEB_CONF_CODE = CST_DOC_SCHEMA_WEB_CONF + ":code";
     public static final String CST_DOC_XPATH_COMMENTABLE_SPACE = CST_DOC_SCHEMA_TOUTATICE_SPACE_PREFIX + ":spaceCommentable";
     

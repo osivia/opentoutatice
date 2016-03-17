@@ -102,36 +102,6 @@ public class SetWebID {
         return runner.getDocument();
     }
 
-    /**
-     * Get the parent space and look at the property "ttcs:hasWebIdEnabled"
-     * 
-     * @param doc
-     * @return true if webid are enabled
-     * @throws PropertyException
-     * @throws ClientException
-     */
-    private boolean isSpaceSupportsWebId(DocumentModel doc) throws PropertyException, ClientException {
-        // check if document belong to a space whose supports webid
-        boolean spaceSupportsWebId = true;
-        DocumentModelList spaces = ToutaticeDocumentHelper.getParentSpaceList(coreSession, doc, true, true, true);
-        if (spaces != null && spaces.size() > 0) {
-
-            DocumentModel space = spaces.get(0);
-            Property hasWebIdEnabled = space.getProperty(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICESPACE_WEBID_ENABLED);
-
-            if (hasWebIdEnabled != null) {
-                if (hasWebIdEnabled.getValue(Boolean.class) == false) {
-                    spaceSupportsWebId = false;
-                }
-            } else {
-                spaceSupportsWebId = false; // param in space is set to false
-            }
-        } else {
-            spaceSupportsWebId = false; // space is not found
-        }
-        return spaceSupportsWebId;
-    }
-
     private class UnrestrictedSilentSetWebIdRunner extends ToutaticeSilentProcessRunnerHelper {
 
         private DocumentModel document;
@@ -154,23 +124,6 @@ public class SetWebID {
 
             // if document has not toutatice schema
             if (this.document.isImmutable() || !this.document.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
-                return;
-            }
-
-            // if space does not supports webid or if we can not verify it.
-            if (!isSpaceSupportsWebId(this.document)) {
-
-                Object currentWebId = getWebId();
-                if (currentWebId != null) { // in case of import, copy, move or restauration
-                    if (StringUtils.isNotEmpty(currentWebId.toString())) {
-
-                        // blank the value of the webid document
-                        this.document.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID, StringUtils.EMPTY);
-                        this.session.saveDocument(this.document);
-
-                    }
-                }
-
                 return;
             }
 
