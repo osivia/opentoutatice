@@ -70,6 +70,9 @@ public class ToutaticeValidatorBean implements Serializable {
 
     private static final String DOMAIN_ID_UNICITY_QUERY = "select * from Domain where ecm:uuid <> '%s' and ttc:domainID = '%s' and ecm:currentLifeCycleState <> 'deleted'";
 
+    private static final String WEB_ID_UNICITY_QUERY = "select * from Document Where ttc:webid = '%s'"
+            + " AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+
     @In(create = true, required = true)
     protected transient CoreSession documentManager;
 
@@ -118,6 +121,75 @@ public class ToutaticeValidatorBean implements Serializable {
                     msg = ComponentUtils.translate(context, "label.toutatice.validator.no.domain");
                 }
             }
+            if (msg != null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
+                throw new ValidatorException(message);
+            }
+        }
+    }
+
+
+    /**
+     * 
+     * @param context
+     * @param component
+     * @param value
+     * @throws ValidatorException
+     */
+    public void validateWebId(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+
+        String webID = (String) value;
+        if (StringUtils.isNotBlank(webID)) {
+            String msg = null;
+
+            // unicity control
+            DocumentModel doc = null;
+            try {
+                doc = ((ToutaticeDocumentActionsBean) documentActions).getCurrentDocument();
+
+
+                if (doc != null) {
+                    DocumentModelList doubles = documentManager.query(String.format(WEB_ID_UNICITY_QUERY, webID, doc.getId()));
+
+                    if (doubles.size() > 0) {
+                        msg = ComponentUtils.translate(context, "label.toutatice.validator.webid.no.unicity");
+                    }
+
+
+                } else {
+                    msg = ComponentUtils.translate(context, "label.toutatice.validator.no.doc");
+                }
+            } catch (ClientException ce) {
+                msg = ce.getMessage();
+            }
+
+            if (msg != null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
+                throw new ValidatorException(message);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param context
+     * @param component
+     * @param value
+     * @throws ValidatorException
+     */
+    public void validateExplicitUrl(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+
+
+        String explicitUrl = (String) value;
+        if (StringUtils.isNotBlank(explicitUrl)) {
+            String msg = null;
+
+            // format control
+            Matcher m = patternExplicit.matcher(explicitUrl);
+            if (!m.matches()) {
+                msg = ComponentUtils.translate(context, "label.toutatice.validator.malformed.explicit");
+            }
+
             if (msg != null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
                 throw new ValidatorException(message);

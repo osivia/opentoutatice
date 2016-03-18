@@ -157,6 +157,8 @@
                 <property name="disabled">#{!currentUser.administrator 
                         or currentDocument.hasFacet('WebidDisabled')}
                 </property>
+                <property name="validator">#{toutaticeValidator.validateWebId}
+                </property>
             </properties>
 		</widget>
 		
@@ -176,6 +178,8 @@
 			<properties widgetMode="edit">
                 <property name="disabled">#{!currentUser.administrator 
                         or currentDocument.hasFacet('WebidDisabled')}
+                </property>
+                <property name="validator">#{toutaticeValidator.validateWebId}
                 </property>
             </properties>
 		</widget>
