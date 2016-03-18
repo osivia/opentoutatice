@@ -25,7 +25,7 @@
 			<event>aboutToRemoveVersion</event>
 		</listener>
 
-		<listener name="toutaticeDocumentMoved" async="true"
+		<listener name="toutaticeDocumentMoved" async="false"
 			postCommit="false" 
             enabled="true"
 			class="fr.toutatice.ecm.platform.core.listener.ToutaticeDocumentMoved"
