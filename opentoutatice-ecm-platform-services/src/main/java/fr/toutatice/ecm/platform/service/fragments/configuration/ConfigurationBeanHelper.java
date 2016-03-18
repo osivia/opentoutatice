@@ -1,17 +1,17 @@
 /*
  * (C) Copyright 2014 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
- * 
+ *
+ *
  * Contributors:
  * lbillon
  * dchevrier
@@ -57,7 +57,7 @@ import fr.toutatice.ecm.platform.core.local.configuration.WebConfsConfigurationC
 public class ConfigurationBeanHelper {
 
     /**
-	 * 
+	 *
 	 */
 	private static final String WCONF_OPTIONS = "wconf:options";
 
@@ -76,7 +76,7 @@ public class ConfigurationBeanHelper {
 
     /**
      * Get the current JSF instance of this class
-     * 
+     *
      * @return the instance
      */
     public static ConfigurationBeanHelper getBean() {
@@ -85,7 +85,7 @@ public class ConfigurationBeanHelper {
 
     /**
      * List of configurations in nuxeo
-     * 
+     *
      * @return webvconfigurations describing the allowed types of templates the user can set.
      */
     public DocumentModelList getConfigs(String confType) {
@@ -100,7 +100,7 @@ public class ConfigurationBeanHelper {
 
     public DocumentModelList getConfigs(String confType, CoreSession session, DocumentModel domain) {
         List<DocumentModel> configs = null;
-        
+
         if (domain != null) {
             UnrestrictedGetAllWebConfs allConfsGetter = new UnrestrictedGetAllWebConfs(session, domain, confType);
             allConfsGetter.runUnrestricted();
@@ -139,7 +139,7 @@ public class ConfigurationBeanHelper {
     }
 
     /**
-     * 
+     *
      * @param selectedConfs
      * @param confType
      * @return confs of given type.
@@ -154,15 +154,15 @@ public class ConfigurationBeanHelper {
         }
         return confsByTypes;
     }
-    
+
     /**
      * Unrestricted access to global and local web confs.
-     * 
+     *
      * @author david chevrier.
      *
      */
     public static class UnrestrictedGetAllWebConfs extends UnrestrictedSessionRunner {
-        
+
         private DocumentModel domain;
         private String confType;
 
@@ -171,56 +171,56 @@ public class ConfigurationBeanHelper {
             this.domain = domain;
             this.confType = confType;
         }
-        
+
         private List<DocumentModel> webConfs;
 
 
         public List<DocumentModel> getWebConfs() {
-            return this.webConfs;
+            return webConfs;
         }
-        
+
         @Override
         public void run() throws ClientException {
-            
-         // Get overriden or new local confs
-            String localQuery = String.format(WEB_CONFS_QUERY, this.domain.getId(), this.confType);
-            DocumentModelList localConfs = this.session.query(localQuery);
-            if (this.domain.hasFacet(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_FACET)) {
 
-                WebConfsConfiguration webConfsConfiguration = this.domain.getAdapter(WebConfsConfiguration.class);
+         // Get overriden or new local confs
+            String localQuery = String.format(WEB_CONFS_QUERY, domain.getId(), confType);
+            DocumentModelList localConfs = session.query(localQuery);
+            if (domain.hasFacet(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_FACET)) {
+
+                WebConfsConfiguration webConfsConfiguration = domain.getAdapter(WebConfsConfiguration.class);
                 if (webConfsConfiguration != null) {
 
                     // Get global selected confs
-                    List<DocumentModel> selectedConfs = webConfsConfiguration.getSelectedConfs(this.domain);
+                    List<DocumentModel> selectedConfs = webConfsConfiguration.getSelectedConfs(domain);
                     if (selectedConfs != null) {
-                        this.webConfs = new ArrayList<DocumentModel>(mergeGlobalNLocalConfs(selectedConfs, localConfs, this.confType));
+                        webConfs = new ArrayList<DocumentModel>(mergeGlobalNLocalConfs(selectedConfs, localConfs, confType));
                     } else {
                         // TODO: To test!!
-                        this.webConfs = new ArrayList<DocumentModel>(getSelectedConfsByType(localConfs, this.confType));
+                        webConfs = new ArrayList<DocumentModel>(getSelectedConfsByType(localConfs, confType));
                     }
 
                 }
             } else {
 
                 WebConfsConfigurationAdapter.UnrestrictedGetGlobalWebConfs globalConfsGetter = new WebConfsConfigurationAdapter.UnrestrictedGetGlobalWebConfs(
-                        this.session);
+                        session);
                 globalConfsGetter.runUnrestricted();
                 DocumentModelList globalConfs = globalConfsGetter.getWebConfs();
 
-                if (globalConfs != null && !globalConfs.isEmpty()) {
-                    this.webConfs = new ArrayList<DocumentModel>(mergeGlobalNLocalConfs(globalConfs, localConfs, this.confType));
+                if ((globalConfs != null) && !globalConfs.isEmpty()) {
+                    webConfs = new ArrayList<DocumentModel>(mergeGlobalNLocalConfs(globalConfs, localConfs, confType));
                 } else {
                     // TODO: To test!!
-                    this.webConfs = new ArrayList<DocumentModel>(getSelectedConfsByType(localConfs, this.confType));
+                    webConfs = new ArrayList<DocumentModel>(getSelectedConfsByType(localConfs, confType));
                 }
             }
-            
+
         }
-        
+
     }
 
     /**
-     * 
+     *
      * @return a list of pages templates allowed in the cms mode
      */
     public DocumentModelList getPageTemplates() {
@@ -228,7 +228,7 @@ public class ConfigurationBeanHelper {
     }
 
     /**
-     * 
+     *
      * @return a list of pages themes allowed in the cms mode
      */
     public DocumentModelList getPageThemes() {
@@ -236,7 +236,7 @@ public class ConfigurationBeanHelper {
     }
 
     /**
-     * 
+     *
      * @return a list of fragment types who can be created in cms mode
      */
     public DocumentModelList getFragmentTypes() {
@@ -244,7 +244,7 @@ public class ConfigurationBeanHelper {
     }
 
     /**
-     * 
+     *
      * @return a list of css window style who can be setted on the CMS windows
      */
     public DocumentModelList getWindowStyles() {
@@ -252,7 +252,7 @@ public class ConfigurationBeanHelper {
     }
 
     /**
-     * 
+     *
      * @return a list of templates who can be setted on the list
      */
     public DocumentModelList getListTemplates() {
@@ -260,7 +260,7 @@ public class ConfigurationBeanHelper {
     }
 
     /**
-     * 
+     *
      * @return a list of zoom templates who can be setted on the zoom fragment
      */
     public DocumentModelList getZoomTemplates() {
@@ -269,7 +269,7 @@ public class ConfigurationBeanHelper {
 
 
     /**
-     * 
+     *
      * @return a list of links templates who can be setted on the links fragment
      */
     public DocumentModelList getLinksTemplates() {
@@ -277,15 +277,15 @@ public class ConfigurationBeanHelper {
     }
 
     /**
-     * 
+     *
      * @return a list of slider templates who can be setted on the carousel fragment
      */
     public DocumentModelList getSliderTemplates() {
         return getConfigs("slidertemplate");
     }
-    
+
     /**
-     * 
+     *
      * @return the avaliable regions layouts
      */
     public DocumentModelList getRegionLayouts() {
@@ -294,7 +294,7 @@ public class ConfigurationBeanHelper {
 
     /**
      * List of configurations in nuxeo
-     * 
+     *
      * @return webconfig of portlet
      */
     public List<Map<String, String>> getFragmentOptionsByCode(DocumentModel doc, String code2) {
@@ -307,7 +307,7 @@ public class ConfigurationBeanHelper {
 
             // compute domain path
             DocumentModel child = null;
-            while (!(type.equals("Domain")) && doc != child) {
+            while (!(type.equals("Domain")) && (doc != child)) {
                 child = doc;
                 doc = session.getDocument(doc.getParentRef());
                 if (doc != null) {
@@ -337,8 +337,9 @@ public class ConfigurationBeanHelper {
 
                 Map<String, Object> properties = config.getProperties("webconfiguration");
 
-                if (properties.containsKey(WCONF_OPTIONS) && properties.get(WCONF_OPTIONS) != null)
+                if (properties.containsKey(WCONF_OPTIONS) && (properties.get(WCONF_OPTIONS) != null)) {
                     return (List<Map<String, String>>) properties.get(WCONF_OPTIONS);
+                }
 
             }
 
@@ -349,34 +350,38 @@ public class ConfigurationBeanHelper {
 
         return null;
     }
-    
+
     /**
      * Evaluate a configuration option on website options
-     * 
+     *
      * @param paramName the param name
      * @return true or false
      */
     public boolean getWebsiteParam(String paramName) {
-    	
-    	boolean conf = false;
-    	
-    	DocumentModelList configs = getConfigs("websiteConfig");
-    	
-    	if(configs.size() > 0) {
-    		DocumentModel websiteconfig = configs.get(0);
-    		
-    		Map<String, Object> properties = websiteconfig.getProperties("webconfiguration");
-    		
-    		List<Map<String, String>> options = (List<Map<String, String>>) properties.get(WCONF_OPTIONS);
-    		for(Map<String, String> option : options) {
-    			if(option.get("propertyName").equals(paramName)) {
-    				conf = BooleanUtils.toBoolean(option.get("propertyDefaultValue"));
-    				break;
-    			}
-    		}
+        return BooleanUtils.toBoolean(getPropertyValue(paramName));
+    }
 
-    	}
-   	
-    	return conf;
+    private String getPropertyValue(String paramName) {
+        DocumentModelList configs = getConfigs("websiteConfig");
+
+        if (configs.size() > 0) {
+            DocumentModel websiteconfig = configs.get(0);
+
+            Map<String, Object> properties = websiteconfig.getProperties("webconfiguration");
+
+            List<Map<String, String>> options = (List<Map<String, String>>) properties.get(WCONF_OPTIONS);
+            for (Map<String, String> option : options) {
+                if (option.get("propertyName").equals(paramName)) {
+                    return option.get("propertyDefaultValue");
+                }
+            }
+        }
+        return null;
+    }
+
+
+    public String getWebsiteParamString(String paramName, String defaultValue) {
+        String propertyValue = getPropertyValue(paramName);
+        return propertyValue == null ? defaultValue : propertyValue;
     }
 }

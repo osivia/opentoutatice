@@ -82,7 +82,7 @@
                 <div class="form-group">
                     <h:outputLabel value="#{messages['osivia.fragment.zoom.form.description']}" class="control-label col-sm-2" />
                     <div class="col-sm-8">
-                        <nxl:widgetType id="zl_desc" name="ottc_inline_htmltext" mode="edit" class="form-control" 
+                        <nxl:widgetType id="zl_desc" name="#{config.getWebsiteParamString('zoomTinyMce','ottc_inline_htmltext')}" mode="edit" class="form-control" 
                             title="Texte du lien." value="#{zoom.content}" />
                     </div>
                 </div>
