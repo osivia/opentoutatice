@@ -16,6 +16,7 @@ import org.nuxeo.ecm.webapp.filemanager.FileManageActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 
 /**
@@ -41,7 +42,17 @@ public class ToutaticeFileManageActionsBean extends FileManageActionsBean {
             return MOVE_IMPOSSIBLE;
         }
         
-        return super.checkMoveAllowed(docRef, containerRef);
+        String status = super.checkMoveAllowed(docRef, containerRef);
+        
+        // To avoid republication of local proxies: move is sufficient
+        if(MOVE_PUBLISH.equals(status)){
+            DocumentModel localProxy = ToutaticeDocumentHelper.getProxy(documentManager, doc, null);
+            if(localProxy != null){
+                status = MOVE_OK;
+            }
+        }
+        
+        return status;
     }
     
     /*
