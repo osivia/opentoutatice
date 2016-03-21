@@ -8,8 +8,12 @@
   xmlns:nxh="http://nuxeo.org/nxweb/html"
   xmlns:nxp="http://nuxeo.org/nxweb/pdf"
   xmlns:ui="http://java.sun.com/jsf/facelets">
+  <c:if test="#{empty field_0}">
+    <c:set var="field_0" value="#{value}" />
+  </c:if>
   <c:if test="#{nxl:isLikePlainMode(widget.mode)}">#{field_0}</c:if>
   <c:if test="#{nxl:isLikeViewMode(widget.mode)}">
+  
 
     <c:if test="#{not empty field_0}">
       <div class="textBlock #{widgetProperty_cssClass}" dir="auto">

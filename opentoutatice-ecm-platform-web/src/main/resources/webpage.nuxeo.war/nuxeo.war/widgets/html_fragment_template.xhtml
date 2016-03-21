@@ -32,11 +32,8 @@
 
                 <div class="form-group">
                     <div class="col-sm-12 fgt-html">
-
-                        <nxl:widgetType name="ottc_htmltext" mode="edit"
-                            value="#{html_fgt.data}"
-                            rendered="#{html_fgt.refURI eq fragmentBean.uri}" />
-
+                        <nxl:widgetType name="#{config.getWebsiteParamString('htmlTinyMce','ottc_htmltext')}" mode="edit"
+                            value="#{html_fgt.data}" rendered="#{html_fgt.refURI eq fragmentBean.uri}" />
                     </div>
                 </div>
                 </s:div>
