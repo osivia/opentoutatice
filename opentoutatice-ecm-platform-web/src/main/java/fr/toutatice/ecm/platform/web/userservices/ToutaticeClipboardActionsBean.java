@@ -20,6 +20,7 @@ package fr.toutatice.ecm.platform.web.userservices;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,6 +30,7 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.bpm.ProcessInstance;
+import org.jboss.seam.faces.FacesMessages;
 import org.jboss.seam.international.StatusMessage;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -37,6 +39,7 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.LifeCycleConstants;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
+import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoutingService;
@@ -44,6 +47,7 @@ import org.nuxeo.ecm.webapp.clipboard.ClipboardActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 @Name("clipboardActions")
 @Scope(ScopeType.SESSION)
@@ -53,6 +57,12 @@ public class ToutaticeClipboardActionsBean extends ClipboardActionsBean {
 	private static final long serialVersionUID = 7075230311269912496L;
 
 	private static final Log log = LogFactory.getLog(ToutaticeClipboardActionsBean.class);
+	
+	@In(create = true, required = false)
+    protected FacesMessages facesMessages;
+
+    @In(create = true)
+    protected Map<String, String> messages;
 	
     @In(create = true)
     protected transient DocumentRoutingService routingService;
@@ -109,6 +119,14 @@ public class ToutaticeClipboardActionsBean extends ClipboardActionsBean {
         List<DocumentModel> newDocs = new ArrayList<DocumentModel>();
         StringBuilder sb = new StringBuilder();
         for (DocumentModel docModel : docs) {
+            
+            // Temporary fix to do not move remote proxies
+            // to keep constent refrences
+            if(ToutaticeDocumentHelper.isRemoteProxy(docModel)){
+                facesMessages.add(StatusMessage.Severity.WARN, messages.get("move_impossible"));
+                return new DocumentModelListImpl();
+            }
+            
             DocumentRef sourceFolderRef = docModel.getParentRef();
 
             String sourceType = docModel.getType();
@@ -126,7 +144,7 @@ public class ToutaticeClipboardActionsBean extends ClipboardActionsBean {
             if (documentRoutes != null && !documentRoutes.isEmpty()) {
             	hasActiveWF = true;
             }
-
+            
             if (canRemoveDoc && canPasteInCurrentFolder && !sameFolder && !hasActiveWF) {
                 if (destinationIsDeleted) {
                     if (checkDeletedState(docModel)) {
