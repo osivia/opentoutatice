@@ -24,6 +24,7 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
@@ -54,7 +55,7 @@ public class ToutaticeVersioningServiceHandler<T> extends ToutaticeAbstractServi
 
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		NuxeoPrincipal principal = null;
+	    String sessionId = null;
 		
 		try {
 			if (filteredMethodsList.contains(method.getName())) {
@@ -62,14 +63,12 @@ public class ToutaticeVersioningServiceHandler<T> extends ToutaticeAbstractServi
 					for (Object arg : args) {
 						if (arg instanceof SQLDocumentLive) {
 							SQLDocumentLive document = (SQLDocumentLive) args[0];
-							String sessionId = document.getSession().getSessionId();
-							CoreSession session = CoreInstance.getInstance().getSession(sessionId);
-							principal = (NuxeoPrincipal) session.getPrincipal();
+							sessionId = document.getSession().getSessionId();
 							break;
 						}
 					}
 					
-					if (null != principal && ToutaticeServiceProvider.instance().isRegistered(VersioningService.class, principal.getName())) {
+					if (StringUtils.isNotBlank(sessionId) && ToutaticeServiceProvider.instance().isRegistered(VersioningService.class, sessionId)) {
 						// do filter invocation
 						return null;
 					}
