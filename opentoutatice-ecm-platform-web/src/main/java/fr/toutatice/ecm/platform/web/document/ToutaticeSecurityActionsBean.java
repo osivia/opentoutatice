@@ -29,10 +29,12 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.security.ACL;
 import org.nuxeo.ecm.core.api.security.ACP;
+import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
 import org.nuxeo.ecm.webapp.security.SecurityActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 /**
@@ -73,6 +75,14 @@ public class ToutaticeSecurityActionsBean extends SecurityActionsBean {
 		 } else {
 			 log.debug("Le document n'a pas de proxy");
 		 }
+	 }
+	 
+	 /**
+	  * @return true if currentUser has all rights.
+	  */
+	 public boolean hasAllRights(){
+	     DocumentModel currentDoc = navigationContext.getCurrentDocument();
+	     return documentManager.hasPermission(currentDoc.getRef(), SecurityConstants.EVERYTHING);
 	 }
 	 
 }

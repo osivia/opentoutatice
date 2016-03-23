@@ -13,7 +13,8 @@
 				<field>ottcwebc:enableWebUrl</field>
 			</fields>
 			<properties mode="any">
-				<property name="template">/widgets/toutatice_weburl_enable_widget.xhtml</property>
+				<property name="template">/widgets/toutatice_weburl_enable_widget.xhtml
+				</property>
 			</properties>
 			<widgetModes>
 				<mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace'),
@@ -22,6 +23,26 @@
 			</widgetModes>
 		</widget>
 
+		<widget name="ottc_weburl" type="template">
+			<labels>
+				<label mode="any">webmode.label.weburl</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ottcweb:segment</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="validator">#{webModeValidator.validateSegment}
+				</property>
+			</properties>
+
+			<properties mode="any">
+				<property name="template">
+					/widgets/toutatice_weburl_widget.xhtml
+				</property>
+			</properties>
+
+		</widget>
 
 	</extension>
 

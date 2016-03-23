@@ -3,15 +3,20 @@
  */
 package org.osivia.opentoutatice.web.bean;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang.StringUtils;
 import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
+import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
 import org.nuxeo.runtime.api.Framework;
 
@@ -24,21 +29,29 @@ import fr.toutatice.ecm.platform.web.document.ToutaticeDocumentActionsBean;
  * @author david
  *
  */
-@Name("documentActions")
+@Name("webModeDocumentActionsBean")
 @Scope(ScopeType.CONVERSATION)
 @Install(precedence = ExtendedSeamPrecedence.TOUTATICE + 100)
-public class WebModeDocumentActionsBean extends ToutaticeDocumentActionsBean {
+public class WebModeDocumentActionsBean implements Serializable {
 
 	private static final long serialVersionUID = 5410768946883126601L;
 	
+	@In(create = true)
+    protected CoreSession documentManager;
+	
+	@In(create = true)
+	protected NavigationContext navigationContext;
+	
+	@In(create = true)
+	protected ToutaticeDocumentActionsBean documentActions;
+	
 	/**
-	 * Default behavior: all Folderish ara shown in menu.
+	 * Default behavior: all Folderish are shown in menu.
 	 * @throws ClientException
 	 */
-	@Override
 	@Observer(value = {EventNames.NEW_DOCUMENT_CREATED})
     public void initShowInMenu() throws ClientException {
-		super.initShowInMenu();
+	    documentActions.initShowInMenu();
 		
 		DocumentModel newDocument = navigationContext.getChangeableDocument();
 		boolean folderish = newDocument.hasFacet("Folderish");

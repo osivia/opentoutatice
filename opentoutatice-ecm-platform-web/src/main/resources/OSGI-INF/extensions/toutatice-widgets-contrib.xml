@@ -137,7 +137,7 @@
 			</properties>
 			<widgetModes>
 				<mode value="any">#{nxu:test(currentDocument.type != 'BlogSite' and
-					currentUser.administrator ,
+					(currentUser.administrator or securityActions.hasAllRights()) ,
 					layout.mode,
 					'hidden')}
 				</mode>
@@ -154,7 +154,7 @@
 				<field>ttc:webid</field>
 			</fields>
 			<properties widgetMode="edit">
-                <property name="disabled">#{!currentUser.administrator 
+                <property name="disabled">#{(!currentUser.administrator and !securityActions.hasAllRights())
                         or currentDocument.hasFacet('WebidDisabled')}
                 </property>
                 <property name="validator">#{toutaticeValidator.validateWebId}
@@ -176,7 +176,7 @@
 				</property>
 			</properties>
 			<properties widgetMode="edit">
-                <property name="disabled">#{!currentUser.administrator 
+                <property name="disabled">#{(!currentUser.administrator and !securityActions.hasAllRights())
                         or currentDocument.hasFacet('WebidDisabled')}
                 </property>
                 <property name="validator">#{toutaticeValidator.validateWebId}

@@ -3,6 +3,7 @@
 	name="org.osivia.opentoutatice.webpage.metadata.layouts">
 
 	<require>fr.toutatice.ecm.platform.web.document.forms.layouts.webpage</require>
+	<require>org.osivia.opentoutatice.web.mode.widgets</require>
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="layouts">
@@ -68,31 +69,7 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
 		
-		<widget name="ottc_weburl" type="template">
-			<labels>
-				<label mode="any">webmode.label.weburl</label>
-			</labels>
-			<translated>true</translated>
-			<fields>
-				<field>ottcweb:segment</field>
-			</fields>
-			<properties widgetMode="edit">
-				<property name="validator">#{webModeValidator.validateSegment}</property>
-				<!-- <property name="disabled">#{!toutaticeValidator.spaceSupportsWebId or currentDocument.hasFacet('WebidDisabled')}
-				</property>
-				<property name="required">#{!toutaticeValidator.spaceSupportsWebId or currentDocument.hasFacet('WebidDisabled')}
-				</property> -->
-			</properties>
-			
-            <properties mode="any">
-                <property name="template">
-                    /widgets/toutatice_weburl_widget.xhtml
-                </property>
-            </properties>			
-
-		</widget>
-		
-		<widget name="ottc_webid" type="text">
+		<widget name="ottc_webid" type="template">
 			<labels>
 				<label mode="any">webmode.label.webid</label>
 			</labels>
@@ -100,10 +77,18 @@
 			<fields>
 				<field>ttc:webid</field>
 			</fields>
-			<properties widgetMode="edit">
-				<property name="disabled">true
-				</property>
-			</properties>
+			<properties mode="any">
+                <property name="template">
+                    /widgets/toutatice_removewebid_widget.xhtml
+                </property>
+            </properties>
+            <properties widgetMode="edit">
+                <property name="disabled">#{(!currentUser.administrator and !securityActions.hasAllRights())
+                        or currentDocument.hasFacet('WebidDisabled')}
+                </property>
+                <property name="validator">#{toutaticeValidator.validateWebId}
+                </property>
+            </properties>
 		</widget>
 		
 		<widget name="web_flow" type="layout">
