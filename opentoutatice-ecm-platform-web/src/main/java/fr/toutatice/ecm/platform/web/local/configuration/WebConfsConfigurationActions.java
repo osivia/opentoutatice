@@ -78,7 +78,7 @@ public class WebConfsConfigurationActions implements Serializable {
             if (webConfsConfiguration != null) {
 
                 Boolean allDocsDenied = (Boolean) document.getPropertyValue(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_DENIED_ALL_PROPERTY);
-                if (BooleanUtils.isFalse(allDocsDenied)) {
+                if (BooleanUtils.isNotTrue(allDocsDenied)) {
 
                     List<String> allowedWebConfs = getAllowedWebConfs(document);
                     notSelectedWebConfs = webConfsConfiguration.getAllGlobalWebConfs(document);

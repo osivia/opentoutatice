@@ -116,7 +116,7 @@ public class WebConfsConfigurationAdapter extends AbstractLocalConfiguration<Web
         if (document.hasFacet(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_FACET)) {
 
             Boolean allDocsDenied = (Boolean) document.getPropertyValue(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_DENIED_ALL_PROPERTY);
-            if (BooleanUtils.isFalse(allDocsDenied)) {
+            if (BooleanUtils.isNotTrue(allDocsDenied)) {
 
                 List<String> allowedWebConfs = getAllowedWebConfs(document);
                 List<DocumentModel> allglobalWebConfs = getAllGlobalWebConfs(document);
