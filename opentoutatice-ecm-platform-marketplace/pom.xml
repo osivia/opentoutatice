@@ -40,10 +40,6 @@
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-web</artifactId>
 		</dependency>
-		<dependency>
-            <groupId>opentoutatice-ecm.platform</groupId>
-            <artifactId>opentoutatice-ecm-platform-web-mode</artifactId>
-        </dependency>
 		
 		<!-- Necessary for Portal -->
 		<dependency>

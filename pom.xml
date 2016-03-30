@@ -14,7 +14,6 @@
 		<module>opentoutatice-ecm-platform-web</module>
 		<module>opentoutatice-ecm-platform-automation</module>
 		<module>opentoutatice-ecm-platform-services</module>
-		<module>opentoutatice-ecm-platform-web-mode</module>
 		<module>opentoutatice-ecm-platform-custom</module>
 		<module>opentoutatice-ecm-platform-marketplace</module>
 		<module>opentoutatice-ecm-platform-distribution</module>
@@ -248,11 +247,6 @@
 			<dependency>
 				<groupId>opentoutatice-ecm.platform</groupId>
 				<artifactId>opentoutatice-ecm-platform-web</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>opentoutatice-ecm.platform</groupId>
-				<artifactId>opentoutatice-ecm-platform-web-mode</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
