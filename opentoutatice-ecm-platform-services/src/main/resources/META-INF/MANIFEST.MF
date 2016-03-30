@@ -9,8 +9,6 @@ Nuxeo-Component: OSGI-INF/extensions/customize-types/customize-types-service.xml
  OSGI-INF/extensions/customize-types/customize-base-types-contrib.xml,
  OSGI-INF/extensions/customize-types/customize-base-rules-types-contrib.xml,
  OSGI-INF/extensions/customize-ui/cutomize-ui-service.xml,
- OSGI-INF/extensions/webpage/toutatice-editablewindows-service.xml,
- OSGI-INF/extensions/webpage/toutatice-editablewindows-contrib.xml,
  OSGI-INF/extensions/inheritance/toutatice-inheritance-service-contrib.xml,
  OSGI-INF/extensions/inheritance/toutatice-inheritance-listeners-contrib.xml,
  OSGI-INF/extensions/lock/lock-service-framework.xml,

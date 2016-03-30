@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.webmode.actions">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+	<require>fr.toutatice.ecm.platform.webmode.filters</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="actions">
+
+		<!-- =========== gestion des fragments : Actions -->
+
+		<!-- Modification -->
+		<action id="HTML_EDIT_FRAGMENT" link="#{documentActions.updateCurrentDocument('done')}"
+			order="0" label="html.edit.save">
+			<category>HTML_EDIT_FRAGMENT</category>
+			<filter-id>is_not_thread_document</filter-id>
+		</action>
+
+	</extension>
+
+</component>

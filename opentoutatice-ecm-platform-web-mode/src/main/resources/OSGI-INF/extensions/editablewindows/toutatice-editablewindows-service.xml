@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<component name="fr.toutatice.ecm.platform.service.editablewindows.EditableWindowService">
+<component name="fr.toutatice.ecm.platform.webmode.editablewindows.service">
 	<documentation>
 		Service to define editable windows
 	</documentation>

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<component name="fr.toutatice.ecm.platform.service.editablewindows.contrib">
+<component name="fr.toutatice.ecm.platform.webmode.editablewindows.contrib">
 
-	<require>fr.toutatice.ecm.platform.service.editablewindows.EditableWindowService</require>
+	<require>fr.toutatice.ecm.platform.webmode.editablewindows.service</require>
 
 	<extension
-		target="fr.toutatice.ecm.platform.service.editablewindows.EditableWindowService"
+		target="fr.toutatice.ecm.platform.webmode.editablewindows.service"
 		point="editablewindow">
 
 		<editablewindow code="fgt.html"

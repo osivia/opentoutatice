@@ -24,6 +24,23 @@
             <to-view-id>/osivia_create_document.xhtml</to-view-id>
         </navigation-case>
 	
+
+		<navigation-case>
+			<from-outcome>osivia_create_fragment</from-outcome>
+			<to-view-id>/osivia_create_fragment.xhtml</to-view-id>
+		</navigation-case>
+		
+		<!-- Navigation entre ecran creation et ecran edition webpage -->
+		<navigation-case>
+			<from-outcome>osivia_create_fragment_2</from-outcome>
+			<to-view-id>/osivia_edit_fragment.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>osivia_edit_fragment</from-outcome>
+			<to-view-id>/osivia_edit_fragment.xhtml</to-view-id>
+		</navigation-case>	
+	
 	</extension>
 
 	<install>

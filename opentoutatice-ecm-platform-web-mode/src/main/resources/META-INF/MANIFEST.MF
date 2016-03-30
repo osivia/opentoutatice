@@ -10,7 +10,20 @@ Nuxeo-Component: OSGI-INF/extensions/webpage/layouts-contrib.xml,
  OSGI-INF/extensions/webpage/theme-contrib.xml,
  OSGI-INF/extensions/webpage/actions-contrib.xml,
  OSGI-INF/extensions/widgets-contrib.xml,
- OSGI-INF/extensions/layouts-contrib.xml
+ OSGI-INF/extensions/layouts-contrib.xml,
+ OSGI-INF/extensions/editablewindows/toutatice-core-types-contrib.xml,
+ OSGI-INF/extensions/editablewindows/toutatice-schemas-contrib.xml,
+ OSGI-INF/extensions/editablewindows/toutatice-editablewindows-service.xml,
+ OSGI-INF/extensions/editablewindows/toutatice-editablewindows-contrib.xml, 
+ OSGI-INF/extensions/editablewindows/toutatice-actions-contrib.xml, 
+ OSGI-INF/extensions/editablewindows/toutatice-filters-contrib.xml, 
+ OSGI-INF/extensions/editablewindows/toutatice-layouts-contrib.xml, 
+ OSGI-INF/extensions/editablewindows/toutatice-themes-contrib.xml, 
+ OSGI-INF/extensions/editablewindows/toutatice-widgets-contrib.xml, 
+ OSGI-INF/extensions/medialibrary/toutatice-core-types-contrib.xml,
+ OSGI-INF/extensions/medialibrary/toutatice-lifecycle-contrib.xml, 
+ OSGI-INF/extensions/medialibrary/toutatice-filters-contrib.xml,
+ OSGI-INF/extensions/medialibrary/toutatice-ui-types-contrib.xml, 
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.osivia.opentoutatice.web.mode
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

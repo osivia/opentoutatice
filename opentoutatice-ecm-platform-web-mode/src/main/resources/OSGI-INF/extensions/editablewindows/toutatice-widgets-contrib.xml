@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.webmode.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+		<widget name="generic_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/generic_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="html_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/html_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="picture_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/picture_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="zoom_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/zoom_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="links_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/links_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="summary_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/summary_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="list_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/list_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="portlet_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/portlet_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+		
+		<widget name="ew_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/ew_fragment_widget.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="rss_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/rss_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="criteria_list_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/criteria_list_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="slider_list_fragment_widget" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<translated>true</translated>
+			<properties mode="any">
+				<property name="template">/widgets/slider_list_fragment_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+		
+        <widget name="set_fragment_widget" type="template">
+            <labels>
+                <label mode="any" />
+            </labels>
+            <translated>true</translated>
+            <properties mode="any">
+                <property name="template">/widgets/set_fragment_template.xhtml
+                </property>
+                <property name="currentDocument">value</property>
+            </properties>
+        </widget>
+	</extension>
+
+</component>

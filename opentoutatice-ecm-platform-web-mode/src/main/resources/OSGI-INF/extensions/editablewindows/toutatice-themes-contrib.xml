@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<component name="fr.toutatice.ecm.platform.webpage.theme">
+<component name="fr.toutatice.ecm.platform.webmode.theme">
 
 	<require>org.nuxeo.theme.nuxeo.default</require>
 
