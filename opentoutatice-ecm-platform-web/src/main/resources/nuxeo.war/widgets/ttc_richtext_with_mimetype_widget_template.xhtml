@@ -9,7 +9,7 @@
   xmlns:nxp="http://nuxeo.org/nxweb/pdf"
   xmlns:ui="http://java.sun.com/jsf/facelets">
   
-  <c:if test="#{empty changeableDocument and empty field_0}">
+  <c:if test="#{empty widget.getFieldDefinitions()[0].getFieldName()}">
     <c:set var="field_0" value="#{value}" />
   </c:if>
   
