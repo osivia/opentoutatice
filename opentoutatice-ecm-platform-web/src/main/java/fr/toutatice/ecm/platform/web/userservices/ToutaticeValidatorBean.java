@@ -83,7 +83,7 @@ public class ToutaticeValidatorBean implements Serializable {
     protected transient DocumentActions documentActions;
 
 
-    final Pattern patternId = Pattern.compile("([a-zA-Z_0-9\\-]+)");
+    final Pattern patternId = Pattern.compile("([a-zA-Z_0-9\\-\\_]+)");
     final Pattern patternExplicit = Pattern.compile("([a-zA-Z_0-9\\-\\/]+)");
 
     public void validateDomainIdUnicity(FacesContext context, UIComponent component, Object value) throws ValidatorException {
@@ -142,6 +142,13 @@ public class ToutaticeValidatorBean implements Serializable {
         if (StringUtils.isNotBlank(webID)) {
             String msg = null;
 
+
+            // format control
+            Matcher m = patternId.matcher(webID);
+            if (!m.matches()) {
+                msg = ComponentUtils.translate(context, "label.toutatice.validator.malformed.webid");
+            } else {
+
             // unicity control
             DocumentModel doc = null;
             try {
@@ -161,6 +168,8 @@ public class ToutaticeValidatorBean implements Serializable {
                 }
             } catch (ClientException ce) {
                 msg = ce.getMessage();
+            }
+
             }
 
             if (msg != null) {
