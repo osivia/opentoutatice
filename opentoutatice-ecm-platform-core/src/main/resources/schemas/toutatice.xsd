@@ -74,4 +74,5 @@
 	<xs:element name="editorialTitle" type="xs:string" />
 	<xs:element name="abstract" type="xs:string" />
 	<xs:element name="useES" type="xs:boolean" default="false" />
+	<xs:element name="selectors" type="xs:string" />
 </xs:schema>
