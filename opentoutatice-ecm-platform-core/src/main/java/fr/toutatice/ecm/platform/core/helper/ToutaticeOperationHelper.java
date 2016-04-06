@@ -107,7 +107,7 @@ public class ToutaticeOperationHelper {
 	 *         priori
 	 * @throws ServeurException
 	 */
-	public static Object callOperation(OperationContext ctx, String operationId,Map<String, Object> parameters) throws ToutaticeException {
+	public static Object callOperation(OperationContext ctx, String operationId, Map<String, Object> parameters) throws ToutaticeException {
 		
 		Object operationRes = null;
 		try {

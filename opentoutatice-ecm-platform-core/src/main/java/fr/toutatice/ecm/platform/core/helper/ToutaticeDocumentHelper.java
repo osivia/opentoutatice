@@ -773,6 +773,12 @@ public class ToutaticeDocumentHelper {
 		@Override
 		public void run() throws ClientException {
 			String srcDocID = this.proxy.getSourceId();
+			// For compatibility with content views managed by ES (JsonDocumentModelReader#getDocumentModel
+			// has sid null when fetchFromEs is true
+			if(srcDocID == null){
+			    DocumentModel sourceDocument = this.session.getSourceDocument(this.proxy.getRef());
+			    srcDocID = sourceDocument.getId();
+			}
 			DocumentModel srcDoc = this.session.getDocument(new IdRef(srcDocID));
 			this.versionLabel = srcDoc.getVersionLabel();
 		}
