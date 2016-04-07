@@ -62,9 +62,7 @@ public class SetWebID {
 
     private static final Log log = LogFactory.getLog(SetWebID.class);
 
-
-    private static final String CREATE_OP = "createOp";
-    private static final String OTHER_CHAIN = "other";
+    private static final String NO_RECURSIVE_CHAIN = "notRecursive";
 
     private static final String WEB_ID_UNICITY_QUERY = "select * from Document Where ttc:webid = \"%s\""
             + " AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
@@ -85,7 +83,7 @@ public class SetWebID {
     @In(create = true)
     protected NavigationContext navigationContext;
 
-    @Param(name = "chainSource", required = true)
+    @Param(name = "chainSource", required = false)
     protected String chainSource;
 
     /**
@@ -128,14 +126,14 @@ public class SetWebID {
             }
 
             // webid setted in the document, we use it
-            if (getWebId() != null) {
+            if (StringUtils.isNotBlank(getWebId())) {
                 webid = getWebId().toString();
 
                 // clean if needed
                 webid = IdUtils.generateId(webid, "-", true, 24);
             }
             // else in creation or import, try to generate it.
-            else if (CREATE_OP.equals(chainSource) || (OTHER_CHAIN.equals(chainSource) && getWebId() == null)) {
+            else if (StringUtils.isBlank(getWebId())) {
                 // else new id is generated
                 webid = generateNewWebId();
 
@@ -194,15 +192,17 @@ public class SetWebID {
                     this.session.saveDocument(this.document);
                 }
             }
-
-            DocumentRef parentRef = this.document.getRef();
-            if (this.session.hasChildren(parentRef)) {
-                if (this.parentDoc == null) {
-                    this.parentDoc = this.document;
-                }
-                for (DocumentModel child : this.session.getChildren(parentRef)) {
-                    this.document = child;
-                    run();
+            
+            if(!StringUtils.equals(chainSource, NO_RECURSIVE_CHAIN)){
+                DocumentRef parentRef = this.document.getRef();
+                if (this.session.hasChildren(parentRef)) {
+                    if (this.parentDoc == null) {
+                        this.parentDoc = this.document;
+                    }
+                    for (DocumentModel child : this.session.getChildren(parentRef)) {
+                        this.document = child;
+                        run();
+                    }
                 }
             }
 
@@ -211,8 +211,8 @@ public class SetWebID {
         /**
          * @return
          */
-        private Serializable getWebId() {
-            return this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
+        private String getWebId() {
+            return (String) this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
         }
 
         /**
