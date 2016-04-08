@@ -24,13 +24,7 @@
                             <nxu:column>
                                 <c:set var="parent" value="#{documentActions.getParent(publishedDoc, true)}" />
 
-                                 <h:outputLink value="#{oh:preferredLinkUrl(publishedDoc)}"
-                                    target="_blank" rendered="#{oh:hasWebId(publishedDoc)}">
-                                    <h:outputText value="#{nxd:titleOrId(parent)}" />
-                                </h:outputLink>
-
-                                <nxd:restDocumentLink document="#{publishedDoc}"
-                                    rendered="#{!oh:hasWebId(document)}"
+                                  <nxd:restDocumentLink document="#{publishedDoc}"
                                     newConversation="true" target="_blank">
                                     <f:param name="parentPath" value="#{parent.path}" />
                                     <h:outputText value="#{nxd:titleOrId(parent)}" />

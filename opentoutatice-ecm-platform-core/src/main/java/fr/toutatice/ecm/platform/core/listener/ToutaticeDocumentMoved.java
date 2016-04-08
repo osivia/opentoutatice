@@ -76,7 +76,7 @@ public class ToutaticeDocumentMoved implements EventListener {
 				if (null != proxies && 0 < proxies.size()) {
 					for (DocumentModel proxy : proxies) {
 					    this.session.move(proxy.getRef(), dstFolderRef, null);
-					    // To commit proxy move before reordoring it
+					    // To commit proxy move and flush caches before reordoring it
 					    this.session.save();
 						this.session.orderBefore(dstFolderRef, proxy.getName(), this.movedDocument.getName());
 					}

@@ -37,14 +37,11 @@ public class ToutaticeFileManageActionsBean extends FileManageActionsBean {
     protected String checkMoveAllowed(DocumentRef docRef, DocumentRef containerRef) throws ClientException {
 
         DocumentModel doc = documentManager.getDocument(docRef);
-        if(doc.isProxy() && doc.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_REMOTE_PROXY)){
-            facesMessages.add(StatusMessage.Severity.WARN, messages.get("move_impossible"));
-            return MOVE_IMPOSSIBLE;
-        }
         
         String status = super.checkMoveAllowed(docRef, containerRef);
         
-        // To avoid republication of local proxies: move is sufficient
+        // To avoid republication of local proxies (cf FileManageActionsBean#moveWithId): 
+        // move is sufficient 
         if(MOVE_PUBLISH.equals(status)){
             DocumentModel localProxy = ToutaticeDocumentHelper.getProxy(documentManager, doc, null);
             if(localProxy != null){
