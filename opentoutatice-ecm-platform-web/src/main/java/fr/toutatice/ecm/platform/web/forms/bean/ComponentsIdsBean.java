@@ -41,7 +41,7 @@ import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 @Roles({@Role(name = "themeSimpleForm", scope = ScopeType.SESSION),
     	@Role(name = "pageTemplateSimpleForm", scope = ScopeType.SESSION), @Role(name = "subpageTemplateSimpleForm", scope = ScopeType.SESSION)})
 @Role(name = "field")
-public class SpacesConfigFormBean {
+public class ComponentsIdsBean {
 
     protected UIComponent simpleComponent;
 
