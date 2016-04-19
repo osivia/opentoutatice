@@ -110,12 +110,12 @@
                                 </f:facet>
 
                                 <h:outputLink value="#{oh:preferredLinkUrl(document)}"
-                                    target="_blank" rendered="#{oh:hasWebId(document)}">
+                                    target="_blank" rendered="#{!documentActions.isRemoteProxy(document) and oh:hasWebId(document)}">
                                     <h:outputText value="#{nxd:titleOrId(document)}" />
                                 </h:outputLink>
 
                                 <nxd:restDocumentLink document="#{document}"
-                                    rendered="#{!oh:hasWebId(document)}" newConversation="true"
+                                    rendered="#{documentActions.isRemoteProxy(document)}" newConversation="true"
                                     target="_blank">
                                     <h:outputText value="#{nxd:titleOrId(document)}" />
                                 </nxd:restDocumentLink>
@@ -135,17 +135,8 @@
                                     <h:outputText
                                         value="#{messages['toutatice.label.content.header.pathOrId']}" />
                                 </f:facet>
-                                <h:outputText value="#{oh:preferredDisplayId(document)}" />
-                            </h:column>
-                            <!-- Published sections -->
-                            <h:column>
-                                <f:facet name="header">
-                                    <h:outputText
-                                        value="#{messages['toutatice.label.remote.proxies.list']}" />
-                                </f:facet>
-                                <ui:include src="/incl/remote_proxies_list.xhtml">
-                                    <ui:param name="document" value="#{document}" />
-                                </ui:include>
+                                <h:outputText value="#{oh:preferredDisplayId(document)}" rendered="#{!documentActions.isRemoteProxy(document) and oh:hasWebId(document)}"/>
+                                <h:outputText value="#{document.pathAsString}" rendered="#{documentActions.isRemoteProxy(document)}"/>
                             </h:column>
                         </nxu:dataTable>
                     </div>
@@ -218,7 +209,7 @@
                   }
                   
                   function updateFunction(docLink){
-                	  var index = 1;
+                      var index = 1;
                       if(typeof window.opener.index_ != "undefined"){
                           index = window.opener.index_;
                       }
@@ -243,7 +234,7 @@
                       if (window.opener.origin_ == "ew") {
                         updateFragment(docLink);
                       } else if (window.opener.origin_ == "updateFunction"){
-                    	  updateFunction(docLink);
+                          updateFunction(docLink);
                       }else { 
                         updateEditor(docLink);
                       }

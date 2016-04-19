@@ -259,13 +259,15 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
         constraints.add("ecm:mixinType != 'HiddenInNavigation'");
 
         // no archived, revisions, deleted
-        constraints.add("ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'");
+        constraints.add("(ecm:mixinType = 'isRemoteProxy' or ecm:isProxy = 0) AND ecm:isCheckedInVersion = 0 AND ecm:currentLifeCycleState!='deleted'");
 
         // search keywords
         final String query = String.format("SELECT * FROM Document WHERE %s", StringUtils.join(constraints.toArray(), " AND "));
         log.debug("Query: " + query);
-
-        resultDocuments = documentManager.query(query, 100);
+        
+        // FIXME: We do not restrict anymore number of results.
+        // optimization: pagination or ES query
+        resultDocuments = documentManager.query(query);
         hasSearchResults = !resultDocuments.isEmpty();
         log.debug("query result contains: " + resultDocuments.size() + " docs.");
         return "editor_link_search_document";

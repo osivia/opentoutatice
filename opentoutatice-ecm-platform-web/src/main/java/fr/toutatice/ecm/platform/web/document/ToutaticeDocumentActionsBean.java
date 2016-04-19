@@ -190,6 +190,14 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         return currentDocument.isProxy() && !StringUtils.endsWith(currentDocument.getName(), ToutaticeGlobalConst.CST_PROXY_NAME_SUFFIX);
     }
+    
+    /**
+     * @param currentDocument
+     * @return true if current document is remote proxy.
+     */
+    public boolean isRemoteProxy(DocumentModel currentDocument) {
+        return currentDocument.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_REMOTE_PROXY);
+    }
 
     public String saveDocument() throws ClientException {
         DocumentModel changeableDocument = navigationContext.getChangeableDocument();
@@ -451,6 +459,13 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     public boolean isOnlineDocument() throws ClientException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         return isOnlineDocument(currentDocument);
+    }
+    
+    /**
+     * @return true if given document is in Publish Space.
+     */
+    public boolean isInPublishSpace(DocumentModel document){
+        return ToutaticeDocumentHelper.isInPublishSpace(documentManager, document);
     }
 
     /**
