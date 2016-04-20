@@ -48,7 +48,7 @@ public class ToutaticeDocumentResolver {
 
 	}
 
-	public static DocumentModelList resolveReference(CoreSession session, WedIdRef webIdRef)
+	public static DocumentModelList resolveReference(CoreSession session, WebIdRef webIdRef)
 			throws DocumentException, ClientException {
 		if (webIdRef == null) {
 			throw new DocumentException("Invalid reference (null)");
@@ -61,7 +61,7 @@ public class ToutaticeDocumentResolver {
 		return resolveDocumentByWebId(session, webIdRef);
 	}
 
-	protected static DocumentModelList resolveDocumentByWebId(CoreSession session, WedIdRef webIdRef) throws ClientException {
+	protected static DocumentModelList resolveDocumentByWebId(CoreSession session, WebIdRef webIdRef) throws ClientException {
 	    
 		String webId = (String) webIdRef.reference();
 		String parentId = null;

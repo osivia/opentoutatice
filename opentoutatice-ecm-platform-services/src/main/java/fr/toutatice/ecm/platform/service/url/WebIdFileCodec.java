@@ -50,7 +50,7 @@ public class WebIdFileCodec extends WebIdCodec {
 		if (webView != null) {
 			ToutaticeDocumentLocation docLoc = (ToutaticeDocumentLocation) webView
 					.getDocumentLocation();
-			WedIdRef webIdRef = docLoc.getWebIdRef();
+			WebIdRef webIdRef = docLoc.getWebIdRef();
 			String webid = (String) webIdRef.reference();
 			Map<String, String> webviewParameters = webView.getParameters();
 			Map<String, String> parameters = new HashMap<String, String>();

@@ -110,7 +110,7 @@
                                 </f:facet>
 
                                 <h:outputLink value="#{oh:preferredLinkUrl(document)}"
-                                    target="_blank" rendered="#{!documentActions.isRemoteProxy(document) and oh:hasWebId(document)}">
+                                    target="_blank" rendered="#{!documentActions.isRemoteProxy(document)}">
                                     <h:outputText value="#{nxd:titleOrId(document)}" />
                                 </h:outputLink>
 
@@ -135,7 +135,7 @@
                                     <h:outputText
                                         value="#{messages['toutatice.label.content.header.pathOrId']}" />
                                 </f:facet>
-                                <h:outputText value="#{oh:preferredDisplayId(document)}" rendered="#{!documentActions.isRemoteProxy(document) and oh:hasWebId(document)}"/>
+                                <h:outputText value="#{oh:preferredDisplayId(document)}" rendered="#{!documentActions.isRemoteProxy(document)}"/>
                                 <h:outputText value="#{document.pathAsString}" rendered="#{documentActions.isRemoteProxy(document)}"/>
                             </h:column>
                         </nxu:dataTable>

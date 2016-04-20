@@ -45,7 +45,7 @@ import org.nuxeo.ecm.platform.util.RepositoryLocation;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.service.url.ToutaticeDocumentLocation;
 import fr.toutatice.ecm.platform.service.url.ToutaticeDocumentResolver;
-import fr.toutatice.ecm.platform.service.url.WedIdRef;
+import fr.toutatice.ecm.platform.service.url.WebIdRef;
 
 /**
  * @author David Chevrier
@@ -65,7 +65,7 @@ public class ToutaticePictureManagerBean extends PictureManagerBean {
             
             if(docLoc instanceof ToutaticeDocumentLocation){
             	ToutaticeDocumentLocation ttcDocLoc = (ToutaticeDocumentLocation) docLoc;
-            	WedIdRef webIdRef = ttcDocLoc.getWebIdRef();
+            	WebIdRef webIdRef = ttcDocLoc.getWebIdRef();
             	if(webIdRef != null){
             		try {
 						downloadWebIdFile(docView, ttcDocLoc);

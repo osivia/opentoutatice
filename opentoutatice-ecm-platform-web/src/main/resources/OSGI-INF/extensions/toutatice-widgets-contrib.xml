@@ -157,6 +157,7 @@
                 <property name="disabled">#{(!currentUser.administrator and !securityActions.hasAllRights())
                         or currentDocument.hasFacet('WebidDisabled')}
                 </property>
+                <property name="required">true</property>
                 <property name="validator">#{toutaticeValidator.validateWebId}
                 </property>
             </properties>
@@ -179,6 +180,7 @@
                 <property name="disabled">#{(!currentUser.administrator and !securityActions.hasAllRights())
                         or currentDocument.hasFacet('WebidDisabled')}
                 </property>
+                <property name="required">true</property>
                 <property name="validator">#{toutaticeValidator.validateWebId}
                 </property>
             </properties>
@@ -374,6 +376,38 @@
                     <defaultValues mode="any">
                         <property name="disableHmlInit">true</property>
                         <property name="editorSelector">mceEditorMinimalInLine</property>
+                    </defaultValues>
+                </properties>
+            </configuration>
+            <handler-class>
+                org.nuxeo.ecm.platform.forms.layout.facelets.plugins.HtmlTextWidgetTypeHandler
+            </handler-class>
+        </widgetType>
+        
+        <widgetType name="ottc_minimal_htmltext">
+            <configuration>
+                <title>HTML text</title>
+                <description>
+                    <p>Pre-configured Nx htmltext</p>
+                </description>
+                <categories>
+                    <category>document</category>
+                </categories>
+                <supportedModes>
+                    <mode>edit</mode>
+                    <mode>view</mode>
+                </supportedModes>
+                <fields>
+                    <list>false</list>
+                    <complex>false</complex>
+                    <supportedTypes>
+                        <type>string</type>
+                    </supportedTypes>
+                </fields>
+                <properties>
+                    <defaultValues mode="any">
+                        <property name="disableHmlInit">true</property>
+                        <property name="editorSelector">mceEditorMinimal</property>
                     </defaultValues>
                 </properties>
             </configuration>

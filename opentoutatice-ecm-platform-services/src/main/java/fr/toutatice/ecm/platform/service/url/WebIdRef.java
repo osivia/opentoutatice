@@ -28,7 +28,7 @@ import org.nuxeo.ecm.core.api.DocumentRef;
  * @author David Chevrier
  * 
  */
-public class WedIdRef implements DocumentRef {
+public class WebIdRef implements DocumentRef {
 
 	private static final long serialVersionUID = -3531204028673068100L;
 
@@ -38,13 +38,13 @@ public class WedIdRef implements DocumentRef {
 	private final String extensionUrl;
 	private Map<String, String> parameters;
 
-	public WedIdRef(String explicitUrl, String value, String extensionUrl) {
+	public WebIdRef(String explicitUrl, String value, String extensionUrl) {
 		this.explicitUrl = explicitUrl;
 		this.value = value;
 		this.extensionUrl = extensionUrl;
 	}
 	
-	public WedIdRef(String explicitUrl, String value, String extensionUrl, Map<String, String> parameters) {
+	public WebIdRef(String explicitUrl, String value, String extensionUrl, Map<String, String> parameters) {
         this.explicitUrl = explicitUrl;
         this.value = value;
         this.extensionUrl = extensionUrl;

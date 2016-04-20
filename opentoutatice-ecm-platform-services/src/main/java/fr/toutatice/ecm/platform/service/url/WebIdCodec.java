@@ -144,7 +144,7 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
                 }
 
                 /* FIXME: replace DEFAULT_REPO by server name? */
-                final ToutaticeDocumentLocation docLoc = new ToutaticeDocumentLocation(DEFAULT_REPO, new WedIdRef(explicitUrl, webid, extensionUrl, parameters));
+                final ToutaticeDocumentLocation docLoc = new ToutaticeDocumentLocation(DEFAULT_REPO, new WebIdRef(explicitUrl, webid, extensionUrl, parameters));
                 /* FIXME: find view instead hard coding view_documents */
                 DocumentViewImpl documentViewImpl = new DocumentViewImpl(docLoc, "view_documents", parameters);
                 return documentViewImpl;
@@ -159,7 +159,7 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
     public String getUrlFromDocumentView(DocumentView docView) {
 
         ToutaticeDocumentLocation docLoc = (ToutaticeDocumentLocation) docView.getDocumentLocation();
-        WedIdRef webIdRef = docLoc.getWebIdRef();
+        WebIdRef webIdRef = docLoc.getWebIdRef();
         //String extensionUrl = webIdRef.getExtensionUrl();
         String webId = (String) webIdRef.reference();
         String explicitUrl = webIdRef.getExplicitUrl();

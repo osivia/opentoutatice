@@ -29,7 +29,7 @@ import org.nuxeo.ecm.restapi.server.jaxrs.RepositoryObject;
 import org.nuxeo.ecm.webengine.model.WebObject;
 
 import fr.toutatice.ecm.platform.service.url.ToutaticeDocumentResolver;
-import fr.toutatice.ecm.platform.service.url.WedIdRef;
+import fr.toutatice.ecm.platform.service.url.WebIdRef;
 
 @WebObject(type = "toutatice")
 public class ToutaticeRepositoryObject extends RepositoryObject {
@@ -39,7 +39,7 @@ public class ToutaticeRepositoryObject extends RepositoryObject {
 		DocumentModelList list = null;
 		try {
 			CoreSession session = getContext().getCoreSession();
-			list = ToutaticeDocumentResolver.resolveReference(session, new WedIdRef(null, web, null));
+			list = ToutaticeDocumentResolver.resolveReference(session, new WebIdRef(null, web, null));
 		} catch (DocumentException e) {
 			e.printStackTrace();
 		}

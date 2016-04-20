@@ -46,14 +46,14 @@ public class ToutaticeDocumentLocation extends DocumentLocationImpl {
 
 	
 	private String serverName;
-	private WedIdRef webIdRef;
+	private WebIdRef webIdRef;
 	private Map<String, String> parameters;
 	
 	public String getServerName() {
 		return serverName;
 	}
 	
-	public WedIdRef getWebIdRef() {
+	public WebIdRef getWebIdRef() {
 		return webIdRef;
 	}
 	
@@ -62,7 +62,7 @@ public class ToutaticeDocumentLocation extends DocumentLocationImpl {
 	}
 
 	public ToutaticeDocumentLocation(final String serverName,
-			final WedIdRef docRef) {
+			final WebIdRef docRef) {
 		super(serverName, docRef);
 		this.serverName = serverName;
 		this.webIdRef = docRef;
@@ -74,7 +74,7 @@ public class ToutaticeDocumentLocation extends DocumentLocationImpl {
 			String webId = (String) doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
 			String explicitUrl = (String) doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXPLICIT_URL);
 			String extensionUrl = (String) doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_EXTENSION_URL);
-			this.webIdRef = new WedIdRef(explicitUrl, webId, extensionUrl);
+			this.webIdRef = new WebIdRef(explicitUrl, webId, extensionUrl);
 			setLocationParameters(doc);
 		} catch (Exception e) {
 			log.error("Can not get webId property: " + e.getMessage());

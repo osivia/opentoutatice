@@ -34,7 +34,7 @@ import org.nuxeo.ecm.platform.url.api.DocumentView;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.service.url.ToutaticeDocumentLocation;
 import fr.toutatice.ecm.platform.service.url.WebIdCodec;
-import fr.toutatice.ecm.platform.service.url.WedIdRef;
+import fr.toutatice.ecm.platform.service.url.WebIdRef;
 
 @Name("restHelper")
 @Scope(EVENT)

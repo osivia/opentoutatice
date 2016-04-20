@@ -61,7 +61,7 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.service.url.ToutaticeDocumentResolver;
 import fr.toutatice.ecm.platform.service.url.WebIdResolver;
-import fr.toutatice.ecm.platform.service.url.WedIdRef;
+import fr.toutatice.ecm.platform.service.url.WebIdRef;
 
 @Name("navigationContext")
 @Scope(CONVERSATION)
@@ -107,9 +107,9 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
         }
         DocumentModel doc = null;
         DocumentModelList docs = null;
-        if (docRef instanceof WedIdRef) {
+        if (docRef instanceof WebIdRef) {
             try {
-                docs = ToutaticeDocumentResolver.resolveReference(documentManager, (WedIdRef) docRef);
+                docs = ToutaticeDocumentResolver.resolveReference(documentManager, (WebIdRef) docRef);
             } catch (DocumentException e) {
                 throw new ClientException(e);
             } catch (DocumentSecurityException dse) {
@@ -126,7 +126,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
                 DocumentModel foundDoc = docs.get(0);
                 if(ToutaticeDocumentHelper.isLocaProxy(foundDoc)){
                     
-                    DocumentModel liveDoc = getLive((WedIdRef) docRef);
+                    DocumentModel liveDoc = getLive((WebIdRef) docRef);
                     goTo = navigateToDocument(liveDoc);
                     
                 } else {
@@ -136,7 +136,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
             // Case of many remote proxies
             } else if(docs.size() > 1){
                 
-                DocumentModel liveDoc = getLive((WedIdRef) docRef);
+                DocumentModel liveDoc = getLive((WebIdRef) docRef);
                 goTo = navigateToDocument(liveDoc);
                 
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, messages.get("toutatice.label.many.webid.proxies"), null);
@@ -153,7 +153,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
      * @param docRef
      * @return live document with given webId
      */
-    protected DocumentModel getLive(WedIdRef webIdRef) {
+    protected DocumentModel getLive(WebIdRef webIdRef) {
         String webId = (String) webIdRef.reference();
         DocumentModel liveDoc = WebIdResolver.getLiveDocumentByWebId(documentManager, webId);
         liveDoc.detach(true); // liveDoc is fetch with unrestricted session

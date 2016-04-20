@@ -15,8 +15,8 @@
 		<module>opentoutatice-ecm-platform-automation</module>
 		<module>opentoutatice-ecm-platform-services</module>
 		<module>opentoutatice-ecm-platform-custom</module>
-		<module>opentoutatice-ecm-platform-marketplace</module>
-		<module>opentoutatice-ecm-platform-distribution</module>
+		<module>opentoutatice-ecm-platform-marketplace</module> 
+		<module>opentoutatice-ecm-platform-distribution</module> 
 	</modules>
 
 	<properties>
@@ -43,7 +43,7 @@
 				<version>${nuxeo.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency>
+			</dependency> 
 
 			<dependency>
 				<groupId>org.nuxeo.ecm.core</groupId>
@@ -232,6 +232,16 @@
 				<artifactId>nuxeo-platform-publisher-web</artifactId>
 				<version>${nuxeo.version}</version>
 			</dependency>
+			<dependency>
+	            <groupId>org.nuxeo.ecm.webengine</groupId>
+	            <artifactId>nuxeo-webengine-core</artifactId>
+	            <version>${nuxeo.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.nuxeo.ecm.platform</groupId>
+	            <artifactId>nuxeo-rest-api-server</artifactId>
+	            <version>${nuxeo.version}</version>
+	        </dependency>
 
 			<!-- Opentoutatice dependencies -->
 			<dependency>
