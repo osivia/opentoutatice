@@ -83,7 +83,7 @@
             <h:outputText value="#{messages['label.content.emptyFolder']}"
                 rendered="#{!editorLinkActions.hasSearchResults}" />
             <h:form id="search_results"
-                rendered="#{editorLinkActions.hasSearchResults}">
+                rendered="#{editorLinkActions.hasSearchResults}" prependId="false">
                 <h:selectOneRadio>
                     <div class="table-responsive">
 
@@ -93,7 +93,7 @@
                             <!-- id and selection -->
                             <nxu:column styleClass="iconColumn">
                                 <input type="radio" id="selection" name="selection"
-                                    value="#{document.id}" />
+                                    value="#{document.id}" onclick="javascript:showDirectDownloadBox(this);"/>
                                 <div style="display: none;" id="#{document.id}">
                                     <h:outputText value="#{document.dublincore.title}" />
                                 </div>
@@ -108,7 +108,13 @@
                                 <f:facet name="header">
                                     <h:outputText value="#{messages['label.content.header.title']}" />
                                 </f:facet>
-
+                                
+                                <h:outputLink value="#{nxd:fileUrl('downloadFile', document, 'blobholder:0', document.getPropertyValue('file:filename'))}" 
+                                        rendered="#{document.type eq 'File'}" style="display: none;">
+                                    <h:outputText value="#{nxd:titleOrId(document)}" />
+                                </h:outputLink>
+                                
+                                
                                 <h:outputLink value="#{oh:preferredLinkUrl(document)}"
                                     target="_blank" rendered="#{!documentActions.isRemoteProxy(document)}">
                                     <h:outputText value="#{nxd:titleOrId(document)}" />
@@ -144,6 +150,15 @@
                 </h:selectOneRadio>
 
                 <script language="javascript">
+                 function showDirectDownloadBox(radio){
+                	 var filetype = radio.parentNode.parentNode.childNodes[3].childNodes[0].alt;
+                	 if(filetype == "File"){
+                		 document.getElementById("directDownload").style.display = "block";
+                	 }else{
+                		 document.getElementById("directDownload").style.display = "none";
+                	 }
+                 }
+                
                   function getSelectedRadio(buttonGroup) {
                     if (buttonGroup[0]) {
                       for (var i=0; i&lt;buttonGroup.length; i++) {
@@ -153,23 +168,6 @@
                       }
                     } else if (buttonGroup.checked) {
                       return buttonGroup;
-                    }
-                    return null;
-                  }
-
-                  function getDocumentLink(radioButton) {
-                    if (radioButton) {
-                      var ele = radioButton.parentNode.nextSibling;
-                      while(ele != null) {
-                        for (var i = 0; i &lt; ele.childNodes.length; ++i) {
-                          e = ele.childNodes[i];
-                          if (e.nodeName == 'A' || e.nodeName == 'a') {
-                            var docLink = e;
-                            return docLink;
-                          }
-                        }
-                        ele = ele.nextSibling;
-                      }
                     }
                     return null;
                   }
@@ -226,10 +224,31 @@
 
                       window.opener.updateFunction(relativeUrl, title);
                   }
+                  
+                  function getDocumentLink(form,linkNb){
+                	  for (i = 0; i &lt; form.elements.selection.length; i++) {
+                		  if(form.elements.selection[i].checked){
+	                		  return form.elements.selection[i].parentNode.parentNode.getElementsByTagName("a")[linkNb];
+                		  }
+                	  }
+                	  return null;
+                  }
 
                   function updateCaller(form) {
+                    
+                    var docLink;
                     var button = getSelectedRadio(form.elements.selection);
-                    var docLink = getDocumentLink(button);
+                    var filetype = button.parentNode.parentNode.childNodes[3].childNodes[0].alt;
+                    if(filetype == "File"){
+                    	if(form.directDownloadBox.checked){
+                        	docLink = getDocumentLink(form,0);
+                        }else{
+                        	docLink = getDocumentLink(form,1);
+                        }
+                    }else{
+                    	docLink = getDocumentLink(form,0);
+                    }
+                    
                     if (docLink != null) {
                       if (window.opener.origin_ == "ew") {
                         updateFragment(docLink);
@@ -245,14 +264,20 @@
                     }
                   }
                 </script>
+                
 
                 <nav class="navbar navbar-default navbar-fixed-bottom">
                     <div class="container-fluid">
-                        <div class="col-sm-offset-2">
+                        <div class="col-sm-2 col-sm-offset-2">
                             <input type="submit" id="button_update"
                                 class="btn btn-primary navbar-btn"
                                 value="#{messages['toutatice.label.command.insert']}"
                                 onclick="javascript:updateCaller(this.form);" />
+                        </div>
+                        <div class="col-sm-3 checkbox" style="display: none;" id="directDownload">
+                        
+                            <h:selectBooleanCheckbox id="directDownloadBox" value="#{config.getWebsiteParamString('link.file.directDownload','false')}" />
+                            <h:outputText value="#{messages['toutatice.label.direct.download']}" />
                         </div>
                     </div>
                 </nav>
