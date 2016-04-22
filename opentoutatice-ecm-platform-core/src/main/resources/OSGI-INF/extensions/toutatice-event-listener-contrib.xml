@@ -50,6 +50,12 @@
 			<event>documentImported</event>
 			<event>documentMoved</event>
 		</listener>
+		
+		<!-- Set folderish documents show in menu -->
+		<listener name="FolderishDocumentCreatedListener" postCommit="false"
+			class="fr.toutatice.ecm.platform.core.listener.FolderishDocumentCreatedListener">
+			<event>emptyDocumentModelCreated</event>
+		</listener>
 
 	</extension>
 
