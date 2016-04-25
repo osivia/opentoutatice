@@ -49,7 +49,6 @@ public class ToutaticeNuxeoStudioConst {
 	public final static String CST_DOC_SCHEMA_DUBLINCORE = "dublincore";
 	public final static String CST_DOC_SCHEMA_TOUTATICE = "toutatice";
 	public final static String CST_DOC_SCHEMA_TOUTATICE_PREFIX = "ttc";
-    public final static String CST_DOC_SCHEMA_OPENTOUTATICE_WEB_PREFIX = "ottcweb";
     public final static String CST_DOC_SCHEMA_TOUTATICE_SPACE = "toutatice_space";
     public final static String CST_DOC_SCHEMA_TOUTATICE_SPACE_PREFIX = "ttcs";
 	public final static String CST_DOC_SCHEMA_TOUTATICE_SPACEID = "ttc:spaceID";
@@ -104,7 +103,6 @@ public class ToutaticeNuxeoStudioConst {
 	public final static String CST_DOC_XPATH_MNT_AUTOMATION_LOGS_STATUS = CST_DOC_SCHEMA_MNT_PREFIX + ":automationLogsStatus";
 	public final static String CST_DOC_XPATH_MNT_AUTOMATION_LOGS_THRESHOLD = CST_DOC_SCHEMA_MNT_PREFIX + ":automationLogsThreshold";
 	public static final String CST_DOC_SCHEMA_TOUTATICE_WEBID = CST_DOC_SCHEMA_TOUTATICE_PREFIX + ":webid";
-    public static final String CST_DOC_SCHEMA_OPENTOUTATICE_SEGMENT = CST_DOC_SCHEMA_OPENTOUTATICE_WEB_PREFIX + ":segment";
     public static final String CST_DOC_XPATH_WEB_CONF_CODE = CST_DOC_SCHEMA_WEB_CONF + ":code";
     public static final String CST_DOC_XPATH_COMMENTABLE_SPACE = CST_DOC_SCHEMA_TOUTATICE_SPACE_PREFIX + ":spaceCommentable";
 

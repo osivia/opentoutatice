@@ -9,6 +9,9 @@ import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
+import org.nuxeo.ecm.core.schema.FacetNames;
+
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
 /**
  * @author Loïc Billon
@@ -29,8 +32,8 @@ public class FolderishDocumentCreatedListener implements EventListener{
 			
 			DocumentEventContext docCtx = (DocumentEventContext) context;
 			DocumentModel sourceDocument = docCtx.getSourceDocument();
-			if(sourceDocument.hasFacet("Folderish")) {
-				sourceDocument.setPropertyValue("ttc:showInMenu", "true");
+			if(sourceDocument.isFolder()) {
+				sourceDocument.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_SIM, Boolean.TRUE);
 			}
 			
 		}

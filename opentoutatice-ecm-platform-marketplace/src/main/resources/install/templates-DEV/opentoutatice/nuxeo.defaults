@@ -5,3 +5,12 @@ opentoutatice.target=.
 nuxeo.permalink.service.portal.url=localhost
 nuxeo.permalink.service.param1=portal
 nuxeo.permalink.service.param2=cms
+
+##----------------------------------------------------------------------------
+## States stack
+##----------------------------------------------------------------------------
+nuxeo.jsf.numberOfViewsInSession=20
+nuxeo.jsf.numberOfLogicalViews=20
+
+## Current version
+ottc.version=3.2.2

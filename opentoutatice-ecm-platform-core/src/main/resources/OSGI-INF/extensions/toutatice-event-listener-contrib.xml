@@ -2,6 +2,8 @@
 
 <component name="fr.toutatice.ecm.platform.core.eventlistener">
 
+    <require>org.nuxeo.ecm.core.event.EventServiceComponent</require>
+
 	<extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
 		point="listener">
 
