@@ -15,10 +15,11 @@ import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 
-@Operation(id = EraseModifications.ID, category = Constants.CAT_DOCUMENT, label = "Checks in a new version from the published document",
-        description = "Checks in a new version from the published document. Returns the checked in document.")
+@Operation(id = EraseModifications.ID, category = Constants.CAT_DOCUMENT, label = "Erase unpublished modifications of live document yet locally published",
+        description = "Erase unpublished modifications of live document yet locally published. This live is given as input")
 public class EraseModifications {
-
+    
+    /** Identifiant of operation. */
     public static final String ID = "Document.EraseModifications";
 
     @Context
@@ -35,17 +36,27 @@ public class EraseModifications {
 
     @OperationMethod(collector = DocumentModelCollector.class)
     public DocumentModel run(DocumentRef docRef) throws Exception {
-
-        final DocumentModel live = session.getDocument(docRef);
-
-        DocumentModel publishedDocument = ToutaticeDocumentHelper.getProxy(session, live, SecurityConstants.READ);
-
-        final DocumentModel latestLive = session.getWorkingCopy(publishedDocument.getRef());
-        final DocumentModel sourceDocument = session.getSourceDocument(publishedDocument.getRef());
-
-        session.restoreToVersion(latestLive.getRef(), sourceDocument.getRef(), skipCreateVersion, skipCheckout);
-
+        
+        final DocumentModel document = session.getDocument(docRef);
+        // It must be a live document
+        if(!document.isProxy() && !document.isVersion()){
+            DocumentModel publishedDocument = ToutaticeDocumentHelper.getProxy(session, document, SecurityConstants.READ);  
+            
+            if(publishedDocument != null){
+                
+                DocumentModel publishedVersion = session.getSourceDocument(publishedDocument.getRef());
+                session.restoreToVersion(document.getRef(), publishedVersion.getRef(), skipCreateVersion, skipCheckout);
+                
+            } else {
+                throw new Exception("Input live document is not yet locally published.");
+            }
+        } else {
+            throw new Exception("Input document is not a working copy.");
+        }
+        
+        // The restored version keeps the same id
         return session.getDocument(docRef);
+        
     }
 
 }
