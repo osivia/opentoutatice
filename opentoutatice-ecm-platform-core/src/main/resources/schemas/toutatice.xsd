@@ -62,7 +62,7 @@
 	<xs:element name="queryPart" type="xs:string" />
 	<xs:element name="showInMenu" type="xs:boolean" default="false" />
 	<xs:element name="spaceID" type="xs:string" />
-	<xs:element name="tabOrder" type="xs:integer" />
+	<xs:element name="tabOrder" type="xs:integer" default="0"/>
 	<xs:element name="vignette" type="nxs:content" />
 	<xs:element name="keywords" type="nxs:stringList" />
 	<xs:element name="webid" type="xs:string" />
