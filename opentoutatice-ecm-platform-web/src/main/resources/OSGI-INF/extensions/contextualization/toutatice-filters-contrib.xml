@@ -10,9 +10,6 @@
 			<rule grant="true">
 				<facet>TTCPortalConfigurable</facet>
 			</rule>
-			<rule grant="true">
-				<type>Workspace</type>
-			</rule>
 		</filter>
 
 	</extension>

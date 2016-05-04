@@ -69,7 +69,9 @@ import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.api.security.impl.ACLImpl;
 import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
+import org.nuxeo.ecm.core.schema.DocumentType;
 import org.nuxeo.ecm.core.schema.FacetNames;
+import org.nuxeo.ecm.core.schema.types.Type;
 import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
 import org.nuxeo.ecm.platform.publisher.api.PublisherService;
@@ -135,15 +137,25 @@ public class ToutaticeDocumentHelper {
 	}
 
 	/**
-     * Save a document in an silent unrestricted or not way.
+     * Save a document in an silent unrestricted or not way:
+     * EventService and VersioningService are bypassed.
      */
     public static void saveDocumentSilently(CoreSession session, DocumentModel document, boolean unrestricted) {
         SilentSave save = new SilentSave(session, document);
-        if (unrestricted) {
-            save.silentRun(true, ToutaticeGlobalConst.EVENT_N_VERSIONING_FILTERD_SERVICE);
-        } else {
-            save.silentRun(false, ToutaticeGlobalConst.EVENT_N_VERSIONING_FILTERD_SERVICE);
-        }
+        save.silentRun(unrestricted, ToutaticeGlobalConst.EVENT_N_VERSIONING_FILTERD_SERVICE);
+    }
+    
+    /**
+     * Save a document bypassing given services.
+     * 
+     * @param session
+     * @param document
+     * @param services
+     * @param unrestricted
+     */
+    public static void saveDocumentSilently(CoreSession session, DocumentModel document, List<Class<?>> services, boolean unrestricted) {
+        SilentSave save = new SilentSave(session, document);
+        save.silentRun(unrestricted, services);
     }
     
     /**
@@ -151,11 +163,7 @@ public class ToutaticeDocumentHelper {
      */
     public static void saveDocumentWithNoVersioning(CoreSession session, DocumentModel document, boolean unrestricted){
         SilentSave save = new SilentSave(session, document);
-        if (unrestricted) {
-            save.silentRun(true, ToutaticeGlobalConst.VERSIONING_FILTERD_SERVICE);
-        } else {
-            save.silentRun(false, ToutaticeGlobalConst.VERSIONING_FILTERD_SERVICE);
-        }
+        save.silentRun(unrestricted, ToutaticeGlobalConst.VERSIONING_FILTERD_SERVICE);
     }
 
     /**
@@ -699,15 +707,33 @@ public class ToutaticeDocumentHelper {
 
 		return status;
 	}
-
+	
+	/**
+	 * 
+	 * @param document
+	 * @return true if document is Workspace or extends it.
+	 */
+	// FIXME: UserWorkspace test to move in AcRennes.
 	public static boolean isAWorkSpaceDocument(DocumentModel document) {
-		boolean status = false;
-
-		if (ToutaticeNuxeoStudioConst.CST_DOC_TYPE_WORKSPACE.equals(document.getType()) || ToutaticeNuxeoStudioConst.CST_DOC_TYPE_USER_WORKSPACE.equals(document.getType())) {
-			status = true;
-		}
-
-		return status;
+	    return ToutaticeNuxeoStudioConst.CST_DOC_TYPE_WORKSPACE.equals(document.getType()) || ToutaticeNuxeoStudioConst.CST_DOC_TYPE_USER_WORKSPACE.equals(document.getType())
+	            || isSubTypeOf(document, ToutaticeNuxeoStudioConst.CST_DOC_TYPE_WORKSPACE);
+	}
+	
+	/**
+	 * 
+	 * @param document
+	 * @param type
+	 * @return true if document extends a document with givent type.
+	 */
+	public static boolean isSubTypeOf(DocumentModel document, String type){
+	    DocumentType documentType = document.getDocumentType();
+        Type superType = documentType.getSuperType();
+        
+        if(superType != null){
+            return StringUtils.equals(type, superType.getName());
+        }
+       
+        return false;
 	}
 	
 	/**
