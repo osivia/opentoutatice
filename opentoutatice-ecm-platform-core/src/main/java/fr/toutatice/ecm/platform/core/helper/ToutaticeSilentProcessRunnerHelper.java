@@ -41,7 +41,7 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
 	
 	private static final Log log = LogFactory.getLog(ToutaticeSilentProcessRunnerHelper.class);
 	
-	private static final List<Class<?>> DEFAULT_FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
+	public static final List<Class<?>> DEFAULT_FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
 		private static final long serialVersionUID = 1L;
 
 		{
