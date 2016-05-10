@@ -727,11 +727,12 @@ public class ToutaticeDocumentHelper {
 	 */
 	public static boolean isSubTypeOf(DocumentModel document, String type){
 	    DocumentType documentType = document.getDocumentType();
-        Type superType = documentType.getSuperType();
-        
-        if(superType != null){
-            return StringUtils.equals(type, superType.getName());
-        }
+	    if(documentType != null){
+            Type superType = documentType.getSuperType();
+            if(superType != null){
+                return StringUtils.equals(type, superType.getName());
+            }
+	    }
        
         return false;
 	}
