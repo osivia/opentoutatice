@@ -85,6 +85,10 @@
 		<resource name="icons.js">
 			<path>scripts/icons.js</path>
 		</resource>
+		
+		<resource name="focus.js">
+            <path>scripts/focus.js</path>
+        </resource>
 
 	</extension>
 
@@ -106,6 +110,7 @@
 			<resource>custom.tinymce.modals.js</resource>
 			<resource>forms.errors.manager.js</resource>
 			<resource>icons.js</resource>
+			<resource>focus.js</resource>
 		</view>
 
 	</extension>
