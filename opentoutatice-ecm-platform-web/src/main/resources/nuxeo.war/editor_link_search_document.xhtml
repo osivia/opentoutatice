@@ -86,10 +86,19 @@
                 rendered="#{editorLinkActions.hasSearchResults}" prependId="false">
                 <h:selectOneRadio>
                     <div class="table-responsive">
-
+                    
+                        <nxu:set var="showWarnResults" value="#{editorLinkActions.resultDocuments.size() > 100}" />
+                        
+                        <c:if test="#{editorLinkActions.resultDocuments.size() > 100}">
+                             <p class="alert alert-info">
+                                <i class="glyphicons halflings info-sign"></i> <span class="text-info">#{messages['toutatice.label.links.plugin.results.docs.size.info']}</span>
+                             </p>
+                        </c:if>
+                        
                         <nxu:dataTable id="dataTable"
-                            value="#{editorLinkActions.searchDocumentResults}" var="document"
+                            value="#{editorLinkActions.resultDocuments}" var="document"
                             rowClasses="dataRowEven,dataRowOdd" styleClass="table">
+                            
                             <!-- id and selection -->
                             <nxu:column styleClass="iconColumn">
                                 <input type="radio" id="selection" name="selection"
@@ -151,12 +160,12 @@
 
                 <script language="javascript">
                  function showDirectDownloadBox(radio){
-                	 var filetype = radio.parentNode.parentNode.childNodes[3].childNodes[0].alt;
-                	 if(filetype == "File"){
-                		 document.getElementById("directDownload").style.display = "block";
-                	 }else{
-                		 document.getElementById("directDownload").style.display = "none";
-                	 }
+                     var filetype = radio.parentNode.parentNode.childNodes[3].childNodes[0].alt;
+                     if(filetype == "File"){
+                         document.getElementById("directDownload").style.display = "block";
+                     }else{
+                         document.getElementById("directDownload").style.display = "none";
+                     }
                  }
                 
                   function getSelectedRadio(buttonGroup) {
@@ -226,12 +235,12 @@
                   }
                   
                   function getDocumentLink(form,linkNb){
-                	  for (i = 0; i &lt; form.elements.selection.length; i++) {
-                		  if(form.elements.selection[i].checked){
-	                		  return form.elements.selection[i].parentNode.parentNode.getElementsByTagName("a")[linkNb];
-                		  }
-                	  }
-                	  return null;
+                      for (i = 0; i &lt; form.elements.selection.length; i++) {
+                          if(form.elements.selection[i].checked){
+                              return form.elements.selection[i].parentNode.parentNode.getElementsByTagName("a")[linkNb];
+                          }
+                      }
+                      return null;
                   }
 
                   function updateCaller(form) {
@@ -240,13 +249,13 @@
                     var button = getSelectedRadio(form.elements.selection);
                     var filetype = button.parentNode.parentNode.childNodes[3].childNodes[0].alt;
                     if(filetype == "File"){
-                    	if(form.directDownloadBox.checked){
-                        	docLink = getDocumentLink(form,0);
+                        if(form.directDownloadBox.checked){
+                            docLink = getDocumentLink(form,0);
                         }else{
-                        	docLink = getDocumentLink(form,1);
+                            docLink = getDocumentLink(form,1);
                         }
                     }else{
-                    	docLink = getDocumentLink(form,0);
+                        docLink = getDocumentLink(form,0);
                     }
                     
                     if (docLink != null) {

@@ -228,6 +228,8 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
     public String searchDocuments() throws ClientException {
         resultDocuments = null;
         final List<String> constraints = new ArrayList<String>();
+        
+        final int queryLimitResults = 101;
 
         // filter: path
         if (MEDIALIBRARY.equals(scope)) {
@@ -265,9 +267,8 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
         final String query = String.format("SELECT * FROM Document WHERE %s", StringUtils.join(constraints.toArray(), " AND "));
         log.debug("Query: " + query);
         
-        // FIXME: We do not restrict anymore number of results.
-        // optimization: pagination or ES query
-        resultDocuments = documentManager.query(query);
+        // FIXME: optimization: pagination or ES query
+        resultDocuments = documentManager.query(query, queryLimitResults);
         hasSearchResults = !resultDocuments.isEmpty();
         log.debug("query result contains: " + resultDocuments.size() + " docs.");
         return "editor_link_search_document";
