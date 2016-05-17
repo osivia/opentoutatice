@@ -21,9 +21,6 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.common.utils.i18n.I18NUtils;
@@ -32,122 +29,112 @@ import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
+import org.nuxeo.ecm.automation.core.annotations.Param;
+import org.nuxeo.ecm.automation.core.util.StringList;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.LifeCycleConstants;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.platform.task.Task;
 import org.nuxeo.ecm.platform.task.TaskService;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
-@Operation(id = GetExtendedTasks.ID, category = Constants.CAT_SERVICES, label = "Get extended tasks", since = "5.4",
-        description = "List tasks assigned to this user or one of its group." + "Task properties are serialized using JSON and returned in a Blob.")
+@Operation(id = GetExtendedTasks.ID, category = Constants.CAT_SERVICES, label = "Get extended tasks", since = "5.4", description = "List tasks assigned to this user or one of its group."
+		+ "Task properties are serialized using JSON and returned in a Blob.")
 public class GetExtendedTasks // extends GetUserTasks
 {
 
-    public static final String ID = "Workflow.GetExtendedTasks";
+	public static final String ID = "Workflow.GetExtendedTasks";
 
-    private static final Log log = LogFactory.getLog(Log.class);
+	private static final Log log = LogFactory.getLog(Log.class);
 
-    @Context
-    protected OperationContext ctx;
+	@Context
+	protected OperationContext ctx;
 
-    @Context
-    protected CoreSession repo;
+	@Context
+	protected CoreSession repo;
 
-    @Context
-    protected TaskService taskService;
+	@Context
+	protected TaskService taskService;
 
-    @OperationMethod
-    public Blob run() throws Exception {
-        NuxeoPrincipal principal = principal();
-        
-        List<Task> tasks = taskService.getCurrentTaskInstances(repo);
+	@Param(name = "wkflsNames",required = false)
+	protected StringList wkfls;
 
-        if (tasks == null) {
-            return null;
-        }
+	@OperationMethod
+	public Blob run() throws Exception {
+		NuxeoPrincipal principal = principal();
 
-        JSONArray rows = new JSONArray();
-        for (Task task : tasks) {
-            DocumentModel doc = null;
-            try {
-                if (task.hasEnded() || task.isCancelled()) {
-                    continue;
-                }
-                doc = taskService.getTargetDocumentModel(task, repo);
-            } catch (Exception e) {
-                log.warn("Cannot get doc for task " + task.getId() + ", error: " + e.getMessage());
-            }
-            if (doc == null) {
-                log.warn(String.format("User '%s' has a task of type '%s' on an " + "unexisting or invisible document", principal.getName(), task.getName()));
-            } else {
-                if (!LifeCycleConstants.DELETED_STATE.equals(doc.getCurrentLifeCycleState())) {
-                    JSONObject obj = new JSONObject();
-                    // obj.element("id", task.getId());
-                    obj.element("docid", doc.getId());
-                    obj.element("doctype", doc.getType());
-                    obj.element("docpath", doc.getPathAsString());
-                    // obj.element("docname", URLEncoder.encode(doc.getPropertyValue("dc:title").toString(),"UTF-8"));
-                    obj.element("docname", URLEncoder.encode(doc.getTitle(), "UTF-8"));
+		List<Task> tasks = taskService.getCurrentTaskInstances(repo);
 
-                    // String taskName = I18NUtils.getMessageString("messages", "label.workflow.task." + (String) task.getName(), null, Locale.FRENCH);
-                    String taskName = I18NUtils.getMessageString("messages", (String) task.getName(), null, Locale.FRENCH);
+		if (tasks == null) {
+			return null;
+		}
 
-                    obj.element("name", URLEncoder.encode(taskName, "UTF-8"));
+		JSONArray rows = new JSONArray();
+		boolean exposeTask = true;
+		for (Task task : tasks) {
+			DocumentModel doc = null;
+		
+			if(this.wkfls!=null && !this.wkfls.isEmpty()){
+			 String wkflName = getProcessName(task);
+			 exposeTask = this.wkfls.contains(wkflName);
+			} 
+			
+			if (exposeTask) {
+				try {
+					if (task.hasEnded() || task.isCancelled()) {
+						continue;
+					}
+					doc = taskService.getTargetDocumentModel(task, repo);
+				} catch (Exception e) {
+					log.warn("Cannot get doc for task " + task.getId() + ", error: " + e.getMessage());
+				}
+				if (doc == null) {
+					log.warn(String.format(
+							"User '%s' has a task of type '%s' on an " + "unexisting or invisible document",
+							principal.getName(), task.getName()));
+				} else {
+					if (!LifeCycleConstants.DELETED_STATE.equals(doc.getCurrentLifeCycleState())) {
+						JSONObject obj = new JSONObject();
+						obj.element("docid", doc.getId());
+						obj.element("doctype", doc.getType());
+						obj.element("docpath", doc.getPathAsString());
 
-                    // obj.element("description", task.getActorId()+task.getDescription()+task.getName());
-                    /*
-                     * String description = task.getDescription();
-                     * if(description == null)
-                     * description = "";
-                     * obj.element("description", URLEncoder.encode(description,"UTF-8"));
-                     */
-                    obj.element("startDate", task.getCreated());
-                    obj.element("dueDate", task.getDueDate());
+						obj.element("docname", URLEncoder.encode(doc.getTitle(), "UTF-8"));
 
-                    // obj.element("directive", task.getVariableLocally(TaskVariableName.directive.name()));
+						String taskName = I18NUtils.getMessageString("messages", (String) task.getName(), null,
+								Locale.FRENCH);
 
-                    /*
-                     * @SuppressWarnings("unchecked")
-                     * List<Comment> comments = task.getComments();
-                     * String comment = "";
-                     * if (comments != null && !comments.isEmpty()) {
-                     * comment = comments.get(comments.size() - 1).getMessage();
-                     * }
-                     * if(StringUtils.isBlank(comment))
-                     * {
-                     * comment = "Pas de commentaire";
-                     * }
-                     * obj.element("comment", URLEncoder.encode(comment,"UTF-8"));
-                     */
+						obj.element("name", URLEncoder.encode(taskName, "UTF-8"));
 
-                    // task.getVariablesLocally() => documentRepositoryName=default, initiator=nxadam, documentId=0e233871-8943-4db6-8edb-0149a153e95f
-                    // doc.getCurrentLifeCycleState() => "project"
-                    // doc.getLifeCyclePolicy() => "default"
-                    // TaskVariableName.directive.name() => directive
-                    // task.getVariableLocally(TaskVariableName.directive.name()) => null
-                    // task.getName() => "org.nuxeo.ecm.platform.publisher.jbpm.CoreProxyWithWorkflowFactory"
+						obj.element("startDate", task.getCreated());
+						obj.element("dueDate", task.getDueDate());
 
-                    rows.add(obj);
+						rows.add(obj);
+						
+					}
+				}
+			}
+		}
 
-                    /*
-                     * {"id":1212416,"docid":"0e233871-8943-4db6-8edb-0149a153e95f","docname":"Hausse+du+chauffage+%C3%A0+De+Robien",
-                     * "description":"nullnullorg.nuxeo.ecm.platform.publisher.jbpm.CoreProxyWithWorkflowFactory",
-                     * "startDate":{"date":1,"day":3,"hours":16,"minutes":16,"month":11,"nanos":323000000,"seconds":55,"time":1291216615323,"timezoneOffset":-60,
-                     * "year":110},"comment":""}
-                     */
-                }
-            }
-        }
+		return (0 < rows.size()) ? new StringBlob(rows.toString(), "application/json") : null;
+	}
 
-        return (0 < rows.size()) ? new StringBlob(rows.toString(), "application/json") : null;
-    }
+	private String getProcessName(Task task) {
+		final String processId = task.getProcessId();
+		
+		DocumentModel processDoc = repo.getDocument(new IdRef(processId));
+		
+		return processDoc.getName();
+	}
 
-    protected NuxeoPrincipal principal() {
-        return (NuxeoPrincipal) ctx.getPrincipal();
-    }
+	protected NuxeoPrincipal principal() {
+		return (NuxeoPrincipal) ctx.getPrincipal();
+	}
 
 }
