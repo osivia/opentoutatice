@@ -129,8 +129,11 @@ public class GetExtendedTasks // extends GetUserTasks
 		final String processId = task.getProcessId();
 		
 		DocumentModel processDoc = repo.getDocument(new IdRef(processId));
-		
-		return processDoc.getName();
+		String name = processDoc.getName();
+		if(name.contains(".")){
+			name = name.split(".")[0];
+		}		
+		return name;
 	}
 
 	protected NuxeoPrincipal principal() {

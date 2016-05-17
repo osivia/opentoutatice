@@ -4,13 +4,10 @@
 		<p>This addon implements the opened platform called Open Toutatice
 			(which one is based on the Nuxeo DM distribution)
 
-			Bug fixes :
-			* #5269: Reduire la taille d'une image dans une note n'est plus possible
-			* #3802: Prise en compte de la date de publication dans requêtes de type Listes
+			Bug fixes :		
 			
 			Main features :
-			* Évolution classe helper de notification dans le journal (audit logs): accepte un evenement non associé à un document.
-			* #3867: evolution cartoun; lien entre cartoun et viaeduc
+			* #6570 : Evolution de l'opération GetExtendedTask
 		</p>
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
