@@ -131,7 +131,7 @@ public class GetExtendedTasks // extends GetUserTasks
 		DocumentModel processDoc = repo.getDocument(new IdRef(processId));
 		String name = processDoc.getName();
 		if(name.contains(".")){
-			name = name.split(".")[0];
+			name = name.substring(0, name.indexOf('.'));
 		}		
 		return name;
 	}
