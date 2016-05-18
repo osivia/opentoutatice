@@ -159,7 +159,7 @@ public class SetWebID {
                 String webidconcat = webid;
                 do {
                     webidconcat = StringEscapeUtils.escapeJava(webidconcat);
-                    DocumentModelList query = coreSession.query(String.format(WEB_ID_UNICITY_QUERY, webidconcat, this.document.getId()));
+                    DocumentModelList query = this.session.query(String.format(WEB_ID_UNICITY_QUERY, webidconcat, this.document.getId()));
 
                     if (query.size() > 0) {
                         unicity = false;

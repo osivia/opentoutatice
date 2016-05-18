@@ -81,11 +81,7 @@ public class SetDomainID {
         }
 
         public DocumentModel getDocument() throws ClientException {
-			/* Récupération du document dans la session utilisateur connecté afin
-			 * que les opérations chaînées suivantes (exécutées avec la session utilisateur) 
-			 * soient en mesure de récupérer les propriétés du document.  
-			 */
-			return this.session.getDocument(this.document.getRef());			 
+            return this.document;
         }
 
         @Override
@@ -100,7 +96,7 @@ public class SetDomainID {
         private void updateDoc(DocumentModel document) throws Exception {
         	if (!document.isImmutable() && document.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
         		//get domainID
-        		DocumentModel domain = getDomain(this.document);
+        		DocumentModel domain = getDomain(document);
         		
         		if (null != domain) {
         			String domainID = (String) domain.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_DOMAIN_ID);

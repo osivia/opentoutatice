@@ -79,11 +79,7 @@ public class SetSpaceID {
 		}
 
 		public DocumentModel getDoc() throws ClientException {
-			/* Récupération du document dans la session utilisateur connecté afin
-			 * que les opérations chaînées suivantes (exécutées avec la session utilisateur) 
-			 * soient en mesure de récupérer les propriétés du document.  
-			 */
-			return this.session.getDocument(this.doc.getRef());			 
+		    return this.doc;
 		}
 
 		private void updateDoc(DocumentModel doc, String spaceID) throws  ClientException, PropertyException {
