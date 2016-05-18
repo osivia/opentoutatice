@@ -36,11 +36,14 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.model.PropertyException;
+import org.nuxeo.ecm.core.event.EventService;
+import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.picture.api.ImageInfo;
 import org.nuxeo.ecm.platform.picture.api.ImagingService;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.automation.helper.ToutaticeXPathPropertyHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
 
 @Operation(id = ResizeImageOperation.ID, category = Constants.CAT_CONVERSION, label = "Image resizing operation", description = "Operation to resize the images")
 public class ResizeImageOperation {
@@ -48,6 +51,15 @@ public class ResizeImageOperation {
 
 	public static final Log log = LogFactory.getLog(ResizeImageOperation.class);
 	private static final float ROUND_RANGE = new Float(0.05);
+	
+	private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
+        private static final long serialVersionUID = 1L;
+
+        {
+            add(EventService.class);
+            add(VersioningService.class);
+        }
+    };
 	
 	@Context
 	protected ImagingService service;
@@ -71,36 +83,10 @@ public class ResizeImageOperation {
 	protected boolean enlarge = false;
 
 	@OperationMethod
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	public DocumentModel run(DocumentModel doc) throws PropertyException, ClientException {
-		ToutaticeXPathPropertyHelper inProperty = new ToutaticeXPathPropertyHelper(doc, xpath_img_in);
-
-		if (inProperty.getValue() != null) {
-			if (inProperty.isList()) {
-				List<Map<String, Object>> out = new ArrayList<Map<String, Object>>();
-				
-				// retailler toutes les images d'une liste ("xpath_img_in") et les affecter à une méta-donnée de type liste ("xpath_img_out")
-				List images = (List) inProperty.getValue();
-				
-				for (Object image : images) {
-					Object resizedImage = resize(image, img_width, img_heidth, enlarge);
-					out.add((Map<String, Object>) resizedImage);
-				}
-				
-				doc.setPropertyValue(xpath_img_out, (Serializable) out);
-			} else {
-				// retailler une image ("xpath_img_in") et l'affecter à une méta-donnée scalaire ("xpath_img_out")
-				Object image = inProperty.getValue();
-				Object resizedImage = resize(image, img_width, img_heidth, enlarge);
-				if (null != resizedImage) {
-					doc.setPropertyValue(xpath_img_out, (Serializable) resizedImage);
-				}
-			}
-			
-		}
-		
-		return doc;
-
+	    ResizeImgeSilently runner = new ResizeImgeSilently(session, doc, xpath_img_in, xpath_img_out, img_width, img_heidth, enlarge);
+	    runner.silentRun(true, FILTERED_SERVICES_LIST);
+        return runner.getDocument();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -174,6 +160,64 @@ public class ResizeImageOperation {
 		}
 		
 		return this.service;
+	}
+	
+	private class ResizeImgeSilently extends ToutaticeSilentProcessRunnerHelper {
+	    
+	    private DocumentModel doc;
+	    private String xpath_img_in;
+	    private String xpath_img_out;
+	    private int img_width;
+	    private int img_heigth;
+	    private boolean enlarge;
+
+        public ResizeImgeSilently(CoreSession session, DocumentModel doc, String xpath_img_in, String xpath_img_out,
+                int img_width, int img_heigth, boolean enlarge) {
+            super(session);
+            this.doc = doc;
+            this.xpath_img_in = xpath_img_in;
+            this.xpath_img_out = xpath_img_out;
+            this.img_width = img_width;
+            this.img_heigth = img_heigth; 
+            this.enlarge = enlarge;
+        }
+        
+        public DocumentModel getDocument() throws ClientException {
+            return this.session.getDocument(this.doc.getRef());             
+        }
+
+        @Override
+        public void run() throws ClientException {
+            ToutaticeXPathPropertyHelper inProperty = new ToutaticeXPathPropertyHelper(this.doc, this.xpath_img_in);
+
+            if (inProperty.getValue() != null) {
+                if (inProperty.isList()) {
+                    List<Map<String, Object>> out = new ArrayList<Map<String, Object>>();
+                    
+                    // retailler toutes les images d'une liste ("xpath_img_in") et les affecter à une méta-donnée de type liste ("xpath_img_out")
+                    List<?> images = (List<?>) inProperty.getValue();
+                    
+                    for (Object image : images) {
+                        Object resizedImage = resize(image, this.img_width, this.img_heigth, this.enlarge);
+                        out.add((Map<String, Object>) resizedImage);
+                    }
+                    
+                    this.doc.setPropertyValue(this.xpath_img_out, (Serializable) out);
+                    this.session.saveDocument(this.doc);
+                } else {
+                    // retailler une image ("xpath_img_in") et l'affecter à une méta-donnée scalaire ("xpath_img_out")
+                    Object image = inProperty.getValue();
+                    Object resizedImage = resize(image, this.img_width, this.img_heigth, this.enlarge);
+                    if (null != resizedImage) {
+                        this.doc.setPropertyValue(this.xpath_img_out, (Serializable) resizedImage);
+                        this.session.saveDocument(this.doc);
+                    }
+                }
+                
+            }
+            
+        }
+	    
 	}
 		
 
