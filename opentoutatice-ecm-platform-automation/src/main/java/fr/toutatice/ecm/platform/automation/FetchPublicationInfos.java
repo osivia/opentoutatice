@@ -138,20 +138,6 @@ public class FetchPublicationInfos {
     @Param(name = "webid", required = false)
     protected String webid;
 
-    @Param(name = "parentId", required = false)
-    protected String parentId;
-    
-    @Param(name = "parentPath", required = false)
-    protected String parentPath;
-    
-    @Deprecated
-    @Param(name = "displayLiveVersion", required = false)
-    protected boolean draft;
-    
-    @Deprecated
-    @Param(name = "navigationPath", required = false)
-    protected String navigationPath;
-
     @OperationMethod
     public Object run() throws Exception {
 
@@ -510,7 +496,7 @@ public class FetchPublicationInfos {
     private Object getDocumentByWebId(String webid) {
         DocumentModel doc = null;
         try {
-            DocumentModelList documentsByWebId = WebIdResolver.getDocumentsByWebId(coreSession, parentId, parentPath, webid);
+            DocumentModelList documentsByWebId = WebIdResolver.getDocumentsByWebId(coreSession, webid);
             if (CollectionUtils.isNotEmpty(documentsByWebId) && documentsByWebId.size() == 1) {
                 doc = documentsByWebId.get(0);
             }

@@ -80,7 +80,7 @@ public class WebIdResolver {
      * @return documents matching given webid (live or proxy, proxies).
      * @throws NoSuchDocumentException
      */
-    public static DocumentModelList getDocumentsByWebId(CoreSession coreSession, String parentId, String parentPath, String webId)
+    public static DocumentModelList getDocumentsByWebId(CoreSession coreSession, String webId)
             throws NoSuchDocumentException {
 
         DocumentModelList documents = null;
@@ -88,7 +88,7 @@ public class WebIdResolver {
         if (StringUtils.isNotBlank(webId)) {
 
 
-            UnrestrictedFecthWebIdRunner fecthWebIdRunner = new UnrestrictedFecthWebIdRunner(coreSession, parentId, parentPath, webId);
+            UnrestrictedFecthWebIdRunner fecthWebIdRunner = new UnrestrictedFecthWebIdRunner(coreSession, webId);
             fecthWebIdRunner.runUnrestricted();
             documents = fecthWebIdRunner.getDocuments();
 
@@ -107,76 +107,20 @@ public class WebIdResolver {
      */
     private static class UnrestrictedFecthWebIdRunner extends UnrestrictedSessionRunner {
 
-        String parentId;
-        String parentPath;
         String webId;
         DocumentModelList documents;
 
-        private static final String PROXY_FILTER = " AND ecm:isProxy = 1 ";
         private static final String LIVE_FILTER = " AND ecm:isProxy = 0 ";
 
-        public UnrestrictedFecthWebIdRunner(CoreSession session, String parentId, String parentPath, String webId) {
+        public UnrestrictedFecthWebIdRunner(CoreSession session, String webId) {
             super(session);
-            this.parentPath = parentPath;
-            this.parentId = parentId;
             this.webId = webId;
             this.documents = new DocumentModelListImpl();
         }
 
         @Override
         public void run() throws ClientException {
-            /*
-             * Parent id given: we try to resolve document with webid
-             * according to it.
-             * Note: we are necessary in case of many remote publications.
-             */
-            if (StringUtils.isNotBlank(this.parentId)) {
-                DocumentModelList proxies = this.session.query(String.format(WEB_ID_QUERY, this.webId, PROXY_FILTER));
-
-                if (CollectionUtils.isNotEmpty(proxies)) {
-                    boolean parentIdFound = false;
-                    Iterator<DocumentModel> iterator = proxies.iterator();
-
-                    while (iterator.hasNext() && !parentIdFound) {
-                        DocumentModel proxy = iterator.next();
-
-                        DocumentModelList parentList = ToutaticeDocumentHelper.getParentList(proxy.getCoreSession(), proxy, null, true, true);
-                        if (CollectionUtils.isNotEmpty(parentList)) {
-                            DocumentModel firstParent = parentList.get(0);
-                            String parentWebId = (String) firstParent.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
-
-                            if (StringUtils.isNotBlank(parentWebId) && this.parentId.equals(parentWebId)) {
-                                this.documents.add(proxy);
-                                parentIdFound = true;
-                            }
-                        }
-                    }
-                }
-            } else if (StringUtils.isNotBlank(this.parentPath)) {
-
-                DocumentModelList proxies = this.session.query(String.format(WEB_ID_QUERY, this.webId, PROXY_FILTER));
-
-                if (CollectionUtils.isNotEmpty(proxies)) {
-                    boolean parentPathFound = false;
-                    Iterator<DocumentModel> iterator = proxies.iterator();
-
-                    while (iterator.hasNext() && !parentPathFound) {
-                        DocumentModel proxy = iterator.next();
-
-                        DocumentModel parentDocument = this.session.getParentDocument(proxy.getRef());
-                        if (this.parentPath.equals(parentDocument.getPathAsString())) {
-                            this.documents.add(proxy);
-                            parentPathFound = true;
-                        }
-                    }
-
-                }
-
-            } else {
-                // If no parent parameter, document is in live space
-                getLive();
-            } 
-
+            getLive();
         }
 
         /**

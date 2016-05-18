@@ -64,20 +64,10 @@ public class ToutaticeDocumentResolver {
 	protected static DocumentModelList resolveDocumentByWebId(CoreSession session, WebIdRef webIdRef) throws ClientException {
 	    
 		String webId = (String) webIdRef.reference();
-		String parentId = null;
-		String parentPath = null;
-		Map<String, String> parameters = webIdRef.getParameters();
-		if(MapUtils.isNotEmpty(parameters)){
-		    parentId = parameters.get("parentId");
-		    parentPath = parameters.get("parentPath");
-		    if(StringUtils.isNotBlank(parentPath)){
-		        parentPath = StringUtils.replace(parentPath, "%2F", "/");
-		    }
-		}
 		
 		DocumentModelList documents = null;
 		try {
-		    documents = WebIdResolver.getDocumentsByWebId(session, parentId, parentPath, webId);
+		    documents = WebIdResolver.getDocumentsByWebId(session, webId);
         } catch (NoSuchDocumentException de) {
            throw new ClientException(de);
         }
