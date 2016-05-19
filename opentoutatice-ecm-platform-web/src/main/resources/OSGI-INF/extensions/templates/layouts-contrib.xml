@@ -7,8 +7,6 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="layouts">
 
-
-
 		<layout name="layout@PortalSite-create">
 			<templates>
 				<template mode="any">/layouts/layout_default_template.xhtml
@@ -25,7 +23,7 @@
 					<widget>picture</widget>
 				</row>
 				<row>
-					<widget>content</widget>
+					<widget>ottc_content</widget>
 				</row>
 				<row>
 					<widget>toutatice_select_template_widget</widget>
