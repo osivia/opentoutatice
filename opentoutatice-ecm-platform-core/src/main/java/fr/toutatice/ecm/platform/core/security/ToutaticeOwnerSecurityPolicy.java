@@ -15,6 +15,8 @@ import org.nuxeo.ecm.core.model.Document;
 import org.nuxeo.ecm.core.query.sql.model.SQLQuery;
 import org.nuxeo.ecm.core.security.AbstractSecurityPolicy;
 
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
+
 public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
 
 	private static final Log log = LogFactory.getLog(ToutaticeOwnerSecurityPolicy.class);
@@ -29,10 +31,12 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
 		Access access = Access.UNKNOWN;
 
 		try {
-			if (doPolicyApply(mergedAcp, principal, permission, additionalPrincipals)) {
+			if (doPolicyApply(doc, mergedAcp, principal, permission, additionalPrincipals)) {
 				String creator = (String) doc.getPropertyValue("dc:creator");
 				if (!principal.getName().equals(creator)) {
 					access = Access.DENY;
+				} else {
+				    access = Access.GRANT;
 				}
 			}
 		} catch (DocumentException e) {
@@ -42,10 +46,19 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
 		return access;
 	}
 
-	private boolean doPolicyApply(ACP mergedAcp, Principal principal, String permission, String[] additionalPrincipals) {
+	private boolean doPolicyApply(Document doc, ACP mergedAcp, Principal principal, String permission, String[] additionalPrincipals) {
 		boolean status = false;
-
-		if (SecurityConstants.WRITE.equals(permission) || SecurityConstants.REMOVE.equals(permission)) {
+		
+		// User can not be contributor of Folderish
+		if(doc.hasFacet("Folderish")){
+		    return status;
+		}
+		
+		boolean isWritePermission = SecurityConstants.WRITE_PROPERTIES.equals(permission) || SecurityConstants.WRITE.equals(permission) || SecurityConstants.REMOVE.equals(permission)
+                 || SecurityConstants.WRITE_VERSION.equals(permission);
+		boolean isSetOnLinePermission = ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE.equals(permission);
+		
+		if (isWritePermission || isSetOnLinePermission) {
 			List<String> principalsList = new ArrayList<String>();
 			if (null != additionalPrincipals) {
 				principalsList.addAll(Arrays.asList(additionalPrincipals));
@@ -53,15 +66,37 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
 				principalsList.add(principal.getName());
 			}
 			
-			Access acessWMOO = mergedAcp.getAccess(principalsList.toArray(new String[principalsList.size()]), new String[] {"WriteModifyOwnOnly"});
-			Access acessWrite = mergedAcp.getAccess(principalsList.toArray(new String[principalsList.size()]), new String[] {SecurityConstants.READ_WRITE});
-			if (Access.GRANT == acessWMOO && Access.GRANT != acessWrite) {
-				status = true;
-			}
+			Access acessContributor = mergedAcp.getAccess(principalsList.toArray(new String[principalsList.size()]), new String[] {ToutaticeNuxeoStudioConst.CST_PERM_CONTRIBUTOR});
+			
+			if (Access.GRANT == acessContributor) {
+                if ((isWritePermission && Access.GRANT != getWriteAccess(mergedAcp, principalsList))
+                        || (isSetOnLinePermission && Access.GRANT != getOnLineAccess(mergedAcp, principalsList))) {
+                    status = true;
+                }
+            }
 		}
 
 		return status;
 	}
+	
+	/**
+     * @param mergedAcp
+     * @param principalsList
+     * @return
+     */
+    private Access getOnLineAccess(ACP mergedAcp, List<String> principalsList) {
+        return mergedAcp.getAccess(principalsList.toArray(new String[principalsList.size()]),
+                new String[]{ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE});
+    }
+
+    /**
+     * @param mergedAcp
+     * @param principalsList
+     * @return
+     */
+    private Access getWriteAccess(ACP mergedAcp, List<String> principalsList) {
+        return mergedAcp.getAccess(principalsList.toArray(new String[principalsList.size()]), new String[]{SecurityConstants.READ_WRITE});
+    }
 
 	@Override
 	public boolean isRestrictingPermission(String permission) {

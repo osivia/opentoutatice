@@ -7,10 +7,6 @@
 
 	<extension target="org.nuxeo.ecm.core.security.SecurityService"
 		point="permissions">
-		
-		<permission name="WriteModifyOwnOnly">
-            <include>ReadWrite</include>
-        </permission>
 
 		<permission name="Read">
 			<remove>CanAskForPublishing</remove>
@@ -22,34 +18,51 @@
 
 		<permission name="validationWorkflow_validation">
 			<include>Write</include>
-		</permission> 
+		</permission>
 
 		<permission name="RemotePublish">
 			<include>CanAskForPublishing</include>
 			<include>Write</include>
 		</permission>
+		
+		<permission name="WriteModifyOwnOnly">
+            <include>Read</include>
+            <include>validationWorkflow_validation</include>
+        </permission>
 
 	</extension>
-	
+
 	<extension target="org.nuxeo.ecm.core.security.SecurityService"
 		point="permissionsVisibility">
-
+        
+		<visibility>
+			<item order="300" show="true">WriteModifyOwnOnly</item>
+		</visibility>
+		
+		<!-- FIXME: temporary fix cause global visibility doesn't work for Workspace -->
+		<visibility type="Workspace">
+            <item order="300" show="true">WriteModifyOwnOnly</item>
+        </visibility>
+		
 		<visibility type="PortalSite">
-		    <item order="150" show="true">CanAskForPublishing</item>
+			<item order="150" show="true">CanAskForPublishing</item>
 			<item order="1000" show="true">validationWorkflow_validation</item>
 		</visibility>
 
 		<visibility type="PortalPage">
-		    <item order="150" show="true">CanAskForPublishing</item>
+			<item order="150" show="true">CanAskForPublishing</item>
 			<item order="1000" show="true">validationWorkflow_validation</item>
 		</visibility>
 
 	</extension>
-	
-	<extension point="policies" target="org.nuxeo.ecm.core.security.SecurityService">
-    
-        <policy class="fr.toutatice.ecm.platform.core.security.ToutaticeOwnerSecurityPolicy" name="ttcOwner" order="5"/>
-    
-    </extension>
+
+	<extension point="policies"
+		target="org.nuxeo.ecm.core.security.SecurityService">
+
+		<policy
+			class="fr.toutatice.ecm.platform.core.security.ToutaticeOwnerSecurityPolicy"
+			name="ttcOwner" order="5" />
+
+	</extension>
 
 </component>
