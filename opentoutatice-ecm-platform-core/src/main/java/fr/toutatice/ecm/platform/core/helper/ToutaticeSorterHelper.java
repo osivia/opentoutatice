@@ -24,8 +24,6 @@ import java.util.Comparator;
 
 public abstract class ToutaticeSorterHelper<T> implements Comparator<T> {
 
-	private static final long serialVersionUID = -8025278561121445915L;
-	
 	Collator collator;
 	
 	public ToutaticeSorterHelper() {
