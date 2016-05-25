@@ -57,19 +57,6 @@ public class RemovePublishedVersions {
 	}
 	
 	private static class UnrestrictedRemovePublishedVersionsRunner extends UnrestrictedSessionRunner {
-        
-        /**
-         * Service filtered by silent inner runner.
-         */
-        private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
-
-            private static final long serialVersionUID = 1L;
-
-            {
-                add(EventService.class);
-                add(VersioningService.class);
-            }
-        };
 		
 		private DocumentModel document;
 		private DocumentModel target;
