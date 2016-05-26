@@ -457,6 +457,7 @@
 		<widgetType name="multipleUsersSuggestionWithPermission">
 			<configuration>
 				<title>Multiple users/groups suggestion with given permission
+				       on current document.
 				</title>
 				<sinceVersion>6.0</sinceVersion>
 				<supportedModes>
@@ -496,6 +497,7 @@
 		<widgetType name="singleUserSuggestionWithPermission">
             <configuration>
                 <title>Single user/group suggestion with given permission
+                       on current document.
                 </title>
                 <sinceVersion>6.0</sinceVersion>
                 <supportedModes>
@@ -521,6 +523,7 @@
                         <property name="operationId">UserGroup.SuggestUserEntriesWithPermission
                         </property>
                         <property name="documentId">#{currentDocument.id}</property>
+                        <property name="multiple">false</property>
                     </defaultValues>
                 </properties>
             </configuration>
@@ -529,6 +532,29 @@
             </handler-class>
             <property name="template">
                 /widgets/toutatice_single_user_suggestion_widget_template.xhtml
+            </property>
+        </widgetType>
+
+        <widgetType name="ottcUploadMultipleFiles">
+            <configuration>
+                <title>Custom version to upload multiple files.
+                </title>
+                <sinceVersion>6.0</sinceVersion>
+                <supportedModes>
+                    <mode>edit</mode>
+                    <mode>view</mode>
+                </supportedModes>
+                <categories>
+                    <category>document</category>
+                </categories>
+                <fields />
+                <properties />
+            </configuration>
+            <handler-class>
+                org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+            </handler-class>
+            <property name="template">
+                /widgets/toutatice_multiple_files_upload_template.xhtml
             </property>
         </widgetType>
 

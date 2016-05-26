@@ -18,8 +18,10 @@
  */
 package fr.toutatice.ecm.platform.web.imagemanager;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,6 +50,7 @@ import org.nuxeo.ecm.platform.ui.web.tag.fn.DocumentModelFunctions;
 import org.nuxeo.ecm.platform.ui.web.util.files.FileUtils;
 import org.nuxeo.ecm.webapp.filemanager.FileManageActionsBean;
 import org.nuxeo.ecm.webapp.filemanager.NxUploadedFile;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
@@ -126,9 +129,45 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
 		}
 	}
 	
-	@Override
+	/**
+	 * To do not save (case of creation in peculiar).
+	 */
+    @Override
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public void validateMultipleUploadForDocument(DocumentModel current) throws ClientException, FileNotFoundException, IOException {
+        if (!current.hasSchema(FILES_SCHEMA)) {
+            return;
+        }
+        Collection<NxUploadedFile> nxuploadFiles = getUploadedFiles();
+        try {
+            ArrayList files = (ArrayList) current.getPropertyValue(FILES_PROPERTY);
+            if (nxuploadFiles != null) {
+                for (NxUploadedFile uploadItem : nxuploadFiles) {
+                    String filename = FileUtils.getCleanFileName(uploadItem.getName());
+                    Blob blob = FileUtils.createTemporaryFileBlob(uploadItem.getFile(), filename, uploadItem.getContentType());
+                    HashMap<String, Object> fileMap = new HashMap<String, Object>(2);
+                    fileMap.put("file", blob);
+                    fileMap.put("filename", filename);
+                    if (!files.contains(fileMap)) {
+                        files.add(fileMap);
+                    }
+                }
+            }
+            current.setPropertyValue(FILES_PROPERTY, files);
+        } finally {
+            if (nxuploadFiles != null) {
+                for (NxUploadedFile uploadItem : nxuploadFiles) {
+                    File tempFile = uploadItem.getFile();
+                    if (tempFile != null && tempFile.exists()) {
+                        Framework.trackFile(tempFile, tempFile);
+                    }
+                }
+            }
+        }
+    }
+	
     @SuppressWarnings("unchecked")
-    public void validateMultipleUploadForDocument(DocumentModel current) throws ClientException, FileNotFoundException {
+    public void validatAttachablesPicturesForDocument(DocumentModel current) throws ClientException, FileNotFoundException {
     	List<String>  msg_params = new ArrayList<String>();
     	
         if (!current.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {

@@ -14,6 +14,12 @@ body {
 		.form-control;
 	}
 	
+	input[type="submit"] {
+	   .btn;
+	   .btn-default;
+	   width: auto;
+	}
+	
 	table > tbody > tr > td {
 
         input[type="checkbox"]{
@@ -129,6 +135,62 @@ body {
 	   padding: 1px;
 	   border-color: #ccc;
 	}
+	
+	div.ottcMultipleFilesUpload {
+	
+        div.itemFile {
+            .form-control;
+            width: 80%;
+            margin-bottom: 5px;
+        }
+        
+        span.rf-fu-btns-rgh {
+            display: none;
+        }
+        
+        div.rf-fu-lst {
+            span.rf-fu-itm-rgh {
+                a.rf-fu-itm-lnk {
+                    display:none;
+                }
+            }
+        }
+        
+        div.rf-fu {
+            border: none;
+            
+            div.rf-fu-hdr {
+                border: none;
+                
+                /*span.rf-fu-btn-add:hover {
+                    cursor: pointer;
+                }*/
+                
+                span.rf-fu-btn-add {
+                    border: none;
+                    padding: 0px !important;
+                    
+                        .btn;
+                        .btn-default;
+                        margin-left: 0px;
+                    
+                        span.rf-fu-btn-cnt-add {
+                            background: none;
+                            padding: 11px !important;
+                            
+                            span.rf-fu-inp-cntr {
+                                height: 100%;
+                                width: 100%;
+                            
+                                input[type="file"] {
+                                    height: 100%;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 	
 }
 
