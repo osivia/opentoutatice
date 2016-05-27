@@ -184,6 +184,15 @@ public class ToutaticeDocumentHelper {
         }
 
     }
+    
+    /**
+     * 
+     * @param document
+     * @return true if document is an empty document model (creation).
+     */
+    public static boolean isEmptyDocumentModel(DocumentModel document){
+        return document.getId() == null;
+    }
 
     /**
 	 * Retourne la dernière version valide du document passé en paramètre.

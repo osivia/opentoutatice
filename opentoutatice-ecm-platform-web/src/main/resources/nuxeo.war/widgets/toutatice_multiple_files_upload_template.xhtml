@@ -45,7 +45,7 @@
                             <div class="itemFile">
                                 <a4j:commandLink immediate="true"
                                     onclick="if( !confirmRemoveFiles('#{nxu:javaScriptEscape(document.files.files[counter.index].filename)}')) return false;"
-                                    actionListener="#{FileManageActions.performAction}"
+                                    actionListener="#{toutaticeFileManageActions.performAction}"
                                     id="files_delete" render="document_files_edit"
                                     bypassUpdates="true">
                                     <h:graphicImage value="/icons/delete.png"
@@ -72,7 +72,7 @@
                         <a4j:ajax event="clear" onbeforesubmit="processClear(event);"
                             render="document_files_edit" />
                         <a4j:ajax event="uploadcomplete" render="document_files_edit"
-                            listener="#{ImageManagerActions.validateMultipleUploadForDocument(document)}" />
+                            listener="#{toutaticeFileManageActions.validateMultipleUploadForDocument(document)}" />
                     </rich:fileUpload>
                     <h:message styleClass="errorMessage" for="upload"
                         id="files_message" />

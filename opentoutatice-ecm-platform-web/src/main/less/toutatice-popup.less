@@ -81,6 +81,7 @@ body {
 		display: inline;
 	}
 	
+	/* Select used for users and vocabularies in peculiar */
 	& > .select2-container, .select2-container-multi {
 		width: 100%;
 		
@@ -136,7 +137,46 @@ body {
 	   border-color: #ccc;
 	}
 	
+	/* For ottcMultipleFilesUpload widget */
 	div.ottcMultipleFilesUpload {
+	
+	   div.rf-fu {
+	       width: 80%;
+	       
+	       div.rf-fu-itm {
+	           padding: 0px;
+	           border-bottom: none;
+	           
+	           span.rf-fu-itm-lft {
+	               width:100%;
+	               
+	               div.progress {
+	                   border-radius: 4px;
+	               
+	                   .progress-striped, .progress-bar, .progress-bar-striped {
+                            background-image: none;
+                            background-color: #4da0ab;
+                            border-color: #459099;
+                            font-size: inherit;
+                        }
+                        
+                        div.progress-bar > span {
+                            padding: 0px 10px;
+                        }
+                    }
+                    
+                    span.rf-fu-itm-st {
+                        display: none !important;
+                    }
+            
+                    span.rf-fu-itm-rgh {
+                        a.rf-fu-itm-lnk {
+                            display:none;
+                        }
+                    }
+	           }
+	       }
+	   }
 	
         div.itemFile {
             .form-control;
@@ -148,23 +188,11 @@ body {
             display: none;
         }
         
-        div.rf-fu-lst {
-            span.rf-fu-itm-rgh {
-                a.rf-fu-itm-lnk {
-                    display:none;
-                }
-            }
-        }
-        
         div.rf-fu {
             border: none;
             
             div.rf-fu-hdr {
                 border: none;
-                
-                /*span.rf-fu-btn-add:hover {
-                    cursor: pointer;
-                }*/
                 
                 span.rf-fu-btn-add {
                     border: none;
@@ -174,9 +202,10 @@ body {
                         .btn-default;
                         margin-left: 0px;
                     
-                        span.rf-fu-btn-cnt-add {
+                        .rf-fu-btn-cnt-add {
                             background: none;
-                            padding: 11px !important;
+                            padding: 6px 12px !important;
+                            overflow: visible !important;
                             
                             span.rf-fu-inp-cntr {
                                 height: 100%;
@@ -184,6 +213,7 @@ body {
                             
                                 input[type="file"] {
                                     height: 100%;
+                                    cursor: pointer;
                                 }
                             }
                         }
