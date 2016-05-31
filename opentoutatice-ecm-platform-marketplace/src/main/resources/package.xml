@@ -1,37 +1,57 @@
 <package type="addon" name="open-toutatice" version="@VERSION@">
 	<title>Open Toutatice</title>
 	<description>
-		<p>This addon implements the opened platform called Open Toutatice
-		   (which one is based on the Nuxeo DM distribution)
+			This addon implements the opened platform called Open Toutatice
+			(which one is based on the Nuxeo DM distribution)
 			
-			Main features :
-            * Possibility to contribute on widget type for widget BO-FO mapping service
-			* Move and reorder of documents in publish spaces
-			* New webIds policy
-			* First step of webURL implementation
-			* Remote sections informations available for Portal
-			* Suggest Users Widget filtering on permission on current document
-			* Publication date taken into account in list requests
-			* Part of web mode in opentoutatice-web-mode plugin henceforth
+			_________________________________________________________________
+			
+		    Main new features:
 
-			Bug fixes :
-			* #929: Error on contentView after asynchronous treatment which can have removed documents
-			* #963, #970: refactoring of fragments portlet
-			* #971: loop on sub tab Administration -> Publication
-			* #1000: custom of multiple vocabulary widget
-			* #1000: simplified PortalViews
-			* #1002: Enlargeable Images
-			* #1013: webids activated on Spaces by default
-			* Fixes nullPointer in WidgetAdapterServiceImpl in web mode
-			* Fixes theme and template saving in web mode
-			* Fixes duplication of publishing_status widget insertion
-			* Fixes permissions for imports of zip
-			* Fixes escape of "bad" webids (because a good webid has no character to escape)
-			* Fixes internationalization of vocabularies entries label
-			* Fixes Multi-levels vocabularies cycles
-		</p>
+			* Generalization of opentoutatice's ids
+				- every document has a technical id (except remote proxies for
+				  the moment: they have only cms path)
+			    - only admins can change id's values
+			    - CRUD by id integrated in REST API
+			* Web mode moved in external addon
+			* Exclusive Contribute permission: only leaf document's creator can modify or delete it
+			* TiniyMCE:
+			    - possibility to insert download link when inserting link to File
+			      document
+			    - possibility to insert link to remote proxy
+			* By default, every Folderish is shown in Portal menu
+			* New EraseModifications operation allowing to come back to last
+
+		    Other features:
+		    
+			* New Multiple upload files widget
+			* Notifications:
+				- getUserFullName method
+				- specific documentLocallyPublished event
+				
+		    _________________________________________________________________
+		
+		    Main bug fixes:
+		    
+			* #873: Works of Asynchronous listeners done in silent mode
+			* #6933: References passed in createOp chain to be able to execute many chains on same event (event-handler)
+			* #1159: check of unicity of id on imports / possibility to shutdown recursion on ids setting
+		
+		    Other bug fixes:
+		    
+			* #1206: Access of documents in content view cv_ContentOrderedReadNWrite managed by Elasticsearch
+			* property tabOrder of Publish Spaces pre-filled to avoid ElasticSearch parsing Exception
+			* #1182: conditions on Portal Configuration tab
+			* Get allowed configurations
+			* #1152, #961: fix move and reorder of local proxies
+			* New definition of validationWorkflow_validation permission
+			* Visibility of toutatice_widget_tab_order
+			* Fixes possible nullPointer on Nx start up in ToutaticeDocumentHelper
+			* #1166: errors bindings on JSF components
+			* ttc_richtext_with_mimetype: fix of empty field definition or empty field for changeable document
 	</description>
-	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace</home-page>
+	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace
+	</home-page>
 	<vendor>Academie de Rennes - OSIVIA</vendor>
 	<installer restart="true" />
 	<uninstaller restart="true" />
