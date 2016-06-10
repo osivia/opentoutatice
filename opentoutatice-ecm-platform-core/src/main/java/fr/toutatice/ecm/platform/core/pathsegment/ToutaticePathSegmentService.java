@@ -18,8 +18,6 @@
  */
 package fr.toutatice.ecm.platform.core.pathsegment;
 
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.common.utils.IdUtils;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -28,21 +26,38 @@ import org.nuxeo.ecm.core.api.pathsegment.PathSegmentService;
 
 public class ToutaticePathSegmentService implements PathSegmentService {
 
-	public Pattern stupidRegexp = Pattern.compile("^[- .,;?!:/\\\\'\"]*$");
+	protected final int maxSize = 24;
 	
+	/**
+	 * Generates path segment based on document's title.
+	 */
 	@Override
 	public String generatePathSegment(DocumentModel doc) throws ClientException {
-		String s = doc.getTitle();
-		if (s == null) {
-			s = StringUtils.EMPTY;
+		String title = doc.getTitle();
+		if (title == null) {
+			title = StringUtils.EMPTY;
 		}
 		
-		return IdUtils.generateId(s, "-", true, 24);		
+		return IdUtils.generateId(title, "-", true, maxSize);		
 	}
-
+	
+	/**
+	 * Generates path segment:
+	 * - value is lowercased
+	 * - length is 24 at maximum
+	 * - empty spaces are replaced by '-'.
+	 */
 	@Override
-	public String generatePathSegment(String s) throws ClientException {
-		return IdUtils.generateId(s, "-", true, 24);
+	public String generatePathSegment(String value) throws ClientException {
+		return IdUtils.generateId(value, "-", true, maxSize);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+    @Override
+    public int getMaxSize() {
+        return maxSize;
+    }
 
 }
