@@ -74,6 +74,7 @@ public class ToutaticeNuxeoStudioConst {
 	public static final String CST_FACET_SPACE_CONTENT = "SpaceContent";
 	public static final String CST_FACET_REMOTE_PROXY = "isRemoteProxy";
 	public static final String CST_FACET_LOCAL_LIVE = "isLocalPublishLive";
+	public static final String CST_FACET_EXPLICIT_VERSION = "ExplicitVersion";
 
 	// meta-data
 	public final static String CST_DOC_SCHEMA_NUXEO_WEBCONTAINER_EMAIL = "email";
