@@ -18,13 +18,13 @@
  */
 package fr.toutatice.ecm.platform.service.workflows;
 
-import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationProvider;
+import fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProvider;
 
 
 /**
  * @author David Chevrier.
  *
  */
-public interface ToutaticeTaskService extends FetchInformationProvider {
+public interface ToutaticeTaskService extends DocumentInformationsProvider {
 
 }

@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
-<component name="fr.toutatice.ecm.platform.core.services.fetchinformation">
+<component name="fr.toutatice.ecm.platform.core.services.infos.provider">
 	<documentation>
 		Service to add informations in the FetchPublicationInfo command
 	</documentation>
 	<service>
 		<provide
-			interface="fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationsService" />
+			interface="fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProviderService" />
 	</service>
 	<implementation
-		class="fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationsServiceImpl" />
+		class="fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProviderServiceImpl" />
 
 	<extension-point name="fetch_infos">
 		<documentation>
@@ -17,7 +17,7 @@
 			in the Document.FetchPublicationInfos operation.
 		</documentation>
 		<object
-			class="fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationsDescriptor" />
+			class="fr.toutatice.ecm.platform.core.services.infos.provider.FetchInformationsDescriptor" />
 	</extension-point>
 
 	<extension-point name="extended_fetch_infos">
@@ -27,6 +27,6 @@
 			used in the Document.FetchExtendedInfos.
 		</documentation>
 		<object
-			class="fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationsDescriptor" />
+			class="fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProviderDescriptor" />
 	</extension-point>
 </component>

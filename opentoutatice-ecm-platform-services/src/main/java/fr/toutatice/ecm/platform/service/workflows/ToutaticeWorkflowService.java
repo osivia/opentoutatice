@@ -18,14 +18,14 @@
  */
 package fr.toutatice.ecm.platform.service.workflows;
 
-import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationProvider;
+import fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProvider;
 
 
 /**
  * @author david chevrier
  *
  */
-public interface ToutaticeWorkflowService extends FetchInformationProvider {
+public interface ToutaticeWorkflowService extends DocumentInformationsProvider {
     
     /** Validation worflow's category. */
     String VALIDATION_WF_CATEGORY = "validation";

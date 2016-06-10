@@ -36,7 +36,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.runtime.api.Framework;
 
-import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationsService;
+import fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProviderService;
 import fr.toutatice.ecm.platform.service.url.WebIdResolver;
 
 
@@ -65,7 +65,7 @@ public class FetchExtendedDocumentInfos {
         JSONArray rowDocInfos= new JSONArray();
         JSONObject docInfos = new JSONObject();
         
-        FetchInformationsService fetchInfosService = Framework.getService(FetchInformationsService.class);
+        DocumentInformationsProviderService fetchInfosService = Framework.getService(DocumentInformationsProviderService.class);
         if (fetchInfosService != null) {
             Map<String, Object> infos = fetchInfosService.fetchAllExtendedInfos(session, document);
             docInfos.accumulateAll(infos);

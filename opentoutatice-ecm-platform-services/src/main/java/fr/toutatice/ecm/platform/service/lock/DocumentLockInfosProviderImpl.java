@@ -34,7 +34,7 @@ import org.nuxeo.ecm.core.api.security.SecurityConstants;
  * @author lbillon
  *
  */
-public class ToutaticeLockServiceImpl implements ToutaticeLockService {
+public class DocumentLockInfosProviderImpl implements DocumentLockInfosProvider {
 
 	@Override
 	public Map<String, Object> fetchInfos(CoreSession coreSession,

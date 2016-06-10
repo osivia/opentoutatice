@@ -19,14 +19,14 @@
  */
 package fr.toutatice.ecm.platform.service.lock;
 
-import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationProvider;
+import fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProvider;
 
 /**
  * Service used to get all lock informations about a document
  * @author lbillon
  *
  */
-public interface ToutaticeLockService extends FetchInformationProvider {
+public interface DocumentLockInfosProvider extends DocumentInformationsProvider {
 
 	/** The time when document has been locked */
 	public final static String LOCK_CREATION_DATE = "lockCreationDate";
