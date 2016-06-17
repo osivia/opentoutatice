@@ -3,9 +3,9 @@
 
   <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
     point="operations">
-    
+
     <operation class="fr.toutatice.ecm.platform.automation.FetchPublishedDocument" />
-    <operation class="fr.toutatice.ecm.platform.automation.FetchLiveDocument" />   
+    <operation class="fr.toutatice.ecm.platform.automation.FetchLiveDocument" />
     <operation class="fr.toutatice.ecm.platform.automation.FetchPublishSpace" />
     <operation class="fr.toutatice.ecm.platform.automation.FetchVersionDocument" />
     <operation class="fr.toutatice.ecm.platform.automation.FetchPublicationInfos" />
@@ -31,24 +31,28 @@
     <operation class="fr.toutatice.ecm.platform.automation.GetUserProfile" />
     <operation class="fr.toutatice.ecm.platform.automation.GetExtendedTasks" />
     <operation class="fr.toutatice.ecm.platform.automation.AddComplexProperty" />
-    <operation class="fr.toutatice.ecm.platform.automation.FetchDocumentInList" />      
+    <operation class="fr.toutatice.ecm.platform.automation.FetchDocumentInList" />
     <operation class="fr.toutatice.ecm.platform.automation.GetWebConfigurations" />
     <operation class="fr.toutatice.ecm.platform.automation.GetPermalink" />
-    
+
     <operation class="fr.toutatice.ecm.platform.infos.FetchExtendedDocumentInfos" />
-    
+
 	<operation class="fr.toutatice.ecm.platform.automation.workflows.OperateWFProcess" />
 	<operation class="fr.toutatice.ecm.platform.automation.workflows.StartWFProcess" />
 	<operation class="fr.toutatice.ecm.platform.automation.workflows.StopWFProcess" />
 	<operation class="fr.toutatice.ecm.platform.automation.workflows.SendTaskNotification" />
-	
+
     <operation class="fr.toutatice.ecm.platform.automation.comments.FetchCommentsOfDocument" />
 	<operation class="fr.toutatice.ecm.platform.automation.comments.AddComment" />
 	<operation class="fr.toutatice.ecm.platform.automation.comments.DeleteComment" />
 	<operation class="fr.toutatice.ecm.platform.automation.comments.CreateChildComment" />
-	
-	
-	
+
+	<!-- Tags -->
+	<operation class="fr.toutatice.ecm.platform.automation.SetDocumentTags" />
+	<operation class="fr.toutatice.ecm.platform.automation.GetDocumentTags" />
+
+
+
   </extension>
 
 </component>
