@@ -17,10 +17,10 @@ import org.nuxeo.ecm.platform.tag.TagService;
 import org.nuxeo.runtime.api.Framework;
 import net.sf.json.JSONArray;
 
-@Operation(id = GetDocumentTags.ID, category = Constants.CAT_DOCUMENT, label = "GetDocumentTags", description = "Fetch the document's list of tags. If username is set, only the tags applied by the user are returned. Returns a json array containing the tag labels (string values)")
+@Operation(id = GetDocumentTags.ID, category = Constants.CAT_DOCUMENT, label = "Get Document Tags", description = "Fetch the document's list of tags. If username is set, only the tags applied by the user are returned. Returns a json array containing the tag labels (string values)")
 public class GetDocumentTags {
 
-	public static final String ID = "GetDocumentTags";
+	public static final String ID = "Document.GetTags";
 
 	private static final Log log = LogFactory.getLog(GetDocumentTags.class);
 

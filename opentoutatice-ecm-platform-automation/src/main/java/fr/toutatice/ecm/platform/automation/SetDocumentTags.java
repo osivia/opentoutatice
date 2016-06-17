@@ -12,14 +12,15 @@ import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.automation.core.util.StringList;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.platform.tag.Tag;
 import org.nuxeo.ecm.platform.tag.TagService;
 import org.nuxeo.runtime.api.Framework;
 
-@Operation(id = SetDocumentTags.ID, category = Constants.CAT_DOCUMENT, label = "SetDocumentTags", description = "Sets a document tags. Replace the previous list of tags by the list.")
+@Operation(id = SetDocumentTags.ID, category = Constants.CAT_DOCUMENT, label = "Set Document Tags", description = "Sets a document tags. Replace the previous list of tags by the list.")
 public class SetDocumentTags {
 
-	public static final String ID = "SetDocumentTags";
+	public static final String ID = "Document.SetTags";
 
 	private static final Log log = LogFactory.getLog(SetDocumentTags.class);
 
@@ -33,11 +34,19 @@ public class SetDocumentTags {
 	protected String username;
 
 	@OperationMethod
-	public void run(DocumentModel input) throws Exception {
+	public void run(DocumentModel doc) throws Exception {
+		final String docId = doc.getId();
+
+		setLabels(docId);
+	}
+
+	@OperationMethod
+	public void run(IdRef idRef) throws Exception {
+		setLabels(idRef.toString());
+	}
+
+	private void setLabels(final String docId) {
 		final TagService service = Framework.getLocalService(TagService.class);
-
-		final String docId = input.getId();
-
 		log.info("SetDocumentTags> docId=" + docId + " tags=" + StringUtils.join(labels, ", ") + " username=" + username);
 
 		// remove existing tags
