@@ -5,6 +5,7 @@
 	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
 		point="operations">
 
+		<operation class="fr.toutatice.ecm.platform.automation.CreateDocument" />
 		<operation
 			class="fr.toutatice.ecm.platform.automation.FetchPublishedDocument" />
 		<operation class="fr.toutatice.ecm.platform.automation.FetchLiveDocument" />
