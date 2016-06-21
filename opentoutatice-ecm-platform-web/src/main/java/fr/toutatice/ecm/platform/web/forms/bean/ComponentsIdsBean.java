@@ -18,6 +18,8 @@
  */
 package fr.toutatice.ecm.platform.web.forms.bean;
 
+import java.io.Serializable;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
@@ -41,8 +43,11 @@ import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 @Roles({@Role(name = "themeSimpleForm", scope = ScopeType.SESSION),
     	@Role(name = "pageTemplateSimpleForm", scope = ScopeType.SESSION), @Role(name = "subpageTemplateSimpleForm", scope = ScopeType.SESSION)})
 @Role(name = "field")
-public class ComponentsIdsBean {
+public class ComponentsIdsBean implements Serializable {
 
+    private static final long serialVersionUID = -591706134232829L;
+    
+    /** Bind component. */
     protected UIComponent simpleComponent;
 
     /**
