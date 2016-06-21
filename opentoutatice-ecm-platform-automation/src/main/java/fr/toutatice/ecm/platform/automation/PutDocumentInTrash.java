@@ -53,9 +53,9 @@ public class PutDocumentInTrash {
         List<DocumentModel> docs = new ArrayList<DocumentModel>(1);
         docs.add(document);
         
-//    #3411 delete the local proxy if there
+        // #3411 delete the local proxy if there
         DocumentModel proxy = ToutaticeDocumentHelper.getProxy(session, document, null, true);
-        if(proxy!=null){
+        if(proxy != null){
         	session.removeDocument(proxy.getRef());
         }
         
@@ -65,6 +65,12 @@ public class PutDocumentInTrash {
         
         return document;
         
+    }
+    
+    @OperationMethod
+    public Object run(DocumentModel document) throws Exception {
+        this.document = document;
+        return run();
     }
 
 }
