@@ -102,9 +102,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     private static final Log log = LogFactory.getLog(ToutaticeDocumentActionsBean.class);
 
     @In(create = true)
-    protected transient NavigationContext navigationContext;
-
-    @In(create = true)
     protected PageBean pageBean;
 
     @In(create = true)
