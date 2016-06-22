@@ -4,7 +4,7 @@
 
 	<require>org.nuxeo.ecm.directory.sql.SQLDirectoryFactory</require>
 	<require>org.nuxeo.ecm.directory.ui.DirectoryUIManager</require>
-	
+
 	<!-- TODO: remplacé par objet conf? -->
 	<extension target="org.nuxeo.ecm.directory.sql.SQLDirectoryFactory"
 		point="directories">
@@ -21,9 +21,25 @@
 		</directory>
 	</extension>
 
+		<extension target="org.nuxeo.ecm.directory.sql.SQLDirectoryFactory"
+		point="directories">
+		<directory name="visibility">
+			<schema>vocabulary</schema>
+			<dataSource>java:/nxsqldirectory</dataSource>
+			<cacheTimeout>3600</cacheTimeout>
+			<cacheMaxSize>1000</cacheMaxSize>
+			<idField>id</idField>
+			<autoincrementIdField>false</autoincrementIdField>
+			<createTablePolicy>on_missing_columns</createTablePolicy>
+			<table>vocabulary_visibility</table>
+			<dataFile>vocabularies/visibility.csv</dataFile>
+		</directory>
+	</extension>
+
 	<extension target="org.nuxeo.ecm.directory.ui.DirectoryUIManager"
 		point="directories">
 		<directory name="pageScopes" layout="vocabulary" sortField="label" />
+		<directory name="visibility" layout="vocabulary" sortField="label" />
 	</extension>
 
 </component>

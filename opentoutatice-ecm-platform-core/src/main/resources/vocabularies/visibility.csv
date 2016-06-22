@@ -1,0 +1,4 @@
+"id","label","obsolete","ordering"
+"PRIVATE","Privé","1","0"
+"INVITATION","Sur Invitation","0","1"
+"PUBLIC","Public","1","2"
