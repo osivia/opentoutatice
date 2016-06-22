@@ -15,7 +15,6 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.platform.tag.Tag;
 import org.nuxeo.ecm.platform.tag.TagService;
-import org.nuxeo.runtime.api.Framework;
 
 @Operation(id = SetDocumentTags.ID, category = Constants.CAT_DOCUMENT, label = "Set Document Tags", description = "Sets a document tags. Replace the previous list of tags by the list.")
 public class SetDocumentTags {
@@ -27,7 +26,10 @@ public class SetDocumentTags {
 	@Context
 	protected CoreSession session;
 
-	@Param(name = "labels", required = true, description = "list of tag labels")
+	@Context
+	protected TagService tagService;
+
+	@Param(name = "labels", required = false, description = "list of tag labels, if empty removes all current tags")
 	protected StringList labels;
 
 	@Param(name = "username", required = true)
@@ -46,19 +48,24 @@ public class SetDocumentTags {
 	}
 
 	private void setLabels(final String docId) {
-		final TagService service = Framework.getLocalService(TagService.class);
 		log.info("SetDocumentTags> docId=" + docId + " tags=" + StringUtils.join(labels, ", ") + " username=" + username);
 
 		// remove existing tags
-		final List<Tag> existingTags = service.getDocumentTags(session, docId, username);
+		final List<Tag> existingTags = tagService.getDocumentTags(session, docId, username);
 
-		for (final Tag tag : existingTags) {
-			service.untag(session, docId, tag.getLabel(), username);
+		if (existingTags != null) {
+			for (final Tag tag : existingTags) {
+				tagService.untag(session, docId, tag.getLabel(), username);
+			}
 		}
 
 		// add new tags
-		for (final String label : labels) {
-			service.tag(session, docId, label, username);
+		if (labels != null) {
+			for (final String label : labels) {
+				if (StringUtils.isNotBlank(label)) {
+					tagService.tag(session, docId, label, username);
+				}
+			}
 		}
 
 		session.save();
