@@ -9,6 +9,11 @@ body {
     width: 100%;
 }
 
+.first-form-group {
+    .form-group;
+    padding-top: 15px;
+}
+
 .ttc-form-control {
 	& > input, select {
 		.form-control;
@@ -32,13 +37,9 @@ body {
 		.form-control;
 		width:40%;
 		display: inline;
-		/*& > & >i {
-			padding-left: 10px;
-			cursor: pointer;
-		}*/
 	}
 	
-	& > .select2-container {
+& > .select2-container {
 		width: 100%;
 		
 		& > a {
@@ -69,6 +70,11 @@ body {
 .form-group.required .control-label:after { 
    content:"  *";
    color: #bf3730;
+}
+
+/* For label clientWidth > 0 in dialog boxes of tinyMCE. */
+.mce-label {
+    position: relative !important;
 }
 
 /* Keywords widget */
