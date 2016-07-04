@@ -19,96 +19,79 @@
     <f:subview
         rendered="#{!editorImageActions.inToutaticeCreationMode and currentDocument.hasFacet('TTCAttachableImages')}">
 
-<h:form enctype="multipart/form-data" id="uploadForm"
-            class="form form-horizontal" disableDoubleClickShield="true">
+        <a4j:region id="imgs_list_region" renderRegionOnly="true">
+            <a4j:outputPanel id="imgs_list_region_panel" ajaxRendered="true">
 
-        <script type="text/javascript">
-            function updateEditorWithImagePJ(img) {
-                if (window.opener.tinyMCE) {
-                    var tinyMCE = window.opener.tinyMCE;
-                    var html = '&lt;img src="' + img.src + '"/&gt;';
-                    tinyMCE.execCommand('mceInsertContent', false, html);
-                    self.close();
-                }
-            }
+                <h:form enctype="multipart/form-data" id="uploadForm"
+                    class="form form-horizontal" disableDoubleClickShield="true">
 
-            function updateFragment(img) {
+                    <c:choose>
+                        <c:when test="#{empty currentDocument.toutatice.images}">
 
-                var imgSrc = img.src;
-                var relativeUrl = imgSrc.replace(/^(?:\/\/|[^\/]+)*\//, "/");
+                            <div class="alert alert-warning">
+                                <i class="glyphicons halflings warning-sign"></i> <span
+                                    class="text-warning">#{messages['toutatice.label.imageUpload.choose.NoattachedImage']}</span>
 
-                var picturePathField = window.opener.$picturePath;
-                picturePathField.val(relativeUrl);
-                window.opener.previewImg();
+                            </div>
 
-                self.close();
-            }
+                            <div>
+                                <ui:include
+                                    src="/incl/editor_media_upload/upload_attached_images.xhtml" />
+                            </div>
 
-            function updateCaller(img) {
-                if (window.opener.$picturePath) {
-                    updateFragment(img);
-                } else {
-                    updateEditorWithImagePJ(img)
-                }
-            }
-        </script>
+                        </c:when>
+                        <c:otherwise>
 
-        <c:choose>
-            <c:when test="#{empty currentDocument.toutatice.images}">
+                            <div class="alert alert-info">
+                                <i class="glyphicons halflings info-sign"></i> <span
+                                    class="text-info">#{messages['toutatice.label.attached.images.select']}</span>
 
-                <div class="alert alert-warning">
-                    <i class="glyphicons halflings warning-sign"></i> <span
-                        class="text-warning">#{messages['toutatice.label.imageUpload.choose.NoattachedImage']}</span>
+                            </div>
 
-                </div>
+                            <!--<div id="img_style_value_checkbox" class="checkbox">
+                                <label> <input id="img_style_value" checked="checked"
+                                    type="checkbox" value="enlargeable" />#{messages['toutatice.label.attached.image.style.enlargeable']}
+                                </label>
+                            </div> -->
 
-                <div>
-                    <ui:include
-                        src="/incl/editor_media_upload/upload_attached_images.xhtml" />
-                </div>
+                            <div class="row">
 
-            </c:when>
-            <c:otherwise>
+                                <div class="pictures-list">
 
-                <div class="alert alert-info">
-                    <i class="glyphicons halflings info-sign"></i> <span
-                        class="text-info">#{messages['toutatice.label.attached.images.select']}</span>
+                                    <ui:repeat var="img"
+                                        value="#{currentDocument.toutatice.images}" varStatus="status">
+                                        <ui:fragment rendered="#{not empty img.filename}">
+                                            <div class="col-xs-3 col-md-3"
+                                                onclick="javascript:updateCaller(jQuery(this).find('img')[0], jQuery('#img_style_value').val());">
+                                                <div class="picture">
+                                                    <a href="#" class="thumbnail"> <h:graphicImage styleClass="text-middle"
+                                                            value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', status.index, 'file', img.filename)}" />
+                                                    </a>
+                                                </div>
+                                                <p class="text-center">#{img.filename}</p>
 
-                </div>
+                                            </div>
+                                        </ui:fragment>
 
-                <div class="row">
-                    <div class="pictures-list">
+                                    </ui:repeat>
 
-                    <ui:repeat var="img" value="#{currentDocument.toutatice.images}" varStatus="status">
-                            <ui:fragment rendered="#{not empty img.filename}">
-                                <div class="col-xs-3 col-md-3"
-                                    onclick="javascript:updateCaller(jQuery(this).find('img')[0]);">
-                                    <div class="picture">
-                                        <a href="#" class="thumbnail"> <h:graphicImage
-                                                value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', status.index, 'file', img.filename)}" />
-                                        </a>
+                                    <div>
+                                        <ui:include
+                                            src="/incl/editor_media_upload/upload_attached_images.xhtml" />
                                     </div>
-                                    <p class="text-center">#{img.filename}</p>
 
                                 </div>
-                            </ui:fragment>
 
-                        </ui:repeat>
+                            </div>
 
-                        <div>
-                            <ui:include
-                                src="/incl/editor_media_upload/upload_attached_images.xhtml" />
-                        </div>
+                        </c:otherwise>
 
-                    </div>
-                    
-                </div>
+                    </c:choose>
 
-            </c:otherwise>
+                </h:form>
 
-        </c:choose>
-
-</h:form>
+            </a4j:outputPanel>
+        </a4j:region>
 
     </f:subview>
 
@@ -120,5 +103,20 @@
         </div>
 
     </f:subview>
+
+    <script type="text/javascript">
+        // TODO: to externalize
+        jQuery('div.tab-content').on('dragover', function() {
+            jQuery('div.tab-content input').addClass('asDropZone');
+        });
+
+        jQuery('div.tab-content').on('dragleave', function() {
+            jQuery('div.tab-content input').removeClass('asDropZone');
+        });
+
+        jQuery('div.tab-content').on('drop', function() {
+            jQuery('div.tab-content input').removeClass('asDropZone');
+        });
+    </script>
 
 </f:subview>
