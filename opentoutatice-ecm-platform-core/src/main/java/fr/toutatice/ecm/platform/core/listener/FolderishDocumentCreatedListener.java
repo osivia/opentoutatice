@@ -9,7 +9,6 @@ import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
-import org.nuxeo.ecm.core.schema.FacetNames;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
