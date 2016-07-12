@@ -5,7 +5,7 @@
 
 	<groupId>opentoutatice-ecm.platform</groupId>
 	<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-	<version>3.2.2</version>
+	<version>3.2.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>open toutatice plate-forme</name>
 
@@ -414,30 +414,12 @@
 	                    </execution>
 	                </executions>
 	            </plugin>
-	            <plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-antrun-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>copy-jar</id>
-							<goals>
-								<goal>run</goal>
-							</goals>
-							<configuration>
-								<tasks>
-									<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/3.1.0" />
-								</tasks>
-							</configuration>
-							<phase>package</phase>
-						</execution>
-					</executions>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
 
 	<scm>
-		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/3.2.2</developerConnection>
+		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/branches/3.2.2-maintenance</developerConnection>
 	</scm>
 
 	<distributionManagement>
