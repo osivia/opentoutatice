@@ -59,11 +59,6 @@ public class FetchCommentsOfDocument {
     public static final String COMMENT_SCHEMA = "comment";
     public static final String POST_SCHEMA = "post";
 
-    /** Total number of root comments. */
-    private int nbRootsComments;
-    /** Toatal number of comments (children of roots). */
-    private int nbChildrenComments;
-
     @Context
     CoreSession session;
 
@@ -84,7 +79,6 @@ public class FetchCommentsOfDocument {
         }
         List<DocumentModel> commentsRoots = commentableDoc.getComments();
         if (commentsRoots != null) {
-            nbRootsComments = commentsRoots.size();
             /*
              * Construction de la liste des fils de commentaires.
              */
@@ -112,8 +106,6 @@ public class FetchCommentsOfDocument {
             }
         }
 
-        updateDocument();
-
         return createBlob(commentsTree);
 
     }
@@ -121,9 +113,7 @@ public class FetchCommentsOfDocument {
     private JSONArray getCommentsThread(DocumentModel comment, CommentableDocument commentableDocService, JSONArray threads) throws ClientException {
         String schemaPrefix = getSchema(document.getType());
         List<DocumentModel> childrenComments = commentableDocService.getComments(comment);
-        if (childrenComments != null) {
-            nbChildrenComments += childrenComments.size();
-        }
+       
         if (childrenComments == null || childrenComments.isEmpty()) {
             return threads;
         } else {
@@ -154,40 +144,6 @@ public class FetchCommentsOfDocument {
         }
     }
 
-    /**
-     * Update comments number on document if necessary.
-     */
-    // DCH: FIXME: temporary wainting better Forum model.
-    private void updateDocument() {
-
-        if (this.document.hasSchema("thread_toutatice")) {
-
-            Long nbComments = (Long) this.document.getPropertyValue("ttcth:nbComments");
-            Long newNbComments = Long.valueOf(this.nbRootsComments + this.nbChildrenComments);
-
-            if (!nbComments.equals(newNbComments)) {
-                // Update of Thread to be correctly ordered
-                
-                this.document.setPropertyValue("ttcth:nbComments", newNbComments);
-                // Done in unrestricted way because a user can add post
-                // even if he has no write permission on Thread
-                ToutaticeDocumentHelper.saveDocumentSilently(this.session, this.document, true);
-                
-                DublinCoreStorageService service = NXDublinCore.getDublinCoreStorageService();
-                
-                Calendar modificationDate = Calendar.getInstance();
-                modificationDate.setTime(new Date());
-                
-                service.setModificationDate(this.document, modificationDate, null);
-                
-                // "Virtual" event to pass principal to method
-                DocumentEventContext ctx = new DocumentEventContext(session, this.session.getPrincipal(),
-                        this.document);
-                service.addContributor(this.document, ctx.newEvent(StringUtils.EMPTY));
-            }
-
-        }
-    }
 
     private Blob createBlob(JSONArray json) {
         return new StringBlob(json.toString(), "application/json");

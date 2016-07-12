@@ -83,7 +83,7 @@ public class AddComment {
             }
         }
 
-         return new StringBlob(commentDoc.getId());
+        return new StringBlob(commentDoc.getId());
     }
 
     public static DocumentModel createComment(String docType, CoreSession session, String commentContent, String commentTitle, String fileName, Blob blob)
@@ -101,6 +101,11 @@ public class AddComment {
         comment.setProperty(schemaPrefix, "creationDate", Calendar.getInstance());
         if (POST_TYPE.equals(commentType)) {
             comment.setProperty(schemaPrefix, "title", commentTitle);
+            // Author is set in comment:author property to be coherent with with CommentManagerImpl#updateAuthor.
+			// Furthermore, if not and if parent of Post created is Post,
+			// this parent is get in system session and we don't have good author informations.
+			// (cf CommentManagerImpl#createComment(DocumentModel docModel, DocumentModel parent, DocumentModel child)
+            comment.setProperty(FetchCommentsOfDocument.COMMENT_SCHEMA, "author", user.getName());
             if (StringUtils.isNotEmpty(fileName)) {
                 comment.setProperty(FetchCommentsOfDocument.POST_SCHEMA, "filename", fileName);
                 comment.setProperty(FetchCommentsOfDocument.POST_SCHEMA, "fileContent", blob);
