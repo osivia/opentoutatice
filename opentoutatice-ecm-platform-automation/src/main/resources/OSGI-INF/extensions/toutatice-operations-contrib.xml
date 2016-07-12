@@ -45,6 +45,8 @@
         <operation class="fr.toutatice.ecm.platform.automation.OrderDocument" />
         <operation class="fr.toutatice.ecm.platform.automation.EraseModifications" />
 
+		<operation class="fr.toutatice.ecm.platform.automation.security.GetDocumentACLs" />
+
 		<operation
 			class="fr.toutatice.ecm.platform.infos.FetchExtendedDocumentInfos" />
 		<operation
