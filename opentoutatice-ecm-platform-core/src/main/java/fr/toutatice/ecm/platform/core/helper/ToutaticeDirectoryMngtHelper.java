@@ -14,7 +14,8 @@
  *
  * Contributors:
  *   mberhaut1
- *    
+ *   kle-helley
+ *
  */
 package fr.toutatice.ecm.platform.core.helper;
 
@@ -26,7 +27,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,13 +37,12 @@ import org.nuxeo.ecm.directory.DirectoryException;
 import org.nuxeo.ecm.directory.Session;
 import org.nuxeo.ecm.directory.api.DirectoryService;
 import org.nuxeo.runtime.api.Framework;
-
 import fr.toutatice.ecm.platform.core.constants.ToutaticeUtilsConst;
 import fr.toutatice.ecm.platform.core.utils.exception.ToutaticeException;
 
 public class ToutaticeDirectoryMngtHelper {
 	private static final Log log = LogFactory.getLog(ToutaticeDirectoryMngtHelper.class);
-	
+
 	private static ToutaticeDirectoryMngtHelper instance;
 	private DirectoryService service;
 
@@ -51,25 +50,28 @@ public class ToutaticeDirectoryMngtHelper {
 		// singleton
 	}
 
-    public static ToutaticeDirectoryMngtHelper instance() throws ToutaticeException {
-        if (null == instance) {
-            instance = new ToutaticeDirectoryMngtHelper();
-        }
-        return instance;
-    }
+	public static ToutaticeDirectoryMngtHelper instance() throws ToutaticeException {
+		if (null == instance) {
+			instance = new ToutaticeDirectoryMngtHelper();
+		}
+		return instance;
+	}
 
 	/**
 	 * Return the label of a directory entry
-	 * 
-	 * @param directory the directory name that contains the entry
-	 * @param entryKey the key of the entry
+	 *
+	 * @param directory
+	 *            the directory name that contains the entry
+	 * @param entryKey
+	 *            the key of the entry
 	 * @return the entry label if found inside the directory. Otherwise will return an empty string
-	 * @throws ToutaticeException if any error occurs while requesting the directory service
+	 * @throws ToutaticeException
+	 *             if any error occurs while requesting the directory service
 	 */
-	public String getDirectoryEntryLabel(String directory, String entryKey) {
+	public String getDirectoryEntryLabel(final String directory, final String entryKey) {
 		String entryLabel = "";
 		Session directorySession = null;
-		
+
 		if (StringUtils.isNotBlank(directory) && StringUtils.isNotBlank(entryKey)) {
 			try {
 				directorySession = getService().open(directory);
@@ -95,11 +97,11 @@ public class ToutaticeDirectoryMngtHelper {
 
 		return entryLabel;
 	}
-	
-	public DocumentModelList getEntries(String directory) throws ToutaticeException {
+
+	public DocumentModelList getEntries(final String directory) throws ToutaticeException {
 		DocumentModelList entries = null;
 		Session directorySession = null;
-		
+
 		try {
 			directorySession = getService().open(directory);
 			if (null != directorySession) {
@@ -119,45 +121,51 @@ public class ToutaticeDirectoryMngtHelper {
 				}
 			}
 		}
-		
+
 		return entries;
 	}
 
 	/**
 	 * Return the label of a directory entry. The label is translated according to the locale passed-in parameter if not null.
-	 * 
-	 * @param directory the directory name that contains the entry
-	 * @param entryKey the key of the entry
-	 * @param the locale to apply to get the translated label
+	 *
+	 * @param directory
+	 *            the directory name that contains the entry
+	 * @param entryKey
+	 *            the key of the entry
+	 * @param the
+	 *            locale to apply to get the translated label
 	 * @return the localized entry label if found inside the directory. Otherwise will return an empty string
 	 */
-	public String getDirectoryEntryLocalizedLabel(String directory, String entryKey, Locale locale) {
+	public String getDirectoryEntryLocalizedLabel(final String directory, final String entryKey, final Locale locale) {
 		String label = getDirectoryEntryLabel(directory, entryKey);
 		return translate(label, locale);
 	}
 
 	/**
 	 * Return all the labels associated to the keys & directories passed-in parameter
-	 * 
-	 * @param directories the list of directories associated to the entry keys
-	 * @param rawKeys the raw keys (String type) with the usual separator character
-	 * @param locale the local for translation
+	 *
+	 * @param directories
+	 *            the list of directories associated to the entry keys
+	 * @param rawKeys
+	 *            the raw keys (String type) with the usual separator character
+	 * @param locale
+	 *            the local for translation
 	 * @return The string representation of all labels concatenated (separated by the colon character).
 	 */
-	public String getDirectoryEntriesLocalizedLabel(String[] directories, String rawKeys, Locale locale) {
+	public String getDirectoryEntriesLocalizedLabel(final String[] directories, final String rawKeys, final Locale locale) {
 		String label = "";
-		
+
 		List<String> labelsList = getDirectoryEntriesLocalizedLabelList(directories, rawKeys, locale);
 		for (String item : labelsList) {
 			label += item + ",";
 		}
-		
+
 		return label.replaceAll(",$", "");
 	}
-	
-	public List<String> getDirectoryEntriesLocalizedLabelList(String[] directories, String rawKeys, Locale locale) {
+
+	public List<String> getDirectoryEntriesLocalizedLabelList(final String[] directories, final String rawKeys, final Locale locale) {
 		List<String> list = new ArrayList<String>();
-		
+
 		String[] keysList = rawKeys.split(ToutaticeUtilsConst.CST_DEFAULT_DIRECTORIES_SEPARATE_CHARACTER);
 		if (keysList.length > directories.length) {
 			log.warn("The list of directories ('" + directories + "') cannot be smaller than the keys list ('" + keysList + "')");
@@ -171,83 +179,88 @@ public class ToutaticeDirectoryMngtHelper {
 				list.add(keyLabel);
 			}
 		}
-				
+
 		return list;
 	}
 
-    /**
-     * Return elements from a directory (might be LDAP type). Items are generic (document models).
-     *  
-     * @param directoryName the directory to search into
-     * @param fieldName the element field to use as filter
-     * @param pattern the pattern that is used to check the field value applies
-     * @return the list of directory item
-     * @throws ToutaticeException if any processing exception occurs
-     */
-    public DocumentModelList getItems(String directoryName, String fieldName, String pattern) throws ToutaticeException {
+	/**
+	 * Return elements from a directory (might be LDAP type). Items are generic (document models).
+	 *
+	 * @param directoryName
+	 *            the directory to search into
+	 * @param fieldName
+	 *            the element field to use as filter
+	 * @param pattern
+	 *            the pattern that is used to check the field value applies
+	 * @return the list of directory item
+	 * @throws ToutaticeException
+	 *             if any processing exception occurs
+	 */
+	public DocumentModelList getItems(final String directoryName, final String fieldName, final String pattern) throws ToutaticeException {
 		Map<String, Serializable> filter = new HashMap<String, Serializable>();
 		filter.put(fieldName, pattern);
 		Set<String> fulltext = new HashSet<String>();
 		fulltext.add(fieldName);
 		return getItems(directoryName, filter, fulltext, null);
-    }
-    
-    public DocumentModelList getItems(String directoryName, Map<String, Serializable> filter, Set<String> fulltext, Map<String, String> orderBy) throws ToutaticeException {
-    	DocumentModelList items = null;
-    	Session session = null;
+	}
 
-    	try {
-    		session = getService().open(directoryName);
-    	} catch (DirectoryException e) {
-    		throw new ToutaticeException("could not open session on directory '" + directoryName + "', error: " + e.getMessage());
-    	}
+	public DocumentModelList getItems(final String directoryName, final Map<String, Serializable> filter, final Set<String> fulltext, final Map<String, String> orderBy)
+			throws ToutaticeException {
+		DocumentModelList items = null;
+		Session session = null;
 
-    	if (null != session) {
-    		try {
-    			items = session.query(filter, fulltext, orderBy);
-    		} catch (Exception e) {
-    			throw new ToutaticeException("could not query on directory '" + directoryName + "', error: " + e.getMessage());
-    		} finally {
-    			try {
-    				if (null != session) {
-    					session.close();
-    				}
-    			} catch (DirectoryException ce) {
-    				log.error("Could not close directory session", ce);
-    			}
-    		}
-    	} else {
-    		throw new ToutaticeException("could not open session on directory: " + directoryName);
-    	}
-    	
-    	return items;
-    }
+		try {
+			session = getService().open(directoryName);
+		} catch (DirectoryException e) {
+			throw new ToutaticeException("could not open session on directory '" + directoryName + "', error: " + e.getMessage());
+		}
 
-	private static String translate(String label, Locale locale) {
+		if (null != session) {
+			try {
+				items = session.query(filter, fulltext, orderBy);
+			} catch (Exception e) {
+				throw new ToutaticeException("could not query on directory '" + directoryName + "', error: " + e.getMessage());
+			} finally {
+				try {
+					if (null != session) {
+						session.close();
+					}
+				} catch (DirectoryException ce) {
+					log.error("Could not close directory session", ce);
+				}
+			}
+		} else {
+			throw new ToutaticeException("could not open session on directory: " + directoryName);
+		}
+
+		return items;
+	}
+
+	private static String translate(final String label, final Locale locale) {
 		String localizedLabel = label;
 		if (null != locale) {
-			label = I18NUtils.getMessageString(ToutaticeUtilsConst.CST_DEFAULT_BUNDLE_NAME, label, null, locale);
+			localizedLabel = I18NUtils.getMessageString(ToutaticeUtilsConst.CST_DEFAULT_BUNDLE_NAME, label, null, locale);
 		}
-        return localizedLabel;
-		
+		return localizedLabel;
 	}
-	
+
 	/**
 	 * Initialize the service attribute
-	 * 
-	 * @throws ToutaticeException if failed to obtain an instance of the directory service
+	 *
+	 * @throws ToutaticeException
+	 *             if failed to obtain an instance of the directory service
 	 */
 	private DirectoryService getService() throws ToutaticeException {
 		try {
-			if (null == this.service) {
-				this.service = (DirectoryService) Framework.getService(DirectoryService.class);
+			if (null == service) {
+				service = Framework.getService(DirectoryService.class);
 			}
 		} catch (Exception e) {
 			log.error("Failed to get the directory service, exception message: " + e.getMessage());
 			throw new ToutaticeException(e);
 		}
-		
-		return this.service;
+
+		return service;
 	}
 
 }
