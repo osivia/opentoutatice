@@ -215,7 +215,6 @@ tinymce.PluginManager.add('ottc_image', function(editor) {
 		win = editor.windowManager.open({
 			title: 'Propriétés de l\'image',
 			data: data,
-			width: 300,
 			body: generalFormItems,
 			onSubmit: onSubmitForm
 		});
