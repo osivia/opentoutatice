@@ -6,7 +6,13 @@ body {
 
 /* Global table (nx theme) */
 .themeSectionFrame.nxMainContainer {
-    width: 100%;
+    //width: 100%;
+    width: auto;
+}
+
+.first-form-group {
+    .form-group;
+    padding-top: 15px;
 }
 
 .ttc-form-control {
@@ -222,6 +228,11 @@ body {
             }
         }
 	
+}
+
+/* For label clientWidth > 0 in dialog boxes of tinyMCE. */
+.mce-label {
+    position: relative !important;
 }
 
 /* Required fields */

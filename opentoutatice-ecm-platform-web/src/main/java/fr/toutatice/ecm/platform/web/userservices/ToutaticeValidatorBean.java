@@ -70,7 +70,7 @@ public class ToutaticeValidatorBean implements Serializable {
 
     private static final String DOMAIN_ID_UNICITY_QUERY = "select * from Domain where ecm:uuid <> '%s' and ttc:domainID = '%s' and ecm:currentLifeCycleState <> 'deleted'";
 
-    private static final String WEB_ID_UNICITY_QUERY = "select * from Document Where ttc:webid = '%s'"
+    private static final String WEB_ID_UNICITY_QUERY = "select * from Document where ttc:webid = '%s'"
             + " AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
     @In(create = true, required = true)

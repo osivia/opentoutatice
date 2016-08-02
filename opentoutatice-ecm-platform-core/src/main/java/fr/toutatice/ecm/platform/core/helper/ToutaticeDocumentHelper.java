@@ -1025,7 +1025,7 @@ public class ToutaticeDocumentHelper {
 	 * @param ace
 	 * @throws ClientException
 	 */
-	public static void setACE(CoreSession session, DocumentRef ref,ACE ace) throws ClientException {
+	public static void setACE(CoreSession session, DocumentRef ref, ACE ace) throws ClientException {
 		ACPImpl acp = new ACPImpl();
 		ACLImpl acl = new ACLImpl(ACL.LOCAL_ACL);
 		acp.addACL(acl);
