@@ -1,0 +1,66 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:nxu="http://nuxeo.org/nxweb/util"
+    xmlns:nxl="http://nuxeo.org/nxforms/layout"
+    xmlns:nxh="http://nuxeo.org/nxweb/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a4j="http://richfaces.org/a4j">
+
+
+    <f:subview
+        rendered="#{documentActions.currentDocument.hasFacet('TTCAttachableImages')}">
+
+       <a4j:region id="imgs_list_region" renderRegionOnly="true">
+            <a4j:outputPanel id="imgs_list_region_panel" ajaxRendered="true">
+
+        <h:form enctype="multipart/form-data" id="uploadForm"
+            class="form form-horizontal" disableDoubleClickShield="true">
+
+                    <div class="alert alert-info">
+                        <i class="glyphicons halflings info-sign"></i> <span
+                            class="text-info">#{messages['toutatice.label.attached.images.select']}</span>
+
+                    </div>
+
+                    <div id="img_style_value_checkbox" class="checkbox">
+                        <label> <input id="img_style_value" checked="checked"
+                            type="checkbox" value="enlargeable" />#{messages['toutatice.label.attached.image.style.enlargeable']}
+                        </label>
+                    </div>
+                    
+                    <nxl:widget name="attachedImages" mode="edit" value="#{documentActions.currentDocument}" />
+
+        </h:form>
+
+            </a4j:outputPanel>
+        </a4j:region>
+
+    </f:subview>
+
+    <f:subview
+        rendered="#{!documentActions.currentDocument.hasFacet('TTCAttachableImages')}">
+        <div class="alert alert-warning">
+            <i class="glyphicons halflings warning-sign"></i> <span
+                class="text-warning">#{messages['toutatice.label.imageUpload.noImages']}</span>
+        </div>
+
+    </f:subview>
+
+    <script type="text/javascript">
+        // TODO: to externalize
+        jQuery('div.tab-content').on('dragover', function() {
+            jQuery('div.tab-content input').addClass('asDropZone');
+        });
+
+        jQuery('div.tab-content').on('dragleave', function() {
+            jQuery('div.tab-content input').removeClass('asDropZone');
+        });
+
+        jQuery('div.tab-content').on('drop', function() {
+            jQuery('div.tab-content input').removeClass('asDropZone');
+        });
+    </script>
+
+</f:subview>
