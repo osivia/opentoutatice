@@ -124,6 +124,64 @@ public class ToutaticeDocumentHelper {
 	}
 
 	/**
+     * Save a document in an silent unrestricted or not way:
+     * EventService and VersioningService are bypassed.
+     */
+    public static void saveDocumentSilently(CoreSession session, DocumentModel document, boolean unrestricted) {
+        SilentSave save = new SilentSave(session, document);
+        save.silentRun(unrestricted, ToutaticeGlobalConst.EVENT_N_VERSIONING_FILTERD_SERVICE);
+    }
+    
+    /**
+     * Save a document bypassing given services.
+     * 
+     * @param session
+     * @param document
+     * @param services
+     * @param unrestricted
+     */
+    public static void saveDocumentSilently(CoreSession session, DocumentModel document, List<Class<?>> services, boolean unrestricted) {
+        SilentSave save = new SilentSave(session, document);
+        save.silentRun(unrestricted, services);
+    }
+    
+    /**
+     * Save document with no versioning.
+     */
+    public static void saveDocumentWithNoVersioning(CoreSession session, DocumentModel document, boolean unrestricted){
+        SilentSave save = new SilentSave(session, document);
+        save.silentRun(unrestricted, ToutaticeGlobalConst.VERSIONING_FILTERD_SERVICE);
+    }
+
+    /**
+     * Save a document in an silent way.
+     */
+    public static class SilentSave extends ToutaticeSilentProcessRunnerHelper {
+
+        private DocumentModel document;
+
+        protected SilentSave(CoreSession session, DocumentModel document) {
+            super(session);
+            this.document = document;
+        }
+
+        @Override
+        public void run() throws ClientException {
+            this.session.saveDocument(this.document);
+        }
+
+    }
+    
+    /**
+     * 
+     * @param document
+     * @return true if document is an empty document model (creation).
+     */
+    public static boolean isEmptyDocumentModel(DocumentModel document){
+        return document.getId() == null;
+    }
+
+    /**
 	 * Retourne la dernière version valide du document passé en paramètre.
 	 * 
 	 * @param document
