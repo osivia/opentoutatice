@@ -32,7 +32,7 @@ public class SetDocumentTags {
 	@Param(name = "labels", required = false, description = "list of tag labels, if empty removes all current tags")
 	protected StringList labels;
 
-	@Param(name = "username", required = true)
+	@Param(name = "username", required = false, description = "username of the owner of the tags, if null the tags are global")
 	protected String username;
 
 	@OperationMethod
