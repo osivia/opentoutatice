@@ -56,4 +56,8 @@ targetNamespace="http://www.nuxeo.org/ecm/project/schemas/ACRENNES2/toutatice-sp
 		</xs:sequence>
 	</xs:complexType>	
   <xs:element name="catSpaceKey" type="xs:string"/>
+  
+  <!-- Is space full visible from everybody, description only or private (on request) -->
+  <xs:element name="visibility" type="xs:string" />
+  
 </xs:schema>
