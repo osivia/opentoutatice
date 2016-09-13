@@ -65,8 +65,7 @@ public class WebIdResolver {
             if (segments.length >= 2) {
                 domainIdSegment = segments[0];
                 webIdSegment = segments[1];
-            }
-            if (segments.length == 1) {
+            }else if (segments.length == 1) {
                 webIdSegment = webid;
             } else {
                 throw new NoSuchDocumentException(webid);
