@@ -135,6 +135,7 @@ public class GetPublishedDocumentsInfos {
                             
                             documentInfos.element("url", getDocumentURL(proxy));
                             documentInfos.element("sectionTitle", parentDocument.getTitle());
+                            documentInfos.element("versionLabel", proxy.getVersionLabel());
 
                             informations.add(documentInfos);
 
