@@ -64,7 +64,7 @@ public class FetchCommentsOfDocument {
 
     /** Total number of root comments. */
     private int nbRootsComments;
-    /** Toatal number of comments (children of roots). */
+    /** Total number of comments (children of roots). */
     private int nbChildrenComments;
 
     @Context

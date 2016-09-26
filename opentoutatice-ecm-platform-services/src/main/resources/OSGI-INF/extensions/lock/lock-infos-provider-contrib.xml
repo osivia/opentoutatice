@@ -11,4 +11,5 @@
 			class="fr.toutatice.ecm.platform.service.lock.DocumentLockInfosProviderImpl" />
 
 	</extension>
+	
 </component>

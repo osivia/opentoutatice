@@ -16,7 +16,6 @@
 			</filters>
 		</handler>
 
-		<!-- WebURL -->
 		<handler chainId="webIdUnicity">
 		    <event>beforeDocumentModification</event> <!-- case of save operation -->
 			<event>documentCreatedByCopy</event>
