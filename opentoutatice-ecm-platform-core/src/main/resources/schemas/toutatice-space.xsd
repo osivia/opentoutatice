@@ -61,5 +61,20 @@
 	
    <!-- Is space full visible from everybody, description only or private (on request) -->
    <xs:element name="visibility" type="xs:string" />
+   
+   <!-- Space's members -->
+   <xs:complexType name="lstSpaceMembersType">
+        <xs:sequence>
+            <xs:element name="item" type="nxs:spaceMembersType" minOccurs="0"
+                maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+   <xs:complexType name="spaceMembersType">
+        <xs:sequence>
+            <xs:element name="login" type="xs:string" />
+            <xs:element name="joinedDate" type="xs:date" />
+        </xs:sequence>
+    </xs:complexType>
+   <xs:element name="spaceMembers" type="nxs:lstSpaceMembersType" />
 	
 </xs:schema>
