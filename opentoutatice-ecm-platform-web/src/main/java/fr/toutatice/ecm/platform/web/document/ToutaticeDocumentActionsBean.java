@@ -205,7 +205,15 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public String saveDocument(String viewId) throws ClientException {
         saveDocument();
-        pageBean.setNotificationKey(PortalConstants.Notifications.SUCCESS_MESSAGE_CREATE.name());
+        
+        String msgSuccessKey;
+        if(isInPublishSpace(getCurrentDocument())){
+            msgSuccessKey = PortalConstants.Notifications.SUCCESS_MESSAGE_CREATE.name();;
+        } else {
+            msgSuccessKey = PortalConstants.Notifications.SUCCESS_MESSAGE_CREATE_IN_WS.name(); 
+        }
+                
+        pageBean.setNotificationKey(msgSuccessKey);
         live = true;
         return viewId;
     }

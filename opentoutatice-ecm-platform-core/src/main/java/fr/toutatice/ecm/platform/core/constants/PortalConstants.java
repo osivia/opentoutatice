@@ -30,6 +30,7 @@ public final class PortalConstants {
     public enum Notifications {
     	SUCCESS_MESSAGE_MODIFY,
     	SUCCESS_MESSAGE_CREATE,
+    	SUCCESS_MESSAGE_CREATE_IN_WS,
     	SUCCESS_MESSAGE_PUBLISH,
     	SUCCESS_MESSAGE_ASK_PUBLISH
     }
