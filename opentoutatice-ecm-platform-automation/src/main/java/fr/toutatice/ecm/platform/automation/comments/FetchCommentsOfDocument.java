@@ -92,25 +92,22 @@ public class FetchCommentsOfDocument {
              * Construction de la liste des fils de commentaires.
              */
 
-            JsonConfig jsonConfig = new JsonConfig();
-            jsonConfig.registerJsonValueProcessor(GregorianCalendar.class, new GregorianCalendarJsonValueProcessor());  
-
             for (DocumentModel commentRoot : commentsRoots) {
                 JSONObject jsonCommentRoot = new JSONObject();
                 jsonCommentRoot.element("id", commentRoot.getId());
                 jsonCommentRoot.element("path", commentRoot.getPathAsString());
                 String author = (String) commentRoot.getProperty(schemaPrefix, "author");
                 jsonCommentRoot.element("author", author);
-                jsonCommentRoot.element("creationDate", commentRoot.getProperty(schemaPrefix, "creationDate"), jsonConfig);
+                jsonCommentRoot.element("creationDate", commentRoot.getProperty(schemaPrefix, "creationDate"));
                 jsonCommentRoot.element("content", commentRoot.getProperty(schemaPrefix, "text"));
-                jsonCommentRoot.element("modifiedDate", commentRoot.getProperty("dublincore", "modified"), jsonConfig);
+                jsonCommentRoot.element("modifiedDate", commentRoot.getProperty("dublincore", "modified"));
                 boolean canDelete = canDeleteComment(author, document);
                 jsonCommentRoot.element("canDelete", canDelete);
                 if (AddComment.THREAD_TYPE.equals(document.getType())) {
                     jsonCommentRoot.element("title", commentRoot.getProperty(schemaPrefix, "title"));
                     jsonCommentRoot.element("filename", commentRoot.getProperty(schemaPrefix, "filename"));
                 }
-                jsonCommentRoot.element("children", getCommentsThread(commentRoot, commentableDoc, new JSONArray(), jsonConfig));
+                jsonCommentRoot.element("children", getCommentsThread(commentRoot, commentableDoc, new JSONArray()));
                 commentsTree.add(jsonCommentRoot);
                 if (StringUtils.isBlank(author)) {
                     log.warn("Missing comment author on comment ID '" + commentRoot.getId() + "' (content: '" + commentRoot.getProperty(schemaPrefix, "text")
@@ -125,7 +122,7 @@ public class FetchCommentsOfDocument {
 
     }
 
-    private JSONArray getCommentsThread(DocumentModel comment, CommentableDocument commentableDocService, JSONArray threads, JsonConfig jsonConfig) throws ClientException {
+    private JSONArray getCommentsThread(DocumentModel comment, CommentableDocument commentableDocService, JSONArray threads) throws ClientException {
         String schemaPrefix = getSchema(document.getType());
         List<DocumentModel> childrenComments = commentableDocService.getComments(comment);
         if (childrenComments != null) {
@@ -140,16 +137,16 @@ public class FetchCommentsOfDocument {
                 jsonChildComment.element("path", childComment.getPathAsString());
                 String author = (String) childComment.getProperty(schemaPrefix, "author");
                 jsonChildComment.element("author", author);
-                jsonChildComment.element("creationDate", childComment.getProperty(schemaPrefix, "creationDate"), jsonConfig);
+                jsonChildComment.element("creationDate", childComment.getProperty(schemaPrefix, "creationDate"));
                 jsonChildComment.element("content", childComment.getProperty(schemaPrefix, "text"));
-                jsonChildComment.element("modifiedDate", childComment.getProperty("dublincore", "modified"), jsonConfig);
+                jsonChildComment.element("modifiedDate", childComment.getProperty("dublincore", "modified"));
                 boolean canDelete = canDeleteComment(author, document);
                 jsonChildComment.element("canDelete", canDelete);
                 if (AddComment.THREAD_TYPE.equals(document.getType())) {
                     jsonChildComment.element("title", childComment.getProperty(schemaPrefix, "title"));
                     jsonChildComment.element("filename", childComment.getProperty(schemaPrefix, "filename"));
                 }
-                jsonChildComment.element("children", getCommentsThread(childComment, commentableDocService, new JSONArray(), jsonConfig));
+                jsonChildComment.element("children", getCommentsThread(childComment, commentableDocService, new JSONArray()));
                 threads.add(jsonChildComment);
 
                 if (StringUtils.isBlank(author)) {
@@ -218,25 +215,6 @@ public class FetchCommentsOfDocument {
             schemaPrefix = FetchCommentsOfDocument.POST_SCHEMA;
         }
         return schemaPrefix;
-    }
-
-    private class GregorianCalendarJsonValueProcessor extends JsDateJsonValueProcessor {
-
-        public GregorianCalendarJsonValueProcessor() {
-            super();
-        }
-        
-        @Override
-        public Object processObjectValue(String s, Object o, JsonConfig jsonConfig) {
-            Object po = o;
-            
-            if (o instanceof GregorianCalendar) {
-                po = ((GregorianCalendar) o).getTime();
-            }
-            
-            return super.processObjectValue(s, po, jsonConfig);
-        }
-
     }
 
 }
