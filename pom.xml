@@ -5,7 +5,7 @@
 
     <groupId>opentoutatice-ecm.platform</groupId>
     <artifactId>opentoutatice-ecm-platform-parent</artifactId>
-    <version>3.0.10-SNAPSHOT</version>
+    <version>3.0.10-RC04</version>
     <packaging>pom</packaging>
     <name>open toutatice plate-forme</name>
 
@@ -75,7 +75,7 @@
     </build>
 
     <scm>
-        <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/branches/3.0.3-MAINTENANCE</developerConnection>
+        <developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/3.0.10-RC04</developerConnection>
     </scm>
 
     <distributionManagement>
