@@ -52,169 +52,197 @@ import org.nuxeo.ecm.platform.dublincore.service.DublinCoreStorageService;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 @Operation(id = FetchCommentsOfDocument.ID, category = Constants.CAT_FETCH, label = "FetchCommentsOfDocument",
-        description = "Fetches comments of a (commentable) document")
+description = "Fetches comments of a (commentable) document")
 public class FetchCommentsOfDocument {
 
-    public static final String ID = "Fetch.DocumentComments";
+	public static final String ID = "Fetch.DocumentComments";
 
-    private static final Log log = LogFactory.getLog(FetchCommentsOfDocument.class);
+	private static final Log log = LogFactory.getLog(FetchCommentsOfDocument.class);
 
-    public static final String COMMENT_SCHEMA = "comment";
-    public static final String POST_SCHEMA = "post";
+	public static final String COMMENT_SCHEMA = "comment";
+	public static final String POST_SCHEMA = "post";
 
-    /** Total number of root comments. */
-    private int nbRootsComments;
-    /** Total number of comments (children of roots). */
-    private int nbChildrenComments;
+	/** Total number of root comments. */
+	private int nbRootsComments;
+	/** Toatal number of comments (children of roots). */
+	private int nbChildrenComments;
 
-    @Context
-    CoreSession session;
+	@Context
+	CoreSession session;
 
-    @Param(name = "commentableDoc", required = true)
-    protected DocumentModel document;
+	@Param(name = "commentableDoc", required = true)
+	protected DocumentModel document;
 
-    @OperationMethod
-    public Object run() throws ClientException, IOException {
+	@OperationMethod
+	public Object run() throws ClientException, IOException {
 
-        JSONArray commentsTree = new JSONArray();
-        /*
-         * Récupération du service de commentaires.
-         */
-        CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
-        String schemaPrefix = "comment";
-        if (AddComment.THREAD_TYPE.equals(document.getType())) {
-            schemaPrefix = "post";
-        }
-        List<DocumentModel> commentsRoots = commentableDoc.getComments();
-        if (commentsRoots != null) {
-            nbRootsComments = commentsRoots.size();
-            /*
-             * Construction de la liste des fils de commentaires.
-             */
+		JSONArray commentsTree = new JSONArray();
+		/*
+		 * Récupération du service de commentaires.
+		 */
+		CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
+		String schemaPrefix = "comment";
+		if (AddComment.THREAD_TYPE.equals(document.getType())) {
+			schemaPrefix = "post";
+		}
+		List<DocumentModel> commentsRoots = commentableDoc.getComments();
+		if (commentsRoots != null) {
+			nbRootsComments = commentsRoots.size();
+			/*
+			 * Construction de la liste des fils de commentaires.
+			 */
+			
+			// Ticket Redmine #7378 - Logs d'infos "inquiétants" sur le fetch de commentaires
+			// (utilisation d'un élément de configuration JSON) 
+			JsonConfig jsonConfig = new JsonConfig();
+			jsonConfig.registerJsonValueProcessor(GregorianCalendar.class, new GregorianCalendarJsonValueProcessor());
 
-            for (DocumentModel commentRoot : commentsRoots) {
-                JSONObject jsonCommentRoot = new JSONObject();
-                jsonCommentRoot.element("id", commentRoot.getId());
-                jsonCommentRoot.element("path", commentRoot.getPathAsString());
-                String author = (String) commentRoot.getProperty(schemaPrefix, "author");
-                jsonCommentRoot.element("author", author);
-                jsonCommentRoot.element("creationDate", commentRoot.getProperty(schemaPrefix, "creationDate"));
-                jsonCommentRoot.element("content", commentRoot.getProperty(schemaPrefix, "text"));
-                jsonCommentRoot.element("modifiedDate", commentRoot.getProperty("dublincore", "modified"));
-                boolean canDelete = canDeleteComment(author, document);
-                jsonCommentRoot.element("canDelete", canDelete);
-                if (AddComment.THREAD_TYPE.equals(document.getType())) {
-                    jsonCommentRoot.element("title", commentRoot.getProperty(schemaPrefix, "title"));
-                    jsonCommentRoot.element("filename", commentRoot.getProperty(schemaPrefix, "filename"));
-                }
-                jsonCommentRoot.element("children", getCommentsThread(commentRoot, commentableDoc, new JSONArray()));
-                commentsTree.add(jsonCommentRoot);
-                if (StringUtils.isBlank(author)) {
-                    log.warn("Missing comment author on comment ID '" + commentRoot.getId() + "' (content: '" + commentRoot.getProperty(schemaPrefix, "text")
-                            + "')");
-                }
-            }
-        }
+			for (DocumentModel commentRoot : commentsRoots) {
+				JSONObject jsonCommentRoot = new JSONObject();
+				jsonCommentRoot.element("id", commentRoot.getId());
+				jsonCommentRoot.element("path", commentRoot.getPathAsString());
+				String author = (String) commentRoot.getProperty(schemaPrefix, "author");
+				jsonCommentRoot.element("author", author);
+				jsonCommentRoot.element("creationDate", commentRoot.getProperty(schemaPrefix, "creationDate"), jsonConfig);
+				jsonCommentRoot.element("content", commentRoot.getProperty(schemaPrefix, "text"));
+				jsonCommentRoot.element("modifiedDate", commentRoot.getProperty("dublincore", "modified"), jsonConfig);
+				boolean canDelete = canDeleteComment(author, document);
+				jsonCommentRoot.element("canDelete", canDelete);
+				if (AddComment.THREAD_TYPE.equals(document.getType())) {
+					jsonCommentRoot.element("title", commentRoot.getProperty(schemaPrefix, "title"));
+					jsonCommentRoot.element("filename", commentRoot.getProperty(schemaPrefix, "filename"));
+				}
+				jsonCommentRoot.element("children", getCommentsThread(commentRoot, commentableDoc, new JSONArray(), jsonConfig));
+				commentsTree.add(jsonCommentRoot);
+				if (StringUtils.isBlank(author)) {
+					log.warn("Missing comment author on comment ID '" + commentRoot.getId() + "' (content: '" + commentRoot.getProperty(schemaPrefix, "text")
+							+ "')");
+				}
+			}
+		}
 
-        updateDocument();
+		updateDocument();
 
-        return createBlob(commentsTree);
+		return createBlob(commentsTree);
 
-    }
+	}
 
-    private JSONArray getCommentsThread(DocumentModel comment, CommentableDocument commentableDocService, JSONArray threads) throws ClientException {
-        String schemaPrefix = getSchema(document.getType());
-        List<DocumentModel> childrenComments = commentableDocService.getComments(comment);
-        if (childrenComments != null) {
-            nbChildrenComments += childrenComments.size();
-        }
-        if (childrenComments == null || childrenComments.isEmpty()) {
-            return threads;
-        } else {
-            for (DocumentModel childComment : childrenComments) {
-                JSONObject jsonChildComment = new JSONObject();
-                jsonChildComment.element("id", childComment.getId());
-                jsonChildComment.element("path", childComment.getPathAsString());
-                String author = (String) childComment.getProperty(schemaPrefix, "author");
-                jsonChildComment.element("author", author);
-                jsonChildComment.element("creationDate", childComment.getProperty(schemaPrefix, "creationDate"));
-                jsonChildComment.element("content", childComment.getProperty(schemaPrefix, "text"));
-                jsonChildComment.element("modifiedDate", childComment.getProperty("dublincore", "modified"));
-                boolean canDelete = canDeleteComment(author, document);
-                jsonChildComment.element("canDelete", canDelete);
-                if (AddComment.THREAD_TYPE.equals(document.getType())) {
-                    jsonChildComment.element("title", childComment.getProperty(schemaPrefix, "title"));
-                    jsonChildComment.element("filename", childComment.getProperty(schemaPrefix, "filename"));
-                }
-                jsonChildComment.element("children", getCommentsThread(childComment, commentableDocService, new JSONArray()));
-                threads.add(jsonChildComment);
+	private JSONArray getCommentsThread(DocumentModel comment, CommentableDocument commentableDocService, JSONArray threads, JsonConfig jsonConfig) throws ClientException {
+		String schemaPrefix = getSchema(document.getType());
+		List<DocumentModel> childrenComments = commentableDocService.getComments(comment);
+		if (childrenComments != null) {
+			nbChildrenComments += childrenComments.size();
+		}
+		if (childrenComments == null || childrenComments.isEmpty()) {
+			return threads;
+		} else {
+			for (DocumentModel childComment : childrenComments) {
+				JSONObject jsonChildComment = new JSONObject();
+				jsonChildComment.element("id", childComment.getId());
+				jsonChildComment.element("path", childComment.getPathAsString());
+				String author = (String) childComment.getProperty(schemaPrefix, "author");
+				jsonChildComment.element("author", author);
+				jsonChildComment.element("creationDate", childComment.getProperty(schemaPrefix, "creationDate"), jsonConfig);
+				jsonChildComment.element("content", childComment.getProperty(schemaPrefix, "text"));
+				jsonChildComment.element("modifiedDate", childComment.getProperty("dublincore", "modified"), jsonConfig);
+				boolean canDelete = canDeleteComment(author, document);
+				jsonChildComment.element("canDelete", canDelete);
+				if (AddComment.THREAD_TYPE.equals(document.getType())) {
+					jsonChildComment.element("title", childComment.getProperty(schemaPrefix, "title"));
+					jsonChildComment.element("filename", childComment.getProperty(schemaPrefix, "filename"));
+				}
+				jsonChildComment.element("children", getCommentsThread(childComment, commentableDocService, new JSONArray(), jsonConfig));
+				threads.add(jsonChildComment);
 
-                if (StringUtils.isBlank(author)) {
-                    log.warn("Missing comment author on comment ID '" + childComment.getId() + "' (content: '" + childComment.getProperty(schemaPrefix, "text") + "')");
-                }
-            }
-            return threads;
-        }
-    }
+				if (StringUtils.isBlank(author)) {
+					log.warn("Missing comment author on comment ID '" + childComment.getId() + "' (content: '" + childComment.getProperty(schemaPrefix, "text")	+ "')");
+				}
+			}
+			return threads;
+		}
+	}
 
-    /**
-     * Update comments number on document if necessary.
-     */
-    // DCH: FIXME: temporary wainting better Forum model.
-    private void updateDocument() {
+	/**
+	 * Update comments number on document if necessary.
+	 */
+	// DCH: FIXME: temporary wainting better Forum model.
+	private void updateDocument() {
 
-        if (this.document.hasSchema("thread_toutatice")) {
+		if (this.document.hasSchema("thread_toutatice")) {
 
-            Long nbComments = (Long) this.document.getPropertyValue("ttcth:nbComments");
-            Long newNbComments = Long.valueOf(this.nbRootsComments + this.nbChildrenComments);
+			Long nbComments = (Long) this.document.getPropertyValue("ttcth:nbComments");
+			Long newNbComments = Long.valueOf(this.nbRootsComments + this.nbChildrenComments);
 
-            if (!nbComments.equals(newNbComments)) {
-                // Update of Thread to be correctly ordered
-                
-                this.document.setPropertyValue("ttcth:nbComments", newNbComments);
-                
-                DublinCoreStorageService service = NXDublinCore.getDublinCoreStorageService();
-                
-                Calendar modificationDate = Calendar.getInstance();
-                modificationDate.setTime(new Date());
-                
-                service.setModificationDate(this.document, modificationDate, null);
-                
-                // "Virtual" event to pass principal to method
-                DocumentEventContext ctx = new DocumentEventContext(session, this.session.getPrincipal(),
-                        this.document);
-                service.addContributor(this.document, ctx.newEvent(StringUtils.EMPTY));
-                
-                // Done in unrestricted way because a user can add post
-                // even if he has no write permission on Thread
-                ToutaticeDocumentHelper.saveDocumentSilently(this.session, this.document, true);
-            }
+			if (!nbComments.equals(newNbComments)) {
+				// Update of Thread to be correctly ordered
 
-        }
-    }
+				this.document.setPropertyValue("ttcth:nbComments", newNbComments);
+				// Done in unrestricted way because a user can add post
+				// even if he has no write permission on Thread
+				ToutaticeDocumentHelper.saveDocumentSilently(this.session, this.document, true);
 
-    private Blob createBlob(JSONArray json) {
-        return new StringBlob(json.toString(), "application/json");
-    }
+				DublinCoreStorageService service = NXDublinCore.getDublinCoreStorageService();
 
-    private boolean canDeleteComment(String author, DocumentModel document) {
-        boolean canDelete = false;
-        Principal user = session.getPrincipal();
-        if (user != null) {
-            boolean isUserAuthor = user.getName().equals(author);
-            boolean isUserAdmin = ((NuxeoPrincipal) user).isAdministrator();
-            boolean userHasAllRights = session.hasPermission(document.getRef(), SecurityConstants.EVERYTHING);
-            canDelete = isUserAuthor || isUserAdmin || userHasAllRights;
-        }
-        return canDelete;
-    }
+				Calendar modificationDate = Calendar.getInstance();
+				modificationDate.setTime(new Date());
 
-    protected static String getSchema(String documentType) {
-        String schemaPrefix = FetchCommentsOfDocument.COMMENT_SCHEMA;
-        if (AddComment.THREAD_TYPE.equals(documentType)) {
-            schemaPrefix = FetchCommentsOfDocument.POST_SCHEMA;
-        }
-        return schemaPrefix;
-    }
+				service.setModificationDate(this.document, modificationDate, null);
+
+				// "Virtual" event to pass principal to method
+				DocumentEventContext ctx = new DocumentEventContext(session, this.session.getPrincipal(),
+						this.document);
+				service.addContributor(this.document, ctx.newEvent(StringUtils.EMPTY));
+			}
+
+		}
+	}
+
+	private Blob createBlob(JSONArray json) {
+		return new StringBlob(json.toString(), "application/json");
+	}
+
+	private boolean canDeleteComment(String author, DocumentModel document) {
+		boolean canDelete = false;
+		Principal user = session.getPrincipal();
+		if (user != null) {
+			boolean isUserAuthor = user.getName().equals(author);
+			boolean isUserAdmin = ((NuxeoPrincipal) user).isAdministrator();
+			boolean userHasAllRights = session.hasPermission(document.getRef(), SecurityConstants.EVERYTHING);
+			canDelete = isUserAuthor || isUserAdmin || userHasAllRights;
+		}
+		return canDelete;
+	}
+
+	protected static String getSchema(String documentType) {
+		String schemaPrefix = FetchCommentsOfDocument.COMMENT_SCHEMA;
+		if (AddComment.THREAD_TYPE.equals(documentType)) {
+			schemaPrefix = FetchCommentsOfDocument.POST_SCHEMA;
+		}
+		return schemaPrefix;
+	}
+
+	private class GregorianCalendarJsonValueProcessor extends JsDateJsonValueProcessor {
+
+	    public GregorianCalendarJsonValueProcessor() {
+	    	super();
+	    }
+	    
+		@Override
+		public Object processObjectValue(String s, Object o, JsonConfig jsonConfig) {
+			Object po = o;
+			
+			if (o instanceof GregorianCalendar) {
+				po = ((GregorianCalendar) o).getTime();
+			}
+			
+			JSONObject processedValue = (JSONObject) super.processObjectValue(s, po, jsonConfig);
+			if(!processedValue.isNullObject() && processedValue.containsKey("hours")){
+			    processedValue.element("timeInMillis", ((GregorianCalendar) o).getTimeInMillis());
+			}
+			
+			return processedValue;
+		}
+
+	}
 
 }
