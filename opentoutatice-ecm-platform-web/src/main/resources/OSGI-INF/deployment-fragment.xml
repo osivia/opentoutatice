@@ -55,6 +55,11 @@
 			<from-outcome>validate_remote_publishing</from-outcome>
 			<to-view-id>/pv_workflows/validate_remote_publishing.xhtml</to-view-id>
 		</navigation-case>
+		
+		<navigation-case>
+            <from-outcome>refresh_principal</from-outcome>
+            <to-view-id>/refresh-principal.xhtml</to-view-id>
+        </navigation-case>
 
 	</extension>
 
