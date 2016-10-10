@@ -58,7 +58,6 @@
 
 		<view name="nuxeo5 includes" template-engine="jsf-facelets" merge="true">
 			<format-type>widget</format-type>
-			<template>incl/tinymce/js_includes.xhtml</template>
 			<resource>glyphicons.css</resource>
 			<resource>ottc.custom.tinymce.init.js</resource>
 			<resource>ottc.simple.tinymce.init.js</resource>

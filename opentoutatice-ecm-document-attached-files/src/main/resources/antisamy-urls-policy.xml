@@ -48,6 +48,7 @@
       value="([\p{L}\p{N}\\\.\#@\$%\+&amp;;\-_~,\?=/!]+|\#(\w)+)" />
     <regexp name="offsiteURL"
       value="(\s)*((ht|f)tp(s?)://|mailto:)[\p{L}\p{N}]+[\p{L}\p{N}\p{Zs}\.\#@\$%\+&amp;;:\-_~,\?=/!\(\)]*(\s)*" />
+    <!-- Definition of relatives URLs used for img -->  
     <regexp name="relativeOffsiteURL"
       value="([\p{L}\p{N}]+[\p{L}\p{N}\p{Zs}\.\#@\$%\+&amp;;:\-_~,\?=/!\(\)]*)(\s)*" />
 
@@ -216,6 +217,7 @@
       <regexp-list>
         <regexp name="onsiteURL" />
         <regexp name="offsiteURL" />
+        <regexp name="relativeOffsiteURL" />
       </regexp-list>
     </attribute>
 
@@ -814,8 +816,8 @@
     </tag>
 
 
-    <!-- Image & image related tags -->
-
+    <!-- Image & image related tags 
+         DCH: we auhorize relatives URLs -->
     <tag name="img" action="validate">
       <attribute name="src" onInvalid="removeTag">
         <regexp-list>
