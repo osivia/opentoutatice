@@ -236,13 +236,10 @@
                       window.opener.updateFunction(relativeUrl, title);
                   }
                   
-                  function getDocumentLink(form,linkNb){
-                      for (i = 0; i &lt; form.elements.selection.length; i++) {
-                          if(form.elements.selection[i].checked){
-                              return form.elements.selection[i].parentNode.parentNode.getElementsByTagName("a")[linkNb];
-                          }
+                  function getDocumentLink(button,linkNb){
+                      if(button){
+                    	  return button.parentNode.parentNode.getElementsByTagName("a")[linkNb];
                       }
-                      return null;
                   }
 
                   function updateCaller(form) {
@@ -252,12 +249,12 @@
                     var filetype = button.parentNode.parentNode.childNodes[3].childNodes[0].alt;
                     if(filetype == "File"){
                         if(form.directDownloadBox.checked){
-                            docLink = getDocumentLink(form,0);
+                        	docLink = getDocumentLink(button,0);
                         }else{
-                            docLink = getDocumentLink(form,1);
+                            docLink = getDocumentLink(button,1);
                         }
                     }else{
-                        docLink = getDocumentLink(form,0);
+                        docLink = getDocumentLink(button,0);
                     }
                     
                     if (docLink != null) {
