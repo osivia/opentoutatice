@@ -56,9 +56,9 @@
             <path>css/icons.css</path>
         </resource>
         
-         <resource name="jquery.ui.js">
+         <!-- <resource name="jquery.ui.js">
             <path>scripts/jquery-ui.js</path>
-        </resource>
+        </resource> -->
         <!-- <resource name="bootstrap.tooltip.js">
             <path>scripts/bootstrap/bootstrap-tooltip.js</path>
         </resource> -->
@@ -92,9 +92,9 @@
 			<path>scripts/icons.js</path>
 		</resource>
 		
-		<resource name="tooltip.focus.js">
+		<!-- <resource name="tooltip.focus.js">
             <path>scripts/tooltip-focus.js</path>
-        </resource>
+        </resource> -->
 
 	</extension>
 
@@ -108,7 +108,7 @@
 			<resource>toutatice-popup.min.css</resource>
 			<resource>custom-popup.min.css</resource>
 			<resource>icons.css</resource>
-			<resource>jquery.ui.js</resource>
+			<!-- <resource>jquery.ui.js</resource> -->
 			<!-- <resource>bootstrap.tooltip.js</resource> -->
 			<resource>bootstrap.datepicker.js</resource>
 			<resource>bootstrap.datepicker.fr.js</resource>
@@ -118,7 +118,7 @@
 			<resource>custom.tinymce.modals.js</resource>
 			<resource>forms.errors.manager.js</resource>
 			<resource>icons.js</resource>
-			<resource>tooltip.focus.js</resource>
+			<!-- <resource>tooltip.focus.js</resource> -->
 		</view>
 
 	</extension>
