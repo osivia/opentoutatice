@@ -60,7 +60,7 @@ public class SetWebID {
 
     private static final String NO_RECURSIVE_CHAIN = "notRecursive";
 
-    private static final String WEB_ID_UNICITY_QUERY = "select * from Document Where ttc:webid = \"%s\""
+    private static final String WEB_ID_UNICITY_QUERY = "select * from Document where ttc:webid = \"%s\""
             + " AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
     private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
@@ -191,6 +191,7 @@ public class SetWebID {
             if(StringUtils.isBlank(webId)){
                 String[] arrayPath = this.document.getPathAsString().split("/");
                 webId = arrayPath[arrayPath.length - 1];
+                // DCH - TO TEST: webId = this.document.getName();
     
                 // for docs whose ecm:name may be identical, nuxeo add a .timestamp, remove it
                 if (webId.contains(".")) {
@@ -240,12 +241,31 @@ public class SetWebID {
          * Check repo unicity of given webid.
          * 
          * @param webid
-         * @return
+         * @return true if not unique
          */
         protected boolean isNotUnique(String webId){
             String escapedWebId = StringEscapeUtils.escapeJava(webId);
             DocumentModelList query = this.session.query(String.format(WEB_ID_UNICITY_QUERY, escapedWebId, this.document.getId()));
-            return query.size() != 0;
+            
+            if(query.isEmpty()){
+                return existInTechnicalWebId("draft_", escapedWebId);
+            } else {
+                return query.size() > 0;
+            }
+        }
+        
+        /**
+         * Checks if webid exists in technical webids
+         * (ex: draft_<webId>).
+         * 
+         * @param string
+         * @param escapedWebId
+         * @return true if exists
+         */
+        // FIXME: to move in Checkin addon (make an inherited operation)
+        protected boolean existInTechnicalWebId(String prefix, String webId) {
+            DocumentModelList query = this.session.query(String.format(WEB_ID_UNICITY_QUERY, prefix.concat(webId), this.document.getId()));
+            return query.size() > 0;
         }
         
     }
