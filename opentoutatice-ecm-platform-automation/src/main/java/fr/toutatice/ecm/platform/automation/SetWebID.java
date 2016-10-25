@@ -61,10 +61,10 @@ public class SetWebID {
     private static final String NO_RECURSIVE_CHAIN = "notRecursive";
 
     private static final String WEB_ID_UNICITY_QUERY = "select * from Document where ttc:webid = \"%s\""
-            + " AND ecm:uuid <> '%s' AND ecm:mixinTypes <> 'OttcDraft' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+            + " AND ecm:uuid <> '%s' AND ecm:mixinType <> 'OttcDraft' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
     
     private static final String DRAFTS_WEB_ID_UNICITY_QUERY = "select * from Document where ttc:webid = \"%s\""
-            + " AND ecm:uuid <> '%s' AND ecm:mixinTypes = 'OttcDraft' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+            + " AND ecm:uuid <> '%s' AND ecm:mixinType = 'OttcDraft' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
     private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
 
