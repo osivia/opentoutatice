@@ -61,7 +61,10 @@ public class SetWebID {
     private static final String NO_RECURSIVE_CHAIN = "notRecursive";
 
     private static final String WEB_ID_UNICITY_QUERY = "select * from Document where ttc:webid = \"%s\""
-            + " AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+            + " AND ecm:uuid <> '%s' AND ecm:mixinTypes <> 'OttcDraft' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+    
+    private static final String DRAFTS_WEB_ID_UNICITY_QUERY = "select * from Document where ttc:webid = \"%s\""
+            + " AND ecm:uuid <> '%s' AND ecm:mixinTypes = 'OttcDraft' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
     private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
 
@@ -142,8 +145,9 @@ public class SetWebID {
                 
             }
             
+            String originalWebid = webId;
             while(isNotUnique(webId)){
-                webId = generateWebId(webId, suffixForUnicity);
+                webId = generateWebId(originalWebid, suffixForUnicity);
                 suffixForUnicity += 1;
                 hasToBeUpdated = true;
             }
@@ -248,23 +252,23 @@ public class SetWebID {
             DocumentModelList query = this.session.query(String.format(WEB_ID_UNICITY_QUERY, escapedWebId, this.document.getId()));
             
             if(query.isEmpty()){
-                return existInTechnicalWebId("draft_", escapedWebId);
+                return existInDraftsWebId(escapedWebId);
             } else {
                 return query.size() > 0;
             }
         }
         
         /**
-         * Checks if webid exists in technical webids
-         * (ex: draft_<webId>).
+         * Checks if webid exists in draft webids
+         * (draft_<webId>).
          * 
          * @param string
          * @param escapedWebId
          * @return true if exists
          */
         // FIXME: to move in Checkin addon (make an inherited operation)
-        protected boolean existInTechnicalWebId(String prefix, String webId) {
-            DocumentModelList query = this.session.query(String.format(WEB_ID_UNICITY_QUERY, prefix.concat(webId), this.document.getId()));
+        protected boolean existInDraftsWebId(String webId) {
+            DocumentModelList query = this.session.query(String.format(DRAFTS_WEB_ID_UNICITY_QUERY, "draft_".concat(webId), this.document.getId()));
             return query.size() > 0;
         }
         
