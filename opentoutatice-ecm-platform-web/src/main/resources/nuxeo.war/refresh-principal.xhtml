@@ -1,29 +1,11 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:nxthemes="http://nuxeo.org/nxthemes"
-	xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:nxu="http://nuxeo.org/nxweb/util"
-	xmlns:nxd="http://nuxeo.org/nxweb/document"
-	xmlns:oh="http://osivia.org/html">
+<html xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-<meta charset="utf-8"></meta>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
-<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-
-<link href="#{baseURL}css/toutatice-popup.min.css" type="text/css"
-	rel="stylesheet" />
-
-<script type="text/javascript" src="#{baseURL}/scripts/postmessage.js"></script>
-</head>
+<head />
 
 <body>
 	<div>
 		#{operationActionBean.doOperation('Document.RefreshPrincipal')}
 	</div>
-
 </body>
 
 </html>

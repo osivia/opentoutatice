@@ -58,10 +58,14 @@
 
 	<extension point="policies"
 		target="org.nuxeo.ecm.core.security.SecurityService">
+		
+		<policy
+            class="fr.toutatice.ecm.platform.core.security.OwnerMemberSecurityPolicy"
+            name="ottcOwnerGroup" order="1" />
 
 		<policy
 			class="fr.toutatice.ecm.platform.core.security.ToutaticeOwnerSecurityPolicy"
-			name="ttcOwner" order="5" />
+			name="ottcOwner" order="2" />
 
 	</extension>
 

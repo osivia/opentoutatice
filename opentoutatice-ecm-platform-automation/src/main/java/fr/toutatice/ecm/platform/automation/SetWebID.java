@@ -42,6 +42,7 @@ import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
+import fr.toutatice.ecm.platform.service.url.ToutaticeWebIdHelper;
 
 /**
  * Generate or apply a webId on a document. Check if the webId is unique in the domain
@@ -59,12 +60,6 @@ public class SetWebID {
     private static final Log log = LogFactory.getLog(SetWebID.class);
 
     private static final String NO_RECURSIVE_CHAIN = "notRecursive";
-
-    private static final String WEB_ID_UNICITY_QUERY = "select * from Document where ttc:webid = \"%s\""
-            + " AND ecm:uuid <> '%s' AND ecm:mixinType <> 'OttcDraft' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
-    
-    private static final String DRAFTS_WEB_ID_UNICITY_QUERY = "select * from Document where ttc:webid = \"%s\""
-            + " AND ecm:uuid <> '%s' AND ecm:mixinType = 'OttcDraft' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
 
     private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
 
@@ -94,19 +89,21 @@ public class SetWebID {
      */
     @OperationMethod()
     public DocumentModel run(DocumentModel document) throws Exception {
-        UnrestrictedSilentSetWebIdRunner runner = new UnrestrictedSilentSetWebIdRunner(coreSession, document);
+        UnrestrictedSilentSetWebIdRunner runner = new UnrestrictedSilentSetWebIdRunner(coreSession, document, chainSource);
         runner.silentRun(true, FILTERED_SERVICES_LIST);
         return runner.getDocument();
     }
 
-    private class UnrestrictedSilentSetWebIdRunner extends ToutaticeSilentProcessRunnerHelper {
+    public static class UnrestrictedSilentSetWebIdRunner extends ToutaticeSilentProcessRunnerHelper {
 
         private DocumentModel document;
+        private String chainSource;
         private DocumentModel parentDoc;
 
-        protected UnrestrictedSilentSetWebIdRunner(CoreSession session, DocumentModel document) {
+        protected UnrestrictedSilentSetWebIdRunner(CoreSession session, DocumentModel document, String chainSource) {
             super(session);
             this.document = document;
+            this.chainSource = chainSource;
         }
 
         public DocumentModel getDocument() {
@@ -146,7 +143,7 @@ public class SetWebID {
             }
             
             String originalWebid = webId;
-            while(isNotUnique(webId)){
+            while(isNotUnique(this.session, this.document, webId)){
                 webId = generateWebId(originalWebid, suffixForUnicity);
                 suffixForUnicity += 1;
                 hasToBeUpdated = true;
@@ -247,12 +244,12 @@ public class SetWebID {
          * @param webid
          * @return true if not unique
          */
-        protected boolean isNotUnique(String webId){
+        public static boolean isNotUnique(CoreSession session, DocumentModel document, String webId){
             String escapedWebId = StringEscapeUtils.escapeJava(webId);
-            DocumentModelList query = this.session.query(String.format(WEB_ID_UNICITY_QUERY, escapedWebId, this.document.getId()));
+            DocumentModelList query = session.query(String.format(ToutaticeWebIdHelper.NOT_DRAFT_WEB_ID_UNICITY_QUERY, escapedWebId, document.getId()));
             
             if(query.isEmpty()){
-                return existInDraftsWebId(escapedWebId);
+                return existInDraftsWebId(session, document, escapedWebId);
             } else {
                 return query.size() > 0;
             }
@@ -266,9 +263,9 @@ public class SetWebID {
          * @param escapedWebId
          * @return true if exists
          */
-        // FIXME: to move in Checkin addon (make an inherited operation)
-        protected boolean existInDraftsWebId(String webId) {
-            DocumentModelList query = this.session.query(String.format(DRAFTS_WEB_ID_UNICITY_QUERY, "draft_".concat(webId), this.document.getId()));
+        // FIXME: to move in Checkin addon (make an inherited operation)?
+        protected static boolean existInDraftsWebId(CoreSession session, DocumentModel document, String webId) {
+            DocumentModelList query = session.query(String.format(ToutaticeWebIdHelper.DRAFTS_WEB_ID_UNICITY_QUERY, "draft_".concat(webId), document.getId()));
             return query.size() > 0;
         }
         
