@@ -24,7 +24,6 @@ import java.util.Map;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -37,7 +36,6 @@ import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProviderService;
-import fr.toutatice.ecm.platform.service.url.WebIdResolver;
 
 
 /**
