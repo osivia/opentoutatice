@@ -258,7 +258,7 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
         }
 
         // filter: no folderish doc nor hidden doc
-        constraints.add("ecm:mixinType != 'HiddenInNavigation'");
+        constraints.add("ecm:mixinType <> 'HiddenInNavigation' and ecm:mixinType <> 'OttcDraft'");
 
         // no archived, revisions, deleted
         constraints.add("(ecm:mixinType = 'isRemoteProxy' or ecm:isProxy = 0) AND ecm:isCheckedInVersion = 0 AND ecm:currentLifeCycleState!='deleted'");
