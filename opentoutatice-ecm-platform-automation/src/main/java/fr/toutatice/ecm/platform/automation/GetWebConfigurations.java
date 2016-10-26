@@ -32,7 +32,6 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.PathRef;
-import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 
 import fr.toutatice.ecm.platform.service.fragments.configuration.ConfigurationBeanHelper;
 

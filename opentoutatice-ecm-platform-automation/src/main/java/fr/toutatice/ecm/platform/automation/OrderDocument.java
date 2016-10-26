@@ -30,8 +30,6 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.PathRef;
 
-import com.sun.faces.util.CollectionsUtils;
-
 
 /**
  * @author David Chevrier.

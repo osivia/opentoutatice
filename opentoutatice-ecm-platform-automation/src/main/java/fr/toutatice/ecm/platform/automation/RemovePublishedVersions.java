@@ -18,9 +18,6 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -34,8 +31,6 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
-import org.nuxeo.ecm.core.event.EventService;
-import org.nuxeo.ecm.core.versioning.VersioningService;
 
 @Operation(id = RemovePublishedVersions.ID, category = Constants.CAT_DOCUMENT, label = "Remove all published versions of a document", description = "Remove all published versions of a document among its versions series and inside a specific target folder/section. Return the input document.")
 public class RemovePublishedVersions {

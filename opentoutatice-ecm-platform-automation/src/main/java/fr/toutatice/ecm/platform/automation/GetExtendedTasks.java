@@ -21,6 +21,9 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.common.utils.i18n.I18NUtils;
@@ -40,9 +43,6 @@ import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.platform.task.Task;
 import org.nuxeo.ecm.platform.task.TaskService;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 @Operation(id = GetExtendedTasks.ID, category = Constants.CAT_SERVICES, label = "Get extended tasks", since = "5.4", description = "List tasks assigned to this user or one of its group."
 		+ "Task properties are serialized using JSON and returned in a Blob.")
