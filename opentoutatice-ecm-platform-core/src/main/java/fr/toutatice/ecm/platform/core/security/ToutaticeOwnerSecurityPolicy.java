@@ -20,6 +20,25 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
 
 	private static final Log log = LogFactory.getLog(ToutaticeOwnerSecurityPolicy.class);
+	
+	/** Current Folderish id on which policy applying. */
+	private static String currentAppliedPolicyFolderishId;
+	
+	/**
+	 * Gets current Folderish id on which policy applying.
+	 * 
+	 * @return current Folderish id on which policy applying
+	 */
+	public static String getCurrentAppliedPolicyFolderishId(){
+	    return currentAppliedPolicyFolderishId;
+	}
+	
+	/**
+	 * Resets current Folderish id on which policy applying.
+	 */
+	public static void resetCurrentAppliedFolderishId(){
+	    currentAppliedPolicyFolderishId = null;
+	}
 
 	@Override
 	public Access checkPermission(Document doc, 
@@ -32,12 +51,11 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
 
 		try {
 			if (doPolicyApply(doc, mergedAcp, principal, permission, additionalPrincipals)) {
-				String creator = (String) doc.getPropertyValue("dc:creator");
-				if (!principal.getName().equals(creator)) {
-					access = Access.DENY;
-				} else {
-				    access = Access.GRANT;
-				}
+			    if(doc.isFolder()){
+			        access = applyPolicyToFolderish(doc, principal);
+			    } else {
+			        access = applyPolicyToLeaf(doc, principal);
+			    }
 			}
 		} catch (DocumentException e) {
 			log.error("Failed to evaluate the policy, error: " + e.getMessage());
@@ -45,14 +63,20 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
 
 		return access;
 	}
-
+	
+	
+	/**
+	 * 
+	 * 
+	 * @param doc
+	 * @param mergedAcp
+	 * @param principal
+	 * @param permission
+	 * @param additionalPrincipals
+	 * @return true if WriteModifyOwnOnly policy can be applied.
+	 */
 	private boolean doPolicyApply(Document doc, ACP mergedAcp, Principal principal, String permission, String[] additionalPrincipals) {
 		boolean status = false;
-		
-		// User can not be contributor of Folderish
-		if(doc.hasFacet("Folderish")){
-		    return status;
-		}
 		
 		boolean isWritePermission = SecurityConstants.WRITE_PROPERTIES.equals(permission) || SecurityConstants.WRITE.equals(permission) || SecurityConstants.REMOVE.equals(permission)
                  || SecurityConstants.WRITE_VERSION.equals(permission);
@@ -78,6 +102,37 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
 
 		return status;
 	}
+	
+	/**
+     * Store Folderish id for which allowed sub types filtered {@link OwnerSecurityPolicyHelper}.
+     * 
+     * @param doc
+     * @param principal
+     * @throws DocumentException
+     */
+    protected Access applyPolicyToFolderish(Document doc, Principal principal) throws DocumentException {
+        currentAppliedPolicyFolderishId = doc.getUUID();
+        return Access.DENY;
+    }
+
+    /**
+     * Only creator can update, delete document.
+     * 
+     * @param doc
+     * @param principal
+     * @return  grant if principal is document's creator
+     * @throws DocumentException
+     */
+    protected Access applyPolicyToLeaf(Document doc, Principal principal) throws DocumentException {
+        Access access;
+        String creator = (String) doc.getPropertyValue("dc:creator");
+        if (!principal.getName().equals(creator)) {
+            access = Access.DENY;
+        } else {
+            access = Access.GRANT;
+        }
+        return access;
+    }
 	
 	/**
      * @param mergedAcp

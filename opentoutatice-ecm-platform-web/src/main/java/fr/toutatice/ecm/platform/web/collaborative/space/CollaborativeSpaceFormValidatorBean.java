@@ -24,6 +24,7 @@ import org.nuxeo.ecm.webapp.contentbrowser.DocumentActions;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentMetadataHelper;
 import fr.toutatice.ecm.platform.web.document.ToutaticeDocumentActionsBean;
 
 
@@ -38,10 +39,6 @@ public class CollaborativeSpaceFormValidatorBean implements Serializable {
 
     private static final long serialVersionUID = -6037133994828912338L;
     
-    public static final String UNICITY_TITLE_QUERY = "select * from Document where ecm:ancestorId = '%s' and "
-            .concat("dc:title = '%s' and ecm:isProxy = 0 and ecm:currentLifeCycleState <> 'deleted' and ecm:isVersion = 0");
-    protected static final String UNICITY_TITLE_EXCLUDE_ITSELF_CLAUSE = " and ecm:uuid <> '%s'";
-
     @In(create = true, required = true)
     protected transient CoreSession documentManager;
     
@@ -95,11 +92,7 @@ public class CollaborativeSpaceFormValidatorBean implements Serializable {
                 currentUUId = currentDocument.getId();
             }
             
-            String query = String .format(UNICITY_TITLE_QUERY, parentUUId, title);
-            if(currentUUId != null){
-                query = String.format(query.concat(UNICITY_TITLE_EXCLUDE_ITSELF_CLAUSE), currentUUId);
-            }
-            return this.documentManager.query(query).isEmpty();
+            return ToutaticeDocumentMetadataHelper.isTileUnique(this.documentManager, parentUUId, currentUUId, title);
         }
         
         return false;

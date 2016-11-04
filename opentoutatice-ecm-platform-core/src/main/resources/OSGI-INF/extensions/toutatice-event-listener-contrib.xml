@@ -17,7 +17,7 @@
 			<event>documentRestored</event>
 			<event>documentModified</event>
 		</listener>
-
+		
 		<listener name="toutaticeDeletelistener" async="false"
 			postCommit="false" 
             enabled="true"
@@ -34,6 +34,15 @@
 			priority="123">
 			<event>documentMoved</event>
 		</listener>
+		
+		<!-- After DublinCoreLister (priority 120) -->
+		<listener name="toutaticeDocumentCopied" async="false"
+            postCommit="false" 
+            enabled="true"
+            class="fr.toutatice.ecm.platform.core.listener.ToutaticeDocumentCopiedListener"
+            priority="140">
+            <event>documentCreatedByCopy</event>
+        </listener>
 
 		<!-- Faire en sorte que les documents modifiés en mode dit "silencieux" 
 			soient bien indexés par ElasticSearch. (http://redmine.toutatice.fr/issues/3802) -->
@@ -58,6 +67,18 @@
 			class="fr.toutatice.ecm.platform.core.listener.FolderishDocumentCreatedListener">
 			<event>emptyDocumentModelCreated</event>
 		</listener>
+		
+		<listener name="toutaticeUnicityTitle" async="false"
+            postCommit="false" 
+            enabled="true"
+            class="fr.toutatice.ecm.platform.core.listener.ToutaticeUnicityTitleListener"
+            priority="140">
+            <event>documentCreated</event>
+            <event>documentModified</event>
+            <event>documentCreatedByCopy</event>
+            <event>documentMoved</event>
+            <event>documentRestored</event>
+        </listener>
 
 	</extension>
 

@@ -73,6 +73,7 @@ import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.core.security.OwnerSecurityPolicyHelper;
 import fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProviderService;
 import fr.toutatice.ecm.platform.service.url.WebIdResolver;
 
@@ -237,9 +238,11 @@ public class FetchPublicationInfos {
                 /*
                  * Récupération des sous-types permis dans le folder.
                  */
-                Collection<Type> allowedSubTypes = this.typeService.getAllowedSubTypes(document.getType());
+                //Collection<Type> allowedSubTypes = this.typeService.getAllowedSubTypes(document.getType());
+                Collection<Type> filteredAllowedSubTypes = OwnerSecurityPolicyHelper.getFilteredAllowedSubTypes(document, coreSession.getPrincipal());
+                
                 JSONObject subTypes = new JSONObject();
-                for (Type subType : allowedSubTypes) {
+                for (Type subType : filteredAllowedSubTypes) {
                     subTypes.put(subType.getId(), URLEncoder.encode(subType.getLabel(), "UTF-8"));
                 }
                 infosPubli.put("subTypes", subTypes);

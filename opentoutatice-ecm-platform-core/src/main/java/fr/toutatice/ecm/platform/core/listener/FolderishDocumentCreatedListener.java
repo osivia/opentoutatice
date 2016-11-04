@@ -3,6 +3,8 @@
  */
 package fr.toutatice.ecm.platform.core.listener;
 
+import static org.nuxeo.ecm.core.schema.FacetNames.SYSTEM_DOCUMENT;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -12,6 +14,7 @@ import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
+import org.nuxeo.ecm.core.schema.FacetNames;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
@@ -37,7 +40,7 @@ public class FolderishDocumentCreatedListener implements EventListener {
 			
 			DocumentEventContext docCtx = (DocumentEventContext) context;
 			DocumentModel sourceDocument = docCtx.getSourceDocument();
-			if(sourceDocument.isFolder()) {
+			if(sourceDocument.isFolder() && !sourceDocument.hasFacet(SYSTEM_DOCUMENT)) {
 			    try {
 			        sourceDocument.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_SIM, Boolean.TRUE);
 			    } catch (PropertyNotFoundException pnf) {
