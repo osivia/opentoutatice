@@ -3,6 +3,7 @@
  */
 package fr.toutatice.ecm.platform.core.helper;
 
+import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.core.api.CoreSession;
 
 
@@ -30,11 +31,12 @@ public class ToutaticeDocumentMetadataHelper {
      * @return true if title unicity in current Folder
      */
     public static boolean isTileUnique(CoreSession session, String parentUUId, String currentUUId, String title) {
-            String query = String .format(UNICITY_TITLE_QUERY, parentUUId, title);
-            if(currentUUId != null){
-                query = String.format(query.concat(UNICITY_TITLE_EXCLUDE_ITSELF_CLAUSE), currentUUId);
-            }
-            return session.query(query).isEmpty();
+        title = StringUtils.replace(title, "'", "\\'");
+        String query = String.format(UNICITY_TITLE_QUERY, parentUUId, title);
+        if (currentUUId != null) {
+            query = String.format(query.concat(UNICITY_TITLE_EXCLUDE_ITSELF_CLAUSE), currentUUId);
+        }
+        return session.query(query).isEmpty();
     }
 
 }
