@@ -12,7 +12,7 @@ import org.nuxeo.ecm.core.api.CoreSession;
  */
 public class ToutaticeDocumentMetadataHelper {
     
-    public static final String UNICITY_TITLE_QUERY = "select * from Document where ecm:ancestorId = '%s' and "
+    public static final String UNICITY_TITLE_QUERY = "select * from Document where ecm:parentId = '%s' and "
             .concat("dc:title = '%s' and ecm:isProxy = 0 and ecm:currentLifeCycleState <> 'deleted' and ecm:isVersion = 0");
     protected static final String UNICITY_TITLE_EXCLUDE_ITSELF_CLAUSE = " and ecm:uuid <> '%s'";
 

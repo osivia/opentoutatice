@@ -55,9 +55,10 @@ public class ToutaticeUnicityTitleListener implements EventListener {
     protected DocumentModel checksUnicityTitle(DocumentEventContext docCtx, DocumentModel document) {
         CoreSession session = docCtx.getCoreSession();
         String parentUUId = session.getParentDocument(document.getRef()).getId();
+        String docUUId = document.getId();
         String title = (String) document.getPropertyValue("dc:title");
 
-        boolean isUniqueTitle = ToutaticeDocumentMetadataHelper.isTileUnique(session, parentUUId, null, title);
+        boolean isUniqueTitle = ToutaticeDocumentMetadataHelper.isTileUnique(session, parentUUId, docUUId, title);
         while (!isUniqueTitle) {
             Matcher matcher = TITLE_SUFFIX_PATTERN.matcher(title);
 
@@ -70,7 +71,7 @@ public class ToutaticeUnicityTitleListener implements EventListener {
                 title = title.concat(" (" + String.valueOf(1) + ")");
             }
 
-            isUniqueTitle = ToutaticeDocumentMetadataHelper.isTileUnique(session, parentUUId, null, title);
+            isUniqueTitle = ToutaticeDocumentMetadataHelper.isTileUnique(session, parentUUId, docUUId, title);
         }
         document.setPropertyValue("dc:title", title);
 
