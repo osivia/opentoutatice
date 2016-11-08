@@ -76,5 +76,7 @@
         </xs:sequence>
     </xs:complexType>
    <xs:element name="spaceMembers" type="nxs:lstSpaceMembersType" />
+   
+   <xs:element name="headImage" type="nxs:content"/>
 	
 </xs:schema>
