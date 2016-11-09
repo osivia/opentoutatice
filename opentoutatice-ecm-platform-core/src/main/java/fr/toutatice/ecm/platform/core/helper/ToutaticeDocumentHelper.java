@@ -31,10 +31,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -56,7 +54,6 @@ import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.VersionModel;
-import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.api.impl.LifeCycleFilter;
 import org.nuxeo.ecm.core.api.impl.VersionModelImpl;
@@ -72,12 +69,7 @@ import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 import org.nuxeo.ecm.core.schema.DocumentType;
 import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.core.schema.types.Type;
-import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
-import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
-import org.nuxeo.ecm.platform.publisher.api.PublisherService;
-import org.nuxeo.ecm.platform.publisher.impl.core.SimpleCorePublishedDocument;
 import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
-import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
@@ -165,6 +157,15 @@ public class ToutaticeDocumentHelper {
         SilentSave save = new SilentSave(session, document);
         save.silentRun(unrestricted, ToutaticeGlobalConst.VERSIONING_FILTERD_SERVICE);
     }
+    
+    /**
+     * Remiove a document in an silent unrestricted or not way:
+     * EventService and VersioningService are bypassed.
+     */
+    public static void removeDocumentSilently(CoreSession session, DocumentModel document, boolean unrestricted) {
+        SilentRemoveRunner deleter = new SilentRemoveRunner(session, document.getRef());
+        deleter.silentRun(unrestricted, ToutaticeGlobalConst.EVENT_N_VERSIONING_FILTERD_SERVICE);
+    }
 
     /**
      * Save a document in an silent way.
@@ -183,6 +184,26 @@ public class ToutaticeDocumentHelper {
             this.session.saveDocument(this.document);
         }
 
+    }
+    
+    /**
+     * Delete a document silently. 
+     */
+    public static class SilentRemoveRunner extends ToutaticeSilentProcessRunnerHelper {
+        
+        /** Ref of doc to delete. */
+        private DocumentRef docRef;
+
+        public SilentRemoveRunner(CoreSession session, DocumentRef docRef) {
+            super(session);
+            this.docRef = docRef;
+        }
+
+        @Override
+        public void run() throws ClientException {
+            this.session.removeDocument(this.docRef);
+        }
+        
     }
     
     /**

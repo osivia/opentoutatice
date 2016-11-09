@@ -36,6 +36,7 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
+import org.nuxeo.ecm.core.api.LifeCycleConstants;
 import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
@@ -138,7 +139,15 @@ public class SetWebID {
                 
                 webId = getWebId().toString();
                 // clean if needed
-                webId = IdUtils.generateId(webId, "-", true, 24);
+                // DCH: TEST procedures!
+                if(StringUtils.contains(webId, "_")){
+                    // Case of technical webId
+                    String nonTechPart = StringUtils.substringAfterLast(webId, "_");
+                    String techPart = StringUtils.substringBeforeLast(webId, "_");
+                    webId = techPart.concat("_").concat(IdUtils.generateId(nonTechPart, "-", true, 24));
+                } else {
+                    webId = IdUtils.generateId(webId, "-", true, 24);
+                }
                 
             }
             
@@ -249,7 +258,7 @@ public class SetWebID {
             DocumentModelList query = session.query(String.format(ToutaticeWebIdHelper.NOT_DRAFT_WEB_ID_UNICITY_QUERY, escapedWebId, document.getId()));
             
             if(query.isEmpty()){
-                return existInDraftsWebId(session, document, escapedWebId);
+                return existsInDraftsWebId(session, document, escapedWebId);
             } else {
                 return query.size() > 0;
             }
@@ -264,9 +273,17 @@ public class SetWebID {
          * @return true if exists
          */
         // FIXME: to move in Checkin addon (make an inherited operation)?
-        protected static boolean existInDraftsWebId(CoreSession session, DocumentModel document, String webId) {
-            DocumentModelList query = session.query(String.format(ToutaticeWebIdHelper.DRAFTS_WEB_ID_UNICITY_QUERY, "draft_".concat(webId), document.getId()));
-            return query.size() > 0;
+        protected static boolean existsInDraftsWebId(CoreSession session, DocumentModel document, String webId) {
+            String cycleState = document.getCurrentLifeCycleState();
+            // We don't check Drafts when checkined document is in trash
+            boolean isInTrash = LifeCycleConstants.DELETED_STATE.equals(cycleState)
+                    || StringUtils.endsWith(document.getName(), "_.trashed");
+            
+            if(document.hasFacet("OttcCheckedIn") && !isInTrash){
+                DocumentModelList query = session.query(String.format(ToutaticeWebIdHelper.DRAFTS_WEB_ID_UNICITY_QUERY, "draft_".concat(webId), document.getId()));
+                return query.size() > 0;
+            }
+            return false;
         }
         
     }
