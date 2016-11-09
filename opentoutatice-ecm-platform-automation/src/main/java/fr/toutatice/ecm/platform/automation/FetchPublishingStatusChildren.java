@@ -100,7 +100,7 @@ public class FetchPublishingStatusChildren {
             boolean isDeleted = DELETED_STATE.equals(child.getCurrentLifeCycleState());
             JSONObject childWithStatus = new JSONObject();
 
-            if (PublishStatus.live.getStatus().equals(publishStatus) && !child.isProxy() && !isDeleted && canAddChildren(documentManager, child)) {
+            if (PublishStatus.live.getStatus().equals(publishStatus) && !child.isProxy() && !isDeleted) {
 
                 // Live children
                 childrenWithStatus = getInfosFromLive(childrenWithStatus, child, childWithStatus);
