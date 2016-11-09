@@ -7,6 +7,8 @@
 
 	<extension target="org.nuxeo.ecm.core.security.SecurityService"
 		point="permissions">
+		
+		<permission name="WriteModifyOwnOnly" />
 
 		<permission name="Read">
 			<remove>CanAskForPublishing</remove>
@@ -14,6 +16,7 @@
 
 		<permission name="Write">
 			<include>CanAskForPublishing</include>
+			<include>WriteModifyOwnOnly</include>
 		</permission>
 
 		<permission name="validationWorkflow_validation">
@@ -25,11 +28,6 @@
 			<include>Write</include>
 		</permission>
 		
-		<permission name="WriteModifyOwnOnly">
-            <include>Read</include>
-            <include>validationWorkflow_validation</include>
-        </permission>
-
 	</extension>
 
 	<extension target="org.nuxeo.ecm.core.security.SecurityService"

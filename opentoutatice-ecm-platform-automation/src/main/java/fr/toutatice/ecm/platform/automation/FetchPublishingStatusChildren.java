@@ -35,9 +35,7 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
-import org.nuxeo.ecm.core.api.DocumentSecurityException;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
-import org.nuxeo.ecm.core.api.security.SecurityConstants;
 
 import fr.toutatice.ecm.platform.automation.FetchPublicationInfos.ServeurException;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
@@ -102,7 +100,7 @@ public class FetchPublishingStatusChildren {
             boolean isDeleted = DELETED_STATE.equals(child.getCurrentLifeCycleState());
             JSONObject childWithStatus = new JSONObject();
 
-            if (PublishStatus.live.getStatus().equals(publishStatus) && !child.isProxy() && !isDeleted && isEditableByUser(child)) {
+            if (PublishStatus.live.getStatus().equals(publishStatus) && !child.isProxy() && !isDeleted && canAddChildren(documentManager, child)) {
 
                 // Live children
                 childrenWithStatus = getInfosFromLive(childrenWithStatus, child, childWithStatus);
@@ -183,21 +181,13 @@ public class FetchPublishingStatusChildren {
         return childrenWithStatus;
     }
     
-    /* FIXME: duplicate code with FetchPubliInfos: to mutualise in Helper class */
-    private boolean isEditableByUser(DocumentModel liveDoc) throws ServeurException {
-        boolean canModify = false;
-        try {
-            canModify = documentManager.hasPermission(liveDoc.getRef(), SecurityConstants.WRITE);
-        } catch (ClientException e) {
-            if (e instanceof DocumentSecurityException) {
-                return Boolean.FALSE;
-            } else {
-                log.warn("Failed to fetch permissions for document '" + liveDoc.getPathAsString() + "', error:"
-                        + e.getMessage());
-                throw new ServeurException(e);
-            }
+    private boolean canAddChildren(CoreSession session, DocumentModel liveDoc) throws ServeurException, UnsupportedEncodingException {
+        if(liveDoc.isFolder()){
+            JSONObject subTypes = FetchPublicationInfos.getSubTypes(session, liveDoc);
+            return !subTypes.isEmpty();
         }
-        return canModify;
+        
+        return false;
     }
 
 }

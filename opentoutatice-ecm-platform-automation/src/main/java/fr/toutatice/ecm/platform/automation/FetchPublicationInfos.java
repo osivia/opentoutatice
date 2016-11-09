@@ -19,6 +19,7 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.Principal;
@@ -233,20 +234,7 @@ public class FetchPublicationInfos {
 
         infosPubli.put("subTypes", new JSONObject());
         if (document.isFolder()) {
-            boolean canAddChildren = coreSession.hasPermission(document.getRef(), SecurityConstants.ADD_CHILDREN);
-            if (canAddChildren) {
-                /*
-                 * Récupération des sous-types permis dans le folder.
-                 */
-                //Collection<Type> allowedSubTypes = this.typeService.getAllowedSubTypes(document.getType());
-                Collection<Type> filteredAllowedSubTypes = OwnerSecurityPolicyHelper.getFilteredAllowedSubTypes(document, coreSession.getPrincipal());
-                
-                JSONObject subTypes = new JSONObject();
-                for (Type subType : filteredAllowedSubTypes) {
-                    subTypes.put(subType.getId(), URLEncoder.encode(subType.getLabel(), "UTF-8"));
-                }
-                infosPubli.put("subTypes", subTypes);
-            }
+            infosPubli.put("subTypes", getSubTypes(coreSession, document));
         }
 
 
@@ -271,6 +259,25 @@ public class FetchPublicationInfos {
         rowInfosPubli.add(infosPubli);
 
         return createBlob(rowInfosPubli);
+    }
+
+    /**
+     * Gets allowed subTypes for given folder.
+     * 
+     * @param infosPubli
+     * @param folder
+     * @throws UnsupportedEncodingException
+     */
+    public static JSONObject getSubTypes(CoreSession session, DocumentModel folder) throws UnsupportedEncodingException {
+        JSONObject subTypes = new JSONObject();
+        boolean canAddChildren = session.hasPermission(folder.getRef(), SecurityConstants.ADD_CHILDREN);
+        if (canAddChildren) {
+            Collection<Type> filteredAllowedSubTypes = OwnerSecurityPolicyHelper.getFilteredAllowedSubTypes(folder, session.getPrincipal());
+            for (Type subType : filteredAllowedSubTypes) {
+                subTypes.put(subType.getId(), URLEncoder.encode(subType.getLabel(), "UTF-8"));
+            }
+        }
+        return subTypes;
     }
 
     /**
