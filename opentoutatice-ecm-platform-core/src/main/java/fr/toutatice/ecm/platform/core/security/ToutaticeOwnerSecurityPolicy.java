@@ -122,7 +122,8 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
         if(isCreator(doc, principal)){
             // Can read, update, move and remove its documents (leafs)
             if(SecurityConstants.READ.equals(permission) || (SecurityConstants.WRITE_PROPERTIES.equals(permission))
-                    || (SecurityConstants.REMOVE.equals(permission)) || (SecurityConstants.WRITE_VERSION.equals(permission))
+                    || (SecurityConstants.REMOVE.equals(permission)) || (SecurityConstants.WRITE_LIFE_CYCLE.equals(permission)) 
+                    || (SecurityConstants.WRITE_VERSION.equals(permission))
                     // Group Permission (TODO in another way (get SubGroupPermission)
                     || (SecurityConstants.WRITE.equals(permission))){
                 return Access.GRANT;

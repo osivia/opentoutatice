@@ -6,9 +6,11 @@ package fr.toutatice.ecm.platform.core.listener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.event.DocumentEventTypes;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
@@ -22,10 +24,15 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentMetadataHelper;
  *
  */
 public class ToutaticeUnicityTitleListener implements EventListener {
+    
+    /** Default copied suffix title. */
+    public final static String DEFAULT_COPIED_TITLE_SUFFIX = " (copie)";
+    /** Default suffix title. */
+    public final static String DEFAULT_TITLE_SUFFIX = " (1)";
 
-    /** Copied title suffix pattern. */
-    private static final Pattern TITLE_SUFFIX_PATTERN = Pattern.compile("(.*)\\(([0-9]+)+\\)$");
-
+    /** Title suffix pattern. */
+    private static final Pattern TITLE_SUFFIX_PATTERN = Pattern.compile("(.*)\\((copie |copie)?([0-9]+)?\\)(\\.[a-z]+)?$");
+    
     /**
      * Checks unicity of document's title
      * if document is in Collaborative Space.
@@ -38,7 +45,7 @@ public class ToutaticeUnicityTitleListener implements EventListener {
             DocumentModel document = docCtx.getSourceDocument();
             
             if(ToutaticeDocumentHelper.isInWorkSpace(docCtx.getCoreSession(), document)){
-                document = checksUnicityTitle(docCtx, document);
+                document = checksUnicityTitle(docCtx, event.getName(), document);
                 ToutaticeDocumentHelper.saveDocumentSilently(docCtx.getCoreSession(), document, true);
             }
         }
@@ -52,7 +59,7 @@ public class ToutaticeUnicityTitleListener implements EventListener {
      * @param document
      * @return true if title is unique
      */
-    protected DocumentModel checksUnicityTitle(DocumentEventContext docCtx, DocumentModel document) {
+    protected DocumentModel checksUnicityTitle(DocumentEventContext docCtx, String eventName, DocumentModel document) {
         CoreSession session = docCtx.getCoreSession();
         String parentUUId = session.getParentDocument(document.getRef()).getId();
         String docUUId = document.getId();
@@ -64,11 +71,29 @@ public class ToutaticeUnicityTitleListener implements EventListener {
 
             if (matcher.find()) {
                 StringBuffer sb = new StringBuffer();
-                int number = Integer.valueOf(matcher.group(2));
-                matcher.appendReplacement(sb, "$1" + "(" + String.valueOf(number + 1) + ")");
+                String number = matcher.group(3);
+                if (number != null) {
+                    int num = Integer.valueOf(number).intValue() + 1;
+                    number = String.valueOf(num);
+                } else {
+                    number = " " + String.valueOf(1);
+                }
+                matcher.appendReplacement(sb, "$1" + "(" + "$2" + number + ")" + "$4");
                 title = matcher.appendTail(sb).toString();
             } else {
-                title = title.concat(" (" + String.valueOf(1) + ")");
+                
+                String fileExtension = StringUtils.substringAfterLast(title, ".");
+                if (StringUtils.isNotEmpty(fileExtension)) {
+                    fileExtension = ".".concat(fileExtension);
+                }
+                
+                String marker = DEFAULT_TITLE_SUFFIX;
+                if (DocumentEventTypes.DOCUMENT_CREATED_BY_COPY.equals(eventName)) {
+                    marker = DEFAULT_COPIED_TITLE_SUFFIX;
+                } 
+                
+                title = StringUtils.removeEnd(title, fileExtension).concat(marker)
+                        .concat(fileExtension);
             }
 
             isUniqueTitle = ToutaticeDocumentMetadataHelper.isTileUnique(session, parentUUId, docUUId, title);

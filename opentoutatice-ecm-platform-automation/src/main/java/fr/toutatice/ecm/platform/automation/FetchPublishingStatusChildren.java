@@ -180,14 +180,5 @@ public class FetchPublishingStatusChildren {
         childrenWithStatus.add(childWithStatus);
         return childrenWithStatus;
     }
-    
-    private boolean canAddChildren(CoreSession session, DocumentModel liveDoc) throws ServeurException, UnsupportedEncodingException {
-        if(liveDoc.isFolder()){
-            JSONObject subTypes = FetchPublicationInfos.getSubTypes(session, liveDoc);
-            return !subTypes.isEmpty();
-        }
-        
-        return false;
-    }
 
 }
