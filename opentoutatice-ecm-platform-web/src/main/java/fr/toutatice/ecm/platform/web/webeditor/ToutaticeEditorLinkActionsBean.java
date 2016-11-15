@@ -252,7 +252,7 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
             if (searchKeywords.length() > 0) {
                 if (!searchKeywords.equals("*")) {
                     // full text search
-                    constraints.add(String.format("ecm:fulltext LIKE '%s%%'", searchKeywords));
+                    constraints.add(String.format("ecm:fulltext LIKE '%s%%'", searchKeywords.replace("'", "\\'")));
                 }
             }
         }
