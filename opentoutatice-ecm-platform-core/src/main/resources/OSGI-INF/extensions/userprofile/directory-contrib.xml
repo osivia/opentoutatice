@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<component name="toutatice.ecm.plateform.core.user.profile.directory">
+
+	<require>toutatice.ecm.plateform.core.directory</require>
+
+	<extension target="org.nuxeo.ecm.directory.sql.SQLDirectoryFactory"
+		point="directories">
+		
+		<directory name="ottcExtendedUserprofile">
+			<schema>vocabulary</schema>
+			<dataSource>java:/nxsqldirectory</dataSource>
+			<cacheTimeout>3600</cacheTimeout>
+			<cacheMaxSize>1000</cacheMaxSize>
+			<idField>id</idField>
+			<autoincrementIdField>false</autoincrementIdField>
+			<!-- <createTablePolicy>on_missing_columns</createTablePolicy> -->
+			<createTablePolicy>always</createTablePolicy>
+			<table>vocabulary_ottcExtendedUserprofile</table>
+			<dataFile>vocabularies/toutatice-extended-userprofile.csv</dataFile>
+		</directory>
+		
+	</extension>
+
+	<extension target="org.nuxeo.ecm.directory.ui.DirectoryUIManager"
+		point="directories">
+		
+		<directory name="ottcExtendedUserprofile" layout="vocabulary" sortField="label" />
+		
+	</extension>
+
+</component>

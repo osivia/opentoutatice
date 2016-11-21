@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<xs:schema targetNamespace="http://www.nuxeo.core/toutatice/schemas/extendeduserprofile/"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:nxs="http://www.nuxeo.core/toutatice/schemas/extendeduserprofile/">
+  
+  <xs:complexType name="socialnetwork">
+  	<xs:sequence>
+  		<xs:element name="url" type="xs:string" />
+  		<xs:element name="type" type="xs:string" />
+  	</xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="socialnetworkList">
+		<xs:sequence>
+			<xs:element name="item" type="nxs:socialnetwork" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+  <xs:element name="socialnetwork" type="nxs:socialnetworkList" />
+  
+</xs:schema>

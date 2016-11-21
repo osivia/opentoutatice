@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.core.user.profile.type">
+
+  <require>org.nuxeo.ecm.user.center.profile.core.types</require>
+
+  <extension target="org.nuxeo.ecm.core.schema.TypeService"
+    point="schema">
+    
+    <schema name="ottc_extended_userprofile" src="schemas/toutatice-extended-userprofile.xsd"
+      prefix="ottceup" />
+      
+  </extension>
+
+  <extension target="org.nuxeo.ecm.core.schema.TypeService"
+    point="doctype">
+    
+    <facet name="OttcExtendedUserProfile">
+      <schema name="ottc_extended_userprofile" />
+    </facet>
+
+    <doctype name="UserProfile" appends="true">
+      <facet name="OttcExtendedUserProfile" />
+    </doctype>
+
+  </extension>
+
+</component>
