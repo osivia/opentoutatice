@@ -17,6 +17,6 @@
 		</xs:sequence>
 	</xs:complexType>
 
-  <xs:element name="socialnetwork" type="nxs:socialnetworkList" />
+  <xs:element name="socialnetworks" type="nxs:socialnetworkList" />
   
 </xs:schema>

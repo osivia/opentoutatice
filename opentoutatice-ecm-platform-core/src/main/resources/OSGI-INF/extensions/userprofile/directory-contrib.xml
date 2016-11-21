@@ -7,7 +7,7 @@
 	<extension target="org.nuxeo.ecm.directory.sql.SQLDirectoryFactory"
 		point="directories">
 		
-		<directory name="ottcExtendedUserprofile">
+		<directory name="ottc_socialnetworks">
 			<schema>vocabulary</schema>
 			<dataSource>java:/nxsqldirectory</dataSource>
 			<cacheTimeout>3600</cacheTimeout>
@@ -16,8 +16,8 @@
 			<autoincrementIdField>false</autoincrementIdField>
 			<!-- <createTablePolicy>on_missing_columns</createTablePolicy> -->
 			<createTablePolicy>always</createTablePolicy>
-			<table>vocabulary_ottcExtendedUserprofile</table>
-			<dataFile>vocabularies/toutatice-extended-userprofile.csv</dataFile>
+			<table>vocabulary_ottc_socialnetworks</table>
+			<dataFile>vocabularies/toutatice-socialnetworks.csv</dataFile>
 		</directory>
 		
 	</extension>
@@ -25,7 +25,7 @@
 	<extension target="org.nuxeo.ecm.directory.ui.DirectoryUIManager"
 		point="directories">
 		
-		<directory name="ottcExtendedUserprofile" layout="vocabulary" sortField="label" />
+		<directory name="ottc_socialnetworks" layout="vocabulary" sortField="label" />
 		
 	</extension>
 
