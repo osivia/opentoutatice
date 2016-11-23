@@ -10,7 +10,6 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.DocumentSecurityException;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.core.api.security.Access;
@@ -62,7 +61,7 @@ public class OwnerSecurityPolicyHelper {
         try {
             Collection<Type> allowedSubTypes = uiTypeManager.getAllowedSubTypes(document.getType(), document);
 
-            String folderishId = ToutaticeOwnerSecurityPolicy.getCurrentAppliedPolicyFolderishId();
+            String folderishId = ToutaticeOwnerSecurityPolicy.getCurrentOwnerPoliciedFolderishId();
             if (StringUtils.equals(document.getId(), folderishId)) {
 
                 Set<String> folderish = getFolderishTypes();
@@ -78,7 +77,7 @@ public class OwnerSecurityPolicyHelper {
                 leafSubTypes.addAll(allowedSubTypes);
             }
         } finally {
-            ToutaticeOwnerSecurityPolicy.resetCurrentAppliedFolderishId();
+            ToutaticeOwnerSecurityPolicy.resetCurrentOwnerPoliciedFolderishId();
         }
 
         return leafSubTypes;

@@ -8,15 +8,23 @@
 	<extension target="org.nuxeo.ecm.core.security.SecurityService"
 		point="permissions">
 		
-		<permission name="WriteModifyOwnOnly" />
+		<!-- Read is for requests -->
+		<permission name="WriteModifyOwnOnly">
+		      <include>Read</include>
+		</permission>
+		
+		<!-- Read is for requests -->
+		<permission name="MasterOwner">
+		      <include>Read</include>
+		</permission>
 
+        <!-- FIXME: replace remove by exclude, no? -->
 		<permission name="Read">
 			<remove>CanAskForPublishing</remove>
 		</permission>
 
 		<permission name="Write">
 			<include>CanAskForPublishing</include>
-			<include>WriteModifyOwnOnly</include>
 		</permission>
 
 		<permission name="validationWorkflow_validation">
@@ -34,12 +42,13 @@
 		point="permissionsVisibility">
         
 		<visibility>
-			<item order="300" show="true">WriteModifyOwnOnly</item>
+			<item order="100" show="true">WriteModifyOwnOnly</item>
 		</visibility>
 		
 		<!-- FIXME: temporary fix cause global visibility doesn't work for Workspace -->
 		<visibility type="Workspace">
-            <item order="300" show="true">WriteModifyOwnOnly</item>
+            <item order="100" show="true">WriteModifyOwnOnly</item>
+            <item order="300" show="true">MasterOwner</item>
         </visibility>
 		
 		<visibility type="PortalSite">
@@ -58,8 +67,8 @@
 		target="org.nuxeo.ecm.core.security.SecurityService">
 		
 		<policy
-            class="fr.toutatice.ecm.platform.core.security.OwnerMemberSecurityPolicy"
-            name="ottcOwnerGroup" order="1" />
+            class="fr.toutatice.ecm.platform.core.security.MasterOwnerSecurityPolicy"
+            name="ottcMasterOwner" order="1" />
 
 		<policy
 			class="fr.toutatice.ecm.platform.core.security.ToutaticeOwnerSecurityPolicy"

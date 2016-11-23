@@ -124,6 +124,7 @@ public class ToutaticeNuxeoStudioConst {
 	// custom permissions
 	public final static String CST_PERM_VALIDATE = "validationWorkflow_validation";
 	public final static String CST_PERM_CONTRIBUTOR = "WriteModifyOwnOnly";
+	public final static String CST_PERM_MASTER_OWNER = "MasterOwner";
 
 	// operation chains
 	public final static String CST_OPERATION_DOCUMENT_PUBLISH_ONLY = "setOnLine";
