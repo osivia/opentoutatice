@@ -20,6 +20,7 @@ package fr.toutatice.ecm.platform.automation.comments;
 import java.security.Principal;
 import java.util.Calendar;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
@@ -77,7 +78,7 @@ public class AddComment {
 
         if (THREAD_TYPE.equals(document.getType())) {
             Boolean isModerated = (Boolean) this.document.getProperty("thread", "moderated");
-            if (!isModerated) {
+            if (BooleanUtils.isNotTrue(isModerated)) {
                 FollowTransitionUnrestricted transition = new FollowTransitionUnrestricted(session, commentDoc.getRef(), CommentsConstants.TRANSITION_TO_PUBLISHED_STATE);
                 transition.runUnrestricted();
             }

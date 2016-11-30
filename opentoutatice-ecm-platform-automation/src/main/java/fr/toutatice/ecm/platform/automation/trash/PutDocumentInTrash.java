@@ -16,7 +16,7 @@
  *   mberhaut1
  *    
  */
-package fr.toutatice.ecm.platform.automation;
+package fr.toutatice.ecm.platform.automation.trash;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,19 +51,18 @@ public class PutDocumentInTrash {
     @OperationMethod
     public Object run() throws Exception {
         List<DocumentModel> docs = new ArrayList<DocumentModel>(1);
-        docs.add(document);
+        docs.add(this.document);
         
         // #3411 delete the local proxy if there
-        DocumentModel proxy = ToutaticeDocumentHelper.getProxy(session, document, null, true);
+        DocumentModel proxy = ToutaticeDocumentHelper.getProxy(this.session, this.document, null, true);
         if(proxy != null){
-        	session.removeDocument(proxy.getRef());
+            this.session.removeDocument(proxy.getRef());
         }
-        
         
         TrashService trashService = Framework.getService(TrashService.class);
         trashService.trashDocuments(docs);
         
-        return document;
+        return this.document;
         
     }
     

@@ -30,7 +30,6 @@
 		<operation class="fr.toutatice.ecm.platform.automation.SetWebID" />
 		<operation class="fr.toutatice.ecm.platform.automation.TextExtraction" />
 		<operation class="fr.toutatice.ecm.platform.automation.ReloadMntCfg" />
-		<operation class="fr.toutatice.ecm.platform.automation.PutDocumentInTrash" />
 		<operation
 			class="fr.toutatice.ecm.platform.automation.QueryDocumentBaseOperation" />
 		<operation
@@ -45,6 +44,10 @@
 		<operation class="fr.toutatice.ecm.platform.automation.GetPermalink" />
         <operation class="fr.toutatice.ecm.platform.automation.OrderDocument" />
         <operation class="fr.toutatice.ecm.platform.automation.EraseModifications" />
+        
+        <operation class="fr.toutatice.ecm.platform.automation.trash.PutDocumentInTrash" />
+        <operation class="fr.toutatice.ecm.platform.automation.trash.RestoreDocuments" />
+        <operation class="fr.toutatice.ecm.platform.automation.trash.PurgeDocuments" />
         
         <operation class="fr.toutatice.ecm.platform.automation.security.GetDocumentACLs" />
 
