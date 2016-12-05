@@ -37,9 +37,7 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/templates/core-types.xml,
  OSGI-INF/extensions/picturebook/core-types-contrib.xml,
  OSGI-INF/extensions/workflows/tasks-provider-contrib.xml,
- OSGI-INF/extensions/security/toutatice-policies-permissions-contrib.xml,
- OSGI-INF/extensions/userprofile/core-types-contrib.xml,
- OSGI-INF/extensions/userprofile/directory-contrib.xml
+ OSGI-INF/extensions/security/toutatice-policies-permissions-contrib.xml
  
  
  
