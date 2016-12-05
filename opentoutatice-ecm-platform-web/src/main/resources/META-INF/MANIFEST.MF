@@ -58,6 +58,8 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-actions-contrib.xml,
  OSGI-INF/extensions/templates/layouts-contrib.xml,
  OSGI-INF/extensions/templates/widgets-contrib.xml,
  OSGI-INF/extensions/picturebook/toutatice-ui-types-contrib.xml,
- OSGI-INF/extensions/picturebook/toutatice-types-contrib.xml
+ OSGI-INF/extensions/picturebook/toutatice-types-contrib.xml,
+ OSGI-INF/extensions/collaborative-space/widget-contrib.xml
+ 
  
  

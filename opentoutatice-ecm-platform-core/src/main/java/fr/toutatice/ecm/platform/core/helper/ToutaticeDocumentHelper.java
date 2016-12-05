@@ -757,6 +757,21 @@ public class ToutaticeDocumentHelper {
 	    return CollectionUtils.isNotEmpty(parentPublishSpaceList);
 	}
 	
+	/**
+	 * 
+	 * @param session
+	 * @param document
+	 * @return true if document is in WorkSpace like space
+	 */
+	public static boolean isInWorkSpace(CoreSession session, DocumentModel document){
+	    DocumentModelList spaceDocsList = ToutaticeDocumentHelper.getParentSpaceList(session, document, true, true, true);
+        if(CollectionUtils.isNotEmpty(spaceDocsList)){
+            DocumentModel space = spaceDocsList.get(0);
+            return ToutaticeDocumentHelper.isAWorkSpaceDocument(space);
+        }
+        return false;
+	}
+	
 	@SuppressWarnings("unused")
 	private static class UnrestrictedGetProxyRunner extends UnrestrictedSessionRunner {
 		private DocumentModel document;
