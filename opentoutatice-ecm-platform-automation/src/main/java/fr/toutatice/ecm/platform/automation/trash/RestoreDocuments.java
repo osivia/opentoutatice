@@ -12,6 +12,7 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.trash.TrashService;
+import org.nuxeo.ecm.core.trash.TrashServiceImpl;
 import org.nuxeo.runtime.api.Framework;
 
 
@@ -33,7 +34,12 @@ public class RestoreDocuments {
    @OperationMethod
    public void run(DocumentModelList documents) throws Exception {
        TrashService trashService = Framework.getService(TrashService.class);
-       trashService.undeleteDocuments(documents);
+       
+       if(((TrashServiceImpl) trashService).canUndelete(documents)) {
+           trashService.undeleteDocuments(documents);
+       } else {
+           throw new Exception("You don't have enough write permissions to restore given documents");
+       }
    }
    
    @OperationMethod

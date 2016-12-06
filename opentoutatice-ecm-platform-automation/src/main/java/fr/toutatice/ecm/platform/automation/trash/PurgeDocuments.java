@@ -38,7 +38,7 @@ public class PurgeDocuments {
     public void run(DocumentModelList documents) throws Exception {
         TrashService trashService = Framework.getService(TrashService.class);
         
-        if(trashService.checkDeletePermOnParents(documents)) {
+        if(trashService.canDelete(documents, this.session.getPrincipal(), false)) {
             List<DocumentRef> refs = new ArrayList<DocumentRef>(documents.size());
             for(DocumentModel doc : documents){
                 refs.add(doc.getRef());
