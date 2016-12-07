@@ -49,8 +49,8 @@
     <regexp name="offsiteURL"
       value="(\s)*((ht|f)tp(s?)://|mailto:)[\p{L}\p{N}]+[\p{L}\p{N}\p{Zs}\.\#@\$%\+&amp;;:\-_~,\?=/!\(\)]*(\s)*" />
     <!-- Definition of relatives URLs used for img -->  
-    <regexp name="relativeOffsiteURL"
-      value="([\p{L}\p{N}]+[\p{L}\p{N}\p{Zs}\.\#@\$%\+&amp;;:\-_~,\?=/!\(\)]*)(\s)*" />
+    <regexp name="blobOnsiteURL"
+      value="([\p{L}\p{N}\\\.\#@\$%\+&amp;;:\-_~,\?=/!]+)" />
 
     <regexp name="boolean" value="(true|false)" />
     <regexp name="singlePrintable" value="[a-zA-Z0-9]{1}" /> <!-- \w allows the '_' character -->
@@ -217,7 +217,6 @@
       <regexp-list>
         <regexp name="onsiteURL" />
         <regexp name="offsiteURL" />
-        <regexp name="relativeOffsiteURL" />
       </regexp-list>
     </attribute>
 
@@ -618,6 +617,7 @@
         <regexp-list>
           <regexp name="onsiteURL" />
           <regexp name="offsiteURL" />
+          <regexp name="blobOnsiteURL" />
         </regexp-list>
       </attribute>
 
@@ -823,7 +823,7 @@
         <regexp-list>
           <regexp name="onsiteURL" />
           <regexp name="offsiteURL" />
-          <regexp name="relativeOffsiteURL" />
+          <regexp name="blobOnsiteURL" />
         </regexp-list>
       </attribute>
       <attribute name="name" />
@@ -851,6 +851,7 @@
         <regexp-list>
           <regexp name="onsiteURL" />
           <regexp name="offsiteURL" />
+          <regexp name="blobOnsiteURL" />
         </regexp-list>
       </attribute>
       <attribute name="width" />

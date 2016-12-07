@@ -29,19 +29,17 @@ public class DocumentContentConverter implements Converter {
     
     private static final String webappName = "/".concat(BaseURL.getWebAppName()).concat("/");
     
-    private static final String INTERNAL_PICTURE_INDICATOR = "attachedImages";
+    private static final String ATTACHED_RESOURCE_INDICATOR = "attachedImages";
     
     /** Component internal link pattern. */
-    static final Pattern PATTERN_COMPONENT_INTERNAL_LINK = Pattern.compile("(href)(=\")(.+\")");
-    /** Model internal link pattern. */
-    //static final Pattern PATTERN_MODEL_INTERNAL_LINK = Pattern.compile("(src|href)(=\"".concat(webappName).concat(")(.+\")"));
+    static final Pattern PATTERN_COMPONENT_LINK_OR_RESOURCE = Pattern.compile("(src|href)(=\")([.[^\"]]+\")");
 
     /** Component internal picture pattern. */
-    static final Pattern PATTERN_COMPONENT_INTERNAL_PICTURE = Pattern.compile("(nxfile/default/)([a-zA-Z0-9[-]&&[^/]]*)(/ttc:images/[.[^\"]]*\")");
-    static final Pattern PATTERN_COMPONENT_INTERNAL_PICTURE_PARAM = Pattern.compile("([?]conversationId=[.[^\"]]+)");
+    static final Pattern PATTERN_COMPONENT_ATTACHED_RESOURCE = Pattern.compile("(nxfile/default/)([a-zA-Z0-9[-]&&[^/]]*)(/ttc:images/[.[^\"]]*\")");
+    static final Pattern PATTERN_COMPONENT_ATTACHED_RESOURCE_PARAM = Pattern.compile("([?]conversationId=[.[^\"]]+)");
 
     /** Model internal picture pattern. */
-    static final Pattern PATTERN_MODEL_INTERNAL_PICTURE = Pattern.compile("(nxfile/default/)(".concat(INTERNAL_PICTURE_INDICATOR).concat(")").concat("(/ttc:images/[.[^\"]]*\")"));
+    static final Pattern PATTERN_MODEL_ATTACHED_RESOURCE = Pattern.compile("(nxfile/default/)(".concat(ATTACHED_RESOURCE_INDICATOR).concat(")").concat("(/ttc:images/[.[^\"]]*\")"));
     
     /**
      * Default constructor.
@@ -58,28 +56,26 @@ public class DocumentContentConverter implements Converter {
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         StringBuffer replacement = new StringBuffer();
         if (value != null) {
-            Matcher pictMatcher = PATTERN_COMPONENT_INTERNAL_PICTURE.matcher((String) value);
+            Matcher pictMatcher = PATTERN_COMPONENT_ATTACHED_RESOURCE.matcher((String) value);
             StringBuffer pictReplacementStack = new StringBuffer();
             while (pictMatcher.find()) {
                 String g3 = pictMatcher.group(3);
-                Matcher paramMatcher = PATTERN_COMPONENT_INTERNAL_PICTURE_PARAM.matcher(g3);
+                Matcher paramMatcher = PATTERN_COMPONENT_ATTACHED_RESOURCE_PARAM.matcher(g3);
                 if (paramMatcher.find()) {
                     g3 = StringUtils.remove(g3, paramMatcher.group(1));
                 }
-                pictMatcher.appendReplacement(pictReplacementStack, "$1" + INTERNAL_PICTURE_INDICATOR + g3);
+                pictMatcher.appendReplacement(pictReplacementStack, "$1" + ATTACHED_RESOURCE_INDICATOR + g3);
             }
             replacement = pictMatcher.appendTail(pictReplacementStack);
             
-            Matcher linkMatcher = PATTERN_COMPONENT_INTERNAL_LINK.matcher(replacement.toString());
+            Matcher linkMatcher = PATTERN_COMPONENT_LINK_OR_RESOURCE.matcher(replacement.toString());
             StringBuffer linkReplacementStack = new StringBuffer();
             while(linkMatcher.find()){
                 // We store URL links prefixed with webapp's name
                 String g3 = linkMatcher.group(3);
                 String rp3 = g3;
-                if(!StringUtils.startsWith(rp3, "nxfile")){
-                    if (!StringUtils.startsWith(g3, webappName)) {
-                        rp3 = webappName.concat(g3);
-                    }
+                if (!StringUtils.startsWith(g3, webappName)) {
+                    rp3 = webappName.concat(g3);
                 }
                 
                 linkMatcher.appendReplacement(linkReplacementStack, "$1" + "$2" + rp3);
@@ -102,7 +98,7 @@ public class DocumentContentConverter implements Converter {
     public String getAsString(FacesContext context, UIComponent component, Object value) {
         StringBuffer replacement = new StringBuffer();
         if (value != null) {
-            Matcher matcher = PATTERN_MODEL_INTERNAL_PICTURE.matcher((String) value);
+            Matcher matcher = PATTERN_MODEL_ATTACHED_RESOURCE.matcher((String) value);
 
             OttcDocumentActionsBean actionsBean = (OttcDocumentActionsBean) SeamComponentCallHelper.getSeamComponentByName("documentActions");
             DocumentModel currentDoc = actionsBean.getCurrentDocument();
@@ -129,7 +125,7 @@ public class DocumentContentConverter implements Converter {
                 }
                 replacement = matcher.appendTail(pictReplacementStack);
                 
-                Matcher linkMatcher = PATTERN_COMPONENT_INTERNAL_LINK.matcher(replacement.toString());
+                Matcher linkMatcher = PATTERN_COMPONENT_LINK_OR_RESOURCE.matcher(replacement.toString());
                 StringBuffer linkReplacementStack = new StringBuffer();
                 while(linkMatcher.find()){
                  // We set URL without webapp name
