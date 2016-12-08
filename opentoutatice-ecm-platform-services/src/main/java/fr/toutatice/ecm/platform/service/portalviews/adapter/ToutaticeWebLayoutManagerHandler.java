@@ -27,19 +27,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
-import javax.faces.view.facelets.FaceletContext;
-
-import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.platform.forms.layout.api.Layout;
 import org.nuxeo.ecm.platform.forms.layout.api.LayoutRow;
 import org.nuxeo.ecm.platform.forms.layout.api.Widget;
 import org.nuxeo.ecm.platform.forms.layout.api.impl.LayoutImpl;
 import org.nuxeo.ecm.platform.forms.layout.api.impl.LayoutRowImpl;
-import org.nuxeo.ecm.platform.ui.web.rest.RestHelper;
-import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
-import org.nuxeo.ecm.platform.url.api.DocumentView;
-import org.nuxeo.ecm.webengine.app.DefaultContext;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.components.ToutaticeAbstractServiceHandler;
