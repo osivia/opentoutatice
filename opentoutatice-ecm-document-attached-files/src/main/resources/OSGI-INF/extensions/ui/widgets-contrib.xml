@@ -43,5 +43,16 @@
 		</widget>
 
 	</extension>
+	
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager" point="widgettypes">
+	
+	   <!-- Alias waiting for definition of UIHtmlEditor component (cf HtmlTextWidgetTypeHandler) -->
+	   <widgetType name="ttc_richtext_with_mimetype">
+            <aliases>
+                <alias>ottc_htmltext</alias>
+            </aliases>
+        </widgetType>
+	
+	</extension>
 
 </component>

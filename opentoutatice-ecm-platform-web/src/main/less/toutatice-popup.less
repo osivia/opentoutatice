@@ -10,6 +10,10 @@ body {
     width: auto;
 }
 
+.tab-content {
+    margin-top: 10px;
+}
+
 .first-form-group {
     .form-group;
     padding-top: 15px;
@@ -24,6 +28,11 @@ body {
 	   .btn;
 	   .btn-default;
 	   width: auto;
+	}
+	
+	.form-group > label.control-label {
+		padding-left: 0;
+		padding-right: 2px;
 	}
 	
 	table > tbody > tr > td {
@@ -236,7 +245,7 @@ body {
 }
 
 /* Required fields */
-.form-group.required .control-label:after { 
+.form-group.required .control-label:after, .form-group.required .ttc-label:after { 
    content:"  *";
    color: #bf3730;
 }

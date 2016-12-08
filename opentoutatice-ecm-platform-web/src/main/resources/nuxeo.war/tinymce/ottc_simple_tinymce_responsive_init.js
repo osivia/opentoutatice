@@ -14,7 +14,7 @@ tinyMCE
 		  mode : "specific_textareas",
 		  height : 350,
 		  theme : "modern",
-		  plugins : ["link ottc_image code charmap fullscreen nuxeoimageupload nuxeolink"],
+		  plugins : ["ottcbasiclink ottc_image code charmap fullscreen nuxeoimageupload nuxeolink"],
 		  language : lang,
 		  block_formats: "Paragraphe=p;Adresse=address;Pre=pre;Titre 1=h1;Titre 2=h2;Titre 3=h3;Titre 4=h4;Titre 5=h5; Titre 6=h6",
 		  content_css: "/nuxeo/css/toutatice-popup.min.css?" + new Date().getTime(),
@@ -23,7 +23,7 @@ tinyMCE
 		  document_base_url : baseURL,
 		
 		  toolbar1 : "formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist",
-		  toolbar2 : "fullscreen | undo redo | code | link unlink nuxeolink | nuxeoimageupload ottc_image",
+		  toolbar2 : "fullscreen | undo redo | code | ottcbasiclink unlink nuxeolink | nuxeoimageupload ottc_image",
 		  menubar: false,
 		  statusbar: false
 	  
