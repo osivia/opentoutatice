@@ -53,7 +53,6 @@ import fr.toutatice.ecm.platform.automation.SetWebID;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.local.configuration.WebConfsConfigurationConstants;
-import fr.toutatice.ecm.platform.service.url.ToutaticeWebIdHelper;
 import fr.toutatice.ecm.platform.web.document.ToutaticeDocumentActionsBean;
 import fr.toutatice.ecm.platform.web.local.configuration.WebConfsConfigurationActions;
 

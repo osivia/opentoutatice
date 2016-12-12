@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="fr.toutatice.ecm.platform.web.event.handler">
+<component name="fr.toutatice.ecm.platform.automation.event.handler">
 
 	<require>org.nuxeo.ecm.core.operation.OperationServiceComponent
 	</require>
@@ -17,10 +17,9 @@
 		</handler>
 
 		<handler chainId="webIdUnicity">
-		    <event>beforeDocumentModification</event> <!-- case of save operation -->
+		    <event>beforeDocumentModification</event> 
 			<event>documentCreatedByCopy</event>
 			<event>documentMoved</event>
-			<event>lifecycle_transition_event</event> <!-- for put in trash and restauration -->
 			<filters>
 				<attribute>Mutable Document</attribute>
 				<condition>Document.hasSchema('toutatice')</condition>

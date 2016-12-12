@@ -36,7 +36,6 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
-import org.nuxeo.ecm.core.api.LifeCycleConstants;
 import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
@@ -71,7 +70,7 @@ public class SetWebID {
             add(VersioningService.class);
         }
     };
-
+    
     @Context
     protected CoreSession coreSession;
 
@@ -90,18 +89,20 @@ public class SetWebID {
      */
     @OperationMethod()
     public DocumentModel run(DocumentModel document) throws Exception {
-        UnrestrictedSilentSetWebIdRunner runner = new UnrestrictedSilentSetWebIdRunner(coreSession, document, chainSource);
+        UnrestrictedSilentSetWebIdRunner runner = new UnrestrictedSilentSetWebIdRunner(this.coreSession, 
+                document, this.chainSource);
         runner.silentRun(true, FILTERED_SERVICES_LIST);
         return runner.getDocument();
     }
 
     public static class UnrestrictedSilentSetWebIdRunner extends ToutaticeSilentProcessRunnerHelper {
-
+        
         private DocumentModel document;
         private String chainSource;
         private DocumentModel parentDoc;
 
-        protected UnrestrictedSilentSetWebIdRunner(CoreSession session, DocumentModel document, String chainSource) {
+        protected UnrestrictedSilentSetWebIdRunner(CoreSession session, DocumentModel document, 
+                String chainSource) {
             super(session);
             this.document = document;
             this.chainSource = chainSource;
@@ -248,42 +249,32 @@ public class SetWebID {
         }
         
         /**
-         * Check repo unicity of given webid.
+         * Conditional check repository unicity of given webId 
+         * 
+         * @param ctx
+         * @param session
+         * @param document
+         * @param webId
+         * @return true if not unique
+         */
+//        protected static boolean isNotUnique(OperationContext ctx, CoreSession session, DocumentModel document, 
+//                String webId){
+//            if(doCheckWebIdUnicty(ctx, document)){
+//                return isNotUnique(session, document, webId);
+//            }
+//            return false;
+//        }
+        
+        /**
+         * Checks repository unicity of given webId.
          * 
          * @param webid
          * @return true if not unique
          */
-        public static boolean isNotUnique(CoreSession session, DocumentModel document, String webId){
+        public static boolean isNotUnique(CoreSession session, DocumentModel document, String webId) {
             String escapedWebId = StringEscapeUtils.escapeJava(webId);
-            DocumentModelList query = session.query(String.format(ToutaticeWebIdHelper.NOT_DRAFT_WEB_ID_UNICITY_QUERY, escapedWebId, document.getId()));
-            
-            if(query.isEmpty()){
-                return existsInDraftsWebId(session, document, escapedWebId);
-            } else {
-                return query.size() > 0;
-            }
-        }
-        
-        /**
-         * Checks if webid exists in draft webids
-         * (draft_<webId>).
-         * 
-         * @param string
-         * @param escapedWebId
-         * @return true if exists
-         */
-        // FIXME: to move in Checkin addon (make an inherited operation)?
-        protected static boolean existsInDraftsWebId(CoreSession session, DocumentModel document, String webId) {
-            String cycleState = document.getCurrentLifeCycleState();
-            // We don't check Drafts when checkined document is in trash
-            boolean isInTrash = LifeCycleConstants.DELETED_STATE.equals(cycleState)
-                    || StringUtils.endsWith(document.getName(), "_.trashed");
-            
-            if(document.hasFacet("OttcCheckedIn") && !isInTrash){
-                DocumentModelList query = session.query(String.format(ToutaticeWebIdHelper.DRAFTS_WEB_ID_UNICITY_QUERY, "draft_".concat(webId), document.getId()));
-                return query.size() > 0;
-            }
-            return false;
+            DocumentModelList query = session.query(String.format(ToutaticeWebIdHelper.WEB_ID_UNICITY_QUERY, escapedWebId, document.getId()));
+           return query.size() > 0;
         }
         
     }

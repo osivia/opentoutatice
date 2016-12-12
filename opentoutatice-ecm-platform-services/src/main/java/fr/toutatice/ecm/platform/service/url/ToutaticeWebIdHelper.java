@@ -37,11 +37,8 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
  */
 public class ToutaticeWebIdHelper {
     
-    public static final String NOT_DRAFT_WEB_ID_UNICITY_QUERY = "select * from Document where ttc:webid = \"%s\""
-            + " AND ecm:uuid <> '%s' AND ecm:mixinType <> 'OttcDraft' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
-    
-    public static final String DRAFTS_WEB_ID_UNICITY_QUERY = "select * from Document where ttc:webid = \"%s\""
-            + " AND ecm:uuid <> '%s' AND ecm:mixinType = 'OttcDraft' AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
+    public static final String WEB_ID_UNICITY_QUERY = "select * from Document where ttc:webid = \"%s\""
+            + " AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:isCheckedInVersion = 0";
     
     /**
      * Utility class.
