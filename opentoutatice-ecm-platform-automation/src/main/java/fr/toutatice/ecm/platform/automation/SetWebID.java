@@ -35,7 +35,6 @@ import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
-import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
@@ -76,7 +75,8 @@ public class SetWebID {
 
     @In(create = true)
     protected NavigationContext navigationContext;
-
+    
+    @Deprecated
     @Param(name = "chainSource", required = false)
     protected String chainSource;
 
@@ -173,19 +173,6 @@ public class SetWebID {
                 }
             }
             
-            if(!StringUtils.equals(chainSource, NO_RECURSIVE_CHAIN)){
-                DocumentRef parentRef = this.document.getRef();
-                if (this.session.hasChildren(parentRef)) {
-                    if (this.parentDoc == null) {
-                        this.parentDoc = this.document;
-                    }
-                    for (DocumentModel child : this.session.getChildren(parentRef)) {
-                        this.document = child;
-                        run();
-                    }
-                }
-            }
-
         }
 
         /**
@@ -247,23 +234,6 @@ public class SetWebID {
             }
             return webid;
         }
-        
-        /**
-         * Conditional check repository unicity of given webId 
-         * 
-         * @param ctx
-         * @param session
-         * @param document
-         * @param webId
-         * @return true if not unique
-         */
-//        protected static boolean isNotUnique(OperationContext ctx, CoreSession session, DocumentModel document, 
-//                String webId){
-//            if(doCheckWebIdUnicty(ctx, document)){
-//                return isNotUnique(session, document, webId);
-//            }
-//            return false;
-//        }
         
         /**
          * Checks repository unicity of given webId.
