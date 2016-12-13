@@ -37,8 +37,21 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
  */
 public class ToutaticeWebIdHelper {
     
-    public static final String WEB_ID_UNICITY_QUERY = "select * from Document where ttc:webid = \"%s\""
-            + " AND ecm:uuid <> '%s' AND ecm:isProxy = 0 AND ecm:isCheckedInVersion = 0";
+    /** Live query filter. */
+    public static final String LIVE_QUERY_FILTER = " and ecm:isProxy = 0 ";
+    /** Unicity webid query filter. */
+    public static final String WEB_ID_UNICITY_QUERY_FILTER = " AND ecm:uuid <> '%s' ";
+    
+    /** Query to get document according to its webId. */
+    public static final String WEB_ID_QUERY = "select * from Document where ttc:webid = '%s' "
+            + "AND ecm:isCheckedInVersion = 0";
+    /** Query to get live document according to its webId. */
+    public static final String LIVE_WEB_ID_QUERY = WEB_ID_QUERY + LIVE_QUERY_FILTER;
+    
+    /** Unicity webid query. */
+    public static final String WEB_ID_UNICITY_QUERY = WEB_ID_QUERY + WEB_ID_UNICITY_QUERY_FILTER;
+    /** Unicity webid query. */
+    public static final String LIVE_WEB_ID_UNICITY_QUERY = WEB_ID_UNICITY_QUERY + LIVE_QUERY_FILTER;
     
     /**
      * Utility class.

@@ -19,21 +19,16 @@
  */
 package fr.toutatice.ecm.platform.service.url;
 
-import java.util.Iterator;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
-import org.nuxeo.ecm.core.api.Filter;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 
-import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
-import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeQueryHelper;
 
 
@@ -49,14 +44,6 @@ public class WebIdResolver {
     private WebIdResolver() {
     };
 
-    /** Query to get document according to its webId. */
-    private static final String WEB_ID_QUERY = "select * from Document where ttc:webid = '%s'"
-            + " %s AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0";
-
-    /** Query to get unique live with given webid. */
-    private static final String LIVE_DOC_WEB_ID_QUERY = "select * from Document where ttc:webid = '%s'"
-            + " AND ecm:currentLifeCycleState!='deleted' AND ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0";
-
     /**
      * @param coreSession
      * @param webId
@@ -65,7 +52,7 @@ public class WebIdResolver {
     public static DocumentModel getLiveDocumentByWebId(CoreSession coreSession, String webId) {
         DocumentModel live = null;
 
-        String query = String.format(LIVE_DOC_WEB_ID_QUERY, webId);
+        String query = String.format(ToutaticeWebIdHelper.LIVE_WEB_ID_QUERY, webId);
         DocumentModelList lives = ToutaticeQueryHelper.queryUnrestricted(coreSession, query);
         if (CollectionUtils.isNotEmpty(lives) && lives.size() == 1) {
             live = lives.get(0);
@@ -110,8 +97,6 @@ public class WebIdResolver {
         String webId;
         DocumentModelList documents;
 
-        private static final String LIVE_FILTER = " AND ecm:isProxy = 0 ";
-
         public UnrestrictedFecthWebIdRunner(CoreSession session, String webId) {
             super(session);
             this.webId = webId;
@@ -127,7 +112,7 @@ public class WebIdResolver {
          * Get live with given webId.
          */
         private void getLive() {
-            DocumentModelList lives = this.session.query(String.format(WEB_ID_QUERY, this.webId, LIVE_FILTER));
+            DocumentModelList lives = this.session.query(String.format(ToutaticeWebIdHelper.LIVE_WEB_ID_QUERY, this.webId));
             if (CollectionUtils.isNotEmpty(lives) && lives.size() == 1) {
                 this.documents.add(lives.get(0));
             }
