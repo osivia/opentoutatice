@@ -44,7 +44,7 @@ public class ToutaticeUnicityTitleListener implements EventListener {
             DocumentEventContext docCtx = (DocumentEventContext) event.getContext();
             DocumentModel document = docCtx.getSourceDocument();
             
-            if(ToutaticeDocumentHelper.isInWorkSpace(docCtx.getCoreSession(), document)){
+            if(ToutaticeDocumentHelper.isInWorkspaceLike(docCtx.getCoreSession(), document)){
                 document = checksUnicityTitle(docCtx, event.getName(), document);
                 ToutaticeDocumentHelper.saveDocumentSilently(docCtx.getCoreSession(), document, true);
             }

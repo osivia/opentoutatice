@@ -14,6 +14,12 @@
 	      <filter>application/zip</filter>
 	    </plugin>
 
+		<!-- <plugin name="ToutaticeRouteModelsImporter" enabled="true"
+			class="fr.toutatice.ecm.platform.core.persistence.ToutaticeRouteModelsZipImporter"
+			order="5">
+			<filter>application/zip</filter>
+		</plugin> -->
+
 	</extension>
 
 

@@ -11,13 +11,11 @@ import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.core.api.security.Access;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.model.Document;
-import org.nuxeo.ecm.core.query.sql.NXQL;
 import org.nuxeo.ecm.core.query.sql.model.SQLQuery;
 import org.nuxeo.ecm.core.security.AbstractSecurityPolicy;
 import org.nuxeo.ecm.platform.usermanager.UserService;
@@ -48,47 +46,43 @@ public class MasterOwnerSecurityPolicy extends AbstractSecurityPolicy {
     @Override
     public Access checkPermission(Document doc, ACP mergedAcp, Principal principal, String permission, String[] resolvedPermissions,
             String[] additionalPrincipals) {
-        
+
         try {
             // FIXME: better to use Session at this level
-//            Principal systemPrincipal = new NuxeoPrincipalImpl(SecurityConstants.SYSTEM_USERNAME);
-//            QueryFilter systemFilter = new QueryFilter(systemPrincipal, null, null, null, null, 1, 1);
-//            String query = String.format(WORKSPACE_QUERY, doc.getSystemProp("ancestors", String[].class));
-            
+            // Principal systemPrincipal = new NuxeoPrincipalImpl(SecurityConstants.SYSTEM_USERNAME);
+            // QueryFilter systemFilter = new QueryFilter(systemPrincipal, null, null, null, null, 1, 1);
+            // String query = String.format(WORKSPACE_QUERY, doc.getSystemProp("ancestors", String[].class));
+
             // Get Workspace
             CoreSession sessionSystem = null;
             try {
-            sessionSystem = CoreInstance.openCoreSessionSystem(doc.getRepositoryName());
-            DocumentModel documentModel = sessionSystem.getDocument(new IdRef(doc.getUUID()));
-            DocumentModelList spaces = ToutaticeDocumentHelper.getParentSpaceList(sessionSystem, documentModel, true, true);
-            
-            if(spaces != null && spaces.size() == 1){
-                DocumentModel space = spaces.get(0);
-                if("Workspace".equals(space.getType())){
+                sessionSystem = CoreInstance.openCoreSessionSystem(doc.getRepositoryName());
+                DocumentModel documentModel = sessionSystem.getDocument(new IdRef(doc.getUUID()));
+                DocumentModel ws = ToutaticeDocumentHelper.getWorkspace(sessionSystem, documentModel, false);
+
+                if (ws != null) {
                     // Checks if current user has MasterOwner permission
-                    ACP wsAcp = space.getACP();
-                    if(!ArrayUtils.contains(additionalPrincipals, principal.getName())){
+                    ACP wsAcp = ws.getACP();
+                    if (!ArrayUtils.contains(additionalPrincipals, principal.getName())) {
                         additionalPrincipals[additionalPrincipals.length] = principal.getName();
                     }
+
+                    boolean hasAllPermissions = Access.GRANT.equals(wsAcp.getAccess(additionalPrincipals, new String[]{SecurityConstants.EVERYTHING}));
                     
-                    boolean hasAllPermissions = Access.GRANT.equals(wsAcp.getAccess(additionalPrincipals,
-                            new String[]{SecurityConstants.EVERYTHING}));
-        
-                    if(!hasAllPermissions && Access.GRANT.equals(wsAcp.getAccess(additionalPrincipals,
-                            new String[]{ToutaticeNuxeoStudioConst.CST_PERM_MASTER_OWNER}))){
+                    if (!hasAllPermissions
+                            && Access.GRANT.equals(wsAcp.getAccess(additionalPrincipals, new String[]{ToutaticeNuxeoStudioConst.CST_PERM_MASTER_OWNER}))) {
                         return Access.GRANT;
                     }
                 }
-            }
             } finally {
-                if(sessionSystem != null){
+                if (sessionSystem != null) {
                     sessionSystem.close();
                 }
             }
         } catch (Exception e) {
             log.error(e);
         }
-        
+
         return Access.UNKNOWN;
     }
     

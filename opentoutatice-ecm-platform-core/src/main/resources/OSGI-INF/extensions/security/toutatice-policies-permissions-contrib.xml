@@ -13,9 +13,9 @@
 		      <include>Read</include>
 		</permission>
 		
-		<!-- Read is for requests -->
+		<!-- Browse is for requests -->
 		<permission name="MasterOwner">
-		      <include>Read</include>
+		      <include>Browse</include>
 		</permission>
 
         <!-- FIXME: replace remove by exclude, no? -->

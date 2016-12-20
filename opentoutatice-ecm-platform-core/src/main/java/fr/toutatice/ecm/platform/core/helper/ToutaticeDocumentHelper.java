@@ -475,6 +475,30 @@ public class ToutaticeDocumentHelper {
 		
 		return mapPpty;
 	}
+	
+	/**
+	 * Gets parent of document of Workspace type.
+	 * 
+	 * @param session
+	 * @param document
+	 * @param unrestricted
+	 * @return parent of document of Workspace type
+	 */
+	public static DocumentModel getWorkspace(CoreSession session, DocumentModel document, boolean unrestricted){
+	    @SuppressWarnings("serial")
+        Filter wsFiler = new Filter(){
+            @Override
+            public boolean accept(DocumentModel docModel) {
+                return ToutaticeNuxeoStudioConst.CST_DOC_TYPE_WORKSPACE.equals(docModel.getType());
+            }
+	    };
+	    DocumentModelList parentWsList = getParentList(session, document, wsFiler, unrestricted, true, true);
+	    if(parentWsList != null && parentWsList.size() > 0){
+	        return parentWsList.get(0);
+	    } else {
+	        return null;
+	    }
+	}
 
 	/**
 	 * 
@@ -713,7 +737,7 @@ public class ToutaticeDocumentHelper {
 			DocumentModelList spaceDocsList = ToutaticeDocumentHelper.getParentSpaceList(session, doc, true, true, true);
 			if(spaceDocsList!=null && !spaceDocsList.isEmpty()){
 				DocumentModel space = spaceDocsList.get(0);
-                res = ToutaticeDocumentHelper.isAWorkSpaceDocument(space) || ToutaticeDocumentHelper.isAPublicationSpaceDocument(space);
+                res = ToutaticeDocumentHelper.isAWorkSpaceLikeDocument(space) || ToutaticeDocumentHelper.isAPublicationSpaceDocument(space);
 			}
 		}
 
@@ -744,9 +768,19 @@ public class ToutaticeDocumentHelper {
 	 * @return true if document is Workspace or extends it.
 	 */
 	// FIXME: UserWorkspace test to move in AcRennes.
-	public static boolean isAWorkSpaceDocument(DocumentModel document) {
+	public static boolean isAWorkSpaceLikeDocument(DocumentModel document) {
 	    return ToutaticeNuxeoStudioConst.CST_DOC_TYPE_WORKSPACE.equals(document.getType()) || ToutaticeNuxeoStudioConst.CST_DOC_TYPE_USER_WORKSPACE.equals(document.getType())
 	            || isSubTypeOf(document, ToutaticeNuxeoStudioConst.CST_DOC_TYPE_WORKSPACE);
+	}
+	
+	/**
+	 * Checks if document is of Workspace type.
+	 * 
+	 * @param document
+	 * @return true if document is of Workspace type
+	 */
+	public static boolean isWorkspace(DocumentModel document){
+	    return ToutaticeNuxeoStudioConst.CST_DOC_TYPE_WORKSPACE.equals(document.getType());
 	}
 	
 	/**
@@ -784,11 +818,11 @@ public class ToutaticeDocumentHelper {
 	 * @param document
 	 * @return true if document is in WorkSpace like space
 	 */
-	public static boolean isInWorkSpace(CoreSession session, DocumentModel document){
+	public static boolean isInWorkspaceLike(CoreSession session, DocumentModel document){
 	    DocumentModelList spaceDocsList = ToutaticeDocumentHelper.getParentSpaceList(session, document, true, true, true);
         if(CollectionUtils.isNotEmpty(spaceDocsList)){
             DocumentModel space = spaceDocsList.get(0);
-            return ToutaticeDocumentHelper.isAWorkSpaceDocument(space);
+            return ToutaticeDocumentHelper.isAWorkSpaceLikeDocument(space);
         }
         return false;
     }

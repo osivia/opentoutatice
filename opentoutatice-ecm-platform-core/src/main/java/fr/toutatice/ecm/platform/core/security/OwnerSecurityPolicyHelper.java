@@ -10,10 +10,6 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.NuxeoPrincipal;
-import org.nuxeo.ecm.core.api.security.ACP;
-import org.nuxeo.ecm.core.api.security.Access;
-import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.schema.SchemaManager;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.platform.types.TypeManager;
@@ -81,23 +77,6 @@ public class OwnerSecurityPolicyHelper {
         }
 
         return leafSubTypes;
-    }
-    
-    /**
-     * Checks if principal is application or functionnal admin.
-     * 
-     * @param document
-     * @param principal
-     * @return true if principal is admin
-     */
-    private static boolean isAdmin(DocumentModel document, Principal principal){
-        if(((NuxeoPrincipal) principal).isAdministrator()){
-            return true;
-        }
-        
-        ACP acp = document.getACP();
-        Access access = acp.getAccess(principal.getName(), SecurityConstants.EVERYTHING);
-        return Access.GRANT.equals(access);
     }
 
 }

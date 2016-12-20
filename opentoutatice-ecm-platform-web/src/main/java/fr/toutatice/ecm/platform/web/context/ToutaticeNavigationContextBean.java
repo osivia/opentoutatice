@@ -226,15 +226,15 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
 	}
     
     public DocumentModel getCurrentWorkspaceArea() {
-        return getWorkspaceArea(getCurrentDocument());
+        return getWorkspaceLikeArea(getCurrentDocument());
     }
 
-    public DocumentModel getWorkspaceArea(DocumentModel document) {
+    public DocumentModel getWorkspaceLikeArea(DocumentModel document) {
         DocumentModel area = ToutaticeGlobalConst.NULL_DOCUMENT_MODEL;
 
         if (null != document) {
             DocumentModel space = getSpaceDoc(document);
-            if (ToutaticeDocumentHelper.isAWorkSpaceDocument(space)) {
+            if (ToutaticeDocumentHelper.isAWorkSpaceLikeDocument(space)) {
                 area = space;
             }
         } else {

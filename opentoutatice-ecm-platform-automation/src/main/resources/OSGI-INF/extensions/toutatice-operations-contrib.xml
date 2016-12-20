@@ -45,11 +45,15 @@
         <operation class="fr.toutatice.ecm.platform.automation.OrderDocument" />
         <operation class="fr.toutatice.ecm.platform.automation.EraseModifications" />
         
+        <!-- Trash -->
         <operation class="fr.toutatice.ecm.platform.automation.trash.PutDocumentInTrash" />
         <operation class="fr.toutatice.ecm.platform.automation.trash.RestoreDocuments" />
         <operation class="fr.toutatice.ecm.platform.automation.trash.PurgeDocuments" />
         
+        <!-- Security -->
         <operation class="fr.toutatice.ecm.platform.automation.security.GetDocumentACLs" />
+        <operation class="fr.toutatice.ecm.platform.automation.security.AddACEs" />
+        <operation class="fr.toutatice.ecm.platform.automation.security.RemoveACEs" />
 
 		<operation
 			class="fr.toutatice.ecm.platform.infos.FetchExtendedDocumentInfos" />

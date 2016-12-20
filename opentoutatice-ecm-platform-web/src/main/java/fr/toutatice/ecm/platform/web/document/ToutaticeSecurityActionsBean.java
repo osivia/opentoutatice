@@ -20,6 +20,8 @@ package fr.toutatice.ecm.platform.web.document;
 
 import static org.jboss.seam.ScopeType.CONVERSATION;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.annotations.Install;
@@ -36,6 +38,7 @@ import org.nuxeo.ecm.webapp.security.SecurityActionsBean;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.core.security.MasterOwnerSecurityHelper;
 
 /**
  * Custom version of the security related methods.
@@ -50,13 +53,32 @@ public class ToutaticeSecurityActionsBean extends SecurityActionsBean {
 	private static final Log log = LogFactory.getLog(ToutaticeSecurityActionsBean.class);
 	
 	private static final long serialVersionUID = 8932929262490071180L;
+	
+	/**
+	 * Adds Master Owners on local ACL when inheritance is blocked.
+	 */
+	public void modifyLocalACl(boolean blockInheritance) throws ClientException {
+	    if(blockInheritance){
+	        // Get Master Owners
+	        List<String> masterOwners = MasterOwnerSecurityHelper.getMasterOwners(this.documentManager, 
+	                this.navigationContext.getCurrentDocument());
+	        
+	        // Set local ACEs (after EveryOne ACE)
+	        for(String masterOwner : masterOwners){
+	            super.securityData.addModifiablePrivilege(masterOwner, ToutaticeNuxeoStudioConst.CST_PERM_MASTER_OWNER, true);
+	        }
+	    }
+	}
 
-	@Override
-	public String updateSecurityOnDocument() throws ClientException {
-		 String res = super.updateSecurityOnDocument();
-		 updateACLProxy();
-		 return res;
-	 }
+    @Override
+    public String updateSecurityOnDocument() throws ClientException {
+        // Custom blockInheritance rule
+        modifyLocalACl(super.getBlockRightInheritance());
+
+        String res = super.updateSecurityOnDocument();
+        updateACLProxy();
+        return res;
+    }
 	 
 	 private void updateACLProxy() throws ClientException{
 		 DocumentModel currentDoc = navigationContext.getCurrentDocument();
