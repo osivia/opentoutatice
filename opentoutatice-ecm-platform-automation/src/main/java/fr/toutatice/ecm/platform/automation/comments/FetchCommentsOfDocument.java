@@ -22,11 +22,6 @@ import java.security.Principal;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-import net.sf.json.processors.JsDateJsonValueProcessor;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,6 +39,11 @@ import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.processors.JsDateJsonValueProcessor;
+
 @Operation(id = FetchCommentsOfDocument.ID, category = Constants.CAT_FETCH, label = "FetchCommentsOfDocument",
         description = "Fetches comments of a (commentable) document")
 public class FetchCommentsOfDocument {
@@ -52,6 +52,9 @@ public class FetchCommentsOfDocument {
 
     private static final Log log = LogFactory.getLog(FetchCommentsOfDocument.class);
 
+    public static final String COMMENT_TYPE = "Comment";
+    public static final String THREAD_TYPE = "Thread";
+    public static final String POST_TYPE = "Post";
     public static final String COMMENT_SCHEMA = "comment";
     public static final String POST_SCHEMA = "post";
 
@@ -70,7 +73,7 @@ public class FetchCommentsOfDocument {
          */
         CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
         String schemaPrefix = "comment";
-        if (AddComment.THREAD_TYPE.equals(document.getType())) {
+        if (THREAD_TYPE.equals(document.getType())) {
             schemaPrefix = "post";
         }
         List<DocumentModel> commentsRoots = commentableDoc.getComments();
@@ -93,7 +96,7 @@ public class FetchCommentsOfDocument {
 				jsonCommentRoot.element("modifiedDate", commentRoot.getProperty("dublincore", "modified"), jsonConfig);
                 boolean canDelete = canDeleteComment(author, document);
                 jsonCommentRoot.element("canDelete", canDelete);
-                if (AddComment.THREAD_TYPE.equals(document.getType())) {
+                if (THREAD_TYPE.equals(document.getType())) {
                     jsonCommentRoot.element("title", commentRoot.getProperty(schemaPrefix, "title"));
                     jsonCommentRoot.element("filename", commentRoot.getProperty(schemaPrefix, "filename"));
                 }
@@ -128,7 +131,7 @@ public class FetchCommentsOfDocument {
 				jsonChildComment.element("modifiedDate", childComment.getProperty("dublincore", "modified"), jsonConfig);
                 boolean canDelete = canDeleteComment(author, document);
                 jsonChildComment.element("canDelete", canDelete);
-                if (AddComment.THREAD_TYPE.equals(document.getType())) {
+                if (THREAD_TYPE.equals(document.getType())) {
                     jsonChildComment.element("title", childComment.getProperty(schemaPrefix, "title"));
                     jsonChildComment.element("filename", childComment.getProperty(schemaPrefix, "filename"));
                 }
@@ -162,7 +165,7 @@ public class FetchCommentsOfDocument {
 
     protected static String getSchema(String documentType) {
         String schemaPrefix = FetchCommentsOfDocument.COMMENT_SCHEMA;
-        if (AddComment.THREAD_TYPE.equals(documentType)) {
+        if (THREAD_TYPE.equals(documentType)) {
             schemaPrefix = FetchCommentsOfDocument.POST_SCHEMA;
         }
         return schemaPrefix;

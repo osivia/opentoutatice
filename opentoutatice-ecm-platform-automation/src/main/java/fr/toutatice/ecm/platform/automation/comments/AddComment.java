@@ -1,121 +1,102 @@
 /*
  * (C) Copyright 2014 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
- * 
+ *
+ *
  * Contributors:
  * mberhaut1
  */
 package fr.toutatice.ecm.platform.automation.comments;
 
-import java.security.Principal;
-import java.util.Calendar;
+import java.util.Date;
 
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
-import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
-import org.nuxeo.ecm.platform.comment.workflow.utils.CommentsConstants;
-import org.nuxeo.ecm.platform.comment.workflow.utils.FollowTransitionUnrestricted;
 
+/**
+ * Add comment operation.
+ *
+ * @see AbstractCommentOperation
+ */
 @Operation(id = AddComment.ID, category = Constants.CAT_DOCUMENT, label = "AddCommentToDocument", description = "Add a comment to a (commentable) document")
-public class AddComment {
+public class AddComment extends AbstractCommentOperation {
 
+    /** Operation identifier. */
     public static final String ID = "Document.AddComment";
 
-    public static final String COMMENT_TYPE = "Comment";
-    public static final String THREAD_TYPE = "Thread";
-    public static final String POST_TYPE = "Post";
 
-    public static final String PUBLISHED_TRANSITION = "moderation_publish";
-
+    /** Core session. */
     @Context
     protected CoreSession session;
 
-    @Param(name = "commentableDoc", required = true)
+    /** Commentable document parameter. */
+    @Param(name = "document")
     protected DocumentModel document;
 
-    @Param(name = "comment", required = true)
-    protected String commentContent;
+    /** Comment content parameter. */
+    @Param(name = "content")
+    protected String content;
 
+    /** Comment author parameter. */
+    @Param(name = "author", required = false)
+    protected String author;
+
+    /** Comment creation date parameter. */
+    @Param(name = "creationDate", required = false)
+    protected Date creationDate;
+
+    /** Thread post title parameter. */
     @Param(name = "title", required = false)
-    protected String commentTitle;
+    protected String title;
 
+    /** Thread post file name parameter. */
     @Param(name = "fileName", required = false)
     protected String fileName;
-    
+
+
+    /**
+     * Constructor.
+     */
+    public AddComment() {
+        super();
+    }
+
+
+    /**
+     * Run operation.
+     *
+     * @return comment
+     */
     @OperationMethod
-    public DocumentModel run() throws Exception {
-    	CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
-        DocumentModel comment = createComment(document.getType(), session, commentContent, commentTitle, fileName, null);
-        return commentableDoc.addComment(comment);
+    public DocumentModel run() {
+        return this.execute(this.session, this.document, null, this.content, this.author, this.creationDate, this.title, null, null);
     }
 
+
+    /**
+     * Run operation.
+     *
+     * @param blob thread post file BLOB
+     * @return comment
+     */
     @OperationMethod
-    public Object run(Blob blob) throws Exception {
-
-        CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
-        DocumentModel comment = createComment(document.getType(), session, commentContent, commentTitle, fileName, blob);
-        DocumentModel commentDoc = commentableDoc.addComment(comment);
-
-        if (THREAD_TYPE.equals(document.getType())) {
-            Boolean isModerated = (Boolean) this.document.getProperty("thread", "moderated");
-            if (BooleanUtils.isNotTrue(isModerated)) {
-                FollowTransitionUnrestricted transition = new FollowTransitionUnrestricted(session, commentDoc.getRef(), CommentsConstants.TRANSITION_TO_PUBLISHED_STATE);
-                transition.runUnrestricted();
-            }
-        }
-
-         return new StringBlob(commentDoc.getId());
-    }
-
-    public static DocumentModel createComment(String docType, CoreSession session, String commentContent, String commentTitle, String fileName, Blob blob)
-            throws ClientException {
-        String commentType = getType(docType);
-        String schemaPrefix = FetchCommentsOfDocument.getSchema(docType);
-
-        DocumentModel comment = session.createDocumentModel(commentType);
-        Principal user = session.getPrincipal();
-        if (user == null) {
-            throw new ClientException("No author for comment.");
-        }
-        comment.setProperty(schemaPrefix, "author", user.getName());
-        comment.setProperty(schemaPrefix, "text", commentContent);
-        comment.setProperty(schemaPrefix, "creationDate", Calendar.getInstance());
-        if (POST_TYPE.equals(commentType)) {
-            comment.setProperty(schemaPrefix, "title", commentTitle);
-            if (StringUtils.isNotEmpty(fileName)) {
-                comment.setProperty(FetchCommentsOfDocument.POST_SCHEMA, "filename", fileName);
-                comment.setProperty(FetchCommentsOfDocument.POST_SCHEMA, "fileContent", blob);
-            }
-        }
-        return comment;
-    }
-
-    protected static String getType(String documentType) {
-        String type = COMMENT_TYPE;
-        if (AddComment.THREAD_TYPE.equals(documentType)) {
-            type = POST_TYPE;
-        }
-        return type;
+    public DocumentModel run(Blob blob) {
+        return this.execute(this.session, this.document, null, this.content, this.author, this.creationDate, this.title, this.fileName, blob);
     }
 
 }
