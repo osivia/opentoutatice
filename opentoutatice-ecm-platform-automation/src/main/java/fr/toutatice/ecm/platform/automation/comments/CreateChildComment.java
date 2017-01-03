@@ -41,19 +41,19 @@ public class CreateChildComment extends AbstractCommentOperation {
 
     /** Core session. */
     @Context
-    protected CoreSession session;
+    private CoreSession session;
 
     /** Commentable document parameter. */
     @Param(name = "document")
-    protected DocumentModel document;
+    private DocumentModel document;
 
     /** Parent comment parameter. */
     @Param(name = "parent")
-    protected DocumentModel parent;
+    private DocumentModel parent;
 
     /** Comment content parameter. */
     @Param(name = "content")
-    protected String content;
+    private String content;
 
     /** Comment author parameter. */
     @Param(name = "author", required = false)
@@ -65,11 +65,11 @@ public class CreateChildComment extends AbstractCommentOperation {
 
     /** Thread post title parameter. */
     @Param(name = "title", required = false)
-    protected String title;
+    private String title;
 
     /** Thread post file name parameter. */
     @Param(name = "fileName", required = false)
-    protected String fileName;
+    private String fileName;
 
 
     /**

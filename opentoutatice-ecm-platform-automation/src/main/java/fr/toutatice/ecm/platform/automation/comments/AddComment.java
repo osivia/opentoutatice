@@ -42,31 +42,31 @@ public class AddComment extends AbstractCommentOperation {
 
     /** Core session. */
     @Context
-    protected CoreSession session;
+    private CoreSession session;
 
     /** Commentable document parameter. */
     @Param(name = "document")
-    protected DocumentModel document;
+    private DocumentModel document;
 
     /** Comment content parameter. */
     @Param(name = "content")
-    protected String content;
+    private String content;
 
     /** Comment author parameter. */
     @Param(name = "author", required = false)
-    protected String author;
+    private String author;
 
     /** Comment creation date parameter. */
     @Param(name = "creationDate", required = false)
-    protected Date creationDate;
+    private Date creationDate;
 
     /** Thread post title parameter. */
     @Param(name = "title", required = false)
-    protected String title;
+    private String title;
 
     /** Thread post file name parameter. */
     @Param(name = "fileName", required = false)
-    protected String fileName;
+    private String fileName;
 
 
     /**
