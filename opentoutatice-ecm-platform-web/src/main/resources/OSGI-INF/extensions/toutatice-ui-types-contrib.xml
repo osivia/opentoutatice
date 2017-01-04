@@ -78,8 +78,30 @@
                 <contentView showInExportView="false">cv_ContentOrderedReadNWrite
                 </contentView>
             </contentViews>
-        </type>
-
+		</type>
+		
+		<!-- Surcharge du type pour intégrer les fichiers joints -->
+		<type id="Note">
+			<label>Note</label>
+			<icon>/icons/note.gif</icon>
+			<bigIcon>/icons/note_100.png</bigIcon>
+			<category>SimpleDocument</category>
+			<description>Note.description</description>
+			<default-view>view_documents</default-view>
+			<layouts mode="any">
+				<layout>heading</layout>
+				<layout>note</layout>
+				<layout>files</layout>
+			</layouts>
+			<layouts mode="edit">
+				<layout>heading</layout>
+				<layout>note</layout>
+				<layout>files</layout>
+				<layout>dublincore</layout>
+			</layouts>
+		</type>      
+		
+		
     </extension>
 
 
