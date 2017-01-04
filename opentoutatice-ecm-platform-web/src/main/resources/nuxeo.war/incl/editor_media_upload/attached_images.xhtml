@@ -65,9 +65,11 @@
 													value="#{nxd:complexFileUrl('downloadFile', currentDocument, 'ttc:images', status.index, 'file', img.filename)}" />
 											</a>
 										</div>
-										<p class="text-center">#{img.filename}</p>
-
+										<p class="text-center">#{nxd:fileDescription(currentDocument, "ttc:images/".concat(status.index).concat("/file"), "ttc:images/".concat(status.index).concat("/filename"), "image")}</p>	
 									</div>
+									<ui:fragment rendered="#{(status.index+1) mod 4 eq 0}">
+										<div class="clearfix"></div>
+									</ui:fragment>
 								</ui:fragment>
 
 							</ui:repeat>
