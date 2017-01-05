@@ -123,22 +123,32 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
      */
     public boolean isInPortalViewContext() {
         boolean is = false;
-        RestHelper restHelper = (RestHelper) SeamComponentCallHelper.getSeamComponentByName("restHelper");
-        String viewId = StringUtils.EMPTY;
-        DocumentView documentView = restHelper.getDocumentView();
-        boolean fromUrlParamExists = false;
 
-        if (documentView != null) {
-            viewId = documentView.getViewId();
-            fromUrlParam = documentView.getParameter(FROM_URL_PARAM);
-        } else {
-            FacesContext context = FacesContext.getCurrentInstance();
-            viewId = context.getViewRoot().getViewId();
-            fromUrlParamExists = isFromUrlParamExists(context);
+        RestHelper restHelper = null;
+        try {
+            restHelper = (RestHelper) SeamComponentCallHelper.getSeamComponentByName("restHelper");
+        } catch (IllegalStateException ise) {
+            // Seam context is not available (case of creation of document by automation)
+            // Nothing to do
         }
-        currentPortalView = viewId;
-        
-        is = fromUrlParamExists || isPortalView(viewId);
+
+        if (restHelper != null) {
+            String viewId = StringUtils.EMPTY;
+            DocumentView documentView = restHelper.getDocumentView();
+            boolean fromUrlParamExists = false;
+
+            if (documentView != null) {
+                viewId = documentView.getViewId();
+                fromUrlParam = documentView.getParameter(FROM_URL_PARAM);
+            } else {
+                FacesContext context = FacesContext.getCurrentInstance();
+                viewId = context.getViewRoot().getViewId();
+                fromUrlParamExists = isFromUrlParamExists(context);
+            }
+            currentPortalView = viewId;
+
+            is = fromUrlParamExists || isPortalView(viewId);
+        }
 
         return is;
     }
