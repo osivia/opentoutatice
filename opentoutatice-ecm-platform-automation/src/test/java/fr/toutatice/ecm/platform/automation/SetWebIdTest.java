@@ -4,17 +4,15 @@
 package fr.toutatice.ecm.platform.automation;
 
 import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.nuxeo.ecm.automation.client.Constants;
 import org.nuxeo.ecm.automation.client.Session;
 import org.nuxeo.ecm.automation.client.jaxrs.impl.HttpAutomationClient;
 import org.nuxeo.ecm.automation.client.model.Document;
 import org.nuxeo.ecm.automation.client.model.PathRef;
-import org.nuxeo.ecm.automation.test.AutomationFeature;
-import org.nuxeo.runtime.test.runner.Features;
-import org.nuxeo.runtime.test.runner.FeaturesRunner;
+import org.nuxeo.ecm.automation.client.model.PropertyList;
 
+import fr.toutatice.ecm.platform.automation.document.CreateDocument;
+import fr.toutatice.ecm.platform.automation.document.UpdateDocument;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
 
@@ -33,10 +31,14 @@ public class SetWebIdTest {
             
             final long beginCrea1 = System.currentTimeMillis();
             
+            // Creation
+            String properties = "dc:title=Miskin \n dc:contributors=albert,roger \n dc:creator=jiji";
+            
             Document createdDoc = (Document) session.newRequest(CreateDocument.ID)
                     .setInput(new PathRef("/default-domain/workspaces/espace-pedagogie/documents"))
-                    .set("type", "Note").set("properties", "dc:title=Note avec webid")
-                    .setHeader(Constants.HEADER_NX_SCHEMAS, "toutatice")
+                    .set("type", "Note")
+                    .set("properties", properties)
+                    .setHeader(Constants.HEADER_NX_SCHEMAS, "dublincore, toutatice")
                     .execute();
             
             final long endCrea1 = System.currentTimeMillis(); 
@@ -44,6 +46,41 @@ public class SetWebIdTest {
 
             String createdWebId = createdDoc.getProperties().getString(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
             System.out.println("CREATED: " + createdWebId);
+            String creator = (String) createdDoc.getProperties().getString("dc:creator");
+            System.out.println("CREATOR: " + creator);
+            String lastContributor = (String) createdDoc.getProperties().getString("dc:lastContributor");
+            System.out.println("lastContributor: " + lastContributor);
+            PropertyList contributors = (PropertyList) createdDoc.getProperties().get("dc:contributors");
+            for(int index = 0; index < contributors.size(); index++){
+                System.out.println(" - contributor: " + contributors.getString(index));
+            }
+            
+            // Update
+            String upProperties = "dc:contributors=albertUpdate,rogerUpdate \n dc:creator=jijiUpdate \n dc:lastContributor=UnknownX";
+            
+            final long beginUp1 = System.currentTimeMillis();
+            
+            Document updatedDoc = (Document) session.newRequest(UpdateDocument.ID)
+                    .setInput(createdDoc)
+                    .set("properties", upProperties)
+                    .setHeader(Constants.HEADER_NX_SCHEMAS, "dublincore, toutatice")
+                    .execute();
+            
+            final long endUp1 = System.currentTimeMillis(); 
+            System.out.println("*** UPDATE =====" + (beginUp1 - endUp1) + "=====");
+
+            String updatedWebId = updatedDoc.getProperties().getString(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
+            System.out.println("UPDATED: " + updatedWebId);
+            String upCreator = (String) updatedDoc.getProperties().getString("dc:creator");
+            System.out.println("CREATOR: " + upCreator);
+            String uplastContributor = (String) updatedDoc.getProperties().getString("dc:lastContributor");
+            System.out.println("lastContributor: " + uplastContributor);
+            PropertyList upcontributors = (PropertyList) updatedDoc.getProperties().get("dc:contributors");
+            for(int index = 0; index < upcontributors.size(); index++){
+                System.out.println(" - contributor: " + upcontributors.getString(index));
+            }
+            
+            // ===================================
             
             Document otherCreatedDoc = null;
             Document otherCreatedDocForInc = null;

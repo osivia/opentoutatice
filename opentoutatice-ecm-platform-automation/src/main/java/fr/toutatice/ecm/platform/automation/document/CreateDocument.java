@@ -15,13 +15,10 @@
  * Contributors:
  *   kle-helley
  */
-package fr.toutatice.ecm.platform.automation;
+package fr.toutatice.ecm.platform.automation.document;
 
 import java.io.IOException;
-import java.util.Map.Entry;
-import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -45,15 +42,10 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 		description = "Create a new document in the input folder. If the 'name' parameter is not set, a new name will be derived from the document title, using the same "
 				+ "naming strategy as Nuxeo when using the GUI (if the document has a title). This is the only difference between this operation and 'Document.Create', "
 				+ "with the latter defaulting the name to 'Untitled'.")
-public class CreateDocument {
+public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
 
 	public static final String ID = "Document.TTCCreate";
 	
-	/** DublinCore schema prefix. */
-	protected static final String DUBLINCORE_SCHEMA_PREFIX = "dc:";
-	/** Title property key. */
-	protected static final String PROP_TITLE = "dc:title";
-
 	@Context
 	protected CoreSession session;
 
@@ -83,26 +75,11 @@ public class CreateDocument {
 		DocumentModel newDoc = this.session.createDocumentModel(doc.getPathAsString(), this.name, this.type);
 
 		if (this.properties != null) {
-		    // Get Dublincore properties to save them silently
-		    // (to disable DublinCoreListener)
-		    Properties dublinCoreProperties = getDublinCoreProperties(this.properties);
-		    
-		    if(dublinCoreProperties.size() > 0){
-		        // Remove DublinCore entries from original properties
-		        Set<String> propertiesKeys = this.properties.keySet();
-		        propertiesKeys.removeAll(dublinCoreProperties.keySet());
-		        
-		        // Creates with given DublincoreProperties
-		        newDoc = create(this.session, newDoc, this.properties, dublinCoreProperties);
-		        
-		    } else {
-	            // Creates normally
-		        newDoc = this.session.createDocument(newDoc);
-	        }
-		    
+		    // Creates document taking DublinCore properties into account
+		    newDoc = super.executeSplittingProperties(this.session, newDoc, this.properties, true);
 		} else {
 		    // Creates
-		    newDoc = this.session.createDocument(newDoc);
+		    newDoc = execute(this.session, newDoc, this.properties, true);
 		}
 		
 		return newDoc;
@@ -113,24 +90,10 @@ public class CreateDocument {
 		return run(this.session.getDocument(doc));
 	}
 	
-	/**
-	 * Extract properties of DublinCore schema from given properties.
-	 * 
-	 * @param properties
-	 * @return properties of DublinCore schema
-	 */
-	protected Properties getDublinCoreProperties(Properties properties){
-	    Properties dcProperties = new Properties();
-	    
-	    if(properties != null){
-	        for(Entry<String, String> property : properties.entrySet()){
-	            if(StringUtils.contains(property.getKey(), DUBLINCORE_SCHEMA_PREFIX)){
-	                dcProperties.put(property.getKey(), property.getValue());
-	            }
-	        }
+	 @Override
+	    protected DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, boolean save) throws ClientException, IOException {
+	        return session.createDocument(document);
 	    }
-	    return dcProperties;
-	}
 	
 	/**
 	 * Creates document setting Dublincore properties.
@@ -143,7 +106,8 @@ public class CreateDocument {
 	 * @throws ClientException
 	 * @throws IOException
 	 */
-	protected DocumentModel create(CoreSession session, DocumentModel document, Properties properties, Properties dublinCoreProperties) throws ClientException, IOException {
+	@Override
+	protected DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, Properties dublinCoreProperties, boolean save) throws ClientException, IOException {
 	    // Create document without given dublincore properties:
 	    // DublinCoreListener sets them
 	    DocumentHelper.setProperties(session, document, properties);
