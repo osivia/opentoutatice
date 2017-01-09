@@ -26,8 +26,6 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
-import org.nuxeo.ecm.core.api.ClientException;
-import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
 import org.nuxeo.runtime.model.ComponentContext;
@@ -48,6 +46,22 @@ public class ToutaticeWorkflowServiceImpl extends DefaultComponent implements To
 
     /** Map of contributed workflows. */
     private Map<String, List<String>> wfContribs;
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasContributions() {
+        return MapUtils.isEmpty(this.wfContribs);
+    }
+
+
+    /**
+     * @param wfContribs the wfContribs to set
+     */
+    public void setWfContribs(Map<String, List<String>> wfContribs) {
+        this.wfContribs = wfContribs;
+    }
 
     @Override
     public void activate(ComponentContext context) throws Exception {
@@ -114,22 +128,6 @@ public class ToutaticeWorkflowServiceImpl extends DefaultComponent implements To
 
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
-        Map<String, Object> infos = new HashMap<String, Object>(0);
-
-        if (MapUtils.isNotEmpty(wfContribs)) {
-            infos.put(VALIDATION_WF_RUNNING_INFOS_KEY, isWorkflowOfCategoryRunning(VALIDATION_WF_CATEGORY, currentDocument));
-        } else {
-            infos.put(VALIDATION_WF_RUNNING_INFOS_KEY, false);
-        }
-
-        return infos;
-    }
-
-    /**
      * @param category category of workflows
      * @return workflows names of given category
      */
@@ -145,10 +143,9 @@ public class ToutaticeWorkflowServiceImpl extends DefaultComponent implements To
     }
 
     /**
-     * @param category category of workflow(s)
-     * @param document studied document
-     * @return true if there is at least one workflow of given category running on given document
+     * {@inheritDoc}
      */
+    @Override
     public boolean isWorkflowOfCategoryRunning(String category, DocumentModel document) {
         boolean running = false;
 

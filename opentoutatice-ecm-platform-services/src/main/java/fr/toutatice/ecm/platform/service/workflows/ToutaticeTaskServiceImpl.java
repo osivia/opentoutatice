@@ -18,10 +18,8 @@
 package fr.toutatice.ecm.platform.service.workflows;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
@@ -39,8 +37,6 @@ import org.nuxeo.runtime.model.ComponentContext;
 import org.nuxeo.runtime.model.ComponentInstance;
 import org.nuxeo.runtime.model.DefaultComponent;
 
-import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
-
 
 /**
  * @author david chevrier
@@ -54,14 +50,23 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
 
     /** Map of contributed tasks (name / permission). */
     private Map<String, String> tasksContribs;
-
+    
     /**
-     * Informations given by service on given Task.
+     * {@inheritDoc}
      */
-    private enum TaskInfos {
-        taskName, isTaskPending, canManageTask, isTaskInitiator;
+    @Override
+    public boolean hasContributions() {
+        return MapUtils.isNotEmpty(this.tasksContribs);
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Map<String, String> getTaskContributions() {
+        return this.tasksContribs;
+    }
+
     @Override
     public void activate(ComponentContext context) throws Exception {
         super.activate(context);
@@ -101,51 +106,20 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
      * {@inheritDoc}
      */
     @Override
-    public Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
-        Map<String, Object> infos = new HashMap<String, Object>(0);
-        if (MapUtils.isNotEmpty(tasksContribs)) {
-            
-            /* At one time, there is only one task on current document */
-            Task currentTask = null;
-            boolean taskFound = false;
-            String searchedTaskName = StringUtils.EMPTY;
-            String permission = null;
-            Set<String> tasksNames = tasksContribs.keySet();
-            Iterator<String> iterator = tasksNames.iterator();
-            while (iterator.hasNext() && !taskFound) {
-                String taskName = iterator.next();
-                Task task = getTask(coreSession, currentDocument, taskName);
-                if (task != null) {
-                    searchedTaskName = taskName;
-                    currentTask = task;
-                    permission = tasksContribs.get(taskName);
-                    taskFound = true;
-                }
-            }
-            
-            infos.put(TaskInfos.taskName.name(), searchedTaskName);
-            infos.put(TaskInfos.isTaskPending.name(), isTaskPending(currentTask));
-            infos.put(TaskInfos.isTaskInitiator.name(), isUserTaskInitiator(coreSession, currentTask));
-            infos.put(TaskInfos.canManageTask.name(), canUserManageTask(coreSession, currentTask, currentDocument, permission));
-            
-        }
-        return infos;
-    }
-
-    protected Task getTask(CoreSession coreSession, DocumentModel document, String taskName) {
-        return ToutaticeWorkflowHelper.getTaskByName(taskName, coreSession, document);
-    }
-
-    public Boolean isTaskPending(Task task) throws ClientException {
-        Boolean isPending = Boolean.FALSE;
+    public boolean isTaskPending(Task task) throws ClientException {
+        boolean isPending = false;
         if (task != null) {
             isPending = task.isOpened();
         }
         return isPending;
     }
-
-    private Boolean isUserTaskInitiator(CoreSession coreSession, Task task) throws ClientException {
-        Boolean isInitiator = Boolean.FALSE;
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isUserTaskInitiator(CoreSession coreSession, Task task) throws ClientException {
+        boolean isInitiator = false;
 
         if (task != null) {
             /* Initiator of wf is task initiator too */
@@ -161,15 +135,14 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
     }
 
     /**
-     * Get user validate rigth on document.
-     * 
-     * @throws ServeurException
-     * @throws ClientException
+     * {@inheritDoc}
      */
-    private Boolean canUserManageTask(CoreSession coreSession, Task currentTask, DocumentModel currentDocument, String permission) throws ClientException {
+    @Override
+    public boolean canUserManageTask(CoreSession coreSession, Task currentTask, DocumentModel currentDocument, String permission) throws ClientException {
 
-        Boolean canValidate = Boolean.FALSE;
-        Boolean isActor = Boolean.FALSE;
+        boolean canValidate = false;
+        boolean isActor = false;
+        
         if (currentTask != null) {
 
             List<String> actors = currentTask.getActors();
@@ -211,6 +184,5 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
         }
         return can;
     }
-
 
 }

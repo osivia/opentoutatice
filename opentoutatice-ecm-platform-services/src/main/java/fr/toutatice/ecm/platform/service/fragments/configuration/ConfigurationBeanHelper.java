@@ -19,6 +19,7 @@
  */
 package fr.toutatice.ecm.platform.service.fragments.configuration;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -54,12 +55,11 @@ import fr.toutatice.ecm.platform.core.local.configuration.WebConfsConfigurationC
 @Name("config")
 @Scope(ScopeType.CONVERSATION)
 @Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
-public class ConfigurationBeanHelper {
+public class ConfigurationBeanHelper implements Serializable {
 
-    /**
-	 *
-	 */
-	private static final String WCONF_OPTIONS = "wconf:options";
+    private static final long serialVersionUID = 3182188147180903548L;
+
+    private static final String WCONF_OPTIONS = "wconf:options";
 
 	private static final Log log = LogFactory.getLog(ConfigurationBeanHelper.class);
 

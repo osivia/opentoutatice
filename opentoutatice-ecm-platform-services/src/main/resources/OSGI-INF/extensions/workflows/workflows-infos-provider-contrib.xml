@@ -10,9 +10,9 @@
 		point="extended_fetch_infos">
 
 		<fetchInfos name="workflowInfosProvider"
-			class="fr.toutatice.ecm.platform.service.workflows.ToutaticeWorkflowServiceImpl" />
-		<fetchInfos name="taskflowInfosProvider"
-			class="fr.toutatice.ecm.platform.service.workflows.ToutaticeTaskServiceImpl" />
+			class="fr.toutatice.ecm.platform.service.workflows.infos.WorkflowDocumentInfosProvider" />
+		<fetchInfos name="taskInfosProvider"
+			class="fr.toutatice.ecm.platform.service.workflows.infos.TaskDocumentInfosProvider" />
 
 	</extension>
 </component>
