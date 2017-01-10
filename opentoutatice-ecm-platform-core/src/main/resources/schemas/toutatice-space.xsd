@@ -68,11 +68,24 @@
             <xs:element name="item" type="nxs:spaceMembersType" minOccurs="0"
                 maxOccurs="unbounded" />
         </xs:sequence>
-    </xs:complexType>
+   </xs:complexType>
+   
    <xs:complexType name="spaceMembersType">
         <xs:sequence>
             <xs:element name="login" type="xs:string" />
             <xs:element name="joinedDate" type="xs:date" />
+            <!-- News -->
+            <xs:element name="newsPeriod" default="weekly">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="none"/>
+                        <xs:enumeration value="daily" />
+                        <xs:enumeration value="weekly" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="lastNewsDate" type="xs:date" />
+            <xs:element name="nextNewsDate" type="xs:date" />
         </xs:sequence>
     </xs:complexType>
    <xs:element name="spaceMembers" type="nxs:lstSpaceMembersType" />
