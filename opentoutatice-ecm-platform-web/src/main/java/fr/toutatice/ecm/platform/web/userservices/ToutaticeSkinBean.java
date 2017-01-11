@@ -19,6 +19,8 @@
  */
 package fr.toutatice.ecm.platform.web.userservices;
 
+import java.io.Serializable;
+
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang.StringUtils;
@@ -26,7 +28,6 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.annotations.web.RequestParameter;
 import org.nuxeo.runtime.api.Framework;
 import org.richfaces.skin.Skin;
 import org.richfaces.skin.SkinFactory;
@@ -41,9 +42,11 @@ import fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterServi
  */
 @Name("skinBean")
 @Scope(ScopeType.CONVERSATION)
-public class ToutaticeSkinBean {
+public class ToutaticeSkinBean implements Serializable {
 	
-	public static String NO_SKIN = "plain";
+    private static final long serialVersionUID = 6170929339520015730L;
+    
+    public static String NO_SKIN = "plain";
 	public static String DEFAULT_SKIN = "DEFAULT";
 	
 	private String skin;

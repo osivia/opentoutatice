@@ -16,12 +16,13 @@
 		<module>opentoutatice-ecm-platform-services</module>
 		<module>opentoutatice-ecm-platform-custom</module>
 		<module>opentoutatice-ecm-document-attached-files</module>
+		<module>opentoutatice-ecm-platform-reporting</module>
 		<module>opentoutatice-ecm-platform-marketplace</module> 
 		<module>opentoutatice-ecm-platform-distribution</module> 
 	</modules>
 
 	<properties>
-		<nuxeo.version>6.0-HF30</nuxeo.version>
+		<nuxeo.version>6.0-HF34</nuxeo.version>
 		<commons.lang.version>2.6</commons.lang.version>
 		<org.apache.pdfbox.version>1.7.1</org.apache.pdfbox.version>
 		<net.sf.json.version>2.4</net.sf.json.version>
@@ -411,24 +412,31 @@
 	                    </execution>
 	                </executions>
 	            </plugin>
-	            <plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-antrun-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>copy-jar</id>
-							<goals>
-								<goal>run</goal>
-							</goals>
-							<configuration>
-								<tasks>
-									<copy file="${basedir}/target/${project.build.finalName}.jar" todir="${build.toutatice.ecm.modules.dir}/3.1.0" />
-								</tasks>
-							</configuration>
-							<phase>package</phase>
-						</execution>
-					</executions>
-				</plugin>
+	            <!-- <plugin>
+	                <groupId>net.alchim31.maven</groupId>
+	                <artifactId>yuicompressor-maven-plugin</artifactId>
+	                <configuration>
+	                    <aggregations>
+	                        <aggregation>
+	                            <includes>
+	                                <include>**/*.js</include>
+	                            </includes>
+	                            <insertNewLine>true</insertNewLine>
+	                            <excludes>
+	                                <exclude>jquery-integration.min.js</exclude>
+	                            </excludes>
+	                            <output>${project.build.directory}/${project.build.finalName}/js/socle.min.js</output>
+	                            <removeIncluded>true</removeIncluded>
+	                        </aggregation>
+	                    </aggregations>
+	                    <excludes>
+	                        <exclude>**/*.min.css</exclude>
+	                        <exclude>**/*.min.js</exclude>
+	                    </excludes>
+	                    <jswarn>false</jswarn>
+	                    <suffix>.min</suffix>
+	                </configuration>
+	            </plugin> -->
 			</plugins>
 		</pluginManagement>
 	</build>

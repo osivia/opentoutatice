@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<component name="org.opentoutatice.ecm.scanner.listener">
+
+    <require>org.opentoutatice.ecm.scanner.ScannerConfigurationService</require>
+
+    <extension target="org.nuxeo.ecm.core.event.EventServiceComponent" point="listener">
+    
+        <listener name="ottcScanningListener" class="org.opentoutatice.ecm.scanner.ScanningListener"
+            sync="true" postCommit="true" priority="200">
+        </listener>
+    
+    </extension>
+
+</component>

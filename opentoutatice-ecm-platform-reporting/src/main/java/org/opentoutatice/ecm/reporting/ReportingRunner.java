@@ -1,0 +1,145 @@
+/**
+ * 
+ */
+package org.opentoutatice.ecm.reporting;
+
+import java.lang.reflect.Method;
+import java.util.Iterator;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.nuxeo.ecm.core.event.Event;
+import org.nuxeo.runtime.api.Framework;
+import org.opentoutatice.ecm.reporter.Reporter;
+import org.opentoutatice.ecm.reporter.config.ReporterConfigurationService;
+import org.opentoutatice.ecm.scanner.AbstractScanUpdater;
+import org.opentoutatice.ecm.scanner.Scanner;
+import org.opentoutatice.ecm.scanner.ScannerImpl;
+import org.opentoutatice.ecm.scanner.config.ScannerConfigurationService;
+import org.opentoutatice.ecm.scanner.directive.Directive;
+
+
+/**
+ * @author david
+ *
+ */
+public class ReportingRunner {
+    
+    /** Logger. */
+    private final static Log log = LogFactory.getLog(ReportingRunner.class);
+
+    /** Scan configuration service. */
+    private final ScannerConfigurationService scanCfg;
+
+    /** ReporterRegistry. */
+    private ReporterConfigurationService reporterCfg;
+
+    /**
+     * Default constructor.
+     */
+    public ReportingRunner() {
+        super();
+        this.scanCfg = Framework.getService(ScannerConfigurationService.class);
+        this.reporterCfg = Framework.getService(ReporterConfigurationService.class);
+    }
+
+    /**
+     * Gets scanner.
+     * 
+     * @param event
+     * @return
+     * @throws Exception
+     */
+    private Scanner getScanner(Event event) throws Exception {
+        // Updater of Scanner
+        AbstractScanUpdater scanUpdater = this.scanCfg.getUpdater(event);
+
+        // Scanner
+        return new ScannerImpl((AbstractScanUpdater) scanUpdater);
+    }
+
+    /**
+     * Gets reporter.
+     * 
+     * @param event
+     * @return
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    private Reporter getReporter(Event event) throws InstantiationException, IllegalAccessException {
+        return this.reporterCfg.getReporter(this.getClass().getName());
+    }
+
+    /**
+     * Runner.
+     * 
+     * @param event
+     * @throws Exception
+     */
+    public void run(Event event) throws Exception {
+        // Get Directive
+        Directive directive = scanCfg.getDirective(event);
+        // Scan
+        Scanner scanner = getScanner(event);
+        Iterable<?> scannedObjects = scanner.scan(directive);
+
+        if (scannedObjects != null) {
+            // Updater
+            AbstractScanUpdater updater = scanner.getUpdater();
+
+            // Iterates
+            Iterator<?> iterator = scannedObjects.iterator();
+
+            try {
+                // Index
+                int index = 0;
+                
+                while (iterator.hasNext()) {
+                    // Scanned object
+                    Object scannedObject = iterator.next();
+
+                    try {
+                        // Filters
+                        if (!updater.filter(scannedObject)) {
+                            // Initialize if necessary
+                            scannedObject = updater.initialize(index, scannedObject);
+
+                            // Reporter
+                            Reporter reporter = getReporter(event);
+                            // Build report
+                            Object report = reporter.build(scannedObject);
+                            // Send it
+                            reporter.send(report);
+
+                            // Update scannedObject
+                            updater.update(index, scannedObject);
+                        }
+                    } catch (Exception e) {
+                        log.error(e.getMessage());
+                        try {
+                            updater.updateOnError(index, scannedObject);
+                        } catch (Exception ue) {
+                            // Nothing: do not block
+                            log.error(ue.getMessage());
+                        }
+                    }
+                    
+                    index++;
+                }
+            } finally {
+                // If iterator closable
+                if (iterator != null) {
+                    Class<?>[] parameterStype = null;
+                    Method method = iterator.getClass().getMethod("close", parameterStype);
+
+                    if (method != null) {
+                        Object[] args = null;
+                        method.invoke(iterator, args);
+                    }
+                }
+            }
+        }
+
+    }
+
+}

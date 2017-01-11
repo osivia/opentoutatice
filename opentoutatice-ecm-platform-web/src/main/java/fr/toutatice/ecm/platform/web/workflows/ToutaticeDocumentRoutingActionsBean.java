@@ -246,7 +246,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
         return super.cancelRoute();
     }
 
-    /* "Fork" of cancelRoute() */
+    /* FIXME: "Fork" of cancelRoute() */
     public String cancelWorkflow(String wfName) throws ClientException {
         List<DocumentRoute> routes = getRelatedRoutes();
         if (routes.size() == 0) {
