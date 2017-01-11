@@ -75,7 +75,7 @@
             <xs:element name="login" type="xs:string" />
             <xs:element name="joinedDate" type="xs:date" />
             <!-- News -->
-            <xs:element name="newsPeriod" default="weekly">
+            <xs:element name="newsPeriod" default="none">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
                         <xs:enumeration value="none"/>
