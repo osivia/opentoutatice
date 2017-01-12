@@ -8,14 +8,14 @@
 	<extension target="org.nuxeo.ecm.core.security.SecurityService"
 		point="permissions">
 		
-		<!-- Read is for requests -->
+		<!-- Read is for requests if no acl optimization -->
 		<permission name="WriteModifyOwnOnly">
 		      <include>Read</include>
 		</permission>
 		
-		<!-- Browse is for requests -->
+		<!-- Read is for requests if no acl optimization -->
 		<permission name="MasterOwner">
-		      <include>Browse</include>
+		      <include>Read</include>
 		</permission>
 
         <!-- FIXME: replace remove by exclude, no? -->

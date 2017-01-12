@@ -38,10 +38,12 @@ public class ScanningListener implements PostCommitFilteringEventListener {
 
     @Override
     public void handleEvent(EventBundle events) throws ClientException {
+        // Configuration service
         this.configurationService = (ScannerConfigurationService) Framework.getService(ScannerConfigurationService.class);
         
         for(Event event : events){
             
+            long begin = System.currentTimeMillis();
             if(log.isDebugEnabled()){
                 log.debug("Begin [" + event.getName() + "]");
             }
@@ -59,8 +61,10 @@ public class ScanningListener implements PostCommitFilteringEventListener {
                 throw new ClientException(e);
             }
             
+            long end = System.currentTimeMillis();
+            long duration = end - begin;
             if(log.isDebugEnabled()){
-                log.debug("Ended [" + event.getName() + "]");
+                log.debug("Ended [" + event.getName() + "]: " + duration + " ms");
             }
         }
         

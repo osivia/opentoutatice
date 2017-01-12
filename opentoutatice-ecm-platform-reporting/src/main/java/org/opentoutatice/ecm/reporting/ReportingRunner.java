@@ -3,6 +3,8 @@
  */
 package org.opentoutatice.ecm.reporting;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
@@ -24,7 +26,7 @@ import org.opentoutatice.ecm.scanner.directive.Directive;
  *
  */
 public class ReportingRunner {
-    
+
     /** Logger. */
     private final static Log log = LogFactory.getLog(ReportingRunner.class);
 
@@ -93,7 +95,9 @@ public class ReportingRunner {
             try {
                 // Index
                 int index = 0;
-                
+                // Counter of treated objects
+                int counter = 0;
+
                 while (iterator.hasNext()) {
                     // Scanned object
                     Object scannedObject = iterator.next();
@@ -113,19 +117,32 @@ public class ReportingRunner {
 
                             // Update scannedObject
                             updater.update(index, scannedObject);
+
+                            // Counter
+                            counter++;
                         }
                     } catch (Exception e) {
-                        log.error(e.getMessage());
+                        // Counter
+                        counter++;
+                        // Logs
+                        logStackTrace(log, e);
                         try {
+                            // Specific update
                             updater.updateOnError(index, scannedObject);
                         } catch (Exception ue) {
                             // Nothing: do not block
-                            log.error(ue.getMessage());
+                            logStackTrace(log, e);
                         }
                     }
-                    
+
                     index++;
                 }
+
+                // Debug
+                if (log.isDebugEnabled()) {
+                    log.debug("[Treated objects]: " + counter + " / " + index);
+                }
+
             } finally {
                 // If iterator closable
                 if (iterator != null) {
@@ -138,7 +155,26 @@ public class ReportingRunner {
                     }
                 }
             }
+
         }
+
+    }
+
+    /**
+     * Logs stack trace in server.log.
+     * 
+     * @param log
+     * @param e
+     */
+    private void logStackTrace(Log log, Throwable t) {
+        
+        StringWriter stringWritter = new StringWriter();  
+        PrintWriter printWritter = new PrintWriter(stringWritter, true);  
+        t.printStackTrace(printWritter);  
+        printWritter.flush();  
+        stringWritter.flush(); 
+        
+        log.error("[Error]: " + stringWritter.toString());
 
     }
 

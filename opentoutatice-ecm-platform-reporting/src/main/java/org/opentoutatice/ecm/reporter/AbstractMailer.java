@@ -16,6 +16,12 @@ import org.nuxeo.ecm.platform.ec.notification.email.EmailHelper;
  */
 public abstract class AbstractMailer implements Reporter {
     
+    /** Date format. */
+    public static final String DATE_FORMAT = "dd/MM/yyyy";
+    
+    /** Mail key. */
+    public static final String MAIL_TO = "mail.to";
+    
     /** Mail data. */
     private Map<String, Object> data;
     
