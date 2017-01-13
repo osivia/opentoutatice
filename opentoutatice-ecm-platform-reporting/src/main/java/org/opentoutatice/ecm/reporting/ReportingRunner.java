@@ -104,7 +104,7 @@ public class ReportingRunner {
 
                     try {
                         // Filters
-                        if (!updater.filter(scannedObject)) {
+                        if (!updater.filter(index, scannedObject)) {
                             // Initialize if necessary
                             scannedObject = updater.initialize(index, scannedObject);
 

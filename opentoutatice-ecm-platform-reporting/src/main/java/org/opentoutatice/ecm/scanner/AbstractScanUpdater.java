@@ -53,11 +53,12 @@ public abstract class AbstractScanUpdater {
     /**
      * Filters object.
      * 
+     * @param index
      * @param scannedObject
      * @return boolean
      * @throws Exception
      */
-    public abstract boolean filter(Object scannedObject) throws Exception;
+    public abstract boolean filter(int index, Object scannedObject) throws Exception;
     
     /**
      * Initialize scanned object if necessary.
