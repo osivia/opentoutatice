@@ -104,7 +104,7 @@ public class ReportingRunner {
 
                     try {
                         // Filters
-                        if (!updater.filter(index, scannedObject)) {
+                        if (updater.accept(index, scannedObject)) {
                             // Initialize if necessary
                             scannedObject = updater.initialize(index, scannedObject);
 
@@ -159,7 +159,7 @@ public class ReportingRunner {
         }
 
     }
-
+    
     /**
      * Logs stack trace in server.log.
      * 

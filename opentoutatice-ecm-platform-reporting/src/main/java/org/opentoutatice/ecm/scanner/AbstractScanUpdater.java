@@ -58,7 +58,7 @@ public abstract class AbstractScanUpdater {
      * @return boolean
      * @throws Exception
      */
-    public abstract boolean filter(int index, Object scannedObject) throws Exception;
+    public abstract boolean accept(int index, Object scannedObject) throws Exception;
     
     /**
      * Initialize scanned object if necessary.
