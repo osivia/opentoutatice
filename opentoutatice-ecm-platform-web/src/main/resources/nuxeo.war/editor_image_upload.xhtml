@@ -55,6 +55,13 @@
 			window.opener.origin_ = "none";
 			self.close();
 		}
+		
+		function appendRes(img){
+			var $JQry = jQuery.noConflict();
+			var $img = $JQry(img);
+    		var $title = $img.parents("div.picture").siblings("p.text-center");
+    		$title.append(" ("+$img.prop("naturalWidth")+"x"+$img.prop("naturalHeight")+")");
+		}
 	</script>
 </head>
 
@@ -84,8 +91,6 @@
 
         <div class="tab-content">
 
-           
-
             <f:subview rendered="#{editorImageActions.selectedTab == 'SEARCH'}">
                 <ui:include src="/incl/editor_media_upload/search_pictures.xhtml" />
             </f:subview>
@@ -95,8 +100,7 @@
                 <ui:include src="/incl/editor_media_upload/file_upload.xhtml" />
             </f:subview>
 
-            <f:subview
-                rendered="#{editorImageActions.selectedTab == 'ATTACH_IMGS'}">
+            <f:subview rendered="#{editorImageActions.selectedTab == 'ATTACH_IMGS'}">
                 <ui:include src="/incl/editor_media_upload/attached_images.xhtml" />
             </f:subview>
         </div>
