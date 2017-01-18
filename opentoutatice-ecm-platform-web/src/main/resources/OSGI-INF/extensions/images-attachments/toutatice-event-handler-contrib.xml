@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="fr.toutatice.ecm.platform.web.images.event.handler">
+
+	<require>org.nuxeo.ecm.core.operation.OperationServiceComponent
+	</require>
+
+
+	<!-- TODO : rendre paramétrable l'activation et les préférences de resizing par domaine -->
+
+	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+		point="event-handlers">
+
+		<handler chainId="images-resizing">
+			<event>documentCreated</event>
+			<event>beforeDocumentModification</event>
+			<filters>
+				<condition>Document.hasSchema('toutatice')</condition>
+				<attribute>Mutable Document</attribute>
+			</filters>
+		</handler>
+
+	</extension>
+
+</component>
