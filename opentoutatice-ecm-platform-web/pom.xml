@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>3.0.12-RC02-SNAPSHOT</version>
+		<version>3.0.13-RC01-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-web</artifactId>
