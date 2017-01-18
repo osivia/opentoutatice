@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <component name="fr.toutatice.ecm.platform.core.FileManagerService.contrib">
     
-    <require>org.nuxeo.ecm.platform.filemanager.service.FileManagerService.Plugins</require>
 	<require>org.nuxeo.ecm.platform.filemanager.service.FileManagerService</require>
+	<require>org.nuxeo.ecm.platform.filemanager.service.FileManagerService.Plugins</require>
 
 	<extension
 		target="org.nuxeo.ecm.platform.filemanager.service.FileManagerService"
@@ -19,6 +19,9 @@
 			order="5">
 			<filter>application/zip</filter>
 		</plugin> -->
+		
+		<!-- Disable NoteImporter: all binaries are importaed as File -->
+		<plugin name="NoteImporter" enabled="false" />
 
 	</extension>
 
