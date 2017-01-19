@@ -69,13 +69,13 @@ public class SetWebID {
             add(VersioningService.class);
         }
     };
-    
+
     @Context
     protected CoreSession coreSession;
 
     @In(create = true)
     protected NavigationContext navigationContext;
-    
+
     @Deprecated
     @Param(name = "chainSource", required = false)
     protected String chainSource;
@@ -89,20 +89,18 @@ public class SetWebID {
      */
     @OperationMethod()
     public DocumentModel run(DocumentModel document) throws Exception {
-        UnrestrictedSilentSetWebIdRunner runner = new UnrestrictedSilentSetWebIdRunner(this.coreSession, 
-                document, this.chainSource);
+        UnrestrictedSilentSetWebIdRunner runner = new UnrestrictedSilentSetWebIdRunner(this.coreSession, document, this.chainSource);
         runner.silentRun(true, FILTERED_SERVICES_LIST);
         return runner.getDocument();
     }
 
     public static class UnrestrictedSilentSetWebIdRunner extends ToutaticeSilentProcessRunnerHelper {
-        
+
         private DocumentModel document;
         private String chainSource;
         private DocumentModel parentDoc;
 
-        protected UnrestrictedSilentSetWebIdRunner(CoreSession session, DocumentModel document, 
-                String chainSource) {
+        protected UnrestrictedSilentSetWebIdRunner(CoreSession session, DocumentModel document, String chainSource) {
             super(session);
             this.document = document;
             this.chainSource = chainSource;
@@ -119,7 +117,7 @@ public class SetWebID {
             boolean creationMode = false;
             int suffixForUnicity = 1;
             boolean hasToBeUpdated = false;
-            
+
             // if document has not toutatice schema
             if (this.document.isImmutable() || !this.document.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
                 return;
@@ -132,16 +130,16 @@ public class SetWebID {
                 // for Files or Pictures : get the extension of the file if exists
                 extension = getBlobExtensionIfExists(webId);
                 webId = removeBlobExtensionIfExists(webId, extension);
-                
+
                 creationMode = true;
             }
             // webid setted in the document, we use it
             else if (StringUtils.isNotBlank(getWebId())) {
-                
+
                 webId = getWebId().toString();
                 // clean if needed
                 // DCH: TEST procedures!
-                if(StringUtils.contains(webId, "_")){
+                if (StringUtils.contains(webId, "_")) {
                     // Case of technical webId
                     String nonTechPart = StringUtils.substringAfterLast(webId, "_");
                     String techPart = StringUtils.substringBeforeLast(webId, "_");
@@ -149,11 +147,11 @@ public class SetWebID {
                 } else {
                     webId = IdUtils.generateId(webId, "-", true, 24);
                 }
-                
+
             }
-            
+
             String originalWebid = webId;
-            while(isNotUnique(this.session, this.document, webId)){
+            while (isNotUnique(this.session, this.document, webId)) {
                 webId = generateWebId(originalWebid, suffixForUnicity);
                 suffixForUnicity += 1;
                 hasToBeUpdated = true;
@@ -172,7 +170,7 @@ public class SetWebID {
                     this.session.saveDocument(this.document);
                 }
             }
-            
+
         }
 
         /**
@@ -181,16 +179,16 @@ public class SetWebID {
         protected String getWebId() {
             return (String) this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
         }
-        
+
         /**
          * @return new webId basedon path.
          */
         protected String generateWebId(String webId, int suffixForUnicity) {
-            if(StringUtils.isBlank(webId)){
+            if (StringUtils.isBlank(webId)) {
                 String[] arrayPath = this.document.getPathAsString().split("/");
                 webId = arrayPath[arrayPath.length - 1];
                 // DCH - TO TEST: webId = this.document.getName();
-    
+
                 // for docs whose ecm:name may be identical, nuxeo add a .timestamp, remove it
                 if (webId.contains(".")) {
                     webId = webId.substring(0, webId.indexOf("."));
@@ -200,16 +198,16 @@ public class SetWebID {
             }
             return webId;
         }
-        
+
         /**
          * for Files or Pictures : put the extension of the file if exists.
          * 
          * @param webid
          * @return webid with extension.
          */
-        protected String getBlobExtensionIfExists(String webid){
+        protected String getBlobExtensionIfExists(String webid) {
             String extension = null;
-            
+
             if ("File".equals(this.document.getType()) || "Picture".equals(this.document.getType())) {
                 int lastIndexOf = this.document.getTitle().lastIndexOf(".");
                 if (lastIndexOf > -1) {
@@ -218,23 +216,23 @@ public class SetWebID {
             }
             return extension;
         }
-        
+
         /**
-         * Remove blob extension from webid (if exists). 
+         * Remove blob extension from webid (if exists).
          * 
          * @param webid
          * @param extension
          * @return wenid without blob extension.
          */
-        protected String removeBlobExtensionIfExists(String webid, String extension){
-            if(StringUtils.isNotBlank(extension)){
+        protected String removeBlobExtensionIfExists(String webid, String extension) {
+            if (StringUtils.isNotBlank(extension)) {
                 if (webid.endsWith(extension)) {
                     webid = webid.substring(0, webid.length() - extension.length() - 1);
                 }
             }
             return webid;
         }
-        
+
         /**
          * Checks repository unicity of given webId.
          * 
@@ -243,10 +241,11 @@ public class SetWebID {
          */
         public static boolean isNotUnique(CoreSession session, DocumentModel document, String webId) {
             String escapedWebId = StringEscapeUtils.escapeJava(webId);
-            DocumentModelList query = session.query(String.format(ToutaticeWebIdHelper.WEB_ID_UNICITY_QUERY, escapedWebId, document.getId()));
-           return query.size() > 0;
+            // Local proxy and live have same webId: check only live
+            DocumentModelList query = session.query(String.format(ToutaticeWebIdHelper.LIVE_WEB_ID_UNICITY_QUERY, escapedWebId, document.getId()));
+            return query.size() > 0;
         }
-        
+
     }
 
 }
