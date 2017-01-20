@@ -6,6 +6,7 @@ package fr.toutatice.ecm.platform.automation.security;
 import org.nuxeo.ecm.automation.core.util.Properties;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.security.ACE;
 import org.nuxeo.ecm.core.api.security.ACL;
 import org.nuxeo.ecm.core.api.security.ACP;
 import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
@@ -41,16 +42,38 @@ public abstract class AbstractACEsOperation {
             if (!ACL.INHERITED_ACL.equalsIgnoreCase(aclName)) {
                 
                 ACP acp = new ACPImpl();
-                // Default behavior when blocking inheritance
-                ACL localACL = ACEsOperationHelper.buildDefaultLocalACL(session, document);
                 
-                // Added or removed ACLs
-                localACL = modifyACEs(localACL, aces);
-                // Block inheritance
-                localACL.add(ACEsOperationHelper.getBlockInheritanceACe());
+                // Gets existing ACLs
+                ACL existingAcl = document.getACP().getACL(aclName);
                 
-                // To clear ACP cache
-                acp.addACL(localACL);
+                if(existingAcl != null && !existingAcl.isEmpty()){
+                    // Block inheritance
+                    ACE blockInheritanceACe = ACEsOperationHelper.getBlockInheritanceACe();
+                    if(existingAcl.contains(blockInheritanceACe)){
+                        existingAcl.remove(ACEsOperationHelper.getBlockInheritanceACe());
+                    }
+                    
+                    // Added or removed ACLs
+                    existingAcl = modifyACEs(existingAcl, aces);
+                    
+                    // Block
+                    existingAcl.add(ACEsOperationHelper.getBlockInheritanceACe());
+                    
+                    // To clear ACP cache
+                    acp.addACL(existingAcl);
+                } else {
+                    // Default behavior when blocking inheritance
+                    ACL localACL = ACEsOperationHelper.buildDefaultLocalACL(session, document);
+                    
+                    // Added or removed ACLs
+                    localACL = modifyACEs(localACL, aces);
+                    // Block inheritance
+                    localACL.add(ACEsOperationHelper.getBlockInheritanceACe());
+                    
+                    // To clear ACP cache
+                    acp.addACL(localACL);
+                }
+                
                 // Save
                 document.setACP(acp, true);
             }
