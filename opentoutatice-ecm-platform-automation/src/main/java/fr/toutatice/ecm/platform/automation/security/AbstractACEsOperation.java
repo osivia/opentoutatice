@@ -3,12 +3,16 @@
  */
 package fr.toutatice.ecm.platform.automation.security;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.nuxeo.ecm.automation.core.util.Properties;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.security.ACE;
 import org.nuxeo.ecm.core.api.security.ACL;
 import org.nuxeo.ecm.core.api.security.ACP;
+import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
 
 
@@ -38,6 +42,17 @@ public abstract class AbstractACEsOperation {
      */
     protected DocumentModel execute(CoreSession session, DocumentModel document, String aclName, Properties aces, 
             boolean blockInheritance) throws Exception{
+        
+        Map<String, String> ownAdm = new HashMap<>();
+        String name = session.getPrincipal().getName();
+        ownAdm.put(name, SecurityConstants.EVERYTHING);
+        
+        if(aces != null){
+            if(aces.containsKey(name) && SecurityConstants.EVERYTHING.equals(aces.get(name))) {
+                aces.remove(name);
+            }
+        }
+        
         if (blockInheritance) {
             if (!ACL.INHERITED_ACL.equalsIgnoreCase(aclName)) {
                 
@@ -53,9 +68,17 @@ public abstract class AbstractACEsOperation {
                         existingAcl.remove(ACEsOperationHelper.getBlockInheritanceACe());
                     }
                     
+                    // MasterOwner and Everything
+                    ACL defaultLocalACL = ACEsOperationHelper.buildDefaultLocalACL(session, document);
+                    if(existingAcl.containsAll(defaultLocalACL)){
+                        existingAcl.removeAll(defaultLocalACL);
+                    }
+                    
                     // Added or removed ACLs
                     existingAcl = modifyACEs(existingAcl, aces);
                     
+                    // MasterOwner and Everything
+                    existingAcl.addAll(defaultLocalACL);
                     // Block
                     existingAcl.add(ACEsOperationHelper.getBlockInheritanceACe());
                     

@@ -67,14 +67,15 @@ public class ACEsOperationHelper {
      * 
      * @return default local ACL
      */
-    public static ACL buildDefaultLocalACL(CoreSession session, DocumentModel document){
+    public static ACL buildDefaultLocalACL(CoreSession session, DocumentModel document) {
         ACL acl = new ACLImpl();
-        
+
         String currentUser = session.getPrincipal().getName();
         acl.add(new ACE(currentUser, SecurityConstants.EVERYTHING));
-        //acl.addAll(ACEsOperationHelper.getAdminEverythingACEs());
+
+        // acl.addAll(ACEsOperationHelper.getAdminEverythingACEs());
         acl.addAll(getMasterOwnerACEs(session, document));
-        
+
         return acl;
     }
     
