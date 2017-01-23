@@ -3,8 +3,7 @@
  */
 package fr.toutatice.ecm.platform.automation.security;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.nuxeo.ecm.automation.core.util.Properties;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -12,14 +11,12 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.security.ACE;
 import org.nuxeo.ecm.core.api.security.ACL;
 import org.nuxeo.ecm.core.api.security.ACP;
-import org.nuxeo.ecm.core.api.security.SecurityConstants;
-import org.nuxeo.ecm.core.api.security.impl.ACPImpl;
 
 
 /**
  * Abstract class to add or remove ACEs in inherited or local ACL.
- * It does not allow possibility to add / remove ACEs in inherited ACL 
- * if blockInhertance is set to true. 
+ * It does not allow possibility to add / remove ACEs in inherited ACL
+ * if blockInhertance is set to true.
  * 
  * @author david
  *
@@ -32,7 +29,7 @@ public abstract class AbstractACEsOperation {
     public AbstractACEsOperation() {
         super();
     }
-    
+
     /**
      * Adds or remove ACEs from document.
      * 
@@ -40,93 +37,55 @@ public abstract class AbstractACEsOperation {
      * @return document
      * @throws Exception
      */
-    protected DocumentModel execute(CoreSession session, DocumentModel document, String aclName, Properties aces, 
-            boolean blockInheritance) throws Exception{
-        
-        Map<String, String> ownAdm = new HashMap<>();
-        String name = session.getPrincipal().getName();
-        ownAdm.put(name, SecurityConstants.EVERYTHING);
-        
-        if(aces != null){
-            if(aces.containsKey(name) && SecurityConstants.EVERYTHING.equals(aces.get(name))) {
-                aces.remove(name);
-            }
-        }
-        
-        if (blockInheritance) {
-            if (!ACL.INHERITED_ACL.equalsIgnoreCase(aclName)) {
-                
-                ACP acp = new ACPImpl();
-                
-                // Gets existing ACLs
-                ACL existingAcl = document.getACP().getACL(aclName);
-                
-                if(existingAcl != null && !existingAcl.isEmpty()){
-                    // Block inheritance
-                    ACE blockInheritanceACe = ACEsOperationHelper.getBlockInheritanceACe();
-                    if(existingAcl.contains(blockInheritanceACe)){
-                        existingAcl.remove(ACEsOperationHelper.getBlockInheritanceACe());
-                    }
-                    
-                    // MasterOwner and Everything
-                    ACL defaultLocalACL = ACEsOperationHelper.buildDefaultLocalACL(session, document);
-                    if(existingAcl.containsAll(defaultLocalACL)){
-                        existingAcl.removeAll(defaultLocalACL);
-                    }
-                    
-                    // Added or removed ACLs
-                    existingAcl = modifyACEs(existingAcl, aces);
-                    
-                    // MasterOwner and Everything
-                    existingAcl.addAll(defaultLocalACL);
-                    // Block
-                    existingAcl.add(ACEsOperationHelper.getBlockInheritanceACe());
-                    
-                    // To clear ACP cache
-                    acp.addACL(existingAcl);
-                } else {
-                    // Default behavior when blocking inheritance
-                    ACL localACL = ACEsOperationHelper.buildDefaultLocalACL(session, document);
-                    
-                    // Added or removed ACLs
-                    localACL = modifyACEs(localACL, aces);
-                    // Block inheritance
-                    localACL.add(ACEsOperationHelper.getBlockInheritanceACe());
-                    
-                    // To clear ACP cache
-                    acp.addACL(localACL);
-                }
-                
-                // Save
-                document.setACP(acp, true);
+    protected DocumentModel execute(CoreSession session, DocumentModel document, String aclName, Properties aces, boolean blockInheritance) throws Exception {
+     // Convert ACES
+        List<ACE> inputACEs = ACEsOperationHelper.buildACEs(aces);
+
+        // ACP
+        ACP acp = document.getACP();
+
+        // Local ACL
+        if (ACL.LOCAL_ACL.equals(aclName)) {
+            // Local ACL
+            ACL localAcl = acp.getOrCreateACL(ACL.LOCAL_ACL);
+            
+            // Block inheritance
+            if (blockInheritance) {
+                // Blocked ACL
+                localAcl = blockLocalACLIfNecessary(session, document, localAcl);
+
+                // Modify local ACL with given ACEs
+                localAcl = modifyACEs(localAcl, inputACEs);
+
+                // To clear caches
+                acp.addACL(localAcl);
+            } else {
+                // Inheritance
+                acp = restoreInheritanceIfNecessary(session, document, localAcl);
+
+                // Modify
+                localAcl = modifyACEs(acp.getACL(ACL.LOCAL_ACL), inputACEs);
+
+                // To clear caches
+                acp.addACL(localAcl);
             }
 
         } else {
-            // ACP update
-            ACP acp = document.getACP();
-            // ACL
-            ACL acl = acp.getOrCreateACL(aclName);
-            acl = modifyACEs(acl, aces);
-            
-            // Case of ACL removed
-            if(acl == null){
-                acp.removeACL(aclName);
-            } else {
-                // If bloc inheritance was set, remove it
-                if(acl.contains(ACEsOperationHelper.getBlockInheritanceACe())){
-                    acl.remove(ACEsOperationHelper.getBlockInheritanceACe());
-                }
-                
-                acp.addACL(acl);
+            if (ACL.INHERITED_ACL.equals(aclName)) {
+                throw new Exception("You can not alter inherited ACL.");
             }
-            
-            // Save
-            document.setACP(acp, true);
+
+            ACL acl = acp.getOrCreateACL(aclName);
+            // Modify
+            acl = modifyACEs(acl, inputACEs);
         }
+
+        // Save
+        document.setACP(acp, true);
 
         return document;
     }
-    
+
     /**
      * Removes all ACEs of ACL.
      * 
@@ -135,13 +94,13 @@ public abstract class AbstractACEsOperation {
      * @param aclName
      * @return document
      */
-    public DocumentModel execute(CoreSession session, DocumentModel document, String aclName) throws Exception {
+    protected DocumentModel execute(CoreSession session, DocumentModel document, String aclName) throws Exception {
         ACP acp = document.getACP();
         acp.removeACL(aclName);
         document.setACP(acp, true);
         return document;
     }
-    
+
     /**
      * Adds or removes ACEs in given ACL.
      * 
@@ -149,6 +108,81 @@ public abstract class AbstractACEsOperation {
      * @param aces
      * @return modified acl
      */
-    protected abstract ACL modifyACEs(ACL acl, Properties aces);
+    protected abstract ACL modifyACEs(ACL acl, List<ACE> aces);
+
+    /**
+     * Blocks inheritance and set default rule.
+     * 
+     * @param session
+     * @param document
+     * @return acl
+     */
+    protected ACL blockLocalACLIfNecessary(CoreSession session, DocumentModel document, ACL localAcl) {
+        // Block ACL
+        ACE blockInhACe = ACEsOperationHelper.getBlockInheritanceACe();
+
+        if (!localAcl.contains(blockInhACe)) {
+            // Add default rule
+            ACL defaultLocalACL = ACEsOperationHelper.buildDefaultLocalACL(session, document);
+            for(ACE ace : defaultLocalACL){
+                if(!localAcl.contains(ace)){
+                    localAcl.add(ace);
+                }
+            }
+
+            // Blocks
+            localAcl.add(blockInhACe);
+        }
+
+        return localAcl;
+    }
+
+    /**
+     * Restore inheritance.
+     * 
+     * @param session
+     * @param document
+     * @return acp
+     */
+    protected ACP restoreInheritanceIfNecessary(CoreSession session, DocumentModel document, ACL localAcl) {
+        // ACP
+        ACP acp = document.getACP();
+
+        // Remove default rule
+        ACL defaultLocalACL = ACEsOperationHelper.buildDefaultLocalACL(session, document);
+        if (localAcl.containsAll(defaultLocalACL)) {
+            localAcl.removeAll(defaultLocalACL);
+        }
+
+        // Remove block to restore inheritance
+        ACE blockInACe = ACEsOperationHelper.getBlockInheritanceACe();
+        if (localAcl.contains(blockInACe)) {
+            localAcl.remove(blockInACe);
+        }
+
+        // To clear cache
+        acp.addACL(localAcl);
+
+        return acp;
+    }
+//
+//    protected ACP removeACEs(CoreSession session, DocumentModel document, List<ACE> aces) {
+//        // ACP
+//        ACP acp = document.getACP();
+//        // Get local ACL
+//        ACL localAcl = acp.getACL(ACL.LOCAL_ACL);
+//
+//        // Add
+//        for (ACE aceToRemove : aces) {
+//            if (localAcl.contains(aceToRemove)) {
+//                localAcl.remove(aceToRemove);
+//            }
+//        }
+//
+//        // To clear cache
+//        acp.addACL(localAcl);
+//
+//        return acp;
+//    }
 
 }
