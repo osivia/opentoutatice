@@ -20,17 +20,34 @@ package fr.toutatice.ecm.platform.core.helper;
 
 import java.text.Collator;
 import java.util.Comparator;
+import java.util.Locale;
 
 
 public abstract class ToutaticeSorterHelper<T> implements Comparator<T> {
 
 	Collator collator;
 	
+	/**
+	 * French sort helper.
+	 */
 	public ToutaticeSorterHelper() {
-		this.collator = Collator.getInstance();
+		this.collator = Collator.getInstance(Locale.FRENCH);
 		this.collator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
 		this.collator.setStrength(Collator.TERTIARY);   
 	}
+	
+	/**
+	 * Sorter with parameters.
+	 * 
+	 * @param locale
+	 * @param strength
+	 * @param decomposition
+	 */
+	public ToutaticeSorterHelper(Locale locale, int strength, int decomposition) {
+        this.collator = Collator.getInstance(locale);
+        this.collator.setDecomposition(decomposition);
+        this.collator.setStrength(strength);   
+    }
 	
 	@Override
 	public int compare(T o1, T o2) {

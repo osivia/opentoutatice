@@ -65,7 +65,7 @@ public class FetchExtendedDocumentInfos {
         
         DocumentInformationsProviderService fetchInfosService = Framework.getService(DocumentInformationsProviderService.class);
         if (fetchInfosService != null) {
-            Map<String, Object> infos = fetchInfosService.fetchAllExtendedInfos(session, document);
+            Map<String, Object> infos = fetchInfosService.fetchAllExtendedInfos(this.session, this.document);
             docInfos.accumulateAll(infos);
         }
         

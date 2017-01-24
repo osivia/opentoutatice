@@ -17,7 +17,7 @@
         </type>
         
         <type id="PortalSite">
-            <label>Espace de publication</label>
+            <label>PortalSite</label>
             <category>Collaborative</category>
             <icon>/icons/portalsite.png</icon>
             <bigIcon>/icons/portalsite_100.png</bigIcon>
@@ -41,7 +41,7 @@
         </type>
 
         <type id="PortalPage">
-            <label>Page</label>
+            <label>PortalPage</label>
             <category>SimpleDocument</category>
             <icon>/icons/PortalPage.png</icon>
             <bigIcon>/icons/PortalPage_100.png</bigIcon>
@@ -99,7 +99,7 @@
 				<layout>files</layout>
 				<layout>dublincore</layout>
 			</layouts>
-		</type>      
+		</type>  
 		
 		
     </extension>

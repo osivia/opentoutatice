@@ -19,10 +19,10 @@ package fr.toutatice.ecm.platform.web.webeditor;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -67,7 +67,10 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
     private String scope = ESPACE;
     private Map<String, Object> types;
     private Map<String, String> scopes;
-
+    
+    /** Internationalization properties. */
+    @In(create = true)
+    protected Map<String, String> messages;
 
     private List<DocumentModel> resultDocuments;
     private String searchKeywords;
@@ -174,8 +177,9 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
     }
 
     public Map<String, Object> getTypes() throws ClientException {
-        types = new HashMap<String, Object>();
+        types = new TreeMap<String, Object>();
         Collection<Type> collectTypes = typeManager.getTypes();
+        
         if (MEDIALIBRARY.equals(scope)) {
             collectTypes = typeManager.findAllAllowedSubTypesFrom(getMediaSpace().getType(), getMediaSpace());
         } else if (ESPACE.equals(scope)) {
@@ -185,12 +189,14 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
         } else {
             collectTypes.clear();
         }
+        
         List<Type> lstType = new ArrayList<Type>(collectTypes);
-        Collections.sort(lstType, new ListTypeComparator());
         types.put("Tous", "TOUS");
+        
         for (Type type : lstType) {
             if ("SimpleDocument".equalsIgnoreCase(type.getCategory())) {
-                types.put(type.getLabel(), type.getId());
+                String label = this.messages.get(type.getId());
+                types.put(label, type.getId());
             }
         }
 
@@ -278,7 +284,7 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
 
         @Override
         public String getComparisionString(Type type) {
-            String stg = "";
+            String stg = StringUtils.EMPTY;
 
             try {
                 stg = type.getLabel();

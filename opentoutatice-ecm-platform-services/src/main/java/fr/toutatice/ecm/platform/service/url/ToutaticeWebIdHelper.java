@@ -44,7 +44,7 @@ public class ToutaticeWebIdHelper {
     
     /** Query to get document according to its webId. */
     public static final String WEB_ID_QUERY = "select * from Document where ttc:webid = '%s' "
-            + "AND ecm:isCheckedInVersion = 0";
+            + "AND ecm:isVersion = 0";
     /** Query to get live document according to its webId. */
     public static final String LIVE_WEB_ID_QUERY = WEB_ID_QUERY + LIVE_QUERY_FILTER;
     
