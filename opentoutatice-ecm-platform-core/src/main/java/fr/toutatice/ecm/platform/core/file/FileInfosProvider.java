@@ -6,6 +6,7 @@ package fr.toutatice.ecm.platform.core.file;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -62,7 +63,8 @@ public class FileInfosProvider implements DocumentInformationsProvider {
             
             if(blob != null){
                 String mimeType = blob.getMimeType();
-                convertible = "application/pdf".equals(mimeType) || conversionService.isSourceMimeTypeSupported(ANY_2_PDF_CONVERTER, mimeType);
+                convertible = "application/pdf".equals(mimeType) || StringUtils.startsWith(mimeType, "text/")
+                        || conversionService.isSourceMimeTypeSupported(ANY_2_PDF_CONVERTER, mimeType);
             }
         }
         

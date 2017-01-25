@@ -10,8 +10,6 @@
 		<converter name="any2pdf">
 			<sourceMimeType>application/x-extension-conf</sourceMimeType>
 			<sourceMimeType>application/x-extension-properties</sourceMimeType>
-			<sourceMimeType>text/x-java</sourceMimeType>
-			<sourceMimeType>text/x-ldif</sourceMimeType>
 		</converter>
 
 	</extension>
