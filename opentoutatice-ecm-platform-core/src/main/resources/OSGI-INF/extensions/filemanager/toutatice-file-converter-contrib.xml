@@ -8,8 +8,8 @@
         
         <!-- New source mime-type -->
 		<converter name="any2pdf">
-			<sourceMimeType>application/x-extension-conf</sourceMimeType>
-			<sourceMimeType>application/x-extension-properties</sourceMimeType>
+		    <!-- FIXME: make an Blob.ToPDF opertation with converter name "anytopf" -->
+		    <sourceMimeType>*</sourceMimeType>
 		</converter>
 
 	</extension>
