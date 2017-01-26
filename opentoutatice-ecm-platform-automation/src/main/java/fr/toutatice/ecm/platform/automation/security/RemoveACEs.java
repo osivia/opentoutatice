@@ -6,6 +6,7 @@ package fr.toutatice.ecm.platform.automation.security;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
@@ -31,6 +32,9 @@ import org.nuxeo.ecm.core.api.security.ACL;
 public class RemoveACEs extends AbstractACEsOperation {
 
     public static final String ID = "Document.RemoveACEs";
+    
+    @Context
+    protected OperationContext ctx;
 
     @Context
     protected CoreSession session;
@@ -55,7 +59,7 @@ public class RemoveACEs extends AbstractACEsOperation {
         if (this.removeAll) {
             document = super.execute(this.session, document, this.aclName);
         } else {
-            document = super.execute(this.session, document, this.aclName, this.aces, this.blockInheritance);
+            document = super.execute(this.ctx, this.session, document, this.aclName, this.aces, this.blockInheritance);
         }
         return document;
     }

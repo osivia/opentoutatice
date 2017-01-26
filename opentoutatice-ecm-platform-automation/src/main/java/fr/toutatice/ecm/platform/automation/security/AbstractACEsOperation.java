@@ -5,6 +5,7 @@ package fr.toutatice.ecm.platform.automation.security;
 
 import java.util.List;
 
+import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.util.Properties;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -37,9 +38,9 @@ public abstract class AbstractACEsOperation {
      * @return document
      * @throws Exception
      */
-    protected DocumentModel execute(CoreSession session, DocumentModel document, String aclName, Properties aces, boolean blockInheritance) throws Exception {
+    protected DocumentModel execute(OperationContext ctx, CoreSession session, DocumentModel document, String aclName, Properties aces, boolean blockInheritance) throws Exception {
      // Convert ACES
-        List<ACE> inputACEs = ACEsOperationHelper.buildACEs(aces);
+        List<ACE> inputACEs = ACEsOperationHelper.buildACEs(ctx, aces);
 
         // ACP
         ACP acp = document.getACP();

@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
+import org.nuxeo.ecm.automation.OperationContext;
+import org.nuxeo.ecm.automation.TypeAdaptException;
 import org.nuxeo.ecm.automation.core.util.Properties;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -47,14 +50,26 @@ public class ACEsOperationHelper {
      * 
      * @param aces
      * @return list of ACE objects
+     * @throws TypeAdaptException 
      */
-    public static List<ACE> buildACEs(Properties aces){
+    public static List<ACE> buildACEs(OperationContext ctx, Properties aces) throws TypeAdaptException{
         List<ACE> aceEntries = new ArrayList<ACE>(0);
         
         if(aces != null){
-            for(Entry<String, String> ace : aces.entrySet()){
-                ACE aceEntry = new ACE(ace.getKey(), ace.getValue());
-                aceEntries.add(aceEntry);
+            for(Entry<String, String> aceProp : aces.entrySet()){
+                // Value is a String of the from: [a, b, ...]
+                String permsAsString = StringUtils.substringBetween(aceProp.getValue(), "[", "]");
+                if(permsAsString != null){
+                String[] permissions = permsAsString.split(",");
+                
+                // Add unitary permissions
+                if(permissions != null){
+                    for(String permission : permissions){
+                        ACE aceEntry = new ACE(aceProp.getKey(), StringUtils.trimToEmpty(permission));
+                        aceEntries.add(aceEntry);
+                    }
+                }
+            }
             }
         } 
         

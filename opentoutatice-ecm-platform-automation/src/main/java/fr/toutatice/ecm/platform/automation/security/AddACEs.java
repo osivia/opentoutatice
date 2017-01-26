@@ -5,6 +5,7 @@ package fr.toutatice.ecm.platform.automation.security;
 
 import java.util.List;
 
+import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
@@ -14,9 +15,6 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.security.ACE;
 import org.nuxeo.ecm.core.api.security.ACL;
-import org.nuxeo.ecm.core.api.security.SecurityConstants;
-
-import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
 
 /**
@@ -27,6 +25,9 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 public class AddACEs extends AbstractACEsOperation {
 
     public static final String ID = "Document.AddACEs";
+    
+    @Context
+    protected OperationContext ctx;
 
     @Context
     protected CoreSession session;
@@ -42,7 +43,7 @@ public class AddACEs extends AbstractACEsOperation {
 
     @OperationMethod
     public DocumentModel run(DocumentModel document) throws Exception {
-        return super.execute(this.session, document, this.aclName, this.aces, this.blockInheritance);
+        return super.execute(this.ctx, this.session, document, this.aclName, this.aces, this.blockInheritance);
     }
 
     /**
@@ -63,18 +64,8 @@ public class AddACEs extends AbstractACEsOperation {
             if (!acl.contains(aceToAdd)) {
                 if (blockInhPos != -1) {
                     acl.add(blockInhPos, aceToAdd);
-                    // TODO: temporary fix to delete
-                    if(ToutaticeNuxeoStudioConst.CST_PERM_CONTRIBUTOR.equals(aceToAdd.getPermission())){
-                        ACE read = new ACE(aceToAdd.getUsername(), SecurityConstants.READ);
-                        acl.add(read);
-                    }
                 } else {
                     acl.add(aceToAdd);
-                    // TODO: temporary fix to delete
-                    if(ToutaticeNuxeoStudioConst.CST_PERM_CONTRIBUTOR.equals(aceToAdd.getPermission())){
-                        ACE read = new ACE(aceToAdd.getUsername(), SecurityConstants.READ);
-                        acl.add(read);
-                    }
                 }
             }
         }
