@@ -2,19 +2,10 @@
 <component name="fr.toutatice.ecm.file.infos.provider" version="1.0">
 
     <require>fr.toutatice.ecm.platform.core.services.infos.provider</require>
-    <!-- Test -->
-    <require>org.nuxeo.ecm.core.convert.service.ConversionServiceImpl</require>
     
     <extension target="fr.toutatice.ecm.platform.core.services.infos.provider"
         point="extended_fetch_infos">
         <fetchInfos name="fileInfosProvider" class="fr.toutatice.ecm.platform.core.file.FileInfosProvider" />
-    </extension>
-    
-    <!-- Test -->
-    <extension target="org.nuxeo.ecm.core.convert.service.ConversionServiceImpl" point="configuration">
-        <configuration>
-            <enableCache>false</enableCache>
-        </configuration>
     </extension>
     
 </component>

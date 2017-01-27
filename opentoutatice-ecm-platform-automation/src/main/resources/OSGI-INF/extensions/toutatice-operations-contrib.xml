@@ -7,6 +7,7 @@
 
 		<operation class="fr.toutatice.ecm.platform.automation.document.CreateDocument" />
 		<operation class="fr.toutatice.ecm.platform.automation.document.UpdateDocument" />
+		<operation class="fr.toutatice.ecm.platform.automation.document.AnyBlobToPDF" />
 		
 		<operation
 			class="fr.toutatice.ecm.platform.automation.FetchPublishedDocument" />

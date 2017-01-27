@@ -77,16 +77,20 @@ public class FileInfosProvider implements DocumentInformationsProvider {
             Blob blob = bh.getBlob();
 
             if (blob != null) {
-                String mimeType = blob.getFilename();
+                String mimeType = blob.getMimeType();
                 if ("application/pdf".equals(mimeType)) {
                     convertible = true;
                 } else {
 
                     try {
-                        // Sniff mimeType from Blob (NOT use of srcMimeType of any2pdf converter)
-                        // and use of possible OfficeDocumentConverter inputMimeTyes
-                        String mimetypeStr = getMimetypeRegistry().getMimetypeFromBlob(blob);
-                        convertible = getOfficeDocumentConverter().getFormatRegistry().getFormatByMediaType(mimetypeStr) != null;
+                        // Use of possible OfficeDocumentConverter inputMimeTyes
+                        convertible = getOfficeDocumentConverter().getFormatRegistry().getFormatByMediaType(mimeType) != null;
+                        
+                        // If not found, sniff mimeType from Blob (NOT use of srcMimeType of any2pdf converter)
+                        if(!convertible){
+                            String mimetypeStr = getMimetypeRegistry().getMimetypeFromBlob(blob);
+                            convertible = getOfficeDocumentConverter().getFormatRegistry().getFormatByMediaType(mimetypeStr) != null;
+                        }
                     } catch (MimetypeNotFoundException | MimetypeDetectionException e) {
                         convertible = false;
                     }
