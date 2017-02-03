@@ -213,7 +213,12 @@ public class ToutaticeFunctions extends PlatformFunctions {
 
                     // Rebuild String
                     Elements body = document.getElementsByTag("body");
-                    truncatedHtml = body.first().html() + TRUNCATED_HTML_SUFFIX;
+                    truncatedHtml = body.first().html();
+                    
+                    // To be ... cool
+                    if(StringUtils.isNotBlank(truncatedHtml)){
+                        truncatedHtml.concat(TRUNCATED_HTML_SUFFIX);
+                    }
                 }
             }
 
