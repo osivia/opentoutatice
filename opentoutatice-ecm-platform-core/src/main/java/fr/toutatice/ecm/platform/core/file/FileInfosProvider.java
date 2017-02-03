@@ -6,6 +6,7 @@ package fr.toutatice.ecm.platform.core.file;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.artofsolving.jodconverter.OfficeDocumentConverter;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -82,18 +83,30 @@ public class FileInfosProvider implements DocumentInformationsProvider {
                     convertible = true;
                 } else {
 
-                    try {
-                        // Use of possible OfficeDocumentConverter inputMimeTyes
-                        convertible = getOfficeDocumentConverter().getFormatRegistry().getFormatByMediaType(mimeType) != null;
-                        
-                        // If not found, sniff mimeType from Blob (NOT use of srcMimeType of any2pdf converter)
-                        if(!convertible){
-                            String mimetypeStr = getMimetypeRegistry().getMimetypeFromBlob(blob);
-                            convertible = getOfficeDocumentConverter().getFormatRegistry().getFormatByMediaType(mimetypeStr) != null;
+                    // Use of possible OfficeDocumentConverter inputMimeTyes
+                    convertible = getOfficeDocumentConverter().getFormatRegistry().getFormatByMediaType(mimeType) != null;
+
+                    // If not found, sniff mimeType from Blob (NOT use of srcMimeType of any2pdf converter)
+                    String sniffedMimeType = null;
+                    if (!convertible) {
+                        try {
+                            sniffedMimeType = getMimetypeRegistry().getMimetypeFromBlob(blob);
+                        } catch (MimetypeNotFoundException | MimetypeDetectionException e) {
+                            // MagicMimetype lib (called from getMimetypeFromBlob) can't found mimetype ...
+                            // but we know it is a text mimetype (case seen for ldif)
+                            // Lt's force it to text/plain (!)
+                            if (StringUtils.startsWith(mimeType, "text/")) {
+                                blob.setMimeType("text/plain");
+                                bh.setBlob(blob);
+                                // Save adapted document (as BlobHolder)
+                                coreSession.saveDocument(currentDocument);
+                            }
                         }
-                    } catch (MimetypeNotFoundException | MimetypeDetectionException e) {
-                        convertible = false;
+                        
+                        // Ckeck with OfficeDocumentConverter
+                        convertible = getOfficeDocumentConverter().getFormatRegistry().getFormatByMediaType(sniffedMimeType) != null;
                     }
+
 
                 }
 

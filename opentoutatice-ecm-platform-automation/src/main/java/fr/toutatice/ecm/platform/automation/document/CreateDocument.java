@@ -19,6 +19,7 @@ package fr.toutatice.ecm.platform.automation.document;
 
 import java.io.IOException;
 
+import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -30,10 +31,13 @@ import org.nuxeo.ecm.automation.core.util.Properties;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.pathsegment.PathSegmentService;
 
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.service.url.ToutaticeWebIdHelper;
 
 @Operation(
 		id = CreateDocument.ID,
@@ -70,6 +74,16 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
 			} else {
 			    this.name = "Untitled";
 			}
+		}
+		
+		// Test if webId exists
+		String wId = this.properties.get(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
+		if(StringUtils.isNotBlank(wId)){
+		    DocumentModelList results = this.session.query(String.format(ToutaticeWebIdHelper.WEB_ID_QUERY, wId), 1);
+		    // Don't allow creation from Portal if webId already exists
+		    if(!results.isEmpty()){
+		        throw new ClientException("WebId: " + wId + " already exists.");
+		    }
 		}
 
 		DocumentModel newDoc = this.session.createDocumentModel(doc.getPathAsString(), this.name, this.type);
