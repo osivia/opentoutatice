@@ -217,7 +217,7 @@ public class ToutaticeFunctions extends PlatformFunctions {
                     
                     // To be ... cool
                     if(StringUtils.isNotBlank(truncatedHtml)){
-                        truncatedHtml.concat(TRUNCATED_HTML_SUFFIX);
+                        truncatedHtml = truncatedHtml.concat(TRUNCATED_HTML_SUFFIX);
                     }
                 }
             }
