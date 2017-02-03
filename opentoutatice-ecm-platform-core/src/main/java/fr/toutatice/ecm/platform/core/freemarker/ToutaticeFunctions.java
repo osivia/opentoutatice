@@ -22,6 +22,9 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.nuxeo.ecm.automation.features.PlatformFunctions;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -39,7 +42,10 @@ import fr.toutatice.ecm.platform.services.permalink.PermaLinkService;
 
 public class ToutaticeFunctions extends PlatformFunctions {
     
+    /** Base Url protocol. */
     private static final String PROTOCOL_BASE_URL = "http://";
+    /** Truncated HTML suffix. */
+    private static final String TRUNCATED_HTML_SUFFIX = "<p> ... </p>";
     
 	private static CommentManager commentManager;
 	private static PermaLinkService permaLinkService;
@@ -163,6 +169,58 @@ public class ToutaticeFunctions extends PlatformFunctions {
 	public String extractTextFromHTML(String html) {
 		return Jsoup.parse(html).text();
 	}
+	
+	/**
+	 * Truncate HTML according to its number of characters inside its
+	 * text elements.
+	 * 
+	 * @param html
+	 * @param nbChars
+	 * @return truncatedHtml
+	 */
+	public String truncateHTML(String html, int nbChars) {
+        String truncatedHtml = html;
+
+        if (html != null) {
+            // Document
+            Document document = Jsoup.parse(html);
+
+            // Get as text to count characters
+            String text = document.text();
+
+            if (text != null) {
+                // Elements
+                Elements elements = document.getAllElements();
+
+                if (elements != null) {
+                    // Truncate if necessary
+                    for (int index = elements.size(); text.length() > nbChars && index > 0; index--) {
+                        // Remove last element (containing text)
+                        Element lastTextElement = elements.get(index -1);
+                        
+                        if (lastTextElement.text() != null) {
+                            // Inner text
+                            String innerText = lastTextElement.text();
+                            if(innerText.length() > 0){
+                                // Remove element content from text variable
+                                text = StringUtils.substring(text, 0, text.length() - innerText.length());
+                            }
+                        }
+
+                        // Remove element from DOM
+                        lastTextElement.remove();
+                    }
+
+                    // Rebuild String
+                    Elements body = document.getElementsByTag("body");
+                    truncatedHtml = body.first().html() + TRUNCATED_HTML_SUFFIX;
+                }
+            }
+
+        }
+
+        return truncatedHtml;
+    }
 	
 	/**
 	 * @param username
