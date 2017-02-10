@@ -62,23 +62,27 @@ public class SetDocumentACL {
 		setACE(doc);
 		return session.getDocument(doc);
 	}
-		
-	protected void setACE(DocumentRef ref) throws ClientException {
-		List<ACE>[] aceList = slurpACEs(entries);
-		
-		ACP acp = session.getACP(ref);	
-		
+
+	protected void setACE(final DocumentRef ref) throws ClientException {
+		final List<ACE>[] aceList = slurpACEs(entries);
+
+		final ACP acp = session.getACP(ref);
+
 		ACLImpl acl = (ACLImpl) acp.getACL(aclName);
-		if(acl==null || doOverwrite){
+		if ((acl == null) || doOverwrite) {
 			acl = new ACLImpl(aclName);
+			acl.addAll(aceList[0]);
+		} else {
+			for (final ACE ace : aceList[0]) {
+				if (!acl.contains(ace)) {
+					acl.add(0, ace);
+				}
+			}
 		}
-		
-		acl.addAll(aceList[0]);
-		acl.removeAll(aceList[1]);	
+		acl.removeAll(aceList[1]);
 
 		acp.addACL(acl);
-
-		session.setACP(ref, acp, true);
+		session.setACP(ref, acp, doOverwrite);
 	}
 
 	private List<ACE>[] slurpACEs(String entries) {
