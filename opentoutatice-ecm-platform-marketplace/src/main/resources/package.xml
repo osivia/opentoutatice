@@ -4,7 +4,8 @@
 		<p>This addon implements the opened platform called Open Toutatice
 			(which one is based on the Nuxeo DM distribution)
 
-			Bug fixes :		
+			Bug fixes :	
+			* #10721 : fix sur l'opération setDocumentACL utilisée avec le paramètre overwrite=false 	
 			
 			Main features :
 			* #6570 : Evolution de l'opération GetExtendedTask
