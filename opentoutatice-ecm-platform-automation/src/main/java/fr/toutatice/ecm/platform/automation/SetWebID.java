@@ -143,9 +143,9 @@ public class SetWebID {
                     // Case of technical webId
                     String nonTechPart = StringUtils.substringAfterLast(webId, "_");
                     String techPart = StringUtils.substringBeforeLast(webId, "_");
-                    webId = techPart.concat("_").concat(IdUtils.generateId(nonTechPart, "-", true, 24));
+                    webId = techPart.concat("_").concat(IdUtils.generateId(nonTechPart, "-", true, -1));
                 } else {
-                    webId = IdUtils.generateId(webId, "-", true, 24);
+                    webId = IdUtils.generateId(webId, "-", true, -1);
                 }
 
             }
