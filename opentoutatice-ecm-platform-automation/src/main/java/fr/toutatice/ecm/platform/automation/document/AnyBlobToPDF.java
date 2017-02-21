@@ -4,7 +4,10 @@
 package fr.toutatice.ecm.platform.automation.document;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -48,7 +51,13 @@ public class AnyBlobToPDF {
        if ("application/pdf".equals(bh.getBlob().getMimeType())) {
            return bh.getBlob();
        }
-       BlobHolder pdfBh = this.service.convert(this.converterName, bh, new HashMap<String, Serializable>());
+       
+       // Get modified date to compute cache key
+       Calendar modDate = (GregorianCalendar) doc.getPropertyValue("dc:modified");
+       Map<String, Serializable> cacheKeyParams = new HashMap<String, Serializable>();
+       cacheKeyParams.put("modifiedOn", modDate.getTimeInMillis());
+       
+       BlobHolder pdfBh = this.service.convert(this.converterName, bh, cacheKeyParams);
        Blob result = pdfBh.getBlob();
 
        String fname = result.getFilename();
