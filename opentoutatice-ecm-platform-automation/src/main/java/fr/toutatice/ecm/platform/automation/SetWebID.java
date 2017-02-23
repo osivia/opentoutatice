@@ -25,6 +25,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.annotations.In;
+import org.nuxeo.common.utils.IdUtils;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -131,6 +132,22 @@ public class SetWebID {
                 webId = removeBlobExtensionIfExists(webId, extension);
 
                 creationMode = true;
+            }
+            // webid setted in the document, we use it
+            else if (StringUtils.isNotBlank(getWebId())) {
+
+                webId = getWebId().toString();
+                // clean if needed
+                // DCH: TEST procedures!
+                if (StringUtils.contains(webId, "_")) {
+                    // Case of technical webId
+                    String nonTechPart = StringUtils.substringAfterLast(webId, "_");
+                    String techPart = StringUtils.substringBeforeLast(webId, "_");
+                    webId = techPart.concat("_").concat(IdUtils.generateId(nonTechPart, "-", true, 512));
+                } else {
+                    webId = IdUtils.generateId(webId, "-", true, 512);
+                }
+
             }
 
             String originalWebid = webId;
