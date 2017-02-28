@@ -66,7 +66,7 @@ public abstract class AbstractDublinCoreDocumentUpdate {
             Set<String> propertiesKeys = properties.keySet();
             propertiesKeys.removeAll(dublinCoreProperties.keySet());
             
-            // Treat document with given DublincoreProperties
+            // Treat document with given DublinCoreProperties
             document = execute(session, document, properties, dublinCoreProperties, save);
             
         } else {

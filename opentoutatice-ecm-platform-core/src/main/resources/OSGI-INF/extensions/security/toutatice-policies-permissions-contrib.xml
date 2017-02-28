@@ -8,6 +8,7 @@
 	<extension target="org.nuxeo.ecm.core.security.SecurityService"
 		point="permissions">
 
+        <!-- FIXME: replace remove by exclude, no? -->
 		<permission name="Read">
 			<remove>CanAskForPublishing</remove>
 		</permission>
@@ -23,12 +24,12 @@
 		<permission name="RemotePublish">
 			<include>CanAskForPublishing</include>
 			<include>Write</include>
-		</permission>
-		
-		<permission name="WriteModifyOwnOnly">
-            <include>Read</include>
-            <include>validationWorkflow_validation</include>
         </permission>
+        
+        <permission name="WriteModifyOwnOnly">
+		      <include>Read</include>	
+			  <include>validationWorkflow_validation</include>
+		</permission>
 
 	</extension>
 
@@ -36,7 +37,7 @@
 		point="permissionsVisibility">
         
 		<visibility>
-			<item order="300" show="true">WriteModifyOwnOnly</item>
+			<item order="100" show="true">WriteModifyOwnOnly</item>
 		</visibility>
 		
 		<!-- FIXME: temporary fix cause global visibility doesn't work for Workspace -->
@@ -61,7 +62,7 @@
 
 		<policy
 			class="fr.toutatice.ecm.platform.core.security.ToutaticeOwnerSecurityPolicy"
-			name="ttcOwner" order="5" />
+			name="ottcOwner" order="2" />
 
 	</extension>
 

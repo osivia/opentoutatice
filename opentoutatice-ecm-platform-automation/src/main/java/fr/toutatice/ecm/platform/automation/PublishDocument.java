@@ -18,7 +18,6 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +43,6 @@ import org.nuxeo.ecm.core.api.impl.VersionModelImpl;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeCommentsHelper;
-import fr.toutatice.ecm.platform.core.helper.ToutaticeNotifyEventHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
 
 @Operation(
