@@ -30,6 +30,8 @@ public class FileInfosProvider implements DocumentInformationsProvider {
 
     /** Is pdf convertible property. */
     public static final String IS_PDF_CONVERTIBLE = "isPdfConvertible";
+    /** Error on pdf conversion. */
+    private static final String ERROR_ON_PDF_CONVERSION = "errorOnPdfConversion";
     /** Converter name. */
     public static final String ANY_2_PDF_CONVERTER = "any2pdf";
 
@@ -82,32 +84,34 @@ public class FileInfosProvider implements DocumentInformationsProvider {
                 if ("application/pdf".equals(mimeType)) {
                     convertible = true;
                 } else {
-
                     // Use of possible OfficeDocumentConverter inputMimeTyes
-                    convertible = getOfficeDocumentConverter().getFormatRegistry().getFormatByMediaType(mimeType) != null;
+                    OfficeDocumentConverter converter = getOfficeDocumentConverter();
+                    if (converter != null) {
+                        convertible = converter.getFormatRegistry().getFormatByMediaType(mimeType) != null;
 
-                    // If not found, sniff mimeType from Blob (NOT use of srcMimeType of any2pdf converter)
-                    String sniffedMimeType = null;
-                    if (!convertible) {
-                        try {
-                            sniffedMimeType = getMimetypeRegistry().getMimetypeFromBlob(blob);
-                        } catch (MimetypeNotFoundException | MimetypeDetectionException e) {
-                            // MagicMimetype lib (called from getMimetypeFromBlob) can't found mimetype ...
-                            // but we know it is a text mimetype (case seen for ldif)
-                            // Lt's force it to text/plain (!)
-                            if (StringUtils.startsWith(mimeType, "text/")) {
-                                blob.setMimeType("text/plain");
-                                bh.setBlob(blob);
-                                // Save adapted document (as BlobHolder)
-                                coreSession.saveDocument(currentDocument);
+                        // If not found, sniff mimeType from Blob (NOT use of srcMimeType of any2pdf converter)
+                        String sniffedMimeType = null;
+                        if (!convertible) {
+                            try {
+                                sniffedMimeType = getMimetypeRegistry().getMimetypeFromBlob(blob);
+                            } catch (MimetypeNotFoundException | MimetypeDetectionException e) {
+                                // MagicMimetype lib (called from getMimetypeFromBlob) can't found mimetype ...
+                                // but we know it is a text mimetype (case seen for ldif)
+                                // Lt's force it to text/plain (!)
+                                if (StringUtils.startsWith(mimeType, "text/")) {
+                                    blob.setMimeType("text/plain");
+                                    bh.setBlob(blob);
+                                    // Save adapted document (as BlobHolder)
+                                    coreSession.saveDocument(currentDocument);
+                                }
                             }
+
+                            // Ckeck with OfficeDocumentConverter
+                            convertible = converter.getFormatRegistry().getFormatByMediaType(sniffedMimeType) != null;
                         }
-                        
-                        // Ckeck with OfficeDocumentConverter
-                        convertible = getOfficeDocumentConverter().getFormatRegistry().getFormatByMediaType(sniffedMimeType) != null;
+                    } else {
+                        infos.put(ERROR_ON_PDF_CONVERSION, true);
                     }
-
-
                 }
 
             }
