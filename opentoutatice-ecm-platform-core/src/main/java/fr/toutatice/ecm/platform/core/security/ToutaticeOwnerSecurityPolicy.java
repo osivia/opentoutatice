@@ -24,31 +24,36 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
 	private static final Log log = LogFactory.getLog(ToutaticeOwnerSecurityPolicy.class);
 
 	/** Permissions to check on document. */
-	protected static final String[] DOCUMENT_PERMISSIONS = {SecurityConstants.READ, SecurityConstants.WRITE, ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE};
+	private static final String[] DOCUMENT_PERMISSIONS = {SecurityConstants.READ, SecurityConstants.WRITE, ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE};
 	/** Permissions to check on document's parent. */
-	protected static final String[] PARENT_PERMISSIONS = {SecurityConstants.READ, SecurityConstants.REMOVE_CHILDREN, ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE};
+	private static final String[] PARENT_PERMISSIONS = {SecurityConstants.READ, SecurityConstants.REMOVE_CHILDREN, ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE};
 	/** Permissions to check on Folderish document. */
-	protected static final String[] FOLDERISH_PERMISSIONS = {SecurityConstants.ADD_CHILDREN, ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE};
+	private static final String[] FOLDERISH_PERMISSIONS = {SecurityConstants.ADD_CHILDREN, ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE};
 	
 	/** Current Folderish id on which policy applying. */
 	private static String currentOwnerPoliciedFolderishId;
 	
 	/**
-	 * Gets current Folderish id on which policy applying.
-	 * 
-	 * @return current Folderish id on which policy applying
+	 * Getter for document permissions to simulate. 
 	 */
-	public static synchronized String getCurrentOwnerPoliciedFolderishId(){
-	    return currentOwnerPoliciedFolderishId;
+	protected String[] getDocumentPermissions (){
+	    return DOCUMENT_PERMISSIONS;
 	}
 	
 	/**
-	 * Resets current Folderish id on which policy applying.
+	 * Getter for parent permissions to simulate. 
 	 */
-	public static synchronized void resetCurrentOwnerPoliciedFolderishId(){
-	    currentOwnerPoliciedFolderishId = null;
+	protected String[] getParentPermissions () {
+	    return PARENT_PERMISSIONS;
 	}
-
+	
+	/**
+     * Getter for folderish permissions to simulate. 
+     */
+	protected String[] getFolderishPermissions() {
+	    return FOLDERISH_PERMISSIONS;
+	}
+	
     /**
 	 * {@inheritDoc}
 	 */
@@ -111,9 +116,9 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
     protected Access applyPolicyToFolderish(Document doc, Principal principal, String permission) throws DocumentException {
 			
         // Can read, create, delete, move, import and copy (non Folderish documents)
-        if(ArrayUtils.contains(FOLDERISH_PERMISSIONS, permission) || ArrayUtils.contains(PARENT_PERMISSIONS, permission)) {
+        if(ArrayUtils.contains(getFolderishPermissions(), permission) || ArrayUtils.contains(getParentPermissions(), permission)) {
             // add (and copy...)
-            if(ArrayUtils.contains(FOLDERISH_PERMISSIONS, permission)) {
+            if(ArrayUtils.contains(getFolderishPermissions(), permission)) {
                 currentOwnerPoliciedFolderishId = doc.getUUID();
                 }
             
@@ -136,7 +141,7 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
         
         if(isCreator(doc, principal)){
             // Contributor can read, update, move and remove its documents (leafs)
-            String[] allowedPerms =  org.nuxeo.common.utils.ArrayUtils.intersect(DOCUMENT_PERMISSIONS, resolvedPermissions);
+            String[] allowedPerms =  org.nuxeo.common.utils.ArrayUtils.intersect(getDocumentPermissions(), resolvedPermissions);
             
             if(ArrayUtils.isNotEmpty(allowedPerms)){
                 return Access.GRANT;
@@ -155,7 +160,7 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
      * @return true if principal is creator of document
      * @throws DocumentException 
      */
-    private boolean isCreator(Document doc, Principal principal) throws DocumentException{
+    protected boolean isCreator(Document doc, Principal principal) throws DocumentException{
         String creator = (String) doc.getPropertyValue("dc:creator");
         return StringUtils.equals(principal.getName(), creator);
     }

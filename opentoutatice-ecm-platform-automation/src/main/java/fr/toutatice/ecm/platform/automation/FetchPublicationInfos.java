@@ -268,15 +268,14 @@ public class FetchPublicationInfos {
      * @param folder
      * @throws UnsupportedEncodingException
      */
-    public static JSONObject getSubTypes(CoreSession session, DocumentModel folder) throws UnsupportedEncodingException {
+    public JSONObject getSubTypes(CoreSession session, DocumentModel folder) throws UnsupportedEncodingException {
         JSONObject subTypes = new JSONObject();
-        boolean canAddChildren = session.hasPermission(folder.getRef(), SecurityConstants.ADD_CHILDREN);
-        if (canAddChildren) {
-            Collection<Type> filteredAllowedSubTypes = OwnerSecurityPolicyHelper.getFilteredAllowedSubTypes(folder, session.getPrincipal());
-            for (Type subType : filteredAllowedSubTypes) {
-                subTypes.put(subType.getId(), URLEncoder.encode(subType.getLabel(), "UTF-8"));
-            }
+        
+        Collection<Type> allowedSubTypes = this.typeService.getAllowedSubTypes(folder.getType());
+        for (Type subType : allowedSubTypes) {
+            subTypes.put(subType.getId(), URLEncoder.encode(subType.getLabel(), "UTF-8"));
         }
+        
         return subTypes;
     }
 
