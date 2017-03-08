@@ -23,8 +23,15 @@ import java.util.Map;
 
 import org.nuxeo.ecm.core.api.DocumentModel;
 
-public interface Permalink
-{
-
-    public abstract String getPermalink(DocumentModel documentmodel, String host, Map<String,String> params);
+public interface Permalink {
+    
+    /**
+     * Getter for Permalink.
+     * 
+     * @param documentmodel
+     * @param host
+     * @param params
+     * @return permalink
+     */
+    String getPermalink(DocumentModel documentmodel, String host, Map<String,String> params);
 }
