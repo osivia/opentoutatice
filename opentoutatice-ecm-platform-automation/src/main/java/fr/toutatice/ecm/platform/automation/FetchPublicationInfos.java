@@ -1,17 +1,17 @@
 /*
  * (C) Copyright 2014 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
- * 
+ *
+ *
  * Contributors:
  * mberhaut1
  * lbillon
@@ -74,7 +74,6 @@ import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
-import fr.toutatice.ecm.platform.core.security.OwnerSecurityPolicyHelper;
 import fr.toutatice.ecm.platform.core.services.fetchinformation.FetchInformationsService;
 import fr.toutatice.ecm.platform.service.url.WebIdResolver;
 
@@ -149,7 +148,7 @@ public class FetchPublicationInfos {
 
         // WebId given
         if (StringUtils.isNotBlank(webid)) {
-            
+
             Object documentByWebIdRes = getDocumentByWebId(webid);
             if (isError(documentByWebIdRes)) {
                 errorsCodes.add((Integer) documentByWebIdRes);
@@ -159,7 +158,7 @@ public class FetchPublicationInfos {
             } else {
                 document = (DocumentModel) documentByWebIdRes;
             }
-            
+
         }
 
         /*
@@ -263,25 +262,28 @@ public class FetchPublicationInfos {
 
     /**
      * Gets allowed subTypes for given folder.
-     * 
+     *
      * @param infosPubli
      * @param folder
      * @throws UnsupportedEncodingException
      */
     public JSONObject getSubTypes(CoreSession session, DocumentModel folder) throws UnsupportedEncodingException {
         JSONObject subTypes = new JSONObject();
-        
-        Collection<Type> allowedSubTypes = this.typeService.getAllowedSubTypes(folder.getType());
-        for (Type subType : allowedSubTypes) {
-            subTypes.put(subType.getId(), URLEncoder.encode(subType.getLabel(), "UTF-8"));
+
+        boolean canAddChildren = session.hasPermission(folder.getRef(), SecurityConstants.ADD_CHILDREN);
+        if (canAddChildren) {
+            Collection<Type> allowedSubTypes = this.typeService.getAllowedSubTypes(folder.getType());
+            for (Type subType : allowedSubTypes) {
+                subTypes.put(subType.getId(), URLEncoder.encode(subType.getLabel(), "UTF-8"));
+            }
         }
-        
+
         return subTypes;
     }
 
     /**
      * Récupère un code d'erreur.
-     * 
+     *
      * @param operationRes
      *            objet de type Response contenant en en-tête un code d'erreur
      * @param errorCodeNotFound
@@ -306,7 +308,7 @@ public class FetchPublicationInfos {
     /**
      * Méthode permettant de vérifier si un document (live) est modifiable par
      * l'utilisateur.
-     * 
+     *
      * @param infos
      *            pour stocker le résultat du test (booléen)
      * @param liveDoc
@@ -332,7 +334,7 @@ public class FetchPublicationInfos {
     /**
      * Méthode permettant de vérifier si un document (live) est gérable par
      * l'utilisateur.
-     * 
+     *
      * @param infos
      *            pour stocker le résultat du test (booléen)
      * @param liveDoc
@@ -357,7 +359,7 @@ public class FetchPublicationInfos {
 
     /**
      * Get user validate rigth on document.
-     * 
+     *
      * @throws ServeurException
      * @throws ClientException
      */
@@ -384,7 +386,7 @@ public class FetchPublicationInfos {
     /**
      * Méthode permettant de vérifier si un document (live) est supprimable par
      * l'utilisateur.
-     * 
+     *
      * @param infos
      *            pour stocker le résultat du test (booléen)
      * @param liveDoc
@@ -429,7 +431,7 @@ public class FetchPublicationInfos {
     /**
      * Méthode permettant de "fetcher" un document live et mettant à faux le
      * booléen editableByUser en cas d'erreur.
-     * 
+     *
      * @param session
      *            session Nuxeo
      * @param doc
@@ -466,7 +468,7 @@ public class FetchPublicationInfos {
     /**
      * Méthode permettant de récupérer un document suivant sa référence; stocke,
      * le cas échéant, les erreurs 401 ou 404.
-     * 
+     *
      * @param refDoc
      *            référence du document
      * @return un DocumentModel ou l'objet erros en cas d'erreur à la
@@ -494,7 +496,7 @@ public class FetchPublicationInfos {
         }
         return doc;
     }
-    
+
     /**
      * @param webid
      * @return document if found, error otherwise.
@@ -504,20 +506,20 @@ public class FetchPublicationInfos {
         DocumentModel doc = null;
         try {
             DocumentModelList documentsByWebId = WebIdResolver.getDocumentsByWebId(coreSession, webid);
-            if (CollectionUtils.isNotEmpty(documentsByWebId) && documentsByWebId.size() == 1) {
+            if (CollectionUtils.isNotEmpty(documentsByWebId) && (documentsByWebId.size() == 1)) {
                 doc = documentsByWebId.get(0);
             }
         } catch (NoSuchDocumentException e) {
             return ERROR_CONTENT_NOT_FOUND;
         }
-        
+
         return doc;
     }
 
     /**
      * Indique si l'exception donnée est engendrée par une exception de type
      * NoSuchDocumentException
-     * 
+     *
      * @param ce
      *            Exception à tester (de type ClientException)
      * @return vrai si l'exception est a pour cause une NoSuchDocumentException
@@ -533,21 +535,22 @@ public class FetchPublicationInfos {
 
     /**
      * Supprime le suffixe du nom d'un proxy.
-     * 
+     *
      * @param path
      *            Chemin du proxy
      * @return le path avec le nom du proxy sans le suffixe
      */
     public static String computeNavPath(String path) {
         String result = path;
-        if (path.endsWith(SUFFIXE_PROXY))
+        if (path.endsWith(SUFFIXE_PROXY)) {
             result = result.substring(0, result.length() - SUFFIXE_PROXY.length());
+        }
         return result;
     }
 
     /**
      * Indique si l'objet en entrée correspond à une erreur.
-     * 
+     *
      * @param operationRes
      *            résultat d'une opération Nuxeo ou d'une méthode
      * @return vrai si l'objet en entrée correspond à une erreur
@@ -574,7 +577,7 @@ public class FetchPublicationInfos {
     }
 
     /**
-	 * 
+	 *
 	 */
     private static class UnrestrictedFecthPubliInfosRunner extends UnrestrictedSessionRunner {
 
@@ -623,7 +626,7 @@ public class FetchPublicationInfos {
                      */
                     String parentSpaceID = "";
                     DocumentModelList spaceParentList = ToutaticeDocumentHelper.getParentSpaceList(this.session, liveDoc, true, true);
-                    if (spaceParentList != null && spaceParentList.size() > 0) {
+                    if ((spaceParentList != null) && (spaceParentList.size() > 0)) {
                         DocumentModel parentSpace = spaceParentList.get(0);
                         parentSpaceID = getSpaceID(parentSpace);
                     }
@@ -695,7 +698,7 @@ public class FetchPublicationInfos {
 
                 /* TODO: valeur toujours mise à true pour l'instant */
                 this.infosPubli.element("workspaceInContextualization", Boolean.TRUE);
-                
+
                 if (!isError(liveDocRes)) {
                     DocumentModel liveDoc = (DocumentModel) this.liveDocRes;
                     Boolean isRemotePublishable = isRemotePublishable(liveDoc, workspaceRes);
@@ -754,7 +757,7 @@ public class FetchPublicationInfos {
             }
 
         }
-        
+
         /**
          * @param liveDoc given document
          * @return true if given document is remote publishable
@@ -778,20 +781,21 @@ public class FetchPublicationInfos {
 			DocumentModelList remotePublishedDocuments = ToutaticeDocumentHelper.getRemotePublishedDocuments(this.session, liveDoc);
 			if(remotePublishedDocuments.size() > 0) {
 				return true;
-			}
-			else return false;
+			} else {
+                return false;
+            }
 		}
 
         /**
          * Use in remote publication case.
-         * 
+         *
          * @return true if live is different from all
          *         its published versions.
          */
         private Boolean isLiveModifiedFromProxies(DocumentModel liveDoc) {
             Boolean isModified = Boolean.TRUE;
 
-            PublisherService publisherService = (PublisherService) Framework.getService(PublisherService.class);
+            PublisherService publisherService = Framework.getService(PublisherService.class);
             Map<String, String> availablePublicationTrees = publisherService.getAvailablePublicationTrees();
 
             if (MapUtils.isNotEmpty(availablePublicationTrees)) {
@@ -819,7 +823,7 @@ public class FetchPublicationInfos {
          * Méthode permettant de vérifier si un document publié est accessible
          * de façon anonyme; met à faux le booléen anonymouslyReadable en cas
          * d'erreur.
-         * 
+         *
          * @param session
          *            session Nuxeo
          * @param doc
@@ -854,7 +858,7 @@ public class FetchPublicationInfos {
         /**
          * Récupère la proriété de contextualisation (schéma toutatice) d'un
          * document.
-         * 
+         *
          * @param doc
          *            document donné
          * @return la valeur de la propriété sous forme de BooleanProperty
@@ -868,7 +872,7 @@ public class FetchPublicationInfos {
 
         /**
          * Gère le traitement d'une ClientException
-         * 
+         *
          * @param errorsCodes
          *            pour stocker une erreur
          * @param doc
