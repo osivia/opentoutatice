@@ -69,7 +69,7 @@
 		<!-- FIXME: just for schema webpage of PortalSite and PortalPage... -->
 		<package>nuxeo-sites-blogs:1.2.0:1.2.0</package>
 		<!-- HF dependencies -->
-		<package>nuxeo-6.0-HF30:1.0.0</package>
+		<package>nuxeo-6.0-HF34:1.0.0</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
