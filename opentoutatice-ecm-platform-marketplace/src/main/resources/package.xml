@@ -31,6 +31,8 @@
 		<package>nuxeo-sites-blogs:1.2.0</package>
 		<!-- Dépendance sur les hotfixes -->
 		<package>nuxeo-6.0-HF21:1.0.0</package>
+		<!-- Utilisation du schéma VEVENT par TOUTATICE_EVENT -->
+		<package>nuxeo-agenda:1.2.1</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
