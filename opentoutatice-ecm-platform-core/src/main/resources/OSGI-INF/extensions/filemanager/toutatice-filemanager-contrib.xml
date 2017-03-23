@@ -20,7 +20,7 @@
 			<filter>application/zip</filter>
 		</plugin> -->
 		
-		<!-- Disable NoteImporter: all binaries are importaed as File -->
+		<!-- Disable NoteImporter: all binaries are imported as File -->
 		<plugin name="NoteImporter" enabled="false" />
 
 	</extension>

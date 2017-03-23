@@ -16,9 +16,10 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.platform.types.Type;
+import org.nuxeo.ecm.platform.types.TypeManager;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
-import fr.toutatice.ecm.platform.core.security.OwnerSecurityPolicyHelper;
 
 
 /**
@@ -27,23 +28,39 @@ import fr.toutatice.ecm.platform.core.security.OwnerSecurityPolicyHelper;
  */
 public class DocumentSecurityInformationsProviderImpl implements DocumentSecurityInformationsProvider {
     
+    /** Types manager. */
+    private static TypeManager typeMgr = null;
+    
+    /**
+     * Getter for TypeManager. 
+     */
+    public static TypeManager getTypeManager(){
+        if(typeMgr == null){
+            typeMgr = (TypeManager) Framework.getService(TypeManager.class);
+        }
+        return typeMgr;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
-        
+    public Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDoc) throws ClientException {
         Map<String, Object> securityInfo = new HashMap<String, Object>();
-        
-        securityInfo.put(canCopy.name(), canCopy(coreSession, currentDocument));
-        
+        securityInfo.put(canCopy.name(), canCopy(coreSession, currentDoc));
         return securityInfo;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean canCopy(CoreSession coreSession, DocumentModel currentDocument) {
+    public boolean canCopy(CoreSession coreSession, DocumentModel currentDoc) {
         boolean canCopy = false;
 
-        DocumentRef parentRef = coreSession.getParentDocumentRef(currentDocument.getRef());
+        DocumentRef parentRef = coreSession.getParentDocumentRef(currentDoc.getRef());
 
-        boolean isAdmin = coreSession.hasPermission(currentDocument.getRef(), SecurityConstants.EVERYTHING);
+        boolean isAdmin = coreSession.hasPermission(currentDoc.getRef(), SecurityConstants.EVERYTHING);
         if (isAdmin) {
             return true;
         }
@@ -51,13 +68,13 @@ public class DocumentSecurityInformationsProviderImpl implements DocumentSecurit
         boolean canAdd = coreSession.hasPermission(parentRef, SecurityConstants.ADD_CHILDREN);
         if (canAdd) {
             // Owner policy (to externalize in inherited class?)
-            boolean isUserOwner = coreSession.hasPermission(currentDocument.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_CONTRIBUTOR);
+            boolean isUserOwner = coreSession.hasPermission(currentDoc.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_CONTRIBUTOR);
             if (isUserOwner) {
                 // Owner can not copy Folderish
-                canCopy = !currentDocument.isFolder();
+                canCopy = !currentDoc.isFolder();
             } else {
-                if (currentDocument.isFolder()) {
-                    Collection<Type> subTypes = OwnerSecurityPolicyHelper.getFilteredAllowedSubTypes(currentDocument, coreSession.getPrincipal());
+                if (currentDoc.isFolder()) {
+                    Collection<Type> subTypes = getTypeManager().getAllowedSubTypes(currentDoc.getType(), currentDoc);
                     canCopy = CollectionUtils.isNotEmpty(subTypes);
                 } else {
                     canCopy = true;
@@ -67,10 +84,12 @@ public class DocumentSecurityInformationsProviderImpl implements DocumentSecurit
 
         return canCopy;
     }
-
+    
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean canCopyTo(CoreSession coreSession, DocumentModel currentDocument, DocumentModel target) {
-        // TODO Auto-generated method stub
         return false;
     }
 

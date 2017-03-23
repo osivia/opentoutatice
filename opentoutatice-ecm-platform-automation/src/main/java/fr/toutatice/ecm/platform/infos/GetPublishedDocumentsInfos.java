@@ -27,6 +27,8 @@ import net.sf.json.JSONObject;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -52,7 +54,11 @@ import org.nuxeo.ecm.platform.ui.web.tag.fn.DocumentModelFunctions;
 @Operation(id = GetPublishedDocumentsInfos.ID, category = Constants.CAT_DOCUMENT, label = "GetPublishedDocumentsInfos",
         description = "Get informations of remote published documents of a given live document.")
 public class GetPublishedDocumentsInfos {
-
+    
+    /** Logger. */
+    private static final Log log = LogFactory.getLog(GetPublishedDocumentsInfos.class);
+    
+    /** Identifier. */
     public static final String ID = "Document.GetPublishedDocumentsInfos";
 
     @Context
@@ -66,6 +72,8 @@ public class GetPublishedDocumentsInfos {
 
     @OperationMethod
     public StringBlob run(DocumentModel document) throws Exception {
+        // For Trace logs
+        long begin = System.currentTimeMillis();
         
         JSONArray informations = new JSONArray();
         GetUnrestrictedSections getter = new GetUnrestrictedSections(this.session, this.publisherService, document);
@@ -77,6 +85,12 @@ public class GetPublishedDocumentsInfos {
         }
         
         informations = getter.getInformations();
+        
+        if (log.isTraceEnabled()) {
+            long end = System.currentTimeMillis();
+            log.trace("      [GetPublishedDocumentsInfos]: " + String.valueOf(end - begin) + " ms");
+        }
+        
         return new StringBlob(informations.toString(), "application/json");
     }
 

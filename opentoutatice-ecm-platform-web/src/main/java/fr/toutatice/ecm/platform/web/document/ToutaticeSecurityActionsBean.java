@@ -107,4 +107,17 @@ public class ToutaticeSecurityActionsBean extends SecurityActionsBean {
 	     return documentManager.hasPermission(currentDoc.getRef(), SecurityConstants.EVERYTHING);
 	 }
 	 
+	 /**
+	  * Checks if current user has given permission
+	  * on current document.
+	  * 
+	  * @param permission
+	  * @return true if current user has given permission
+	  * on current document
+	  */
+	 public boolean hasPermission(String permission){
+		 DocumentModel currentDoc = navigationContext.getCurrentDocument();
+	     return documentManager.hasPermission(currentDoc.getRef(), permission);
+	 }
+	 
 }

@@ -24,6 +24,8 @@ import java.util.Map;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -46,6 +48,9 @@ import fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformatio
 description = "Fetch peculiar informations about the given document (used by Portal).")
 public class FetchExtendedDocumentInfos {
     
+    /** Logger. */
+    private final static Log log = LogFactory.getLog(FetchExtendedDocumentInfos.class); 
+    
     /** Operation id */
     public static final String ID = "Document.FetchExtendedDocInfos";
     
@@ -59,6 +64,11 @@ public class FetchExtendedDocumentInfos {
     
     @OperationMethod
     public Blob run() throws Exception {
+        // For Trace logs
+        long begin = System.currentTimeMillis();
+        if(log.isTraceEnabled()){
+            log.trace(" ID: " + this.document.getPathAsString());
+        }
         
         JSONArray rowDocInfos= new JSONArray();
         JSONObject docInfos = new JSONObject();
@@ -70,6 +80,12 @@ public class FetchExtendedDocumentInfos {
         }
         
         rowDocInfos.add(docInfos);
+        
+        if(log.isTraceEnabled()){
+            long end = System.currentTimeMillis();
+            log.trace(" Ended: " + String.valueOf(end - begin) + " ms ======= \r\n");
+        }
+        
         return new StringBlob(rowDocInfos.toString(), "application/json");
     }
 

@@ -119,7 +119,15 @@ public class DocumentInformationsProviderServiceImpl extends DefaultComponent im
     public Map<String, Object> fetchAllExtendedInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
         Map<String, Object> infos = new HashMap<String, Object>(0);
         for (DocumentInformationsProvider contrib : extendedInfosProvidersRegistry.values()) {
+            // For trace logs
+            long begin = System.currentTimeMillis();
+            
             infos.putAll(contrib.fetchInfos(coreSession, currentDocument));
+            
+            if(log.isTraceEnabled()){
+                long end = System.currentTimeMillis();
+                log.trace(" " + contrib.getClass().getName() + ": " + String.valueOf(end - begin) + " ms");
+            }
         }
         return infos;
     }

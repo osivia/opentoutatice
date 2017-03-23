@@ -31,7 +31,7 @@ public class FileInfosProvider implements DocumentInformationsProvider {
     /** Is pdf convertible property. */
     public static final String IS_PDF_CONVERTIBLE = "isPdfConvertible";
     /** Error on pdf conversion. */
-    private static final String ERROR_ON_PDF_CONVERSION = "errorOnPdfConversion";
+    public static final String ERROR_ON_PDF_CONVERSION = "errorOnPdfConversion";
     /** Converter name. */
     public static final String ANY_2_PDF_CONVERTER = "any2pdf";
 

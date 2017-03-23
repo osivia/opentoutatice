@@ -21,6 +21,8 @@ package fr.toutatice.ecm.platform.service.url;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -39,6 +41,9 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeQueryHelper;
  *
  */
 public class WebIdResolver {
+    
+    /** Logger. */
+    private static final Log log = LogFactory.getLog(WebIdResolver.class);
 
     /** Utility class. */
     private WebIdResolver() {
@@ -73,11 +78,17 @@ public class WebIdResolver {
         DocumentModelList documents = null;
 
         if (StringUtils.isNotBlank(webId)) {
-
+            // For Trace logs
+            long begin = System.currentTimeMillis();
 
             UnrestrictedFecthWebIdRunner fecthWebIdRunner = new UnrestrictedFecthWebIdRunner(coreSession, webId);
             fecthWebIdRunner.runUnrestricted();
             documents = fecthWebIdRunner.getDocuments();
+            
+            if(log.isTraceEnabled()){
+                long end = System.currentTimeMillis();
+                log.trace(": " + String.valueOf(end - begin) + " ms");
+            }
 
             if (CollectionUtils.isEmpty(documents) || (CollectionUtils.isNotEmpty(documents) && documents.size() > 1)) {
                 throw new NoSuchDocumentException(webId);
@@ -93,7 +104,7 @@ public class WebIdResolver {
      * Get doc by webid in unrestricted mode (admin)
      */
     private static class UnrestrictedFecthWebIdRunner extends UnrestrictedSessionRunner {
-
+        
         String webId;
         DocumentModelList documents;
 

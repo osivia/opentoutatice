@@ -31,12 +31,14 @@ public class WorkflowDocumentInfosProvider implements DocumentInformationsProvid
     @Override
     public Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
         Map<String, Object> infos = new HashMap<String, Object>(0);
-
-        if (!this.wfSrv.hasContributions()) {
-            infos.put(ToutaticeWorkflowService.VALIDATION_WF_RUNNING_INFOS_KEY, 
-                    this.wfSrv.isWorkflowOfCategoryRunning(ToutaticeWorkflowService.VALIDATION_WF_CATEGORY, currentDocument));
-        } else {
-            infos.put(ToutaticeWorkflowService.VALIDATION_WF_RUNNING_INFOS_KEY, false);
+        // No workflow on Folderish
+        if(!currentDocument.isFolder()){
+            if (!this.wfSrv.hasContributions()) {
+                infos.put(ToutaticeWorkflowService.VALIDATION_WF_RUNNING_INFOS_KEY, 
+                        this.wfSrv.isWorkflowOfCategoryRunning(ToutaticeWorkflowService.VALIDATION_WF_CATEGORY, currentDocument));
+            } else {
+                infos.put(ToutaticeWorkflowService.VALIDATION_WF_RUNNING_INFOS_KEY, false);
+            }
         }
 
         return infos;

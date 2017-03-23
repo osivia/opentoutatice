@@ -43,31 +43,38 @@ public class TaskDocumentInfosProvider implements DocumentInformationsProvider {
     @Override
     public Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
         Map<String, Object> infos = new HashMap<String, Object>(0);
-        if (this.taskSrv.hasContributions()) {
-            
-            /* At one time, there is only one task on current document */
-            Task currentTask = null;
-            boolean taskFound = false;
-            String searchedTaskName = StringUtils.EMPTY;
-            String permission = null;
-            Set<String> tasksNames = this.taskSrv.getTaskContributions().keySet();
-            Iterator<String> iterator = tasksNames.iterator();
-            while (iterator.hasNext() && !taskFound) {
-                String taskName = iterator.next();
-                Task task = getTask(coreSession, currentDocument, taskName);
-                if (task != null) {
-                    searchedTaskName = taskName;
-                    currentTask = task;
-                    permission = this.taskSrv.getTaskContributions().get(taskName);
-                    taskFound = true;
+        
+        // No Task on Folderish
+        if(!currentDocument.isFolder()){
+        
+            if (this.taskSrv.hasContributions()) {
+                // At one time, there is only one task on current document 
+                Task currentTask = null;
+                boolean taskFound = false;
+                String searchedTaskName = StringUtils.EMPTY;
+                String permission = null;
+                
+                Set<String> tasksNames = this.taskSrv.getTaskContributions().keySet();
+                Iterator<String> iterator = tasksNames.iterator();
+                
+                while (iterator.hasNext() && !taskFound) {
+                    String taskName = iterator.next();
+                    Task task = getTask(coreSession, currentDocument, taskName);
+                    if (task != null) {
+                        searchedTaskName = taskName;
+                        currentTask = task;
+                        permission = this.taskSrv.getTaskContributions().get(taskName);
+                        taskFound = true;
+                    }
                 }
+                
+                infos.put(TaskInfos.taskName.name(), searchedTaskName);
+                infos.put(TaskInfos.isTaskPending.name(), this.taskSrv.isTaskPending(currentTask));
+                infos.put(TaskInfos.isTaskInitiator.name(), this.taskSrv.isUserTaskInitiator(coreSession, currentTask));
+                infos.put(TaskInfos.canManageTask.name(), this.taskSrv.canUserManageTask(coreSession, currentTask, currentDocument, permission));
+                
             }
-            
-            infos.put(TaskInfos.taskName.name(), searchedTaskName);
-            infos.put(TaskInfos.isTaskPending.name(), this.taskSrv.isTaskPending(currentTask));
-            infos.put(TaskInfos.isTaskInitiator.name(), this.taskSrv.isUserTaskInitiator(coreSession, currentTask));
-            infos.put(TaskInfos.canManageTask.name(), this.taskSrv.canUserManageTask(coreSession, currentTask, currentDocument, permission));
-            
+        
         }
         return infos;
     }
