@@ -8,12 +8,10 @@
 	<extension target="org.nuxeo.ecm.core.security.SecurityService"
 		point="permissions">
 		
-		<!-- Read is for requests if no acl optimization -->
 		<permission name="WriteModifyOwnOnly">
 		      <include>Read</include>
 		</permission>
 		
-		<!-- Read is for requests if no acl optimization -->
 		<permission name="MasterOwner">
 		      <include>Read</include>
 		</permission>
@@ -65,10 +63,6 @@
 
 	<extension point="policies"
 		target="org.nuxeo.ecm.core.security.SecurityService">
-		
-		<policy
-            class="fr.toutatice.ecm.platform.core.security.MasterOwnerSecurityPolicy"
-            name="ottcMasterOwner" order="1" />
 
 		<policy
 			class="fr.toutatice.ecm.platform.core.security.ToutaticeOwnerSecurityPolicy"
