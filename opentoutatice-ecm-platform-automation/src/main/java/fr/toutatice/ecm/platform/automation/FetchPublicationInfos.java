@@ -74,7 +74,6 @@ import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
-import fr.toutatice.ecm.platform.core.security.OwnerSecurityPolicyHelper;
 import fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProviderService;
 import fr.toutatice.ecm.platform.service.url.WebIdResolver;
 
@@ -140,6 +139,12 @@ public class FetchPublicationInfos {
 
     @OperationMethod
     public Object run() throws Exception {
+        // For Trace logs
+        long begin = System.currentTimeMillis();
+        if(log.isTraceEnabled()){
+            String id = this.document == null ? this.webid : this.document.getPathAsString();
+            log.trace(" ID: " + id);
+        }
 
         /* Réponse de l'opération sous forme de flux JSon */
         JSONArray rowInfosPubli = new JSONArray();
@@ -180,6 +185,10 @@ public class FetchPublicationInfos {
             return createBlob(rowInfosPubli);
         }
         DocumentModel document = (DocumentModel) fetchDocumentRes;
+        
+        // Version
+        boolean isVersion = document.isVersion();
+        infosPubli.element("isVersion", isVersion);
 
         /*
          * Test du droit de modification, suppression sur le document.
@@ -203,17 +212,25 @@ public class FetchPublicationInfos {
 
             Object canUserValidate = canUserValidate();
             infosPubli.element("canUserValidate", canUserValidate);
-
+            
             /*
              * Récupération du path du document - cas où un uuid ou un webId est donné en
              * entrée
              */
-            String livePath = liveDoc.getPathAsString();
-            String docPath = document.getPath().toString();
-            String path = docPath;
-            if (docPath.endsWith(TOUTATICE_PUBLI_SUFFIX) && docPath.equals(livePath + TOUTATICE_PUBLI_SUFFIX)) {
-                path = livePath;
+            
+            String path = document.getPathAsString();
+            
+            // Versions: path must be uuid for Portal
+            if(isVersion){
+                path = document.getId();
+            } else {
+                String livePath = liveDoc.getPathAsString();
+                
+                if (path.endsWith(TOUTATICE_PUBLI_SUFFIX) && path.equals(livePath + TOUTATICE_PUBLI_SUFFIX)) {
+                    path = livePath;
+                }
             }
+            
             infosPubli.element("documentPath", URLEncoder.encode(path, "UTF-8"));
 
             /* Indique une modification du live depuis la dernière publication du proxy */
@@ -257,6 +274,11 @@ public class FetchPublicationInfos {
         infosPubli = infosPubliRunner.getInfosPubli();
         infosPubli.element("errorCodes", errorsCodes);
         rowInfosPubli.add(infosPubli);
+        
+        if(log.isTraceEnabled()){
+            long end = System.currentTimeMillis();
+            log.trace(" Ended: " + String.valueOf(end - begin) + " ms ======= \r\n");
+        }
 
         return createBlob(rowInfosPubli);
     }
@@ -268,15 +290,17 @@ public class FetchPublicationInfos {
      * @param folder
      * @throws UnsupportedEncodingException
      */
-    public static JSONObject getSubTypes(CoreSession session, DocumentModel folder) throws UnsupportedEncodingException {
+    public JSONObject getSubTypes(CoreSession session, DocumentModel folder) throws UnsupportedEncodingException {
         JSONObject subTypes = new JSONObject();
+
         boolean canAddChildren = session.hasPermission(folder.getRef(), SecurityConstants.ADD_CHILDREN);
         if (canAddChildren) {
-            Collection<Type> filteredAllowedSubTypes = OwnerSecurityPolicyHelper.getFilteredAllowedSubTypes(folder, session.getPrincipal());
-            for (Type subType : filteredAllowedSubTypes) {
+            Collection<Type> allowedSubTypes = this.typeService.getAllowedSubTypes(folder.getType());
+            for (Type subType : allowedSubTypes) {
                 subTypes.put(subType.getId(), URLEncoder.encode(subType.getLabel(), "UTF-8"));
             }
         }
+
         return subTypes;
     }
 
@@ -502,14 +526,22 @@ public class FetchPublicationInfos {
      * @throws ServeurException
      */
     private Object getDocumentByWebId(String webid) {
+        // Trace logs
+        long begin = System.currentTimeMillis();
+        
         DocumentModel doc = null;
         try {
             DocumentModelList documentsByWebId = WebIdResolver.getDocumentsByWebId(coreSession, webid);
-            if (CollectionUtils.isNotEmpty(documentsByWebId) && documentsByWebId.size() == 1) {
+            if (CollectionUtils.isNotEmpty(documentsByWebId) && (documentsByWebId.size() == 1)) {
                 doc = documentsByWebId.get(0);
             }
         } catch (NoSuchDocumentException e) {
             return ERROR_CONTENT_NOT_FOUND;
+        }
+        
+        if (log.isTraceEnabled()) {
+            long end = System.currentTimeMillis();
+            log.trace("      [getDocumentByWebId]: " + String.valueOf(end - begin) + " ms");
         }
         
         return doc;
@@ -541,8 +573,9 @@ public class FetchPublicationInfos {
      */
     public static String computeNavPath(String path) {
         String result = path;
-        if (path.endsWith(SUFFIXE_PROXY))
+        if (path.endsWith(SUFFIXE_PROXY)) {
             result = result.substring(0, result.length() - SUFFIXE_PROXY.length());
+        }
         return result;
     }
 
@@ -624,7 +657,7 @@ public class FetchPublicationInfos {
                      */
                     String parentSpaceID = "";
                     DocumentModelList spaceParentList = ToutaticeDocumentHelper.getParentSpaceList(this.session, liveDoc, true, true);
-                    if (spaceParentList != null && spaceParentList.size() > 0) {
+                    if ((spaceParentList != null) && (spaceParentList.size() > 0)) {
                         DocumentModel parentSpace = spaceParentList.get(0);
                         parentSpaceID = getSpaceID(parentSpace);
                     }
@@ -779,8 +812,9 @@ public class FetchPublicationInfos {
 			DocumentModelList remotePublishedDocuments = ToutaticeDocumentHelper.getRemotePublishedDocuments(this.session, liveDoc);
 			if(remotePublishedDocuments.size() > 0) {
 				return true;
+			} else {
+                return false;
 			}
-			else return false;
 		}
 
         /**
@@ -792,7 +826,7 @@ public class FetchPublicationInfos {
         private Boolean isLiveModifiedFromProxies(DocumentModel liveDoc) {
             Boolean isModified = Boolean.TRUE;
 
-            PublisherService publisherService = (PublisherService) Framework.getService(PublisherService.class);
+            PublisherService publisherService = Framework.getService(PublisherService.class);
             Map<String, String> availablePublicationTrees = publisherService.getAvailablePublicationTrees();
 
             if (MapUtils.isNotEmpty(availablePublicationTrees)) {

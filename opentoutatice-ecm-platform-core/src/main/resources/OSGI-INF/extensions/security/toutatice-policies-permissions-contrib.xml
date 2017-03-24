@@ -13,7 +13,7 @@
 		</permission>
 		
 		<permission name="MasterOwner">
-		      <include>Read</include>
+		      <include>Everything</include>
 		</permission>
 
         <!-- FIXME: replace remove by exclude, no? -->

@@ -158,21 +158,21 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
      */
     private boolean isPortalView(String viewId) {
         boolean is = false;
-        
+
         DefaultPortalViewId[] defaultPortalViewIds = DefaultPortalViewId.values();
 
         if (StringUtils.isNotBlank(viewId)) {
-            for(DefaultPortalViewId defaultPortalViewId : defaultPortalViewIds){
+            for (DefaultPortalViewId defaultPortalViewId : defaultPortalViewIds) {
                 is |= viewId.contains(defaultPortalViewId.name());
             }
-        }
-        
-        if (CollectionUtils.isNotEmpty(portalViewIds)) {
-            for (String vId : portalViewIds) {
-                is |= viewId.contains(vId);
+
+            if (CollectionUtils.isNotEmpty(portalViewIds)) {
+                for (String vId : portalViewIds) {
+                    is |= viewId.contains(vId);
+                }
             }
         }
-        
+
         return is;
     }
 
