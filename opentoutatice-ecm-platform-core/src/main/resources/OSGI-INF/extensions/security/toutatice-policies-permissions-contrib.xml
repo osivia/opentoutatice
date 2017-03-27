@@ -12,9 +12,15 @@
 		      <include>Read</include>
 		</permission>
 		
-		<permission name="MasterOwner">
+        <permission name="MasterOwner">
+            <include>Read</include>
+        </permission>
+		
+		<!-- <permission name="MasterOwner">
 		      <include>Everything</include>
-		</permission>
+		      <include>Write</include>
+		      <include>Read</include>
+		</permission> -->
 
         <!-- FIXME: replace remove by exclude, no? -->
 		<permission name="Read">
@@ -66,7 +72,11 @@
 
 		<policy
 			class="fr.toutatice.ecm.platform.core.security.ToutaticeOwnerSecurityPolicy"
-			name="ottcOwner" order="2" />
+			name="ottcOwner" order="1" />
+			
+		<policy
+            class="fr.toutatice.ecm.platform.core.security.MasterOwnerSecurityPolicy"
+            name="ottcMasterOwner" order="10" />
 
 	</extension>
 
