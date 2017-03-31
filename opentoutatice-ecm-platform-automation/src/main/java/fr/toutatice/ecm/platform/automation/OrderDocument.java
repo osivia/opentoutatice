@@ -17,6 +17,9 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.core.Constants;
@@ -26,9 +29,15 @@ import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.DocumentModelIterator;
 import org.nuxeo.ecm.core.api.DocumentModelList;
+import org.nuxeo.ecm.core.api.Filter;
 import org.nuxeo.ecm.core.api.IdRef;
+import org.nuxeo.ecm.core.api.LifeCycleConstants;
 import org.nuxeo.ecm.core.api.PathRef;
+import org.nuxeo.elasticsearch.api.ElasticSearchIndexing;
+import org.nuxeo.elasticsearch.commands.IndexingCommand;
+import org.nuxeo.runtime.api.Framework;
 
 
 /**
@@ -37,7 +46,7 @@ import org.nuxeo.ecm.core.api.PathRef;
  */
 @Operation(id = OrderDocument.ID, category = Constants.CAT_DOCUMENT, label = "Order input Documents",
         description = "Order the given documents in the given container. The orderd document will become the input of the next operation."
-                    + "Manage associated local proxies if any.")
+                + "Manage associated local proxies if any.")
 public class OrderDocument {
 
     public static final String ID = "Document.OrderDocument";
@@ -60,24 +69,61 @@ public class OrderDocument {
 
         DocumentModel target = getTargetDocument();
         String targetName = null;
-        if(target != null){
+        if (target != null) {
             targetName = target.getName();
         }
 
-        if (StringUtils.equalsIgnoreCase("before", position)) {
-            
-            session.orderBefore(parentDocument.getRef(), source.getName(), targetName);
+        if (StringUtils.equalsIgnoreCase("before", this.position)) {
+
+            this.session.orderBefore(parentDocument.getRef(), source.getName(), targetName);
             orderProxyBefore(parentDocument, targetName);
-            
+
         } else if (StringUtils.equalsIgnoreCase("after", position)) {
-            
-            session.orderBefore(parentDocument.getRef(), targetName, source.getName());
+
+            this.session.orderBefore(parentDocument.getRef(), targetName, source.getName());
             orderProxyAfter(parentDocument, targetName);
-            
+
         }
+
+        // Explicit indexing of reordered children
+        indexReorderedChildren(parentDocument);
 
         return source;
 
+    }
+
+
+    /**
+     * Index synchronously reordered children.
+     * 
+     * @param parentDocument
+     */
+    public void indexReorderedChildren(DocumentModel parentDocument) {
+        // Filter on trashed and version children
+        Filter filter = new Filter() {
+
+            private static final long serialVersionUID = 6829091503899474742L;
+
+            @Override
+            public boolean accept(DocumentModel docModel) {
+                boolean notTrashed = !StringUtils.equals(LifeCycleConstants.DELETED_STATE, docModel.getCurrentLifeCycleState());
+                return !docModel.isVersion() && notTrashed;
+            }
+        };
+
+        // Direct children
+        DocumentModelIterator childrenIterator = this.session.getChildrenIterator(parentDocument.getRef(), null, null, filter);
+        if (childrenIterator != null) {
+            List<IndexingCommand> cmds = new ArrayList<>(2);
+            // Commands
+            while (childrenIterator.hasNext()) {
+                cmds.add(new IndexingCommand(childrenIterator.next(), IndexingCommand.Type.UPDATE, true, false));
+            }
+
+            // Synchronous indexing
+            ElasticSearchIndexing esi = (ElasticSearchIndexing) Framework.getService(ElasticSearchIndexing.class);
+            esi.indexNonRecursive(cmds);
+        }
     }
 
 
@@ -99,7 +145,7 @@ public class OrderDocument {
         }
         return target;
     }
-    
+
     /**
      * @param parentDocument
      * @param target
@@ -113,7 +159,7 @@ public class OrderDocument {
             }
         }
     }
-    
+
     /**
      * @param parentDocument
      * @param target
