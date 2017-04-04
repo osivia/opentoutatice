@@ -33,7 +33,10 @@ import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.directory.Directory;
 import org.nuxeo.ecm.directory.api.DirectoryService;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
+import org.nuxeo.ecm.platform.usermanager.UserManagerImpl;
 import org.nuxeo.runtime.api.Framework;
+import org.nuxeo.runtime.services.event.Event;
+import org.nuxeo.runtime.services.event.EventService;
 
 @Operation(id = RefreshPrincipal.ID, 
 category = Constants.CAT_USERS_GROUPS, 
@@ -52,6 +55,7 @@ public class RefreshPrincipal {
 			NuxeoPrincipal principal = (NuxeoPrincipal) ctx.getPrincipal();
 			UserManager userManager = Framework.getService(UserManager.class);
 			DirectoryService directoryService = Framework.getLocalService(DirectoryService.class);
+            EventService eventService = Framework.getService(EventService.class);
 
 			/**
 			 * Refer to Jira for implementation: https://jira.nuxeo.com/browse/SUPNXP-10432
@@ -61,7 +65,11 @@ public class RefreshPrincipal {
 			String userDirectoryName = userManager.getUserDirectoryName();
 			Directory userDirectory = directoryService.getDirectory(userDirectoryName);
 			userDirectory.getCache().invalidate(principal.getName());
-			
+            // fluch NuxeoPrincipal cache @see UserManagerImpl
+            eventService.sendEvent(new Event(UserManagerImpl.USERMANAGER_TOPIC, UserManagerImpl.INVALIDATE_PRINCIPAL_EVENT_ID, this, principal.getName()));
+            // flush DisplayName cache @see UserNameResolverHelper
+            eventService.sendEvent(new Event(UserManagerImpl.USERMANAGER_TOPIC, UserManagerImpl.USERCHANGED_EVENT_ID, this, principal.getName()));
+
 			// refresh the principal (rebuild its data model)
 			DocumentModel um = userManager.getUserModel(principal.getName());
 			principal.setModel(um);
