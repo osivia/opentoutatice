@@ -59,7 +59,7 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
         Access access = Access.UNKNOWN;
 
         // Owner permission and its possible aliases
-        String[] ownerPermissions = (String[]) ArrayUtils.add(OwnerSecurityPolicyHelper.getAliases(), ToutaticeNuxeoStudioConst.CST_PERM_CONTRIBUTOR);
+        String[] ownerPermissions = (String[]) ArrayUtils.add(ArrayUtils.EMPTY_STRING_ARRAY, ToutaticeNuxeoStudioConst.CST_PERM_CONTRIBUTOR);
 
         try {
             if (doPolicyApply(ownerPermissions, mergedAcp, principal, additionalPrincipals)) {
