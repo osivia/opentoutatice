@@ -19,6 +19,7 @@ import org.nuxeo.ecm.platform.mimetype.MimetypeNotFoundException;
 import org.nuxeo.ecm.platform.mimetype.interfaces.MimetypeRegistry;
 import org.nuxeo.runtime.api.Framework;
 
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProvider;
 
 
@@ -97,12 +98,12 @@ public class FileInfosProvider implements DocumentInformationsProvider {
                             } catch (MimetypeNotFoundException | MimetypeDetectionException e) {
                                 // MagicMimetype lib (called from getMimetypeFromBlob) can't found mimetype ...
                                 // but we know it is a text mimetype (case seen for ldif)
-                                // Lt's force it to text/plain (!)
+                                // Let's force it to text/plain (!)
                                 if (StringUtils.startsWith(mimeType, "text/")) {
                                     blob.setMimeType("text/plain");
                                     bh.setBlob(blob);
                                     // Save adapted document (as BlobHolder)
-                                    coreSession.saveDocument(currentDocument);
+                                    ToutaticeDocumentHelper.saveDocumentSilently(coreSession, currentDocument, true);
                                 }
                             }
 

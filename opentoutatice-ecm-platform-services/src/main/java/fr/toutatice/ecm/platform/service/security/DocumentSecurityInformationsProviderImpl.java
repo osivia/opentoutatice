@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -19,8 +18,6 @@ import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.platform.types.Type;
 import org.nuxeo.ecm.platform.types.TypeManager;
 import org.nuxeo.runtime.api.Framework;
-
-import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
 
 /**
@@ -68,29 +65,11 @@ public class DocumentSecurityInformationsProviderImpl implements DocumentSecurit
 
         boolean canAdd = coreSession.hasPermission(parentRef, SecurityConstants.ADD_CHILDREN);
         if (canAdd) {
-            // Owner policy (to externalize in inherited class?)
-            boolean hasOwnerPerm = coreSession.hasPermission(currentDoc.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_CONTRIBUTOR);
-            if (hasOwnerPerm) {
-                // Owner can not copy its own Folders and all leafs
-                if(currentDoc.isFolder()){
-                    String creator = (String) currentDoc.getPropertyValue("dc:creator");
-                    canCopy = StringUtils.equals(coreSession.getPrincipal().getName(), creator);
-
-                    // Robustness: check allowed types too
-                    if (canCopy) {
-                        Collection<Type> subTypes = getTypeManager().getAllowedSubTypes(currentDoc.getType(), currentDoc);
-                        canCopy = CollectionUtils.isNotEmpty(subTypes);
-                    }
-                } else {
-                    canCopy = true;
-                }
+            if (currentDoc.isFolder()) {
+                Collection<Type> subTypes = getTypeManager().getAllowedSubTypes(currentDoc.getType(), currentDoc);
+                canCopy = CollectionUtils.isNotEmpty(subTypes);
             } else {
-                if (currentDoc.isFolder()) {
-                    Collection<Type> subTypes = getTypeManager().getAllowedSubTypes(currentDoc.getType(), currentDoc);
-                    canCopy = CollectionUtils.isNotEmpty(subTypes);
-                } else {
-                    canCopy = true;
-                }
+                canCopy = true;
             }
         }
 

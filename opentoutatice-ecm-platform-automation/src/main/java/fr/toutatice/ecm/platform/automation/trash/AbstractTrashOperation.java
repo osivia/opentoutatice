@@ -1,11 +1,13 @@
 package fr.toutatice.ecm.platform.automation.trash;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
+import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.core.trash.TrashInfo;
 import org.nuxeo.ecm.core.trash.TrashService;
 import org.nuxeo.runtime.api.Framework;
@@ -22,6 +24,39 @@ public abstract class AbstractTrashOperation {
      */
     public AbstractTrashOperation() {
         super();
+    }
+
+    /**
+     * Gets recursive trash info.
+     * <b>FOR TEST: DO NOT USE!</b>
+     * 
+     * @param trashService
+     * @param session
+     * @param docs
+     * @param permission
+     * @return trash info
+     */
+    protected TrashInfo getRecursiveTrashInfo(TrashService trashService, CoreSession session, List<DocumentModel> docs) {
+        // Result
+        TrashInfo trashInfo = null;
+
+        if (docs != null) {
+            // Info of roots
+            trashInfo = trashService.getTrashInfo(docs, session.getPrincipal(), false, false);
+            // Recursive treatment
+            if (trashInfo.forbidden > 0) {
+                return trashInfo;
+            } else {
+                for (DocumentModel doc : docs) {
+                    DocumentModelList children = session.getChildren(doc.getRef(), null, SecurityConstants.REMOVE);
+                    trashInfo = getRecursiveTrashInfo(trashService, session, children);
+                }
+            }
+
+
+        }
+
+        return trashInfo;
     }
 
 
@@ -67,7 +102,7 @@ public abstract class AbstractTrashOperation {
         Principal principal = session.getPrincipal();
 
         // Trash info
-        TrashInfo info = trashService.getTrashInfo(documents, principal, false, true);
+        TrashInfo info = trashService.getTrashInfo(documents, principal, false, false);
 
         // Rejected documents
         DocumentModelList rejected = new DocumentModelListImpl(info.forbidden);

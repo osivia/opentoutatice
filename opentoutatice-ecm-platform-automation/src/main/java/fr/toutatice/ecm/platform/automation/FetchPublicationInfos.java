@@ -217,20 +217,12 @@ public class FetchPublicationInfos {
              * Récupération du path du document - cas où un uuid ou un webId est donné en
              * entrée
              */
-            
-            String path = document.getPathAsString();
-            
-            // Versions: path must be uuid for Portal
-            if(isVersion){
-                path = document.getId();
-            } else {
-                String livePath = liveDoc.getPathAsString();
-                
-                if (path.endsWith(TOUTATICE_PUBLI_SUFFIX) && path.equals(livePath + TOUTATICE_PUBLI_SUFFIX)) {
-                    path = livePath;
-                }
+            String livePath = liveDoc.getPathAsString();
+            String docPath = document.getPath().toString();
+            String path = docPath;
+            if (docPath.endsWith(TOUTATICE_PUBLI_SUFFIX) && docPath.equals(livePath + TOUTATICE_PUBLI_SUFFIX)) {
+                path = livePath;
             }
-            
             infosPubli.element("documentPath", URLEncoder.encode(path, "UTF-8"));
 
             /* Indique une modification du live depuis la dernière publication du proxy */
@@ -265,6 +257,10 @@ public class FetchPublicationInfos {
         }
         boolean userNotAnonymous = !((NuxeoPrincipal) user).isAnonymous();
         infosPubli.put("isCommentableByUser", docCommentable && userNotAnonymous);
+
+        if (log.isTraceEnabled()) {
+            log.trace(" [Before UnrestrictedFecthPubliInfosRunner]: " + String.valueOf(System.currentTimeMillis() - begin));
+        }
 
         UnrestrictedFecthPubliInfosRunner infosPubliRunner = new UnrestrictedFecthPubliInfosRunner(coreSession, document, liveDocRes, infosPubli, userManager,
                 errorsCodes);

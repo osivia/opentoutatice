@@ -25,15 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.nuxeo.ecm.core.api.CoreInstance;
-import org.nuxeo.ecm.core.api.CoreSession;
-import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.storage.sql.coremodel.SQLDocumentLive;
 import org.nuxeo.ecm.core.versioning.VersioningService;
 
 public class ToutaticeVersioningServiceHandler<T> extends ToutaticeAbstractServiceHandler<T> {
-
-//	private static final Log log = LogFactory.getLog(ToutaticeVersioningServiceHandler.class);
 
 	private static final List<String> filteredMethodsList = new ArrayList<String>() {
 		private static final long serialVersionUID = 1L;
