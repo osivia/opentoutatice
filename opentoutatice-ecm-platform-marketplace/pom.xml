@@ -106,6 +106,13 @@
 			</properties>
 		</profile>
 		<profile>
+			<id>QT</id>
+
+			<properties>
+				<profileName>QT</profileName>
+			</properties>
+		</profile>
+		<profile>
 			<id>PREPROD</id>
 
 			<properties>
