@@ -757,10 +757,13 @@ public class FetchPublicationInfos {
                         String publishSpacePath = URLDecoder.decode(this.infosPubli.getString("publishSpacePath"), "UTF-8");
                         if (StringUtils.isNotEmpty(publishSpacePath)) {
                             isBeingModified = Boolean.TRUE;
-                        } else {
-                            // Remote publishing
-                            isBeingModified = Boolean.valueOf(isLiveModifiedFromProxies(document));
                         }
+                        //} else {
+                            // Remote publishing
+                        	// #1446 - Désactivation de la vérification sur les proxy distants, code non threadsafe
+                        	
+                            //isBeingModified = Boolean.valueOf(isLiveModifiedFromProxies(document));
+                        //}
                     }
 
                     this.infosPubli.element("isLiveModifiedFromProxy", isBeingModified);
