@@ -44,9 +44,15 @@ public class ToutaticeUnicityTitleListener implements EventListener {
             DocumentEventContext docCtx = (DocumentEventContext) event.getContext();
             DocumentModel document = docCtx.getSourceDocument();
             
-            if(ToutaticeDocumentHelper.isInWorkspaceLike(docCtx.getCoreSession(), document)){
-                document = checksUnicityTitle(docCtx, event.getName(), document);
-                ToutaticeDocumentHelper.saveDocumentSilently(docCtx.getCoreSession(), document, true);
+            if (ToutaticeDocumentHelper.isInWorkspaceLike(docCtx.getCoreSession(), document)
+                    && ToutaticeDocumentEventListenerHelper.isAlterableDocument(document)) {
+                // Initial title
+                String initialTitle = (String) document.getPropertyValue("dc:title");
+                String newTitle = makeUniqueTitle(docCtx, event.getName(), document);
+
+                if (!StringUtils.equals(initialTitle, newTitle)) {
+                    document.setPropertyValue("dc:title", newTitle);
+                }
             }
         }
 
@@ -59,7 +65,7 @@ public class ToutaticeUnicityTitleListener implements EventListener {
      * @param document
      * @return true if title is unique
      */
-    protected DocumentModel checksUnicityTitle(DocumentEventContext docCtx, String eventName, DocumentModel document) {
+    protected String makeUniqueTitle(DocumentEventContext docCtx, String eventName, DocumentModel document) {
         CoreSession session = docCtx.getCoreSession();
         String parentUUId = session.getParentDocument(document.getRef()).getId();
         String docUUId = document.getId();
@@ -98,9 +104,8 @@ public class ToutaticeUnicityTitleListener implements EventListener {
 
             isUniqueTitle = ToutaticeDocumentMetadataHelper.isTileUnique(session, parentUUId, docUUId, title);
         }
-        document.setPropertyValue("dc:title", title);
 
-        return document;
+        return title;
     }
 
 }
