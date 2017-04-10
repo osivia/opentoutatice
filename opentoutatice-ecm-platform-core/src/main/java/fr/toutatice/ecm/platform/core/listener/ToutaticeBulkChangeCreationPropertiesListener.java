@@ -3,6 +3,7 @@
  */
 package fr.toutatice.ecm.platform.core.listener;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -14,8 +15,13 @@ import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventBundle;
 import org.nuxeo.ecm.core.event.EventContext;
+import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.ecm.core.event.PostCommitFilteringEventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
+import org.nuxeo.ecm.core.event.impl.EventImpl;
+import org.nuxeo.runtime.api.Framework;
+
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 
 /**
@@ -24,8 +30,24 @@ import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
  */
 public class ToutaticeBulkChangeCreationPropertiesListener implements PostCommitFilteringEventListener {
 
+    /** To block this listener. */
+    public static final String BLOCK = "block";
+
     /** Log. */
     private static final Log log = LogFactory.getLog(ToutaticeBulkChangeCreationPropertiesListener.class);
+
+    /** EventService. */
+    private static EventService evtService;
+
+    /**
+     * Getter for EventService.
+     */
+    public EventService getEventService() {
+        if (evtService == null) {
+            evtService = (EventService) Framework.getService(EventService.class);
+        }
+        return evtService;
+    }
 
     /**
      * Accepts documentCreatedByCopy event.
@@ -48,25 +70,31 @@ public class ToutaticeBulkChangeCreationPropertiesListener implements PostCommit
         if (DocumentEventContext.class.isInstance(context)) {
             DocumentEventContext docCtx = (DocumentEventContext) context;
 
-            // Copied document
-            DocumentModel srcDoc = docCtx.getSourceDocument();
+            if (BooleanUtils.isNotTrue((Boolean) docCtx.getProperty(BLOCK))) {
 
-            if (!ToutaticeChangeCreationPropertiesListener.block(docCtx)) {
+                // Copied document
+                DocumentModel srcDoc = docCtx.getSourceDocument();
+
                 // Only Folders
-                if (srcDoc.isFolder()) {
-                    CoreSession session = docCtx.getCoreSession();
+                if (srcDoc.isFolder() && ToutaticeDocumentEventListenerHelper.isAlterableDocument(srcDoc)) {
 
-                    // // Initiator of copy will be set as creator
-                    try {
-                        DocumentModelList docs = new DocumentModelListImpl();
-                        docs.add(srcDoc);
-                        if (session.exists(srcDoc.getRef())) {
-                            changeCreationProperties(docCtx, session, event, docs);
-                            session.save();
+                    if (!ToutaticeChangeCreationPropertiesListener.block(docCtx)) {
+                        CoreSession session = docCtx.getCoreSession();
+
+                        try {
+                            DocumentModelList docs = new DocumentModelListImpl();
+                            docs.add(srcDoc);
+                            if (session.exists(srcDoc.getRef())) {
+                                // Call listeners on createdByCopy
+                                fireCreatedByCopy(docCtx, session, event, docs);
+
+                                // Commit
+                                session.save();
+                            }
+                        } catch (ClientException e) {
+                            log.error("Unable to get children", e);
+                            return;
                         }
-                    } catch (ClientException e) {
-                        log.error("Unable to get children", e);
-                        return;
                     }
                 }
             }
@@ -82,14 +110,23 @@ public class ToutaticeBulkChangeCreationPropertiesListener implements PostCommit
      * @throws ClientException
      */
     // TODO: test in Publish Spaces, i.e. effect on local proxies
-    protected void changeCreationProperties(DocumentEventContext docCtx, CoreSession documentManager, Event event, DocumentModelList docs)
-            throws ClientException {
+    protected void fireCreatedByCopy(DocumentEventContext docCtx, CoreSession session, Event event, DocumentModelList docs) throws ClientException {
         for (DocumentModel docMod : docs) {
-            ToutaticeChangeCreationPropertiesListener.changeCreationProperties(event, docCtx, docMod);
+
+            DocumentEventContext newDocCtx = new DocumentEventContext(session, docCtx.getPrincipal(), docMod);
+            Event eventToThrow = new EventImpl(DocumentEventTypes.DOCUMENT_CREATED_BY_COPY, newDocCtx);
+
+            newDocCtx.setProperty(BLOCK, true);
+
+            getEventService().fireEvent(eventToThrow);
+
+            ToutaticeDocumentHelper.saveDocumentSilently(session, docMod, true);
+
+            // Recurse
             if (docMod.isFolder()) {
-                DocumentModelList children = documentManager.query(String.format(
+                DocumentModelList children = session.query(String.format(
                         "SELECT * FROM Document WHERE ecm:parentId = '%s' AND ecm:isVersion = 0 AND ecm:currentLifeCycleState != 'deleted' ", docMod.getRef()));
-                changeCreationProperties(docCtx, documentManager, event, children);
+                fireCreatedByCopy(docCtx, session, event, children);
             }
         }
     }

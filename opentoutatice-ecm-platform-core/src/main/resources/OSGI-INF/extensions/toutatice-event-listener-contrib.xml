@@ -36,18 +36,18 @@
 		</listener>
 		
 		<!-- After DublinCoreListener (priority 120) -->
-		<listener name="toutaticeDocumentCopied" async="false"
+		<listener name="toutaticeChangeCreatorListener" async="false"
             postCommit="false" 
             enabled="true"
             class="fr.toutatice.ecm.platform.core.listener.ToutaticeChangeCreationPropertiesListener"
-            priority="140">
+            priority="150">
             <event>documentCreatedByCopy</event>
         </listener>
         
-        <!-- <listener name="bulkChangeCreatorListener" async="true" postCommit="true"
+        <listener name="bulkChangeCreatorListener" async="true" postCommit="true"
 		      class="fr.toutatice.ecm.platform.core.listener.ToutaticeBulkChangeCreationPropertiesListener">
 		      <event>documentCreatedByCopy</event>
-		</listener> -->
+		</listener>
 
 		<!-- Faire en sorte que les documents modifiés en mode dit "silencieux" 
 			soient bien indexés par ElasticSearch. (http://redmine.toutatice.fr/issues/3802) -->
