@@ -38,7 +38,7 @@ public class AnyBlobToPDF {
     protected ConversionService service;
 
     @Param(name = "converterName", required = false)
-    protected String converterName = "any2pdf";
+    protected String converterName = "toutaticeAny2pdf";
 
     /**
      * Convert blob of document to pdf with given converter.

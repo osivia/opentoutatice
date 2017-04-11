@@ -17,3 +17,6 @@ ottc.version=3.2.2
 
 ## Archive import
 ottc.import.archive.compatibility=true
+
+# soffice user environments pool size
+ottc.converter.toutaticeAny2pdf.poolSize=10
