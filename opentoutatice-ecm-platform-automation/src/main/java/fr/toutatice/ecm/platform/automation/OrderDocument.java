@@ -35,6 +35,7 @@ import org.nuxeo.ecm.core.api.Filter;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.LifeCycleConstants;
 import org.nuxeo.ecm.core.api.PathRef;
+import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.elasticsearch.api.ElasticSearchIndexing;
 import org.nuxeo.elasticsearch.commands.IndexingCommand;
 import org.nuxeo.runtime.api.Framework;
@@ -67,26 +68,30 @@ public class OrderDocument {
     public DocumentModel run() throws Exception {
         DocumentModel parentDocument = session.getParentDocument(source.getRef());
 
-        DocumentModel target = getTargetDocument();
-        String targetName = null;
-        if (target != null) {
-            targetName = target.getName();
+        // Low level permission test (~ Write test on Folder)
+        if (this.session.hasPermission(parentDocument.getRef(), SecurityConstants.ADD_CHILDREN)) {
+
+            DocumentModel target = getTargetDocument();
+            String targetName = null;
+            if (target != null) {
+                targetName = target.getName();
+            }
+
+            if (StringUtils.equalsIgnoreCase("before", this.position)) {
+
+                this.session.orderBefore(parentDocument.getRef(), source.getName(), targetName);
+                orderProxyBefore(parentDocument, targetName);
+
+            } else if (StringUtils.equalsIgnoreCase("after", position)) {
+
+                this.session.orderBefore(parentDocument.getRef(), targetName, source.getName());
+                orderProxyAfter(parentDocument, targetName);
+
+            }
+
+            // Explicit indexing of reordered children
+            indexReorderedChildren(parentDocument);
         }
-
-        if (StringUtils.equalsIgnoreCase("before", this.position)) {
-
-            this.session.orderBefore(parentDocument.getRef(), source.getName(), targetName);
-            orderProxyBefore(parentDocument, targetName);
-
-        } else if (StringUtils.equalsIgnoreCase("after", position)) {
-
-            this.session.orderBefore(parentDocument.getRef(), targetName, source.getName());
-            orderProxyAfter(parentDocument, targetName);
-
-        }
-
-        // Explicit indexing of reordered children
-        indexReorderedChildren(parentDocument);
 
         return source;
 
