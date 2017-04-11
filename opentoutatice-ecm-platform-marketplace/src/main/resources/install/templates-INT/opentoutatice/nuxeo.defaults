@@ -5,3 +5,6 @@ opentoutatice.target=.
 nuxeo.permalink.service.portal.url=localhost
 nuxeo.permalink.service.param1=portail
 nuxeo.permalink.service.param2=cms
+
+# soffice user environments pool size
+ottc.converter.toutaticeAny2pdf.poolSize=10
