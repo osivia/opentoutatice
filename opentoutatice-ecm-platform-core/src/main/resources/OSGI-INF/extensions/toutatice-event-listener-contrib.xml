@@ -45,7 +45,7 @@
         </listener>
         
         <listener name="bulkChangeCreatorListener" async="true" postCommit="true"
-		      class="fr.toutatice.ecm.platform.core.listener.ToutaticeBulkChangeCreationPropertiesListener">
+		      class="fr.toutatice.ecm.platform.core.listener.ToutaticeBulkDocumentCopiedListener">
 		      <event>documentCreatedByCopy</event>
 		</listener>
 

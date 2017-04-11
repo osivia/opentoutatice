@@ -28,13 +28,13 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
  * @author david
  *
  */
-public class ToutaticeBulkChangeCreationPropertiesListener implements PostCommitFilteringEventListener {
+public class ToutaticeBulkDocumentCopiedListener implements PostCommitFilteringEventListener {
 
     /** To block this listener. */
     public static final String BLOCK = "block";
 
     /** Log. */
-    private static final Log log = LogFactory.getLog(ToutaticeBulkChangeCreationPropertiesListener.class);
+    private static final Log log = LogFactory.getLog(ToutaticeBulkDocumentCopiedListener.class);
 
     /** EventService. */
     private static EventService evtService;
