@@ -42,7 +42,7 @@ public class ToutaticeBulkDocumentCopiedListener implements PostCommitFilteringE
     /**
      * Getter for EventService.
      */
-    public EventService getEventService() {
+    public static EventService getEventService() {
         if (evtService == null) {
             evtService = (EventService) Framework.getService(EventService.class);
         }
@@ -81,19 +81,18 @@ public class ToutaticeBulkDocumentCopiedListener implements PostCommitFilteringE
                     if (!ToutaticeChangeCreationPropertiesListener.block(docCtx)) {
                         CoreSession session = docCtx.getCoreSession();
 
-                        try {
-                            DocumentModelList docs = new DocumentModelListImpl();
-                            docs.add(srcDoc);
-                            if (session.exists(srcDoc.getRef())) {
-                                // Call listeners on createdByCopy
+                        DocumentModelList docs = new DocumentModelListImpl();
+                        docs.add(srcDoc);
+                        if (session.exists(srcDoc.getRef())) {
+                            // Call listeners on createdByCopy
+                            try {
                                 fireCreatedByCopy(docCtx, session, event, docs);
-
-                                // Commit
-                                session.save();
+                            } catch (Exception e) {
+                                log.error(e);
                             }
-                        } catch (ClientException e) {
-                            log.error("Unable to get children", e);
-                            return;
+
+                            // Commit
+                            session.save();
                         }
                     }
                 }
@@ -110,25 +109,53 @@ public class ToutaticeBulkDocumentCopiedListener implements PostCommitFilteringE
      * @throws ClientException
      */
     // TODO: test in Publish Spaces, i.e. effect on local proxies
-    protected void fireCreatedByCopy(DocumentEventContext docCtx, CoreSession session, Event event, DocumentModelList docs) throws ClientException {
+    protected void fireCreatedByCopy(DocumentEventContext docCtx, CoreSession session, Event event, DocumentModelList docs) {
         for (DocumentModel docMod : docs) {
 
-            DocumentEventContext newDocCtx = new DocumentEventContext(session, docCtx.getPrincipal(), docMod);
-            Event eventToThrow = new EventImpl(DocumentEventTypes.DOCUMENT_CREATED_BY_COPY, newDocCtx);
-
-            newDocCtx.setProperty(BLOCK, true);
-
-            getEventService().fireEvent(eventToThrow);
-
-            ToutaticeDocumentHelper.saveDocumentSilently(session, docMod, true);
+            try {
+                throwEvent(docCtx, DocumentEventTypes.DOCUMENT_CREATED_BY_COPY, session, docMod);
+            } catch (Exception e) {
+                log.error(e);
+            }
 
             // Recurse
             if (docMod.isFolder()) {
-                DocumentModelList children = session.query(String.format(
-                        "SELECT * FROM Document WHERE ecm:parentId = '%s' AND ecm:isVersion = 0 AND ecm:currentLifeCycleState != 'deleted' ", docMod.getRef()));
-                fireCreatedByCopy(docCtx, session, event, children);
+                DocumentModelList children = null;
+                try {
+                    children = session.query(String.format(
+                            "SELECT * FROM Document WHERE ecm:parentId = '%s' AND ecm:isVersion = 0 AND ecm:currentLifeCycleState <> 'deleted' ",
+                            docMod.getRef()));
+                } catch (Exception e) {
+                    // Possible error on getting children (?)
+                    log.error(e);
+                }
+
+                if (children != null) {
+                    fireCreatedByCopy(docCtx, session, event, children);
+                }
+
             }
         }
+    }
+
+    /**
+     * 
+     * 
+     * @param docCtx
+     * @param session
+     * @param docMod
+     */
+    public static void throwEvent(DocumentEventContext docCtx, String eventName, CoreSession session, DocumentModel docMod) {
+        // Event creation
+        DocumentEventContext newDocCtx = new DocumentEventContext(session, docCtx.getPrincipal(), docMod);
+        Event eventToThrow = new EventImpl(eventName, newDocCtx);
+        // To avoid loop
+        newDocCtx.setProperty(BLOCK, true);
+
+        // Fire
+        getEventService().fireEvent(eventToThrow);
+        // Save document's modification due to inline listeners
+        ToutaticeDocumentHelper.saveDocumentSilently(session, docMod, true);
     }
 
 
