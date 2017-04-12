@@ -15,6 +15,9 @@
       <sourceMimeType>text/csv</sourceMimeType>
       <sourceMimeType>text/tsv</sourceMimeType>
       
+      <!-- .properties and .conf files -->
+      <sourceMimeType>application/x-extension-properties</sourceMimeType>
+      <sourceMimeType>application/x-extension-conf</sourceMimeType>
 
       <!-- Microsoft office documents -->
       <sourceMimeType>application/msword</sourceMimeType>
