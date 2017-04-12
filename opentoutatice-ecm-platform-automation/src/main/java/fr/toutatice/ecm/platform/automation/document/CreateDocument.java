@@ -77,13 +77,15 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
 		}
 		
 		// Test if webId exists
-		String wId = this.properties.get(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
-		if(StringUtils.isNotBlank(wId)){
-		    DocumentModelList results = this.session.query(String.format(ToutaticeWebIdHelper.WEB_ID_QUERY, wId), 1);
-		    // Don't allow creation from Portal if webId already exists
-		    if(!results.isEmpty()){
-		        throw new ClientException("WebId: " + wId + " already exists.");
-		    }
+        if (this.properties != null) {
+            String wId = this.properties.get(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
+            if (StringUtils.isNotBlank(wId)) {
+                DocumentModelList results = this.session.query(String.format(ToutaticeWebIdHelper.WEB_ID_QUERY, wId), 1);
+                // Don't allow creation from Portal if webId already exists
+                if (!results.isEmpty()) {
+                    throw new ClientException("WebId: " + wId + " already exists.");
+                }
+            }
 		}
 
 		DocumentModel newDoc = this.session.createDocumentModel(doc.getPathAsString(), this.name, this.type);

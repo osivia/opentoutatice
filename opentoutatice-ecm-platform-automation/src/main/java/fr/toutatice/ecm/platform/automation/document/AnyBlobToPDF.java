@@ -66,45 +66,28 @@ public class AnyBlobToPDF {
         Map<String, Serializable> cacheKeyParams = new HashMap<String, Serializable>();
         cacheKeyParams.put("modifiedOn", modDate.getTimeInMillis());
 
-        // try {
-            BlobHolder pdfBh = this.service.convert(this.converterName, bh, cacheKeyParams);
-            result = pdfBh.getBlob();
+        BlobHolder pdfBh = this.service.convert(this.converterName, bh, cacheKeyParams);
+        result = pdfBh.getBlob();
 
-            String fname = result.getFilename();
-            String filename = bh.getBlob().getFilename();
-            if (filename != null && !filename.isEmpty()) {
-                // add pdf extension
-                int pos = filename.lastIndexOf('.');
-                if (pos > 0) {
-                    filename = filename.substring(0, pos);
-                }
-                filename += ".pdf";
-                result.setFilename(filename);
-            } else if (fname != null && !fname.isEmpty()) {
-                result.setFilename(fname);
-            } else {
-                result.setFilename("file");
+        String fname = result.getFilename();
+        String filename = bh.getBlob().getFilename();
+        if (filename != null && !filename.isEmpty()) {
+            // add pdf extension
+            int pos = filename.lastIndexOf('.');
+            if (pos > 0) {
+                filename = filename.substring(0, pos);
             }
+            filename += ".pdf";
+            result.setFilename(filename);
+        } else if (fname != null && !fname.isEmpty()) {
+            result.setFilename(fname);
+        } else {
+            result.setFilename("file");
+        }
 
-            result.setMimeType("application/pdf");
-        // } catch (ConversionException te) {
-        // return manageConversionException(te, doc);
-        // }
+        result.setMimeType("application/pdf");
 
         return result;
     }
-
-    /**
-     * Return portal messages on conversion service exception.
-     * 
-     * @param te
-     * @return
-     */
-    // private Blob manageConversionException(ConversionException ce, DocumentModel document) {
-    // // Log
-    // log.error("Error converting: " + document.getPathAsString(), ce);
-    // // FIXME: suffisant??
-    // return null;
-    // }
 
 }
