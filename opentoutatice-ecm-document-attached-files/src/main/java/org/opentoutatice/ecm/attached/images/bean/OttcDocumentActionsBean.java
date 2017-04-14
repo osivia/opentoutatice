@@ -38,7 +38,7 @@ import fr.toutatice.ecm.platform.web.document.ToutaticeDocumentActionsBean;
  */
 @Name("documentActions")
 @Scope(CONVERSATION)
-@Install(precedence = ExtendedSeamPrecedence.TOUTATICE + 100)
+@Install(precedence = ExtendedSeamPrecedence.INHERIT_TOUTATICE)
 public class OttcDocumentActionsBean extends ToutaticeDocumentActionsBean {
 
     private static final long serialVersionUID = -7497960175016224842L;
