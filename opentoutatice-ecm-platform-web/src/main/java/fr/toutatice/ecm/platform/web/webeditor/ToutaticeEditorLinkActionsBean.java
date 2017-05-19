@@ -42,6 +42,7 @@ import org.nuxeo.ecm.webapp.action.EditorLinkActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeEsQueryHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSorterHelper;
 
 @Name("editorLinkActions")
@@ -273,10 +274,22 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
         final String query = String.format("SELECT * FROM Document WHERE %s", StringUtils.join(constraints.toArray(), " AND "));
         log.debug("Query: " + query);
         
-        // FIXME: optimization: pagination or ES query
-        resultDocuments = documentManager.query(query, queryLimitResults);
+        // resultDocuments = documentManager.query(query, queryLimitResults);
+        final long begin = System.currentTimeMillis();
+
+        resultDocuments = ToutaticeEsQueryHelper.query(documentManager, query, 0, queryLimitResults);
+
+        if (log.isDebugEnabled()) {
+            final long end = System.currentTimeMillis();
+            log.debug("query: " + String.valueOf(end - begin) + " ms");
+        }
+
         hasSearchResults = !resultDocuments.isEmpty();
-        log.debug("query result contains: " + resultDocuments.size() + " docs.");
+
+        if (log.isDebugEnabled()) {
+            log.debug("query result contains: " + resultDocuments.size() + " docs.");
+        }
+
         return "editor_link_search_document";
     }
 

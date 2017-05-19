@@ -49,6 +49,18 @@ public class ToutaticeQueryHelper {
     }
     
     /**
+     * Execute a query in unrestricted mode.
+     * 
+     * @param query
+     * @param limit
+     * @return DocumentModelList
+     */
+    public static DocumentModelList queryUnrestricted(CoreSession session, String query, int limit) {
+        UnrestrictedQueryRunner runner = new UnrestrictedQueryRunner(session, query, limit);
+        return runner.runQuery();
+    }
+
+    /**
      * To query in unrestricted mode.
      * 
      * @author David Chevrier.
@@ -57,6 +69,7 @@ public class ToutaticeQueryHelper {
     public static class UnrestrictedQueryRunner extends UnrestrictedSessionRunner {
 
         String query;
+        int limit = -1;
 
         DocumentModelList docs;
 
@@ -65,17 +78,24 @@ public class ToutaticeQueryHelper {
             this.query = query;
         }
 
+        protected UnrestrictedQueryRunner(CoreSession session, String query, int limit) {
+            super(session);
+            this.query = query;
+            this.limit = limit;
+        }
+
         @Override
         public void run() throws ClientException {
-            docs = session.query(query);
-            for (DocumentModel documentModel : docs) {
+            this.docs = this.session.query(this.query, this.limit);
+
+            for (DocumentModel documentModel : this.docs) {
                 documentModel.detach(true);
             }
         }
 
         public DocumentModelList runQuery() throws ClientException {
             runUnrestricted();
-            return docs;
+            return this.docs;
         }
     }
 

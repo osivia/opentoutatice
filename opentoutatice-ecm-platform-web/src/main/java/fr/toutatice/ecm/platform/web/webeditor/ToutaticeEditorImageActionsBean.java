@@ -19,7 +19,6 @@
 package fr.toutatice.ecm.platform.web.webeditor;
 
 import static org.jboss.seam.ScopeType.CONVERSATION;
-
 import static org.nuxeo.ecm.webapp.documentsLists.DocumentsListsManager.CURRENT_DOCUMENT_SELECTION;
 
 import java.io.IOException;
@@ -56,6 +55,7 @@ import org.nuxeo.ecm.webapp.note.EditorImageActionsBean;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeEsQueryHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeFileHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeImageCollectionHelper;
 
@@ -301,7 +301,18 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 
 		final String query = String.format(SEARCH_QUERY,
 				StringUtils.join(constraints, " AND "));
-		resultDocuments = documentManager.query(query, 100);
+
+        // Log Timer
+        final long begin = System.currentTimeMillis();
+        // Query
+        resultDocuments = ToutaticeEsQueryHelper.query(documentManager, query, 100);
+        // Log timer
+        if (log.isDebugEnabled()) {
+            final long end = System.currentTimeMillis();
+            log.debug("#searchImages: " + String.valueOf(end - begin) + " ms");
+        }
+
+
 		hasSearchResults = !resultDocuments.isEmpty();
 		log.debug("query result contains: " + resultDocuments.size() + " docs.");
 		return "editor_image_upload";
