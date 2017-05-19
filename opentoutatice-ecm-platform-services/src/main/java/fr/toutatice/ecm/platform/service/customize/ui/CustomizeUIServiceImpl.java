@@ -336,15 +336,17 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
                         PageProvider<?> pageProvider = contentView.getPageProvider(null, new ArrayList<SortInfo>(), null, null, new Object[0]);
                         PageProviderDefinition pageProviderDefinition = pageProvider.getDefinition();
                         String pattern = pageProviderDefinition.getPattern();
-                        if (pattern != null) {
+                        if (pattern != null && !StringUtils.contains(pattern, QUERY_WITH_NO_PROXY)) {
                             pattern += QUERY_WITH_NO_PROXY;
                             pageProviderDefinition.setPattern(pattern);
                         } else {
                             WhereClauseDefinition whereClause = pageProviderDefinition.getWhereClause();
                             if (whereClause != null) {
                                 String query = whereClause.getFixedPart();
-                                query += QUERY_WITH_NO_PROXY;
-                                whereClause.setFixedPart(query);
+                                if (query != null && !StringUtils.contains(query, QUERY_WITH_NO_PROXY)) {
+                                    query += QUERY_WITH_NO_PROXY;
+                                    whereClause.setFixedPart(query);
+                                }
                             }
                         }
                         pageProviderDefinition.setEnabled(true);
