@@ -25,20 +25,20 @@ import org.nuxeo.runtime.api.Framework;
  *
  */
 public class DocumentSecurityInformationsProviderImpl implements DocumentSecurityInformationsProvider {
-    
+
     /** Types manager. */
     private static TypeManager typeMgr = null;
-    
+
     /**
-     * Getter for TypeManager. 
+     * Getter for TypeManager.
      */
-    public static TypeManager getTypeManager(){
-        if(typeMgr == null){
+    public static TypeManager getTypeManager() {
+        if (typeMgr == null) {
             typeMgr = (TypeManager) Framework.getService(TypeManager.class);
         }
         return typeMgr;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -58,24 +58,26 @@ public class DocumentSecurityInformationsProviderImpl implements DocumentSecurit
 
         DocumentRef parentRef = coreSession.getParentDocumentRef(currentDoc.getRef());
 
-        boolean isAdmin = coreSession.hasPermission(currentDoc.getRef(), SecurityConstants.EVERYTHING);
-        if (isAdmin) {
-            return true;
-        }
+        if (parentRef != null) {
+            boolean isAdmin = coreSession.hasPermission(currentDoc.getRef(), SecurityConstants.EVERYTHING);
+            if (isAdmin) {
+                return true;
+            }
 
-        boolean canAdd = coreSession.hasPermission(parentRef, SecurityConstants.ADD_CHILDREN);
-        if (canAdd) {
-            if (currentDoc.isFolder()) {
-                Collection<Type> subTypes = getTypeManager().getAllowedSubTypes(currentDoc.getType(), currentDoc);
-                canCopy = CollectionUtils.isNotEmpty(subTypes);
-            } else {
-                canCopy = true;
+            boolean canAdd = coreSession.hasPermission(parentRef, SecurityConstants.ADD_CHILDREN);
+            if (canAdd) {
+                if (currentDoc.isFolder()) {
+                    Collection<Type> subTypes = getTypeManager().getAllowedSubTypes(currentDoc.getType(), currentDoc);
+                    canCopy = CollectionUtils.isNotEmpty(subTypes);
+                } else {
+                    canCopy = true;
+                }
             }
         }
 
         return canCopy;
     }
-    
+
     /**
      * {@inheritDoc}
      */
