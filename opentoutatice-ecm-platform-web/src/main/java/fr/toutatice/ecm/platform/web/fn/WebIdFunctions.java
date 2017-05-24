@@ -135,7 +135,7 @@ public class WebIdFunctions {
             if (StringUtils.isNotBlank(webid)) {
                 url = callWebIdCodec(doc, blobPropertyName);
             } else {
-                url = DocumentModelFunctions.documentUrl(doc);
+                url = DocumentModelFunctions.fileUrl(patternName, doc, blobPropertyName, filename);
             }
 
         } catch (ClientException e) {
