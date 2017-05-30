@@ -48,14 +48,6 @@ public class ToutaticeRootSectionsFinder extends DefaultRootSectionsFinder {
     }
 
     @Override
-    public DocumentModelList getAccessibleSectionRoots(DocumentModel currentDoc) throws ClientException {
-        if ((currentDocument == null) || (!currentDocument.getRef().equals(currentDoc.getRef()))) {
-            computeUserSectionRoots(currentDoc);
-        }
-        return accessibleSectionRoots;
-    }
-
-    @Override
     protected DocumentModelList getDefaultSectionRoots(CoreSession session) throws ClientException {
         DocumentModelList sectionRoots = new DocumentModelListImpl();
 
