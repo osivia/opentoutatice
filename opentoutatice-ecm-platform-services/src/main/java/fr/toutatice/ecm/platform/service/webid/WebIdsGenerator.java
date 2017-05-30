@@ -2,10 +2,9 @@ package fr.toutatice.ecm.platform.service.webid;
 
 import java.nio.ByteBuffer;
 
-import org.apache.commons.codec.net.URLCodec;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
-import org.nuxeo.common.utils.Base64;
 import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.uidgen.AbstractUIDGenerator;
@@ -52,10 +51,7 @@ public class WebIdsGenerator extends AbstractUIDGenerator {
             truncatedArray[i] = bytes[BYTES - size + i];
         }
         
-        URLCodec utf8UrlCodec = new URLCodec();
-        byte[] encoded = utf8UrlCodec.encode(truncatedArray);
-        String encodedString = Base64.encodeBytes(truncatedArray);
-        
+        String encodedString = Base64.encodeBase64String(truncatedArray);
         return StringUtils.removeStart(encodedString, "AA");
     }
 
