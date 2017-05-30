@@ -33,15 +33,19 @@ import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
+import org.nuxeo.ecm.platform.uidgen.UIDGenerator;
+import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
 import fr.toutatice.ecm.platform.service.url.ToutaticeWebIdHelper;
+import fr.toutatice.ecm.platform.service.webid.TTCUIDGeneratorService;
 
 /**
  * Generate or apply a webId on a document. Check if the webId is unique in the domain
@@ -126,7 +130,6 @@ public class SetWebID {
             String webId = null;
             String extension = null;
             boolean creationMode = false;
-            int suffixForUnicity = 1;
             boolean hasToBeUpdated = false;
 
             // if document has not toutatice schema
@@ -134,38 +137,38 @@ public class SetWebID {
                 return;
             }
 
-            // in creation or import, try to generate it.
-            if (StringUtils.isBlank(getWebId())) {
-                // else new id is generated
-                webId = generateWebId(webId, suffixForUnicity);
-                // for Files or Pictures : get the extension of the file if exists
-                extension = getBlobExtensionIfExists(webId);
-                webId = removeBlobExtensionIfExists(webId, extension);
+            try {
+                // in creation or import, try to generate it.
+                if (StringUtils.isBlank(getWebId())) {
+                    // else new id is generated
+                    webId = generateWebId();
+                    extension = getBlobExtensionIfExists(webId);
+                    creationMode = true;
+                }
+                // webid setted in the document, we use it
+                else if (StringUtils.isNotBlank(getWebId())) {
 
-                creationMode = true;
-            }
-            // webid setted in the document, we use it
-            else if (StringUtils.isNotBlank(getWebId())) {
+                    webId = getWebId().toString();
+                    // clean if needed
+                    // DCH: TEST procedures!
+                    if (StringUtils.contains(webId, "_")) {
+                        // Case of technical webId
+                        String nonTechPart = StringUtils.substringAfterLast(webId, "_");
+                        String techPart = StringUtils.substringBeforeLast(webId, "_");
+                        webId = techPart.concat("_").concat(IdUtils.generateId(nonTechPart, "-", true, 512));
+                    } else {
+                        webId = IdUtils.generateId(webId, "-", true, 512);
+                    }
 
-                webId = getWebId().toString();
-                // clean if needed
-                // DCH: TEST procedures!
-                if (StringUtils.contains(webId, "_")) {
-                    // Case of technical webId
-                    String nonTechPart = StringUtils.substringAfterLast(webId, "_");
-                    String techPart = StringUtils.substringBeforeLast(webId, "_");
-                    webId = techPart.concat("_").concat(IdUtils.generateId(nonTechPart, "-", true, 512));
-                } else {
-                    webId = IdUtils.generateId(webId, "-", true, 512);
                 }
 
-            }
+                while (isNotUnique(this.session, this.document, webId)) {
+                    webId = generateWebId();
+                    hasToBeUpdated = true;
+                }
 
-            String originalWebid = webId;
-            while (isNotUnique(this.session, this.document, webId)) {
-                webId = generateWebId(originalWebid, suffixForUnicity);
-                suffixForUnicity += 1;
-                hasToBeUpdated = true;
+            } catch (DocumentException e) {
+                throw new ClientException(e);
             }
 
             if (StringUtils.isNotBlank(webId)) {
@@ -197,22 +200,12 @@ public class SetWebID {
         }
 
         /**
-         * @return new webId basedon path.
+         * @return new random webId.
          */
-        protected String generateWebId(String webId, int suffixForUnicity) {
-            if (StringUtils.isBlank(webId)) {
-                String[] arrayPath = this.document.getPathAsString().split("/");
-                webId = arrayPath[arrayPath.length - 1];
-                // DCH - TO TEST: webId = this.document.getName();
-
-                // for docs whose ecm:name may be identical, nuxeo add a .timestamp, remove it
-                if (webId.contains(".")) {
-                    webId = webId.substring(0, webId.indexOf("."));
-                }
-            } else {
-                webId = webId.concat(String.valueOf(suffixForUnicity));
-            }
-            return webId;
+        protected String generateWebId() throws DocumentException {
+            TTCUIDGeneratorService service = (TTCUIDGeneratorService) Framework.getRuntime().getComponent(TTCUIDGeneratorService.ID);
+            UIDGenerator defaultGenerator = service.getDefaultUIDGenerator();
+            return defaultGenerator.createUID(this.document);
         }
 
         /**
