@@ -87,6 +87,7 @@ public class OttcEditorImageActionsBean extends ToutaticeEditorImageActionsBean 
                 item.put("file", uploadedImageBlob);
                 
                 ToutaticeImageCollectionHelper.instance().add(files, item);
+
                 doc.setPropertyValue(
                         ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES,
                         (Serializable) files);

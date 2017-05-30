@@ -33,7 +33,10 @@
 			<fileset dir="src/main/resources" />
 			<filterset>
 				<filter token="VERSION" value="${maven.project.version}" />
-				<filter token="DISTRIB_VERSION" value="${nuxeo.cap.distribution.version}" />
+				<filter token="DISTRIB_VERSION" value="${nuxeo.version}" />
+				<filter token="CAP_DISTRIB_VERSION" value="${nuxeo.cap.version}" />
+				<filter token="NUXEO_DAM_VERSION" value="${nuxeo.dam.version}" />
+				<filter token="NUXEO_BLOGS_SITES_VERSION" value="${nuxeo.blogs.sites.version}" />
 			</filterset>
 		</copy>
 
@@ -101,47 +104,11 @@
 			<patternset refid="opentoutatice.versus.cap" />
 		</unzip>
 
-		<!-- Build the property that lists the bundles to include -->
-		<var name="install.bundles" value="" />
-		<if>
-			<available file="${outdir}/marketplace/install/bundles" />
-			<then>
-				<var name="install.bundles"
-					value="${line.separator}&lt;update file=&quot;${package.root}/install/bundles&quot; todir=&quot;${env.server.home}/nxserver/plugins&quot; /&gt;" />
-			</then>
-		</if>
-
-		<!-- Build the property that lists the third party libraries to include -->
-		<var name="install.libs" value="" />
-		<if>
-			<available file="${outdir}/marketplace/install/lib" />
-			<then>
-				<var name="install.libs"
-					value="${line.separator}&lt;update file=&quot;${package.root}/install/lib&quot; todir=&quot;${env.lib}&quot; /&gt;" />
-			</then>
-		</if> 
-
-		<!-- No SDK property files -->
-		<var name="install.properties" value="" />
-
-		<!-- Build the property that lists the templates to install -->
-		<var name="install.templates" value="" />
-		<!--if> <available file="${outdir}/marketplace/install/templates-${profileName}" 
-			/> <then> no need for cleaning the selected install the selected profile's 
-			template <var name="install.templates" value="${install.templates}${line.separator}&lt;copy 
-			dir=&quot;${package.root}/install/templates-${profileName}&quot; todir=&quot;${env.templates}&quot; 
-			overwrite=&quot;true&quot; /&gt;" /> update the nuxeo.conf according to the 
-			selected profile's template <var name="install.templates" value="${install.templates}${line.separator}&lt;config 
-			addtemplate=&quot;opentoutatice&quot; /&gt;" /> </then> </if -->
-
 		<!-- Update the install.xml file from properties -->
 		<copy file="src/main/resources/install.xml" todir="${outdir}/marketplace"
 			overwrite="true">
 			<filterset>
-				<filter token="BUNDLES" value="${install.bundles}" />
-				<filter token="LIBS" value="${install.libs}" />
-				<filter token="PROPERTIES" value="${install.properties}" />
-				<filter token="TEMPLATES" value="${install.templates}" />
+				<filter token="PROFILE" value="${profileName}" />
 			</filterset>
 		</copy>
 

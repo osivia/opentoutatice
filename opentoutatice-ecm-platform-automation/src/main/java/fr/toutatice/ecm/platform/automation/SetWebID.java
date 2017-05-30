@@ -58,6 +58,7 @@ public class SetWebID {
 
     private static final Log log = LogFactory.getLog(SetWebID.class);
 
+    @Deprecated
     private static final String NO_RECURSIVE_CHAIN = "notRecursive";
 
     private static final List<Class<?>> FILTERED_SERVICES_LIST = new ArrayList<Class<?>>() {
@@ -97,10 +98,17 @@ public class SetWebID {
     public static class UnrestrictedSilentSetWebIdRunner extends ToutaticeSilentProcessRunnerHelper {
 
         private DocumentModel document;
+        @Deprecated
         private String chainSource;
         private DocumentModel parentDoc;
 
-        protected UnrestrictedSilentSetWebIdRunner(CoreSession session, DocumentModel document, String chainSource) {
+        public UnrestrictedSilentSetWebIdRunner(CoreSession session, DocumentModel document) {
+            super(session);
+            this.document = document;
+        }
+
+        @Deprecated
+        public UnrestrictedSilentSetWebIdRunner(CoreSession session, DocumentModel document, String chainSource) {
             super(session);
             this.document = document;
             this.chainSource = chainSource;
@@ -112,6 +120,9 @@ public class SetWebID {
 
         @Override
         public void run() throws ClientException {
+            // Performances logs
+            final long begin = System.currentTimeMillis();
+
             String webId = null;
             String extension = null;
             boolean creationMode = false;
@@ -169,6 +180,11 @@ public class SetWebID {
                     }
                     this.session.saveDocument(this.document);
                 }
+            }
+
+            if (log.isDebugEnabled()) {
+                final long end = System.currentTimeMillis();
+                log.debug("[#run] " + String.valueOf(end - begin) + " ms");
             }
 
         }
@@ -240,9 +256,18 @@ public class SetWebID {
          * @return true if not unique
          */
         public static boolean isNotUnique(CoreSession session, DocumentModel document, String webId) {
+            // For logs
+            final long begin = System.currentTimeMillis();
+
             String escapedWebId = StringEscapeUtils.escapeJava(webId);
             // Local proxy and live have same webId: check only live
             DocumentModelList query = session.query(String.format(ToutaticeWebIdHelper.LIVE_WEB_ID_UNICITY_QUERY, escapedWebId, document.getId()));
+
+            if (log.isDebugEnabled()) {
+                final long end = System.currentTimeMillis();
+                log.debug("[#isNotUnique] " + String.valueOf(end - begin) + " ms");
+            }
+
             return query.size() > 0;
         }
 

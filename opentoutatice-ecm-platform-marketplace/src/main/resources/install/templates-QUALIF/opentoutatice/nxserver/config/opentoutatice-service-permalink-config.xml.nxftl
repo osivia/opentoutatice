@@ -7,7 +7,7 @@
 		point="permalinks">
 
 		<permalink name="permalinkByPath" classpath="fr.toutatice.ecm.platform.services.permalink.PermalinkByPathDoc" default="true" enabled="true">
-			<host>${nuxeo.permalink.service.portal.url}</host>
+			<host>${nuxeo.permalink.portal.service.url}</host>
 			<parameters>
 				<param name="param1">${nuxeo.permalink.service.param1}</param>
 				<param name="param2">${nuxeo.permalink.service.param2}</param>

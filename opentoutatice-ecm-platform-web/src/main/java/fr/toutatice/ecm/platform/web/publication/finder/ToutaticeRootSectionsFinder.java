@@ -1,20 +1,19 @@
 /*
  * (C) Copyright 2014 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- *
+ * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- *
+ * 
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
- *
+ * 
+ * 
  * Contributors:
- *   mberhaut1
- *    
+ * mberhaut1
  */
 package fr.toutatice.ecm.platform.web.publication.finder;
 
@@ -36,7 +35,7 @@ public class ToutaticeRootSectionsFinder extends DefaultRootSectionsFinder {
     private static final Log log = LogFactory.getLog(ToutaticeRootSectionsFinder.class);
 
     private static String CST_QUERY_LIST_PUBLISH_SPACES = "SELECT * FROM %s WHERE ecm:mixinType != 'HiddenInNavigation' AND ecm:isCheckedInVersion = 0 AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0";
-                
+
     public ToutaticeRootSectionsFinder(CoreSession userSession) {
         super(userSession);
     }
@@ -46,6 +45,14 @@ public class ToutaticeRootSectionsFinder extends DefaultRootSectionsFinder {
         if (unrestrictedDefaultSectionRoot != null) {
             unrestrictedDefaultSectionRoot.clear();
         }
+    }
+
+    @Override
+    public DocumentModelList getAccessibleSectionRoots(DocumentModel currentDoc) throws ClientException {
+        if ((currentDocument == null) || (!currentDocument.getRef().equals(currentDoc.getRef()))) {
+            computeUserSectionRoots(currentDoc);
+        }
+        return accessibleSectionRoots;
     }
 
     @Override
@@ -85,7 +92,8 @@ public class ToutaticeRootSectionsFinder extends DefaultRootSectionsFinder {
                 try {
                     DocumentModel sectionRootParent = this.session.getParentDocument(sectionRoot.getRef());
                     // Templates Roots can have PortalSite models that we don't want in tree
-                    if (!sectionRootParent.hasFacet(FacetNames.MASTER_PUBLISH_SPACE) && (!ToutaticeNuxeoStudioConst.CST_DOC_TYPE_TEMPLATE_ROOT.equals(sectionRootParent.getType()))) {
+                    if (!sectionRootParent.hasFacet(FacetNames.MASTER_PUBLISH_SPACE)
+                            && (!ToutaticeNuxeoStudioConst.CST_DOC_TYPE_TEMPLATE_ROOT.equals(sectionRootParent.getType()))) {
                         this.sectionRoots.add(sectionRoot);
                     }
                 } catch (Exception e) {

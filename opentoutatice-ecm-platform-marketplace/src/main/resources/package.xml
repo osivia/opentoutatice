@@ -61,18 +61,16 @@
 	<production-state>production_ready</production-state>
 	<supported>false</supported>
 	<platforms>
-		<platform>cap-@DISTRIB_VERSION@</platform>
+		<platform>cap-@CAP_DISTRIB_VERSION@</platform>
+		<platform>cap-@CAP_DISTRIB_VERSION@*</platform>
 	</platforms>
 	<dependencies>
 		<!-- Dependencies on Nuxeo's addon -->
-		<package>nuxeo-dam:6.0.0:6.0.0</package>
+		<package>nuxeo-dam:@NUXEO_DAM_VERSION@:@NUXEO_DAM_VERSION@</package>
 		<!-- FIXME: just for schema webpage of PortalSite and PortalPage... -->
-		<package>nuxeo-sites-blogs:1.2.0:1.2.0</package>
+		<package>nuxeo-sites-blogs:@NUXEO_BLOGS_SITES_VERSION@:@NUXEO_BLOGS_SITES_VERSION@</package>
 		<!-- HF dependencies -->
-		<package>nuxeo-6.0-HF34:1.0.0</package>
-		<!-- Utilisation du schéma VEVENT par TOUTATICE_EVENT -->
-		<!-- TODO (KLH) Backport d'une correction de la version 3.0, lien toujours valide en 3.4 ? -->
-		<package>nuxeo-agenda:1.2.1</package>
+		<package>nuxeo-@DISTRIB_VERSION@</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>

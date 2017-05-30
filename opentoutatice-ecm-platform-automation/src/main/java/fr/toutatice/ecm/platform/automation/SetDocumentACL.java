@@ -52,13 +52,13 @@ public class SetDocumentACL {
 	boolean doBreakInheritance = false;
 
 	@OperationMethod(collector=DocumentModelCollector.class)
-	public DocumentModel run(DocumentModel doc) throws Exception {
+	public DocumentModel run(final DocumentModel doc) throws Exception {
 		setACE(doc.getRef());
 		return session.getDocument(doc.getRef());
 	}
 
 	@OperationMethod(collector=DocumentModelCollector.class)
-	public DocumentModel run(DocumentRef doc) throws Exception {
+	public DocumentModel run(final DocumentRef doc) throws Exception {
 		setACE(doc);
 		return session.getDocument(doc);
 	}
@@ -85,21 +85,21 @@ public class SetDocumentACL {
 		session.setACP(ref, acp, doOverwrite);
 	}
 
-	private List<ACE>[] slurpACEs(String entries) {
-		List<ACE>[] tabList = new ArrayList[2];
-		List<ACE> lstAcePos = new ArrayList<ACE>();
-		List<ACE> lstAceNeg = new ArrayList<ACE>();
+	private List<ACE>[] slurpACEs(final String entries) {
+		final List<ACE>[] tabList = new ArrayList[2];
+		final List<ACE> lstAcePos = new ArrayList<ACE>();
+		final List<ACE> lstAceNeg = new ArrayList<ACE>();
 		
-		StringTokenizer aceTokenizer = new StringTokenizer(entries, ACE_DELIMITER);
+		final StringTokenizer aceTokenizer = new StringTokenizer(entries, ACE_DELIMITER);
 		while (aceTokenizer.hasMoreTokens()) {
-			String aceStg = aceTokenizer.nextToken();
-			Pattern p = Pattern.compile("^(.+?)" + VALUE_DELIMITER + "(.+?)" + VALUE_DELIMITER + "(.+?)$");
-			Matcher m = p.matcher(aceStg);
+			final String aceStg = aceTokenizer.nextToken();
+			final Pattern p = Pattern.compile("^(.+?)" + VALUE_DELIMITER + "(.+?)" + VALUE_DELIMITER + "(.+?)$");
+			final Matcher m = p.matcher(aceStg);
 			if (m.find()) {
-				String user = m.group(1);
-				String permission = m.group(2);
-				boolean granted = Boolean.parseBoolean(m.group(3));
-				ACE ace = new ACE(user, permission, true);
+				final String user = m.group(1);
+				final String permission = m.group(2);
+				final boolean granted = Boolean.parseBoolean(m.group(3));
+				final ACE ace = new ACE(user, permission, true);
 				if(granted){
 					lstAcePos.add(ace);
 				}else{

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -17,12 +18,16 @@
 		<module>opentoutatice-ecm-platform-custom</module>
 		<module>opentoutatice-ecm-document-attached-files</module>
 		<module>opentoutatice-ecm-platform-reporting</module>
-		<module>opentoutatice-ecm-platform-marketplace</module> 
-		<module>opentoutatice-ecm-platform-distribution</module> 
+		<module>opentoutatice-ecm-platform-marketplace</module>
+		<module>opentoutatice-ecm-platform-distribution</module>
 	</modules>
 
 	<properties>
-		<nuxeo.version>6.0-HF34</nuxeo.version>
+		<nuxeo.version>6.0-HF37</nuxeo.version>
+		<nuxeo.cap.version>6.0</nuxeo.cap.version>
+		<nuxeo.dam.version>6.0.0</nuxeo.dam.version>
+		<nuxeo.blogs.sites.version>1.2.0</nuxeo.blogs.sites.version>
+		
 		<commons.lang.version>2.6</commons.lang.version>
 		<org.apache.pdfbox.version>1.7.1</org.apache.pdfbox.version>
 		<net.sf.json.version>2.4</net.sf.json.version>
@@ -41,11 +46,11 @@
 			<!-- Nx dependencies -->
 			<dependency>
 				<groupId>org.nuxeo.ecm.distribution</groupId>
-				<artifactId>nuxeo-distribution</artifactId>
+				<artifactId>nuxeo-distribution-cap</artifactId>
 				<version>${nuxeo.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency> 
+			</dependency>
 
 			<dependency>
 				<groupId>org.nuxeo.ecm.core</groupId>
@@ -225,15 +230,15 @@
 				<version>${nuxeo.version}</version>
 			</dependency>
 			<dependency>
-	            <groupId>org.nuxeo.ecm.webengine</groupId>
-	            <artifactId>nuxeo-webengine-core</artifactId>
-	            <version>${nuxeo.version}</version>
-	        </dependency>
-	        <dependency>
-	            <groupId>org.nuxeo.ecm.platform</groupId>
-	            <artifactId>nuxeo-rest-api-server</artifactId>
-	            <version>${nuxeo.version}</version>
-	        </dependency>
+				<groupId>org.nuxeo.ecm.webengine</groupId>
+				<artifactId>nuxeo-webengine-core</artifactId>
+				<version>${nuxeo.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.nuxeo.ecm.platform</groupId>
+				<artifactId>nuxeo-rest-api-server</artifactId>
+				<version>${nuxeo.version}</version>
+			</dependency>
 
 			<!-- Opentoutatice dependencies -->
 			<dependency>
@@ -254,6 +259,16 @@
 			<dependency>
 				<groupId>opentoutatice-ecm.platform</groupId>
 				<artifactId>opentoutatice-ecm-platform-automation</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>opentoutatice-ecm.platform</groupId>
+				<artifactId>opentoutatice-ecm-document-attached-files</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>opentoutatice-ecm.platform</groupId>
+				<artifactId>opentoutatice-ecm-platform-reporting</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -316,11 +331,11 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-                <groupId>org.nuxeo.ecm.automation</groupId>
-                <artifactId>nuxeo-automation-test</artifactId>
-                <version>${nuxeo.version}</version>
-                <scope>test</scope>
-            </dependency>
+				<groupId>org.nuxeo.ecm.automation</groupId>
+				<artifactId>nuxeo-automation-test</artifactId>
+				<version>${nuxeo.version}</version>
+				<scope>test</scope>
+			</dependency>
 			<dependency>
 				<groupId>javax.mail</groupId>
 				<artifactId>mail</artifactId>
@@ -388,55 +403,37 @@
 					<extensions>true</extensions>
 				</plugin>
 				<plugin>
-	                <groupId>org.lesscss</groupId>
-	                <artifactId>lesscss-maven-plugin</artifactId>
-	                <version>1.7.0.1.1</version>
-	                <configuration>
-	                    <sourceDirectory>${project.basedir}/src/main/less</sourceDirectory>
-	                    <outputDirectory>${project.basedir}/src/main/resources/nuxeo.war/css</outputDirectory>
-	                    <compress>true</compress>
-	                    <includes>
-	                        <include>toutatice-popup.less</include>
-	                        <include>plugin-popup.less</include>
-	                        <include>custom-popup.less</include>
-	                        <include>fragments-popup.less</include>
-	                        <include>custom-remote-publishing.less</include>
-	                    </includes>
-	                    <outputFileFormat>{fileName}.min.css</outputFileFormat>
-	                </configuration>
-	                <executions>
-	                    <execution>
-	                        <goals>
-	                            <goal>compile</goal>
-	                        </goals>
-	                    </execution>
-	                </executions>
-	            </plugin>
-	            <!-- <plugin>
-	                <groupId>net.alchim31.maven</groupId>
-	                <artifactId>yuicompressor-maven-plugin</artifactId>
-	                <configuration>
-	                    <aggregations>
-	                        <aggregation>
-	                            <includes>
-	                                <include>**/*.js</include>
-	                            </includes>
-	                            <insertNewLine>true</insertNewLine>
-	                            <excludes>
-	                                <exclude>jquery-integration.min.js</exclude>
-	                            </excludes>
-	                            <output>${project.build.directory}/${project.build.finalName}/js/socle.min.js</output>
-	                            <removeIncluded>true</removeIncluded>
-	                        </aggregation>
-	                    </aggregations>
-	                    <excludes>
-	                        <exclude>**/*.min.css</exclude>
-	                        <exclude>**/*.min.js</exclude>
-	                    </excludes>
-	                    <jswarn>false</jswarn>
-	                    <suffix>.min</suffix>
-	                </configuration>
-	            </plugin> -->
+					<groupId>org.lesscss</groupId>
+					<artifactId>lesscss-maven-plugin</artifactId>
+					<version>1.7.0.1.1</version>
+					<configuration>
+						<sourceDirectory>${project.basedir}/src/main/less</sourceDirectory>
+						<outputDirectory>${project.basedir}/src/main/resources/nuxeo.war/css</outputDirectory>
+						<compress>true</compress>
+						<includes>
+							<include>toutatice-popup.less</include>
+							<include>plugin-popup.less</include>
+							<include>custom-popup.less</include>
+							<include>fragments-popup.less</include>
+							<include>custom-remote-publishing.less</include>
+						</includes>
+						<outputFileFormat>{fileName}.min.css</outputFileFormat>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>compile</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- <plugin> <groupId>net.alchim31.maven</groupId> <artifactId>yuicompressor-maven-plugin</artifactId> 
+					<configuration> <aggregations> <aggregation> <includes> <include>**/*.js</include> 
+					</includes> <insertNewLine>true</insertNewLine> <excludes> <exclude>jquery-integration.min.js</exclude> 
+					</excludes> <output>${project.build.directory}/${project.build.finalName}/js/socle.min.js</output> 
+					<removeIncluded>true</removeIncluded> </aggregation> </aggregations> <excludes> 
+					<exclude>**/*.min.css</exclude> <exclude>**/*.min.js</exclude> </excludes> 
+					<jswarn>false</jswarn> <suffix>.min</suffix> </configuration> </plugin> -->
 			</plugins>
 		</pluginManagement>
 	</build>

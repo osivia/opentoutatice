@@ -1,10 +1,33 @@
-#nuxeo.template.includes=
 opentoutatice.target=.
+nuxeo.template.includes=postgresql
 
-# default properties values
-nuxeo.permalink.service.portal.url=localhost
-nuxeo.permalink.service.param1=portal
+##----------------------------------------------------------------------------
+## Permalink service
+##----------------------------------------------------------------------------
+nuxeo.permalink.service.portal.url=mig44dch
+nuxeo.permalink.service.param1=portail
 nuxeo.permalink.service.param2=cms
 
+##----------------------------------------------------------------------------
+## JSF States stack
+##----------------------------------------------------------------------------
+nuxeo.jsf.numberOfViewsInSession=20
+nuxeo.jsf.numberOfLogicalViews=20
+
+##----------------------------------------------------------------------------
+## PDF conversion: 
+##----------------------------------------------------------------------------
 # soffice user environments pool size
 ottc.converter.toutaticeAny2pdf.poolSize=10
+
+##========================
+## Fulltext Analyzer
+##========================
+nuxeo.vcs.fulltext.search.analyzer=french
+
+##-------------------------
+## Timeout for imports
+##-------------------------
+org.nuxeo.dnd.upload.timeout=300000
+org.nuxeo.dnd.exec.timeout=300000
+nuxeo.db.transactiontimeout=700

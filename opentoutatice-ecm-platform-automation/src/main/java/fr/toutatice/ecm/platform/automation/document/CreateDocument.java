@@ -37,6 +37,7 @@ import org.nuxeo.ecm.core.api.pathsegment.PathSegmentService;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeQueryHelper;
 import fr.toutatice.ecm.platform.service.url.ToutaticeWebIdHelper;
 
 @Operation(
@@ -80,7 +81,7 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
         if (this.properties != null) {
             String wId = this.properties.get(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
             if (StringUtils.isNotBlank(wId)) {
-                DocumentModelList results = this.session.query(String.format(ToutaticeWebIdHelper.WEB_ID_QUERY, wId), 1);
+                DocumentModelList results = ToutaticeQueryHelper.queryUnrestricted(session, String.format(ToutaticeWebIdHelper.WEB_ID_QUERY, wId), 1);
                 // Don't allow creation from Portal if webId already exists
                 if (!results.isEmpty()) {
                     throw new ClientException("WebId: " + wId + " already exists.");

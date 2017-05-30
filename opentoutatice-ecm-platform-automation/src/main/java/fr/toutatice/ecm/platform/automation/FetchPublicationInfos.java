@@ -429,7 +429,8 @@ public class FetchPublicationInfos {
             if (canBeDelete) {
                 DocumentModel proxy = ToutaticeDocumentHelper.getProxy(coreSession, liveDoc, null);
                 boolean hasProxy = (null != proxy);
-                if (hasProxy) {
+                /* 3.0 Report: boolean isApproved = ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(liveDoc.getCurrentLifeCycleState());*/
+                if (/* isApproved || */hasProxy) {
                     boolean canValidate = coreSession.hasPermission(liveDoc.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE);
                     canBeDelete = Boolean.valueOf(canValidate);
                 }

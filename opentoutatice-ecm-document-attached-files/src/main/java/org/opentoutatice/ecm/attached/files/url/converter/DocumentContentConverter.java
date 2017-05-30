@@ -14,7 +14,6 @@ import javax.faces.convert.FacesConverter;
 import org.apache.commons.lang.StringUtils;
 import org.jboss.seam.core.Manager;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.platform.ui.web.util.BaseURL;
 import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 import org.opentoutatice.ecm.attached.files.url.codec.OttcAttachedFileCodec;
 import org.opentoutatice.ecm.attached.images.bean.OttcDocumentActionsBean;
@@ -30,12 +29,6 @@ import org.opentoutatice.ecm.attached.images.bean.OttcDocumentActionsBean;
  */
 @FacesConverter("org.opentoutatice.ecm.attached.files.url.converter.DocumentContentConverter")
 public class DocumentContentConverter implements Converter {
-
-    /** Nuxeo webapp context. */
-    private static final String webappName = "/".concat(BaseURL.getWebAppName()).concat("/");
-
-    /** Absolute URL indicator. */
-    private static final String protocolIndicator = ":";
 
     private static final String ATTACHED_RESOURCE_INDICATOR = "attachedImages";
 
