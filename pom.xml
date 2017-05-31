@@ -43,7 +43,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- Nx dependencies -->
 			<dependency>
 				<groupId>org.nuxeo.ecm.distribution</groupId>
 				<artifactId>nuxeo-distribution-cap</artifactId>
