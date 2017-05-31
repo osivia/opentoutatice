@@ -16,7 +16,7 @@
 		<module>opentoutatice-ecm-platform-automation</module>
 		<module>opentoutatice-ecm-platform-services</module>
 		<module>opentoutatice-ecm-platform-custom</module>
-		<module>opentoutatice-ecm-document-attached-files</module>
+		<module>opentoutatice-ecm-platform-attached-files</module>
 		<module>opentoutatice-ecm-platform-reporting</module>
 		<module>opentoutatice-ecm-platform-marketplace</module>
 		<module>opentoutatice-ecm-platform-distribution</module>
@@ -262,7 +262,7 @@
 			</dependency>
 			<dependency>
 				<groupId>opentoutatice-ecm.platform</groupId>
-				<artifactId>opentoutatice-ecm-document-attached-files</artifactId>
+				<artifactId>opentoutatice-ecm-platform-attached-files</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

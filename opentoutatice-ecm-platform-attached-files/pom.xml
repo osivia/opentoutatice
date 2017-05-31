@@ -8,7 +8,7 @@
 		<version>4.6-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>opentoutatice-ecm-attached-files</artifactId>
+	<artifactId>opentoutatice-ecm-platform-attached-files</artifactId>
 	<name>Opentoutatice document attached files feature</name>
 	<description>Managment of document's attached files</description>
 

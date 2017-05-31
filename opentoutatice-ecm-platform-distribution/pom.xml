@@ -32,7 +32,7 @@
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
-			<artifactId>opentoutatice-ecm-document-attached-files</artifactId>
+			<artifactId>opentoutatice-ecm-platform-attached-files</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
