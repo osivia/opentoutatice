@@ -4,9 +4,9 @@ nuxeo.template.includes=postgresql
 ##----------------------------------------------------------------------------
 ## Permalink service
 ##----------------------------------------------------------------------------
-#nuxeo.permalink.service.portal.url=localhost
-#nuxeo.permalink.service.param1=portail
-#nuxeo.permalink.service.param2=cms
+nuxeo.permalink.service.portal.url=localhost
+nuxeo.permalink.service.param1=portail
+nuxeo.permalink.service.param2=cms
 
 ##----------------------------------------------------------------------------
 ## JSF States stack
