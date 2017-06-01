@@ -49,18 +49,28 @@
     </f:subview>
 
     <script type="text/javascript">
-        // TODO: to externalize
-        jQuery('div.tab-content').on('dragover', function() {
-            jQuery('div.tab-content input').addClass('asDropZone');
+        document.addEventListener("dragover", function(event) {
+            var inputFile = document.querySelector(".imgsFileUpload");
+            inputFile.classList.add("asDropZone");
+            event.preventDefault();
+            event.stopImmediatePropagation();
         });
-
-        jQuery('div.tab-content').on('dragleave', function() {
-            jQuery('div.tab-content input').removeClass('asDropZone');
-        });
-
-        jQuery('div.tab-content').on('drop', function() {
-            jQuery('div.tab-content input').removeClass('asDropZone');
-        });
+    
+        function removeDropZone(){
+            var dropZone = document.querySelector(".asDropZone");
+            if (dropZone !== null) {
+                dropZone.classList.remove("asDropZone");
+            }
+        }
+        
+        function disableEvent(){
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        }
+    
+        document.addEventListener("dragexit", removeDropZone);
+        document.addEventListener("dragover", disableEvent);
+        document.addEventListener("dragend", disableEvent);
     </script>
 
 </f:subview>
