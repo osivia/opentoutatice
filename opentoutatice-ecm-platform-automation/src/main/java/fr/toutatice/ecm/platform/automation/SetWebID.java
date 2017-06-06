@@ -25,7 +25,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.annotations.In;
-import org.nuxeo.common.utils.IdUtils;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -138,29 +137,33 @@ public class SetWebID {
             }
 
             try {
+                webId = getWebId();
+
                 // in creation or import, try to generate it.
-                if (StringUtils.isBlank(getWebId())) {
+                if (StringUtils.isBlank(webId)) {
                     // else new id is generated
                     webId = generateWebId();
                     extension = getBlobExtensionIfExists(webId);
                     creationMode = true;
                 }
-                // webid setted in the document, we use it
-                else if (StringUtils.isNotBlank(getWebId())) {
 
-                    webId = getWebId().toString();
-                    // clean if needed
-                    // DCH: TEST procedures!
-                    if (StringUtils.contains(webId, "_")) {
-                        // Case of technical webId
-                        String nonTechPart = StringUtils.substringAfterLast(webId, "_");
-                        String techPart = StringUtils.substringBeforeLast(webId, "_");
-                        webId = techPart.concat("_").concat(IdUtils.generateId(nonTechPart, "-", true, 512));
-                    } else {
-                        webId = IdUtils.generateId(webId, "-", true, 512);
-                    }
-
-                }
+                // TODO: move in generator from dc:title
+                // // webid setted in the document, we use it
+                // else if (StringUtils.isNotBlank(getWebId())) {
+                //
+                // webId = getWebId().toString();
+                // // clean if needed
+                // // DCH: TEST procedures!
+                // if (StringUtils.contains(webId, "_")) {
+                // // Case of technical webId
+                // String nonTechPart = StringUtils.substringAfterLast(webId, "_");
+                // String techPart = StringUtils.substringBeforeLast(webId, "_");
+                // webId = techPart.concat("_").concat(IdUtils.generateId(nonTechPart, "-", true, 512));
+                // } else {
+                // webId = IdUtils.generateId(webId, "-", true, 512);
+                // }
+                //
+                // }
 
                 while (isNotUnique(this.session, this.document, webId)) {
                     webId = generateWebId();
