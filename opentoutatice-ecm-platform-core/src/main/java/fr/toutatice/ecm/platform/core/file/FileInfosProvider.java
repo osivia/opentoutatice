@@ -13,7 +13,6 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.blobholder.BlobHolder;
 import org.nuxeo.ecm.core.convert.api.ConversionService;
-import org.nuxeo.ecm.platform.mimetype.interfaces.MimetypeRegistry;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProvider;
@@ -31,9 +30,6 @@ public class FileInfosProvider implements DocumentInformationsProvider {
     public static final String ERROR_ON_PDF_CONVERSION = "errorOnPdfConversion";
     /** Converter name. */
     public static final String TTC_ANY_2_PDF_CONVERTER = "toutaticeAny2pdf";
-
-    /** MimetypeRegistry. */
-    private static MimetypeRegistry mimetypeRegistry;
 
     /** Conversion service. */
     private static ConversionService conversionService;

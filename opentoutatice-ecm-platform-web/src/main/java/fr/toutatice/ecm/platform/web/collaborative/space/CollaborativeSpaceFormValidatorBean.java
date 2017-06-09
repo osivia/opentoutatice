@@ -4,7 +4,6 @@
 package fr.toutatice.ecm.platform.web.collaborative.space;
 
 import java.io.Serializable;
-import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -87,7 +86,7 @@ public class CollaborativeSpaceFormValidatorBean implements Serializable {
                 parentUUId = currentDocument.getId();
             } else {
                 // Update case
-                DocumentModel parentDocument = this.documentManager.getParentDocument(currentDocument.getRef());
+                DocumentModel parentDocument = ToutaticeDocumentHelper.getUnrestrictedParent(currentDocument);
                 parentUUId = parentDocument.getId();
                 currentUUId = currentDocument.getId();
             }

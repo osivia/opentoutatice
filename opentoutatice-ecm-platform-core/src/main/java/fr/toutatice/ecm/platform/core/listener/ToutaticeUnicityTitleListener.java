@@ -67,7 +67,7 @@ public class ToutaticeUnicityTitleListener implements EventListener {
      */
     protected String makeUniqueTitle(DocumentEventContext docCtx, String eventName, DocumentModel document) {
         CoreSession session = docCtx.getCoreSession();
-        String parentUUId = session.getParentDocument(document.getRef()).getId();
+        String parentUUId = ToutaticeDocumentHelper.getUnrestrictedParent(document).getId();
         String docUUId = document.getId();
         String title = (String) document.getPropertyValue("dc:title");
 

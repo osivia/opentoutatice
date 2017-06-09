@@ -174,10 +174,8 @@ public class WebIdCodec extends AbstractDocumentViewCodec {
 
 			String uri = StringUtils.join(items, ToutaticeUtilsConst.PATH_SEPARATOR);
 			
-			Map<String, String> locParameters = docLoc.getParameters();
-			locParameters.putAll(docView.getParameters());
-
-            return URIUtils.addParametersToURIQuery(uri, locParameters);
+            Map<String, String> viewParameters = docView.getParameters();
+            return URIUtils.addParametersToURIQuery(uri, viewParameters);
         }
 
         return null;

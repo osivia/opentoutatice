@@ -38,6 +38,7 @@ import org.nuxeo.runtime.api.Framework;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.service.url.ToutaticeDocumentLocation;
 import fr.toutatice.ecm.platform.service.url.WebIdCodec;
+import fr.toutatice.ecm.platform.service.url.WebIdResolver;
 
 /**
  * Functions for making webid's urls in views
@@ -55,6 +56,9 @@ public class WebIdFunctions {
     private static final Log log = LogFactory.getLog(WebIdFunctions.class);
 
     private static final String WEBID_DOWNLOAD_PICTURE = "webiddownloadpicture";
+
+    /** Portal share link marker. */
+    private static final String PSL_MARKER = "?l=";
 
     /** URL service. */
     protected static URLPolicyService urlService;
@@ -154,12 +158,12 @@ public class WebIdFunctions {
         try {
             String webid = (String) doc.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
             if (StringUtils.isNotBlank(webid)) {
-                id = webid;
+                id = StringUtils.replace(ToutaticeDocumentLocation.getLogicalWebId(doc), WebIdResolver.RPXY_WID_MARKER, PSL_MARKER);
             } else {
                 id = doc.getPathAsString();
             }
 
-        } catch (ClientException e) {
+        } catch (Exception e) {
             log.error("Erreur génération webid " + e);
         }
         return id;

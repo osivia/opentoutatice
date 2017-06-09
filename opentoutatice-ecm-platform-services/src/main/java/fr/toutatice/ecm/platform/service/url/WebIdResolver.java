@@ -31,6 +31,7 @@ import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 
+import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeQueryHelper;
 
 
@@ -41,9 +42,12 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeQueryHelper;
  *
  */
 public class WebIdResolver {
-    
+
     /** Logger. */
     private static final Log log = LogFactory.getLog(WebIdResolver.class);
+
+    /** Remote proxy webid marker. */
+    public static final String RPXY_WID_MARKER = "_c_";
 
     /** Utility class. */
     private WebIdResolver() {
@@ -72,8 +76,7 @@ public class WebIdResolver {
      * @return documents matching given webid (live or proxy, proxies).
      * @throws NoSuchDocumentException
      */
-    public static DocumentModelList getDocumentsByWebId(CoreSession coreSession, String webId)
-            throws NoSuchDocumentException {
+    public static DocumentModelList getDocumentsByWebId(CoreSession coreSession, String webId) throws NoSuchDocumentException {
 
         DocumentModelList documents = null;
 
@@ -84,8 +87,8 @@ public class WebIdResolver {
             UnrestrictedFecthWebIdRunner fecthWebIdRunner = new UnrestrictedFecthWebIdRunner(coreSession, webId);
             fecthWebIdRunner.runUnrestricted();
             documents = fecthWebIdRunner.getDocuments();
-            
-            if(log.isTraceEnabled()){
+
+            if (log.isTraceEnabled()) {
                 long end = System.currentTimeMillis();
                 log.trace(": " + String.valueOf(end - begin) + " ms");
             }
@@ -104,7 +107,7 @@ public class WebIdResolver {
      * Get doc by webid in unrestricted mode (admin)
      */
     private static class UnrestrictedFecthWebIdRunner extends UnrestrictedSessionRunner {
-        
+
         String webId;
         DocumentModelList documents;
 
@@ -116,7 +119,45 @@ public class WebIdResolver {
 
         @Override
         public void run() throws ClientException {
-            getLive();
+            if (StringUtils.contains(this.webId, RPXY_WID_MARKER)) {
+                getRemoteProxy();
+            } else {
+                getLive();
+            }
+        }
+
+        /**
+         * Get remote proxy with given logical webid like
+         * <webid_of_live>_c_<webid_of_section_of_remote_proxy>.
+         */
+        private void getRemoteProxy() {
+            String[] webIds = StringUtils.split(this.webId, RPXY_WID_MARKER);
+
+            // Remote proxy webid is same as live
+            String liveWId = webIds[0];
+            // Webid of section where live is published (section is parent of remote proxy)
+            String sectionWId = webIds[1];
+
+            // Get proxy(ies) with live webId
+            DocumentModelList rProxies = this.session.query(String.format(ToutaticeWebIdHelper.RPXY_WEB_ID_QUERY, liveWId));
+
+            // Published in one place only only
+            if (rProxies.size() == 1) {
+                // Proxy found
+                DocumentModel rPxy = rProxies.get(0);
+                // Check parent
+                if (isParentWebId(rPxy, sectionWId)) {
+                    this.documents.add(rPxy);
+                }
+            } else if (rProxies.size() > 1) {
+                // Published in many places.
+                // Check all to see incoherences (this.documents.size() must be equals to one)
+                for (DocumentModel rPxy : rProxies) {
+                    if (isParentWebId(rPxy, sectionWId)) {
+                        this.documents.add(rPxy);
+                    }
+                }
+            }
         }
 
         /**
@@ -127,6 +168,25 @@ public class WebIdResolver {
             if (CollectionUtils.isNotEmpty(lives) && lives.size() == 1) {
                 this.documents.add(lives.get(0));
             }
+        }
+
+        /**
+         * Checks if webid is parent's document one.
+         * 
+         * @param document
+         * @param webId
+         * @return true if webid is parent's document one
+         */
+        public boolean isParentWebId(DocumentModel document, String webId) {
+            boolean is = false;
+            if (document != null) {
+                DocumentModel parentDocument = this.session.getParentDocument(document.getRef());
+                if (parentDocument != null) {
+                    String pWebId = (String) parentDocument.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
+                    is = StringUtils.equals(webId, pWebId);
+                }
+            }
+            return is;
         }
 
 

@@ -126,16 +126,9 @@
                                 </h:outputLink>
                                 
                                 
-                                <h:outputLink value="#{oh:preferredLinkUrl(document)}"
-                                    target="_blank" rendered="#{!documentActions.isRemoteProxy(document)}">
+                                <h:outputLink value="#{oh:preferredLinkUrl(document)}" target="_blank">
                                     <h:outputText value="#{nxd:titleOrId(document)}" />
                                 </h:outputLink>
-
-                                <nxd:restDocumentLink document="#{document}"
-                                    rendered="#{documentActions.isRemoteProxy(document)}" newConversation="true"
-                                    target="_blank">
-                                    <h:outputText value="#{nxd:titleOrId(document)}" />
-                                </nxd:restDocumentLink>
 
                             </nxu:column>
                             <!--  Author -->
@@ -152,8 +145,7 @@
                                     <h:outputText
                                         value="#{messages['toutatice.label.content.header.pathOrId']}" />
                                 </f:facet>
-                                <h:outputText value="#{oh:preferredDisplayId(document)}" rendered="#{!documentActions.isRemoteProxy(document)}"/>
-                                <h:outputText value="#{document.pathAsString}" rendered="#{documentActions.isRemoteProxy(document)}"/>
+                                <h:outputText value="#{oh:preferredDisplayId(document)}"/>
                             </h:column>
                         </nxu:dataTable>
                     </div>

@@ -312,7 +312,6 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
             log.debug("#searchImages: " + String.valueOf(end - begin) + " ms");
         }
 
-
 		hasSearchResults = !resultDocuments.isEmpty();
 		log.debug("query result contains: " + resultDocuments.size() + " docs.");
 		return "editor_image_upload";

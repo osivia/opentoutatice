@@ -56,12 +56,29 @@ public class ToutaticeEsQueryHelper {
         return uQnA.getRowsResults();
     }
 
+    /**
+     * Execute query on Es (with really no limit: {@link org.nuxeo.elasticsearch.query.NxQueryBuilder#limit(int) NxQueryBuilder.limit(int)}).
+     * 
+     * @param session
+     * @param nxql
+     * @return DocumentModelList fetched from DB
+     */
     public static DocumentModelList query(CoreSession session, String nxql) {
-        return query(session, nxql, 0, -1);
+        // Fetch docs from DB to get facets not defined in DocumentTypeImpl (they ares tored in hierachy table like isRemoteProxy)
+        return query(session, nxql, 0, -1, false);
     }
 
+    /**
+     * Execute query on Es.
+     * 
+     * @param session
+     * @param nxql
+     * @param limit
+     * @return DocumentModelList fetched from DB
+     */
     public static DocumentModelList query(CoreSession session, String nxql, int limit) {
-        return query(session, nxql, 0, limit);
+        // Fetch docs from DB to get facets not defined in DocumentTypeImpl (they ares tored in hierachy table like isRemoteProxy)
+        return query(session, nxql, 0, limit, false);
     }
 
     /**
@@ -71,11 +88,32 @@ public class ToutaticeEsQueryHelper {
      * @param nxql
      * @param currentPageIndex
      * @param pageSize
-     * @return DocumentModelList
+     * @return DocumentModelList fetched from DB
      */
-    public static DocumentModelList query(CoreSession session, String nxql, int currentPageIndex, int pageSize){
+    public static DocumentModelList query(CoreSession session, String nxql, int currentPageIndex, int pageSize) {
+        // Fetch docs from DB to get facets not defined in DocumentTypeImpl (they ares tored in hierachy table like isRemoteProxy)
+        return query(session, nxql, currentPageIndex, pageSize, false);
+    }
+
+    /**
+     * Execute paginated query on ES.
+     * 
+     * @param session
+     * @param nxql
+     * @param currentPageIndex
+     * @param pageSize
+     * @return DocumentModelList fetched from Es or from DB
+     */
+    public static DocumentModelList query(CoreSession session, String nxql, int currentPageIndex, int pageSize, boolean fetchDocFromEs) {
         // Builder
         NxQueryBuilder qB = new NxQueryBuilder(session).nxql(nxql);
+
+        // Fetch documents from Es
+        if (fetchDocFromEs) {
+            qB.fetchFromElasticsearch();
+        } else {
+            qB.fetchFromDatabase();
+        }
         // Pagination
         if(pageSize > 0 && currentPageIndex >= 0){
             qB.offset(currentPageIndex * pageSize);
@@ -83,6 +121,7 @@ public class ToutaticeEsQueryHelper {
         } else {
             qB.limit(DEFAULT_MAX_RESULT_SIZE);
         }
+
         // Query
         return getElasticSearchService().query(qB);
     }

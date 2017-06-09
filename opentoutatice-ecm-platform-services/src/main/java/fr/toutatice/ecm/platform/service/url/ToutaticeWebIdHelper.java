@@ -39,6 +39,8 @@ public class ToutaticeWebIdHelper {
     
     /** Live query filter. */
     public static final String LIVE_QUERY_FILTER = " and ecm:isProxy = 0 ";
+    /** Remote proxy query filter. */
+    public static final String RPXY_QUERY_FILTER = " and (ecm:isProxy = 1 and ecm:mixinType = 'isRemoteProxy') ";
     /** Unicity webid query filter. */
     public static final String WEB_ID_UNICITY_QUERY_FILTER = " AND ecm:uuid <> '%s' ";
     
@@ -47,6 +49,8 @@ public class ToutaticeWebIdHelper {
             + "AND ecm:isVersion = 0";
     /** Query to get live document according to its webId. */
     public static final String LIVE_WEB_ID_QUERY = WEB_ID_QUERY + LIVE_QUERY_FILTER;
+    /** Query to get remote proxiex with given webid. */
+    public static final String RPXY_WEB_ID_QUERY = WEB_ID_QUERY + RPXY_QUERY_FILTER;
     
     /** Unicity webid query. */
     public static final String WEB_ID_UNICITY_QUERY = WEB_ID_QUERY + WEB_ID_UNICITY_QUERY_FILTER;
@@ -64,6 +68,7 @@ public class ToutaticeWebIdHelper {
      * @param document
      * @return the first parent of document with webId.
      */
+    @Deprecated
     public static String getParentWebId(CoreSession session, DocumentModel document){
         String parentWebId = StringUtils.EMPTY;
         
@@ -79,7 +84,7 @@ public class ToutaticeWebIdHelper {
             
         };
         
-        //Carefull: list is fetched in unrestricted way.
+        // Carefull: list is fetched in unrestricted way.
         DocumentModelList parentList = ToutaticeDocumentHelper.getParentList(session, document, webIdExists, true, true);
         
         if(CollectionUtils.isNotEmpty(parentList)){
