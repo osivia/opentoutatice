@@ -75,4 +75,7 @@
 	<xs:element name="abstract" type="xs:string" />
 	<xs:element name="useES" type="xs:boolean" default="false" />
 	<xs:element name="selectors" type="xs:string" />
+	<!-- #652 - Date de parution d'un document -->
+	<xs:element name="publicationDate" type="xs:date" />
+	
 </xs:schema>
