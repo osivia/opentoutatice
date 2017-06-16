@@ -258,30 +258,32 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
      * to be coherent with publisher-task-contrib.xml.
      */
     @Override
-    protected List<String> filterEmptyTrees(Collection<String> trees)
-            throws PublicationTreeNotAvailable, ClientException {
+    protected List<String> filterEmptyTrees(Collection<String> trees) throws PublicationTreeNotAvailable, ClientException {
         List<String> filteredTrees = new ArrayList<>();
 
         for (String tree : trees) {
             try {
-                PublicationTree pTree = publisherService.getPublicationTree(
-                        tree, documentManager, null,
-                        navigationContext.getCurrentDocument());
-                if (pTree != null) {
-                    if (pTree.getTreeType().equals(
-                            "ToutaticeRootSectionsPublicationTree")) {
-                        if (pTree.getChildrenNodes().size() > 0) {
+                // Tree of Domain
+                String treeDomain = StringUtils.substringAfter(tree, "-");
+                // Current Domain
+                String domainName = navigationContext.getCurrentDomain().getName();
+                
+                // We can filter on current Domain cause we are in tree based on Workspace configuration
+                if (StringUtils.equals(domainName, treeDomain)) {
+                    PublicationTree pTree = publisherService.getPublicationTree(tree, documentManager, null, navigationContext.getCurrentDocument());
+                    if (pTree != null) {
+                        if (pTree.getTreeType().equals("ToutaticeRootSectionsPublicationTree")) {
+                            if (pTree.getChildrenNodes().size() > 0) {
+                                filteredTrees.add(tree);
+                            }
+                        } else {
                             filteredTrees.add(tree);
                         }
-                    } else {
-                        filteredTrees.add(tree);
                     }
                 }
             } catch (PublicationTreeNotAvailable e) {
-                log.warn("Publication tree " + tree
-                        + " is not available : check config");
-                log.debug("Publication tree " + tree
-                        + " is not available : root cause is ", e);
+                log.warn("Publication tree " + tree + " is not available : check config");
+                log.debug("Publication tree " + tree + " is not available : root cause is ", e);
             }
         }
         return filteredTrees;
