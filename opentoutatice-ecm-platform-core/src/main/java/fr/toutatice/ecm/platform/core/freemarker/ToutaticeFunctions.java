@@ -1,20 +1,19 @@
 /*
  * (C) Copyright 2014 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- *
+ * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- *
+ * 
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
- *
+ * 
+ * 
  * Contributors:
- *   mberhaut1
- *    
+ * mberhaut1
  */
 package fr.toutatice.ecm.platform.core.freemarker;
 
@@ -41,144 +40,144 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.services.permalink.PermaLinkService;
 
 public class ToutaticeFunctions extends PlatformFunctions {
-    
+
     /** Base Url protocol. */
     private static final String PROTOCOL_BASE_URL = "http://";
     /** Truncated HTML suffix. */
-    private static final String TRUNCATED_HTML_SUFFIX = "<p> ... </p>";
-    
-	private static CommentManager commentManager;
-	private static PermaLinkService permaLinkService;
+    private static final String TRUNCATED_HTML_SUFFIX = "<span>&nbsp;... </span>";
 
-	/**
-	 * @param doc
-	 *            document
-	 * @param xpath
-	 *            xpath du blob
-	 * @return url de download du blob identifier par son xpath dans le document
-	 *         nuxeo
-	 * @throws PropertyException
-	 * @throws ClientException
-	 */
-	public String getDownloadFileUrl(DocumentModel doc, String xpath) throws PropertyException, ClientException {
+    private static CommentManager commentManager;
+    private static PermaLinkService permaLinkService;
 
-		BlobProperty blob = (BlobProperty) doc.getProperty(xpath);
-		String filename = ((SQLBlob) blob.getValue()).getFilename();
-		String url = DocumentModelFunctions.fileUrl("downloadFile", doc, xpath, filename);
+    /**
+     * @param doc
+     *            document
+     * @param xpath
+     *            xpath du blob
+     * @return url de download du blob identifier par son xpath dans le document
+     *         nuxeo
+     * @throws PropertyException
+     * @throws ClientException
+     */
+    public String getDownloadFileUrl(DocumentModel doc, String xpath) throws PropertyException, ClientException {
 
-		return url;
-	}
+        BlobProperty blob = (BlobProperty) doc.getProperty(xpath);
+        String filename = ((SQLBlob) blob.getValue()).getFilename();
+        String url = DocumentModelFunctions.fileUrl("downloadFile", doc, xpath, filename);
 
-	/**
-	 * @param le document
-	 * @return permalink pour visualiser le document depuis le portail, si le document n'est pas visualisable la méthode retourne ""
-	 * @throws PropertyException
-	 * @throws ClientException
-	 */
-	public String getPermalink(DocumentModel doc) throws PropertyException, ClientException {
-		String url = StringUtils.EMPTY;
-		// verification : le document doit pouvoir être visible dans toutatice
-		if (ToutaticeDocumentHelper.isVisibleInPortal(doc, doc.getCoreSession())) {
+        return url;
+    }
 
-			// si oui recherche du permalink
-			if (null == permaLinkService) {
-				try {
-					permaLinkService = Framework.getService(PermaLinkService.class);
-				} catch (Exception e) {
-					throw new WebException("Unable to get publicationService");
-				}
-			}
-			url = permaLinkService.getPermalink(doc);
-		}
-		
-		return url;
-	}
-	
-	public String getPortalHost(DocumentModel doc){
-	    String host = StringUtils.EMPTY;
-	    
-	    if (ToutaticeDocumentHelper.isVisibleInPortal(doc, doc.getCoreSession())) {
-	        
-	        if (null == permaLinkService) {
+    /**
+     * @param le document
+     * @return permalink pour visualiser le document depuis le portail, si le document n'est pas visualisable la méthode retourne ""
+     * @throws PropertyException
+     * @throws ClientException
+     */
+    public String getPermalink(DocumentModel doc) throws PropertyException, ClientException {
+        String url = StringUtils.EMPTY;
+        // verification : le document doit pouvoir être visible dans toutatice
+        if (ToutaticeDocumentHelper.isVisibleInPortal(doc, doc.getCoreSession())) {
+
+            // si oui recherche du permalink
+            if (null == permaLinkService) {
                 try {
                     permaLinkService = Framework.getService(PermaLinkService.class);
                 } catch (Exception e) {
                     throw new WebException("Unable to get publicationService");
                 }
             }
-	        
-	        host = permaLinkService.getPortalHost();
-	        
-	    }
-	    
-	    return host;
-	}
-	
-	public String getShortPortalHost(String portalHost){
-	    String shortHost = StringUtils.EMPTY;
-	    
-	    if(StringUtils.isNotBlank(portalHost)){
-	        shortHost = StringUtils.substring(portalHost, PROTOCOL_BASE_URL.length());
-	    }
-	    
-	    return shortHost;
-	}
+            url = permaLinkService.getPermalink(doc);
+        }
 
-	/**
-	 * Récupére un commentaire sur le document.
-	 * 
-	 * @param le
-	 *            document
-	 * @param le
-	 *            numéro du commentaire voulu. Si null, c'est le dernier
-	 *            commentaire qui est retourné.
-	 * @return le commentaire demandé
-	 * @throws Exception
-	 */
-	public String getDocumentComments(DocumentModel doc, Integer noComment) throws Exception {
-		String res = "";
-		if (commentManager == null) {
-			commentManager = getCommentManager();
-		}
-		List<DocumentModel> lstComments = commentManager.getComments(doc);
-		int idxComment = lstComments.size() - 1;
-		if (noComment != null && noComment < lstComments.size()) {
-			idxComment = noComment;
-		}
+        return url;
+    }
 
-		DocumentModel derComment = lstComments.get(idxComment);
-		res = (String) derComment.getPropertyValue("comment:text");
-		return res;
-	}
+    public String getPortalHost(DocumentModel doc) {
+        String host = StringUtils.EMPTY;
 
-	private CommentManager getCommentManager() throws Exception {
-		CommentManager commentManager = Framework.getService(CommentManager.class);
-		if (commentManager == null) {
-			throw new WebException("Unable to get commentManager");
-		}
-		return commentManager;
-	}
+        if (ToutaticeDocumentHelper.isVisibleInPortal(doc, doc.getCoreSession())) {
 
-	/**
-	 * Transformer du texte html en texte simple
-	 * 
-	 * @param html
-	 *            extrait à transformer
-	 * @return texte
-	 */
-	public String extractTextFromHTML(String html) {
-		return Jsoup.parse(html).text();
-	}
-	
-	/**
-	 * Truncate HTML according to its number of characters inside its
-	 * text elements.
-	 * 
-	 * @param html
-	 * @param nbChars
-	 * @return truncatedHtml
-	 */
-	public String truncateHTML(String html, int nbChars) {
+            if (null == permaLinkService) {
+                try {
+                    permaLinkService = Framework.getService(PermaLinkService.class);
+                } catch (Exception e) {
+                    throw new WebException("Unable to get publicationService");
+                }
+            }
+
+            host = permaLinkService.getPortalHost();
+
+        }
+
+        return host;
+    }
+
+    public String getShortPortalHost(String portalHost) {
+        String shortHost = StringUtils.EMPTY;
+
+        if (StringUtils.isNotBlank(portalHost)) {
+            shortHost = StringUtils.substring(portalHost, PROTOCOL_BASE_URL.length());
+        }
+
+        return shortHost;
+    }
+
+    /**
+     * Récupére un commentaire sur le document.
+     * 
+     * @param le
+     *            document
+     * @param le
+     *            numéro du commentaire voulu. Si null, c'est le dernier
+     *            commentaire qui est retourné.
+     * @return le commentaire demandé
+     * @throws Exception
+     */
+    public String getDocumentComments(DocumentModel doc, Integer noComment) throws Exception {
+        String res = "";
+        if (commentManager == null) {
+            commentManager = getCommentManager();
+        }
+        List<DocumentModel> lstComments = commentManager.getComments(doc);
+        int idxComment = lstComments.size() - 1;
+        if (noComment != null && noComment < lstComments.size()) {
+            idxComment = noComment;
+        }
+
+        DocumentModel derComment = lstComments.get(idxComment);
+        res = (String) derComment.getPropertyValue("comment:text");
+        return res;
+    }
+
+    private CommentManager getCommentManager() throws Exception {
+        CommentManager commentManager = Framework.getService(CommentManager.class);
+        if (commentManager == null) {
+            throw new WebException("Unable to get commentManager");
+        }
+        return commentManager;
+    }
+
+    /**
+     * Transformer du texte html en texte simple
+     * 
+     * @param html
+     *            extrait à transformer
+     * @return texte
+     */
+    public String extractTextFromHTML(String html) {
+        return Jsoup.parse(html).text();
+    }
+
+    /**
+     * Truncate HTML according to its number of characters inside its
+     * text elements.
+     * 
+     * @param html
+     * @param nbChars
+     * @return truncatedHtml
+     */
+    public String truncateHTML(String html, int nbChars) {
         String truncatedHtml = html;
 
         if (html != null) {
@@ -192,59 +191,73 @@ public class ToutaticeFunctions extends PlatformFunctions {
                 // Elements
                 Elements elements = document.getAllElements();
 
-                if (elements != null) {
-                    // Truncate if necessary
-                    for (int index = elements.size(); text.length() > nbChars && index > 0; index--) {
-                        // Remove last element (containing text)
-                        Element lastTextElement = elements.get(index -1);
-                        
-                        if (lastTextElement.text() != null) {
-                            // Inner text
-                            String innerText = lastTextElement.text();
-                            if(innerText.length() > 0){
-                                // Remove element content from text variable
-                                text = StringUtils.substring(text, 0, text.length() - innerText.length());
-                            }
-                        }
+                // Truncate if necessary
+                boolean toTruncate = text.length() > nbChars;
 
+                for (int index = elements.size(); text.length() > nbChars && index > 0; index--) {
+                    // Remove last element (containing text)
+                    Element lastElement = elements.get(index - 1);
+
+                    if (lastElement.hasText()) {
+                        // Inner text
+                        String innerText = lastElement.text();
+                        if (innerText.length() > nbChars) {
+                            // Truncate text size of element
+                            innerText = StringUtils.substring(innerText, 0, nbChars - 1);
+
+                            lastElement.empty();
+                            lastElement.append(innerText);
+                        } else {
+                            // Remove element from DOM
+                            lastElement.remove();
+                        }
+                    } else {
                         // Remove element from DOM
-                        lastTextElement.remove();
+                        lastElement.remove();
                     }
 
-                    // Rebuild String
-                    Elements body = document.getElementsByTag("body");
-                    truncatedHtml = body.first().html();
-                    
-                    // To be ... cool
-                    if(StringUtils.isNotBlank(truncatedHtml)){
-                        truncatedHtml = truncatedHtml.concat(TRUNCATED_HTML_SUFFIX);
+                    // Compute
+                    text = document.text();
+                }
+
+                // Rebuild String
+                Elements body = document.getElementsByTag("body");
+                Element content = body.first();
+
+                // To be ... cool
+                if (toTruncate && StringUtils.isNotBlank(truncatedHtml)) {
+                    Elements finalElements = content.getAllElements();
+                    if (finalElements.size() > 0) {
+                        finalElements.get(finalElements.size() - 1).append(TRUNCATED_HTML_SUFFIX);
                     }
                 }
+
+                truncatedHtml = content.html();
             }
 
         }
 
         return truncatedHtml;
     }
-	
-	/**
-	 * @param username
-	 * @return firstName + lastName of user.
-	 * @throws Exception 
-	 * @throws ClientException 
-	 */
-	public String getUserFullName(String username) {
-	    String fullName = StringUtils.EMPTY;
-	    NuxeoPrincipal principal;
+
+    /**
+     * @param username
+     * @return firstName + lastName of user.
+     * @throws Exception
+     * @throws ClientException
+     */
+    public String getUserFullName(String username) {
+        String fullName = StringUtils.EMPTY;
+        NuxeoPrincipal principal;
         try {
             principal = (NuxeoPrincipal) super.getUserManager().getPrincipal(username);
-            if(principal != null){
+            if (principal != null) {
                 fullName = principal.getFirstName().concat(" ").concat(principal.getLastName());
             }
         } catch (Exception e) {
             return fullName;
         }
         return fullName;
-	}
-	
+    }
+
 }
