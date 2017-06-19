@@ -181,15 +181,18 @@ public class ToutaticeFunctions extends PlatformFunctions {
         String truncatedHtml = html;
 
         if (html != null) {
-            // Document
+            // Document (complete html)
             Document document = Jsoup.parse(html);
+            // Get body
+            Elements body = document.getElementsByTag("body");
+            Element content = body.first();
 
             // Get as text to count characters
-            String text = document.text();
+            String text = content.text();
 
             if (text != null) {
                 // Elements
-                Elements elements = document.getAllElements();
+                Elements elements = content.children();
 
                 // Truncate if necessary
                 boolean toTruncate = text.length() > nbChars;
@@ -198,31 +201,43 @@ public class ToutaticeFunctions extends PlatformFunctions {
                     // Remove last element (containing text)
                     Element lastElement = elements.get(index - 1);
 
-                    if (lastElement.hasText()) {
-                        // Inner text
-                        String innerText = lastElement.text();
+                    // Inner text
+                    String innerText = lastElement.ownText();
+                    if (StringUtils.isNotBlank(innerText)) {
                         if (innerText.length() > nbChars) {
                             // Truncate text size of element
                             innerText = StringUtils.substring(innerText, 0, nbChars - 1);
 
                             lastElement.empty();
                             lastElement.append(innerText);
+
+                            // Check if to remove
+                            if (content.text().length() > nbChars) {
+                                lastElement.remove();
+                            }
                         } else {
                             // Remove element from DOM
                             lastElement.remove();
                         }
                     } else {
-                        // Remove element from DOM
-                        lastElement.remove();
+                        // Recurse
+                        Elements children = lastElement.children();
+                        if (!children.isEmpty()) {
+                            String childTruncHtml = truncateHTML(lastElement.html(), nbChars);
+                            if(childTruncHtml != null){
+                                // Replace lastElement content
+                                lastElement.empty();
+                                lastElement.append(StringUtils.substringBeforeLast(childTruncHtml, TRUNCATED_HTML_SUFFIX));
+                            }
+                        } else {
+                            // Remove element from DOM
+                            lastElement.remove();
+                        }
                     }
 
                     // Compute
-                    text = document.text();
+                    text = content.text();
                 }
-
-                // Rebuild String
-                Elements body = document.getElementsByTag("body");
-                Element content = body.first();
 
                 // To be ... cool
                 if (toTruncate && StringUtils.isNotBlank(truncatedHtml)) {
