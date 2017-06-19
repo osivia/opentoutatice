@@ -19,6 +19,7 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -256,6 +257,15 @@ public class FetchPublicationInfos {
             throw new ClientException("Current user not found.");
         }
         boolean userNotAnonymous = !((NuxeoPrincipal) user).isAnonymous();
+        
+        if(docCommentable) {
+	        // #1444 Un document peut être unitairement interdit de commentaire
+	        Serializable commentsForbidden = document.getPropertyValue(ToutaticeNuxeoStudioConst.TTC_COMMENTS_FORBIDDEN);
+	        if(commentsForbidden != null && ((Boolean)commentsForbidden == true)) {
+	        	docCommentable = false;
+	        }
+        }
+        
         infosPubli.put("isCommentableByUser", docCommentable && userNotAnonymous);
 
         if (log.isTraceEnabled()) {
