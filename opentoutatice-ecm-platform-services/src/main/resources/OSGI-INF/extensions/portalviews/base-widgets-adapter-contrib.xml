@@ -9,8 +9,9 @@
 		point="adapter">
 		
 		<mappings>
-		    
 		    <!-- By widget type -->
+		    <mappingType nxType="date" pvType="pv_ttc_date" />
+		    
 		    <!-- <mappingType nxType="richtext_with_mimetype" pvType="ttc_richtext_with_mimetype"> 
 		      <properties>
 		          <property name="editorSelector" value="mceEditorResponsive" />
