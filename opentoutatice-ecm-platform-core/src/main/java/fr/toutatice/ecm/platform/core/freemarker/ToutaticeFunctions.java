@@ -45,6 +45,8 @@ public class ToutaticeFunctions extends PlatformFunctions {
     private static final String PROTOCOL_BASE_URL = "http://";
     /** Truncated HTML suffix. */
     private static final String TRUNCATED_HTML_SUFFIX = "<span>&nbsp;... </span>";
+    /** Truncated text suffix. */
+    private static final String TRUNCATED_TEXT_SUFFIX = " ...";
 
     private static CommentManager commentManager;
     private static PermaLinkService permaLinkService;
@@ -170,6 +172,29 @@ public class ToutaticeFunctions extends PlatformFunctions {
     }
 
     /**
+     * Transform html to text and truncate it.
+     * 
+     * @param html
+     * @return truncated text of html.
+     */
+    public String truncateTextFromHTML(String html, int nbChars) {
+        String text = extractTextFromHTML(html);
+
+        if (text != null) {
+            // Yet truncated?
+            if (StringUtils.endsWith(text, TRUNCATED_TEXT_SUFFIX)) {
+                text = StringUtils.substringBeforeLast(text, TRUNCATED_TEXT_SUFFIX);
+            }
+
+            if (text.length() > nbChars) {
+                text = StringUtils.substring(text, 0, nbChars - 1).concat(TRUNCATED_TEXT_SUFFIX);
+            }
+        }
+
+        return text;
+    }
+
+    /**
      * Truncate HTML according to its number of characters inside its
      * text elements.
      * 
@@ -177,6 +202,7 @@ public class ToutaticeFunctions extends PlatformFunctions {
      * @param nbChars
      * @return truncatedHtml
      */
+    @Deprecated
     public String truncateHTML(String html, int nbChars) {
         String truncatedHtml = html;
 
@@ -224,7 +250,7 @@ public class ToutaticeFunctions extends PlatformFunctions {
                         Elements children = lastElement.children();
                         if (!children.isEmpty()) {
                             String childTruncHtml = truncateHTML(lastElement.html(), nbChars);
-                            if(childTruncHtml != null){
+                            if (childTruncHtml != null) {
                                 // Replace lastElement content
                                 lastElement.empty();
                                 lastElement.append(StringUtils.substringBeforeLast(childTruncHtml, TRUNCATED_HTML_SUFFIX));

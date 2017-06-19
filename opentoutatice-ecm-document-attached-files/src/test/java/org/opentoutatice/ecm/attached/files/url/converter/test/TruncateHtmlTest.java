@@ -54,13 +54,13 @@ public class TruncateHtmlTest {
         String supContent = "Pari perdu pour Nathalie Kosciusko-Morizet dans la 2e circonscription de la capitale. La présidente du groupe LR au Conseil de Paris s’est inclinée « malgré un net sursaut des électeurs en [sa]faveur par rapport au premier tour », a-t-elle souligné. La défaite de « NKM » face à Gilles Le Gendre, candidat La République en marche (LRM) qui l’a emporté par 54,53 %, est autant le résultat d’un engrenage fatal que d’erreurs stratégiques de sa part.";
 
         String notSupContent = "Pari perdu pour Nathalie Kosciusko-Morizet dans la 2e circonscription de la capitale. La présidente ";
-        String limitContent = "ABLe piège s’est mis en place dès le premier tour de la présidentielle. Dans ce fief de droite, Emmanuel Macron a fait jeu égal avec François Fillon, député sortant de la circonscription). Persuadée que M. Macron pourrait choisir de l’épargner, NKM tente alors d’obtenir le retrait du candidat macroni";
+        String limitContent = "ALe piège s’est mis en place dès le premier tour de la présidentielle. Dans ce fief de droite, Emmanuel Macron a fait jeu égal avec François Fillon, député sortant de la circonscription). Persuadée que M. Macron pourrait choisir de l’épargner, NKM tente alors d’obtenir le retrait du candidat macroni";
 
         // String html = "<p>" + limitContent + "<span>&nbsp;...</span></p>";
 
-        int bLength = Jsoup.parse(html).text().length();
+        int bLength = Jsoup.parse(limitContent).text().length();
 
-        String truncatedHtml = new ToutaticeFunctions().truncateHTML(html, 300);
+        String truncatedHtml = new ToutaticeFunctions().truncateTextFromHTML(limitContent, 300);
 
         int postLength = Jsoup.parse(truncatedHtml).text().length();
 
