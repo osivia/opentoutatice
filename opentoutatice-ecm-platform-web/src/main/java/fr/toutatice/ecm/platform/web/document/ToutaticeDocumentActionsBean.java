@@ -1124,15 +1124,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public String removeDocumentWebId() throws ClientException {
-        DocumentModel currentDoc = getCurrentDocument();
-        if (currentDoc != null) {
-            currentDoc.setProperty("toutatice", "webid", StringUtils.EMPTY);
-        }
-        return null;
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public String removeDocumentKeyword() throws ClientException {
         DocumentModel currentDoc = getCurrentDocument();
         if (currentDoc != null) {
