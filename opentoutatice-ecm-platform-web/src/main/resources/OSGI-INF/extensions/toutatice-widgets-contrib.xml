@@ -685,8 +685,6 @@
 						<property name="datetime_format">dd/MM/yyyy</property>
 						<property name="datetime_showsTime">false
 						</property>
-						<property name="documentId">#{currentDocument.id}</property>
-						<property name="multiple">false</property>
 					</defaultValues>
 				</properties>
 			</configuration>
