@@ -10,7 +10,7 @@
 		
 		<mappings>
 			<!-- Date type widget -->
-			<mappingType nxType="date" pvType="pv_ttc_date" />
+			<!-- <mappingType nxType="date" pvType="pv_ttc_date" /> -->
 			
 		    <!-- By widget type -->
 		    <!-- <mappingType nxType="richtext_with_mimetype" pvType="ttc_richtext_with_mimetype"> 
