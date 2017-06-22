@@ -82,6 +82,34 @@
 			</property>
 		</widgetType>
 		
+		<!-- For compat -->
+		<widgetType name="old_pv_ttc_datetime">
+			<configuration>
+				<title>Old Date time picker</title>
+				<categories>
+					<category>document</category>
+				</categories>
+				<supportedModes>
+					<mode>view</mode>
+					<mode>edit</mode>
+				</supportedModes>
+				<fields>
+					<list>true</list>
+					<complex>false</complex>
+					<supportedTypes>
+						<type>string</type>
+					</supportedTypes>
+				</fields>
+				<!-- TODO: properties -->
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/portalViews/old_pv_datetime_widget.xhtml
+			</property>
+		</widgetType>
+		
 		<widgetType name="pv_ttc_date">
             <configuration>
                 <title>Date picker</title>
