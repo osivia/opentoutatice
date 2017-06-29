@@ -52,6 +52,10 @@
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-contentview-jsf</artifactId>
 		</dependency>
+		<dependency>
+            <groupId>org.nuxeo.ecm.platform</groupId>
+            <artifactId>nuxeo-platform-imaging-core</artifactId>
+        </dependency>
 		<!-- all for tasks TODO: reduce to effective used -->
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>

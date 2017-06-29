@@ -84,6 +84,11 @@
             <event>documentMoved</event>
             <event>documentRestored</event>
         </listener>
+        
+        <listener name="pictureViewListener" async="false" 
+            postCommit="false"  class="fr.toutatice.ecm.platform.core.listener.ToutaticePictureViewListener" priority="20">
+	       <event>updatePictureView</event>
+	    </listener>
 
 	</extension>
 
