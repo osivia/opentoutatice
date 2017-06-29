@@ -36,11 +36,10 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.PathRef;
-import org.nuxeo.ecm.platform.publisher.api.PublicationNode;
+import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
 import org.nuxeo.ecm.platform.publisher.api.PublicationTreeNotAvailable;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
-import org.nuxeo.ecm.platform.publisher.impl.core.SimpleCorePublishedDocument;
 import org.nuxeo.ecm.platform.publisher.impl.service.ProxyNode;
 import org.nuxeo.ecm.platform.publisher.impl.service.ProxyTree;
 import org.nuxeo.ecm.platform.publisher.web.PublishActionsBean;
@@ -51,6 +50,7 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
+import fr.toutatice.ecm.platform.web.publication.finder.ToutaticeRootSectionsFinder;
 
 
 @Name("publishActions")
@@ -68,32 +68,32 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
     }
 
     public boolean getCanPublish(DocumentModel document) throws ClientException {
-        boolean status = false;
+        boolean can = false;
 
         try {
-            if (null != document) {
-                PublicationTree tree = getCurrentPublicationTreeForPublishing();
-                DocumentModel parent = documentManager.getParentDocument(document.getRef());
-                if (null != parent) {
-                    status = true;
+            if (document != null) {
+                // Is document in PublishSpace
+                if (ToutaticeDocumentHelper.isInPublishSpace(this.documentManager, document)) {
 
-                    // vérifier qu'il n'existe pas un processus en cours
+                    // Check if can set online
+                    boolean canWrite = this.documentManager.hasPermission(document.getRef(), SecurityConstants.WRITE);
+                    boolean canPublish = this.documentManager.hasPermission(document.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE);
+                    // Status
+                    can = canWrite && canPublish;
 
-                    // vérifier que le document n'est pas déjà en ligne avec la
-                    // même version
-                    DocumentModelList proxies = documentManager.getProxies(document.getRef(), parent.getRef());
-                    if ((proxies != null) && (!proxies.isEmpty())) {
-                        DocumentModel proxy = proxies.get(0);
-                        if (proxy.getVersionLabel().equals(document.getVersionLabel())) {
-                            status = false;
+                    if (can) {
+                        // vérifier qu'il n'existe pas un processus en cours
+                        // TODO
+
+                        // Check if document is not online with same version
+                        DocumentRef parentRef = document.getParentRef();
+                        DocumentModelList proxies = this.documentManager.getProxies(document.getRef(), parentRef);
+                        if ((proxies != null) && (!proxies.isEmpty())) {
+                            DocumentModel proxy = proxies.get(0);
+                            if (proxy.getVersionLabel().equals(document.getVersionLabel())) {
+                                can = false;
+                            }
                         }
-                    }
-
-                    // vérifier que l'arbre de publication autorise la mise en
-                    // ligne
-                    if (true == status) {
-                        PublicationNode target = tree.getNodeByPath(parent.getPathAsString());
-                        status = super.canPublishTo(target);
                     }
                 }
             }
@@ -101,7 +101,7 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
             log.debug("Failed to check the permission to publish the document '" + document.getTitle() + "', error: " + e.getMessage());
         }
 
-        return status;
+        return can;
     }
 
     public boolean getCanUnpublish() throws ClientException {
@@ -112,13 +112,11 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
     public boolean canUnpublishProxy(DocumentModel proxy) throws ClientException {
         boolean status = false;
 
-        /* Proxy non distant */
-        if (!isRemoteProxy(proxy)) {
+        // For local proxies only
+        if (proxy != null && proxy.isProxy() && !proxy.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_REMOTE_PROXY)) {
             status = documentManager.hasPermission(proxy.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE);
-        } else {
-            PublishedDocument publishedDocument = new SimpleCorePublishedDocument(proxy);
-            status = super.canUnpublish(publishedDocument);
         }
+
         return status;
     }
 
@@ -213,15 +211,16 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
         return iconPath;
     }
 
-   /**
-    * To expand by default all nodes of Rich Tree
-    * @param tree
-    * @return true
-    */
+    /**
+     * To expand by default all nodes of Rich Tree
+     * 
+     * @param tree
+     * @return true
+     */
     public Boolean advisedNodeOpened(UITree tree) {
         return Boolean.TRUE;
     }
-    
+
     @Override
     public boolean isPending() throws ClientException {
         return isPending(navigationContext.getCurrentDocument());
@@ -252,7 +251,7 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
         }
         return has;
     }
-    
+
     /**
      * Type of tree changed (RootSectionsPublicationTree to ToutaticeRootSectionsPublicationTree)
      * to be coherent with publisher-task-contrib.xml.
@@ -261,15 +260,27 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
     protected List<String> filterEmptyTrees(Collection<String> trees) throws PublicationTreeNotAvailable, ClientException {
         List<String> filteredTrees = new ArrayList<>();
 
+        ToutaticeRootSectionsFinder finder = new ToutaticeRootSectionsFinder(documentManager);
+        DocumentModelList accessibleSections = finder.getAccessibleSectionRoots(navigationContext.getCurrentDocument());
+
         for (String tree : trees) {
+
             try {
-                // Tree of Domain
+                // Tree Domain
                 String treeDomain = StringUtils.substringAfter(tree, "-");
-                // Current Domain
-                String domainName = navigationContext.getCurrentDomain().getName();
-                
-                // We can filter on current Domain cause we are in tree based on Workspace configuration
-                if (StringUtils.equals(domainName, treeDomain)) {
+
+                boolean inDomain = false;
+                for (DocumentModel section : accessibleSections) {
+                    if (section.getPathAsString().startsWith("/" + treeDomain))
+                        inDomain = true;
+                }
+
+                if (inDomain) {
+
+                    if (log.isDebugEnabled()) {
+                        log.debug("#filterEmptyTrees: == [LOOP: Selected tree]: " + tree);
+                    }
+
                     PublicationTree pTree = publisherService.getPublicationTree(tree, documentManager, null, navigationContext.getCurrentDocument());
                     if (pTree != null) {
                         if (pTree.getTreeType().equals("ToutaticeRootSectionsPublicationTree")) {

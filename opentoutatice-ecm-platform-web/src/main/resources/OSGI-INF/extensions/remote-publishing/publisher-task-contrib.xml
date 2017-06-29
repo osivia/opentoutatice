@@ -35,6 +35,7 @@
 			tree="RootSectionsCoreTree" factory="ToutaticeCoreProxyWithWorkflow"
 			localSectionTree="true" title="Sections de publication distantes">
 			<parameters>
+				<parameter name="RootPath">/</parameter>
 				<parameter name="RelativeRootPath">/</parameter>
 				<parameter name="enableSnapshot">true</parameter>
 				<parameter name="iconExpanded"></parameter>

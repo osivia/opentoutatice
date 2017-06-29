@@ -21,6 +21,8 @@ package fr.toutatice.ecm.platform.web.publication.tree;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -40,16 +42,19 @@ public class ToutaticeRootSectionsPublicationTree extends RootSectionsPublicatio
 
     private static final long serialVersionUID = 6953076925201018520L;
 
+    /** Logger. */
+    private static final Log log = LogFactory.getLog(ToutaticeRootSectionsPublicationTree.class);
+
     private static final String SECTION_ROOT_TYPE = "SectionRoot";
 
     /* FIXME: Fork to use ToutaticeCoreFolderPublicationNode... and rootNode.getChildrenNodes() */
     @Override
     public List<PublicationNode> getChildrenNodes() throws ClientException {
         if (currentDocument != null && useRootSections) {
+            // FIXME: In fact, rootFinder.getAccessibleSectionRoots returns Roots ans children
+            // We work only with workspace configuration
             DocumentModelList rootSections = rootFinder.getAccessibleSectionRoots(currentDocument);
-            if (rootSections.isEmpty()) {
-                rootSections = rootFinder.getDefaultSectionRoots(false, true);
-            }
+
             List<PublicationNode> publicationNodes = new ArrayList<PublicationNode>();
             for (DocumentModel rootSection : rootSections) {
                 if (isPublicationNode(rootSection)) {
@@ -100,8 +105,10 @@ public class ToutaticeRootSectionsPublicationTree extends RootSectionsPublicatio
         }
         DocumentRef docRef = new PathRef(publicationNode.getPath());
         boolean canAsk = coreSession.hasPermission(docRef, CAN_ASK_FOR_PUBLISHING);
+
         DocumentModel document = coreSession.getDocument(docRef);
         boolean notSectionRoot = !SECTION_ROOT_TYPE.equals(document.getType());
+
         return canAsk && notSectionRoot;
     }
 

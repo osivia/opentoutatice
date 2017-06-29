@@ -19,16 +19,22 @@
 package fr.toutatice.ecm.platform.web.publication.tree;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.LifeCycleConstants;
+import org.nuxeo.ecm.core.api.tree.DefaultDocumentTreeSorter;
 import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.platform.publisher.api.PublicationNode;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocumentFactory;
 import org.nuxeo.ecm.platform.publisher.impl.core.CoreFolderPublicationNode;
+
+import fr.toutatice.ecm.platform.core.helper.ToutaticeEsQueryHelper;
 
 
 /**
@@ -39,7 +45,8 @@ public class ToutaticeCoreFolderPublicationNode extends CoreFolderPublicationNod
 
     private static final long serialVersionUID = 8111887640605954307L;
     
-    private static final Object SECTION_ROOT_TYPE = "SectionRoot";
+    /** Logger. */
+    private static final Log log = LogFactory.getLog(ToutaticeCoreFolderPublicationNode.class);
 
     public ToutaticeCoreFolderPublicationNode(DocumentModel doc, String treeConfigName, String sid, PublicationNode parent, PublishedDocumentFactory factory)
             throws ClientException {
@@ -73,6 +80,21 @@ public class ToutaticeCoreFolderPublicationNode extends CoreFolderPublicationNod
                     treeConfigName, sid, this, factory));
         }
         return childrenNodes;
+    }
+
+    // Fork to querying with ES
+    @Override
+    protected DocumentModelList getSortedChildren(boolean queryDocuments) throws ClientException {
+        String whereClause = buildChildrenWhereClause(queryDocuments);
+
+        DocumentModelList children = ToutaticeEsQueryHelper.query(getCoreSession(), "SELECT * FROM Document WHERE " + whereClause);
+
+        if (!folder.hasFacet(FacetNames.ORDERABLE)) {
+            DefaultDocumentTreeSorter sorter = new DefaultDocumentTreeSorter();
+            sorter.setSortPropertyPath("dc:title");
+            Collections.sort(children, sorter);
+        }
+        return children;
     }
 
 }
