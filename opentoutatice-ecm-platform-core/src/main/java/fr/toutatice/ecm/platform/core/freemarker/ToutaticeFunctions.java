@@ -300,5 +300,9 @@ public class ToutaticeFunctions extends PlatformFunctions {
         }
         return fullName;
     }
-
+    
+    public String defaultIfBlank(String str, String defaultStr) {
+        return StringUtils.defaultIfBlank(str, defaultStr);
+    }
+    
 }
