@@ -31,6 +31,7 @@ import org.nuxeo.ecm.platform.publisher.task.CoreProxyWithWorkflowFactory;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeCommentsHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 
 public class ToutaticeCoreProxyWithWorkflowFactory extends CoreProxyWithWorkflowFactory {
 
@@ -51,14 +52,18 @@ public class ToutaticeCoreProxyWithWorkflowFactory extends CoreProxyWithWorkflow
 				newProxy.addFacet(ToutaticeNuxeoStudioConst.CST_FACET_REMOTE_PROXY);
 			}
 
-			super.coreSession.saveDocument(newProxy);
+            // User has not necessary Write permission on proxy
+            ToutaticeDocumentHelper.saveDocumentSilently(super.coreSession, newProxy, true);
+
 		} else {
 			newPulishedDoc = super.publishDocument(doc, targetNode, params); 
 			newProxy = ((SimpleCorePublishedDocument) newPulishedDoc).getProxy();
 
 			if(!newProxy.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_REMOTE_PROXY)){
 				newProxy.addFacet(ToutaticeNuxeoStudioConst.CST_FACET_REMOTE_PROXY);
-				super.coreSession.saveDocument(newProxy);
+
+                // User has not necessary Write permission on proxy
+                ToutaticeDocumentHelper.saveDocumentSilently(super.coreSession, newProxy, true);
 			}
 
 		}

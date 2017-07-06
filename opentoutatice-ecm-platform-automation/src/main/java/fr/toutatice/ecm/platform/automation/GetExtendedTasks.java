@@ -24,6 +24,7 @@ import java.util.Locale;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.common.utils.i18n.I18NUtils;
@@ -44,100 +45,102 @@ import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.platform.task.Task;
 import org.nuxeo.ecm.platform.task.TaskService;
 
-@Operation(id = GetExtendedTasks.ID, category = Constants.CAT_SERVICES, label = "Get extended tasks", since = "5.4", description = "List tasks assigned to this user or one of its group."
-		+ "Task properties are serialized using JSON and returned in a Blob.")
+@Operation(id = GetExtendedTasks.ID, category = Constants.CAT_SERVICES, label = "Get extended tasks", since = "5.4",
+        description = "List tasks assigned to this user or one of its group." + "Task properties are serialized using JSON and returned in a Blob.")
 public class GetExtendedTasks // extends GetUserTasks
 {
 
-	public static final String ID = "Workflow.GetExtendedTasks";
+    public static final String ID = "Workflow.GetExtendedTasks";
 
-	private static final Log log = LogFactory.getLog(Log.class);
+    private static final Log log = LogFactory.getLog(Log.class);
 
-	@Context
-	protected OperationContext ctx;
+    @Context
+    protected OperationContext ctx;
 
-	@Context
-	protected CoreSession repo;
+    @Context
+    protected CoreSession repo;
 
-	@Context
-	protected TaskService taskService;
+    @Context
+    protected TaskService taskService;
 
-	@Param(name = "wkflsNames",required = false)
-	protected StringList wkfls;
+    @Param(name = "wkflsNames", required = false)
+    protected StringList wkfls;
 
-	@OperationMethod
-	public Blob run() throws Exception {
-		NuxeoPrincipal principal = principal();
+    @OperationMethod
+    public Blob run() throws Exception {
+        NuxeoPrincipal principal = principal();
 
-		List<Task> tasks = taskService.getCurrentTaskInstances(repo);
+        List<Task> tasks = taskService.getCurrentTaskInstances(repo);
 
-		if (tasks == null) {
-			return null;
-		}
+        if (tasks == null) {
+            return null;
+        }
 
-		JSONArray rows = new JSONArray();
-		boolean exposeTask = true;
-		for (Task task : tasks) {
-			DocumentModel doc = null;
-		
-			if(this.wkfls!=null && !this.wkfls.isEmpty()){
-			 String wkflName = getProcessName(task);
-			 exposeTask = this.wkfls.contains(wkflName);
-			} 
-			
-			if (exposeTask) {
-				try {
-					if (task.hasEnded() || task.isCancelled()) {
-						continue;
-					}
-					doc = taskService.getTargetDocumentModel(task, repo);
-				} catch (Exception e) {
-					log.warn("Cannot get doc for task " + task.getId() + ", error: " + e.getMessage());
-				}
-				if (doc == null) {
-					log.warn(String.format(
-							"User '%s' has a task of type '%s' on an " + "unexisting or invisible document",
-							principal.getName(), task.getName()));
-				} else {
-					if (!LifeCycleConstants.DELETED_STATE.equals(doc.getCurrentLifeCycleState())) {
-						JSONObject obj = new JSONObject();
-						obj.element("docid", doc.getId());
-						obj.element("doctype", doc.getType());
-						obj.element("docpath", doc.getPathAsString());
+        JSONArray rows = new JSONArray();
+        boolean exposeTask = true;
+        for (Task task : tasks) {
+            DocumentModel doc = null;
 
-						obj.element("docname", URLEncoder.encode(doc.getTitle(), "UTF-8"));
+            if (this.wkfls != null && !this.wkfls.isEmpty()) {
+                String wkflName = getProcessName(task);
+                exposeTask = this.wkfls.contains(wkflName);
+            }
 
-						String taskName = I18NUtils.getMessageString("messages", (String) task.getName(), null,
-								Locale.FRENCH);
+            if (exposeTask) {
+                try {
+                    if (task.hasEnded() || task.isCancelled()) {
+                        continue;
+                    }
+                    doc = taskService.getTargetDocumentModel(task, repo);
+                } catch (Exception e) {
+                    log.warn("Cannot get doc for task " + task.getId() + ", error: " + e.getMessage());
+                }
+                if (doc == null) {
+                    log.warn(String.format("User '%s' has a task of type '%s' on an " + "unexisting or invisible document", principal.getName(), task.getName()));
+                } else {
+                    if (!LifeCycleConstants.DELETED_STATE.equals(doc.getCurrentLifeCycleState())) {
+                        JSONObject obj = new JSONObject();
+                        obj.element("docid", doc.getId());
+                        obj.element("doctype", doc.getType());
+                        obj.element("docpath", doc.getPathAsString());
 
-						obj.element("name", URLEncoder.encode(taskName, "UTF-8"));
+                        obj.element("docname", URLEncoder.encode(doc.getTitle(), "UTF-8"));
 
-						obj.element("startDate", task.getCreated());
-						obj.element("dueDate", task.getDueDate());
+                        String taskName = I18NUtils.getMessageString("messages", (String) task.getName(), null, Locale.FRENCH);
 
-						rows.add(obj);
-						
-					}
-				}
-			}
-		}
+                        obj.element("name", URLEncoder.encode(taskName, "UTF-8"));
 
-		return (0 < rows.size()) ? new StringBlob(rows.toString(), "application/json") : null;
-	}
+                        obj.element("startDate", task.getCreated());
+                        obj.element("dueDate", task.getDueDate());
 
-	private String getProcessName(Task task) {
-		final String processId = task.getProcessId();
-		
-		DocumentModel processDoc = repo.getDocument(new IdRef(processId));
-		String name = processDoc.getName();
-		if(name.contains(".")){
-			name = name.substring(0, name.indexOf('.'));
-		}		
-		return name;
-	}
+                        rows.add(obj);
 
-	protected NuxeoPrincipal principal() {
-		return (NuxeoPrincipal) ctx.getPrincipal();
-	}
+                    }
+                }
+            }
+        }
+
+        return (0 < rows.size()) ? new StringBlob(rows.toString(), "application/json") : null;
+    }
+
+    private String getProcessName(Task task) {
+        String name = null;
+
+        final String processId = task.getProcessId();
+        // For remote publishing, processId is null (applicative workflow, no document model)
+        if (StringUtils.isNotBlank(processId)) {
+            DocumentModel processDoc = repo.getDocument(new IdRef(processId));
+            name = processDoc.getName();
+            if (name.contains(".")) {
+                name = name.substring(0, name.indexOf('.'));
+            }
+        }
+
+        return name;
+    }
+
+    protected NuxeoPrincipal principal() {
+        return (NuxeoPrincipal) ctx.getPrincipal();
+    }
 
 }
