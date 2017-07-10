@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.mail.MessagingException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.platform.ec.notification.email.EmailHelper;
 
 
@@ -16,6 +18,9 @@ import org.nuxeo.ecm.platform.ec.notification.email.EmailHelper;
  */
 public abstract class AbstractMailer implements Reporter {
     
+    /** Logger. */
+    public static final Log log = LogFactory.getLog(AbstractMailer.class);
+
     /** Date format. */
     public static final String DATE_FORMAT = "dd/MM/yyyy";
     
@@ -57,6 +62,11 @@ public abstract class AbstractMailer implements Reporter {
             this.emailHelper.sendmail((Map<String, Object>) content);
         } catch (MessagingException e) {
             throw new Exception(e);
+        }
+
+        // Log
+        if (log.isInfoEnabled()) {
+            log.info("         [Mail sent]");
         }
     }
 

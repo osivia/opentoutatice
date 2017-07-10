@@ -20,13 +20,13 @@ import org.opentoutatice.ecm.scanner.config.ScannerConfigurationService;
  *
  */
 public class ScanningListener implements PostCommitFilteringEventListener {
-    
+
     /** logger. */
     private static final Log log = LogFactory.getLog(ScanningListener.class);
-    
+
     /** Configuration service. */
     private ScannerConfigurationService configurationService;
-    
+
     /**
      * Filters on scan events.
      */
@@ -40,62 +40,66 @@ public class ScanningListener implements PostCommitFilteringEventListener {
     public void handleEvent(EventBundle events) throws ClientException {
         // Configuration service
         this.configurationService = (ScannerConfigurationService) Framework.getService(ScannerConfigurationService.class);
-        
-        for(Event event : events){
-            
-            long begin = System.currentTimeMillis();
-            if(log.isDebugEnabled()){
-                log.debug("Begin [" + event.getName() + "]");
-            }
-            
-            try {
-                
-                // Run reporting
-                ReportingRunner reporting = new ReportingRunner();
-                reporting.run(event);
-                
-            } catch (Exception e) {
-                if(log.isDebugEnabled()){
-                    e.printStackTrace();
+
+        if (this.configurationService == null) {
+            log.error("No ScannerConfigurationService defined");
+        } else {
+            // Treatment
+            for (Event event : events) {
+
+                long begin = System.currentTimeMillis();
+                if (log.isDebugEnabled()) {
+                    log.debug("Begin [" + event.getName() + "]");
                 }
-                throw new ClientException(e);
+
+                try {
+
+                    // Run reporting
+                    ReportingRunner reporting = new ReportingRunner();
+                    reporting.run(event);
+
+                } catch (Exception e) {
+                    if (log.isDebugEnabled()) {
+                        e.printStackTrace();
+                    }
+                    throw new ClientException(e);
+                }
+
+                long end = System.currentTimeMillis();
+                long duration = end - begin;
+                if (log.isDebugEnabled()) {
+                    log.debug("Ended [" + event.getName() + "]: " + duration + " ms");
+                }
             }
-            
-            long end = System.currentTimeMillis();
-            long duration = end - begin;
-            if(log.isDebugEnabled()){
-                log.debug("Ended [" + event.getName() + "]: " + duration + " ms");
-            }
+
         }
-        
-        
 
     }
-    
-//    /**
-//     * Gets directive from configuration (set in event).
-//     * 
-//     * @param event
-//     * @return directive
-//     */
-//    private Directive getDirective(ScannerConfigurationService configurationService, Event event) throws Exception {
-//        // Directive
-//        Directive directive = null;
-//        // Context
-//        EventContext eventContext = event.getContext();
-//        
-//        String scanEventName = (String) eventContext.getProperty("eventId");
-//        // Check of coherent event 
-//        if(StringUtils.equals(event.getName(), scanEventName)){
-//            
-//            Map<String, Serializable> directiveByEvent = configurationService.getDirectiveByEvent(scanEventName);
-//            String directiveQuery = (String) directiveByEvent.get("nxqlQueryAndFetch");
-//            
-//            if(StringUtils.isNotBlank(directiveQuery)){
-//                directive = new NxqlQueryAndFetchDirective(directiveQuery);
-//            }
-//        }
-//        return directive;
-//    }
+
+    // /**
+    // * Gets directive from configuration (set in event).
+    // *
+    // * @param event
+    // * @return directive
+    // */
+    // private Directive getDirective(ScannerConfigurationService configurationService, Event event) throws Exception {
+    // // Directive
+    // Directive directive = null;
+    // // Context
+    // EventContext eventContext = event.getContext();
+    //
+    // String scanEventName = (String) eventContext.getProperty("eventId");
+    // // Check of coherent event
+    // if(StringUtils.equals(event.getName(), scanEventName)){
+    //
+    // Map<String, Serializable> directiveByEvent = configurationService.getDirectiveByEvent(scanEventName);
+    // String directiveQuery = (String) directiveByEvent.get("nxqlQueryAndFetch");
+    //
+    // if(StringUtils.isNotBlank(directiveQuery)){
+    // directive = new NxqlQueryAndFetchDirective(directiveQuery);
+    // }
+    // }
+    // return directive;
+    // }
 
 }

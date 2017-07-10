@@ -112,8 +112,19 @@ public class ReportingRunner {
                             Reporter reporter = getReporter(event);
                             // Build report
                             Object report = reporter.build(scannedObject);
+
                             // Send it
-                            reporter.send(report);
+                            try {
+                                reporter.send(report);
+                            } catch (Exception e) {
+                                try {
+                                    // Update to send later
+                                    updater.updateOnError(index, scannedObject);
+                                } catch (Exception ue) {
+                                    // Do not block
+                                    logStackTrace(log, e);
+                                }
+                            }
 
                             // Update scannedObject
                             updater.update(index, scannedObject);
@@ -126,13 +137,6 @@ public class ReportingRunner {
                         counter++;
                         // Logs
                         logStackTrace(log, e);
-                        try {
-                            // Specific update
-                            updater.updateOnError(index, scannedObject);
-                        } catch (Exception ue) {
-                            // Nothing: do not block
-                            logStackTrace(log, e);
-                        }
                     }
 
                     index++;
@@ -161,21 +165,18 @@ public class ReportingRunner {
     }
     
     /**
-     * Logs stack trace in server.log.
+     * Logs stack trace in reporting.log.
      * 
      * @param log
      * @param e
      */
     private void logStackTrace(Log log, Throwable t) {
         
-        StringWriter stringWritter = new StringWriter();  
+        StringWriter stringWritter = new StringWriter();
         PrintWriter printWritter = new PrintWriter(stringWritter, true);  
         t.printStackTrace(printWritter);  
-        printWritter.flush();  
-        stringWritter.flush(); 
         
-        log.error("[Error]: " + stringWritter.toString());
-
+        log.error("[ERROR]: " + stringWritter.toString());
     }
 
 }
