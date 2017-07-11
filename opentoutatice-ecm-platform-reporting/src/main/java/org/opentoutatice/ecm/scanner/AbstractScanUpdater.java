@@ -4,6 +4,7 @@
 package org.opentoutatice.ecm.scanner;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -14,7 +15,7 @@ import java.util.Map;
 public abstract class AbstractScanUpdater {
     
     /** Updater parameters. */
-    private Map<String, Serializable> cfgParams;
+    private Map<String, Serializable> cfgParams = new HashMap<>(0);
     
     /**
      * Default constructor.

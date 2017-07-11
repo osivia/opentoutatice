@@ -35,7 +35,6 @@ public class ScannerConfigurationServiceImpl extends DefaultComponent implements
     /** Configuration registry. */
     private ScannerConfigurationRegistryImpl configRegistry;
     
-    
     /**
      * {@inheritDoc}
      */
@@ -83,10 +82,11 @@ public class ScannerConfigurationServiceImpl extends DefaultComponent implements
         // Updater parameterization
         this.configRegistry.registerUpdaterParameterization(configuration.getEventId(), configuration.getUpdaterParameterization());
     }
-    
+
     /**
      * {@inheritDoc}
      */
+    @Override
     public Directive getDirective(Event event) throws DirectiveException {
         // Type, query
         Entry<String, Serializable> parameterization = this.configRegistry.getDirectiveParameterization(event.getName());

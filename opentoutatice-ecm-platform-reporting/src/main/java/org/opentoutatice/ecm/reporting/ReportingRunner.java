@@ -85,14 +85,14 @@ public class ReportingRunner {
         Scanner scanner = getScanner(event);
         Iterable<?> scannedObjects = scanner.scan(directive);
 
-        if (scannedObjects != null) {
-            // Updater
-            AbstractScanUpdater updater = scanner.getUpdater();
+        try {
+            if (scannedObjects != null) {
+                // Updater
+                AbstractScanUpdater updater = scanner.getUpdater();
 
-            // Iterates
-            Iterator<?> iterator = scannedObjects.iterator();
+                // Iterates
+                Iterator<?> iterator = scannedObjects.iterator();
 
-            try {
                 // Index
                 int index = 0;
                 // Counter of treated objects
@@ -146,24 +146,21 @@ public class ReportingRunner {
                 if (log.isDebugEnabled()) {
                     log.debug("[Treated objects]: " + counter + " / " + index);
                 }
+            }
+        } finally {
+            // If scannedObjects closable
+            if (scannedObjects != null) {
+                Class<?>[] parameterStype = null;
+                Method method = scannedObjects.getClass().getMethod("close", parameterStype);
 
-            } finally {
-                // If iterator closable
-                if (iterator != null) {
-                    Class<?>[] parameterStype = null;
-                    Method method = iterator.getClass().getMethod("close", parameterStype);
-
-                    if (method != null) {
-                        Object[] args = null;
-                        method.invoke(iterator, args);
-                    }
+                if (method != null) {
+                    Object[] args = null;
+                    method.invoke(scannedObjects, args);
                 }
             }
-
         }
-
     }
-    
+
     /**
      * Logs stack trace in reporting.log.
      * 
@@ -171,11 +168,11 @@ public class ReportingRunner {
      * @param e
      */
     private void logStackTrace(Log log, Throwable t) {
-        
+
         StringWriter stringWritter = new StringWriter();
-        PrintWriter printWritter = new PrintWriter(stringWritter, true);  
-        t.printStackTrace(printWritter);  
-        
+        PrintWriter printWritter = new PrintWriter(stringWritter, true);
+        t.printStackTrace(printWritter);
+
         log.error("[ERROR]: " + stringWritter.toString());
     }
 

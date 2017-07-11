@@ -3,12 +3,12 @@
  */
 package org.opentoutatice.ecm.scanner;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.event.Event;
-import org.nuxeo.ecm.core.event.EventBundle;
-import org.nuxeo.ecm.core.event.PostCommitFilteringEventListener;
+import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.runtime.api.Framework;
 import org.opentoutatice.ecm.reporting.ReportingRunner;
 import org.opentoutatice.ecm.scanner.config.ScannerConfiguration;
@@ -19,7 +19,7 @@ import org.opentoutatice.ecm.scanner.config.ScannerConfigurationService;
  * @author david
  *
  */
-public class ScanningListener implements PostCommitFilteringEventListener {
+public class ScanningListener implements EventListener {
 
     /** logger. */
     private static final Log log = LogFactory.getLog(ScanningListener.class);
@@ -27,26 +27,17 @@ public class ScanningListener implements PostCommitFilteringEventListener {
     /** Configuration service. */
     private ScannerConfigurationService configurationService;
 
-    /**
-     * Filters on scan events.
-     */
     @Override
-    public boolean acceptEvent(Event event) {
-        String eventCategory = (String) event.getContext().getProperty("eventCategory");
-        return ScannerConfiguration.OTTC_SCAN_EVENT_CATEGORY.equals(eventCategory);
-    }
+    public void handleEvent(Event event) throws ClientException {
+        // Robustness
+        if (StringUtils.equals(ScannerConfiguration.OTTC_SCAN_EVENT, event.getName())) {
+            // Configuration service
+            this.configurationService = (ScannerConfigurationService) Framework.getService(ScannerConfigurationService.class);
 
-    @Override
-    public void handleEvent(EventBundle events) throws ClientException {
-        // Configuration service
-        this.configurationService = (ScannerConfigurationService) Framework.getService(ScannerConfigurationService.class);
-
-        if (this.configurationService == null) {
-            log.error("No ScannerConfigurationService defined");
-        } else {
-            // Treatment
-            for (Event event : events) {
-
+            if (this.configurationService == null) {
+                log.error("No ScannerConfigurationService defined");
+            } else {
+                // Treatment
                 long begin = System.currentTimeMillis();
                 if (log.isDebugEnabled()) {
                     log.debug("Begin [" + event.getName() + "]");
@@ -71,9 +62,7 @@ public class ScanningListener implements PostCommitFilteringEventListener {
                     log.debug("Ended [" + event.getName() + "]: " + duration + " ms");
                 }
             }
-
         }
-
     }
 
     // /**
