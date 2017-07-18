@@ -5,6 +5,8 @@ package org.opentoutatice.ecm.scanner;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.opentoutatice.ecm.reporting.test.mode.ErrorTestMode;
+import org.opentoutatice.ecm.reporting.test.mode.ErrorTestModeException;
 import org.opentoutatice.ecm.scanner.directive.Directive;
 
 
@@ -56,9 +58,16 @@ public class ScannerImpl implements Scanner {
     */
     @Override
     public Iterable<?> scan(Directive directive) throws Exception {
+        // Result
+        Iterable<?> scannedObjects = directive.execute();
+
+        // Error test mode
+        if (ErrorTestMode.generateError(0)) {
+            throw new ErrorTestModeException("Error on Scanner#scan");
+        }
         
         // Execute directive
-        return directive.execute();
+        return scannedObjects;
         
 
 //        IterableQueryResult rows = null;

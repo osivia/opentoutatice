@@ -10,6 +10,9 @@ import javax.mail.MessagingException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.platform.ec.notification.email.EmailHelper;
+import org.nuxeo.runtime.api.Framework;
+import org.opentoutatice.ecm.reporting.test.mode.ErrorTestMode;
+import org.opentoutatice.ecm.reporting.test.mode.ErrorTestModeException;
 
 
 /**
@@ -17,19 +20,22 @@ import org.nuxeo.ecm.platform.ec.notification.email.EmailHelper;
  *
  */
 public abstract class AbstractMailer implements Reporter {
-    
+
     /** Logger. */
     public static final Log log = LogFactory.getLog(AbstractMailer.class);
 
     /** Date format. */
     public static final String DATE_FORMAT = "dd/MM/yyyy";
-    
+
     /** Mail key. */
     public static final String MAIL_TO = "mail.to";
-    
+
+    /** Conditional key property to send mail. */
+    public static final String SEND_MAIL = "ottc.news.scan.send.mail";
+
     /** Mail data. */
     private Map<String, Object> data;
-    
+
     /** EmailHelper. */
     private EmailHelper emailHelper;
 
@@ -40,7 +46,7 @@ public abstract class AbstractMailer implements Reporter {
         super();
         this.emailHelper = new EmailHelper();
     }
-    
+
     /**
      * @return the data
      */
@@ -59,15 +65,31 @@ public abstract class AbstractMailer implements Reporter {
     @Override
     public void send(Object content) throws Exception {
         try {
-            this.emailHelper.sendmail((Map<String, Object>) content);
+            // Error test mode
+            if (ErrorTestMode.generateErrorInTry(4)) {
+                throw new ErrorTestModeException("Error in Mailer#send");
+            }
+
+            // Conditinal sending
+            if (Framework.isBooleanPropertyTrue(SEND_MAIL)) {
+
+                this.emailHelper.sendmail((Map<String, Object>) content);
+
+                // Log
+                if (log.isInfoEnabled()) {
+                    log.info("         [Mail sent]");
+                }
+            } else {
+                // Log
+                if (log.isInfoEnabled()) {
+                    log.info("         [Mail should have been sent]");
+                }
+            }
+
         } catch (MessagingException e) {
             throw new Exception(e);
         }
 
-        // Log
-        if (log.isInfoEnabled()) {
-            log.info("         [Mail sent]");
-        }
     }
 
 }

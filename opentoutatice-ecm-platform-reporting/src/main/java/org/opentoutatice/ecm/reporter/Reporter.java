@@ -24,10 +24,11 @@ public interface Reporter {
     /**
      * Builds report.
      * 
+     * @param index
      * @param data
-     * @return
+     * @return Object
      */
-    Object build(Object data) throws Exception;
+    Object build(int index, Object data) throws Exception;
     
     /**
      * Send report.
