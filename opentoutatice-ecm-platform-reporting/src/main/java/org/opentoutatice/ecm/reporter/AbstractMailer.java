@@ -63,14 +63,14 @@ public abstract class AbstractMailer implements Reporter {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void send(Object content) throws Exception {
-        try {
-            // Error test mode
-            if (ErrorTestMode.generateErrorInTry(4)) {
-                throw new ErrorTestModeException("Error in Mailer#send");
-            }
+    public void send(Object content) throws MessagingException, ErrorTestModeException {
+        // Error test mode
+        if (ErrorTestMode.generateErrorInTry(4)) {
+            throw new ErrorTestModeException("Error in Mailer#send");
+        }
 
-            // Conditinal sending
+        try {
+            // Conditional sending
             if (Framework.isBooleanPropertyTrue(SEND_MAIL)) {
 
                 this.emailHelper.sendmail((Map<String, Object>) content);
@@ -86,10 +86,9 @@ public abstract class AbstractMailer implements Reporter {
                 }
             }
 
-        } catch (MessagingException e) {
-            throw new Exception(e);
+        } catch (Exception e) {
+            throw new MessagingException("Can not send mail", e);
         }
-
     }
 
 }

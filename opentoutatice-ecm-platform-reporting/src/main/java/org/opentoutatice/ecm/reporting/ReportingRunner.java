@@ -8,6 +8,8 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
+import javax.mail.MessagingException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.event.Event;
@@ -16,6 +18,7 @@ import org.nuxeo.runtime.transaction.TransactionHelper;
 import org.opentoutatice.ecm.reporter.Reporter;
 import org.opentoutatice.ecm.reporter.config.ReporterConfigurationService;
 import org.opentoutatice.ecm.reporting.test.mode.ErrorTestMode;
+import org.opentoutatice.ecm.reporting.test.mode.ErrorTestModeException;
 import org.opentoutatice.ecm.scanner.AbstractScanUpdater;
 import org.opentoutatice.ecm.scanner.Scanner;
 import org.opentoutatice.ecm.scanner.ScannerImpl;
@@ -140,7 +143,7 @@ public class ReportingRunner {
                             // Send it
                             try {
                                 reporter.send(report);
-                            } catch (Exception e) {
+                            } catch (MessagingException | ErrorTestModeException e) {
                                 try {
                                     // Update to send later
                                     updater.updateOnErrorInTx(index, scannedObject);
