@@ -1,10 +1,17 @@
 package fr.toutatice.ecm.platform.automation.comments;
 
+import java.io.Serializable;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.nuxeo.ecm.automation.core.util.BlobList;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -19,6 +26,11 @@ import org.nuxeo.ecm.platform.comment.workflow.utils.FollowTransitionUnrestricte
  * @author Cédric Krommenhoek
  */
 public abstract class AbstractCommentOperation {
+
+    /** Schema storing attached Blobs. */
+    public static final String ATTACHED_BLOBS_SCHEMA = "files";
+    /** Xpath storing attached Blobs. */
+    public static final String ATTACHED_BLOBS_XPATH = "files:files";
 
     /**
      * Constructor.
@@ -38,12 +50,12 @@ public abstract class AbstractCommentOperation {
      * @param author comment author, may be null
      * @param creationDate comment creation date, may be null
      * @param title thread post title
-     * @param fileName thread post file name
+     * @param fileNames thread post files names
      * @param blob thread post file BLOB
      * @return comment
      */
     public DocumentModel execute(CoreSession session, DocumentModel document, DocumentModel parent, String content, String author, Date creationDate,
-            String title, String fileName, Blob blob) {
+            String title, BlobList blobs) {
         // Commentable document
         CommentableDocument commentableDocument = document.getAdapter(CommentableDocument.class);
 
@@ -78,10 +90,7 @@ public abstract class AbstractCommentOperation {
         if (CommentType.POST.equals(commentType)) {
             comment.setProperty(schema, "title", StringUtils.trimToEmpty(title));
 
-            if (StringUtils.isNotEmpty(fileName)) {
-                comment.setProperty(schema, "filename", fileName);
-                comment.setProperty(schema, "fileContent", blob);
-            }
+            comment = setAttachments(comment, blobs);
         }
 
         if (parent == null) {
@@ -98,6 +107,30 @@ public abstract class AbstractCommentOperation {
                         CommentsConstants.TRANSITION_TO_PUBLISHED_STATE);
                 transition.runUnrestricted();
             }
+        }
+
+        return comment;
+    }
+
+    /**
+     * Sets Blobs to comment.
+     * 
+     * @param blobs
+     */
+    protected DocumentModel setAttachments(DocumentModel comment, BlobList blobs) {
+        if (CollectionUtils.isNotEmpty(blobs)) {
+
+            List<Map<String, Object>> existingBlobs = (List<Map<String, Object>>) comment.getPropertyValue(ATTACHED_BLOBS_XPATH);
+            if (existingBlobs == null) {
+                existingBlobs = new ArrayList<>();
+            }
+            for (Blob blob : blobs) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("file", blob);
+                map.put("filename", blob.getFilename());
+                existingBlobs.add(map);
+            }
+            comment.setPropertyValue(ATTACHED_BLOBS_XPATH, (Serializable) existingBlobs);
         }
 
         return comment;

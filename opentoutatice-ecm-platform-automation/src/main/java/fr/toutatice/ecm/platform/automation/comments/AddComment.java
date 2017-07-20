@@ -24,7 +24,7 @@ import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
-import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.ecm.automation.core.util.BlobList;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
@@ -64,10 +64,6 @@ public class AddComment extends AbstractCommentOperation {
     @Param(name = "title", required = false)
     private String title;
 
-    /** Thread post file name parameter. */
-    @Param(name = "fileName", required = false)
-    private String fileName;
-
 
     /**
      * Constructor.
@@ -84,7 +80,7 @@ public class AddComment extends AbstractCommentOperation {
      */
     @OperationMethod
     public DocumentModel run() {
-        return this.execute(this.session, this.document, null, this.content, this.author, this.creationDate, this.title, null, null);
+        return this.execute(this.session, this.document, null, this.content, this.author, this.creationDate, this.title, null);
     }
 
 
@@ -95,8 +91,8 @@ public class AddComment extends AbstractCommentOperation {
      * @return comment
      */
     @OperationMethod
-    public DocumentModel run(Blob blob) {
-        return this.execute(this.session, this.document, null, this.content, this.author, this.creationDate, this.title, this.fileName, blob);
+    public DocumentModel run(BlobList blobs) {
+        return this.execute(this.session, this.document, null, this.content, this.author, this.creationDate, this.title, blobs);
     }
 
 }

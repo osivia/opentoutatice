@@ -21,6 +21,12 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.processors.JsDateJsonValueProcessor;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -38,11 +44,6 @@ import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-import net.sf.json.processors.JsDateJsonValueProcessor;
 
 @Operation(id = FetchCommentsOfDocument.ID, category = Constants.CAT_FETCH, label = "FetchCommentsOfDocument",
         description = "Fetches comments of a (commentable) document")
@@ -72,36 +73,50 @@ public class FetchCommentsOfDocument {
          * Récupération du service de commentaires.
          */
         CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
-        String schemaPrefix = "comment";
+        String schemaPrefix = COMMENT_SCHEMA;
         if (THREAD_TYPE.equals(document.getType())) {
-            schemaPrefix = "post";
+            schemaPrefix = POST_SCHEMA;
         }
         List<DocumentModel> commentsRoots = commentableDoc.getComments();
         if (commentsRoots != null) {
             /*
              * Construction de la liste des fils de commentaires.
              */
-			 
-			JsonConfig jsonConfig = new JsonConfig();
-			jsonConfig.registerJsonValueProcessor(GregorianCalendar.class, new GregorianCalendarJsonValueProcessor());
+
+            JsonConfig jsonConfig = new JsonConfig();
+            jsonConfig.registerJsonValueProcessor(GregorianCalendar.class, new GregorianCalendarJsonValueProcessor());
 
             for (DocumentModel commentRoot : commentsRoots) {
                 JSONObject jsonCommentRoot = new JSONObject();
+
                 jsonCommentRoot.element("id", commentRoot.getId());
                 jsonCommentRoot.element("path", commentRoot.getPathAsString());
                 String author = (String) commentRoot.getProperty(schemaPrefix, "author");
                 jsonCommentRoot.element("author", author);
-				jsonCommentRoot.element("creationDate", commentRoot.getProperty(schemaPrefix, "creationDate"), jsonConfig);
+
+                jsonCommentRoot.element("creationDate", commentRoot.getProperty(schemaPrefix, "creationDate"), jsonConfig);
                 jsonCommentRoot.element("content", commentRoot.getProperty(schemaPrefix, "text"));
-				jsonCommentRoot.element("modifiedDate", commentRoot.getProperty("dublincore", "modified"), jsonConfig);
+                jsonCommentRoot.element("modifiedDate", commentRoot.getProperty("dublincore", "modified"), jsonConfig);
+
                 boolean canDelete = canDeleteComment(author, document);
                 jsonCommentRoot.element("canDelete", canDelete);
+
                 if (THREAD_TYPE.equals(document.getType())) {
                     jsonCommentRoot.element("title", commentRoot.getProperty(schemaPrefix, "title"));
-                    jsonCommentRoot.element("filename", commentRoot.getProperty(schemaPrefix, "filename"));
+
+                    // Attached files
+                    List<Map<String, Object>> attachedFiles = (List<Map<String, Object>>) commentRoot.getPropertyValue("files:files");
+                    JSONArray filesNames = new JSONArray();
+                    for (Map<String, Object> attachedFile : attachedFiles) {
+                        filesNames.add(attachedFile.get("filename"));
+                    }
+                    jsonCommentRoot.element("filenames", filesNames);
+
                 }
-				jsonCommentRoot.element("children", getCommentsThread(commentRoot, commentableDoc, new JSONArray(), jsonConfig));
+
+                jsonCommentRoot.element("children", getCommentsThread(commentRoot, commentableDoc, new JSONArray(), jsonConfig));
                 commentsTree.add(jsonCommentRoot);
+
                 if (StringUtils.isBlank(author)) {
                     log.warn("Missing comment author on comment ID '" + commentRoot.getId() + "' (content: '" + commentRoot.getProperty(schemaPrefix, "text")
                             + "')");
@@ -113,33 +128,46 @@ public class FetchCommentsOfDocument {
 
     }
 
-	private JSONArray getCommentsThread(DocumentModel comment, CommentableDocument commentableDocService, JSONArray threads, JsonConfig jsonConfig) throws ClientException {
+    private JSONArray getCommentsThread(DocumentModel comment, CommentableDocument commentableDocService, JSONArray threads, JsonConfig jsonConfig)
+            throws ClientException {
         String schemaPrefix = getSchema(document.getType());
         List<DocumentModel> childrenComments = commentableDocService.getComments(comment);
-       
+
         if (childrenComments == null || childrenComments.isEmpty()) {
             return threads;
         } else {
             for (DocumentModel childComment : childrenComments) {
                 JSONObject jsonChildComment = new JSONObject();
+
                 jsonChildComment.element("id", childComment.getId());
                 jsonChildComment.element("path", childComment.getPathAsString());
                 String author = (String) childComment.getProperty(schemaPrefix, "author");
                 jsonChildComment.element("author", author);
-				jsonChildComment.element("creationDate", childComment.getProperty(schemaPrefix, "creationDate"), jsonConfig);
+
+                jsonChildComment.element("creationDate", childComment.getProperty(schemaPrefix, "creationDate"), jsonConfig);
                 jsonChildComment.element("content", childComment.getProperty(schemaPrefix, "text"));
-				jsonChildComment.element("modifiedDate", childComment.getProperty("dublincore", "modified"), jsonConfig);
+                jsonChildComment.element("modifiedDate", childComment.getProperty("dublincore", "modified"), jsonConfig);
+
                 boolean canDelete = canDeleteComment(author, document);
                 jsonChildComment.element("canDelete", canDelete);
+
                 if (THREAD_TYPE.equals(document.getType())) {
                     jsonChildComment.element("title", childComment.getProperty(schemaPrefix, "title"));
-                    jsonChildComment.element("filename", childComment.getProperty(schemaPrefix, "filename"));
+
+                    // Attached files
+                    List<Map<String, Object>> attachedFiles = (List<Map<String, Object>>) childComment.getPropertyValue("files:files");
+                    JSONArray filesNames = new JSONArray();
+                    for (Map<String, Object> attachedFile : attachedFiles) {
+                        filesNames.add(attachedFile.get("filename"));
+                    }
+                    jsonChildComment.element("filenames", filesNames);
                 }
-				jsonChildComment.element("children", getCommentsThread(childComment, commentableDocService, new JSONArray(), jsonConfig));
+                jsonChildComment.element("children", getCommentsThread(childComment, commentableDocService, new JSONArray(), jsonConfig));
                 threads.add(jsonChildComment);
 
                 if (StringUtils.isBlank(author)) {
-					log.warn("Missing comment author on comment ID '" + childComment.getId() + "' (content: '" + childComment.getProperty(schemaPrefix, "text")	+ "')");
+                    log.warn("Missing comment author on comment ID '" + childComment.getId() + "' (content: '" + childComment.getProperty(schemaPrefix, "text")
+                            + "')");
                 }
             }
             return threads;
@@ -169,29 +197,29 @@ public class FetchCommentsOfDocument {
             schemaPrefix = FetchCommentsOfDocument.POST_SCHEMA;
         }
         return schemaPrefix;
-	}
+    }
 
-	private class GregorianCalendarJsonValueProcessor extends JsDateJsonValueProcessor {
+    private class GregorianCalendarJsonValueProcessor extends JsDateJsonValueProcessor {
 
-	    public GregorianCalendarJsonValueProcessor() {
-	    	super();
-	    }
-	    
-		@Override
-		public Object processObjectValue(String s, Object o, JsonConfig jsonConfig) {
-			Object po = o;
-			
-			if (o instanceof GregorianCalendar) {
-				po = ((GregorianCalendar) o).getTime();
-			}
-			
-			JSONObject processedValue = (JSONObject) super.processObjectValue(s, po, jsonConfig);
-			if(!processedValue.isNullObject() && processedValue.containsKey("hours")){
-			    processedValue.element("timeInMillis", ((GregorianCalendar) o).getTimeInMillis());
-			}
-			
-			return processedValue;
-		}
+        public GregorianCalendarJsonValueProcessor() {
+            super();
+        }
+
+        @Override
+        public Object processObjectValue(String s, Object o, JsonConfig jsonConfig) {
+            Object po = o;
+
+            if (o instanceof GregorianCalendar) {
+                po = ((GregorianCalendar) o).getTime();
+            }
+
+            JSONObject processedValue = (JSONObject) super.processObjectValue(s, po, jsonConfig);
+            if (!processedValue.isNullObject() && processedValue.containsKey("hours")) {
+                processedValue.element("timeInMillis", ((GregorianCalendar) o).getTimeInMillis());
+            }
+
+            return processedValue;
+        }
 
     }
 
