@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.toutatice.ecm.platform.automation.document;
+package fr.toutatice.ecm.platform.automation.blob;
 
 import java.io.Serializable;
 import java.util.Calendar;

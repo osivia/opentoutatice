@@ -8,7 +8,9 @@
         <operation class="fr.toutatice.ecm.platform.automation.document.FetchDocument" />
 		<operation class="fr.toutatice.ecm.platform.automation.document.CreateDocument" />
 		<operation class="fr.toutatice.ecm.platform.automation.document.UpdateDocument" />
-		<operation class="fr.toutatice.ecm.platform.automation.document.AnyBlobToPDF" />
+		
+		<operation class="fr.toutatice.ecm.platform.automation.blob.AttachBlobs" />
+		<operation class="fr.toutatice.ecm.platform.automation.blob.AnyBlobToPDF" />
 		
 		<operation
 			class="fr.toutatice.ecm.platform.automation.FetchPublishedDocument" />

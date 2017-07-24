@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +11,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.core.util.BlobList;
+import org.nuxeo.ecm.automation.core.util.DocumentHelper;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -120,15 +120,13 @@ public abstract class AbstractCommentOperation {
     protected DocumentModel setAttachments(DocumentModel comment, BlobList blobs) {
         if (CollectionUtils.isNotEmpty(blobs)) {
 
-            List<Map<String, Object>> existingBlobs = (List<Map<String, Object>>) comment.getPropertyValue(ATTACHED_BLOBS_XPATH);
+            List<Map<String, Serializable>> existingBlobs = (List<Map<String, Serializable>>) comment.getPropertyValue(ATTACHED_BLOBS_XPATH);
             if (existingBlobs == null) {
                 existingBlobs = new ArrayList<>();
             }
             for (Blob blob : blobs) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("file", blob);
-                map.put("filename", blob.getFilename());
-                existingBlobs.add(map);
+                Map<String, Serializable> blobProp = DocumentHelper.createBlobHolderMap(blob);
+                existingBlobs.add(blobProp);
             }
             comment.setPropertyValue(ATTACHED_BLOBS_XPATH, (Serializable) existingBlobs);
         }
