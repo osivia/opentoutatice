@@ -6,6 +6,7 @@ import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.automation.core.util.BlobList;
+import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
@@ -31,10 +32,19 @@ public class AttachBlobs {
     @Param(name = "save", required = false, values = "true")
     protected boolean save = true;
 
+
+    @OperationMethod
+    public DocumentModel run(Blob blob) throws Exception {
+        BlobList blobs = new BlobList(blob);
+        return this.run(blobs);
+    }
+
+
     @OperationMethod
     public DocumentModel run(BlobList blobs) throws Exception {
         return setBlobs(blobs);
     }
+
 
     /**
      * @param blobs
