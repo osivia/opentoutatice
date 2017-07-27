@@ -43,6 +43,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
+import org.nuxeo.ecm.core.storage.StorageBlob;
 import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
 
 @Operation(id = FetchCommentsOfDocument.ID, category = Constants.CAT_FETCH, label = "FetchCommentsOfDocument",
@@ -105,12 +106,7 @@ public class FetchCommentsOfDocument {
                     jsonCommentRoot.element("title", commentRoot.getProperty(schemaPrefix, "title"));
 
                     // Attached files
-                    List<Map<String, Object>> attachedFiles = (List<Map<String, Object>>) commentRoot.getPropertyValue("files:files");
-                    JSONArray filesNames = new JSONArray();
-                    for (Map<String, Object> attachedFile : attachedFiles) {
-                        filesNames.add(attachedFile.get("filename"));
-                    }
-                    jsonCommentRoot.element("filenames", filesNames);
+                    jsonCommentRoot.element("files", buildFilesInfos(commentRoot));
 
                 }
 
@@ -155,12 +151,7 @@ public class FetchCommentsOfDocument {
                     jsonChildComment.element("title", childComment.getProperty(schemaPrefix, "title"));
 
                     // Attached files
-                    List<Map<String, Object>> attachedFiles = (List<Map<String, Object>>) childComment.getPropertyValue("files:files");
-                    JSONArray filesNames = new JSONArray();
-                    for (Map<String, Object> attachedFile : attachedFiles) {
-                        filesNames.add(attachedFile.get("filename"));
-                    }
-                    jsonChildComment.element("filenames", filesNames);
+                    jsonChildComment.element("files", buildFilesInfos(childComment));
                 }
                 jsonChildComment.element("children", getCommentsThread(childComment, commentableDocService, new JSONArray(), jsonConfig));
                 threads.add(jsonChildComment);
@@ -172,6 +163,34 @@ public class FetchCommentsOfDocument {
             }
             return threads;
         }
+    }
+
+    /**
+     * @param childComment
+     * @return
+     */
+    protected JSONArray buildFilesInfos(DocumentModel childComment) {
+        // Attached files
+        List<Map<String, Object>> attachedFiles = (List<Map<String, Object>>) childComment.getPropertyValue("files:files");
+
+        JSONArray files = new JSONArray();
+        int index = 0;
+
+        for (Map<String, Object> attachedFile : attachedFiles) {
+            // File infos
+            JSONObject fileInfos = new JSONObject();
+            StorageBlob file = (StorageBlob) attachedFile.get("file");
+
+            fileInfos.element("index", index);
+            fileInfos.element("filename", file.getFilename());
+            fileInfos.element("mime-type", file.getMimeType());
+            fileInfos.element("length", file.getLength());
+
+            files.add(fileInfos);
+
+            index++;
+        }
+        return files;
     }
 
 
