@@ -88,6 +88,10 @@
 		<operation
 			class="fr.toutatice.ecm.platform.automation.users.SuggestUserEntriesWithPermission" />
 
+		<!-- Tags -->
+		<operation class="fr.toutatice.ecm.platform.automation.SetDocumentTags" />
+		<operation class="fr.toutatice.ecm.platform.automation.GetDocumentTags" />
+
 
 	</extension>
 

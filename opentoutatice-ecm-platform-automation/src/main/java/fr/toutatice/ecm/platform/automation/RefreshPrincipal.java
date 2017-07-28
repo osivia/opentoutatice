@@ -18,6 +18,10 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.OperationContext;
@@ -64,8 +68,19 @@ public class RefreshPrincipal {
 			// flush the user (LDAP) directories cache
 			String userDirectoryName = userManager.getUserDirectoryName();
 			Directory userDirectory = directoryService.getDirectory(userDirectoryName);
-			userDirectory.getCache().invalidate(principal.getName());
-            // fluch NuxeoPrincipal cache @see UserManagerImpl
+			
+			// REDMINE #8590 : issues with non-lower case username (multiple cache entries must be invalidated)
+			final String userName = principal.getName();
+			final String userNameLowerCase = StringUtils.lowerCase(principal.getName());
+
+			final List<String> cacheKeys = new ArrayList<String>();
+			cacheKeys.add(userName);
+			if (!StringUtils.equals(userName, userNameLowerCase)) {
+				cacheKeys.add(userNameLowerCase);
+			}
+			userDirectory.getCache().invalidate(cacheKeys);
+			
+			// fluch NuxeoPrincipal cache @see UserManagerImpl
             eventService.sendEvent(new Event(UserManagerImpl.USERMANAGER_TOPIC, UserManagerImpl.INVALIDATE_PRINCIPAL_EVENT_ID, this, principal.getName()));
             // flush DisplayName cache @see UserNameResolverHelper
             eventService.sendEvent(new Event(UserManagerImpl.USERMANAGER_TOPIC, UserManagerImpl.USERCHANGED_EVENT_ID, this, principal.getName()));

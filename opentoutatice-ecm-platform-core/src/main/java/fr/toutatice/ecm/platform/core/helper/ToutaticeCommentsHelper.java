@@ -21,7 +21,6 @@ package fr.toutatice.ecm.platform.core.helper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -40,9 +39,11 @@ public class ToutaticeCommentsHelper {
         Map<DocumentModel, List<DocumentModel>> comments = new HashMap<DocumentModel, List<DocumentModel>>();
         CommentableDocument commentableDoc = proxy.getAdapter(CommentableDocument.class);
         List<DocumentModel> rootComments = commentableDoc.getComments();
-        for(DocumentModel rootComment : rootComments){
-            List<DocumentModel> commentsThread = commentableDoc.getComments(rootComment);
-            comments.put(rootComment, commentsThread);
+        if (null != rootComments && 0 < rootComments.size()) {
+        	for(DocumentModel rootComment : rootComments){
+        		List<DocumentModel> commentsThread = commentableDoc.getComments(rootComment);
+        		comments.put(rootComment, commentsThread);
+        	}
         }
         return comments;
     }
