@@ -3,6 +3,9 @@
  */
 package org.opentoutatice.ecm.reporter;
 
+import javax.mail.MessagingException;
+
+import org.opentoutatice.ecm.reporting.test.mode.ErrorTestModeException;
 
 
 
@@ -24,10 +27,11 @@ public interface Reporter {
     /**
      * Builds report.
      * 
+     * @param index
      * @param data
-     * @return
+     * @return Object
      */
-    Object build(Object data) throws Exception;
+    Object build(int index, Object data) throws Exception;
     
     /**
      * Send report.
@@ -35,6 +39,6 @@ public interface Reporter {
      * @param report
      * @throws Exception
      */
-    void send(Object report) throws Exception;
+    void send(Object report) throws MessagingException, ErrorTestModeException;
 
 }

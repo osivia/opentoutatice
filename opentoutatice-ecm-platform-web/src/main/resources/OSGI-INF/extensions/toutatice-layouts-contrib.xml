@@ -220,7 +220,7 @@
 			</templates>
 			<rows>
 				<row>
-					<widget>toutatice_removeWebId_widget</widget>
+					<widget>toutatice_webId_widget</widget>
 				</row>
 			</rows>
 

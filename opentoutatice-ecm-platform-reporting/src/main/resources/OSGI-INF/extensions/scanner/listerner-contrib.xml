@@ -7,7 +7,8 @@
     <extension target="org.nuxeo.ecm.core.event.EventServiceComponent" point="listener">
     
         <listener name="ottcScanningListener" class="org.opentoutatice.ecm.scanner.ScanningListener"
-            sync="true" postCommit="true" priority="200">
+            async="false" postCommit="false" priority="200">
+            <event>startNewsScan</event>
         </listener>
     
     </extension>

@@ -19,6 +19,7 @@
 package fr.toutatice.ecm.platform.automation;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -172,9 +173,16 @@ public class PublishDocument {
                 }
 
                 /** positionner la date de publication */
+                // #652 - Si une date de publication fonctionnelle existe, elle est appliquée.
+                GregorianCalendar issued = new GregorianCalendar();
+                if(doc.getPropertyValue("ttc:publicationDate") != null) {
+                	issued = (GregorianCalendar) doc.getPropertyValue("ttc:publicationDate");
+                }
+                
                 String srcDocId = this.newProxy.getSourceId();
                 DocumentModel srcDoc = this.session.getDocument(new IdRef(srcDocId));
-                srcDoc.setPropertyValue("dc:issued", new Date());
+                
+				srcDoc.setPropertyValue("dc:issued", issued);
                 srcDoc = this.session.saveDocument(srcDoc);
                 
             } else {

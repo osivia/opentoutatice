@@ -8,12 +8,17 @@ import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
+import javax.mail.MessagingException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.runtime.api.Framework;
+import org.nuxeo.runtime.transaction.TransactionHelper;
 import org.opentoutatice.ecm.reporter.Reporter;
 import org.opentoutatice.ecm.reporter.config.ReporterConfigurationService;
+import org.opentoutatice.ecm.reporting.test.mode.ErrorTestMode;
+import org.opentoutatice.ecm.reporting.test.mode.ErrorTestModeException;
 import org.opentoutatice.ecm.scanner.AbstractScanUpdater;
 import org.opentoutatice.ecm.scanner.Scanner;
 import org.opentoutatice.ecm.scanner.ScannerImpl;
@@ -29,6 +34,11 @@ public class ReportingRunner {
 
     /** Logger. */
     private final static Log log = LogFactory.getLog(ReportingRunner.class);
+
+    /** Transaction timeout parameter key. */
+    public static final String TRANSAC_TIMEOUT = "ottc.scan.transaction.timeout";
+    /** Default transaction timeout. */
+    public static final String DEFAULT_TRANSAC_TIMEOUT = "900";
 
     /** Scan configuration service. */
     private final ScannerConfigurationService scanCfg;
@@ -79,24 +89,38 @@ public class ReportingRunner {
      * @throws Exception
      */
     public void run(Event event) throws Exception {
+        // To be able to set transaction timeout cause we are yet in transaction (cf EventJob#execute)
+        TransactionHelper.commitOrRollbackTransaction();
+        // Transaction timeout
+        Integer timeout = Integer.valueOf(Framework.getProperty(TRANSAC_TIMEOUT, DEFAULT_TRANSAC_TIMEOUT));
+        TransactionHelper.startTransaction(timeout.intValue());
+
         // Get Directive
         Directive directive = scanCfg.getDirective(event);
+
         // Scan
         Scanner scanner = getScanner(event);
         Iterable<?> scannedObjects = scanner.scan(directive);
 
-        if (scannedObjects != null) {
-            // Updater
-            AbstractScanUpdater updater = scanner.getUpdater();
+        // Use cases errors
+        ErrorTestMode.incrementUCErrorsIndicator();
 
-            // Iterates
-            Iterator<?> iterator = scannedObjects.iterator();
+        try {
+            if (scannedObjects != null) {
+                // Updater
+                AbstractScanUpdater updater = scanner.getUpdater();
 
-            try {
+                // Iterates
+                Iterator<?> iterator = scannedObjects.iterator();
+
                 // Index
                 int index = 0;
                 // Counter of treated objects
                 int counter = 0;
+
+                if (log.isInfoEnabled()) {
+                    log.info("== [Started] ==");
+                }
 
                 while (iterator.hasNext()) {
                     // Scanned object
@@ -104,19 +128,32 @@ public class ReportingRunner {
 
                     try {
                         // Filters
-                        if (updater.accept(index, scannedObject)) {
+                        if (updater.acceptInNewTx(index, scannedObject)) {
                             // Initialize if necessary
-                            scannedObject = updater.initialize(index, scannedObject);
+                            scannedObject = updater.initializeInNewTx(index, scannedObject);
 
                             // Reporter
                             Reporter reporter = getReporter(event);
                             // Build report
-                            Object report = reporter.build(scannedObject);
-                            // Send it
-                            reporter.send(report);
+                            Object report = reporter.build(index, scannedObject);
 
                             // Update scannedObject
-                            updater.update(index, scannedObject);
+                            updater.updateInNewTx(index, scannedObject);
+
+                            // Send it
+                            try {
+                                reporter.send(report);
+                            } catch (MessagingException | ErrorTestModeException e) {
+                                try {
+                                    // Update to send later
+                                    updater.updateOnErrorInTx(index, scannedObject);
+                                } catch (Exception ue) {
+                                    // Do not block
+                                    logStackTrace(log, ue);
+                                }
+                                // Do not block
+                                logStackTrace(log, e);
+                            }
 
                             // Counter
                             counter++;
@@ -126,56 +163,57 @@ public class ReportingRunner {
                         counter++;
                         // Logs
                         logStackTrace(log, e);
-                        try {
-                            // Specific update
-                            updater.updateOnError(index, scannedObject);
-                        } catch (Exception ue) {
-                            // Nothing: do not block
-                            logStackTrace(log, e);
-                        }
                     }
 
                     index++;
+
+                    // Use cases errors
+                    ErrorTestMode.incrementUCErrorsIndicator();
                 }
+
+                // Error test mode
+                ErrorTestMode.resetGeneratedUseCaseErrors();
 
                 // Debug
                 if (log.isDebugEnabled()) {
                     log.debug("[Treated objects]: " + counter + " / " + index);
                 }
+            }
+        } finally {
+            // If scannedObjects closable
+            if (scannedObjects != null) {
+                Class<?>[] parameterStype = null;
+                Method method = scannedObjects.getClass().getMethod("close", parameterStype);
 
-            } finally {
-                // If iterator closable
-                if (iterator != null) {
-                    Class<?>[] parameterStype = null;
-                    Method method = iterator.getClass().getMethod("close", parameterStype);
-
-                    if (method != null) {
-                        Object[] args = null;
-                        method.invoke(iterator, args);
-                    }
+                if (method != null) {
+                    Object[] args = null;
+                    method.invoke(scannedObjects, args);
                 }
             }
 
-        }
+            // To avoid timeout Exception on EventJob transaction commit
+            TransactionHelper.commitOrRollbackTransaction();
+            TransactionHelper.startTransaction();
 
+            if (log.isInfoEnabled()) {
+                log.info("== [Ended] ==");
+            }
+        }
     }
-    
+
     /**
-     * Logs stack trace in server.log.
+     * Logs stack trace in reporting.log.
      * 
      * @param log
      * @param e
      */
     private void logStackTrace(Log log, Throwable t) {
-        
-        StringWriter stringWritter = new StringWriter();  
-        PrintWriter printWritter = new PrintWriter(stringWritter, true);  
-        t.printStackTrace(printWritter);  
-        printWritter.flush();  
-        stringWritter.flush(); 
-        
-        log.error("[Error]: " + stringWritter.toString());
 
+        StringWriter stringWritter = new StringWriter();
+        PrintWriter printWritter = new PrintWriter(stringWritter, true);
+        t.printStackTrace(printWritter);
+
+        log.error("[ERROR]: " + stringWritter.toString());
     }
 
 }

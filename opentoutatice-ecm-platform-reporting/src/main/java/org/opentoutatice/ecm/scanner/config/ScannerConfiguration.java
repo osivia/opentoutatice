@@ -25,6 +25,10 @@ public class ScannerConfiguration extends ScheduleImpl {
 
     private static final long serialVersionUID = -4666732940403026414L;
 
+    /** Event id. */
+    // FIXME: eventId must be given by ConfigurationService (cf ScanningListener)
+    public static final String OTTC_SCAN_EVENT = "startNewsScan";
+
     /** Event category. */
     public static final String OTTC_SCAN_EVENT_CATEGORY = "ottcScan";
     

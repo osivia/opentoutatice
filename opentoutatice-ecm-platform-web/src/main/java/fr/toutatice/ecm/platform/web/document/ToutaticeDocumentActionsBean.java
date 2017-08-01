@@ -66,12 +66,13 @@ import org.nuxeo.ecm.core.api.VersioningOption;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
+import org.nuxeo.ecm.core.schema.DocumentType;
+import org.nuxeo.ecm.core.schema.SchemaManager;
 import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.forms.layout.api.FieldDefinition;
 import org.nuxeo.ecm.platform.picture.web.PictureBookManager;
 import org.nuxeo.ecm.platform.types.SubType;
 import org.nuxeo.ecm.platform.types.Type;
-import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 import org.nuxeo.ecm.webapp.contentbrowser.DocumentActionsBean;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
@@ -314,6 +315,8 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         return viewId;
     }
 
+
+    
     /**
      * mise à jour et incrémentation de la version(MINOR ou MAJOR) du document courant
      * 
@@ -1121,15 +1124,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public String removeDocumentWebId() throws ClientException {
-        DocumentModel currentDoc = getCurrentDocument();
-        if (currentDoc != null) {
-            currentDoc.setProperty("toutatice", "webid", StringUtils.EMPTY);
-        }
-        return null;
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public String removeDocumentKeyword() throws ClientException {
         DocumentModel currentDoc = getCurrentDocument();
         if (currentDoc != null) {
@@ -1193,5 +1187,16 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public boolean hasView(String viewId) {
         return ToutaticeDocumentHelper.hasView(navigationContext.getCurrentDocument(), viewId);
+    }
+    
+	/**
+	 * Retourne vrai si le type de document est commentable (contrairement à l'instance de document qui peut ne plus l'avoir).
+	 * @return
+	 */
+    public boolean isTypeCommentable() {
+		SchemaManager service = Framework.getService(SchemaManager.class);
+		DocumentType documentType = service.getDocumentType(navigationContext.getCurrentDocument().getType());
+		
+		return documentType.hasFacet(ToutaticeNuxeoStudioConst.CST_DOC_COMMENTABLE);
     }
 }
