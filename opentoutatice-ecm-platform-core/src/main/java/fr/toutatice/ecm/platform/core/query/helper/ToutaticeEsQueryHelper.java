@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.toutatice.ecm.platform.core.helper;
+package fr.toutatice.ecm.platform.core.query.helper;
 
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -115,7 +115,7 @@ public class ToutaticeEsQueryHelper {
             qB.fetchFromDatabase();
         }
         // Pagination
-        if(pageSize > 0 && currentPageIndex >= 0){
+        if (pageSize > 0 && currentPageIndex >= 0) {
             qB.offset(currentPageIndex * pageSize);
             qB.limit(pageSize);
         } else {
@@ -126,11 +126,35 @@ public class ToutaticeEsQueryHelper {
         return getElasticSearchService().query(qB);
     }
 
+    public static DocumentModelList unretrictedQuery(CoreSession session, String nxql, int limit) {
+        UnrestrictedQuery uQry = new UnrestrictedQuery(session);
+        uQry.setNxql(nxql);
+        uQry.setPageSize(limit);
+
+        uQry.runUnrestricted();
+
+        return uQry.getDocuments();
+    }
+
+    public static DocumentModelList query(CoreSession session, String nxql, int limit, boolean unrestricted, boolean fetchDocFromEs) {
+        // Init
+        UnrestrictedQuery uQry = new UnrestrictedQuery(session);
+        uQry.setNxql(nxql);
+        uQry.setPageSize(limit);
+        uQry.setFetchDocFromEs(fetchDocFromEs);
+
+        // Run
+        if (unrestricted) {
+            uQry.runUnrestricted();
+        } else {
+            uQry.run();
+        }
+
+        return uQry.getDocuments();
+    }
+
 
     public static class UnrestrictedQueryAndAggregate extends UnrestrictedSessionRunner {
-
-        /** Session. */
-        private CoreSession session;
         /** Query. */
         private String query;
 
@@ -171,11 +195,85 @@ public class ToutaticeEsQueryHelper {
                 // ES query
                 ElasticSearchService ess = ToutaticeEsQueryHelper.getElasticSearchService();
 
-                NxQueryBuilder queryBuilder = new NxQueryBuilder(this.session).fetchFromElasticsearch().nxql(this.query).limit(this.limit);
+                NxQueryBuilder queryBuilder = new NxQueryBuilder(super.session).fetchFromElasticsearch().nxql(this.query).limit(this.limit);
                 this.iqr = ess.queryAndAggregate(queryBuilder).getRows();
             } else {
                 throw new ClientException("No query defined.");
             }
+        }
+
+    }
+
+    public static class UnrestrictedQuery extends UnrestrictedSessionRunner {
+        /** Query. */
+        private String nxql;
+
+        /** Current page index. */
+        private int currentPageIndex = 0;
+
+        /** Page size. */
+        private int pageSize = -1;
+
+        /** Fetch documents from ES (i.e only simple properties). */
+        private boolean fetchDocFromEs = false;
+
+        /** Results. */
+        private DocumentModelList documents;
+
+        protected UnrestrictedQuery(CoreSession session) {
+            super(session);
+        }
+
+
+        /**
+         * @param nxql the nxql to set
+         */
+        public void setNxql(String nxql) {
+            this.nxql = nxql;
+        }
+
+
+        /**
+         * @param currentPageIndex the currentPageIndex to set
+         */
+        public void setCurrentPageIndex(int currentPageIndex) {
+            this.currentPageIndex = currentPageIndex;
+        }
+
+
+        /**
+         * @param pageSize the pageSize to set
+         */
+        public void setPageSize(int pageSize) {
+            this.pageSize = pageSize;
+        }
+
+
+        /**
+         * @return the fetchDocFromEs
+         */
+        public boolean isFetchDocFromEs() {
+            return fetchDocFromEs;
+        }
+
+
+        /**
+         * @param fetchDocFromEs the fetchDocFromEs to set
+         */
+        public void setFetchDocFromEs(boolean fetchDocFromEs) {
+            this.fetchDocFromEs = fetchDocFromEs;
+        }
+
+        /**
+         * @return the documents
+         */
+        public DocumentModelList getDocuments() {
+            return documents;
+        }
+
+        @Override
+        public void run() throws ClientException {
+            this.documents = ToutaticeEsQueryHelper.query(super.session, this.nxql, this.currentPageIndex, this.pageSize, this.fetchDocFromEs);
         }
 
     }

@@ -32,7 +32,7 @@ import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
-import fr.toutatice.ecm.platform.core.helper.ToutaticeQueryHelper;
+import fr.toutatice.ecm.platform.core.query.helper.ToutaticeQueryHelper;
 
 
 /**

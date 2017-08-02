@@ -33,7 +33,7 @@ import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
 
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
-import fr.toutatice.ecm.platform.core.helper.ToutaticeQueryHelper;
+import fr.toutatice.ecm.platform.core.query.helper.ToutaticeQueryHelper;
 
 public class ToutaticeDocumentMoved implements EventListener {
 

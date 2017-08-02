@@ -45,7 +45,7 @@ public class ToutaticeRootSectionsPublicationTree extends RootSectionsPublicatio
     /** Logger. */
     private static final Log log = LogFactory.getLog(ToutaticeRootSectionsPublicationTree.class);
 
-    private static final String SECTION_ROOT_TYPE = "SectionRoot";
+    public static final String SECTION_ROOT_TYPE = "SectionRoot";
 
     /* FIXME: Fork to use ToutaticeCoreFolderPublicationNode... and rootNode.getChildrenNodes() */
     @Override

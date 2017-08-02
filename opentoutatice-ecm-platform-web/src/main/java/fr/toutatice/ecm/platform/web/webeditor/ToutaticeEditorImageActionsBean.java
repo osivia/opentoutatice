@@ -55,9 +55,9 @@ import org.nuxeo.ecm.webapp.note.EditorImageActionsBean;
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
-import fr.toutatice.ecm.platform.core.helper.ToutaticeEsQueryHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeFileHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeImageCollectionHelper;
+import fr.toutatice.ecm.platform.core.query.helper.ToutaticeEsQueryHelper;
 
 @Name("editorImageActions")
 @Scope(CONVERSATION)

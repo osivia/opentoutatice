@@ -18,7 +18,7 @@
  *   dchevrier
  *    
  */
-package fr.toutatice.ecm.platform.core.helper;
+package fr.toutatice.ecm.platform.core.query.helper;
 
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;

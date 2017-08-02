@@ -315,8 +315,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         return viewId;
     }
 
-
-    
     /**
      * mise à jour et incrémentation de la version(MINOR ou MAJOR) du document courant
      * 
@@ -822,7 +820,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         return path;
     }
 
-    private String getPublicationAreaName(DocumentModel document) {
+    protected String getPublicationAreaName(DocumentModel document) {
         String name = CST_DEFAULT_PUBLICATON_AREA_TITLE;
 
         DocumentModel area = ((ToutaticeNavigationContext) navigationContext).getPublicationArea(document);

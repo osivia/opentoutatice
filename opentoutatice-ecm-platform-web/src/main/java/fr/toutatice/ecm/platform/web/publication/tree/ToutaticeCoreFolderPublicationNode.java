@@ -34,7 +34,7 @@ import org.nuxeo.ecm.platform.publisher.api.PublicationNode;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocumentFactory;
 import org.nuxeo.ecm.platform.publisher.impl.core.CoreFolderPublicationNode;
 
-import fr.toutatice.ecm.platform.core.helper.ToutaticeEsQueryHelper;
+import fr.toutatice.ecm.platform.core.query.helper.ToutaticeEsQueryHelper;
 
 
 /**

@@ -71,6 +71,7 @@ public class ToutaticeGlobalConst {
 	public final static String CST_EVENT_SUB_TAB_SELECTION_CHANGED = "subTabSelectionChanged";
 	public final static String CST_EVENT_PROPAGATE_SECTIONS = "propagateSections";
 	public final static String BEFORE_WF_CANCELED_EVENT = "beforeWorkflowProcessCanceled"; 
+    public final static String BEFORE_DOC_LOCALLY_PUBLISHED = "beforeDocumentLocallyPublished";
 	public final static String CST_EVENT_DOC_LOCALLY_PUBLISHED = "documentLocallyPublished";
     public final static String CST_EVENT_ELASTICSEARCH_INDEX = "toutaticeElasticSearchDocumentIndexation";
 

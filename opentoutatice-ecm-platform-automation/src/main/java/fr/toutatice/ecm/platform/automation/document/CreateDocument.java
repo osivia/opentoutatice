@@ -37,7 +37,7 @@ import org.nuxeo.ecm.core.api.pathsegment.PathSegmentService;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
-import fr.toutatice.ecm.platform.core.helper.ToutaticeQueryHelper;
+import fr.toutatice.ecm.platform.core.query.helper.ToutaticeQueryHelper;
 import fr.toutatice.ecm.platform.service.url.ToutaticeWebIdHelper;
 
 @Operation(

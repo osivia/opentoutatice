@@ -22,7 +22,6 @@ package fr.toutatice.ecm.platform.core.helper;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +43,7 @@ import org.nuxeo.ecm.platform.task.core.service.TaskEventNotificationHelper;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
-import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
+import fr.toutatice.ecm.platform.core.query.helper.ToutaticeEsQueryHelper;
 
 /**
  * @author David Chevrier
@@ -72,10 +71,9 @@ public final class ToutaticeWorkflowHelper {
         List<DocumentRoute> routes = new ArrayList<DocumentRoute>(1);
         
         CoreSession session = currentDoc.getCoreSession();
-        String query = String.format(GET_WF_ON_DOCUMENT_QUERY, currentDoc.getId());
+        String nxql = String.format(GET_WF_ON_DOCUMENT_QUERY, currentDoc.getId());
         
-        ToutaticeQueryHelper.UnrestrictedQueryRunner queryRunner = new ToutaticeQueryHelper.UnrestrictedQueryRunner(session, query);
-        DocumentModelList wfs = queryRunner.runQuery();
+        DocumentModelList wfs = ToutaticeEsQueryHelper.query(session, nxql);
         
         if(CollectionUtils.isNotEmpty(wfs)){
             for(DocumentModel wf : wfs){
@@ -136,10 +134,9 @@ public final class ToutaticeWorkflowHelper {
         DocumentRoute searchedWf = null;
         
         CoreSession session = currentDoc.getCoreSession();
-        String query = String.format(GET_WF_BY_NAME_QUERY, workflowName, currentDoc.getId());
+        String nxql = String.format(GET_WF_BY_NAME_QUERY, workflowName, currentDoc.getId());
         
-        ToutaticeQueryHelper.UnrestrictedQueryRunner queryRunner = new ToutaticeQueryHelper.UnrestrictedQueryRunner(session, query);
-        DocumentModelList wfs = queryRunner.runQuery();
+        DocumentModelList wfs = ToutaticeEsQueryHelper.query(session, nxql);
         
         if(CollectionUtils.isNotEmpty(wfs)){
             DocumentModel wf = wfs.get(0);
