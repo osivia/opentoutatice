@@ -117,6 +117,7 @@ public abstract class AbstractCommentOperation {
      * 
      * @param blobs
      */
+    // FIXME: TODO in unretricted mode!!
     protected DocumentModel setAttachments(DocumentModel comment, BlobList blobs) {
         if (CollectionUtils.isNotEmpty(blobs)) {
 

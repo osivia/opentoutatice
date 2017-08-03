@@ -127,9 +127,9 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     Map<String, Boolean> mapSwitchState = null;
 
 
-	static private final String CST_DEFAULT_PUBLICATON_AREA_TITLE = "inconnu";
-    static private final String CST_DEFAULT_PUBLICATON_AREA_PATH = "/";
-    static private final String CST_DEFAULT_UNKNOWN_VERSION_LABEL = "Version indéterminée"; // I18N
+    static protected final String CST_DEFAULT_PUBLICATON_AREA_TITLE = "inconnu";
+    static protected final String CST_DEFAULT_PUBLICATON_AREA_PATH = "/";
+    static protected final String CST_DEFAULT_UNKNOWN_VERSION_LABEL = "Version indéterminée"; // I18N
 
     public boolean isLive() {
         return live;
@@ -768,45 +768,6 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         return list;
     }
 
-    /**
-     * @return le nom de l'espace de publication dans le portail pour la section
-     */
-    // TODO a déplacer dans le addon publication distante
-    public String getPublicationAreaNameOfSection(DocumentModel section) {
-        String areaName = getPublicationAreaName(section);
-
-        if (CST_DEFAULT_PUBLICATON_AREA_TITLE.equals(areaName)) {
-            /*
-             * La section n'appartient pas à un espace de publication mais à un élément
-             * de type SectionRoot. Prendre son nom.
-             */
-            DocumentModel sectionRoot = ((ToutaticeNavigationContext) navigationContext).getSectionPublicationArea(section);
-            if (sectionRoot != null) {
-                try {
-                    areaName = sectionRoot.getTitle();
-                } catch (ClientException e) {
-                    log.error("Failed to get the domain title, error: " + e.getMessage());
-                    areaName = CST_DEFAULT_PUBLICATON_AREA_TITLE;
-                }
-            } else {
-                /*
-                 * La section n'appartient pas à un espace de publication ni à une SectionRoot. Prendre
-                 * le nom du domaine à la place
-                 */
-                DocumentModel domain = ((ToutaticeNavigationContext) navigationContext).getDocumentDomain(section);
-                if (domain != null) {
-                    try {
-                        areaName = domain.getTitle();
-                    } catch (ClientException e) {
-                        log.error("Failed to get the domain title, error: " + e.getMessage());
-                        areaName = CST_DEFAULT_PUBLICATON_AREA_TITLE;
-                    }
-                }
-            }
-        }
-
-        return areaName;
-    }
 
     private String getSpacePath(DocumentModel document) {
         String path = CST_DEFAULT_PUBLICATON_AREA_PATH;
