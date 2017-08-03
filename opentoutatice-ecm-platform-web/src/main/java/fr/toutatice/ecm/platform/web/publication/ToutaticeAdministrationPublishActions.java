@@ -174,8 +174,4 @@ public class ToutaticeAdministrationPublishActions extends AdministrationPublish
         return super.formatPathFragments(pathFragments);
     }
 
-    public boolean getTrue() {
-        return true;
-    }
-
 }

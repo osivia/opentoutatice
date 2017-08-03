@@ -6,6 +6,7 @@ package fr.toutatice.ecm.platform.core.query.helper;
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.IterableQueryResult;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
@@ -22,6 +23,16 @@ public class ToutaticeEsQueryHelper {
 
     /** Results limit. */
     public static final int DEFAULT_MAX_RESULT_SIZE = 10000;
+
+    /** Descendants query. */
+    public static final String DESCENDANTS_ID_QUERY = "select * from Document where ecm:path startswith '%s' %s and ecm:isVersion = 0 and ecm:mixinType <> 'HiddenInNavigation' and ecm:currentLifeCycleState <> 'deleted'";
+    /** Proxies query clause. */
+    public static final String PROXIES_CLAUSE = " and ecm:isProxy = 1 ";
+    /** Lives query clause. */
+    public static final String LIVES_CLAUSE = " and ecm:isProxy = 0 ";
+    /** Not versions query clause. */
+    public static final String NOT_VERSIONS_CLAUSE = " and ecm:isVersion = 0 ";
+
 
     /** ElasticSeach service for querying. */
     private static ElasticSearchService ess;
@@ -41,6 +52,21 @@ public class ToutaticeEsQueryHelper {
      */
     private ToutaticeEsQueryHelper() {
         super();
+    }
+
+    /**
+     * Gets all children (i.e. children an d recurse children of children) of document.
+     * 
+     * @param parent
+     * @param unrestricted
+     * @param published
+     * @return all children of document
+     */
+    public static DocumentModelList getDescendants(CoreSession session, DocumentModel parent, boolean unrestricted, boolean published) {
+        String clause = published ? PROXIES_CLAUSE : LIVES_CLAUSE;
+        String nxql = String.format(DESCENDANTS_ID_QUERY, parent.getPathAsString(), clause);
+
+        return query(session, nxql, -1, unrestricted, false);
     }
 
     /**
