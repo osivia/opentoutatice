@@ -53,7 +53,7 @@ public class BlobHelper {
      * @return blobs
      */
     public static DocumentModel setBlobs(CoreSession session, DocumentModel doc, BlobList blobs, boolean save) {
-        return setBlobs(session, doc, blobs, "files;files", save);
+        return setBlobs(session, doc, blobs, DEFAULT_SCHEMA, save);
     }
 
     /**
