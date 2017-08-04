@@ -79,11 +79,5 @@
     <xs:element name="hideMetadatas" type="xs:boolean"/>
 	<!-- related software version -->
 	<xs:element name="modelVersion" type="xs:string" />	
-	<!-- #652 - Date fonctionnelle de publication d'un document -->
-	<xs:element name="publicationDate" type="xs:date" />
-	<!-- #1444 - Commentaires interdits -->
-	<xs:element name="commentsForbidden" type="xs:boolean" />
-	<!-- #1529 - Métadonnées non présentées  -->
-	<xs:element name="hideMetadatas" type="xs:boolean" />
 		
 </xs:schema>
