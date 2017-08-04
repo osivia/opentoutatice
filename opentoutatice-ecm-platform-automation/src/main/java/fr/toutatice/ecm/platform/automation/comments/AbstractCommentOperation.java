@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import fr.toutatice.ecm.platform.automation.blob.BlobHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -27,11 +28,6 @@ import org.nuxeo.ecm.platform.comment.workflow.utils.FollowTransitionUnrestricte
  */
 public abstract class AbstractCommentOperation {
 
-    /** Schema storing attached Blobs. */
-    public static final String ATTACHED_BLOBS_SCHEMA = "files";
-    /** Xpath storing attached Blobs. */
-    public static final String ATTACHED_BLOBS_XPATH = "files:files";
-
     /**
      * Constructor.
      */
@@ -43,19 +39,18 @@ public abstract class AbstractCommentOperation {
     /**
      * Execute operation.
      *
-     * @param session core session
-     * @param document document
-     * @param parent parent comment, may be null
-     * @param content comment content
-     * @param author comment author, may be null
+     * @param session      core session
+     * @param document     document
+     * @param parent       parent comment, may be null
+     * @param content      comment content
+     * @param author       comment author, may be null
      * @param creationDate comment creation date, may be null
-     * @param title thread post title
-     * @param fileNames thread post files names
-     * @param blob thread post file BLOB
+     * @param title        thread post title
+     * @param blobs        thread post blobs
      * @return comment
      */
-    public DocumentModel execute(CoreSession session, DocumentModel document, DocumentModel parent, String content, String author, Date creationDate,
-            String title, BlobList blobs) {
+    public DocumentModel execute(CoreSession session, DocumentModel document, DocumentModel parent, String content, String author, Date creationDate, String
+            title, BlobList blobs) {
         // Commentable document
         CommentableDocument commentableDocument = document.getAdapter(CommentableDocument.class);
 
@@ -90,7 +85,7 @@ public abstract class AbstractCommentOperation {
         if (CommentType.POST.equals(commentType)) {
             comment.setProperty(schema, "title", StringUtils.trimToEmpty(title));
 
-            comment = setAttachments(comment, blobs);
+            comment = BlobHelper.setBlobs(comment, blobs);
         }
 
         if (parent == null) {
@@ -103,33 +98,10 @@ public abstract class AbstractCommentOperation {
         if (CommentType.POST.equals(commentType)) {
             Boolean moderated = (Boolean) document.getProperty(schema, "moderated");
             if (BooleanUtils.isNotTrue(moderated)) {
-                FollowTransitionUnrestricted transition = new FollowTransitionUnrestricted(session, comment.getRef(),
-                        CommentsConstants.TRANSITION_TO_PUBLISHED_STATE);
+                FollowTransitionUnrestricted transition = new FollowTransitionUnrestricted(session, comment.getRef(), CommentsConstants
+                        .TRANSITION_TO_PUBLISHED_STATE);
                 transition.runUnrestricted();
             }
-        }
-
-        return comment;
-    }
-
-    /**
-     * Sets Blobs to comment.
-     * 
-     * @param blobs
-     */
-    // FIXME: TODO in unretricted mode!!
-    protected DocumentModel setAttachments(DocumentModel comment, BlobList blobs) {
-        if (CollectionUtils.isNotEmpty(blobs)) {
-
-            List<Map<String, Serializable>> existingBlobs = (List<Map<String, Serializable>>) comment.getPropertyValue(ATTACHED_BLOBS_XPATH);
-            if (existingBlobs == null) {
-                existingBlobs = new ArrayList<>();
-            }
-            for (Blob blob : blobs) {
-                Map<String, Serializable> blobProp = DocumentHelper.createBlobHolderMap(blob);
-                existingBlobs.add(blobProp);
-            }
-            comment.setPropertyValue(ATTACHED_BLOBS_XPATH, (Serializable) existingBlobs);
         }
 
         return comment;
