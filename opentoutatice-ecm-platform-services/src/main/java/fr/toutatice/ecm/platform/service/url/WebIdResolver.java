@@ -131,7 +131,7 @@ public class WebIdResolver {
          * <webid_of_live>_c_<webid_of_section_of_remote_proxy>.
          */
         private void getRemoteProxy() {
-            String[] webIds = StringUtils.split(this.webId, RPXY_WID_MARKER);
+            String[] webIds = StringUtils.splitByWholeSeparator(this.webId, RPXY_WID_MARKER);
 
             // Remote proxy webid is same as live
             String liveWId = webIds[0];
