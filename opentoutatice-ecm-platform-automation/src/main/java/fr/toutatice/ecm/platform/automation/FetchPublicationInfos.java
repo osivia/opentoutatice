@@ -258,7 +258,7 @@ public class FetchPublicationInfos {
         }
         boolean userNotAnonymous = !((NuxeoPrincipal) user).isAnonymous();
         
-        if(docCommentable) {
+        if (document.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE) && docCommentable) {
 	        // #1444 Un document peut être unitairement interdit de commentaire
 	        Serializable commentsForbidden = document.getPropertyValue(ToutaticeNuxeoStudioConst.TTC_COMMENTS_FORBIDDEN);
 	        if(commentsForbidden != null && ((Boolean)commentsForbidden == true)) {
