@@ -79,5 +79,10 @@
     <xs:element name="hideMetadatas" type="xs:boolean"/>
 	<!-- related software version -->
 	<xs:element name="modelVersion" type="xs:string" />	
+	
+	<!-- Note: the elements
+	     lockOwner (string)
+	     lockCreated (date) 
+	     are also available in ES denormalized document -->
 		
 </xs:schema>
