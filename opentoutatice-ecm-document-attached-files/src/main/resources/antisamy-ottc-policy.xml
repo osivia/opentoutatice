@@ -331,6 +331,19 @@
         <!-- <regexp value="(nowrap){0,1}"/> -->
       </regexp-list>
     </attribute>
+    
+    <!-- iframe attributes -->
+    <attribute name="frameborder">
+      <regexp-list>
+        <regexp name="number" />
+      </regexp-list>
+    </attribute>
+    
+    <attribute name="allowfullscreen">
+      <regexp-list>
+        <regexp name="boolean" />
+      </regexp-list>
+    </attribute>
 
 
     <!-- Common positioning attributes -->
@@ -529,9 +542,24 @@
 
     <!-- Frame & related tags -->
 
-    <tag name="iframe" action="remove" />
     <tag name="frameset" action="remove" />
     <tag name="frame" action="remove" />
+    
+    <tag name="iframe" action="validate">
+        <attribute name="src">
+        <regexp-list>
+          <regexp name="offsiteURL" />
+          <regexp name="onsiteURL" />
+        </regexp-list> 
+      </attribute>
+      <attribute name="width" />
+      <attribute name="height" />
+      <attribute name="style" />
+      <attribute name="name" />
+      <attribute name="align" />
+      <attribute name="frameborder" />
+      <attribute name="allowfullscreen" />
+    </tag>
 
 
 

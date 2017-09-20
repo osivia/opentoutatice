@@ -14,7 +14,6 @@ import javax.faces.convert.FacesConverter;
 import org.apache.commons.lang.StringUtils;
 import org.jboss.seam.core.Manager;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.platform.ui.web.util.BaseURL;
 import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
 import org.opentoutatice.ecm.attached.files.url.codec.OttcAttachedFileCodec;
 import org.opentoutatice.ecm.attached.images.bean.OttcDocumentActionsBean;
@@ -30,12 +29,6 @@ import org.opentoutatice.ecm.attached.images.bean.OttcDocumentActionsBean;
  */
 @FacesConverter("org.opentoutatice.ecm.attached.files.url.converter.DocumentContentConverter")
 public class DocumentContentConverter implements Converter {
-
-    /** Nuxeo webapp context. */
-    private static final String webappName = "/".concat(BaseURL.getWebAppName()).concat("/");
-
-    /** Absolute URL indicator. */
-    private static final String protocolIndicator = ":";
 
     private static final String ATTACHED_RESOURCE_INDICATOR = "attachedImages";
 
@@ -83,23 +76,6 @@ public class DocumentContentConverter implements Converter {
                 pictMatcher.appendReplacement(pictReplacementStack, "$1" + ATTACHED_RESOURCE_INDICATOR + g3);
             }
             replacement = pictMatcher.appendTail(pictReplacementStack);
-
-            // Add webapp name before all relative link (on portal side, the XSLFunction class
-            // is coded with it)
-            Matcher linkMatcher = PATTERN_COMPONENT_LINK_OR_RESOURCE.matcher(replacement.toString());
-            StringBuffer linkReplacementStack = new StringBuffer();
-
-            while (linkMatcher.find()) {
-                String g3 = linkMatcher.group(3);
-                String rp3 = g3;
-                // Add webapp name if needed
-                if (!isAbsoluteLink(g3) && !StringUtils.startsWith(g3, webappName)) {
-                    rp3 = webappName.concat(g3);
-                }
-
-                linkMatcher.appendReplacement(linkReplacementStack, "$1" + "$2" + rp3);
-            }
-            replacement = linkMatcher.appendTail(linkReplacementStack);
 
             // Set (and not just 'return') to resolve variable pointer
             value = replacement.toString();
@@ -152,23 +128,6 @@ public class DocumentContentConverter implements Converter {
                 }
                 replacement = matcher.appendTail(pictReplacementStack);
 
-                // All relative links are stored prefixed with /<Nx webapp name>/ (e.g '/nuxeo/')
-                // but tinyMCE doesn't allow it.
-                // So we must remove it before rendering.
-                Matcher linkMatcher = PATTERN_COMPONENT_LINK_OR_RESOURCE.matcher(replacement.toString());
-                StringBuffer linkReplacementStack = new StringBuffer();
-                while (linkMatcher.find()) {
-                    String rlg3 = linkMatcher.group(3);
-
-                    // Remove webapp name if necessary
-                    if (StringUtils.startsWith(rlg3, webappName)) {
-                        rlg3 = StringUtils.remove(rlg3, webappName);
-                    }
-
-                    linkMatcher.appendReplacement(linkReplacementStack, "$1" + "$2" + rlg3);
-                }
-                replacement = linkMatcher.appendTail(linkReplacementStack);
-
                 // Set (and not just 'return') to resolve variable pointer
                 value = replacement.toString();
                 return (String) value;
@@ -176,24 +135,5 @@ public class DocumentContentConverter implements Converter {
         }
         return replacement.toString();
     }
-    
-    /**
-     * Checks if link is absolute.
-     * 
-     * @param link
-     * @return true if link is absolute
-     */
-    public static boolean isAbsoluteLink(String link){
-        boolean absolute = false;
-        
-        if(StringUtils.contains(link, protocolIndicator)){
-            String possibleProtocol = StringUtils.substringBefore(link, protocolIndicator);
-            // It's protocol if it doesn't contain any special character, especially '/'
-            return !StringUtils.contains(possibleProtocol, "/");
-        }
-        
-        return absolute;
-    }
-
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <component name="org.opentoutatice.ecm.attached.files.ui.widgets">
 
-	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+	<require>fr.toutatice.ecm.platform.web.widgets</require>
 
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
 		point="widgets">
@@ -47,11 +47,14 @@
 	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager" point="widgettypes">
 	
 	   <!-- Alias waiting for definition of UIHtmlEditor component (cf HtmlTextWidgetTypeHandler) -->
-	   <widgetType name="ttc_richtext_with_mimetype">
+	   <!-- <widgetType name="ttc_richtext_with_mimetype">
             <aliases>
                 <alias>ottc_htmltext</alias>
             </aliases>
-        </widgetType>
+            <handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+        </widgetType> -->
 	
 	</extension>
 

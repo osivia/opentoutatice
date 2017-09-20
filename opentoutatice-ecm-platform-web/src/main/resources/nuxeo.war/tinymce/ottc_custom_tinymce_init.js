@@ -34,9 +34,9 @@ tinyMCE.init({
 	invalid_elements : "br",
 	valid_elements : "strong/b,em,u,span[style<text-decoration: underline;]",
 
-	// Img insertion fixes
 	relative_urls : false,
-	remove_script_host : false,
+	remove_script_host: true,
+	document_base_url : baseURL,
 
 	toolbar1 : "bold italic underline",
 	menubar: false,
@@ -72,9 +72,9 @@ tinyMCE
 
 	valid_elements : "p,br,strong/b,em,u,span[style<text-decoration: underline;]",
 
-	// Img insertion fixes
 	relative_urls : false,
-	remove_script_host : false,
+    remove_script_host: true,
+	document_base_url : baseURL,
 
 	toolbar1 : "bold italic underline",
 	menubar: false,

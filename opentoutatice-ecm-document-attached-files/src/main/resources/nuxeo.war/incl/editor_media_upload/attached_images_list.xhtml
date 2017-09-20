@@ -16,7 +16,8 @@
 
                 <ui:fragment rendered="#{not empty img.filename}">
                     <div class="col-xs-3 col-md-3"
-                        onclick="javascript:updateCaller(jQuery(this).find('img')[0], jQuery('#img_style_value').val());">
+                        onclick="javascript:updateCaller(jQuery(this).find('img')[0], 
+								 jQuery('#img_style_value').attr('checked') == 'checked' ? jQuery('#img_style_value').val() : '');">
                         <div class="picture">
                             <a href="#" class="thumbnail"> <h:graphicImage
                                     value="#{nxd:complexFileUrl('downloadFile', documentActions.currentDocument, 'ttc:images', status.index, 'file', img.filename)}" />

@@ -8,7 +8,8 @@
         point="types">
 
         <type id="Domain">
-            <layouts mode="create" append="true">
+            <layouts mode="create">
+                <layout>heading</layout>
                 <layout>domainIdLayout</layout>
             </layouts>
             <layouts mode="edit" append="true">

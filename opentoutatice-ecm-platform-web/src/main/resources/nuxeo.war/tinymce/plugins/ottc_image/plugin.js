@@ -59,7 +59,7 @@ tinymce.PluginManager.add('ottc_image', function(editor) {
 
 	function showDialog(imageList) {
 		var win, data = {}, dom = editor.dom, imgElm = editor.selection.getNode();
-		var width, height, imageListCtrl, classCtrl;
+		var width, height, imageListCtrl;
 
 		function buildImageList() {
 			var imageListItems = [{text: 'None', value: ''}];
@@ -76,8 +76,12 @@ tinymce.PluginManager.add('ottc_image', function(editor) {
 		}
 
 		function isEnlargeable(){
+            var isEnLgb = false;
+			if(imgElm != null){
 			var clazz = imgElm.getAttribute('class');
-			return clazz.indexOf('enlargeable') != -1;
+				isEnLgb = clazz.indexOf('enlargeable') != -1;
+			}
+			return isEnLgb;
 		}
 
 		function setClass(){
@@ -200,16 +204,23 @@ tinymce.PluginManager.add('ottc_image', function(editor) {
 			imgElm = null;
 		}
 
-		classCtrl = {
-			name: 'class',
-			type: 'checkbox',
-			label: '',
-			text: 'Image agrandissable'
-		};
-
 		var generalFormItems = [];
 
-		generalFormItems.push(classCtrl);
+		if (editor.settings.image_description !== false) {
+			generalFormItems.push({name: 'alt', type: 'textbox', label: 'Description'});
+		}
+
+		generalFormItems.push({
+				type: 'container',
+				label: 'Agrandissable',
+				layout: 'flex',
+				direction: 'row',
+				align: 'center',
+				spacing: 5,
+				items: [
+					{name: 'class', type: 'checkbox', label: '', text: 'activer'}
+				]
+			});
 
 		// Simple default dialog
 		win = editor.windowManager.open({
