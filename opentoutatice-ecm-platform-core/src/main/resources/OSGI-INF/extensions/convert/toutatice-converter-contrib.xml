@@ -23,7 +23,8 @@
       <sourceMimeType>application/msword</sourceMimeType>
       <sourceMimeType>application/vnd.ms-powerpoint</sourceMimeType>
       <sourceMimeType>application/vnd.ms-excel</sourceMimeType>
-
+      <sourceMimeType>application/vnd.ms-excel.sheet.macroEnabled.12</sourceMimeType>
+      
       <!-- Microsoft office 2007 documents -->
       <sourceMimeType>
         application/vnd.openxmlformats-officedocument.wordprocessingml.document
