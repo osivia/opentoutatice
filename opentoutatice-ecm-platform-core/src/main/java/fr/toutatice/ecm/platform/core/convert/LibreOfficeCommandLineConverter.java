@@ -1,6 +1,7 @@
 package fr.toutatice.ecm.platform.core.convert;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.io.FilenameUtils;
 import org.nuxeo.common.utils.Path;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -17,7 +19,12 @@ import org.nuxeo.ecm.core.convert.api.ConversionException;
 import org.nuxeo.ecm.core.convert.cache.SimpleCachableBlobHolder;
 import org.nuxeo.ecm.core.convert.extension.ConverterDescriptor;
 import org.nuxeo.ecm.platform.commandline.executor.api.CmdParameters;
+import org.nuxeo.ecm.platform.commandline.executor.api.CommandException;
+import org.nuxeo.ecm.platform.commandline.executor.api.CommandLineExecutorService;
+import org.nuxeo.ecm.platform.commandline.executor.api.CommandNotAvailable;
+import org.nuxeo.ecm.platform.commandline.executor.api.ExecResult;
 import org.nuxeo.ecm.platform.convert.plugins.CommandLineBasedConverter;
+import org.nuxeo.runtime.api.Framework;
 
 
 public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
@@ -27,6 +34,80 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
     private static int poolSize;
 
     private static AtomicInteger instanceCounter;
+
+    protected class TTCCmdReturn {
+
+        protected final CmdParameters params;
+
+        protected final List<String> output;
+
+        protected TTCCmdReturn(CmdParameters params, List<String> output) {
+            this.params = params;
+            this.output = output;
+        }
+    }
+
+    protected TTCCmdReturn execOnBlobTTC(String commandName, Map<String, Blob> blobParameters, Map<String, String> parameters) throws ConversionException {
+        CommandLineExecutorService cles = Framework.getService(CommandLineExecutorService.class);
+        CmdParameters params = cles.getDefaultCmdParameters();
+        List<String> filesToDelete = new ArrayList<>();
+        try {
+            if (blobParameters != null) {
+                for (String blobParamName : blobParameters.keySet()) {
+                    Blob blob = blobParameters.get(blobParamName);
+                    File file = File.createTempFile("cmdLineBasedConverter", "." + FilenameUtils.getExtension(blob.getFilename()));
+                    blob.transferTo(file);
+                    params.addNamedParameter(blobParamName, file);
+                    filesToDelete.add(file.getAbsolutePath());
+                }
+            }
+
+            if (parameters != null) {
+                for (String paramName : parameters.keySet()) {
+                    params.addNamedParameter(paramName, parameters.get(paramName));
+                }
+            }
+
+            ExecResult result = Framework.getService(CommandLineExecutorService.class).execCommand(commandName, params);
+            if (!result.isSuccessful()) {
+                throw result.getError();
+            }
+            return new TTCCmdReturn(params, result.getOutput());
+        } catch (CommandNotAvailable e) {
+            // XXX bubble installation instructions
+            throw new ConversionException("Unable to find targetCommand", e);
+        } catch (IOException | CommandException e) {
+            throw new ConversionException("Error while converting via CommandLineService", e);
+        } finally {
+            for (String fileToDelete : filesToDelete) {
+                new File(fileToDelete).delete();
+            }
+        }
+    }
+
+    @Override
+    public BlobHolder convert(BlobHolder blobHolder, Map<String, Serializable> parameters) throws ConversionException {
+
+        String commandName = getCommandName(blobHolder, parameters);
+        if (commandName == null) {
+            throw new ConversionException("Unable to determine target CommandLine name");
+        }
+
+        TTCCmdReturn result;
+        BlobHolder blobResult;
+        instanceCounter.incrementAndGet();
+        try {
+            Map<String, Blob> blobParams = getCmdBlobParameters(blobHolder, parameters);
+            Map<String, String> strParams = getCmdStringParameters(blobHolder, parameters);
+            result = execOnBlobTTC(commandName, blobParams, strParams);
+            blobResult = buildResult(result.output, result.params);
+        } finally {
+            instanceCounter.decrementAndGet();
+        }
+
+        return blobResult;
+    }
+
 
     @Override
     protected Map<String, Blob> getCmdBlobParameters(BlobHolder blobHolder, Map<String, Serializable> parameters) throws ConversionException {
@@ -53,8 +134,8 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
         cmdStringParams.put("outDirPath", outDir.getAbsolutePath());
 
         // tmp soffice user directory to manage multiple instances
-        if(instanceCounter.get() < poolSize){
-            int envIndex = instanceCounter.incrementAndGet();
+        int envIndex = instanceCounter.get();
+        if (envIndex < poolSize) {
             Path envPath = new Path(baseDir).append("sofficeUserEnv_" + String.valueOf(envIndex));
             File envDir = new File(envPath.toString());
             if (!envDir.isDirectory() && !envDir.mkdir()) {
@@ -85,9 +166,6 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
                 blobs.add(blob);
             }
         }
-
-        instanceCounter.decrementAndGet();
-
         return new SimpleCachableBlobHolder(blobs);
     }
 
