@@ -72,26 +72,24 @@ public class GetExtendedTasks // extends GetUserTasks
 
     @OperationMethod
     public Blob run() throws Exception {
-        StringBlob blob = null;
-        UnrestricedGetExtendedTasks unrestricedGetExtendedTasks = new UnrestricedGetExtendedTasks(repo, principal(), wkfls, blob);
+        UnrestricedGetExtendedTasks unrestricedGetExtendedTasks = new UnrestricedGetExtendedTasks(repo, principal(), wkfls);
         unrestricedGetExtendedTasks.runUnrestricted();
-        return blob;
+        return unrestricedGetExtendedTasks.blob;
     }
 
     private class UnrestricedGetExtendedTasks extends UnrestrictedSessionRunner {
 
         private NuxeoPrincipal principal;
 
-        private StringBlob blob;
+        public StringBlob blob;
 
         private CoreSession userSession;
 
         private StringList wkfls;
 
-        protected UnrestricedGetExtendedTasks(CoreSession session, NuxeoPrincipal principal, StringList wkfls, StringBlob blob) {
+        protected UnrestricedGetExtendedTasks(CoreSession session, NuxeoPrincipal principal, StringList wkfls) {
             super(session);
             this.userSession = session;
-            this.blob = blob;
             this.wkfls = wkfls;
             this.principal = principal;
         }
