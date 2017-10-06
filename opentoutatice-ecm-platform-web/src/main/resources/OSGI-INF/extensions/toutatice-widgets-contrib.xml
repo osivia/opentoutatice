@@ -256,6 +256,19 @@
 				</property>
 			</properties>
 		</widget>
+		
+		<widget name="publication_date" type="datetime">
+			<labels>
+				<label mode="any">toutatice.label.publication.date</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:publicationDate</field>
+			</fields>
+	      <properties widgetMode="edit">
+	        <property name="required">false</property>
+	      </properties>
+		</widget>
 
 	</extension>
 

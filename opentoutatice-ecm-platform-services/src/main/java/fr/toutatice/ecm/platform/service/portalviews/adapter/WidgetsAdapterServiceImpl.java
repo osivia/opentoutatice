@@ -247,7 +247,10 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
             if (elContext != null) {
 
                 pvWidget = layoutManager.getWidget((FaceletContext) elContext, pvWidgetName, null, nxWidget.getMode(), "#{value}", null);
-                pvWidget.setId(FaceletHandlerHelper.WIDGET_ID_PREFIX + pvWidgetName);
+                // Widget can be hidden so null
+                if (pvWidget != null) {
+                    pvWidget.setId(FaceletHandlerHelper.WIDGET_ID_PREFIX + pvWidgetName);
+                }
 
             }
         } else {
