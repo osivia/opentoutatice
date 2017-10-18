@@ -21,10 +21,9 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
     private static final Log log = LogFactory.getLog(ToutaticeOwnerSecurityPolicy.class);
 
     /** Permissions to simulate on document to allow actions. */
-    private static final String[] SIMULATED_DOCUMENT_PERMISSIONS = {SecurityConstants.READ, SecurityConstants.WRITE,
-            ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE};
+    private static final String[] SIMULATED_DOCUMENT_PERMISSIONS = {SecurityConstants.READ, SecurityConstants.WRITE};
     /** Permissions to simulate on parent's document to allow actions. */
-    private static final String[] SIMULATED_PARENT_PERMISSIONS = {SecurityConstants.READ, ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE};
+    private static final String[] SIMULATED_PARENT_PERMISSIONS = {SecurityConstants.READ};
     /** Permissions to simulate on parent's document to allow actions but not conditioned by the fact that current user must be creator of parent's document. */
     private static final String[] NOT_CONDITIONED_SIMULATED_PARENT_PERMISSIONS = {SecurityConstants.READ, SecurityConstants.ADD_CHILDREN,
             SecurityConstants.REMOVE_CHILDREN};
@@ -110,7 +109,7 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
         String[] simulatedPerms = null;
 
         if (isCreator(doc, principal)) {
-            // Contributor can update, remove and move and its documents
+            // Contributor can update, remove and move
             simulatedPerms = (String[]) ArrayUtils.addAll(getSimulatedDocumentPermissions(), getSimulatedParentPermissions());
         } else {
             // He can add and import documents in Folder he hasn't created (not his)

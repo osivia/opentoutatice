@@ -31,9 +31,7 @@
 			<include>CanAskForPublishing</include>
 		</permission>
 
-		<permission name="validationWorkflow_validation">
-			<include>Write</include>
-		</permission>
+		<permission name="validationWorkflow_validation" />
 
 		<permission name="RemotePublish">
 			<include>CanAskForPublishing</include>
