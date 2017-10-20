@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.core.userworkspace">
+
+	<require>org.nuxeo.ecm.platform.userworkspace.UserWorkspaceServiceImpl
+	</require>
+
+	<extension target="org.nuxeo.ecm.platform.userworkspace.UserWorkspaceService"
+		point="userWorkspace">
+		<userWorkspace
+			class="fr.toutatice.ecm.platform.core.userworkspace.ToutaticeUserWorkspaceServiceImpl" />
+	</extension>
+
+</component>
