@@ -17,11 +17,14 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.annotations.In;
@@ -55,6 +58,14 @@ public class SetWebID {
 
     /** Op ID */
     public static final String ID = "Document.SetWebId";
+
+    /**
+     * The number of bytes used to represent a {@code long} value in two's
+     * complement binary form.
+     *
+     * @see java.lang.Long since 1.8
+     */
+    public static final int BYTES = Long.SIZE / Byte.SIZE;
 
     private static final Log log = LogFactory.getLog(SetWebID.class);
 
@@ -115,7 +126,6 @@ public class SetWebID {
             String webId = null;
             String extension = null;
             boolean creationMode = false;
-            int suffixForUnicity = 1;
             boolean hasToBeUpdated = false;
 
             // if document has not toutatice schema
@@ -126,7 +136,7 @@ public class SetWebID {
             // in creation or import, try to generate it.
             if (StringUtils.isBlank(getWebId())) {
                 // else new id is generated
-                webId = generateWebId(webId, suffixForUnicity);
+                webId = generateWebId(webId);
                 // for Files or Pictures : get the extension of the file if exists
                 extension = getBlobExtensionIfExists(webId);
                 webId = removeBlobExtensionIfExists(webId, extension);
@@ -152,8 +162,7 @@ public class SetWebID {
 
             String originalWebid = webId;
             while (isNotUnique(this.session, this.document, webId)) {
-                webId = generateWebId(originalWebid, suffixForUnicity);
-                suffixForUnicity += 1;
+                webId = generateWebId(originalWebid);
                 hasToBeUpdated = true;
             }
 
@@ -183,7 +192,7 @@ public class SetWebID {
         /**
          * @return new webId basedon path.
          */
-        protected String generateWebId(String webId, int suffixForUnicity) {
+        protected String generateWebId(String webId) {
             if (StringUtils.isBlank(webId)) {
                 String[] arrayPath = this.document.getPathAsString().split("/");
                 webId = arrayPath[arrayPath.length - 1];
@@ -194,10 +203,34 @@ public class SetWebID {
                     webId = webId.substring(0, webId.indexOf("."));
                 }
             } else {
-                webId = webId.concat(String.valueOf(suffixForUnicity));
+                webId = webId.concat("-".concat(generateBase62()));
             }
             return webId;
         }
+
+
+        private String generateBase62() {
+            int size = 6;
+
+            long random = 0;
+            for (int i = 0; i < size; i++) {
+                int value = RandomUtils.nextInt(61);
+                random += value * Math.round(Math.pow(64, i));
+            }
+
+            ByteBuffer buffer = ByteBuffer.allocate(BYTES);
+            buffer.putLong(0, random);
+            byte[] bytes = buffer.array();
+
+            byte[] truncatedArray = new byte[size];
+            for (int i = 0; i < size; i++) {
+                truncatedArray[i] = bytes[BYTES - size + i];
+            }
+
+            String encodedString = Base64.encodeBase64String(truncatedArray);
+            return StringUtils.removeStart(encodedString, "AA");
+        }
+
 
         /**
          * for Files or Pictures : put the extension of the file if exists.
