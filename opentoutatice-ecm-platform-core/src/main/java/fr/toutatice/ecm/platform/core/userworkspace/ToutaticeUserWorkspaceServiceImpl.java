@@ -39,8 +39,10 @@ public class ToutaticeUserWorkspaceServiceImpl extends DefaultUserWorkspaceServi
                 userSession = CoreInstance.openCoreSession(null, username);
             }
 
+            CoreSession usedSession = userSession != null ? userSession : session;
+
             // If it is username workspace, user has Everything permission on it
-            if (!new UnrestrictedPermissionChecker(userSession, uwref).hasPermission()) {
+            if (!new UnrestrictedPermissionChecker(usedSession, uwref).hasPermission()) {
                 int digestLength = workspacename.length() / 3;
                 // Generate new path
                 String substring = workspacename.substring(0, workspacename.length() - digestLength);
