@@ -5,8 +5,11 @@ package fr.toutatice.ecm.platform.core.userworkspace;
 
 import java.security.Principal;
 
+import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.PathRef;
+import org.nuxeo.ecm.core.api.SystemPrincipal;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.platform.userworkspace.core.service.DefaultUserWorkspaceServiceImpl;
@@ -25,13 +28,31 @@ public class ToutaticeUserWorkspaceServiceImpl extends DefaultUserWorkspaceServi
     @Override
     protected PathRef resolveUserWorkspace(CoreSession session, PathRef rootref, String username, String workspacename, int maxsize) {
         PathRef uwref = new PathRef(rootref, workspacename);
-        // If it is username workspace, user has Everything permission on it
-        if (!new UnrestrictedPermissionChecker(session, uwref).hasPermission()) {
-            int digestLength = workspacename.length() / 3;
-            // Generate new path
-            String substring = workspacename.substring(0, workspacename.length() - digestLength);
-            return new PathRef(rootref, substring.concat(digest(username, digestLength)));
+
+        CoreSession userSession = null;
+        try {
+
+            NuxeoPrincipal principalCaller = (NuxeoPrincipal) session.getPrincipal();
+
+            // Case when this method is called in unrestricted session (like via UserProfileService)
+            if (principalCaller instanceof SystemPrincipal) {
+                userSession = CoreInstance.openCoreSession(null, username);
+            }
+
+            // If it is username workspace, user has Everything permission on it
+            if (!new UnrestrictedPermissionChecker(userSession, uwref).hasPermission()) {
+                int digestLength = workspacename.length() / 3;
+                // Generate new path
+                String substring = workspacename.substring(0, workspacename.length() - digestLength);
+                return new PathRef(rootref, substring.concat(digest(username, digestLength)));
+            }
+
+        } finally {
+            if (userSession != null) {
+                userSession.close();
+            }
         }
+
         return uwref;
     }
 
@@ -50,12 +71,12 @@ public class ToutaticeUserWorkspaceServiceImpl extends DefaultUserWorkspaceServi
         protected UnrestrictedPermissionChecker(CoreSession session, PathRef ref) {
             super(session);
             this.ref = ref;
-            principal = session.getPrincipal();
+            this.principal = session.getPrincipal();
         }
 
         @Override
         public void run() {
-            hasPermission = !session.exists(ref) || session.hasPermission(principal, ref, SecurityConstants.EVERYTHING);
+            this.hasPermission = !this.session.exists(this.ref) || this.session.hasPermission(this.principal, this.ref, SecurityConstants.EVERYTHING);
         }
 
         /**
@@ -63,7 +84,7 @@ public class ToutaticeUserWorkspaceServiceImpl extends DefaultUserWorkspaceServi
          */
         boolean hasPermission() {
             runUnrestricted();
-            return hasPermission;
+            return this.hasPermission;
         }
     }
 
