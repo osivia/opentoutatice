@@ -31,13 +31,22 @@
 			ou bien le user name = 'system') - ou bien un usager qui possède la permission 
 			'Everything' -->
 		<filter id="isGlobalAdministrator">
-			<!-- Administrateur système défini comme appartenant au groupe 'SuperAdministrators' 
-				défini dans 'usermanager-config.xml' -->
+			<!-- Administrateur de l'application (SuperAdmin) définiçs dans 'usermanager-config.xml' -->
 			<rule grant="true">
 				<condition>#{userSession.administrator}</condition>
 			</rule>
-			<!-- Simple appartenance au groupe 'Administrators' -->
+			<!-- Administrateur GED (Everything sur un espace) -->
 			<rule grant="true">
+				<condition>#{securityActions.hasAllRights()}
+				</condition>
+			</rule>
+		</filter>
+		
+		<filter id="isNotGlobalAdministrator">
+			<rule grant="false">
+				<condition>#{userSession.administrator}</condition>
+			</rule>
+			<rule grant="false">
 				<condition>#{securityActions.hasAllRights()}
 				</condition>
 			</rule>
