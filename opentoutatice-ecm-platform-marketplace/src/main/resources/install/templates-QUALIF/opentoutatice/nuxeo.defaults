@@ -19,6 +19,9 @@ nuxeo.jsf.numberOfLogicalViews=20
 ##----------------------------------------------------------------------------
 # soffice user environments pool size
 ottc.converter.toutaticeAny2pdf.poolSize=10
+# conversion timeout
+# time to wait for the conversion before timeout, in seconds
+ottc.converter.toutaticeAny2pdf.timeoutDuration=30
 
 ##========================
 ## Fulltext Analyzer
