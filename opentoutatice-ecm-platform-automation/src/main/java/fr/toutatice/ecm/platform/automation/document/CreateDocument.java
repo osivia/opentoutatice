@@ -78,7 +78,7 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
 		}
 		
 		// Test if webId exists
-        if (this.properties != null) {
+        if (doc.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE) && this.properties != null) {
             String wId = this.properties.get(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
             if (StringUtils.isNotBlank(wId)) {
                 DocumentModelList results = ToutaticeQueryHelper.queryUnrestricted(session, String.format(ToutaticeWebIdHelper.WEB_ID_QUERY, wId), 1);
