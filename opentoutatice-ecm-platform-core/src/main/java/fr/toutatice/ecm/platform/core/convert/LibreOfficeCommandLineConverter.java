@@ -31,7 +31,20 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
 
     private static final String POOL_SIZE_PARAMETER = "EnvironmentPoolSize";
 
+    private static final String TIMEOUT_DURATION_PARAMETER = "EnvironmentTimeoutDuration";
+
+    /** poolSize */
     private static int poolSize;
+
+    /**
+     * timeoutDuration
+     * 
+     * the maximum time to wait, in seconds
+     * 
+     * @see man timeout
+     * 
+     * */
+    private static String timeoutDuration;
 
     private static AtomicInteger instanceCounter;
 
@@ -67,8 +80,9 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
                     params.addNamedParameter(paramName, parameters.get(paramName));
                 }
             }
+            params.addNamedParameter("timeoutDuration", timeoutDuration);
 
-            ExecResult result = Framework.getService(CommandLineExecutorService.class).execCommand(commandName, params);
+            ExecResult result = cles.execCommand(commandName, params);
             if (!result.isSuccessful()) {
                 throw result.getError();
             }
@@ -174,9 +188,9 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
         initParameters = descriptor.getParameters();
         if (initParameters == null) {
             initParameters = new HashMap<>();
-        } else {
-            poolSize = Integer.valueOf(initParameters.get(POOL_SIZE_PARAMETER));
         }
+        poolSize = Integer.valueOf(initParameters.get(POOL_SIZE_PARAMETER));
+        timeoutDuration = initParameters.get(TIMEOUT_DURATION_PARAMETER);
         instanceCounter = new AtomicInteger();
         getCommandLineService();
     }

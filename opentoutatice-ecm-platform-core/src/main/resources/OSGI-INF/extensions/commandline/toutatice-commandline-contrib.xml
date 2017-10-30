@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <component name="fr.toutatice.ecm.platform.core.commandline">
 
-  <require>org.nuxeo.ecm.platform.commandline.executor.service.defaultContrib</require>
-  <extension target="org.nuxeo.ecm.platform.commandline.executor.service.CommandLineExecutorComponent"
-    point="command">
+  <require>fr.toutatice.ecm.platform.core.executors.TTCCommandLineExecutorComponent</require>
+  <require>fr.toutatice.ecm.platform.core.executors.defaultContrib</require>
+  <extension target="fr.toutatice.ecm.platform.core.executors.TTCCommandLineExecutorComponent" point="command">
 
     <command name="sofficeConvertToPdf" enabled="true">
       <commandLine>soffice</commandLine>
