@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.SimpleLog;
@@ -58,7 +59,7 @@ public class TimeoutShellExecutor extends ShellExecutor {
         CmdParameter timeoutDurationP = paramsValues.get("timeoutDuration");
         Long timeoutDuration = null;
         if (timeoutDurationP != null) {
-            timeoutDuration = Long.valueOf(timeoutDurationP.getValue());
+            timeoutDuration = NumberUtils.toLong(timeoutDurationP.getValue());
         }
 
         Process p1;
@@ -87,7 +88,7 @@ public class TimeoutShellExecutor extends ShellExecutor {
 
         int exitCode = 0;
         try {
-            if (timeoutDuration != null) {
+            if (timeoutDuration != null && timeoutDuration > 0) {
                 boolean finished = waitFor(p1, timeoutDuration, TimeUnit.SECONDS);
                 if (finished) {
                     exitCode = p1.exitValue();
