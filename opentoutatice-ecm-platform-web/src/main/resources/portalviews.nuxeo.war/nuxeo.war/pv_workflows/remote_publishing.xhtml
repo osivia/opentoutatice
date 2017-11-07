@@ -106,7 +106,7 @@
 					<a4j:outputPanel id="publishingInfoList" layout="block">
 
 						<script type="text/javascript">
-							parent.jQuery.fancybox.update();
+							parent.jQuery.fancybox.getInstance().update()
 						</script>
 
 						<nxu:dataTable value="#{publishedDocuments}"
