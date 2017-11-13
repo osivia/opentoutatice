@@ -11,6 +11,144 @@
       <winParameterString> --headless --nocrashreport --nodefault --nofirststartwizard --nolockcheck --nologo --norestore -env:UserInstallation=file://#{envDirPath} --convert-to pdf --outdir #{outDirPath} #{inFilePath}</winParameterString>
       <installationDirective>You need to install soffice</installationDirective>
     </command>
+    
+    <command name="identify" enabled="true">
+      <commandLine>identify</commandLine>
+      <parameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet -ping -format '%m %w %h %z %[colorspace]' #{inputFilePath}[0]</parameterString>
+      <winParameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet -ping -format "%m %w %h %z %[colorspace]" #{inputFilePath}[0]</winParameterString>
+      <installationDirective>You need to install ImageMagick.</installationDirective>
+    </command>
+
+    <command name="crop" enabled="true">
+      <commandLine>stream</commandLine>
+      <parameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet -map rgb -storage-type char -extract #{tileWidth}x#{tileHeight}+#{offsetX}+#{offsetY} #{inputFilePath}[0] - | convert -depth 8 -size #{tileWidth}x#{tileHeight} rgb:- #{outputFilePath}</parameterString>
+      <winParameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet -map rgb -storage-type char -extract #{tileWidth}x#{tileHeight}+#{offsetX}+#{offsetY} #{inputFilePath}[0] - | convert -depth 8 -size #{tileWidth}x#{tileHeight} rgb:- #{outputFilePath}</winParameterString>
+      <installationDirective>You need to install ImageMagick.</installationDirective>
+    </command>
+
+    <command name="resizer" enabled="true">
+      <commandLine>convert</commandLine>
+      <parameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet -depth #{targetDepth} #{inputFilePath}[0] jpg:- | convert - -resize #{targetWidth}x#{targetHeight} #{outputFilePath}</parameterString>
+      <winParameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet -depth #{targetDepth} #{inputFilePath}[0] -resize #{targetWidth}x#{targetHeight} #{outputFilePath}</winParameterString>
+      <installationDirective>You need to install ImageMagick.</installationDirective>
+    </command>
+
+    <command name="gifResizer" enabled="true">
+      <commandLine>convert</commandLine>
+      <parameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet -depth #{targetDept h} #{inputFilePath}[0] -coalesce -resize #{targetWidth}x#{targetHeight} -deconstruct #{outputFilePath}</parameterString>
+      <installationDirective>You need to install ImageMagick.</installationDirective>
+    </command>
+
+    <command name="jpegResizer" enabled="true">
+      <commandLine>convert</commandLine>
+      <parameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet -background white -flatten -depth #{targetDepth} #{inputFilePath}[0] jpg:- | convert - -resize #{targetWidth}x#{targetHeight} #{outputFilePath}</parameterString>
+      <winParameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet -background white -flatten -depth #{targetDepth} #{inputFilePath}[0] -resize #{targetWidth}x#{targetHeight} #{outputFilePath}</winParameterString>
+      <installationDirective>You need to install ImageMagick.</installationDirective>
+    </command>
+
+    <command name="rotate" enabled="true">
+      <commandLine>convert</commandLine>
+      <parameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet #{inputFilePath}[0] -rotate #{angle} #{outputFilePath}</parameterString>
+      <winParameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet #{inputFilePath}[0] -rotate #{angle} #{outputFilePath}</winParameterString>
+      <installationDirective>You need to install ImageMagick.</installationDirective>
+    </command>
+
+    <command name="cropAndResize" enabled="true">
+      <commandLine>stream</commandLine>
+      <parameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet -map #{mapComponents} -storage-type char -extract #{tileWidth}x#{tileHeight}+#{offsetX}+#{offsetY} #{inputFilePath}[0] - | convert -depth 8 -size #{tileWidth}x#{tileHeight} -resize #{targetWidth}x#{targetHeight}! #{mapComponents}:- #{outputFilePath}</parameterString>
+      <installationDirective>You need to install ImageMagick.</installationDirective>
+    </command>
+
+    <command name="converter" enabled="true">
+      <commandLine>convert</commandLine>
+      <parameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet #{inputFilePath}[0] #{outputFilePath}</parameterString>
+      <winParameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet #{inputFilePath}[0] #{outputFilePath}</winParameterString>
+      <installationDirective>You need to install ImageMagick.</installationDirective>
+    </command>
+
+    <command name="multiTiler" enabled="true">
+      <commandLine>convert</commandLine>
+      <parameterString>-define registry:temporary-path=#{java.io.tmpdir} -quiet #{inputFilePath}[0] -crop #{tileWidth}x#{tileHeight} +repage #{outputFilePath}</parameterString>
+      <installationDirective>You need to install ImageMagick.</installationDirective>
+    </command>
+    
+     <command enabled="true" name="ffmpeg-info">
+      <commandLine>ffprobe</commandLine>
+      <parameterString> #{inFilePath}</parameterString>
+      <installationDirective>You need to install ffmpeg from http://ffmpeg.org (apt-get install ffmpeg)
+      </installationDirective>
+    </command>
+
+    <command enabled="true" name="ffmpeg-screenshot">
+      <commandLine>ffmpeg</commandLine>
+      <!-- It's important to put the -ss option before the -i option for
+        faster (though less accurate) seek / skip to position in the input file -->
+      <parameterString> -y -ss #{position} -i #{inFilePath} -vframes 1 -f image2 #{outFilePath}</parameterString>
+      <installationDirective>You need to install ffmpeg from http://ffmpeg.org (apt-get install ffmpeg)
+      </installationDirective>
+    </command>
+
+    <command enabled="true" name="ffmpeg-screenshot-resize">
+      <commandLine>ffmpeg</commandLine>
+      <!-- It's important to put the -ss option before the -i option for faster
+        (though less accurate) seek / skip to position in the input file.
+
+        The -vframes 1 option tell to take only one screenshot. This is
+        necessary as apparent the use of the "-s" option forces ffmpeg to
+        switch in "many output files" mode.
+      -->
+      <parameterString> -y -ss #{position} -i #{inFilePath} -vframes 1 -f image2 -s #{width}x#{height} #{outFilePath}</parameterString>
+      <installationDirective>You need to install ffmpeg from http://ffmpeg.org (apt-get install ffmpeg)
+      </installationDirective>
+    </command>
+
+    <command enabled="true" name="ffmpeg-towebm">
+      <commandLine>ffmpeg</commandLine>
+      <parameterString> -i #{inFilePath} -s #{width}x#{height} -acodec libvorbis -v 0 #{outFilePath}</parameterString>
+      <installationDirective>You need to install ffmpeg from http://ffmpeg.org (apt-get install ffmpeg)
+      </installationDirective>
+    </command>
+
+    <command enabled="true" name="ffmpeg-tomp4">
+      <commandLine>ffmpeg</commandLine>
+      <parameterString> -i #{inFilePath} -s #{width}x#{height} -acodec libfaac -vcodec libx264 -v 0 #{outFilePath}</parameterString>
+      <winParameterString> -i #{inFilePath} -s #{width}x#{height} -vcodec libx264 -v 0 #{outFilePath}</winParameterString>
+      <installationDirective>You need to install ffmpeg from http://ffmpeg.org (apt-get install ffmpeg)
+      </installationDirective>
+    </command>
+
+    <command enabled="true" name="ffmpeg-toogg">
+      <commandLine>ffmpeg</commandLine>
+      <parameterString> -i #{inFilePath} -s #{width}x#{height} -acodec libvorbis -v 0 #{outFilePath}</parameterString>
+      <installationDirective>You need to install ffmpeg from http://ffmpeg.org (apt-get install ffmpeg)
+      </installationDirective>
+    </command>
+    
+    <command enabled="true" name="toThumbnail">
+      <commandLine>convert</commandLine>
+      <parameterString>-quiet -strip -thumbnail #{size} -background transparent -gravity center -format png -quality 75 #{inputFilePath}[0] #{outputFilePath}</parameterString>
+      <winParameterString>-quiet -strip -thumbnail #{size} -background transparent -gravity center -format png -quality 75 #{inputFilePath}[0] #{outputFilePath}</winParameterString>
+      <installationDirective>You need to install ImageMagick.</installationDirective>
+    </command>
+    
+    <command enabled="true" name="wpd2text">
+      <commandLine>wpd2text</commandLine>
+      <parameterString> #{inFilePath}</parameterString>
+      <installationDirective>You need to install wpd2text (deb: libwpd-tools)  http://libwpd.sourceforge.net/download.html</installationDirective>
+    </command>
+    
+    <command enabled="true" name="pdftohtml">
+      <commandLine>pdftohtml</commandLine>
+      <parameterString> -c -enc UTF-8 -noframes #{inFilePath} #{outDirPath}/index.html</parameterString>
+      <winParameterString> -c -enc UTF-8 -noframes #{inFilePath} #{outDirPath}\index.html</winParameterString>
+      <installationDirective>You need to install pdftohtml</installationDirective>
+    </command>
+    
+     <command enabled="true" name="pdftoimage">
+      <commandLine>convert</commandLine>
+      <parameterString>-quiet #{sourceFilePath} #{targetFilePath}</parameterString>
+      <installationDirective>You need to install ImageMagick.</installationDirective>
+    </command>
 
   </extension>
 
