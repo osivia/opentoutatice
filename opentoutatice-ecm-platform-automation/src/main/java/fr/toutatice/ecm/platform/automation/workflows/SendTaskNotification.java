@@ -41,8 +41,6 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeWorkflowHelper;
 public class SendTaskNotification {
 	public static final String ID = "Notification.SendTaskNotification";
 
-//	private static final Log log = LogFactory.getLog(SendTaskNotification.class);
-
     @Context
     protected OperationContext ctx;
 
@@ -80,9 +78,8 @@ public class SendTaskNotification {
 	}
 
     protected List<String> getGivenActors(Principal principal) throws OperationException {
-        NuxeoPrincipal nuxpal = (NuxeoPrincipal) principal;
-        
         List<String> recipients = new ArrayList<String>();
+
         Object actors = ctx.get(keyForActors);
         
         if (actors != null) {

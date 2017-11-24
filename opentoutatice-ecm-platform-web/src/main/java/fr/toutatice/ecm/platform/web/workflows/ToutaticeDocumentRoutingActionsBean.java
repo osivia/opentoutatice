@@ -83,10 +83,14 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
 
         getDocumentRoutingService().createNewInstance(workflow.getName(), currentDocIds, documentManager, true);
 
-        /* Events for Observers (and listeners?) */
+        // Seam Events
         Events.instance().raiseEvent(EventNames.DOCUMENT_CHILDREN_CHANGED, workflow);
-
         FacesMessages.instance().addFromResourceBundle(msgKey);
+
+        // Core Events for Notification
+        Task task = ToutaticeWorkflowHelper.getTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, documentManager, currentDoc);
+        ToutaticeWorkflowHelper.notifyRecipients(documentManager, task, currentDoc, task.getInitiator(),
+                ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED_ASSIGNED);
 
         webActions.resetTabList();
         return null;
