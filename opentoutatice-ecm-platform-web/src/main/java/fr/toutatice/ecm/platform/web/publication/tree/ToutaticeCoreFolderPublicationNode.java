@@ -60,11 +60,10 @@ public class ToutaticeCoreFolderPublicationNode extends CoreFolderPublicationNod
     @Override
     protected String buildChildrenWhereClause(boolean queryDocuments) {
         StringBuffer clause = new StringBuffer();
-        clause.append(String.format("ecm:parentId = '%s' AND ecm:currentLifeCycleState != '%s'", folder.getId(), LifeCycleConstants.DELETED_STATE));
+        clause.append(String.format(" ecm:parentId = '%s' AND ecm:currentLifeCycleState != '%s'", folder.getId(), LifeCycleConstants.DELETED_STATE));
         clause.append(String.format(" AND ecm:mixinType IN ('%s' , '%s' ) ", FacetNames.MASTER_PUBLISH_SPACE, FacetNames.PUBLISH_SPACE));
         clause.append(String.format(" AND ecm:mixinType NOT IN ('%s')", FacetNames.HIDDEN_IN_NAVIGATION));
-//        clause.append(String.format(" AND ecm:primaryType NOT IN ('%s')", SECTION_ROOT_TYPE));
-        clause.append(" AND ecm:isProxy = 0 ");
+        clause.append(" AND (ecm:isVersion = 0 AND ecm:isProxy = 0) ");
 
         return clause.toString();
     }
