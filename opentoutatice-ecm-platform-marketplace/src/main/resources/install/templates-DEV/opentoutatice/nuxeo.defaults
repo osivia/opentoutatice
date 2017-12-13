@@ -20,3 +20,19 @@ ottc.import.archive.compatibility=true
 
 # soffice user environments pool size
 ottc.converter.toutaticeAny2pdf.poolSize=10
+
+##----------------------------------------------------------------------------
+## currentlyEditedCache
+##----------------------------------------------------------------------------
+# duration a cache entry is kept, in minute
+ottc.currentlyEditedCache.ttl=5
+# maximum number of entries the cache may contain
+ottc.currentlyEditedCache.maxsize=1000
+
+##----------------------------------------------------------------------------
+## recentlyEditedCache
+##----------------------------------------------------------------------------
+# duration a cache entry is kept, in minute
+ottc.recentlyEditedCache.ttl=5
+# maximum number of entries the cache may contain
+ottc.recentlyEditedCache.maxsize=1000

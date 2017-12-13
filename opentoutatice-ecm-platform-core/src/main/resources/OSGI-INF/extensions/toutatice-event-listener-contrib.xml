@@ -84,6 +84,14 @@
             <event>documentMoved</event>
             <event>documentRestored</event>
         </listener>
+        
+        <listener name="onlyofficeSaveDocumentListener" async="true"
+			postCommit="true"
+            enabled="true"
+			class="fr.toutatice.ecm.platform.core.listener.RecentlyEditedListener"
+			priority="100">
+			<event>documentModified</event>
+		</listener>
 
 	</extension>
 

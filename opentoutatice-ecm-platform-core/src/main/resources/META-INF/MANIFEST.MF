@@ -44,7 +44,9 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/staple/schema-contrib.xml, 
  OSGI-INF/extensions/commandline/toutatice-commandline-contrib.xml,
  OSGI-INF/extensions/convert/toutatice-converter-contrib.xml,
- OSGI-INF/extensions/userworkspace/toutatice-userworkspace-contrib.xml
+ OSGI-INF/extensions/userworkspace/toutatice-userworkspace-contrib.xml,
+ OSGI-INF/extensions/edition/toutatice-edition-cache-contrib.xml,
+ OSGI-INF/extensions/edition/toutatice-edition-infos-provider-contrib.xml
  
  
  
