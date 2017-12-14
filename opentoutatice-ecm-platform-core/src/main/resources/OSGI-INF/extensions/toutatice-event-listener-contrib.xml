@@ -85,7 +85,7 @@
             <event>documentRestored</event>
         </listener>
         
-        <listener name="onlyofficeSaveDocumentListener" async="true"
+        <listener name="recentlyEditedListener" async="true"
 			postCommit="true"
             enabled="true"
 			class="fr.toutatice.ecm.platform.core.listener.RecentlyEditedListener"
