@@ -151,7 +151,6 @@
 			<operation id="Notification.SendTaskNotification">
 				<param type="string" name="task name">validate-online</param>
 				<param type="string" name="event">workflowOnlineTaskAssigned</param>
-				<param type="string" name="actors">WorkflowVariables["assignedTo"]</param>
 			</operation>
 		</chain>
 
