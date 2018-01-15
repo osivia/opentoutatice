@@ -15,16 +15,18 @@ import org.nuxeo.ecm.automation.client.model.FileBlob;
 
 public class FetchPublicationInfosMain {
 
-	public static void main(String[] args) throws Exception {
-		HttpAutomationClient client = new HttpAutomationClient("http://localhost:8080/nuxeo/site/automation");
+    private static final String URL = "http://qt.toutatice.fr/nuxeo/site/automation";
+    private static final String USER = "jgrall2";
+    private static final String PWD = "qt";
 
-		try {
-			Session session = client.getSession("nxberhaut", "BERHAUT");
-			Assert.assertNotNull(session);
+    public static void main(String[] args) {
+        Session session = null;
+        try {
+            HttpAutomationClient client = new HttpAutomationClient(URL);
+            session = client.getSession(USER, PWD);
 
 			OperationRequest request = session.newRequest(FetchPublicationInfos.ID);
-			//request.setInput(new IdRef("/default-domain/espaces-de-travail/espace-de-travail-1/documents/l-arche"));
-			request.set("path","/default-domain/espaces-de-travail/espace-de-travail-1/documents/l-arche");
+            request.set("path", "/pole-mer-et-enseignement/service-mer-ens/dos-mer-ens/service-historique-de-la.proxy");
 			
 			Object result = request.execute();
 			Assert.assertTrue(null != result);
@@ -35,24 +37,24 @@ public class FetchPublicationInfosMain {
             Iterator<Object> itr = jsonObject.iterator();
             while (itr.hasNext()) {
             	JSONObject elt = (JSONObject) itr.next();
-            	System.out.println("> " + elt.get("value"));
+                System.out.println("> " + elt.get("editableByUser"));
             	
-        		JSONArray children = (JSONArray ) elt.get("children");
-                Iterator<Object> childItr = children.iterator();
-                while (childItr.hasNext()) {
-                	JSONObject child = (JSONObject) childItr.next();
-                	System.out.println("   - " + child.get("value"));
-                }
+                // JSONArray children = (JSONArray ) elt.get("children");
+                // Iterator<Object> childItr = children.iterator();
+                // while (childItr.hasNext()) {
+                // JSONObject child = (JSONObject) childItr.next();
+                // System.out.println("   - " + child.get("value"));
+                // }
             }
 			
 			System.out.println("Fin de l'opération");
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		} finally {
-			if (null != client) {
-				client.shutdown();
-			}
-		}
+            System.out.println(e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
 	}
 
 }

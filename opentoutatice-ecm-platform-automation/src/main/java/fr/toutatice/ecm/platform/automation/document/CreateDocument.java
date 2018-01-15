@@ -67,7 +67,7 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
 	protected Properties properties;
 
 	@OperationMethod(collector = DocumentModelCollector.class)
-	public DocumentModel run(final DocumentModel doc) throws Exception {
+	public DocumentModel run(final DocumentModel parentDoc) throws Exception {
 	    // Build name from title if any
 		if (this.name == null) {
 			if ((properties != null) && (properties.get(PROP_TITLE) != null)) {
@@ -78,7 +78,7 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
 		}
 		
 		// Test if webId exists
-        if (doc.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE) && this.properties != null) {
+        if (parentDoc.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE) && this.properties != null) {
             String wId = this.properties.get(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
             if (StringUtils.isNotBlank(wId)) {
                 DocumentModelList results = ToutaticeQueryHelper.queryUnrestricted(session, String.format(ToutaticeWebIdHelper.WEB_ID_QUERY, wId), 1);
@@ -89,7 +89,7 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
             }
 		}
 
-		DocumentModel newDoc = this.session.createDocumentModel(doc.getPathAsString(), this.name, this.type);
+		DocumentModel newDoc = this.session.createDocumentModel(parentDoc.getPathAsString(), this.name, this.type);
 
 		if (this.properties != null) {
 		    // Creates document taking DublinCore properties into account
@@ -109,6 +109,7 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
 	
 	 @Override
 	    protected DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, boolean save) throws ClientException, IOException {
+	        DocumentHelper.setProperties(session, document, properties);
 	        return session.createDocument(document);
 	    }
 	
@@ -124,7 +125,7 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
 	 * @throws IOException
 	 */
 	@Override
-	protected DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, Properties dublinCoreProperties, boolean save) throws ClientException, IOException {
+    protected DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, Properties dublinCoreProperties, boolean save) throws ClientException, IOException {
 	    // Create document without given dublincore properties:
 	    // DublinCoreListener sets them
 	    DocumentHelper.setProperties(session, document, properties);

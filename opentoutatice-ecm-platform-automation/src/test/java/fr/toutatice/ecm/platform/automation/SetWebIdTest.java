@@ -3,6 +3,9 @@
  */
 package fr.toutatice.ecm.platform.automation;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.junit.Assert;
 import org.nuxeo.ecm.automation.client.Constants;
 import org.nuxeo.ecm.automation.client.Session;
@@ -10,6 +13,7 @@ import org.nuxeo.ecm.automation.client.jaxrs.impl.HttpAutomationClient;
 import org.nuxeo.ecm.automation.client.model.Document;
 import org.nuxeo.ecm.automation.client.model.PathRef;
 import org.nuxeo.ecm.automation.client.model.PropertyList;
+import org.nuxeo.ecm.automation.client.model.PropertyMap;
 
 import fr.toutatice.ecm.platform.automation.document.CreateDocument;
 import fr.toutatice.ecm.platform.automation.document.UpdateDocument;
@@ -36,7 +40,7 @@ public class SetWebIdTest {
             // Creation
             String properties = "dc:title=Miskin \n dc:contributors=albert,roger \n dc:creator=jiji";
 
-            Document createdDoc = (Document) session.newRequest(CreateDocument.ID).setInput(new PathRef(TEST_PATH)).set("type", "Note")
+            Document createdDoc = (Document) session.newRequest(CreateDocument.ID).setInput(new PathRef(TEST_PATH)).set("type", "VEVENT")
                     .set("properties", properties).setHeader(Constants.HEADER_NX_SCHEMAS, "dublincore, toutatice").execute();
 
             final long endCrea1 = System.currentTimeMillis();
@@ -54,12 +58,15 @@ public class SetWebIdTest {
             }
 
             // Update
-            String upProperties = "dc:contributors=albertUpdate,rogerUpdate \n dc:creator=jijiUpdate \n dc:lastContributor=UnknownX";
+            Date dateToUpdate = Calendar.getInstance().getTime();
+            // String upProperties = "dc:contributors=albertUpdate,rogerUpdate \n dc:creator=jijiUpdate \n dc:lastContributor=UnknownX";
+            PropertyMap map = new PropertyMap(1);
+            map.set("vevent:dtstart", dateToUpdate);
 
             final long beginUp1 = System.currentTimeMillis();
 
-            Document updatedDoc = (Document) session.newRequest(UpdateDocument.ID).setInput(createdDoc).set("properties", upProperties)
-                    .setHeader(Constants.HEADER_NX_SCHEMAS, "dublincore, toutatice").execute();
+            Document updatedDoc = (Document) session.newRequest(UpdateDocument.ID).setInput(createdDoc).set("properties", map.toString())
+                    .setHeader(Constants.HEADER_NX_SCHEMAS, "dublincore, toutatice, vevent").execute();
 
             final long endUp1 = System.currentTimeMillis();
             System.out.println("*** UPDATE =====" + (beginUp1 - endUp1) + "=====");
@@ -74,6 +81,7 @@ public class SetWebIdTest {
             for (int index = 0; index < upcontributors.size(); index++) {
                 System.out.println(" - contributor: " + upcontributors.getString(index));
             }
+            System.out.println("modifed: " + updatedDoc.getProperties().getDate("vevent:dtstart"));
 
             // ===================================
 

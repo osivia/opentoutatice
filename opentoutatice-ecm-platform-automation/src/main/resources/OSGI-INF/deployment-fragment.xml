@@ -2,19 +2,32 @@
 
 <fragment version="1">
 
+	<requiredBy>org.nuxeo.ecm.automation.io</requiredBy>
 	<require>org.nuxeo.ecm.automation.core</require>
 	<require>fr.toutatice.ecm.platform.core</require>
-
-	<extension target="faces-config#NAVIGATION">
-	</extension>
-
-	<extension target="pages#PAGES">
-	</extension>
 
 	<extension target="application#MODULE">
 		<module>
 			<java>${bundle.fileName}</java>
 		</module>
 	</extension>
+	
+	<extension target="web#SERVLET">
+
+		<filter>
+			<display-name>TransactionalConversationFilter</display-name>
+			<filter-name>TransactionalConversationFilter</filter-name>
+			<filter-class>
+				fr.toutatice.ecm.platform.automation.transaction.filter.TransactionalConversationFilter
+			</filter-class>
+		</filter>
+		
+		<filter-mapping>
+			<filter-name>TransactionalConversationFilter</filter-name>
+			<url-pattern>/site/automation/*</url-pattern>
+			<dispatcher>REQUEST</dispatcher>
+		</filter-mapping>
+
+	</extension>  
 
 </fragment>
