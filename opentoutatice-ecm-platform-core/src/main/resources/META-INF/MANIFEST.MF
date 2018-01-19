@@ -24,6 +24,8 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/webpage/toutatice-lifecycle-contrib.xml,
  OSGI-INF/extensions/webpage/local-configuration-contrib.xml,
  OSGI-INF/extensions/images-search/toutatice-doctypes-contrib.xml,
+ OSGI-INF/extensions/executor/commandline-executor-contrib.xml,
+ OSGI-INF/extensions/executor/commandline-executor-default-contrib.xml,
  OSGI-INF/extensions/maintenance/toutatice-core-services-contrib.xml,
  OSGI-INF/extensions/maintenance/toutatice-core-types-contrib.xml,
  OSGI-INF/extensions/maintenance/toutatice-lifecycle-contrib.xml,
@@ -44,7 +46,8 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/staple/schema-contrib.xml, 
  OSGI-INF/extensions/commandline/toutatice-commandline-contrib.xml,
  OSGI-INF/extensions/convert/toutatice-converter-contrib.xml,
- OSGI-INF/extensions/toutatice-parent-doc-infos-provider-contrib.xml
+ OSGI-INF/extensions/toutatice-parent-doc-infos-provider-contrib.xml,
+ OSGI-INF/extensions/userworkspace/toutatice-userworkspace-contrib.xml
  
  
  

@@ -3,4 +3,12 @@
  xmlns:ui="http://java.sun.com/jsf/facelets"
  xmlns:c="http://java.sun.com/jstl/core">
 
+    <script language="javascript">
+        jQuery(document).ready(function () {
+            jQuery('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                parent.jQuery.fancybox.getInstance().update();
+            });
+        });
+    </script>
+
 </div>

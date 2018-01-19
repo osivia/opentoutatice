@@ -17,7 +17,7 @@
 		</handler>
 
 		<handler chainId="webIdUnicity">
-		    <event>beforeDocumentModification</event> 
+		    <event>documentModified</event> 
 			<event>documentCreatedByCopy</event>
 			<event>documentMoved</event>
 			<filters>
