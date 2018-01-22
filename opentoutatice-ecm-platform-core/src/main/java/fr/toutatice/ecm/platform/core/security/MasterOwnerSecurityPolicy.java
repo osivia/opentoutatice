@@ -33,10 +33,18 @@ public class MasterOwnerSecurityPolicy extends AbstractSecurityPolicy {
         // Trace logs
         long begin = System.currentTimeMillis();
 
-        // Check
-        Access access = mergedAcp.getAccess(additionalPrincipals, new String[]{ToutaticeNuxeoStudioConst.CST_PERM_MASTER_OWNER});
-        if (!Access.GRANT.equals(access)) {
-            access = Access.UNKNOWN;
+        // LBI methode Nullsafe #1782
+        Access access = null;
+        if(mergedAcp == null) {
+        	 access = Access.UNKNOWN;
+        }
+        else {
+	        
+	        // Check
+	        access = mergedAcp.getAccess(additionalPrincipals, new String[]{ToutaticeNuxeoStudioConst.CST_PERM_MASTER_OWNER});
+	        if (!Access.GRANT.equals(access)) {
+	            access = Access.UNKNOWN;
+	        }
         }
 
 

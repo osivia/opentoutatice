@@ -86,6 +86,11 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
         if (!ArrayUtils.contains(additionalPrincipals, principal.getName())) {
             additionalPrincipals[additionalPrincipals.length] = principal.getName();
         }
+        
+        // LBI methode Nullsafe #1782
+        if(mergedAcp == null) {
+        	return Boolean.FALSE;
+        }
 
         // Don't apply policy when user/groups has Everything permission
         // (we must test it cause getAccess always return true if user has Everything permission
