@@ -91,6 +91,10 @@
 		<!-- Tags -->
 		<operation class="fr.toutatice.ecm.platform.automation.SetDocumentTags" />
 		<operation class="fr.toutatice.ecm.platform.automation.GetDocumentTags" />
+		
+		<!-- Facets -->
+		<operation class="fr.toutatice.ecm.platform.automation.AddFacets" />
+		<operation class="fr.toutatice.ecm.platform.automation.RemoveFacets" />		
 
 
 	</extension>
