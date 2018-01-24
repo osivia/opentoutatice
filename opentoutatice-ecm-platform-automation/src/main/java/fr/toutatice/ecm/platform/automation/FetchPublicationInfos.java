@@ -73,6 +73,7 @@ import org.nuxeo.ecm.platform.types.TypeManager;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 import org.nuxeo.runtime.api.Framework;
 
+import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProviderService;
@@ -201,10 +202,22 @@ public class FetchPublicationInfos {
             infosPubli.element("liveId", StringUtils.EMPTY);
             infosPubli.element("editableByUser", Boolean.FALSE);
             infosPubli.element("isDeletableByUser", Boolean.FALSE);
+            
+            // #1782 Cas de la dépublication sans avoir de live, contrôle des droits sur le proxy
+            Boolean isEditable = isEditableByUser(infosPubli, document);
+            Object canUnpublishRemoteProxy = canUnpublishRemoteProxy(isEditable);
+            infosPubli.element("canUnpublishRemoteProxy", canUnpublishRemoteProxy);
+            
         } else {
             DocumentModel liveDoc = (DocumentModel) liveDocRes;
             infosPubli.element("liveId", liveDoc.getId());
-            Object isEditable = isEditableByUser(infosPubli, liveDoc);
+            
+            // #1782 Cas de la dépublication avec un live en corbeille
+            if(ToutaticeGlobalConst.CST_DOC_STATE_DELETED.equals(liveDoc.getCurrentLifeCycleState())) {
+                infosPubli.element("isLiveDeleted", Boolean.TRUE);
+            }
+            
+            Boolean isEditable = isEditableByUser(infosPubli, liveDoc);
             infosPubli.element("editableByUser", isEditable);
             Object isManageable = isManageableByUser(infosPubli, liveDoc);
             infosPubli.element("manageableByUser", isManageable);
@@ -213,6 +226,11 @@ public class FetchPublicationInfos {
 
             Object canUserValidate = canUserValidate();
             infosPubli.element("canUserValidate", canUserValidate);
+            
+            // LBI #1780 - droit à la dépublication
+            Object canUnpublishRemoteProxy = canUnpublishRemoteProxy(isEditable);
+            infosPubli.element("canUnpublishRemoteProxy", canUnpublishRemoteProxy);
+            
             
             /*
              * Récupération du path du document - cas où un uuid ou un webId est donné en
@@ -289,7 +307,9 @@ public class FetchPublicationInfos {
         return createBlob(rowInfosPubli);
     }
 
-    /**
+
+
+	/**
      * Gets allowed subTypes for given folder.
      * 
      * @param infosPubli
@@ -345,7 +365,7 @@ public class FetchPublicationInfos {
      * @return vrai si le document est modifiable par l'utilisateur
      * @throws ServeurException
      */
-    private Object isEditableByUser(JSONObject infos, DocumentModel liveDoc) throws ServeurException {
+    private Boolean isEditableByUser(JSONObject infos, DocumentModel liveDoc) throws ServeurException {
         Boolean canModify = null;
         try {
             canModify = Boolean.valueOf(coreSession.hasPermission(liveDoc.getRef(), SecurityConstants.WRITE));
@@ -411,6 +431,27 @@ public class FetchPublicationInfos {
         }
         return canValidate;
     }
+    
+    private Boolean canUnpublishRemoteProxy(Boolean isEditable) throws ServeurException {
+    	Boolean canUnpublishRemoteProxy = Boolean.FALSE;
+    	
+		if(document.hasFacet("isRemoteProxy") && isEditable) {
+	        
+	        try {
+	        	canUnpublishRemoteProxy = Boolean.valueOf(coreSession.hasPermission(document.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_REMOTE_PUBLISH));
+	        } catch (ClientException e) {
+	            if (e instanceof DocumentSecurityException) {
+	                return Boolean.FALSE;
+	            } else {
+	                log.warn("Failed to fetch permissions for document '" + document.getPathAsString() + "', error:" + e.getMessage());
+	                throw new ServeurException(e);
+	            }
+	        }
+
+		}
+
+		return canUnpublishRemoteProxy;
+	}
 
     /**
      * Méthode permettant de vérifier si un document (live) est supprimable par
