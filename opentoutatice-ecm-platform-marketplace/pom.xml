@@ -67,50 +67,6 @@
 		</plugins>
 	</build>
 
-	<profiles>
-		<profile>
-			<id>DEV</id>
-
-			<properties>
-				<profileName>DEV</profileName>
-			</properties>
-		</profile>
-		<profile>
-			<id>INT</id>
-
-			<properties>
-				<profileName>INT</profileName>
-			</properties>
-		</profile>
-		<profile>
-			<id>QUALIF</id>
-
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-
-			<properties>
-				<profileName>QUALIF</profileName>
-			</properties>
-		</profile>
-		<profile>
-			<id>PREPROD</id>
-
-			<properties>
-				<profileName>PREPROD</profileName>
-			</properties>
-		</profile>
-		<profile>
-			<id>PROD</id>
-
-			<!-- <activation> <activeByDefault>true</activeByDefault> </activation> -->
-
-			<properties>
-				<profileName>PROD</profileName>
-			</properties>
-		</profile>
-	</profiles>
-
 	<distributionManagement>
 		<repository>
 			<id>toutatice-releases</id>

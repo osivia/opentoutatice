@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -26,7 +27,7 @@
 		<nuxeo.cap.version>6.0</nuxeo.cap.version>
 		<nuxeo.dam.version>6.0.0</nuxeo.dam.version>
 		<nuxeo.blogs.sites.version>1.2.0</nuxeo.blogs.sites.version>
-		
+
 		<commons.lang.version>2.6</commons.lang.version>
 		<org.apache.pdfbox.version>1.7.1</org.apache.pdfbox.version>
 		<net.sf.json.version>2.4</net.sf.json.version>
@@ -34,8 +35,10 @@
 		<org.freemarker.version>2.3.11</org.freemarker.version>
 		<javax.mail.version>1.4</javax.mail.version>
 		<org.richfaces.version>4.5.0.Alpha3</org.richfaces.version>
-		<!-- FIXME: find version in Nx -->
 		<javax.servlet.version>3.0.1</javax.servlet.version>
+		<!-- Nx jxl patch -->
+		<jxl.nx.patch.version>2.6.12-NX2</jxl.nx.patch.version>
+		<log4j.version>1.2.17</log4j.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -313,6 +316,11 @@
 				<groupId>org.richfaces</groupId>
 				<artifactId>richfaces-a4j</artifactId>
 				<version>${org.richfaces.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>${log4j.version}</version>
 			</dependency>
 
 			<!-- Tests -->
