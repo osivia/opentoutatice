@@ -522,7 +522,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     /**
      * Determine si l'action "seeOnlineDocumentVersion" doit être présentée.
      * 
-     * <h4>Conditions</h4> <ul>
+     * <b>Conditions</b> <ul>
      * <li>le document doit posséder un proxy local (publication locale pour mise en ligne)</li>
      * <li>le document ne doit pas être la version
      * valide</li>
@@ -553,7 +553,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     /**
      * Determine si l'action "seeLiveDocumentVersion" de la vue 'summary' doit être présentée.
      * 
-     * <h4>Conditions</h4> 
+     * <b>Conditions</b> 
      * <ul><li>le document visualisé ne doit pas être la version live</li> <li>l'usager connecté doit avoir au minima un droit de lecture sur le
      * doucment source</li>
      * </ul>

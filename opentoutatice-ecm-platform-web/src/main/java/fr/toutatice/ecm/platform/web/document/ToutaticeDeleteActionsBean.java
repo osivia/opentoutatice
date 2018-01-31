@@ -128,7 +128,6 @@ public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 	/**
 	 * Dans une section ou section root, ne pas permettre de supprimer un document publié mais seulement les éléments 'folderish'.
 	 * L'action de dé-publication doit être utilisée pour supprimer les documents présents dans les sections. 
-	 * <br/>
 	 * 
 	 * @see org.nuxeo.ecm.webapp.action.DeleteActionsBean#getCanDeleteSections()
 	 */
