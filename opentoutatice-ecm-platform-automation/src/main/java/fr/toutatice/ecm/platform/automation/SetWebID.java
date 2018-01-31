@@ -87,7 +87,6 @@ public class SetWebID {
     /**
      * Main method
      * 
-     * @param doc
      * @return document modified
      * @throws Exception
      */
@@ -248,7 +247,6 @@ public class SetWebID {
         /**
          * Checks repository unicity of given webId.
          * 
-         * @param webid
          * @return true if not unique
          */
         public static boolean isNotUnique(CoreSession session, DocumentModel document, String webId) {

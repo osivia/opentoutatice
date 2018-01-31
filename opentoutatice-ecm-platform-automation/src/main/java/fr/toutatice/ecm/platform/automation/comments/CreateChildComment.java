@@ -89,7 +89,7 @@ public class CreateChildComment extends AbstractCommentOperation {
     /**
      * Run operation.
      *
-     * @param blob thread post file BLOB
+     * @param blobs thread post file BLOB
      * @return comment
      */
     @OperationMethod

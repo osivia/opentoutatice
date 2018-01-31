@@ -23,7 +23,7 @@ public class RemoveFacets {
 	protected String facets;
 
 	/**
-	 * @param input
+	 * @param doc
 	 *            le document auquel sont ajouté les facets
 	 * @return un objet JSON
 	 */

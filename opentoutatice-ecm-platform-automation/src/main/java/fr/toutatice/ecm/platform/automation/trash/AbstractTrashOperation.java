@@ -30,10 +30,6 @@ public abstract class AbstractTrashOperation {
      * Gets recursive trash info.
      * <b>FOR TEST: DO NOT USE!</b>
      * 
-     * @param trashService
-     * @param session
-     * @param docs
-     * @param permission
      * @return trash info
      */
     protected TrashInfo getRecursiveTrashInfo(TrashService trashService, CoreSession session, List<DocumentModel> docs) {

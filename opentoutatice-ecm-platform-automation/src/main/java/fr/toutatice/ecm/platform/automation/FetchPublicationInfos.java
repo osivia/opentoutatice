@@ -312,9 +312,6 @@ public class FetchPublicationInfos {
 	/**
      * Gets allowed subTypes for given folder.
      * 
-     * @param infosPubli
-     * @param folder
-     * @throws UnsupportedEncodingException
      */
     public JSONObject getSubTypes(CoreSession session, DocumentModel folder) throws UnsupportedEncodingException {
         JSONObject subTypes = new JSONObject();
