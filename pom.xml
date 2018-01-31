@@ -5,7 +5,7 @@
 
 	<groupId>opentoutatice-ecm.platform</groupId>
 	<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-	<version>4.7-SNAPSHOT</version>
+	<version>4.6.6</version>
 	<packaging>pom</packaging>
 	<name>open toutatice plate-forme</name>
 
@@ -436,7 +436,7 @@
 	</build>
 
 	<scm>
-		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/trunk</developerConnection>
+		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/4.6.6</developerConnection>
 	</scm>
 
 	<distributionManagement>
