@@ -10,7 +10,6 @@ public interface ToutaticeInheritanceSetter {
 	 * The classes that implement this interface have to implement this method to define their own
 	 * behavior (what meta-data to update, conditions...)
 	 *  
-	 * @param session the unrestricted session (silent mode is active)
 	 * @param source the source document resulting from the action definition
 	 * @param destination the document to update
 	 * @return true if the destination document is updated, otherwise false.

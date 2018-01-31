@@ -41,7 +41,7 @@ public interface ToutaticeTaskService {
     /**
      * Getter for tasks contributions.
      * 
-     * @return Map<String, String>
+     * @return Map&lt;String, String&gt;
      */
     Map<String, String> getTaskContributions();
 
@@ -67,7 +67,6 @@ public interface ToutaticeTaskService {
     /**
      * Get user validate right on document.
      * 
-     * @throws ServeurException
      * @throws ClientException
      */
     public boolean canUserManageTask(CoreSession coreSession, Task currentTask, DocumentModel currentDocument, String permission) throws ClientException;
