@@ -1,17 +1,17 @@
 /*
  * (C) Copyright 2014 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
- * 
+ *
+ *
  * Contributors:
  * mberhaut1
  * dchevrier
@@ -30,7 +30,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -69,7 +68,6 @@ import org.nuxeo.ecm.core.schema.DocumentType;
 import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.core.schema.types.Type;
 import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
-
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 
@@ -89,7 +87,7 @@ public class ToutaticeDocumentHelper {
      */
     public static DocumentModel getUnrestrictedDocument(CoreSession session, String id) throws ClientException {
 
-        GetUnrestrictedDocument getter = new GetUnrestrictedDocument(session, id);
+        final GetUnrestrictedDocument getter = new GetUnrestrictedDocument(session, id);
         getter.runUnrestricted();
         return getter.getDocument();
 
@@ -104,7 +102,7 @@ public class ToutaticeDocumentHelper {
         private DocumentModel document;
 
         public DocumentModel getDocument() {
-            return this.document;
+            return document;
         }
 
         public GetUnrestrictedDocument(CoreSession session, String id) {
@@ -114,14 +112,14 @@ public class ToutaticeDocumentHelper {
 
         @Override
         public void run() throws ClientException {
-            if (StringUtils.isNotBlank(this.id)) {
+            if (StringUtils.isNotBlank(id)) {
                 DocumentRef ref = null;
-                if (!StringUtils.contains(this.id, "/")) {
-                    ref = new IdRef(this.id);
+                if (!StringUtils.contains(id, "/")) {
+                    ref = new IdRef(id);
                 } else {
-                    ref = new PathRef(this.id);
+                    ref = new PathRef(id);
                 }
-                this.document = this.session.getDocument(ref);
+                document = session.getDocument(ref);
             }
 
         }
@@ -129,7 +127,7 @@ public class ToutaticeDocumentHelper {
 
     /**
      * Gets parent's document without checking permissions.
-     * 
+     *
      * @param document
      * @return parent's document
      */
@@ -138,7 +136,7 @@ public class ToutaticeDocumentHelper {
         DocumentModel parent = null;
 
         if (document != null) {
-            GetUnresrictedParent runner = new GetUnresrictedParent(document.getCoreSession(), document);
+            final GetUnresrictedParent runner = new GetUnresrictedParent(document.getCoreSession(), document);
             runner.runUnrestricted();
 
             parent = runner.get();
@@ -164,12 +162,12 @@ public class ToutaticeDocumentHelper {
 
         @Override
         public void run() throws ClientException {
-            this.parent = this.session.getParentDocument(this.document.getRef());
+            parent = session.getParentDocument(document.getRef());
         }
 
         // Getter for parent
         public DocumentModel get() {
-            return this.parent;
+            return parent;
         }
 
     }
@@ -179,20 +177,20 @@ public class ToutaticeDocumentHelper {
      * EventService and VersioningService are bypassed.
      */
     public static void saveDocumentSilently(CoreSession session, DocumentModel document, boolean unrestricted) {
-        SilentSave save = new SilentSave(session, document);
+        final SilentSave save = new SilentSave(session, document);
         save.silentRun(unrestricted, ToutaticeGlobalConst.EVENT_N_VERSIONING_FILTERD_SERVICE);
     }
 
     /**
      * Save a document bypassing given services.
-     * 
+     *
      * @param session
      * @param document
      * @param services
      * @param unrestricted
      */
     public static void saveDocumentSilently(CoreSession session, DocumentModel document, List<Class<?>> services, boolean unrestricted) {
-        SilentSave save = new SilentSave(session, document);
+        final SilentSave save = new SilentSave(session, document);
         save.silentRun(unrestricted, services);
     }
 
@@ -200,7 +198,7 @@ public class ToutaticeDocumentHelper {
      * Save document with no versioning.
      */
     public static void saveDocumentWithNoVersioning(CoreSession session, DocumentModel document, boolean unrestricted) {
-        SilentSave save = new SilentSave(session, document);
+        final SilentSave save = new SilentSave(session, document);
         save.silentRun(unrestricted, ToutaticeGlobalConst.VERSIONING_FILTERD_SERVICE);
     }
 
@@ -209,7 +207,7 @@ public class ToutaticeDocumentHelper {
      * EventService and VersioningService are bypassed.
      */
     public static void removeDocumentSilently(CoreSession session, DocumentModel document, boolean unrestricted) {
-        SilentRemoveRunner deleter = new SilentRemoveRunner(session, document.getRef());
+        final SilentRemoveRunner deleter = new SilentRemoveRunner(session, document.getRef());
         deleter.silentRun(unrestricted, ToutaticeGlobalConst.EVENT_N_VERSIONING_FILTERD_SERVICE);
     }
 
@@ -227,7 +225,7 @@ public class ToutaticeDocumentHelper {
 
         @Override
         public void run() throws ClientException {
-            this.session.saveDocument(this.document);
+            session.saveDocument(document);
         }
 
     }
@@ -247,13 +245,13 @@ public class ToutaticeDocumentHelper {
 
         @Override
         public void run() throws ClientException {
-            this.session.removeDocument(this.docRef);
+            session.removeDocument(docRef);
         }
 
     }
 
     /**
-     * 
+     *
      * @param document
      * @return true if document is an empty document model (creation).
      */
@@ -263,7 +261,7 @@ public class ToutaticeDocumentHelper {
 
     /**
      * Retourne la dernière version valide du document passé en paramètre.
-     * 
+     *
      * @param document
      * @param session
      * @return
@@ -281,14 +279,14 @@ public class ToutaticeDocumentHelper {
                     Collections.sort(versionDocList, new DocumentVersionComparator());
 
                     for (int i = 0; i < versionDocList.size(); i++) {
-                        DocumentModel versionDoc = versionDocList.get(i);
+                        final DocumentModel versionDoc = versionDocList.get(i);
                         if (ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(versionDoc.getCurrentLifeCycleState())) {
                             latestDoc = versionDoc;
                             break;
                         }
                     }
                 }
-            } catch (ClientException e) {
+            } catch (final ClientException e) {
                 log.debug("Failed to get the latest version of the document '" + document.getName() + "', error: " + e.getMessage());
             }
         }
@@ -299,13 +297,13 @@ public class ToutaticeDocumentHelper {
     /**
      * Retourne un objet de type VersionModel à partir du document (version)
      * passé en paramètre.
-     * 
+     *
      * @param version
      * @return
      * @throws DocumentException
      */
     public static VersionModel getVersionModel(DocumentModel version) throws DocumentException {
-        VersionModel versionModel = new VersionModelImpl();
+        final VersionModel versionModel = new VersionModelImpl();
         versionModel.setId(version.getId());
         versionModel.setLabel(version.getVersionLabel());
         return versionModel;
@@ -329,7 +327,7 @@ public class ToutaticeDocumentHelper {
         /**
          * Vérifie que le document de 'comparaison' à été modifié après le
          * document de référence.
-         * 
+         *
          * @param ref
          *            le document 'de référence'
          * @param comp
@@ -340,10 +338,10 @@ public class ToutaticeDocumentHelper {
             boolean isNewer = false;
 
             try {
-                Calendar ref_modified = (GregorianCalendar) ref.getPropertyValue("dc:modified");
-                Calendar comp_modified = (GregorianCalendar) comp.getPropertyValue("dc:modified");
+                final Calendar ref_modified = (GregorianCalendar) ref.getPropertyValue("dc:modified");
+                final Calendar comp_modified = (GregorianCalendar) comp.getPropertyValue("dc:modified");
                 isNewer = comp_modified.after(ref_modified);
-            } catch (ClientException e) {
+            } catch (final ClientException e) {
                 log.debug("Failed to determine wich document is the latest modified");
             }
 
@@ -351,12 +349,12 @@ public class ToutaticeDocumentHelper {
         }
 
         public static boolean isBigger(String v0, String v1) {
-            String[] sV0 = v0.split("\\.");
-            String[] sV1 = v1.split("\\.");
-            int majorV0 = Integer.parseInt(sV0[0]);
-            int minorV0 = Integer.parseInt(sV0[1]);
-            int majorV1 = Integer.parseInt(sV1[0]);
-            int minorV1 = Integer.parseInt(sV1[1]);
+            final String[] sV0 = v0.split("\\.");
+            final String[] sV1 = v1.split("\\.");
+            final int majorV0 = Integer.parseInt(sV0[0]);
+            final int minorV0 = Integer.parseInt(sV0[1]);
+            final int majorV1 = Integer.parseInt(sV1[0]);
+            final int minorV1 = Integer.parseInt(sV1[1]);
 
             return ((majorV0 > majorV1) || ((majorV0 == majorV1) && (minorV0 > minorV1)));
         }
@@ -364,7 +362,7 @@ public class ToutaticeDocumentHelper {
 
     /**
      * Récupérer la liste des parents d'un document.
-     * 
+     *
      * @param session
      *            la session courante de l'utilisateur
      * @param document
@@ -383,7 +381,7 @@ public class ToutaticeDocumentHelper {
 
     /**
      * Récupérer la liste des parents d'un document.
-     * 
+     *
      * @param session
      *            la session courante de l'utilisateur
      * @param document
@@ -406,7 +404,7 @@ public class ToutaticeDocumentHelper {
 
     /**
      * Récupérer la liste des parents d'un document.
-     * 
+     *
      * @param session
      *            la session courante de l'utilisateur
      * @param document
@@ -429,14 +427,14 @@ public class ToutaticeDocumentHelper {
         DocumentModelList parent = null;
 
         try {
-            UnrestrictedGetParentsListRunner runner = new UnrestrictedGetParentsListRunner(session, document, filter, immediateOnly, thisInluded);
+            final UnrestrictedGetParentsListRunner runner = new UnrestrictedGetParentsListRunner(session, document, filter, immediateOnly, thisInluded);
             if (runInUnrestrictedMode) {
                 runner.runUnrestricted();
             } else {
                 runner.run();
             }
             parent = runner.getParentList();
-        } catch (ClientException e) {
+        } catch (final ClientException e) {
             log.warn("Failed to get the parent for the current document, error: " + e.getMessage());
         }
 
@@ -445,7 +443,7 @@ public class ToutaticeDocumentHelper {
 
     /**
      * Récupérer la liste des "spaces" parents d'un document.
-     * 
+     *
      * @param session
      *            la session courante de l'utilisateur
      * @param document
@@ -463,7 +461,7 @@ public class ToutaticeDocumentHelper {
 
     /**
      * Récupérer la liste des "spaces" parents d'un document.
-     * 
+     *
      * @param session
      *            la session courante de l'utilisateur
      * @param document
@@ -481,7 +479,7 @@ public class ToutaticeDocumentHelper {
      */
     public static DocumentModelList getParentSpaceList(CoreSession session, DocumentModel document, boolean runInUnrestrictedMode, boolean immediateOnly,
             boolean thisIncluded) {
-        Filter filter = new Filter() {
+        final Filter filter = new Filter() {
 
             private static final long serialVersionUID = 1L;
 
@@ -512,14 +510,14 @@ public class ToutaticeDocumentHelper {
             boolean runInUnrestrictedMode, boolean thisIncluded) {
         Map<String, Property> mapPpty = null;
         try {
-            GetParentPropertiesRunner runner = new GetParentPropertiesRunner(session, document, lstXpaths, filter, runInUnrestrictedMode, thisIncluded);
+            final GetParentPropertiesRunner runner = new GetParentPropertiesRunner(session, document, lstXpaths, filter, runInUnrestrictedMode, thisIncluded);
             if (runInUnrestrictedMode) {
                 runner.runUnrestricted();
             } else {
                 runner.run();
             }
             mapPpty = runner.getProperties();
-        } catch (ClientException e) {
+        } catch (final ClientException e) {
             log.warn("Failed to get the parent for the current document, error: " + e.getMessage());
         }
 
@@ -528,7 +526,7 @@ public class ToutaticeDocumentHelper {
 
     /**
      * Gets parent of document of Workspace type.
-     * 
+     *
      * @param session
      * @param document
      * @param unrestricted
@@ -536,6 +534,7 @@ public class ToutaticeDocumentHelper {
      */
     public static DocumentModel getWorkspace(CoreSession session, DocumentModel document, boolean unrestricted) {
         @SuppressWarnings("serial")
+		final
         Filter wsFiler = new Filter() {
 
             @Override
@@ -543,8 +542,8 @@ public class ToutaticeDocumentHelper {
                 return ToutaticeNuxeoStudioConst.CST_DOC_TYPE_WORKSPACE.equals(docModel.getType());
             }
         };
-        DocumentModelList parentWsList = getParentList(session, document, wsFiler, unrestricted, true, true);
-        if (parentWsList != null && parentWsList.size() > 0) {
+        final DocumentModelList parentWsList = getParentList(session, document, wsFiler, unrestricted, true, true);
+        if ((parentWsList != null) && (parentWsList.size() > 0)) {
             return parentWsList.get(0);
         } else {
             return null;
@@ -552,7 +551,7 @@ public class ToutaticeDocumentHelper {
     }
 
     /**
-     * 
+     *
      * @param session
      * @param document
      * @return
@@ -567,11 +566,11 @@ public class ToutaticeDocumentHelper {
             spaceId = document.getTitle().toLowerCase();
         } else {
             // sinon récupérer la liste des spaceParents
-            DocumentModelList spaceParentList = getParentSpaceList(session, document, runInUnrestrictedMode, true);
+            final DocumentModelList spaceParentList = getParentSpaceList(session, document, runInUnrestrictedMode, true);
 
-            if (spaceParentList != null && !spaceParentList.isEmpty()) {
+            if ((spaceParentList != null) && !spaceParentList.isEmpty()) {
                 // prendre le 1er parent de type space rencontré
-                DocumentModel space = spaceParentList.get(0);
+                final DocumentModel space = spaceParentList.get(0);
 
                 if (ToutaticeNuxeoStudioConst.CST_DOC_TYPE_USER_WORKSPACE.equals(space.getType())) {
                     // si le type de ce space est UserWorkspace => spaceID = dc:title
@@ -603,6 +602,7 @@ public class ToutaticeDocumentHelper {
 
         // sinon récupérer la liste des spaceParents
         @SuppressWarnings("serial")
+		final
         DocumentModelList DomainList = getParentList(session, document, new Filter() {
 
             @Override
@@ -611,7 +611,7 @@ public class ToutaticeDocumentHelper {
             }
         }, runInUnrestrictedMode, true, true);
 
-        if (null != DomainList && !DomainList.isEmpty()) {
+        if ((null != DomainList) && !DomainList.isEmpty()) {
             domain = DomainList.get(0);
         }
 
@@ -621,7 +621,7 @@ public class ToutaticeDocumentHelper {
     /**
      * Récupérer la liste des "espaces de publication (locale)" parents d'un
      * document.
-     * 
+     *
      * @param session
      *            la session courante de l'utilisateur
      * @param document
@@ -636,7 +636,7 @@ public class ToutaticeDocumentHelper {
      * @return la liste des "spaces" parents d'un document
      */
     public static DocumentModelList getParentPublishSpaceList(CoreSession session, DocumentModel document, boolean runInUnrestrictedMode, boolean immediateOnly) {
-        Filter filter = new Filter() {
+        final Filter filter = new Filter() {
 
             private static final long serialVersionUID = 1L;
 
@@ -646,7 +646,7 @@ public class ToutaticeDocumentHelper {
 
                 try {
                     status = ToutaticeDocumentHelper.isAPublicationSpaceDocument(document);
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     log.error("Failed to filter the publish space documents, error: " + e.getMessage());
                     status = false;
                 }
@@ -659,20 +659,20 @@ public class ToutaticeDocumentHelper {
     }
 
     public static String[] filterLifeCycleStateDocuments(CoreSession session, String[] sectionIdList, List<String> acceptedStates, List<String> excludedStates) {
-        List<String> filteredSectionsList = new ArrayList<String>();
+        final List<String> filteredSectionsList = new ArrayList<>();
 
         try {
-            if (null != sectionIdList && 0 < sectionIdList.length) {
-                Filter lcFilter = new LifeCycleFilter(acceptedStates, excludedStates);
+            if ((null != sectionIdList) && (0 < sectionIdList.length)) {
+                final Filter lcFilter = new LifeCycleFilter(acceptedStates, excludedStates);
 
-                for (String sectionId : sectionIdList) {
-                    DocumentModel section = session.getDocument(new IdRef(sectionId));
+                for (final String sectionId : sectionIdList) {
+                    final DocumentModel section = session.getDocument(new IdRef(sectionId));
                     if (lcFilter.accept(section)) {
                         filteredSectionsList.add(sectionId);
                     }
                 }
             }
-        } catch (ClientException e) {
+        } catch (final ClientException e) {
             log.error("Failed to filter the active sections, error: " + e.getMessage());
         }
 
@@ -683,7 +683,7 @@ public class ToutaticeDocumentHelper {
      * Retourne le proxy d'un document s'il existe. Recherche réalisée en MODE UNRESTRICTED.
      * La recherche est effectuée uniquement sur le périmètre du container direct du document (local).
      * Si une permission est précisée en paramètre elle sera contrôlée.
-     * 
+     *
      * @param session la session utilisateur connecté courant
      * @param document le document pour lequel la recherche est faite
      * @return le proxy associé ou null si aucun proxy existe ou une exception
@@ -698,7 +698,7 @@ public class ToutaticeDocumentHelper {
      * Retourne le proxy d'un document s'il existe.
      * La recherche est effectuée uniquement sur le périmètre du container direct du document (local).
      * Si une permission est précisée en paramètre elle sera contrôlée.
-     * 
+     *
      * @param session la session utilisateur connecté courant
      * @param document le document pour lequel la recherche est faite
      * @param unrestricted true si le proxy doit être récupéré en mode unrestricted. False s'il doit être récupéré avec la session utilisateur courante
@@ -709,11 +709,11 @@ public class ToutaticeDocumentHelper {
     public static DocumentModel getProxy(CoreSession session, DocumentModel document, String permission, boolean unrestricted) throws ClientException {
         DocumentModel proxy = null;
 
-        DocumentModelList proxies = getProxies(session, document, ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE.LOCAL, permission, unrestricted);
-        if (null != proxies && 0 < proxies.size()) {
+        final DocumentModelList proxies = getProxies(session, document, ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE.LOCAL, permission, unrestricted);
+        if ((null != proxies) && (0 < proxies.size())) {
             proxy = proxies.get(0);
             if (StringUtils.isNotBlank(permission) && !session.hasPermission(proxy.getRef(), permission)) {
-                Principal principal = session.getPrincipal();
+                final Principal principal = session.getPrincipal();
                 throw new DocumentSecurityException("The user '" + principal.getName() + "' has not the permission '" + permission
                         + "' on the proxy of document '" + document.getTitle() + "'");
             }
@@ -724,7 +724,7 @@ public class ToutaticeDocumentHelper {
 
     /**
      * Retourne les proxies d'un document s'ils existent.
-     * 
+     *
      * @param session la session utilisateur connecté courant
      * @param document le document pour lequel la recherche est faite
      * @param scope le périmètre de la recherche: enumeration {@link ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE}
@@ -742,7 +742,7 @@ public class ToutaticeDocumentHelper {
                 proxies = new DocumentModelListImpl();
                 proxies.add(document);
             } else {
-                UnrestrictedGetProxyRunner runner = new UnrestrictedGetProxyRunner(session, document, scope);
+                final UnrestrictedGetProxyRunner runner = new UnrestrictedGetProxyRunner(session, document, scope);
                 if (unrestricted) {
                     runner.runUnrestricted();
                 } else {
@@ -757,7 +757,7 @@ public class ToutaticeDocumentHelper {
 
     /**
      * Retourne la version d'un proxy de document s'il existe.
-     * 
+     *
      * @param session
      *            la session utilisateur connecté courant
      * @param document
@@ -768,9 +768,9 @@ public class ToutaticeDocumentHelper {
     public static String getProxyVersion(CoreSession session, DocumentModel document) throws ClientException {
         String proxyVersion = null;
 
-        DocumentModel proxy = getProxy(session, document, null);
+        final DocumentModel proxy = getProxy(session, document, null);
         if (null != proxy) {
-            UnrestrictedGetProxyVersionLabelRunner runner = new UnrestrictedGetProxyVersionLabelRunner(session, proxy);
+            final UnrestrictedGetProxyVersionLabelRunner runner = new UnrestrictedGetProxyVersionLabelRunner(session, proxy);
             runner.runUnrestricted();
             proxyVersion = runner.getVersionLabel();
         }
@@ -786,9 +786,9 @@ public class ToutaticeDocumentHelper {
 
         if (!res) {
             // le document est dans un workspace ou est en attente de publication dans un PortalSite
-            DocumentModelList spaceDocsList = ToutaticeDocumentHelper.getParentSpaceList(session, doc, true, true, true);
-            if (spaceDocsList != null && !spaceDocsList.isEmpty()) {
-                DocumentModel space = spaceDocsList.get(0);
+            final DocumentModelList spaceDocsList = ToutaticeDocumentHelper.getParentSpaceList(session, doc, true, true, true);
+            if ((spaceDocsList != null) && !spaceDocsList.isEmpty()) {
+                final DocumentModel space = spaceDocsList.get(0);
                 res = ToutaticeDocumentHelper.isAWorkSpaceLikeDocument(space) || ToutaticeDocumentHelper.isAPublicationSpaceDocument(space);
             }
         }
@@ -815,7 +815,7 @@ public class ToutaticeDocumentHelper {
     }
 
     /**
-     * 
+     *
      * @param document
      * @return true if document is Workspace or extends it.
      */
@@ -828,7 +828,7 @@ public class ToutaticeDocumentHelper {
 
     /**
      * Checks if document is of Workspace type.
-     * 
+     *
      * @param document
      * @return true if document is of Workspace type
      */
@@ -837,15 +837,15 @@ public class ToutaticeDocumentHelper {
     }
 
     /**
-     * 
+     *
      * @param document
      * @param type
      * @return true if document extends a document with givent type.
      */
     public static boolean isSubTypeOf(DocumentModel document, String type) {
-        DocumentType documentType = document.getDocumentType();
+        final DocumentType documentType = document.getDocumentType();
         if (documentType != null) {
-            Type superType = documentType.getSuperType();
+            final Type superType = documentType.getSuperType();
             if (superType != null) {
                 return StringUtils.equals(type, superType.getName());
             }
@@ -855,26 +855,26 @@ public class ToutaticeDocumentHelper {
     }
 
     /**
-     * 
+     *
      * @param session
      * @param document
      * @return true if document is in publish space.
      */
     public static boolean isInPublishSpace(CoreSession session, DocumentModel document) {
-        DocumentModelList parentPublishSpaceList = getParentPublishSpaceList(session, document, true, true);
+        final DocumentModelList parentPublishSpaceList = getParentPublishSpaceList(session, document, true, true);
         return CollectionUtils.isNotEmpty(parentPublishSpaceList);
     }
 
     /**
-     * 
+     *
      * @param session
      * @param document
      * @return true if document is in WorkSpace like space
      */
     public static boolean isInWorkspaceLike(CoreSession session, DocumentModel document) {
-        DocumentModelList spaceDocsList = ToutaticeDocumentHelper.getParentSpaceList(session, document, true, true, true);
+        final DocumentModelList spaceDocsList = ToutaticeDocumentHelper.getParentSpaceList(session, document, true, true, true);
         if (CollectionUtils.isNotEmpty(spaceDocsList)) {
-            DocumentModel space = spaceDocsList.get(0);
+            final DocumentModel space = spaceDocsList.get(0);
             return ToutaticeDocumentHelper.isAWorkSpaceLikeDocument(space);
         }
         return false;
@@ -893,27 +893,27 @@ public class ToutaticeDocumentHelper {
 
         public UnrestrictedGetProxyRunner(CoreSession session, DocumentModel document, ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE scope) {
             super(session);
-            this.proxies = null;
+            proxies = null;
             this.document = document;
             this.scope = scope;
         }
 
         public DocumentModel getProxy() throws ClientException {
-            return (null != this.proxies && 0 < this.proxies.size()) ? this.proxies.get(0) : null;
+            return ((null != proxies) && (0 < proxies.size())) ? proxies.get(0) : null;
         }
 
         public DocumentModelList getProxies() throws ClientException {
-            return (null != this.proxies && 0 < this.proxies.size()) ? this.proxies : null;
+            return ((null != proxies) && (0 < proxies.size())) ? proxies : null;
         }
 
         @Override
         public void run() throws ClientException {
-            if (null == scope || ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE.GLOBAL.equals(scope)) {
+            if ((null == scope) || ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE.GLOBAL.equals(scope)) {
                 // lookup all proxies of the document (wherever they are placed in the repository)
-                this.proxies = this.session.getProxies(document.getRef(), null);
+                proxies = session.getProxies(document.getRef(), null);
             } else {
                 // lookup only the proxies of the document placed in the parent folder
-                this.proxies = this.session.getProxies(document.getRef(), document.getParentRef());
+                proxies = session.getProxies(document.getRef(), document.getParentRef());
             }
         }
 
@@ -927,24 +927,24 @@ public class ToutaticeDocumentHelper {
         public UnrestrictedGetProxyVersionLabelRunner(CoreSession session, DocumentModel proxy) {
             super(session);
             this.proxy = proxy;
-            this.versionLabel = null;
+            versionLabel = null;
         }
 
         @Override
         public void run() throws ClientException {
-            String srcDocID = this.proxy.getSourceId();
+            String srcDocID = proxy.getSourceId();
             // For compatibility with content views managed by ES (JsonDocumentModelReader#getDocumentModel
             // has sid null when fetchFromEs is true
             if (srcDocID == null) {
-                DocumentModel sourceDocument = this.session.getSourceDocument(this.proxy.getRef());
+                final DocumentModel sourceDocument = session.getSourceDocument(proxy.getRef());
                 srcDocID = sourceDocument.getId();
             }
-            DocumentModel srcDoc = this.session.getDocument(new IdRef(srcDocID));
-            this.versionLabel = srcDoc.getVersionLabel();
+            final DocumentModel srcDoc = session.getDocument(new IdRef(srcDocID));
+            versionLabel = srcDoc.getVersionLabel();
         }
 
         public String getVersionLabel() {
-            return this.versionLabel;
+            return versionLabel;
         }
 
     }
@@ -961,9 +961,9 @@ public class ToutaticeDocumentHelper {
         public GetParentPropertiesRunner(CoreSession session, DocumentModel document, List<String> lstXpaths, Filter filter, boolean runInUnrestrictedMode,
                 boolean included) {
             super(session);
-            this.doc = document;
+            doc = document;
             this.filter = filter;
-            this.lstxpath = lstXpaths;
+            lstxpath = lstXpaths;
             this.included = included;
             this.runInUnrestrictedMode = runInUnrestrictedMode;
         }
@@ -974,14 +974,14 @@ public class ToutaticeDocumentHelper {
 
         @Override
         public void run() throws ClientException {
-            DocumentModelList lstParent = getParentList(session, this.doc, this.filter, this.runInUnrestrictedMode, true, this.included);
+            final DocumentModelList lstParent = getParentList(session, doc, filter, runInUnrestrictedMode, true, included);
             DocumentModel parent = null;
-            if (lstParent != null && !lstParent.isEmpty()) {
+            if ((lstParent != null) && !lstParent.isEmpty()) {
                 parent = lstParent.get(0);
             }
             if (parent != null) {
-                this.mapPpties = new HashMap<String, Property>(lstxpath.size());
-                for (String xpath : this.lstxpath) {
+                mapPpties = new HashMap<>(lstxpath.size());
+                for (final String xpath : lstxpath) {
                     mapPpties.put(xpath, parent.getProperty(xpath));
                 }
             }
@@ -1002,9 +1002,9 @@ public class ToutaticeDocumentHelper {
 
         protected UnrestrictedGetParentsListRunner(CoreSession session, DocumentModel document, Filter filter, boolean immediateOnly, boolean thisIncluded) {
             super(session);
-            this.baseDoc = document;
+            baseDoc = document;
             this.filter = filter;
-            this.parentDocList = new DocumentModelListImpl();
+            parentDocList = new DocumentModelListImpl();
             this.immediateOnly = immediateOnly;
             this.thisIncluded = thisIncluded;
         }
@@ -1012,29 +1012,29 @@ public class ToutaticeDocumentHelper {
         @Override
         public void run() throws ClientException {
 
-            if (this.thisIncluded && this.baseDoc.isFolder()) {
-                if (null != this.filter) {
-                    if (this.filter.accept(this.baseDoc)) {
-                        this.parentDocList.add(this.baseDoc);
+            if (thisIncluded && baseDoc.isFolder()) {
+                if (null != filter) {
+                    if (filter.accept(baseDoc)) {
+                        parentDocList.add(baseDoc);
                     }
                 } else {
-                    this.parentDocList.add(this.baseDoc);
+                    parentDocList.add(baseDoc);
                 }
             }
 
-            DocumentRef[] parentsRefList = this.session.getParentDocumentRefs(this.baseDoc.getRef());
-            if (null != parentsRefList && parentsRefList.length > 0) {
-                for (DocumentRef parentsRef : parentsRefList) {
-                    DocumentModel parent = this.session.getDocument(parentsRef);
-                    if (null != this.filter) {
-                        if (this.filter.accept(parent)) {
-                            this.parentDocList.add(parent);
+            final DocumentRef[] parentsRefList = session.getParentDocumentRefs(baseDoc.getRef());
+            if ((null != parentsRefList) && (parentsRefList.length > 0)) {
+                for (final DocumentRef parentsRef : parentsRefList) {
+                    final DocumentModel parent = session.getDocument(parentsRef);
+                    if (null != filter) {
+                        if (filter.accept(parent)) {
+                            parentDocList.add(parent);
                         }
                     } else {
-                        this.parentDocList.add(parent);
+                        parentDocList.add(parent);
                     }
 
-                    if (this.immediateOnly && this.parentDocList.size() == 1) {
+                    if (immediateOnly && (parentDocList.size() == 1)) {
                         break;
                     }
                 }
@@ -1044,24 +1044,24 @@ public class ToutaticeDocumentHelper {
 
     /**
      * Récupérer la liste des documents similaires dans un dossier.
-     * 
+     *
      * @param session
      *            la session courante de l'utilisateur
      * @param document
      *            le document pour lequel il faut rechercher les parents
      * @param filter
      *            un filtre pour ajouter des critères de contrôle supplémentaires
-     * 
+     *
      * @return le compte des documents similaires dans le dossier.
      */
     public static int getSameDocsCount(CoreSession session, DocumentModel document, Filter filter) {
         int count = 0;
 
         try {
-            UnrestrictedGetSameDocsListRunner runner = new UnrestrictedGetSameDocsListRunner(session, document, filter);
+            final UnrestrictedGetSameDocsListRunner runner = new UnrestrictedGetSameDocsListRunner(session, document, filter);
             runner.runUnrestricted();
             count = runner.getCount();
-        } catch (ClientException e) {
+        } catch (final ClientException e) {
             log.error("Failed to get the same document of one folder, error: " + e.getMessage());
         }
 
@@ -1075,31 +1075,31 @@ public class ToutaticeDocumentHelper {
         private DocumentModel document;
 
         public int getCount() {
-            return this.count;
+            return count;
         }
 
         protected UnrestrictedGetSameDocsListRunner(CoreSession session, DocumentModel document, Filter filter) {
             super(session);
-            this.count = 0;
+            count = 0;
             this.filter = filter;
             this.document = document;
         }
 
         @Override
         public void run() throws ClientException {
-            String docTitle = this.document.getTitle();
-            DocumentModel docParent = this.session.getParentDocument(this.document.getRef());
-            DocumentModelList rs = this.session.query("SELECT * FROM " + this.document.getType() + " WHERE ecm:parentId = '" + docParent.getId() + "' "
+            final String docTitle = document.getTitle();
+            final DocumentModel docParent = session.getParentDocument(document.getRef());
+            final DocumentModelList rs = session.query("SELECT * FROM " + document.getType() + " WHERE ecm:parentId = '" + docParent.getId() + "' "
                     + "AND ecm:mixinType != 'HiddenInNavigation' " + "AND ecm:isCheckedInVersion = 0 " + "AND dc:title LIKE '" + docTitle.replace("'", "\\'")
-                    + "%'", this.filter);
+                    + "%'", filter);
 
-            this.count = rs.size();
+            count = rs.size();
         }
     }
 
 
     /**
-     * 
+     *
      * @param session
      * @param doc
      * @param aclName par défaut Local
@@ -1108,18 +1108,18 @@ public class ToutaticeDocumentHelper {
      * @throws ClientException
      */
     public static ACL getDocumentACL(CoreSession session, DocumentModel doc, String aclName, ToutaticeFilter<ACE> filter) throws ClientException {
-        ACL res = new ACLImpl();
+        final ACL res = new ACLImpl();
 
         if (StringUtils.isBlank(aclName)) {
             aclName = ACL.LOCAL_ACL;
         }
 
-        ACP acp = doc.getACP();
+        final ACP acp = doc.getACP();
         ACL[] aclList = null;
         if ("*".equals(aclName)) {
             aclList = acp.getACLs();
         } else {
-            ACL acl = acp.getACL(aclName);
+            final ACL acl = acp.getACL(aclName);
             if (null != acl) {
                 aclList = new ACLImpl[1];
                 aclList[0] = acl;
@@ -1127,9 +1127,9 @@ public class ToutaticeDocumentHelper {
         }
 
         if (null != aclList) {
-            for (ACL acl : aclList) {
-                for (ACE ace : acl.getACEs()) {
-                    if (filter == null || filter.accept(ace)) {
+            for (final ACL acl : aclList) {
+                for (final ACE ace : acl.getACEs()) {
+                    if ((filter == null) || filter.accept(ace)) {
                         // ajouter les permissions au document doc
                         res.add(ace);
                     }
@@ -1142,15 +1142,15 @@ public class ToutaticeDocumentHelper {
 
     /**
      * ajout une ace sur un document
-     * 
+     *
      * @param session
      * @param ref
      * @param ace
      * @throws ClientException
      */
     public static void setACE(CoreSession session, DocumentRef ref, ACE ace) throws ClientException {
-        ACPImpl acp = new ACPImpl();
-        ACLImpl acl = new ACLImpl(ACL.LOCAL_ACL);
+        final ACPImpl acp = new ACPImpl();
+        final ACLImpl acl = new ACLImpl(ACL.LOCAL_ACL);
         acp.addACL(acl);
         acl.add(ace);
 
@@ -1166,8 +1166,8 @@ public class ToutaticeDocumentHelper {
         boolean status = false;
 
         if (null != document) {
-            TypeInfo typeInfo = document.getAdapter(TypeInfo.class);
-            String chosenView = typeInfo.getView(viewId);
+            final TypeInfo typeInfo = document.getAdapter(TypeInfo.class);
+            final String chosenView = typeInfo.getView(viewId);
             status = (chosenView != null);
         }
 
@@ -1175,30 +1175,30 @@ public class ToutaticeDocumentHelper {
     }
 
     /**
-     * Méthode permettant d'appeler une opération Nuxeo..
-     * 
-     * @param automation
-     *            Service automation
-     * @param ctx
-     *            Contexte d'exécution
-     * @param operationId
-     *            identifiant de l'opération
-     * @param parameters
-     *            paramètres de l'opération
-     * @return le résultat de l'opération dont le type n'est pas connu à
-     *         priori
-     * @deprecated use {@link ToutaticeOperationHelper#callOperation()} instead.
-     */
+	 * Méthode permettant d'appeler une opération Nuxeo..
+	 * 
+	 * @param automation
+	 *            Service automation
+	 * @param ctx
+	 *            Contexte d'exécution
+	 * @param operationId
+	 *            identifiant de l'opération
+	 * @param parameters
+	 *            paramètres de l'opération
+	 * @return le résultat de l'opération dont le type n'est pas connu à
+	 *         priori
+	 * @deprecated use {@link ToutaticeOperationHelper#callOperation(OperationContext, String, Map)} instead.
+	 */
     @Deprecated
     public static Object callOperation(AutomationService automation, OperationContext ctx, String operationId, Map<String, Object> parameters) throws Exception {
-        InvokableMethod operationMethod = getRunMethod(automation, operationId);
-        Object operationRes = operationMethod.invoke(ctx, parameters);
+        final InvokableMethod operationMethod = getRunMethod(automation, operationId);
+        final Object operationRes = operationMethod.invoke(ctx, parameters);
         return operationRes;
     }
 
     /**
      * Check whether the document is a runtime (technical) document.
-     * 
+     *
      * @param document the document to check
      * @return true if the document is runtime type, otherwise false.
      */
@@ -1209,7 +1209,7 @@ public class ToutaticeDocumentHelper {
     /**
      * Méthode permettant de récupérer la méthode d'exécution (run()) d'une
      * opération.
-     * 
+     *
      * @param automation
      *            instance du service d'automation
      * @param operationId
@@ -1221,35 +1221,36 @@ public class ToutaticeDocumentHelper {
      */
     private static InvokableMethod getRunMethod(AutomationService automation, String operationId) throws SecurityException, NoSuchMethodException,
             OperationNotFoundException {
-        OperationType opType = automation.getOperation(operationId);
+        final OperationType opType = automation.getOperation(operationId);
         Method method;
         try {
             method = opType.getType().getMethod("run", (Class<?>[]) null);
-        } catch (NoSuchMethodException nsme) {
-            Class[] tabArg = new Class[1];
+        } catch (final NoSuchMethodException nsme) {
+            final Class[] tabArg = new Class[1];
             tabArg[0] = DocumentModel.class;
             method = opType.getType().getMethod("run", tabArg);
         }
-        OperationMethod anno = method.getAnnotation(OperationMethod.class);
+        final OperationMethod anno = method.getAnnotation(OperationMethod.class);
 
         return new InvokableMethod(opType, method, anno);
     }
 
     public static DocumentModel getMediaSpace(DocumentModel doc, CoreSession session) throws ClientException {
         DocumentModel mediaSpace = null;
-        DocumentModel currentDomain = ToutaticeDocumentHelper.getDomain(session, doc, true);
+        final DocumentModel currentDomain = ToutaticeDocumentHelper.getDomain(session, doc, true);
         if (currentDomain != null) {
-            String searchMediaLibraries = "ecm:primaryType = '" + MEDIALIB + "' and ecm:path startswith '" + currentDomain.getPathAsString()
+            final String searchMediaLibraries = "ecm:primaryType = '" + MEDIALIB + "' and ecm:path startswith '" + currentDomain.getPathAsString()
                     + "' and ecm:isCheckedInVersion = 0 AND ecm:isProxy = 0 AND ecm:currentLifeCycleState!='deleted'";
 
-            String queryMediaLibraries = String.format("SELECT * FROM Document WHERE %s", searchMediaLibraries);
+            final String queryMediaLibraries = String.format("SELECT * FROM Document WHERE %s", searchMediaLibraries);
 
-            DocumentModelList query = session.query(queryMediaLibraries);
+            final DocumentModelList query = session.query(queryMediaLibraries);
 
-            if (query.size() < 1 || query.size() > 1) {
+            if ((query.size() < 1) || (query.size() > 1)) {
                 mediaSpace = null;
-            } else
-                mediaSpace = query.get(0);
+            } else {
+				mediaSpace = query.get(0);
+			}
         } else {
             log.warn("CurrentDomain not available " + doc.getTitle());
         }
@@ -1262,10 +1263,10 @@ public class ToutaticeDocumentHelper {
      * @return list of remote proxies of document (if any).
      */
     public static DocumentModelList getRemotePublishedDocuments(CoreSession session, DocumentModel document) {
-        DocumentModelList remoteProxies = new DocumentModelListImpl();
+        final DocumentModelList remoteProxies = new DocumentModelListImpl();
 
         if (!ToutaticeDocumentHelper.isInPublishSpace(session, document)) {
-            DocumentModelList remoteProxiesFound = ToutaticeDocumentHelper.getProxies(session, document,
+            final DocumentModelList remoteProxiesFound = ToutaticeDocumentHelper.getProxies(session, document,
                     ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE.GLOBAL, StringUtils.EMPTY, false);
             if (CollectionUtils.isNotEmpty(remoteProxiesFound)) {
                 remoteProxies.addAll(remoteProxiesFound);
@@ -1290,7 +1291,7 @@ public class ToutaticeDocumentHelper {
                 session.getDocument(document.getRef());
                 exists = true;
 
-            } catch (ClientException ce) {
+            } catch (final ClientException ce) {
 
                 if (ce.getCause() instanceof NoSuchDocumentException) {
                     exists = false;
@@ -1305,7 +1306,7 @@ public class ToutaticeDocumentHelper {
     }
 
     /**
-     * 
+     *
      * @param document
      * @return true if document is a remote proxy.
      */
@@ -1329,11 +1330,11 @@ public class ToutaticeDocumentHelper {
     public static boolean isBeingModified(CoreSession session, DocumentModel document) {
         boolean is = false;
 
-        String versionLabel = document.getVersionLabel();
+        final String versionLabel = document.getVersionLabel();
 
-        DocumentModel lastDocumentVersion = session.getLastDocumentVersion(document.getRef());
+        final DocumentModel lastDocumentVersion = session.getLastDocumentVersion(document.getRef());
         if (lastDocumentVersion != null) {
-            String lastDocumentVersionLabel = lastDocumentVersion.getVersionLabel();
+            final String lastDocumentVersionLabel = lastDocumentVersion.getVersionLabel();
             is = !StringUtils.equals(versionLabel, lastDocumentVersionLabel);
         }
 
