@@ -70,7 +70,6 @@ public class CollaborativeSpaceFormValidatorBean implements Serializable {
     /**
      * Checks title unicity in current Folder.
      * 
-     * @param value
      * @return true if title unicity in current Folder
      */
     public boolean isTileUnique(String title) {

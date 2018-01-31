@@ -522,8 +522,11 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     /**
      * Determine si l'action "seeOnlineDocumentVersion" doit être présentée.
      * 
-     * <h4>Conditions</h4> <li>le document doit posséder un proxy local (publication locale pour mise en ligne)</li> <li>le document ne doit pas être la version
+     * <h4>Conditions</h4> <ul>
+     * <li>le document doit posséder un proxy local (publication locale pour mise en ligne)</li>
+     * <li>le document ne doit pas être la version
      * valide</li>
+     * </ul>
      * 
      * @return true si l'action doit être présentée. false sinon.
      * @throws ClientException
@@ -550,8 +553,10 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     /**
      * Determine si l'action "seeLiveDocumentVersion" de la vue 'summary' doit être présentée.
      * 
-     * <h4>Conditions</h4> <li>le document visualisé ne doit pas être la version live</li> <li>l'usager connecté doit avoir au minima un droit de lecture sur le
+     * <h4>Conditions</h4> 
+     * <ul><li>le document visualisé ne doit pas être la version live</li> <li>l'usager connecté doit avoir au minima un droit de lecture sur le
      * doucment source</li>
+     * </ul>
      * 
      * @return true si l'action doit être présentée. false sinon.
      * @throws ClientException
@@ -702,7 +707,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     }
 
     /**
-     * Détermine si le document courant appartient à un espace destiné à la
+     * <p>Détermine si le document courant appartient à un espace destiné à la
      * publication dans le portail Toutatice </p>
      * 
      * @return 'true' si le document courant peut être publié dans le portail.
@@ -722,7 +727,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     }
 
     /**
-     * Détermine si le document courant appartient à un espace de travail en
+     * <p>Détermine si le document courant appartient à un espace de travail en
      * ligne directe.
      * 
      * </p>

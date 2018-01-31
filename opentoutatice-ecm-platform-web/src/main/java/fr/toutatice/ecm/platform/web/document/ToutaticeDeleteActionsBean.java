@@ -53,7 +53,7 @@ public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 	
 	/**
 	 * Additional controls on delete action.
-	 * @see fr.gouv.education.acrennes.ged.document.additionalDeleteFilter()
+	 * voir fr.gouv.education.acrennes.ged.document.additionalDeleteFilter()
 	 */
 	@Override
 	public boolean getCanDelete() {
@@ -69,7 +69,7 @@ public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 	
 	/**
 	 * Additional controls on purge action.
-	 * @see fr.gouv.education.acrennes.ged.document.additionalDeleteFilter()
+	 * voir fr.gouv.education.acrennes.ged.document.additionalDeleteFilter()
 	 */
 	@Override
 	public boolean getCanPurge() throws ClientException {

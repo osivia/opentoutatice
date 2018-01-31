@@ -173,8 +173,8 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
      * Determine si l'action "workflow_online_cancel" de la vue 'summary' doit
      * être présentée.
      * 
-     * <h4>Conditions</h4> <li>Un process de demande de m doit exister</li> <li>
-     * l'utilisateur courant doit être l'initateur de ce processus</li>
+     * <h4>Conditions</h4> <ul><li>Un process de demande de m doit exister</li> <li>
+     * l'utilisateur courant doit être l'initateur de ce processus</li></ul>
      * 
      * @return true si l'action doit être présentée. false sinon.
      * @throws ClientException
@@ -202,9 +202,13 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
      * Determine si l'action "direct_online" de la vue 'summary' doit être
      * présentée.
      * 
-     * <h4>Conditions</h4> <li>(l'utilisateur courant doit avoir la permission de validation (rôle de validateur) - cf filtre action)</li> <li>le document doit
-     * être dans l'état 'projet'</li> <li>le document ne doit pas déjà être dans un processus de validation/mise en ligne (quels que soient les utilisateurs en
+     * <h4>Conditions</h4> 
+     * <ul>
+     * 	<li>(l'utilisateur courant doit avoir la permission de validation (rôle de validateur) - cf filtre action)</li>
+     * 	<li>le document doit être dans l'état 'projet'</li>
+     * 	<li>le document ne doit pas déjà être dans un processus de validation/mise en ligne (quels que soient les utilisateurs en
      * charge de faire la validation)</li>
+     * </ul>
      * 
      * @return true si l'action doit être présentée. false sinon.
      * @throws ClientException

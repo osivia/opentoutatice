@@ -149,7 +149,6 @@ public class WebIdFunctions {
     }
 
     /**
-     * @param document
      * @return the webid or path of a document.
      */
     public static String getPreferredDisplayId(DocumentModel doc) {

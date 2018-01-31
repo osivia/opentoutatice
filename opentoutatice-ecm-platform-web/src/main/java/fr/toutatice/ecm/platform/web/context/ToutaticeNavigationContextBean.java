@@ -150,7 +150,6 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
     }
 
     /**
-     * @param docRef
      * @return live document with given webId
      */
     protected DocumentModel getLive(WebIdRef webIdRef) {
