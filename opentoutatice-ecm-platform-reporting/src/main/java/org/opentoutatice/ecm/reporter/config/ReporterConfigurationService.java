@@ -15,7 +15,6 @@ public interface ReporterConfigurationService {
     /**
      * Gets reporter. 
      * 
-     * @param event
      * @return Reporter
      */
     Reporter getReporter(String caller) throws InstantiationException, IllegalAccessException;

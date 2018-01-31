@@ -37,7 +37,6 @@ public interface Reporter {
      * Send report.
      * 
      * @param report
-     * @throws Exception
      */
     void send(Object report) throws MessagingException, ErrorTestModeException;
 

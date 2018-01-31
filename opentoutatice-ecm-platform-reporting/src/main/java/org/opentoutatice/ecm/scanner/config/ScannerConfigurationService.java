@@ -28,7 +28,6 @@ public interface ScannerConfigurationService {
      * Gets updater's class.
      * 
      * @param event
-     * @return Class<?>
      * @throws Exception
      */
     AbstractScanUpdater getUpdater(Event event) throws Exception;

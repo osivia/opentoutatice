@@ -64,8 +64,6 @@ public class ErrorTestMode {
     /**
      * Indicates to generate UC error.
      * 
-     * @param error useCase
-     * @return boolean
      * @throws ErrorTestModeException
      */
     public static boolean generateError(int uCError) throws ErrorTestModeException {
