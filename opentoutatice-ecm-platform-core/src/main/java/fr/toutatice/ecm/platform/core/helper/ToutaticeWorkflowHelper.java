@@ -88,9 +88,6 @@ public final class ToutaticeWorkflowHelper {
     /**
      * Get task by name for current document.
      * 
-     * @param taskName
-     * @param session
-     * @param document
      * @return task given name and current doc
      * @throws ClientException
      */
@@ -179,7 +176,6 @@ public final class ToutaticeWorkflowHelper {
     }
     
     /**
-     * @param currenDoc
      * @return initiator of current workflow on current document.
      */
     public static String getCurrentWorkflowInitiator(DocumentModel currentDoc){

@@ -57,10 +57,6 @@ public class ToutaticeChangeCreationPropertiesListener implements EventListener 
     /**
      * Changes DublinCore properties.
      * 
-     * @param event
-     * @param docCtx
-     * @param service
-     * @param srcDoc
      * @return updated document
      */
     public static DocumentModel changeCreationProperties(Event event, DocumentEventContext docCtx, DocumentModel srcDoc) {

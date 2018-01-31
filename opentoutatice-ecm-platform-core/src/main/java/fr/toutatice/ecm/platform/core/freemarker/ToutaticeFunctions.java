@@ -71,7 +71,7 @@ public class ToutaticeFunctions extends PlatformFunctions {
     }
 
     /**
-     * @param le document
+     * @param doc le document
      * @return permalink pour visualiser le document depuis le portail, si le document n'est pas visualisable la méthode retourne ""
      * @throws PropertyException
      * @throws ClientException
@@ -128,9 +128,9 @@ public class ToutaticeFunctions extends PlatformFunctions {
     /**
      * Récupére un commentaire sur le document.
      * 
-     * @param le
+     * @param doc le
      *            document
-     * @param le
+     * @param noComment le
      *            numéro du commentaire voulu. Si null, c'est le dernier
      *            commentaire qui est retourné.
      * @return le commentaire demandé
@@ -284,8 +284,6 @@ public class ToutaticeFunctions extends PlatformFunctions {
     /**
      * @param username
      * @return firstName + lastName of user.
-     * @throws Exception
-     * @throws ClientException
      */
     public String getUserFullName(String username) {
         String fullName = StringUtils.EMPTY;

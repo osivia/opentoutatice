@@ -168,16 +168,18 @@ public final class ToutaticeSQLQueryHelper {
 	/**
 	 * Add to the query the static criteria to filter the results according to :
 	 * <ul>
-	 * 	<li> hidden from navigation
-	 * 	<li> get only the current version of the document, not its history
-	 *  <li> document is not deleted
+	 * 	<li> hidden from navigation</li>
+	 * 	<li> get only the current version of the document, not its history</li>
+	 *  <li> document is not deleted</li>
 	 * </ul>
 	 * 
 	 * @param alias the document alias to use to prefix the where clause predicates
 	 * @param criteria the static criteria to use. Selection must be among:
+	 * <ul>
 	 * 	<li> STATIC_SQL_CRITERIA_LIVE_VERSION: history is discarded. only the live (latest) version is selected</li> 
 	 * 	<li> STATIC_SQL_CRITERIA_NOT_DELETED: documents with deleted status are discarded</li> 
-	 * 	<li> STATIC_SQL_CRITERIA_NOT_HIDDEN_TO_NAVIGATION: documents hidden to the navigation are discarded</li> 
+	 * 	<li> STATIC_SQL_CRITERIA_NOT_HIDDEN_TO_NAVIGATION: documents hidden to the navigation are discarded</li>
+	 * </ul> 
 	 * @return the where clause predicates that deal with the static document criteria
 	 */
 	public String getDefaultStaticCriteria(String alias, int criteria) {

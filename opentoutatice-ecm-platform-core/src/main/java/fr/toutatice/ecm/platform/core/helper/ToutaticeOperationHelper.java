@@ -95,8 +95,6 @@ public class ToutaticeOperationHelper {
 	/**
 	 * Méthode permettant d'appeler une opération Nuxeo..
 	 * 
-	 * @param automation
-	 *            Service automation
 	 * @param ctx
 	 *            Contexte d'exécution
 	 * @param operationId
@@ -105,7 +103,6 @@ public class ToutaticeOperationHelper {
 	 *            paramètres de l'opération
 	 * @return le résultat de l'opération dont le type n'est pas connu à
 	 *         priori
-	 * @throws ServeurException
 	 */
 	public static Object callOperation(OperationContext ctx, String operationId, Map<String, Object> parameters) throws ToutaticeException {
 		

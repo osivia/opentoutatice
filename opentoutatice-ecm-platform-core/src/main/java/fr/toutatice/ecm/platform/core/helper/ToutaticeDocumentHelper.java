@@ -506,7 +506,7 @@ public class ToutaticeDocumentHelper {
      * @param runInUnrestrictedMode opération doit-être exécuter en mode unrestricted
      * @param thisIncluded le document courant est examiné
      * @return
-     *         une map de <xpath, property> du document parent
+     *         une map de &lt;xpath, property&gt; du document parent
      */
     public static Map<String, Property> getPropertiesParentDoc(CoreSession session, DocumentModel document, List<String> lstXpaths, Filter filter,
             boolean runInUnrestrictedMode, boolean thisIncluded) {
@@ -1187,8 +1187,7 @@ public class ToutaticeDocumentHelper {
      *            paramètres de l'opération
      * @return le résultat de l'opération dont le type n'est pas connu à
      *         priori
-     * @throws ServeurException
-     * @deprecated use {@link #ToutaticeOperationHelper.callOperation()} instead.
+     * @deprecated use {@link ToutaticeOperationHelper#callOperation()} instead.
      */
     @Deprecated
     public static Object callOperation(AutomationService automation, OperationContext ctx, String operationId, Map<String, Object> parameters) throws Exception {

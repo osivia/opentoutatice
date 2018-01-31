@@ -27,7 +27,6 @@ public class ToutaticeDocumentMetadataHelper {
     /**
      * Checks title unicity in current Folder.
      * 
-     * @param value
      * @return true if title unicity in current Folder
      */
     public static boolean isTileUnique(CoreSession session, String parentUUId, String currentUUId, String title) {

@@ -104,9 +104,6 @@ public class ToutaticeBulkDocumentCopiedListener implements PostCommitFilteringE
     /**
      * Set user as creator of documents.
      * 
-     * @param documentManager
-     * @param docs
-     * @throws ClientException
      */
     // TODO: test in Publish Spaces, i.e. effect on local proxies
     protected void fireCreatedByCopy(DocumentEventContext docCtx, CoreSession session, Event event, DocumentModelList docs) {

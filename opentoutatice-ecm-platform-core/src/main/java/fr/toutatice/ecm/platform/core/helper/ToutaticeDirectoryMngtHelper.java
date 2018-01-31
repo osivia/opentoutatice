@@ -66,7 +66,6 @@ public class ToutaticeDirectoryMngtHelper {
 	 * @param directory the directory name that contains the entry
 	 * @param entryKey the key of the entry
 	 * @return the entry label if found inside the directory. Otherwise will return an empty string
-	 * @throws ToutaticeException if any error occurs while requesting the directory service
 	 */
 	public String getDirectoryEntryLabel(String directory, String entryKey) {
         return getDirectoryEntryLabel(directory, entryKey, Locale.FRENCH);
@@ -77,9 +76,8 @@ public class ToutaticeDirectoryMngtHelper {
      * 
      * @param directory the directory name that contains the entry
      * @param entryKey the key of the entry
-     * @param the locale to apply to get the translated label
+     * @param locale the locale to apply to get the translated label
      * @return the entry label if found inside the directory. Otherwise will return an empty string
-     * @throws ToutaticeException if any error occurs while requesting the directory service
      */
     public String getDirectoryEntryLabel(String directory, String entryKey, Locale locale) {
         String entryLabel = StringUtils.EMPTY;
@@ -152,7 +150,7 @@ public class ToutaticeDirectoryMngtHelper {
 	 * 
 	 * @param directory the directory name that contains the entry
 	 * @param entryKey the key of the entry
-	 * @param the locale to apply to get the translated label
+	 * @param locale the locale to apply to get the translated label
 	 * @return the localized entry label if found inside the directory. Otherwise will return an empty string
 	 */
 	public String getDirectoryEntryLocalizedLabel(String directory, String entryKey, Locale locale) {
@@ -161,7 +159,7 @@ public class ToutaticeDirectoryMngtHelper {
 	}
 
 	/**
-	 * Return all the labels associated to the keys & directories passed-in parameter
+	 * Return all the labels associated to the keys &amp; directories passed-in parameter
 	 * 
 	 * @param directories the list of directories associated to the entry keys
 	 * @param rawKeys the raw keys (String type) with the usual separator character
