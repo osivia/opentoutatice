@@ -19,5 +19,12 @@
 <!-- 			<option name="concurrencyLevel">${ottc.recentlyEditedCache.concurrencylevel}</option> -->
 	    </cache>
 	</extension>
+	
+	<extension point="caches" target="org.nuxeo.ecm.core.cache.CacheService">
+		<cache class="org.nuxeo.ecm.core.cache.InMemoryCacheImpl" name="temporary-locked-cache">
+			<ttl>${ottc.currentlyEditedCache.ttl}</ttl>
+<!-- 			<option name="concurrencyLevel">${ottc.recentlyEditedCache.concurrencylevel}</option> -->
+	    </cache>
+	</extension>	
 
 </component>
