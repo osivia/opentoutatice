@@ -30,13 +30,10 @@ public class ProbesRestService extends ModuleRoot {
 	@GET
 	@Path("status")
 	public Object getStatus() {
-		
-		log.error("get status");
-		
+				
 		try {
 			CoreSession session = SessionFactory.getSession();
 			session.query("SELECT * FROM Document", 1);
-			
 		}
 		catch(Exception e) {
 			

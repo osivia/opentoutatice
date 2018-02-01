@@ -8,7 +8,7 @@
 
     <specificAuthenticationChain name="probes">
       <urlPatterns>
-        <url>(.*)/probes/.*</url>
+        <url>(.*)/site/probes.*</url>
       </urlPatterns>
       <replacementChain>
         <plugin>ANONYMOUS_AUTH</plugin>
