@@ -53,7 +53,9 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.DocumentSecurityException;
+import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
+import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
@@ -133,17 +135,21 @@ public class FetchPublicationInfos {
      * Identifiant ("path" ou uuid) du document en entrée.
      */
     @Param(name = "path", required = false)
-    protected DocumentModel document;
+    protected String path;
+    //protected DocumentModel document;
 
     @Param(name = "webid", required = false)
     protected String webid;
+
+    
+	private DocumentRef docRef;
 
     @OperationMethod
     public Object run() throws Exception {
         // For Trace logs
         long begin = System.currentTimeMillis();
         if(log.isTraceEnabled()){
-            String id = this.document == null ? this.webid : this.document.getPathAsString();
+            String id = this.path == null ? this.webid : this.path;
             log.trace(" ID: " + id);
         }
 
@@ -156,23 +162,25 @@ public class FetchPublicationInfos {
         // WebId given
         if (StringUtils.isNotBlank(webid)) {
             
-            Object documentByWebIdRes = getDocumentByWebId(webid);
-            if (isError(documentByWebIdRes)) {
-                errorsCodes.add((Integer) documentByWebIdRes);
+        	// LBI #1804 - change input from documentModel to String to avoid long stacktraces 
+        	try {
+        		path = getDocumentPathByWebId(webid);
+        	}
+        	catch(NoSuchDocumentException e) {
+        		errorsCodes.add(ERROR_CONTENT_NOT_FOUND);
                 infosPubli.element("errorCodes", errorsCodes);
                 rowInfosPubli.add(infosPubli);
                 return createBlob(rowInfosPubli);
-            } else {
-                document = (DocumentModel) documentByWebIdRes;
-            }
-            
+        	}
         }
-
-        /*
-         * Récupération du DocumentModel dont le path ou uuid est donné en
-         * entrée
-         */
-        DocumentRef docRef = document.getRef();
+        if(path.startsWith("/")) {
+        	docRef = new PathRef(path);
+        }
+        else {
+        	docRef = new IdRef(path);
+        }
+        
+        
         Object fetchDocumentRes = getDocument(docRef);
         /*
          * Chaque méthode "principale utilisée peut retourner un objet de type
@@ -400,12 +408,13 @@ public class FetchPublicationInfos {
     private Boolean checkValidatePermission() throws ServeurException {
         Boolean canValidate = Boolean.FALSE;
         try {
-            canValidate = Boolean.valueOf(coreSession.hasPermission(document.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE));
+            
+			canValidate = Boolean.valueOf(coreSession.hasPermission(docRef, ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE));
         } catch (ClientException e) {
             if (e instanceof DocumentSecurityException) {
                 return Boolean.FALSE;
             } else {
-                log.warn("Failed to fetch permissions for document '" + document.getPathAsString() + "', error:" + e.getMessage());
+                log.warn("Failed to fetch permissions for document '" + path + "', error:" + e.getMessage());
                 throw new ServeurException(e);
             }
         }
@@ -515,7 +524,7 @@ public class FetchPublicationInfos {
                 if (isNoSuchDocumentException(ce)) {
                     return ERROR_CONTENT_NOT_FOUND;
                 } else {
-                    log.warn("Failed to fetch document with path or uid: '" + document + "', error:" + ce.getMessage());
+                    log.warn("Failed to fetch document with path or uid: '" + path + "', error:" + ce.getMessage());
                     throw new ServeurException(ce);
                 }
             }
@@ -528,29 +537,28 @@ public class FetchPublicationInfos {
     
     /**
      * @param webid
+     * @param infosPubli 
      * @return document if found, error otherwise.
+     * @throws NoSuchDocumentException 
      * @throws ServeurException
      */
-    private Object getDocumentByWebId(String webid) {
+    private String getDocumentPathByWebId(String webid) throws NoSuchDocumentException {
         // Trace logs
         long begin = System.currentTimeMillis();
         
         DocumentModel doc = null;
-        try {
-            DocumentModelList documentsByWebId = WebIdResolver.getDocumentsByWebId(coreSession, webid);
-            if (CollectionUtils.isNotEmpty(documentsByWebId) && (documentsByWebId.size() == 1)) {
-                doc = documentsByWebId.get(0);
-            }
-        } catch (NoSuchDocumentException e) {
-            return ERROR_CONTENT_NOT_FOUND;
+
+        DocumentModelList documentsByWebId = WebIdResolver.getDocumentsByWebId(coreSession, webid);
+        if (CollectionUtils.isNotEmpty(documentsByWebId) && (documentsByWebId.size() == 1)) {
+            doc = documentsByWebId.get(0);
         }
-        
+    
         if (log.isTraceEnabled()) {
             long end = System.currentTimeMillis();
             log.trace("      [getDocumentByWebId]: " + String.valueOf(end - begin) + " ms");
         }
         
-        return doc;
+        return doc.getPathAsString();
     }
 
     /**
