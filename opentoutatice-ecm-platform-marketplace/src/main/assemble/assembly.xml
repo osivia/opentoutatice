@@ -104,19 +104,11 @@
 			<patternset refid="opentoutatice.versus.cap" />
 		</unzip>
 
-		<!-- Update the install.xml file from properties -->
-		<copy file="src/main/resources/install.xml" todir="${outdir}/marketplace"
-			overwrite="true">
-			<filterset>
-				<filter token="PROFILE" value="${profileName}" />
-			</filterset>
-		</copy>
-
 		<zip
-			destfile="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip"
+			destfile="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}.zip"
 			basedir="${outdir}/marketplace" />
 		<artifact:attach
-			file="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip"
+			file="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}.zip"
 			type="zip" />
 	</target>
 

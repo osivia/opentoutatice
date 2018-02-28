@@ -68,16 +68,20 @@ public class ToutaticeEsQueryHelper {
 
         return query(session, nxql, -1, unrestricted, false);
     }
+    
+    public static IterableQueryResult unrestrictedQueryAndAggregate(CoreSession session, String nxql) {
+        return unrestrictedQueryAndAggregate(session, nxql, false);
+    }
 
     /**
      * Executes queryAndAggregate in unrestricted way.
      * 
      * @param session
-     * @param query
+     * @param nxql
      * @return IterableQueryResult
      */
-    public static IterableQueryResult unrestrictedQueryAndAggregate(CoreSession session, String query) {
-        UnrestrictedQueryAndAggregate uQnA = new UnrestrictedQueryAndAggregate(session);
+    public static IterableQueryResult unrestrictedQueryAndAggregate(CoreSession session, String nxql, boolean fetchFromEs) {
+        UnrestrictedQueryAndAggregate uQnA = new UnrestrictedQueryAndAggregate(session, nxql, fetchFromEs);
         uQnA.runUnrestricted();
         return uQnA.getRowsResults();
     }
@@ -152,7 +156,7 @@ public class ToutaticeEsQueryHelper {
         return getElasticSearchService().query(qB);
     }
 
-    public static DocumentModelList unretrictedQuery(CoreSession session, String nxql, int limit) {
+    public static DocumentModelList unrestrictedQuery(CoreSession session, String nxql, int limit) {
         UnrestrictedQuery uQry = new UnrestrictedQuery(session);
         uQry.setNxql(nxql);
         uQry.setPageSize(limit);
@@ -188,6 +192,8 @@ public class ToutaticeEsQueryHelper {
         private int limit = -1;
         /** Results rows. */
         private IterableQueryResult iqr;
+        /** Fetch from ES indicator. */
+        private boolean fetchFromEs = false;
 
         /** Constructor. */
         protected UnrestrictedQueryAndAggregate(CoreSession session) {
@@ -195,9 +201,10 @@ public class ToutaticeEsQueryHelper {
         }
 
         /** Constructor. */
-        protected UnrestrictedQueryAndAggregate(CoreSession session, String query) {
+        protected UnrestrictedQueryAndAggregate(CoreSession session, String query, boolean fetchFromEs) {
             super(session);
             this.query = query;
+            this.fetchFromEs = fetchFromEs;
         }
 
         /** Setter for nxql query. */
@@ -221,7 +228,11 @@ public class ToutaticeEsQueryHelper {
                 // ES query
                 ElasticSearchService ess = ToutaticeEsQueryHelper.getElasticSearchService();
 
-                NxQueryBuilder queryBuilder = new NxQueryBuilder(super.session).fetchFromElasticsearch().nxql(this.query).limit(this.limit);
+                NxQueryBuilder queryBuilder = new NxQueryBuilder(super.session).nxql(this.query).limit(this.limit);
+                if(this.fetchFromEs) {
+                	queryBuilder.fetchFromElasticsearch();
+                }
+                
                 this.iqr = ess.queryAndAggregate(queryBuilder).getRows();
             } else {
                 throw new ClientException("No query defined.");
