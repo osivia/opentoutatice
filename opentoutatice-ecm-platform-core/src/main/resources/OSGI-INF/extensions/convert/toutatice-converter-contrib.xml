@@ -76,6 +76,7 @@
     <parameters>
         <parameter name="CommandLineName">sofficeConvertToPdf</parameter>
         <parameter name="EnvironmentPoolSize">${ottc.converter.toutaticeAny2pdf.poolSize}</parameter>
+        <parameter name="EnvironmentTimeoutDuration">${ottc.converter.toutaticeAny2pdf.timeoutDuration}</parameter>
     </parameters>
     </converter>
     
