@@ -4,7 +4,7 @@
 	<update file="${package.root}/install/bundles" todir="${env.server.home}/nxserver/plugins" />
 	
 	<!-- Libs -->
-	<update file="${package.root}/install/lib" todir="${env.lib}" />"
+	<update file="${package.root}/install/lib" todir="${env.lib}" />
 	
 	<!-- Properties -->
 	<!--  TO STUDY: install.properties -->

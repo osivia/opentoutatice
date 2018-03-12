@@ -1,24 +1,19 @@
-<project name="open-toutatice-marketplace" default="build"
-	xmlns:nx="urn:nuxeo-build" xmlns:artifact="urn:nuxeo-artifact">
+<project name="open-toutatice-marketplace" default="build" xmlns:nx="urn:nuxeo-build" xmlns:artifact="urn:nuxeo-artifact">
 	<taskdef resource="org/nuxeo/build/antlib.xml" uri="urn:nuxeo-build" />
 	<taskdef resource="org/nuxeo/build/artifact/antlib.xml" uri="urn:nuxeo-artifact" />
 	<taskdef resource="net/sf/antcontrib/antlib.xml" />
 
-	<target name="build"
-		description="Build the Nuxeo open toutatice platform Marketplace package">
+	<target name="build" description="Build the Nuxeo open toutatice platform Marketplace package">
 		<property name="outdir" value="${maven.project.build.directory}" />
 		<mkdir dir="${outdir}" />
 
 		<!-- Build the dependency tree, including the "test" scope, resolving artifacts 
 			if needed -->
-		<artifact:nuxeo-expand includeTestScope="true"
-			groupPrefixes="org.nuxeo" />
+		<artifact:nuxeo-expand includeTestScope="true" groupPrefixes="org.nuxeo" />
 
 		<!-- Create specific optional files for use by Nuxeo SDK -->
-		<artifact:print output="${outdir}/artifacts-opentoutatice.properties"
-			mode="sdk" />
-		<artifact:print output="${outdir}/test-artifacts-opentoutatice.properties"
-			mode="sdk" scopes="test" />
+		<artifact:print output="${outdir}/artifacts-opentoutatice.properties" mode="sdk" />
+		<artifact:print output="${outdir}/test-artifacts-opentoutatice.properties" mode="sdk" scopes="test" />
 
 		<!-- Output the dependency tree for debugging purpose -->
 		<artifact:print output="${outdir}/dependency-tree.log" />
@@ -30,24 +25,28 @@
 		<delete failonerror="false" dir="${outdir}/marketplace" />
 		<mkdir dir="${outdir}/marketplace" />
 		<copy todir="${outdir}/marketplace">
-			<fileset dir="src/main/resources" />
+			<fileset dir="src/main/resources">
+				<!-- Cause encoding problems when copied with filterSet ... -->
+				<exclude name="**/jxl-${jxl.nx.patch.version}.jar" />
+			</fileset>
 			<filterset>
 				<filter token="VERSION" value="${maven.project.version}" />
 				<filter token="DISTRIB_VERSION" value="${nuxeo.version}" />
 				<filter token="CAP_DISTRIB_VERSION" value="${nuxeo.cap.version}" />
+				<filter token="JXL_NX_PATCH_VERSION" value="${jxl.nx.patch.version}" />
 				<filter token="NUXEO_DAM_VERSION" value="${nuxeo.dam.version}" />
 				<filter token="NUXEO_BLOGS_SITES_VERSION" value="${nuxeo.blogs.sites.version}" />
 			</filterset>
 		</copy>
+		<!-- jxl fork not defined by gav -->
+		<copy file="src/main/resources/install/lib/jxl-${jxl.nx.patch.version}.jar" todir="${outdir}/marketplace/install/lib" overwrite="true" />
 
 		<copy file="${outdir}/artifacts-opentoutatice.properties" todir="${outdir}/nxr" />
-		<copy file="${outdir}/test-artifacts-opentoutatice.properties"
-			todir="${outdir}/nxr" />
+		<copy file="${outdir}/test-artifacts-opentoutatice.properties" todir="${outdir}/nxr" />
 
 		<!-- Base distribution NXR -->
 		<copy todir="${outdir}">
-			<artifact:resolveFile
-				key="org.nuxeo.ecm.distribution:nuxeo-distribution-cap:${nuxeo.version}:zip" />
+			<artifact:resolveFile key="org.nuxeo.ecm.distribution:nuxeo-distribution-cap:${nuxeo.version}:zip" />
 		</copy>
 
 		<!-- Get Nuxeo bundles but not Nuxeo libraries (which groupId starts with"org.nuxeo.lib"), 
@@ -57,8 +56,7 @@
 				<includes>
 					<artifact groupId="org.nuxeo*" scope="!test" type="!pom" />
 					<!-- Include your artifacts using their groupId for instance -->
-					<artifact groupId="opentoutatice-ecm.*" scope="!test"
-						type="!pom" />
+					<artifact groupId="opentoutatice-ecm.*" scope="!test" type="!pom" />
 				</includes>
 				<excludes>
 					<artifact groupId="org.nuxeo.lib*" />
@@ -89,27 +87,18 @@
 		<nx:rmdups dir="${outdir}/nxr/lib" />
 
 		<!-- Temporary ZIP Nuxeo NXR to compare with base distribution NXR -->
-		<zip destfile="${outdir}/nxr-${maven.project.version}.zip"
-			basedir="${outdir}/nxr" />
+		<zip destfile="${outdir}/nxr-${maven.project.version}.zip" basedir="${outdir}/nxr" />
 
 		<!-- Your MP only needs to include files not already provided by the base 
 			distribution -->
-		<nx:zipdiff file1="${outdir}/nxr-${maven.project.version}.zip"
-			file2="${outdir}/nuxeo-distribution-cap-${nuxeo.version}.zip"
-			includesfile="${outdir}/includes" excludesfile="${outdir}/excludesfile"
-			patternsetid="opentoutatice.versus.cap" ignoreContent="true"
-			ignoreContentPattern=".*\.jar$" />
+		<nx:zipdiff file1="${outdir}/nxr-${maven.project.version}.zip" file2="${outdir}/nuxeo-distribution-cap-${nuxeo.version}.zip" includesfile="${outdir}/includes" excludesfile="${outdir}/excludesfile" patternsetid="opentoutatice.versus.cap" ignoreContent="true" ignoreContentPattern=".*\.jar$" />
 
 		<unzip src="${outdir}/nxr-${maven.project.version}.zip" dest="${outdir}/marketplace/install">
 			<patternset refid="opentoutatice.versus.cap" />
 		</unzip>
 
-		<zip
-			destfile="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}.zip"
-			basedir="${outdir}/marketplace" />
-		<artifact:attach
-			file="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}.zip"
-			type="zip" />
+		<zip destfile="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}.zip" basedir="${outdir}/marketplace" />
+		<artifact:attach file="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}.zip" type="zip" />
 	</target>
 
 </project>
