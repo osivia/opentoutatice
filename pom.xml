@@ -17,6 +17,7 @@
 		<module>opentoutatice-ecm-platform-custom</module>
 		<module>opentoutatice-ecm-platform-attached-files</module>
 		<module>opentoutatice-ecm-platform-reporting</module>
+		<module>opentoutatice-ecm-platform-probes</module>
 		<module>opentoutatice-ecm-platform-marketplace</module>
 		<module>opentoutatice-ecm-platform-distribution</module>
 	</modules>
@@ -269,6 +270,11 @@
 				<artifactId>opentoutatice-ecm-platform-reporting</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>opentoutatice-ecm.platform</groupId>
+				<artifactId>opentoutatice-ecm-platform-probes</artifactId>
+				<version>${project.version}</version>
+			</dependency>			
 
 			<!-- Librairies dependencies -->
 			<dependency>

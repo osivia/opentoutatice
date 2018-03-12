@@ -44,6 +44,10 @@
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-reporting</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-ecm-platform-probes</artifactId>
+		</dependency>		
 
 		<!-- Necessary for Portal -->
 		<dependency>

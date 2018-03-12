@@ -34,3 +34,19 @@ nuxeo.vcs.fulltext.search.analyzer=french
 org.nuxeo.dnd.upload.timeout=300000
 org.nuxeo.dnd.exec.timeout=300000
 nuxeo.db.transactiontimeout=700
+
+##----------------------------------------------------------------------------
+## currentlyEditedCache
+##----------------------------------------------------------------------------
+# duration a cache entry is kept, in minute
+ottc.currentlyEditedCache.ttl=5
+# maximum number of entries the cache may contain
+ottc.currentlyEditedCache.maxsize=1000
+
+##----------------------------------------------------------------------------
+## recentlyEditedCache
+##----------------------------------------------------------------------------
+# duration a cache entry is kept, in minute
+ottc.recentlyEditedCache.ttl=5
+# maximum number of entries the cache may contain
+ottc.recentlyEditedCache.maxsize=1000

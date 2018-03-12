@@ -89,6 +89,14 @@
             postCommit="false"  class="fr.toutatice.ecm.platform.core.listener.ToutaticePictureViewListener" priority="20">
 	       <event>updatePictureView</event>
 	    </listener>
+	    
+        <listener name="recentlyEditedListener" async="true"
+			postCommit="true"
+            enabled="true"
+			class="fr.toutatice.ecm.platform.core.listener.RecentlyEditedListener"
+			priority="100">
+			<event>documentModified</event>
+		</listener>	    
 
 	</extension>
 
