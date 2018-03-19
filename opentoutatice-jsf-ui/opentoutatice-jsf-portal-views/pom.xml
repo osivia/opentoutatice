@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>opentoutatice.ui</groupId>
+		<artifactId>opentoutatice-jsf-ui</artifactId>
+		<version>5.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>opentoutatice-jsf-portal-views</artifactId>
+
+	<name>opentoutatice-jsf-portal-views</name>
+	<url>http://www.osivia.com</url>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-platform-ui-web</artifactId>
+		</dependency>
+
+		<!-- For Hot reload tests -->
+		<dependency>
+			<groupId>org.nuxeo.lib.runtime</groupId>
+			<artifactId>nuxeo-runtime-tomcat-adapter</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.lesscss</groupId>
+				<artifactId>lesscss-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
