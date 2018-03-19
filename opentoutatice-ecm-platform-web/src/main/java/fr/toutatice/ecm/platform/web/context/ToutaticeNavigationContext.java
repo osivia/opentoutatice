@@ -18,7 +18,7 @@
  */
 package fr.toutatice.ecm.platform.web.context;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 
@@ -39,9 +39,9 @@ public interface ToutaticeNavigationContext extends NavigationContext {
 	 */
 	public DocumentModel getSectionPublicationArea(DocumentModel section);
 
-	public String getCurrentLifeCycleState() throws ClientException;
+	public String getCurrentLifeCycleState() throws NuxeoException;
 	
-	public void resetNavigation() throws ClientException;
+	public void resetNavigation() throws NuxeoException;
 	
 	public DocumentModel getSpaceDoc(DocumentModel document);
 }

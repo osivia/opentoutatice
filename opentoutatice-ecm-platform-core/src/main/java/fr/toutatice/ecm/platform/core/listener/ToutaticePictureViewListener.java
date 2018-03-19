@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.model.Property;
 import org.nuxeo.ecm.core.event.Event;
@@ -41,7 +41,7 @@ import org.nuxeo.ecm.platform.picture.api.adapters.PictureResourceAdapter;
  */
 public class ToutaticePictureViewListener implements EventListener {
 
-    public void handleEvent(Event event) throws ClientException {
+    public void handleEvent(Event event) throws NuxeoException {
 
         if (UPDATE_PICTURE_VIEW_EVENT.equals(event.getName()) && event.getContext() instanceof DocumentEventContext) {
 
@@ -70,7 +70,7 @@ public class ToutaticePictureViewListener implements EventListener {
             try {
                 picture.fillPictureViews(blob, filename, title, pictureTemplates);
             } catch (IOException e) {
-                throw new ClientException(e);
+                throw new NuxeoException(e);
             }
 
             if (doc.isVersion()) {

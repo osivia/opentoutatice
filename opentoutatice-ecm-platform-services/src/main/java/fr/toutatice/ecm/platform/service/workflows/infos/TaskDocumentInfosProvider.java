@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.task.Task;
@@ -41,7 +41,7 @@ public class TaskDocumentInfosProvider implements DocumentInformationsProvider {
      * {@inheritDoc}
      */
     @Override
-    public Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
+    public Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDocument) throws NuxeoException {
         Map<String, Object> infos = new HashMap<String, Object>(0);
         
         // No Task on Folderish

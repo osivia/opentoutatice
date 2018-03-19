@@ -25,12 +25,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.nuxeo.ecm.automation.features.PlatformFunctions;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.core.api.model.impl.primitives.BlobProperty;
-import org.nuxeo.ecm.core.storage.sql.coremodel.SQLBlob;
 import org.nuxeo.ecm.platform.comment.api.CommentManager;
 import org.nuxeo.ecm.platform.ui.web.tag.fn.DocumentModelFunctions;
 import org.nuxeo.ecm.webengine.WebException;
@@ -59,12 +59,12 @@ public class ToutaticeFunctions extends PlatformFunctions {
      * @return url de download du blob identifier par son xpath dans le document
      *         nuxeo
      * @throws PropertyException
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public String getDownloadFileUrl(DocumentModel doc, String xpath) throws PropertyException, ClientException {
+    public String getDownloadFileUrl(DocumentModel doc, String xpath) throws PropertyException, NuxeoException {
 
         BlobProperty blob = (BlobProperty) doc.getProperty(xpath);
-        String filename = ((SQLBlob) blob.getValue()).getFilename();
+        String filename = blob.getValue(Blob.class).getFilename();
         String url = DocumentModelFunctions.fileUrl("downloadFile", doc, xpath, filename);
 
         return url;
@@ -74,9 +74,9 @@ public class ToutaticeFunctions extends PlatformFunctions {
      * @param le document
      * @return permalink pour visualiser le document depuis le portail, si le document n'est pas visualisable la méthode retourne ""
      * @throws PropertyException
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public String getPermalink(DocumentModel doc) throws PropertyException, ClientException {
+    public String getPermalink(DocumentModel doc) throws PropertyException, NuxeoException {
         String url = StringUtils.EMPTY;
         // verification : le document doit pouvoir être visible dans toutatice
         if (ToutaticeDocumentHelper.isVisibleInPortal(doc, doc.getCoreSession())) {
@@ -285,7 +285,7 @@ public class ToutaticeFunctions extends PlatformFunctions {
      * @param username
      * @return firstName + lastName of user.
      * @throws Exception
-     * @throws ClientException
+     * @throws NuxeoException
      */
     public String getUserFullName(String username) {
         String fullName = StringUtils.EMPTY;

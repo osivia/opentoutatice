@@ -7,10 +7,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.platform.uidgen.UIDGenerator;
-import org.nuxeo.ecm.platform.uidgen.UIDSequencer;
-import org.nuxeo.ecm.platform.uidgen.service.UIDGeneratorDescriptor;
-import org.nuxeo.ecm.platform.uidgen.service.UIDSequencerImpl;
+import org.nuxeo.ecm.core.uidgen.UIDGenerator;
+import org.nuxeo.ecm.core.uidgen.UIDGeneratorDescriptor;
+import org.nuxeo.ecm.core.uidgen.UIDGeneratorService;
+import org.nuxeo.ecm.core.uidgen.UIDSequencer;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.model.ComponentContext;
 import org.nuxeo.runtime.model.DefaultComponent;
@@ -32,18 +32,18 @@ public class TTCUIDGeneratorService extends DefaultComponent {
     private final Map<String, UIDGenerator> generators = new HashMap<String, UIDGenerator>();
 
     @Override
-    public void activate(ComponentContext context) throws Exception {
+    public void activate(ComponentContext context) {
         super.activate(context);
     }
 
     @Override
-    public void deactivate(ComponentContext context) throws Exception {
+    public void deactivate(ComponentContext context) {
         super.deactivate(context);
-        UIDSequencerImpl.dispose();
+        getSequencer().dispose();
     }
 
     @Override
-    public void registerExtension(Extension extension) throws Exception {
+    public void registerExtension(Extension extension) {
         log.debug("<registerExtension>");
         super.registerExtension(extension);
 
@@ -52,7 +52,11 @@ public class TTCUIDGeneratorService extends DefaultComponent {
             log.info("register contributions for extension point: " + UID_GENERATORS_EXTENSION_POINT);
 
             final Object[] contribs = extension.getContributions();
-            registerGenerators(extension, contribs);
+            try {
+                registerGenerators(extension, contribs);
+            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                log.error(e);
+            }
         } else {
             log.warn("extension not handled: " + extPoint);
         }
@@ -107,7 +111,7 @@ public class TTCUIDGeneratorService extends DefaultComponent {
     }
 
     @Override
-    public void unregisterExtension(Extension extension) throws Exception {
+    public void unregisterExtension(Extension extension) {
         log.debug("<unregisterExtension>");
         super.unregisterExtension(extension);
     }
@@ -181,9 +185,11 @@ public class TTCUIDGeneratorService extends DefaultComponent {
     @Override
     public <T> T getAdapter(Class<T> adapter) {
         if (UIDSequencer.class.isAssignableFrom(adapter)) {
-            return adapter.cast(new UIDSequencerImpl());
+            return adapter.cast(getSequencer());
+        }
+        if (UIDGeneratorService.class.isAssignableFrom(adapter)) {
+            return adapter.cast(this);
         }
         return null;
     }
-
 }

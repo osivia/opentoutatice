@@ -26,7 +26,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -49,7 +49,7 @@ public class ToutaticeDocumentResolver {
 	}
 
 	public static DocumentModelList resolveReference(CoreSession session, WebIdRef webIdRef)
-			throws DocumentException, ClientException {
+			throws DocumentException, NuxeoException {
 		if (webIdRef == null) {
 			throw new DocumentException("Invalid reference (null)");
 		}
@@ -61,7 +61,7 @@ public class ToutaticeDocumentResolver {
 		return resolveDocumentByWebId(session, webIdRef);
 	}
 
-	protected static DocumentModelList resolveDocumentByWebId(CoreSession session, WebIdRef webIdRef) throws ClientException {
+	protected static DocumentModelList resolveDocumentByWebId(CoreSession session, WebIdRef webIdRef) throws NuxeoException {
 	    
 		String webId = (String) webIdRef.reference();
 		
@@ -69,14 +69,14 @@ public class ToutaticeDocumentResolver {
 		try {
 		    documents = WebIdResolver.getDocumentsByWebId(session, webId);
         } catch (NoSuchDocumentException de) {
-           throw new ClientException(de);
+           throw new NuxeoException(de);
         }
 		
 		return documents;
 	}
 	
 	protected static final void checkPermission(CoreSession session, DocumentModel doc, String permission)
-            throws DocumentException, ClientException {
+            throws DocumentException, NuxeoException {
         if (doc != null && !session.hasPermission(doc.getRef(), permission)) {
             throw new DocumentSecurityException("Privilege '" + permission
                     + "' is not granted to '" + session.getPrincipal().getName() + "'");

@@ -41,7 +41,7 @@ import org.nuxeo.ecm.automation.OperationNotFoundException;
 import org.nuxeo.ecm.automation.OperationType;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.impl.InvokableMethod;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -87,7 +87,7 @@ public class ToutaticeDocumentHelper {
      * @param id
      * @return a document fetched with unrestricted session.
      */
-    public static DocumentModel getUnrestrictedDocument(CoreSession session, String id) throws ClientException {
+    public static DocumentModel getUnrestrictedDocument(CoreSession session, String id) throws NuxeoException {
 
         GetUnrestrictedDocument getter = new GetUnrestrictedDocument(session, id);
         getter.runUnrestricted();
@@ -113,7 +113,7 @@ public class ToutaticeDocumentHelper {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             if (StringUtils.isNotBlank(this.id)) {
                 DocumentRef ref = null;
                 if (!StringUtils.contains(this.id, "/")) {
@@ -163,7 +163,7 @@ public class ToutaticeDocumentHelper {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             this.parent = this.session.getParentDocument(this.document.getRef());
         }
 
@@ -226,7 +226,7 @@ public class ToutaticeDocumentHelper {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             this.session.saveDocument(this.document);
         }
 
@@ -246,7 +246,7 @@ public class ToutaticeDocumentHelper {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             this.session.removeDocument(this.docRef);
         }
 
@@ -288,7 +288,7 @@ public class ToutaticeDocumentHelper {
                         }
                     }
                 }
-            } catch (ClientException e) {
+            } catch (NuxeoException e) {
                 log.debug("Failed to get the latest version of the document '" + document.getName() + "', error: " + e.getMessage());
             }
         }
@@ -343,7 +343,7 @@ public class ToutaticeDocumentHelper {
                 Calendar ref_modified = (GregorianCalendar) ref.getPropertyValue("dc:modified");
                 Calendar comp_modified = (GregorianCalendar) comp.getPropertyValue("dc:modified");
                 isNewer = comp_modified.after(ref_modified);
-            } catch (ClientException e) {
+            } catch (NuxeoException e) {
                 log.debug("Failed to determine wich document is the latest modified");
             }
 
@@ -436,7 +436,7 @@ public class ToutaticeDocumentHelper {
                 runner.run();
             }
             parent = runner.getParentList();
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             log.warn("Failed to get the parent for the current document, error: " + e.getMessage());
         }
 
@@ -519,7 +519,7 @@ public class ToutaticeDocumentHelper {
                 runner.run();
             }
             mapPpty = runner.getProperties();
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             log.warn("Failed to get the parent for the current document, error: " + e.getMessage());
         }
 
@@ -556,10 +556,10 @@ public class ToutaticeDocumentHelper {
      * @param session
      * @param document
      * @return
-     * @throws ClientException
+     * @throws NuxeoException
      * @throws PropertyException
      */
-    public static String getSpaceID(CoreSession session, DocumentModel document, boolean runInUnrestrictedMode) throws ClientException, PropertyException {
+    public static String getSpaceID(CoreSession session, DocumentModel document, boolean runInUnrestrictedMode) throws NuxeoException, PropertyException {
         String spaceId = ""; // le document courant n'appartient pas à un space
 
         // si UserWorspace => spaceId = dc:title (conversion en minuscule afin de pouvoir utiliser l'indexation sur cette méta-donnée)
@@ -596,9 +596,9 @@ public class ToutaticeDocumentHelper {
      *            exécutée en mode unrestricted (session System) ou bien avec la
      *            session de l'utilisateur courant?
      * @return le domain parent du document courant
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public static DocumentModel getDomain(CoreSession session, DocumentModel document, boolean runInUnrestrictedMode) throws ClientException {
+    public static DocumentModel getDomain(CoreSession session, DocumentModel document, boolean runInUnrestrictedMode) throws NuxeoException {
         DocumentModel domain = null;
 
         // sinon récupérer la liste des spaceParents
@@ -672,7 +672,7 @@ public class ToutaticeDocumentHelper {
                     }
                 }
             }
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             log.error("Failed to filter the active sections, error: " + e.getMessage());
         }
 
@@ -688,9 +688,9 @@ public class ToutaticeDocumentHelper {
      * @param document le document pour lequel la recherche est faite
      * @return le proxy associé ou null si aucun proxy existe ou une exception
      *         de sécurité si les droits sont insuffisants.
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public static DocumentModel getProxy(CoreSession session, DocumentModel document, String permission) throws ClientException {
+    public static DocumentModel getProxy(CoreSession session, DocumentModel document, String permission) throws NuxeoException {
         return getProxy(session, document, permission, true);
     }
 
@@ -704,9 +704,9 @@ public class ToutaticeDocumentHelper {
      * @param unrestricted true si le proxy doit être récupéré en mode unrestricted. False s'il doit être récupéré avec la session utilisateur courante
      * @return le proxy associé ou null si aucun proxy existe ou une exception
      *         de sécurité si les droits sont insuffisants.
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public static DocumentModel getProxy(CoreSession session, DocumentModel document, String permission, boolean unrestricted) throws ClientException {
+    public static DocumentModel getProxy(CoreSession session, DocumentModel document, String permission, boolean unrestricted) throws NuxeoException {
         DocumentModel proxy = null;
 
         DocumentModelList proxies = getProxies(session, document, ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE.LOCAL, permission, unrestricted);
@@ -731,10 +731,10 @@ public class ToutaticeDocumentHelper {
      * @param unrestricted true si le proxy doit être récupéré en mode unrestricted. False s'il doit être récupéré avec la session utilisateur courante
      * @return le proxy associé ou null si aucun proxy existe ou une exception
      *         de sécurité si les droits sont insuffisants.
-     * @throws ClientException
+     * @throws NuxeoException
      */
     public static DocumentModelList getProxies(CoreSession session, DocumentModel document, ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE scope,
-            String permission, boolean unrestricted) throws ClientException {
+            String permission, boolean unrestricted) throws NuxeoException {
         DocumentModelList proxies = null;
 
         if (null != document) {
@@ -763,9 +763,9 @@ public class ToutaticeDocumentHelper {
      * @param document
      *            le document pour lequel la recherche est faite
      * @return la version du proxy associé ou null si aucun proxy existe
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public static String getProxyVersion(CoreSession session, DocumentModel document) throws ClientException {
+    public static String getProxyVersion(CoreSession session, DocumentModel document) throws NuxeoException {
         String proxyVersion = null;
 
         DocumentModel proxy = getProxy(session, document, null);
@@ -778,7 +778,7 @@ public class ToutaticeDocumentHelper {
         return proxyVersion;
     }
 
-    public static boolean isVisibleInPortal(DocumentModel doc, CoreSession session) throws ClientException {
+    public static boolean isVisibleInPortal(DocumentModel doc, CoreSession session) throws NuxeoException {
         boolean res = false;
 
         // le document est en ligne ?
@@ -898,16 +898,16 @@ public class ToutaticeDocumentHelper {
             this.scope = scope;
         }
 
-        public DocumentModel getProxy() throws ClientException {
+        public DocumentModel getProxy() throws NuxeoException {
             return (null != this.proxies && 0 < this.proxies.size()) ? this.proxies.get(0) : null;
         }
 
-        public DocumentModelList getProxies() throws ClientException {
+        public DocumentModelList getProxies() throws NuxeoException {
             return (null != this.proxies && 0 < this.proxies.size()) ? this.proxies : null;
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             if (null == scope || ToutaticeGlobalConst.CST_TOUTATICE_PROXY_LOOKUP_SCOPE.GLOBAL.equals(scope)) {
                 // lookup all proxies of the document (wherever they are placed in the repository)
                 this.proxies = this.session.getProxies(document.getRef(), null);
@@ -931,7 +931,7 @@ public class ToutaticeDocumentHelper {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             String srcDocID = this.proxy.getSourceId();
             // For compatibility with content views managed by ES (JsonDocumentModelReader#getDocumentModel
             // has sid null when fetchFromEs is true
@@ -973,7 +973,7 @@ public class ToutaticeDocumentHelper {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             DocumentModelList lstParent = getParentList(session, this.doc, this.filter, this.runInUnrestrictedMode, true, this.included);
             DocumentModel parent = null;
             if (lstParent != null && !lstParent.isEmpty()) {
@@ -1010,7 +1010,7 @@ public class ToutaticeDocumentHelper {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
 
             if (this.thisIncluded && this.baseDoc.isFolder()) {
                 if (null != this.filter) {
@@ -1061,7 +1061,7 @@ public class ToutaticeDocumentHelper {
             UnrestrictedGetSameDocsListRunner runner = new UnrestrictedGetSameDocsListRunner(session, document, filter);
             runner.runUnrestricted();
             count = runner.getCount();
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             log.error("Failed to get the same document of one folder, error: " + e.getMessage());
         }
 
@@ -1086,7 +1086,7 @@ public class ToutaticeDocumentHelper {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             String docTitle = this.document.getTitle();
             DocumentModel docParent = this.session.getParentDocument(this.document.getRef());
             DocumentModelList rs = this.session.query("SELECT * FROM " + this.document.getType() + " WHERE ecm:parentId = '" + docParent.getId() + "' "
@@ -1105,9 +1105,9 @@ public class ToutaticeDocumentHelper {
      * @param aclName par défaut Local
      * @param filter
      * @return
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public static ACL getDocumentACL(CoreSession session, DocumentModel doc, String aclName, ToutaticeFilter<ACE> filter) throws ClientException {
+    public static ACL getDocumentACL(CoreSession session, DocumentModel doc, String aclName, ToutaticeFilter<ACE> filter) throws NuxeoException {
         ACL res = new ACLImpl();
 
         if (StringUtils.isBlank(aclName)) {
@@ -1146,9 +1146,9 @@ public class ToutaticeDocumentHelper {
      * @param session
      * @param ref
      * @param ace
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public static void setACE(CoreSession session, DocumentRef ref, ACE ace) throws ClientException {
+    public static void setACE(CoreSession session, DocumentRef ref, ACE ace) throws NuxeoException {
         ACPImpl acp = new ACPImpl();
         ACLImpl acl = new ACLImpl(ACL.LOCAL_ACL);
         acp.addACL(acl);
@@ -1236,7 +1236,7 @@ public class ToutaticeDocumentHelper {
         return new InvokableMethod(opType, method, anno);
     }
 
-    public static DocumentModel getMediaSpace(DocumentModel doc, CoreSession session) throws ClientException {
+    public static DocumentModel getMediaSpace(DocumentModel doc, CoreSession session) throws NuxeoException {
         DocumentModel mediaSpace = null;
         DocumentModel currentDomain = ToutaticeDocumentHelper.getDomain(session, doc, true);
         if (currentDomain != null) {
@@ -1280,9 +1280,9 @@ public class ToutaticeDocumentHelper {
     /**
      * @param document
      * @return true if document still exists.
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public static boolean isDocStillExists(CoreSession session, DocumentModel document) throws ClientException {
+    public static boolean isDocStillExists(CoreSession session, DocumentModel document) throws NuxeoException {
         boolean exists = false;
 
         if (document != null) {
@@ -1291,7 +1291,7 @@ public class ToutaticeDocumentHelper {
                 session.getDocument(document.getRef());
                 exists = true;
 
-            } catch (ClientException ce) {
+            } catch (NuxeoException ce) {
 
                 if (ce.getCause() instanceof NoSuchDocumentException) {
                     exists = false;

@@ -20,7 +20,7 @@
  */
 package fr.toutatice.ecm.platform.core.listener;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -38,7 +38,7 @@ import fr.toutatice.ecm.platform.core.query.helper.ToutaticeQueryHelper;
 public class ToutaticeDocumentMoved implements EventListener {
 
 	@Override
-	public void handleEvent(Event event) throws ClientException {
+	public void handleEvent(Event event) throws NuxeoException {
 		if (event.getContext() instanceof DocumentEventContext) {
 			DocumentEventContext ctx = (DocumentEventContext) event.getContext();
 			DocumentModel movedDocument = ctx.getSourceDocument();
@@ -63,7 +63,7 @@ public class ToutaticeDocumentMoved implements EventListener {
 		}
 		
 		@Override
-		public void run() throws ClientException {
+		public void run() throws NuxeoException {
 			// vérifier qu'il ne s'agit pas d'un renommage de document
 			DocumentRef srcFolderRef = (DocumentRef) this.ctx.getProperty(CoreEventConstants.PARENT_PATH);
 			DocumentRef dstFolderRef = this.movedDocument.getParentRef();

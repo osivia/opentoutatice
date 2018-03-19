@@ -20,7 +20,7 @@
 package fr.toutatice.ecm.platform.core.listener;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.event.Event;
@@ -47,7 +47,7 @@ public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListe
 	private static final String[] SELECTED_EVENTS = {"documentCreated", "documentCreatedByCopy", "documentMoved", "documentRestored"};
 
 	@Override
-	public void handleEvent(EventBundle events) throws ClientException {
+	public void handleEvent(EventBundle events) throws NuxeoException {
 		for (Event event : events) {
 
 			if (event.getContext() instanceof DocumentEventContext) {
@@ -68,7 +68,7 @@ public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListe
 						ToutaticeOperationHelper.runOperationChain(session, MOVE_OP_CHAIN, document);
 					}
 				} catch (ToutaticeException e) {
-					throw new ClientException(e);
+					throw new NuxeoException(e);
 				}
 			}
 		}

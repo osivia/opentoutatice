@@ -31,7 +31,7 @@ import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -86,7 +86,7 @@ public class FetchPublishingStatusChildren {
     protected String publishStatus;
 
     @OperationMethod
-    public Object run() throws ClientException, ServeurException, UnsupportedEncodingException {
+    public Object run() throws NuxeoException, ServeurException, UnsupportedEncodingException {
 
         JSONArray childrenWithStatus = new JSONArray();
         if (document.isProxy()) {
@@ -167,10 +167,10 @@ public class FetchPublishingStatusChildren {
      * @param childrenWithStatus
      * @param child
      * @param childWithStatus
-     * @throws ClientException
+     * @throws NuxeoException
      * @throws UnsupportedEncodingException 
      */
-    public JSONArray fillGlobalProperties(JSONArray childrenWithStatus, DocumentModel child, JSONObject childWithStatus) throws ClientException, UnsupportedEncodingException {
+    public JSONArray fillGlobalProperties(JSONArray childrenWithStatus, DocumentModel child, JSONObject childWithStatus) throws NuxeoException, UnsupportedEncodingException {
         childWithStatus.element("docId", child.getId());
         childWithStatus.element("docPath", URLEncoder.encode(child.getPathAsString(), "UTF-8"));
         childWithStatus.element("docType", child.getType());

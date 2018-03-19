@@ -37,7 +37,7 @@ import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.automation.core.util.StringList;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.LifeCycleConstants;
@@ -95,7 +95,7 @@ public class GetExtendedTasks // extends GetUserTasks
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             List<Task> tasks = taskService.getCurrentTaskInstances(userSession);
 
             if (tasks == null) {
@@ -143,7 +143,7 @@ public class GetExtendedTasks // extends GetUserTasks
 
                                 rows.add(obj);
                             } catch (UnsupportedEncodingException e) {
-                                throw new ClientException(e);
+                                throw new NuxeoException(e);
                             }
                         }
                     }

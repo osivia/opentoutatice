@@ -8,16 +8,17 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
-import javax.faces.convert.Converter;
 
+import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.platform.ui.web.component.editor.HtmlEditorRenderer;
 import org.nuxeo.ecm.platform.ui.web.component.editor.UIHtmlEditor;
 import org.nuxeo.ecm.platform.ui.web.htmleditor.api.HtmlEditorPluginService;
 import org.nuxeo.runtime.api.Framework;
+
+import com.sun.faces.renderkit.html_basic.HtmlBasicRenderer;
 
 
 /**
@@ -25,33 +26,31 @@ import org.nuxeo.runtime.api.Framework;
  *
  */
 public class OttcHTMLEditorRenderer extends HtmlEditorRenderer {
-    
-    private static Map<String, String> pluginsOptions;
 
+    private static Map<String, String> pluginsOptions;
     private static Map<String, String> toolbarPluginsOptions;
-    
-    //private Converter converter;
 
     /**
-     * 
+     * Constructor.
      */
     public OttcHTMLEditorRenderer() {
         super();
     }
-    
+
     @Override
-    public void encodeBegin(FacesContext context, UIComponent component)
-          throws IOException {
-
+    public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
         rendererParamsNotNull(context, component);
-
     }
 
+    /**
+     * We must implement this method to be able to use DocumentContentConverter during validation phase.
+     * Furthermore, the static <code>HtmlEditorRenderer.getCurrentValue()</code> method disable default validate behavior,
+     * so we have to rewrite textarea with currentValue, i.e. converted value (cf {@link HtmlBasicRenderer#getCurrentValue(FacesContext,
+     * UIComponent)} method).
+     * The static behavior of <code>HtmlEditorRenderer.getCurrentValue()</code> implies to rewrite all code ...
+     */
     @Override
-    protected void getEndTextToRender(FacesContext context,
-                                      UIComponent component,
-                                      String currentValue) throws IOException {
-        
+    protected void getEndTextToRender(FacesContext context, UIComponent component, String currentValue) throws IOException {
         if (!component.isRendered()) {
             return;
         }
@@ -60,15 +59,13 @@ public class OttcHTMLEditorRenderer extends HtmlEditorRenderer {
         ResponseWriter writer = context.getResponseWriter();
         Locale locale = context.getViewRoot().getLocale();
 
-        // tiny MCE generic scripts now included in every page header
-
-        // script to actually init tinyMCE with configured options
-        String editorSelector = editorComp.getEditorSelector();
-        // plugins registration
         if (pluginsOptions == null) {
             final HtmlEditorPluginService pluginService = Framework.getLocalService(HtmlEditorPluginService.class);
             pluginsOptions = new HashMap<String, String>();
             pluginsOptions.put("plugins", pluginService.getFormattedPluginsNames());
+        }
+        if (toolbarPluginsOptions == null) {
+            final HtmlEditorPluginService pluginService = Framework.getLocalService(HtmlEditorPluginService.class);
             toolbarPluginsOptions = new HashMap<String, String>();
             toolbarPluginsOptions.put("toolbar", pluginService.getFormattedToolbarsButtonsNames());
         }
@@ -80,6 +77,7 @@ public class OttcHTMLEditorRenderer extends HtmlEditorRenderer {
         writer.startElement("textarea", editorComp);
         writer.writeAttribute("id", clientId, null);
         writer.writeAttribute("name", clientId, null);
+        String editorSelector = editorComp.getEditorSelector();
         if (Boolean.TRUE.equals(editorComp.getDisableHtmlInit())) {
             writer.writeAttribute("class", editorSelector + ",disableMCEInit", null);
         } else {
@@ -87,10 +85,9 @@ public class OttcHTMLEditorRenderer extends HtmlEditorRenderer {
         }
         writer.writeAttribute("rows", editorComp.getRows(), null);
         writer.writeAttribute("cols", editorComp.getCols(), null);
-        //Object currentValue = getCurrentValue(editorComp);
+        // We do not use of HtmlEditorRenderer.getCurrentValue() here
         if (currentValue != null) {
-            //writer.writeText(currentValue, null);
-            writer.writeText(currentValue, editorComp, "value");
+            writer.writeText(currentValue, null);
         } else {
             writer.writeText("", null);
         }
@@ -99,24 +96,28 @@ public class OttcHTMLEditorRenderer extends HtmlEditorRenderer {
         if (!disableHtmlInit) {
             writer.startElement("script", editorComp);
             writer.writeAttribute("type", "text/javascript", null);
+            String compConfiguration = editorComp.getConfiguration();
+            if (StringUtils.isBlank(compConfiguration)) {
+                compConfiguration = "{}";
+            }
             // Since 5.7.3, use unique clientId instead of editorSelector value
             // so that tiny mce editors are initialized individually: no need
             // anymore to specify a class to know which one should or should
             // not be initialized
-            String scriptContent = String.format("initTinyMCE(%s, %s, '%s', '%s', '%s', '%s');", editorComp.getWidth(),
-                    editorComp.getHeight(), clientId, pluginsOptions.get("plugins"), locale.getLanguage(),
-                    toolbarPluginsOptions.get("toolbar"));
+            String scriptContent = new StringBuilder().append("initTinyMCE(").append(editorComp.getWidth()).append(", ").append(editorComp.getHeight())
+                    .append(", '").append(clientId).append("', '").append(pluginsOptions.get("plugins")).append("', '").append(locale.getLanguage())
+                    .append("', '").append(toolbarPluginsOptions.get("toolbar")).append("', '").append(compConfiguration).append("');").toString();
             writer.writeText(scriptContent, null);
-            String ajaxScriptContent = String.format(
-                    "jsf.ajax.addOnEvent(function(data) {if (data.status == \"success\") {%s}});", scriptContent);
+            String ajaxScriptContent = "jsf.ajax.addOnEvent(function(data) {if (data.status == \"success\") {" + scriptContent + "}});";
             writer.writeText(ajaxScriptContent, null);
-            String scriptContent2 = String.format(
-                    "jQuery(document.getElementById('%s')).closest('form').bind('ajaxsubmit', function() {tinyMCE.editors['%s'].save();});",
-                    clientId, clientId);
+            String scriptContent2 = "jQuery(document.getElementById('" + clientId
+                    + "')).closest('form').bind('ajaxsubmit', function() { var editor = tinyMCE.editors['" + clientId
+                    + "']; if (editor != undefined) {editor.save()};});";
             writer.writeText(scriptContent2, null);
             writer.endElement("script");
         }
-        
+
+        writer.flush();
     }
 
 }

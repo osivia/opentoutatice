@@ -23,7 +23,7 @@ package fr.toutatice.ecm.platform.core.listener;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -45,7 +45,7 @@ public class ToutaticeDeleteEventListener implements EventListener {
 	private static String CST_QUERY_DOCUMENT_HAVING_A_SECTION_REFERENCE = "SELECT * FROM Document WHERE ecm:mixinType = 'Folderish' AND ecm:mixinType != 'HiddenInNavigation' AND ecm:isCheckedInVersion = 0 AND ecm:currentLifeCycleState != 'deleted' AND ecm:isProxy = 0 AND publish:sections IN ('%s')";
 
 	@Override
-	public void handleEvent(Event event) throws ClientException {
+	public void handleEvent(Event event) throws NuxeoException {
 		if (event.getContext() instanceof DocumentEventContext) {
 			EventContext ctx = event.getContext();
 			DocumentEventContext  docCtx = (DocumentEventContext) event.getContext();

@@ -21,7 +21,7 @@ package fr.toutatice.ecm.platform.web.adapters;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.picture.api.adapters.PictureBookBlobHolder;
 
@@ -38,7 +38,7 @@ public class ToutaticePictureBookBlobHolder extends PictureBookBlobHolder {
 	}
 
 	@Override
-	public Blob getBlob() throws ClientException {
+	public Blob getBlob() throws NuxeoException {
 		Blob b = null;
 		
 		try {

@@ -14,7 +14,7 @@ import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
@@ -45,10 +45,10 @@ public class GetDocumentACLs {
     /**
      * @param document
      * @return ACEs of document as List.
-     * @throws ClientException
+     * @throws NuxeoException
      */
     @OperationMethod
-    public Object run(DocumentModel document) throws ClientException {
+    public Object run(DocumentModel document) throws NuxeoException {
         JSONObject allACLs = new JSONObject();
         
         ACP acp = session.getACP(document.getRef());

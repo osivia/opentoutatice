@@ -27,7 +27,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
@@ -60,7 +60,7 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
 
 
 	@Override
-	protected boolean getCanMoveDown(DocumentModel container, String documentsListName) throws ClientException {
+	protected boolean getCanMoveDown(DocumentModel container, String documentsListName) throws NuxeoException {
 		boolean status = false;
 
 		List<DocumentModel> docs = documentsListsManager.getWorkingList(documentsListName);
@@ -85,7 +85,7 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
 	}
 	
 	@Override
-	protected boolean getCanMoveUp(DocumentModel container,	String documentsListName) throws ClientException {
+	protected boolean getCanMoveUp(DocumentModel container,	String documentsListName) throws NuxeoException {
 		boolean status = false;
 		
 		List<DocumentModel> docs = documentsListsManager.getWorkingList(documentsListName);
@@ -110,7 +110,7 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
 	}
 
 	@Override
-	protected boolean getCanMoveToTop(DocumentModel container, String documentsListName) throws ClientException {
+	protected boolean getCanMoveToTop(DocumentModel container, String documentsListName) throws NuxeoException {
 		boolean status = false;
 
 		List<DocumentModel> docs = documentsListsManager.getWorkingList(documentsListName);
@@ -134,7 +134,7 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
 	}
 	
 	@Override
-	protected boolean getCanMoveToBottom(DocumentModel container, String documentsListName) throws ClientException {
+	protected boolean getCanMoveToBottom(DocumentModel container, String documentsListName) throws NuxeoException {
 		boolean status = false;
 		
 		List<DocumentModel> docs = documentsListsManager.getWorkingList(documentsListName);
@@ -158,7 +158,7 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
 	}
 
 	@Override
-	protected String moveDown(DocumentModel container, String documentsListName) throws ClientException {
+	protected String moveDown(DocumentModel container, String documentsListName) throws NuxeoException {
 		DocumentModel selectedDocument = documentsListsManager.getWorkingList(documentsListName).get(0);
 
 		List<DocumentModel> children = getChildrenFor(container.getId());
@@ -180,7 +180,7 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
 	}
 
 	@Override
-	protected String moveUp(DocumentModel container, String documentsListName) throws ClientException {
+	protected String moveUp(DocumentModel container, String documentsListName) throws NuxeoException {
         DocumentModel selectedDocument = documentsListsManager.getWorkingList(documentsListName).get(0);
 
         List<DocumentModel> children = getChildrenFor(container.getId());
@@ -202,7 +202,7 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
 	}
 
 	@Override
-	protected String moveToTop(DocumentModel container, String documentsListName) throws ClientException {
+	protected String moveToTop(DocumentModel container, String documentsListName) throws NuxeoException {
         DocumentModel selectedDocument = documentsListsManager.getWorkingList(documentsListName).get(0);
         List<DocumentModel> children = getChildrenFor(container.getId());
         DocumentModel firstDocument = children.get(0);
@@ -221,7 +221,7 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
 	}
 	
 	@Override
-	protected String moveToBottom(DocumentModel container, String documentsListName) throws ClientException {
+	protected String moveToBottom(DocumentModel container, String documentsListName) throws NuxeoException {
         DocumentRef containerRef = container.getRef();
         DocumentModel selectedDocument = documentsListsManager.getWorkingList(documentsListName).get(0);
         documentManager.orderBefore(containerRef, selectedDocument.getName(), null);
@@ -236,26 +236,26 @@ public class ToutaticeOrderableDocumentActions extends OrderableDocumentActions 
         return null;
 	}
 	
-	protected DocumentModelList getChildrenFor(String containerId) throws ClientException {
+	protected DocumentModelList getChildrenFor(String containerId) throws NuxeoException {
 		try {
 			// don't use the query model: is deprecated & has a result size limitation too small
 			 return documentManager.query(String.format(QUERY_DOC_ORDERED_CHILDREN_QM, containerId), CST_MAX_RESULT_SET_SIZE);
 		} catch (Exception e) {
-			throw new ClientException(e);
+			throw new NuxeoException(e);
 		}
 	}
 
 	/**
 	 * Si le document passé en paramètre possède un proxy, ce dernier est placé au dessus du document target.
 	 */
-	protected void moveDocumentProxy(DocumentModel container, DocumentModel document) throws ClientException {
+	protected void moveDocumentProxy(DocumentModel container, DocumentModel document) throws NuxeoException {
 		DocumentModel proxy = documentActions.getProxy(document);
 		if (null != proxy) {
 			documentManager.orderBefore(container.getRef(), proxy.getName(), document.getName());
 		}
 	}
 	
-	private boolean checkPermissions(DocumentModel container, DocumentModel source, DocumentModel destination) throws ClientException {
+	private boolean checkPermissions(DocumentModel container, DocumentModel source, DocumentModel destination) throws NuxeoException {
 		boolean status = true;
 		
 		if ( !documentManager.hasPermission(container.getRef(), SecurityConstants.WRITE) 

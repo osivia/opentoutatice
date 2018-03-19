@@ -2,31 +2,43 @@
 <component name="fr.toutatice.ecm.platform.web.theme">
 
 	<require>org.nuxeo.theme.services.ThemeService</require>
-    <require>org.nuxeo.theme.nuxeo.default</require>
+	<require>org.nuxeo.theme.nuxeo.webapp</require>
 
-	<extension target="org.nuxeo.theme.styling.service" point="pages">
-		<themePage name="*">
-			<styles append="true">
-				<style>local-publishing</style>
-				<style>images-tab</style>
-				<style>opentoutatice</style>
-			</styles>
-		</themePage>
+	<!-- For all pages in BO -->
+	<extension target="org.nuxeo.ecm.platform.WebResources"
+		point="bundles">
+		
+		<bundle name="nuxeo_includes">
+			<resources append="true">
+				<resource>local-publishing.css</resource>
+				<resource>images-tab.css</resource>
+				<resource>opentoutatice.css</resource>
+				<resource>glyphicons.css</resource>
+			</resources>
+		</bundle>
+		
 	</extension>
 
-	<extension target="org.nuxeo.theme.styling.service" point="styles">
-		<style name="local-publishing">
-			<src>themes/css/local-publishing.css</src>
-		</style>
-		<style name="images-tab">
-			<src>themes/css/images-tab.css</src>
-		</style>
-		<style name="opentoutatice">
-			<src>themes/css/opentoutatice.css</src>
-		</style>
+	<extension target="org.nuxeo.ecm.platform.WebResources" 
+		point="resources">
+		
+		<resource name="local-publishing.css" type="css">
+			<path>themes/css/local-publishing.css</path>
+		</resource>
+		<resource name="images-tab.css" type="css">
+			<path>themes/css/images-tab.css</path>
+		</resource>
+		<resource name="opentoutatice.css" type="css">
+			<path>themes/css/opentoutatice.css</path>
+		</resource>
+			<resource name="glyphicons.css">
+			<uri>/css/glyphicons/css/glyphicons.css</uri>
+		</resource>
+		
 	</extension>
+	
 
-	<extension target="org.nuxeo.theme.services.ThemeService"
+	<!-- How to replace??? <extension target="org.nuxeo.theme.services.ThemeService"
 		point="applications">
 
 		<application root="${org.nuxeo.ecm.contextPath}"
@@ -37,32 +49,6 @@
 			</view>
 
 		</application>
-	</extension>
-
-
-	<extension target="org.nuxeo.theme.services.ThemeService"
-		point="resources">
-
-		<resource name="ottc.custom.tinymce.init.js">
-			<path>tinymce/ottc_custom_tinymce_init.js</path>
-		</resource>
-
-		<resource name="ottc.simple.tinymce.init.js">
-			<path>tinymce/ottc_simple_tinymce_responsive_init.js</path>
-		</resource>
-
-	</extension>
-
-	<extension target="org.nuxeo.theme.services.ThemeService"
-		point="views">
-
-		<view name="nuxeo5 includes" template-engine="jsf-facelets" merge="true">
-			<format-type>widget</format-type>
-			<resource>glyphicons.css</resource>
-			<resource>ottc.custom.tinymce.init.js</resource>
-			<resource>ottc.simple.tinymce.init.js</resource>
-		</view>
-
-	</extension>
+	</extension> -->
 
 </component>

@@ -33,7 +33,7 @@ import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.automation.core.collectors.DocumentModelCollector;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -89,7 +89,7 @@ public class PublishDocument {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
 
             this.newProxy = null;
             String formerProxyName = null;
@@ -186,7 +186,7 @@ public class PublishDocument {
                 srcDoc = this.session.saveDocument(srcDoc);
                 
             } else {
-                throw new ClientException("Failed to get the target document reference");
+                throw new NuxeoException("Failed to get the target document reference");
             }
         }
 

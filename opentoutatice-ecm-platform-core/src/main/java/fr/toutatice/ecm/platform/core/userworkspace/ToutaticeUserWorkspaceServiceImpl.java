@@ -25,7 +25,7 @@ public class ToutaticeUserWorkspaceServiceImpl extends DefaultUserWorkspaceServi
 
     private static final long serialVersionUID = 4769849621676186385L;
 
-    @Override
+    // @Override
     protected PathRef resolveUserWorkspace(CoreSession session, PathRef rootref, String username, String workspacename, int maxsize) {
         PathRef uwref = new PathRef(rootref, workspacename);
 

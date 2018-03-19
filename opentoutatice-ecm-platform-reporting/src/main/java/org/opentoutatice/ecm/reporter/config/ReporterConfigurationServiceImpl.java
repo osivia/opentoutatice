@@ -21,12 +21,12 @@ public class ReporterConfigurationServiceImpl extends DefaultComponent implement
     private Map<String, Class<?>> reportersByCaller;
     
     @Override
-    public void activate(org.nuxeo.runtime.model.ComponentContext context) throws Exception {
+    public void activate(org.nuxeo.runtime.model.ComponentContext context) {
         this.reportersByCaller = new HashMap<String, Class<?>>();
     }
     
     @Override
-    public void registerExtension(Extension extension) throws Exception {
+    public void registerExtension(Extension extension) {
         // Contributions
         Object[] contributions = extension.getContributions();
         

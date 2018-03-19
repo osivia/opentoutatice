@@ -30,7 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.annotations.In;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -92,7 +92,7 @@ public class WebConfsConfigurationAdapter extends AbstractLocalConfiguration<Web
         String[] webConfs;
         try {
             webConfs = (String[]) doc.getPropertyValue(property);
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             return Collections.emptyList();
         }
         if (webConfs == null) {
@@ -105,12 +105,12 @@ public class WebConfsConfigurationAdapter extends AbstractLocalConfiguration<Web
         try {
             Boolean value = (Boolean) doc.getPropertyValue(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_DENIED_ALL_PROPERTY);
             return Boolean.TRUE.equals(value);
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             return false;
         }
     }
 
-    public List<DocumentModel> getSelectedConfs(DocumentModel document) throws ClientException {
+    public List<DocumentModel> getSelectedConfs(DocumentModel document) throws NuxeoException {
         List<DocumentModel> selectedWebConfs = new ArrayList<DocumentModel>(0);
 
         if (document.hasFacet(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_FACET)) {
@@ -140,7 +140,7 @@ public class WebConfsConfigurationAdapter extends AbstractLocalConfiguration<Web
         return selectedWebConfs;
     }
 
-    public List<String> getAllowedWebConfs(DocumentModel doc) throws ClientException {
+    public List<String> getAllowedWebConfs(DocumentModel doc) throws NuxeoException {
         List<String> allowedWebConfs = new ArrayList<String>(getAllowedConfsDocs());
         if (allowedWebConfs.isEmpty()) {
             allowedWebConfs = computeAllowedWebConfs(getAllGlobalWebConfs(doc));
@@ -209,7 +209,7 @@ public class WebConfsConfigurationAdapter extends AbstractLocalConfiguration<Web
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             Filter noDomainParent = new Filter() {
 
                 private static final long serialVersionUID = 1L;

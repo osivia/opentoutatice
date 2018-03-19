@@ -29,7 +29,7 @@ import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.automation.core.collectors.DocumentModelCollector;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
@@ -78,7 +78,7 @@ public class CopyACLs {
     }
     
     @SuppressWarnings("unchecked")
-    private void copyACP(DocumentRef docRef) throws ClientException {
+    private void copyACP(DocumentRef docRef) throws NuxeoException {
 		List<String> aclsToCopyList = Collections.emptyList();
     	
 		// get the ACP from the source document

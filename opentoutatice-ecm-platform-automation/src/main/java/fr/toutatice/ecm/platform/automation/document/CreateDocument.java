@@ -1,17 +1,17 @@
 /*
  * (C) Copyright 2016 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
- * 
+ *
+ *
  * Contributors:
  * kle-helley
  */
@@ -20,6 +20,9 @@ package fr.toutatice.ecm.platform.automation.document;
 import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -28,22 +31,22 @@ import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.automation.core.collectors.DocumentModelCollector;
 import org.nuxeo.ecm.automation.core.util.DocumentHelper;
 import org.nuxeo.ecm.automation.core.util.Properties;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.pathsegment.PathSegmentService;
+import org.nuxeo.ecm.core.schema.DocumentType;
+import org.nuxeo.ecm.core.schema.SchemaManager;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.query.helper.ToutaticeQueryHelper;
 import fr.toutatice.ecm.platform.service.url.ToutaticeWebIdHelper;
 
-@Operation(
-        id = CreateDocument.ID,
-        category = Constants.CAT_DOCUMENT,
-        label = "Create a new document",
+@Operation(id = CreateDocument.ID, category = Constants.CAT_DOCUMENT, label = "Create a new document",
         description = "Create a new document in the input folder. If the 'name' parameter is not set, a new name will be derived from the document title, using the same "
                 + "naming strategy as Nuxeo when using the GUI (if the document has a title). This is the only difference between this operation and 'Document.Create', "
                 + "with the latter defaulting the name to 'Untitled'.")
@@ -51,11 +54,19 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
 
     public static final String ID = "Document.TTCCreate";
 
+    private static final Log log = LogFactory.getLog(CreateDocument.class);
+
     @Context
     protected CoreSession session;
 
     @Context
+    protected OperationContext ctx;
+
+    @Context
     protected PathSegmentService pathSegmentService;
+
+    @Context
+    protected SchemaManager schemaManager;
 
     @Param(name = "type")
     protected String type;
@@ -67,7 +78,7 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
     protected Properties properties;
 
     @OperationMethod(collector = DocumentModelCollector.class)
-    public DocumentModel run(final DocumentModel doc) throws Exception {
+    public DocumentModel run(final DocumentModel parentDoc) throws Exception {
         // Build name from title if any
         if (this.name == null) {
             if ((properties != null) && (properties.get(PROP_TITLE) != null)) {
@@ -78,18 +89,19 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
         }
 
         // Test if webId exists
-        if (doc.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE) && this.properties != null) {
+        DocumentType docType = this.schemaManager.getDocumentType(this.type);
+        if (docType.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE) && this.properties != null) {
             String wId = this.properties.get(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
             if (StringUtils.isNotBlank(wId)) {
                 DocumentModelList results = ToutaticeQueryHelper.queryUnrestricted(session, String.format(ToutaticeWebIdHelper.WEB_ID_QUERY, wId), 1);
                 // Don't allow creation from Portal if webId already exists
                 if (!results.isEmpty()) {
-                    throw new ClientException("WebId: " + wId + " already exists.");
+                    throw new NuxeoException("WebId: " + wId + " already exists.");
                 }
             }
         }
 
-        DocumentModel newDoc = this.session.createDocumentModel(doc.getPathAsString(), this.name, this.type);
+        DocumentModel newDoc = this.session.createDocumentModel(parentDoc.getPathAsString(), this.name, this.type);
 
         if (this.properties != null) {
             // Creates document taking DublinCore properties into account
@@ -108,7 +120,7 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
     }
 
     @Override
-    protected DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, boolean save) throws ClientException, IOException {
+    protected DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, boolean save) throws NuxeoException, IOException {
         DocumentHelper.setProperties(session, document, properties);
         return session.createDocument(document);
     }
@@ -121,12 +133,12 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
      * @param properties
      * @param dublinCoreProperties
      * @return document
-     * @throws ClientException
+     * @throws NuxeoException
      * @throws IOException
      */
     @Override
     protected DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, Properties dublinCoreProperties, boolean save)
-            throws ClientException, IOException {
+            throws NuxeoException, IOException {
         // Create document without given dublincore properties:
         // DublinCoreListener sets them
         DocumentHelper.setProperties(session, document, properties);

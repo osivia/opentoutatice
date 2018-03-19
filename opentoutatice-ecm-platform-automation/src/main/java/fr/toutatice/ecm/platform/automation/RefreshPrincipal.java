@@ -30,7 +30,7 @@ import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.collectors.DocumentModelCollector;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
@@ -90,7 +90,7 @@ public class RefreshPrincipal {
 			principal.setModel(um);
 		} catch (Exception e) {
 			log.warn("Failed to refresh the principal, error: " + e.getMessage());
-			throw new ClientException(e);
+			throw new NuxeoException(e);
 		}
 	}
 

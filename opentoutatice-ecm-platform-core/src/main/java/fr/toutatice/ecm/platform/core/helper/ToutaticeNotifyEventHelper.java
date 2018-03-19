@@ -21,7 +21,7 @@ package fr.toutatice.ecm.platform.core.helper;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
@@ -41,7 +41,7 @@ public class ToutaticeNotifyEventHelper {
 		// static class, cannot be instantiated
 	}
 	
-    public static void notifyEvent(CoreSession session, String eventName, DocumentModel document, Map<String, Serializable> properties) throws ClientException {
+    public static void notifyEvent(CoreSession session, String eventName, DocumentModel document, Map<String, Serializable> properties) throws NuxeoException {
     	NuxeoPrincipal principal = (NuxeoPrincipal) session.getPrincipal();
         DocumentEventContext ctx = new DocumentEventContext(session, principal, document);
 
@@ -56,17 +56,17 @@ public class ToutaticeNotifyEventHelper {
         getEventProducer().fireEvent(ctx.newEvent(eventName));
     }
     
-    public static void notifyAuditEvent(CoreSession session, String eventName, DocumentModel document, String comment) throws ClientException {
+    public static void notifyAuditEvent(CoreSession session, String eventName, DocumentModel document, String comment) throws NuxeoException {
     	notifyAuditEvent(session, null, eventName, document, comment);
     }
 
-    public static void notifyAuditEvent(CoreSession session, String category, String eventName, DocumentModel document, String comment) throws ClientException {
+    public static void notifyAuditEvent(CoreSession session, String category, String eventName, DocumentModel document, String comment) throws NuxeoException {
     	NuxeoPrincipal principal = (NuxeoPrincipal) session.getPrincipal();
     	DocumentEventContext ctx = new DocumentEventContext(session, principal, document);
     	notifyAuditEvent(ctx, null, eventName, comment);
     }
     	
-    public static void notifyAuditEvent(EventContext ctx, String category, String eventName, String comment) throws ClientException {
+    public static void notifyAuditEvent(EventContext ctx, String category, String eventName, String comment) throws NuxeoException {
     	ctx.setProperty("category", category);
     	ctx.setProperty("comment", comment);
     	Logs auditProducer = getAuditEventProducer();
@@ -74,24 +74,24 @@ public class ToutaticeNotifyEventHelper {
     	auditProducer.logEvent(entry);
     }
 
-    private static EventProducer getEventProducer() throws ClientException {
+    private static EventProducer getEventProducer() throws NuxeoException {
     	try {
     		if (eventProducer == null) {
     			eventProducer = Framework.getService(EventProducer.class);
     		}
     	} catch (Exception e) {
-    		throw new ClientException(e);
+    		throw new NuxeoException(e);
     	}
     	return eventProducer;
     }
 
-    private static Logs getAuditEventProducer() throws ClientException {
+    private static Logs getAuditEventProducer() throws NuxeoException {
     	try {
     		if (logsBean == null) {
     			logsBean = Framework.getService(Logs.class);
     		}
     	} catch (Exception e) {
-    		throw new ClientException(e);
+    		throw new NuxeoException(e);
     	}
     	return logsBean;
     }

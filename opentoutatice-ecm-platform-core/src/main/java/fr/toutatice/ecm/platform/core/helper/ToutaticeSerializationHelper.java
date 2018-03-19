@@ -24,7 +24,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.impl.blob.StreamingBlob;
+import org.nuxeo.ecm.core.api.impl.blob.ByteArrayBlob;
 
 public class ToutaticeSerializationHelper {
 
@@ -45,7 +45,8 @@ public class ToutaticeSerializationHelper {
 			oos = new ObjectOutputStream(bos);
 			oos.writeObject(object);
 			oos.close();
-			blob = StreamingBlob.createFromByteArray(bos.toByteArray());
+			
+			blob = new ByteArrayBlob(bos.toByteArray());
 		} finally {
 			if (null != bos) bos.close();
 		}

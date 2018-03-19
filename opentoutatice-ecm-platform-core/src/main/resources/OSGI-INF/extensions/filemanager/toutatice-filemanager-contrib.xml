@@ -8,11 +8,11 @@
 		target="org.nuxeo.ecm.platform.filemanager.service.FileManagerService"
 		point="plugins">
 
-		<plugin name="ExportedArchivePlugin"
+		<!-- <plugin name="ExportedArchivePlugin"
 	      class="fr.toutatice.ecm.platform.core.persistence.ToutaticeExportedZipImporter"
 	      order="10">
 	      <filter>application/zip</filter>
-	    </plugin>
+	    </plugin> -->
 
 		<!-- <plugin name="ToutaticeRouteModelsImporter" enabled="true"
 			class="fr.toutatice.ecm.platform.core.persistence.ToutaticeRouteModelsZipImporter"

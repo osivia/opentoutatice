@@ -27,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.security.ACL;
 import org.nuxeo.ecm.core.api.security.ACP;
@@ -57,7 +57,7 @@ public class ToutaticeSecurityActionsBean extends SecurityActionsBean {
 	/**
 	 * Adds Master Owners on local ACL when inheritance is blocked.
 	 */
-	public void modifyLocalACl(boolean blockInheritance) throws ClientException {
+	public void modifyLocalACl(boolean blockInheritance) throws NuxeoException {
 	    if(blockInheritance){
 	        // Get Master Owners
 	        List<String> masterOwners = MasterOwnerSecurityHelper.getMasterOwners(this.documentManager, 
@@ -71,7 +71,7 @@ public class ToutaticeSecurityActionsBean extends SecurityActionsBean {
 	}
 
     @Override
-    public String updateSecurityOnDocument() throws ClientException {
+    public String updateSecurityOnDocument() throws NuxeoException {
         // Custom blockInheritance rule
         modifyLocalACl(super.getBlockRightInheritance());
 
@@ -80,7 +80,7 @@ public class ToutaticeSecurityActionsBean extends SecurityActionsBean {
         return res;
     }
 	 
-	 private void updateACLProxy() throws ClientException{
+	 private void updateACLProxy() throws NuxeoException{
 		 DocumentModel currentDoc = navigationContext.getCurrentDocument();
 		 DocumentModel proxyDoc = ToutaticeDocumentHelper.getProxy(documentManager, currentDoc, null);
 		 if (proxyDoc != null) {

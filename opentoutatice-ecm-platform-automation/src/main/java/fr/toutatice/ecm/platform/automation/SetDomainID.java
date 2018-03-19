@@ -29,7 +29,7 @@ import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -80,16 +80,16 @@ public class SetDomainID {
             this.document = document;
         }
 
-        public DocumentModel getDocument() throws ClientException {
+        public DocumentModel getDocument() throws NuxeoException {
             return this.document;
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             try {
             	updateDoc(this.document);
 			} catch (Exception e) {
-				throw new ClientException(e);
+				throw new NuxeoException(e);
 			}
         }
         

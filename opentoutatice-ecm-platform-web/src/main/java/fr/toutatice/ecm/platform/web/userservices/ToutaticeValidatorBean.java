@@ -39,7 +39,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -100,7 +100,7 @@ public class ToutaticeValidatorBean implements Serializable {
                 DocumentModel currentDomain = null;
                 try {
                     currentDomain = ((ToutaticeDocumentActionsBean) documentActions).getCurrentDocument();
-                } catch (ClientException ce) {
+                } catch (NuxeoException ce) {
                     msg = ce.getMessage();
                 }
                 if (currentDomain != null) {
@@ -109,7 +109,7 @@ public class ToutaticeValidatorBean implements Serializable {
                     DocumentModelList domains = null;
                     try {
                         domains = documentManager.query(String.format(DOMAIN_ID_UNICITY_QUERY, domainUUID, domainID));
-                    } catch (ClientException e) {
+                    } catch (NuxeoException e) {
                         msg = e.getMessage();
                     }
                     if (domains.size() > 0) {
@@ -161,7 +161,7 @@ public class ToutaticeValidatorBean implements Serializable {
                     } else {
                         msg = ComponentUtils.translate(context, "label.toutatice.validator.no.doc");
                     }
-                } catch (ClientException ce) {
+                } catch (NuxeoException ce) {
                     msg = ce.getMessage();
                 }
 
@@ -228,7 +228,7 @@ public class ToutaticeValidatorBean implements Serializable {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
 
             String msg = ComponentUtils.translate(this.context, "osivia.label.validator.webConf.code");
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
@@ -43,7 +43,7 @@ public class DocumentSecurityInformationsProviderImpl implements DocumentSecurit
      * {@inheritDoc}
      */
     @Override
-    public Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDoc) throws ClientException {
+    public Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDoc) throws NuxeoException {
         Map<String, Object> securityInfo = new HashMap<String, Object>();
         securityInfo.put(canCopy.name(), canCopy(coreSession, currentDoc));
         return securityInfo;

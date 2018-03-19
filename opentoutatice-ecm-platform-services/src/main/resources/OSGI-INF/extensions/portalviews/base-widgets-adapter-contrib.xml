@@ -10,7 +10,8 @@
 		
 		<mappings>
 			<!-- Date type widget -->
-			<!-- <mappingType nxType="date" pvType="pv_ttc_date" /> -->
+			<mappingType nxType="datetime" pvType="pv_ttc_date" /> 
+			<mappingType nxType="date" pvType="pv_ttc_date" /> 
 			
 		    <!-- By widget type -->
 		    <!-- <mappingType nxType="richtext_with_mimetype" pvType="ttc_richtext_with_mimetype"> 
@@ -24,8 +25,8 @@
               <properties>
                   <property name="editorSelector" value="mceEditorResponsive" />
                   <property name="disableHtmlInit" value="true" />
-              </properties>
-            </mappingType> -->
+		      </properties> 
+		    </mappingType>  --> 
 		    
 		</mappings>
 		

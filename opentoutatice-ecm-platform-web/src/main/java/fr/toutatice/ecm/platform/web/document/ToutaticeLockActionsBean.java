@@ -28,7 +28,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.webapp.edit.lock.LockActionsBean;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
@@ -53,7 +53,7 @@ public class ToutaticeLockActionsBean extends LockActionsBean {
 
 //	private static final Log log = LogFactory.getLog(ToutaticeLockActionsBean.class);
 	
-	public String getLockTime() throws ClientException {
+	public String getLockTime() throws NuxeoException {
 		String lockTime = "Date de verouillage inconnue";
 		
 		Map<String, Serializable> details = getCurrentDocLockDetails();

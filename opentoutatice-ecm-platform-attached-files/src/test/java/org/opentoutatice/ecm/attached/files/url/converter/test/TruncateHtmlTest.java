@@ -1,6 +1,5 @@
 package org.opentoutatice.ecm.attached.files.url.converter.test;
 
-import org.junit.Test;
 
 import fr.toutatice.ecm.platform.core.freemarker.ToutaticeFunctions;
 
@@ -8,7 +7,7 @@ import fr.toutatice.ecm.platform.core.freemarker.ToutaticeFunctions;
 //@Features(CoreFeature.class)
 public class TruncateHtmlTest {
 
-    @Test
+    //@Test
     public void test_truncate_html() {
 
         String html = "<blockquote>"

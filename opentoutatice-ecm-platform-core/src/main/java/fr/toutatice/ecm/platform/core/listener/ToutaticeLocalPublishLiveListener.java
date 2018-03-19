@@ -19,7 +19,7 @@
  */
 package fr.toutatice.ecm.platform.core.listener;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.event.Event;
@@ -37,7 +37,7 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 public class ToutaticeLocalPublishLiveListener implements EventListener {
 
     @Override
-    public void handleEvent(Event event) throws ClientException {
+    public void handleEvent(Event event) throws NuxeoException {
 
         DocumentEventContext docCtx = (DocumentEventContext) event.getContext();
         CoreSession coreSession = docCtx.getCoreSession();

@@ -6,7 +6,7 @@ package fr.toutatice.ecm.platform.service.workflows.infos;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.runtime.api.Framework;
@@ -29,7 +29,7 @@ public class WorkflowDocumentInfosProvider implements DocumentInformationsProvid
      * {@inheritDoc}
      */
     @Override
-    public Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
+    public Map<String, Object> fetchInfos(CoreSession coreSession, DocumentModel currentDocument) throws NuxeoException {
         Map<String, Object> infos = new HashMap<String, Object>(0);
         // No workflow on Folderish
         if(!currentDocument.isFolder()){

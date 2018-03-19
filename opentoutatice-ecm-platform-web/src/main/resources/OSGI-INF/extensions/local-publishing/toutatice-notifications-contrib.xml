@@ -39,6 +39,6 @@
 		<veto name="onlineVeto"
 			class="fr.toutatice.ecm.platform.web.workflows.notification.OnlineTaskVeto" />
 
-	</extension> 
+	</extension>
 
 </component>

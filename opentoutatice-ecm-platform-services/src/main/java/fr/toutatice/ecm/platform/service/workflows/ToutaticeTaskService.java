@@ -19,7 +19,7 @@ package fr.toutatice.ecm.platform.service.workflows;
 
 import java.util.Map;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.task.Task;
@@ -50,9 +50,9 @@ public interface ToutaticeTaskService {
      * 
      * @param task
      * @return
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    boolean isTaskPending(Task task) throws ClientException;
+    boolean isTaskPending(Task task) throws NuxeoException;
 
     /**
      * Checks if user, associated with session, is initiator of task.
@@ -60,16 +60,16 @@ public interface ToutaticeTaskService {
      * @param coreSession
      * @param task
      * @return
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    boolean isUserTaskInitiator(CoreSession coreSession, Task task) throws ClientException;
+    boolean isUserTaskInitiator(CoreSession coreSession, Task task) throws NuxeoException;
 
     /**
      * Get user validate right on document.
      * 
      * @throws ServeurException
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public boolean canUserManageTask(CoreSession coreSession, Task currentTask, DocumentModel currentDocument, String permission) throws ClientException;
+    public boolean canUserManageTask(CoreSession coreSession, Task currentTask, DocumentModel currentDocument, String permission) throws NuxeoException;
 
 }

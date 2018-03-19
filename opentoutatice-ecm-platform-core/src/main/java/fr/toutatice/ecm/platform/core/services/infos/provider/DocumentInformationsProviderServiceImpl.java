@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.runtime.model.ComponentContext;
@@ -31,7 +31,7 @@ public class DocumentInformationsProviderServiceImpl extends DefaultComponent im
      * {@inheritDoc}
      */
     @Override
-    public void activate(ComponentContext context) throws Exception {
+    public void activate(ComponentContext context) {
         super.activate(context);
         infosProvidersRegistry = new HashMap<String, DocumentInformationsProvider>(0);
         extendedInfosProvidersRegistry = new HashMap<String, DocumentInformationsProvider>(0);
@@ -41,7 +41,7 @@ public class DocumentInformationsProviderServiceImpl extends DefaultComponent im
      * {@inheritDoc}
      */
     @Override
-    public void registerExtension(Extension extension) throws Exception {
+    public void registerExtension(Extension extension) {
         if(FETCH_INFOS_EXT_POINT.equals(extension.getExtensionPoint())){
             registerInfosProvider(extension, infosProvidersRegistry);
         } else if(EXTENDED_FETCH_INFOS_EXT_POINT.equals(extension.getExtensionPoint())){
@@ -57,14 +57,20 @@ public class DocumentInformationsProviderServiceImpl extends DefaultComponent im
      * @param registeredInfosProviders
      * @throws Exception
      */
-    private void registerInfosProvider(Extension extension, Map<String, DocumentInformationsProvider> registeredInfosProviders) throws Exception {
+    private void registerInfosProvider(Extension extension, Map<String, DocumentInformationsProvider> registeredInfosProviders) {
         Object[] contributions = extension.getContributions();
         for (Object contribution : contributions) {
             if(contribution instanceof DocumentInformationsProviderDescriptor){
                 DocumentInformationsProviderDescriptor descriptor = (DocumentInformationsProviderDescriptor) contribution;
                 if(StringUtils.isNotBlank(descriptor.getName())){
-                    DocumentInformationsProvider infosProvider = (DocumentInformationsProvider) extension.getContext().loadClass(descriptor.getProviderClassName()).newInstance();
-                    registeredInfosProviders.put(descriptor.getName(), infosProvider);
+					try {
+						DocumentInformationsProvider infosProvider = (DocumentInformationsProvider) extension.getContext().loadClass(descriptor.getProviderClassName()).newInstance();
+						registeredInfosProviders.put(descriptor.getName(), infosProvider);
+					} catch (InstantiationException | IllegalAccessException
+							| ClassNotFoundException e) {
+						log.error("Can not register " + descriptor.getName(), e);
+					}
+                    
                 } else {
                     log.error("Can not register an Informations provider which has no name: "
                             .concat(StringUtils.isNotBlank(descriptor.getProviderClassName()) ? descriptor.getProviderClassName() : "null"));
@@ -77,7 +83,7 @@ public class DocumentInformationsProviderServiceImpl extends DefaultComponent im
      * {@inheritDoc}
      */
     @Override
-    public void unregisterExtension(Extension extension) throws Exception {
+    public void unregisterExtension(Extension extension) {
         if(FETCH_INFOS_EXT_POINT.equals(extension.getExtensionPoint())){
             unregisterInfosProvider(extension, infosProvidersRegistry);
         } else if(EXTENDED_FETCH_INFOS_EXT_POINT.equals(extension.getExtensionPoint())){
@@ -104,7 +110,7 @@ public class DocumentInformationsProviderServiceImpl extends DefaultComponent im
      * {@inheritDoc}
      */
     @Override
-    public Map<String, Object> fetchAllInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
+    public Map<String, Object> fetchAllInfos(CoreSession coreSession, DocumentModel currentDocument) throws NuxeoException {
         Map<String, Object> infos = new HashMap<String, Object>(0);
         for (DocumentInformationsProvider contrib : infosProvidersRegistry.values()) {
             infos.putAll(contrib.fetchInfos(coreSession, currentDocument));
@@ -116,7 +122,7 @@ public class DocumentInformationsProviderServiceImpl extends DefaultComponent im
      * {@inheritDoc}
      */
     @Override
-    public Map<String, Object> fetchAllExtendedInfos(CoreSession coreSession, DocumentModel currentDocument) throws ClientException {
+    public Map<String, Object> fetchAllExtendedInfos(CoreSession coreSession, DocumentModel currentDocument) throws NuxeoException {
         Map<String, Object> infos = new HashMap<String, Object>(0);
         for (DocumentInformationsProvider contrib : extendedInfosProvidersRegistry.values()) {
             // For trace logs

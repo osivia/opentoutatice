@@ -99,7 +99,7 @@
 			<fields>
 				<field>webp:content</field>
 			</fields>
-			<properties mode="edit">
+			<properties mode="any">
 				<property name="disableHtmlInit">true</property>
 				<property name="editorSelector">mceSimpleEditorResponsive</property>
 			</properties>
@@ -154,7 +154,7 @@
 				<field>ttc:webid</field>
 			</fields>
 			<properties widgetMode="edit">
-				<property name="disabled">#{(!currentUser.administrator)
+				<property name="disabled">#{(!userSession.administrator)
 					or currentDocument.hasFacet('WebidDisabled')}
 				</property>
 				<property name="required">true</property>
@@ -330,141 +330,10 @@
 			</property>
 		</widgetType>
 
-		<widgetType name="ottc_htmltext">
-			<configuration>
-				<title>HTML text</title>
-				<description>
-					<p>Pre-configured Nx htmltext</p>
-				</description>
-				<categories>
-					<category>document</category>
-				</categories>
-				<supportedModes>
-					<mode>edit</mode>
-					<mode>view</mode>
-				</supportedModes>
-				<fields>
-					<list>false</list>
-					<complex>false</complex>
-					<supportedTypes>
-						<type>string</type>
-					</supportedTypes>
-				</fields>
-				<properties>
-					<defaultValues mode="any">
-						<property name="disableHmlInit">true</property>
-						<property name="editorSelector">mceSimpleEditorResponsive</property>
-					</defaultValues>
-				</properties>
-			</configuration>
-			<handler-class>
-				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.HtmlTextWidgetTypeHandler
-			</handler-class>
-		</widgetType>
-
-		<widgetType name="ottc_inline_htmltext">
-			<configuration>
-				<title>HTML text</title>
-				<description>
-					<p>Pre-configured Nx htmltext</p>
-				</description>
-				<categories>
-					<category>document</category>
-				</categories>
-				<supportedModes>
-					<mode>edit</mode>
-					<mode>view</mode>
-				</supportedModes>
-				<fields>
-					<list>false</list>
-					<complex>false</complex>
-					<supportedTypes>
-						<type>string</type>
-					</supportedTypes>
-				</fields>
-				<properties>
-					<defaultValues mode="any">
-						<property name="disableHmlInit">true</property>
-						<property name="editorSelector">mceEditorMinimalInLine</property>
-					</defaultValues>
-				</properties>
-			</configuration>
-			<handler-class>
-				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.HtmlTextWidgetTypeHandler
-			</handler-class>
-		</widgetType>
-
-		<widgetType name="ottc_minimal_htmltext">
-			<configuration>
-				<title>HTML text</title>
-				<description>
-					<p>Pre-configured Nx htmltext</p>
-				</description>
-				<categories>
-					<category>document</category>
-				</categories>
-				<supportedModes>
-					<mode>edit</mode>
-					<mode>view</mode>
-				</supportedModes>
-				<fields>
-					<list>false</list>
-					<complex>false</complex>
-					<supportedTypes>
-						<type>string</type>
-					</supportedTypes>
-				</fields>
-				<properties>
-					<defaultValues mode="any">
-						<property name="disableHmlInit">true</property>
-						<property name="editorSelector">mceEditorMinimal</property>
-					</defaultValues>
-				</properties>
-			</configuration>
-			<handler-class>
-				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.HtmlTextWidgetTypeHandler
-			</handler-class>
-		</widgetType>
-
-		<widgetType name="ttc_richtext_with_mimetype">
-			<configuration>
-				<title>TTCRichtext</title>
-				<description>
-					<p>Configurable Nx richtext_with_mimetype</p>
-				</description>
-				<categories>
-					<!-- do not export with documents -->
-					<!-- <category>configuration_not_ready</category> -->
-					<category>document</category>
-				</categories>
-				<supportedModes>
-					<mode>edit</mode>
-					<mode>view</mode>
-				</supportedModes>
-				<fields>
-					<list>false</list>
-					<complex>false</complex>
-					<supportedTypes>
-						<type>string</type>
-					</supportedTypes>
-				</fields>
-				<properties>
-					<defaultValues mode="any">
-						<property name="showFormat">false</property>
-						<property name="editorSelector">mceSimpleEditorResponsive</property>
-						<property name="disableHTMLInit">true</property>
-					</defaultValues>
-				</properties>
-			</configuration>
-			<handler-class>
-				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
-			</handler-class>
-			<property name="template">
-				/widgets/ttc_richtext_with_mimetype_widget_template.xhtml
-			</property>
-		</widgetType>
-
 		<widgetType name="multipleUsersSuggestionWithPermission">
+			<aliases>
+				<alias>multipleUsersSuggestion</alias>
+			</aliases>
 			<configuration>
 				<title>Multiple users/groups suggestion with given permission
 					on current document.
@@ -500,11 +369,14 @@
 				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
 			</handler-class>
 			<property name="template">
-				/widgets/toutatice_user_suggestion_widget_template.xhtml
+				/widgets/user_suggestion_widget_template.xhtml
 			</property>
 		</widgetType>
 
 		<widgetType name="singleUserSuggestionWithPermission">
+			<aliases>
+				<alias>singleUserSuggestion</alias>
+			</aliases>
 			<configuration>
 				<title>Single user/group suggestion with given permission
 					on current document.
@@ -541,7 +413,7 @@
 				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
 			</handler-class>
 			<property name="template">
-				/widgets/toutatice_single_user_suggestion_widget_template.xhtml
+				/widgets/single_user_suggestion_widget_template.xhtml
 			</property>
 		</widgetType>
 

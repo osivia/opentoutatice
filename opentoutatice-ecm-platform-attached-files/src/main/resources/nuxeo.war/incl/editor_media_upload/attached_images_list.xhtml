@@ -13,6 +13,8 @@
         <div class="pictures-list">
 
              <ui:repeat var="img" value="#{field}" varStatus="status">
+             
+             	<nxu:set var="pictureXPath" value="#{img.getXPath()}/file" />
 
                 <ui:fragment rendered="#{not empty img.filename}">
                     <div class="col-xs-3 col-md-3"
@@ -20,7 +22,7 @@
 								 jQuery('#img_style_value').attr('checked') == 'checked' ? jQuery('#img_style_value').val() : '');">
                         <div class="picture">
                             <a href="#" class="thumbnail"> <h:graphicImage
-                                    value="#{nxd:complexFileUrl('downloadFile', documentActions.currentDocument, 'ttc:images', status.index, 'file', img.filename)}" />
+                                    value="#{editorImageActions.getDownloadUrl(documentActions.currentDocument, pictureXPath, img.filename)}"/>
                             </a>
                         </div>
                         <p class="text-center">#{img.filename}</p>

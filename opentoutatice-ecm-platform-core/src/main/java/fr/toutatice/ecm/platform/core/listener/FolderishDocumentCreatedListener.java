@@ -7,7 +7,7 @@ import static org.nuxeo.ecm.core.schema.FacetNames.SYSTEM_DOCUMENT;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.model.PropertyNotFoundException;
 import org.nuxeo.ecm.core.event.Event;
@@ -32,7 +32,7 @@ public class FolderishDocumentCreatedListener implements EventListener {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void handleEvent(Event event) throws ClientException {
+	public void handleEvent(Event event) throws NuxeoException {
 		
 		EventContext context = event.getContext();
 		

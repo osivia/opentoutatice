@@ -4,13 +4,14 @@
 package fr.toutatice.ecm.platform.core.query.helper;
 
 import org.apache.commons.lang.StringUtils;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.IterableQueryResult;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.elasticsearch.api.ElasticSearchService;
+import org.nuxeo.elasticsearch.api.EsScrollResult;
 import org.nuxeo.elasticsearch.query.NxQueryBuilder;
 import org.nuxeo.runtime.api.Framework;
 
@@ -77,9 +78,19 @@ public class ToutaticeEsQueryHelper {
      * @return IterableQueryResult
      */
     public static IterableQueryResult unrestrictedQueryAndAggregate(CoreSession session, String query) {
-        UnrestrictedQueryAndAggregate uQnA = new UnrestrictedQueryAndAggregate(session);
+        UnrestrictedQueryAndAggregate uQnA = new UnrestrictedQueryAndAggregate(session, query);
         uQnA.runUnrestricted();
         return uQnA.getRowsResults();
+    }
+
+    public static EsScrollResult unrestrictedScroll(CoreSession session, String query) {
+        UnrestrictedScroll scroller = new UnrestrictedScroll(session, query);
+        scroller.runUnrestricted();
+        return scroller.getResult();
+    }
+
+    public static EsScrollResult unrestrictedScroll(ElasticSearchService ess, EsScrollResult currentResults) {
+        return ess.scroll(currentResults);
     }
 
     /**
@@ -181,6 +192,7 @@ public class ToutaticeEsQueryHelper {
 
 
     public static class UnrestrictedQueryAndAggregate extends UnrestrictedSessionRunner {
+
         /** Query. */
         private String query;
 
@@ -216,7 +228,7 @@ public class ToutaticeEsQueryHelper {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             if (StringUtils.isNotBlank(this.query)) {
                 // ES query
                 ElasticSearchService ess = ToutaticeEsQueryHelper.getElasticSearchService();
@@ -224,13 +236,14 @@ public class ToutaticeEsQueryHelper {
                 NxQueryBuilder queryBuilder = new NxQueryBuilder(super.session).fetchFromElasticsearch().nxql(this.query).limit(this.limit);
                 this.iqr = ess.queryAndAggregate(queryBuilder).getRows();
             } else {
-                throw new ClientException("No query defined.");
+                throw new NuxeoException("No query defined.");
             }
         }
 
     }
 
     public static class UnrestrictedQuery extends UnrestrictedSessionRunner {
+
         /** Query. */
         private String nxql;
 
@@ -298,8 +311,68 @@ public class ToutaticeEsQueryHelper {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             this.documents = ToutaticeEsQueryHelper.query(super.session, this.nxql, this.currentPageIndex, this.pageSize, this.fetchDocFromEs);
+        }
+
+    }
+
+    public static class UnrestrictedScroll extends UnrestrictedSessionRunner {
+
+        /** Numbers of returned documents in ES scroll API. */
+        public static final int SCROLL_BUCKET_SIZE = 100;
+        /** Maximum time (in ms) to keep alive a batch scroll. */
+        public static final int SCROLL_KEEP_ALIVE = 5000;
+
+
+        private String nxql;
+        private int scrollBucketSize = SCROLL_BUCKET_SIZE;
+        private int keepAlive = SCROLL_KEEP_ALIVE;
+
+        private boolean fetchFromEs = false;
+
+        private EsScrollResult result;
+
+        protected UnrestrictedScroll(CoreSession session, String nxql) {
+            super(session);
+            this.nxql = nxql;
+        }
+
+        @Override
+        public void run() {
+            if (StringUtils.isNotBlank(this.nxql)) {
+                // ES query
+                ElasticSearchService ess = ToutaticeEsQueryHelper.getElasticSearchService();
+                NxQueryBuilder queryBuilder = new NxQueryBuilder(super.session).nxql(this.nxql);
+
+                if (this.fetchFromEs) {
+                    queryBuilder.fetchFromElasticsearch();
+                } else {
+                    queryBuilder.fetchFromDatabase();
+                }
+
+                this.result = ess.scroll(queryBuilder.limit(this.scrollBucketSize), this.keepAlive);
+            } else {
+                throw new NuxeoException("No query defined.");
+            }
+
+        }
+
+        public void setScrollBucketSize(int scrollBucketSize) {
+            this.scrollBucketSize = scrollBucketSize;
+        }
+
+
+        public void setKeepAlive(int keepAlive) {
+            this.keepAlive = keepAlive;
+        }
+
+        public EsScrollResult getResult() {
+            return result;
+        }
+
+        public void setFetchFromEs(boolean fetchFromEs) {
+            this.fetchFromEs = fetchFromEs;
         }
 
     }

@@ -19,7 +19,7 @@ package fr.toutatice.ecm.platform.core.pathsegment;
 
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.common.utils.IdUtils;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.pathsegment.PathSegmentService;
 import org.nuxeo.runtime.api.Framework;
@@ -32,7 +32,7 @@ public class ToutaticePathSegmentService implements PathSegmentService {
      * Generates path segment based on document's title.
      */
     @Override
-    public String generatePathSegment(DocumentModel doc) throws ClientException {
+    public String generatePathSegment(DocumentModel doc) throws NuxeoException {
         String title = doc.getTitle();
         if (title == null) {
             title = StringUtils.EMPTY;
@@ -48,7 +48,7 @@ public class ToutaticePathSegmentService implements PathSegmentService {
      * - empty spaces are replaced by '-'.
      */
     @Override
-    public String generatePathSegment(String value) throws ClientException {
+    public String generatePathSegment(String value) throws NuxeoException {
         return IdUtils.generateId(value, "-", true, maxSize);
     }
 

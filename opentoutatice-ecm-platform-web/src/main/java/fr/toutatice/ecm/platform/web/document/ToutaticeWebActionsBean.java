@@ -34,7 +34,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.core.Events;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.actions.Action;
 import org.nuxeo.ecm.platform.actions.ActionContext;
@@ -181,12 +181,12 @@ public class ToutaticeWebActionsBean extends WebActionsBean {
      * @param directories
      * @return 
      */
-    public String getLabel(String key,String... directories)  throws ClientException {
+    public String getLabel(String key,String... directories)  throws NuxeoException {
     	StringBuilder entryLabel = new StringBuilder();
     	String[]subKeys = key.split("/");
     	int nbSubKey =subKeys.length;
     	if(nbSubKey>directories.length){
-    		throw new ClientException("The number of directories is not compatible with the number of key.");
+    		throw new NuxeoException("The number of directories is not compatible with the number of key.");
     	}
     	for (int i=0; i<nbSubKey; i++) {
     		DocumentModel entry = DirectoryHelper.getEntry(directories[i], subKeys[i]);

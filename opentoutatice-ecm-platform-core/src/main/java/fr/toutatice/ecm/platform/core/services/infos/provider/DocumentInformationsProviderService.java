@@ -3,7 +3,7 @@ package fr.toutatice.ecm.platform.core.services.infos.provider;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
@@ -15,10 +15,10 @@ public interface DocumentInformationsProviderService extends Serializable {
      * @param coreSession
      * @param currentDocument
      * @return informations's document for all registered providers.
-     * @throws ClientException
+     * @throws NuxeoException
      */
 	Map<String, Object> fetchAllInfos(CoreSession coreSession,
-			DocumentModel currentDocument) throws ClientException;
+			DocumentModel currentDocument) throws NuxeoException;
 	
 	/**
 	 * Fetch extended informations's document for all registered providers.
@@ -26,9 +26,9 @@ public interface DocumentInformationsProviderService extends Serializable {
 	 * @param coreSession
 	 * @param currentDocument
 	 * @return extended informations's document for all registered providers.
-	 * @throws ClientException
+	 * @throws NuxeoException
 	 */
 	Map<String, Object> fetchAllExtendedInfos(CoreSession coreSession,
-            DocumentModel currentDocument) throws ClientException;
+            DocumentModel currentDocument) throws NuxeoException;
 
 }

@@ -21,7 +21,7 @@ package fr.toutatice.ecm.platform.core.local.configuration;
 
 import java.util.List;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
 
@@ -39,9 +39,9 @@ public interface WebConfsConfiguration {
 
     boolean getDenyAllConfsDocs();
     
-    List<DocumentModel> getSelectedConfs(DocumentModel document) throws ClientException;
+    List<DocumentModel> getSelectedConfs(DocumentModel document) throws NuxeoException;
     
-    List<String> getAllowedWebConfs(DocumentModel doc) throws ClientException;
+    List<String> getAllowedWebConfs(DocumentModel doc) throws NuxeoException;
     
     List<DocumentModel> getAllGlobalWebConfs(DocumentModel domain);
 

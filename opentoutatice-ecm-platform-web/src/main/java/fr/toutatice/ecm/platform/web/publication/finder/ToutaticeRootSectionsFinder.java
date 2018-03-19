@@ -19,10 +19,10 @@ package fr.toutatice.ecm.platform.web.publication.finder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.schema.FacetNames;
@@ -48,7 +48,7 @@ public class ToutaticeRootSectionsFinder extends DefaultRootSectionsFinder {
     }
 
     @Override
-    protected DocumentModelList getDefaultSectionRoots(CoreSession session) throws ClientException {
+    protected DocumentModelList getDefaultSectionRoots(CoreSession session) throws NuxeoException {
         DocumentModelList sectionRoots = new DocumentModelListImpl();
 
         for (String sectionRootType : getSectionRootTypes()) {
@@ -79,7 +79,7 @@ public class ToutaticeRootSectionsFinder extends DefaultRootSectionsFinder {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             for (DocumentModel sectionRoot : list) {
                 try {
                     DocumentModel sectionRootParent = this.session.getParentDocument(sectionRoot.getRef());

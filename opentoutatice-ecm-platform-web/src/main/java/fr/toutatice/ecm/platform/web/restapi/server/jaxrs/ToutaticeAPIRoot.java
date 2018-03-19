@@ -31,7 +31,7 @@ import javax.ws.rs.WebApplicationException;
 
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.server.jaxrs.RestOperationException;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 import org.nuxeo.ecm.platform.web.common.exceptionhandling.ExceptionHelper;
 import org.nuxeo.ecm.webengine.WebException;
@@ -50,7 +50,7 @@ public class ToutaticeAPIRoot extends ModuleRoot {
             String repoName = repositoryParam.substring("repo/".length() + 1);
             try {
                 ctx.setRepositoryName(repoName);
-            } catch (final ClientException e) {
+            } catch (final NuxeoException e) {
                 throw new WebResourceNotFoundException(e.getMessage());
             }
 

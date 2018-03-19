@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -92,9 +92,9 @@ public final class ToutaticeWorkflowHelper {
      * @param session
      * @param document
      * @return task given name and current doc
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public static Task getTaskByName(String taskName, CoreSession session, DocumentModel currentDoc) throws ClientException {
+    public static Task getTaskByName(String taskName, CoreSession session, DocumentModel currentDoc) throws NuxeoException {
         Task searchedTask = null;
 
         Object[] params = {taskName, currentDoc.getId()};
@@ -147,7 +147,7 @@ public final class ToutaticeWorkflowHelper {
     }
 
     public static void notifyRecipients(CoreSession documentManager, Task task, DocumentModel document, String initiator, String event)
-            throws ClientException {
+            throws NuxeoException {
         NuxeoPrincipal principal = (NuxeoPrincipal) documentManager.getPrincipal();
 
         Map<String, Serializable> eventProperties = new HashMap<String, Serializable>();
@@ -169,7 +169,7 @@ public final class ToutaticeWorkflowHelper {
         return getOnLineWorkflow(currentDoc) != null;
     }
 
-    public static String getOnLineWorkflowInitiator(DocumentModel currentDoc) throws PropertyException, ClientException {
+    public static String getOnLineWorkflowInitiator(DocumentModel currentDoc) throws PropertyException, NuxeoException {
         String initiator = StringUtils.EMPTY;
         DocumentRoute route = getOnLineWorkflow(currentDoc);
         if (route != null) {

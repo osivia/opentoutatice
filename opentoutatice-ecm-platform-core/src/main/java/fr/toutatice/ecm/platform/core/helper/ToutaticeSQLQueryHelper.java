@@ -27,7 +27,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.ClientRuntimeException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -241,7 +241,7 @@ public final class ToutaticeSQLQueryHelper {
 				String rootDocId = session.getRootDocument().getId();
 				repository = new NuxeoRepository(session.getRepositoryName(), rootDocId);			
 			}
-		} catch (ClientException e) {
+		} catch (NuxeoException e) {
 			if (log.isErrorEnabled()) {
 				log.error("Failed to obtain the repository, error: " + e.getMessage());
 			}

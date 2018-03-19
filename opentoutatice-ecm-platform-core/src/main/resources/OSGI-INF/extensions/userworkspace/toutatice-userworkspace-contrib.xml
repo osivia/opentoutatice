@@ -6,8 +6,8 @@
 
 	<extension target="org.nuxeo.ecm.platform.userworkspace.UserWorkspaceService"
 		point="userWorkspace">
-		<userWorkspace
-			class="fr.toutatice.ecm.platform.core.userworkspace.ToutaticeUserWorkspaceServiceImpl" />
+		<!-- <userWorkspace
+			class="fr.toutatice.ecm.platform.core.userworkspace.ToutaticeUserWorkspaceServiceImpl" /> -->
 	</extension>
 
 </component>

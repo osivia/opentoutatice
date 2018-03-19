@@ -91,11 +91,20 @@
 		<!-- Tags -->
 		<operation class="fr.toutatice.ecm.platform.automation.SetDocumentTags" />
 		<operation class="fr.toutatice.ecm.platform.automation.GetDocumentTags" />
-		
+
 		<!-- Facets -->
 		<operation class="fr.toutatice.ecm.platform.automation.AddFacets" />
 		<operation class="fr.toutatice.ecm.platform.automation.RemoveFacets" />		
-
+		
+		<!-- Test Transactional conversations -->
+		<operation class="fr.toutatice.ecm.platform.automation.document.transaction.test.CreateDocumentInTransaction" />
+		<operation class="fr.toutatice.ecm.platform.automation.document.transaction.test.FetchPubInfosInTransaction" />
+		<operation class="fr.toutatice.ecm.platform.automation.document.transaction.test.FetchLiveDocumentInTransaction" />
+		
+		<!-- Transactional conversations -->
+		<operation class="fr.toutatice.ecm.platform.automation.transaction.operation.StartTransaction" />
+		<operation class="fr.toutatice.ecm.platform.automation.transaction.operation.MarkTransactionAsRollback" />
+		<operation class="fr.toutatice.ecm.platform.automation.transaction.operation.CommitOrRollbackTransaction" />
 
 	</extension>
 

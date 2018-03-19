@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.automation.services.proxyfactory">
+
+	<require>fr.toutatice.ecm.platform.core.services.proxyfactory</require>
+
+	<extension target="fr.toutatice.ecm.platform.core.services.proxyfactory"
+		point="handlers">
+
+		<!-- Impacted the hot reload process while the marketplace installation
+		(see support ticket: https://jira.nuxeo.com/browse/SUPNXP-11255 -->
+		<handler enabled="true"
+			serviceClass="org.nuxeo.ecm.automation.AutomationService"
+			handlerClass="fr.toutatice.ecm.platform.automation.transaction.component.ToutaticeAutomationServiceHandler" />
+
+	</extension>
+
+</component>

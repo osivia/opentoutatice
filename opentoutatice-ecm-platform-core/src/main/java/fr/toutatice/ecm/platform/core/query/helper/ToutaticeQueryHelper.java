@@ -20,7 +20,7 @@
  */
 package fr.toutatice.ecm.platform.core.query.helper;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -85,7 +85,7 @@ public class ToutaticeQueryHelper {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             this.docs = this.session.query(this.query, this.limit);
 
             for (DocumentModel documentModel : this.docs) {
@@ -93,7 +93,7 @@ public class ToutaticeQueryHelper {
             }
         }
 
-        public DocumentModelList runQuery() throws ClientException {
+        public DocumentModelList runQuery() throws NuxeoException {
             runUnrestricted();
             return this.docs;
         }

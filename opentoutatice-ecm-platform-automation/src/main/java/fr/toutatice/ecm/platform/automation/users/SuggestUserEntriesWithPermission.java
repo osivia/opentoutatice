@@ -35,7 +35,7 @@ import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.automation.features.PrincipalHelper;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -53,7 +53,6 @@ import org.nuxeo.ecm.core.schema.types.Schema;
 import org.nuxeo.ecm.directory.Directory;
 import org.nuxeo.ecm.directory.SizeLimitExceededException;
 import org.nuxeo.ecm.directory.api.DirectoryService;
-import org.nuxeo.ecm.platform.ui.select2.common.Select2Common;
 import org.nuxeo.ecm.platform.usermanager.UserAdapter;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 
@@ -131,7 +130,7 @@ public class SuggestUserEntriesWithPermission {
     protected String lang;
 
     @OperationMethod
-    public Blob run() throws ClientException {
+    public Blob run() throws NuxeoException {
         JSONArray result = new JSONArray();
         boolean isGroupRestriction = !StringUtils.isBlank(groupRestriction);
         boolean groupOnly = false;

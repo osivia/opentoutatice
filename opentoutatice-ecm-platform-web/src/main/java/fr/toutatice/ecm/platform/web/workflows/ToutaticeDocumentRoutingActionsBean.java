@@ -36,8 +36,8 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.faces.FacesMessages;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.platform.publisher.web.PublishActionsBean;
 import org.nuxeo.ecm.platform.routing.api.DocumentRoute;
@@ -71,7 +71,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
     @In(create = true)
     PublishActionsBean publishActions;
 
-    public String startOnlineWorkflow() throws ClientException {
+    public String startOnlineWorkflow() throws NuxeoException {
         DocumentModel onlineWf = getOnlineWorkflowModel();
         return startWorkflow(onlineWf, "toutatice.label.online.wf.started");
     }
@@ -83,20 +83,16 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
 
         getDocumentRoutingService().createNewInstance(workflow.getName(), currentDocIds, documentManager, true);
 
-        // Seam Events
+        /* Events for Observers (and listeners?) */
         Events.instance().raiseEvent(EventNames.DOCUMENT_CHILDREN_CHANGED, workflow);
-        FacesMessages.instance().addFromResourceBundle(msgKey);
 
-        // Core Events for Notification
-        Task task = ToutaticeWorkflowHelper.getTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, documentManager, currentDoc);
-        ToutaticeWorkflowHelper.notifyRecipients(documentManager, task, currentDoc, task.getInitiator(),
-                ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED_ASSIGNED);
+        FacesMessages.instance().addFromResourceBundle(msgKey);
 
         webActions.resetTabList();
         return null;
     }
 
-    public Task getValidateTask(String wfName) throws ClientException {
+    public Task getValidateTask(String wfName) throws NuxeoException {
         Task validate = null;
 
         String taskName = StringUtils.EMPTY;
@@ -118,7 +114,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
         return validate;
     }
 
-    private DocumentModel getOnlineWorkflowModel() throws ClientException {
+    private DocumentModel getOnlineWorkflowModel() throws NuxeoException {
         String id = getDocumentRoutingService().getRouteModelDocIdWithId(documentManager, ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE);
         return getRouteModel(id);
     }
@@ -127,9 +123,9 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
      * Check if a workflow is running on current document.
      * 
      * @return true if process is running
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public boolean isWorkflowRunning() throws ClientException {
+    public boolean isWorkflowRunning() throws NuxeoException {
         List<DocumentRoute> relatedRoutes = getRelatedRoutes();
         return relatedRoutes != null && !relatedRoutes.isEmpty();
     }
@@ -139,9 +135,9 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
      * of documents.
      * 
      * @return true if process is running
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public boolean isWorkflowRunningForSelection() throws ClientException {
+    public boolean isWorkflowRunningForSelection() throws NuxeoException {
         List<DocumentModel> currentDocumentSelection = documentsListsManager.getWorkingList(CURRENT_DOCUMENT_SELECTION);
         return isWorkflowRunningForSelection(currentDocumentSelection);
     }
@@ -151,9 +147,9 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
      * documents.
      * 
      * @return true if process is running
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    private boolean isWorkflowRunningForSelection(List<DocumentModel> selection) throws ClientException {
+    private boolean isWorkflowRunningForSelection(List<DocumentModel> selection) throws NuxeoException {
         boolean status = false;
         for (DocumentModel document : selection) {
             if (isWorkflowRunningForDocument(document)) {
@@ -164,7 +160,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
         return status;
     }
 
-    public boolean isWorkflowRunningForDocument(DocumentModel document) throws ClientException {
+    public boolean isWorkflowRunningForDocument(DocumentModel document) throws NuxeoException {
         List<DocumentRoute> documentRoutes = getDocumentRoutingService().getDocumentRoutesForAttachedDocument(documentManager, document.getId());
         return (documentRoutes != null && !documentRoutes.isEmpty());
     }
@@ -173,13 +169,15 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
      * Determine si l'action "workflow_online_cancel" de la vue 'summary' doit
      * être présentée.
      * 
-     * <h4>Conditions</h4> <li>Un process de demande de m doit exister</li> <li>
+     * <h4>Conditions</h4>
+     * <li>Un process de demande de m doit exister</li>
+     * <li>
      * l'utilisateur courant doit être l'initateur de ce processus</li>
      * 
      * @return true si l'action doit être présentée. false sinon.
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public boolean isCancelOnlineActionAuthorized() throws ClientException {
+    public boolean isCancelOnlineActionAuthorized() throws NuxeoException {
         boolean doWorkflowExist = false;
         boolean isUserInitiator = false;
 
@@ -202,14 +200,17 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
      * Determine si l'action "direct_online" de la vue 'summary' doit être
      * présentée.
      * 
-     * <h4>Conditions</h4> <li>(l'utilisateur courant doit avoir la permission de validation (rôle de validateur) - cf filtre action)</li> <li>le document doit
-     * être dans l'état 'projet'</li> <li>le document ne doit pas déjà être dans un processus de validation/mise en ligne (quels que soient les utilisateurs en
+     * <h4>Conditions</h4>
+     * <li>(l'utilisateur courant doit avoir la permission de validation (rôle de validateur) - cf filtre action)</li>
+     * <li>le document doit
+     * être dans l'état 'projet'</li>
+     * <li>le document ne doit pas déjà être dans un processus de validation/mise en ligne (quels que soient les utilisateurs en
      * charge de faire la validation)</li>
      * 
      * @return true si l'action doit être présentée. false sinon.
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public boolean isDirectSetOnlineActionAuthorized() throws ClientException {
+    public boolean isDirectSetOnlineActionAuthorized() throws NuxeoException {
         boolean isAuthorized = false;
         try {
             String currentLifeCycle = ((ToutaticeNavigationContext) navigationContext).getCurrentLifeCycleState();
@@ -222,7 +223,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
         return isAuthorized;
     }
 
-    public String getPendingWorkflowName() throws ClientException {
+    public String getPendingWorkflowName() throws NuxeoException {
         /* Take the first route in the routes stack */
         String name = StringUtils.EMPTY;
         DocumentRoute relatedRoute = getRelatedRoute();
@@ -237,7 +238,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
     }
 
 
-    public String cancelOnlineWorkflow() throws ClientException {
+    public String cancelOnlineWorkflow() throws NuxeoException {
         return cancelWorkflow(ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE);
     }
 
@@ -245,13 +246,13 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
      * To allow to fire beforeWorkflowProcessCanceled event.
      */
     @Override
-    public String cancelRoute() throws ClientException {
+    public String cancelRoute() throws NuxeoException {
         Events.instance().raiseEvent(ToutaticeGlobalConst.BEFORE_WF_CANCELED_EVENT);
         return super.cancelRoute();
     }
 
     /* FIXME: "Fork" of cancelRoute() */
-    public String cancelWorkflow(String wfName) throws ClientException {
+    public String cancelWorkflow(String wfName) throws NuxeoException {
         List<DocumentRoute> routes = getRelatedRoutes();
         if (routes.size() == 0) {
             log.error("No workflow to cancel");
@@ -294,7 +295,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
         return onlineRoute;
     }
 
-    public boolean isOnLineWfPending(DocumentModel document) throws ClientException {
+    public boolean isOnLineWfPending(DocumentModel document) throws NuxeoException {
         return ToutaticeWorkflowHelper.isOnLineWorkflow(document);
     }
 

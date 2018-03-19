@@ -9,7 +9,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.remoting.WebRemote;
 import org.jboss.seam.international.StatusMessage;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.webapp.filemanager.FileManageActionsBean;
@@ -34,7 +34,7 @@ public class ToutaticeFileManageActionsBean extends FileManageActionsBean {
      */
     @Override
     @WebRemote
-    protected String checkMoveAllowed(DocumentRef docRef, DocumentRef containerRef) throws ClientException {
+    protected String checkMoveAllowed(DocumentRef docRef, DocumentRef containerRef) throws NuxeoException {
 
         DocumentModel doc = documentManager.getDocument(docRef);
         
@@ -57,42 +57,42 @@ public class ToutaticeFileManageActionsBean extends FileManageActionsBean {
      */
     @Override
     @WebRemote
-    public String addFolderFromPlugin(String fullName, String morePath) throws ClientException{
+    public String addFolderFromPlugin(String fullName, String morePath) throws NuxeoException{
         return super.addFolderFromPlugin(fullName, morePath);
     }
     
     @Override
     @WebRemote
-    public String moveWithId(String docId, String containerId) throws ClientException {
+    public String moveWithId(String docId, String containerId) throws NuxeoException {
         return super.moveWithId(docId, containerId);
     }
     
     @Override
     @WebRemote
-    public String copyWithId(String docId) throws ClientException {
+    public String copyWithId(String docId) throws NuxeoException {
         return super.copyWithId(docId);
     }
 
     @WebRemote
-    public String pasteWithId(String docId) throws ClientException {
+    public String pasteWithId(String docId) throws NuxeoException {
         return super.pasteWithId(docId);
     }
     
     @Override
     @WebRemote
-    public String removeUploadedFile(String fileName) throws ClientException {
+    public String removeUploadedFile(String fileName) throws NuxeoException {
         return super.removeUploadedFile(fileName);
     }
     
     @Override
     @WebRemote
-    public String removeAllUploadedFile() throws ClientException {
+    public String removeAllUploadedFile() throws NuxeoException {
         return super.removeAllUploadedFile();
     }
     
     @Override
     @WebRemote
-    public String removeSingleUploadedFile() throws ClientException {
+    public String removeSingleUploadedFile() throws NuxeoException {
         return removeSingleUploadedFile();
     }
 

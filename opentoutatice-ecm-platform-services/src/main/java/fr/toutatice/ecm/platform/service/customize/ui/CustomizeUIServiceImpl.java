@@ -89,7 +89,7 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
     private List<String> categories;
 
     @Override
-    public void activate(ComponentContext context) throws Exception {
+    public void activate(ComponentContext context) {
         super.activate(context);
         typeManager = Framework.getService(TypeManager.class);
         contentViewService = Framework.getService(ContentViewService.class);
@@ -102,7 +102,7 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
     }
 
     @Override
-    public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
+    public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) {
         if (LAYOUTS_PT_EXT.equals(extensionPoint)) {
             LayoutsDescriptor layoutsDescriptor = (LayoutsDescriptor) contribution;
             allLayoutsDescriptor.add(layoutsDescriptor);
@@ -113,14 +113,20 @@ public class CustomizeUIServiceImpl extends DefaultComponent implements Customiz
     }
 
     @Override
-    public void applicationStarted(ComponentContext context) throws Exception {
+    public void applicationStarted(ComponentContext context) {
         Set<String> publishSpaces = schemaManager.getDocumentTypeNamesForFacet(ToutaticeNuxeoStudioConst.CST_DOC_FACET_TTC_PUBLISH_SPACE);
         
         for(String publishSpace : publishSpaces){
             
             Type psType = typeManager.getType(publishSpace);
             allowedTypesUnderPublishSpace = getAllowedTypesUnderPublishSpace(new ArrayList<Type>(), psType);
-            adaptContentViews();
+            
+            try {
+                adaptContentViews();
+            } catch (Exception e) {
+                log.error(e);
+            }
+            
             for (LayoutsDescriptor layoutsDescriptor : allLayoutsDescriptor) {
                 overrideLayoutsTemplate(layoutsDescriptor);
             }

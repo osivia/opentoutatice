@@ -21,7 +21,7 @@ package fr.toutatice.ecm.platform.web.restapi.server.jaxrs;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -35,7 +35,7 @@ import fr.toutatice.ecm.platform.service.url.WebIdRef;
 public class ToutaticeRepositoryObject extends RepositoryObject {
 
 	@Path("web/{web}")
-	public Object getDocsByWebId(@PathParam("web") String web) throws ClientException {
+	public Object getDocsByWebId(@PathParam("web") String web) throws NuxeoException {
 		DocumentModelList list = null;
 		try {
 			CoreSession session = getContext().getCoreSession();

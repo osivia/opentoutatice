@@ -13,8 +13,8 @@
  *
  *
  * Contributors:
- *   mberhaut1
- *    
+ * mberhaut1
+ * 
  */
 package fr.toutatice.ecm.platform.web.publication.tree;
 
@@ -24,10 +24,10 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.LifeCycleConstants;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.tree.DefaultDocumentTreeSorter;
 import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.platform.publisher.api.PublicationNode;
@@ -39,21 +39,22 @@ import fr.toutatice.ecm.platform.core.query.helper.ToutaticeEsQueryHelper;
 
 /**
  * @author David Chevrier
- * Used to override buildChildrenWhereClause query.
+ *         Used to override buildChildrenWhereClause query.
  */
 public class ToutaticeCoreFolderPublicationNode extends CoreFolderPublicationNode {
 
     private static final long serialVersionUID = 8111887640605954307L;
-    
+
     /** Logger. */
     private static final Log log = LogFactory.getLog(ToutaticeCoreFolderPublicationNode.class);
 
     public ToutaticeCoreFolderPublicationNode(DocumentModel doc, String treeConfigName, String sid, PublicationNode parent, PublishedDocumentFactory factory)
-            throws ClientException {
+            throws NuxeoException {
         super(doc, treeConfigName, sid, parent, factory);
     }
 
-    public ToutaticeCoreFolderPublicationNode(DocumentModel document, String configName, String sessionId, PublishedDocumentFactory factory) throws ClientException {
+    public ToutaticeCoreFolderPublicationNode(DocumentModel document, String configName, String sessionId, PublishedDocumentFactory factory)
+            throws NuxeoException {
         super(document, configName, sessionId, factory);
     }
 
@@ -67,23 +68,22 @@ public class ToutaticeCoreFolderPublicationNode extends CoreFolderPublicationNod
 
         return clause.toString();
     }
-    
+
     /* Fork to use ToutaticeCoreFolderPublicationNode ... */
     @Override
-    public List<PublicationNode> getChildrenNodes() throws ClientException {
+    public List<PublicationNode> getChildrenNodes() throws NuxeoException {
         DocumentModelList children = getSortedChildren(false);
 
         List<PublicationNode> childrenNodes = new ArrayList<PublicationNode>();
         for (DocumentModel child : children) {
-            childrenNodes.add(new ToutaticeCoreFolderPublicationNode(child,
-                    treeConfigName, sid, this, factory));
+            childrenNodes.add(new ToutaticeCoreFolderPublicationNode(child, treeConfigName, sid, this, factory));
         }
         return childrenNodes;
     }
 
     // Fork to querying with ES
     @Override
-    protected DocumentModelList getSortedChildren(boolean queryDocuments) throws ClientException {
+    protected DocumentModelList getSortedChildren(boolean queryDocuments) throws NuxeoException {
         String whereClause = buildChildrenWhereClause(queryDocuments);
 
         DocumentModelList children = ToutaticeEsQueryHelper.query(getCoreSession(), "SELECT * FROM Document WHERE " + whereClause);

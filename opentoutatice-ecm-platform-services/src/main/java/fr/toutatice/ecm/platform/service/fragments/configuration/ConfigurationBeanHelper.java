@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,10 +34,10 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
@@ -61,7 +62,7 @@ public class ConfigurationBeanHelper implements Serializable {
 
     private static final String WCONF_OPTIONS = "wconf:options";
 
-	private static final Log log = LogFactory.getLog(ConfigurationBeanHelper.class);
+    private static final Log log = LogFactory.getLog(ConfigurationBeanHelper.class);
 
     private static final String WEB_CONFS_QUERY = "select * from WebConfiguration where ecm:ancestorId = '%s' and wconf:type = '%s' "
             + "AND wconf:enabled=1 AND ecm:mixinType != 'HiddenInNavigation'  AND ecm:currentLifeCycleState <> 'deleted' ORDER BY ecm:pos";
@@ -180,9 +181,9 @@ public class ConfigurationBeanHelper implements Serializable {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
 
-         // Get overriden or new local confs
+            // Get overriden or new local confs
             String localQuery = String.format(WEB_CONFS_QUERY, domain.getId(), confType);
             DocumentModelList localConfs = session.query(localQuery);
             if (domain.hasFacet(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_FACET)) {
@@ -321,9 +322,11 @@ public class ConfigurationBeanHelper implements Serializable {
             }
 
             // select conf objects that are enabled
-            String query = "select * from Document " + "where ecm:primaryType = 'WebConfiguration'  " + " AND wconf:type =  'fragmenttype'"
-                    + " AND wconf:enabled=1  " + " AND ecm:mixinType != 'HiddenInNavigation'  AND ecm:currentLifeCycleState <> 'deleted'  "
-                    + " AND wconf:code2 = '" + code2 + "'";
+            String baseQuery = "select * from Document where ecm:primaryType = 'WebConfiguration' AND wconf:type =  'fragmenttype'"
+                    + " AND wconf:enabled=1 AND ecm:mixinType != 'HiddenInNavigation'  AND ecm:currentLifeCycleState <> 'deleted' AND wconf:code2 = '" + code2
+                    + "'";
+
+            String query = baseQuery;
 
             // if domain is found, query only conf who is belong to it
             if (confPath != null) {
@@ -332,19 +335,27 @@ public class ConfigurationBeanHelper implements Serializable {
 
             DocumentModelList configurations = session.query(query);
 
-            if (configurations.get(0) != null) {
-                DocumentModel config = configurations.get(0);
+            if (CollectionUtils.isNotEmpty(configurations)) {
+                if (configurations.get(0) != null) {
+                    DocumentModel config = configurations.get(0);
 
-                Map<String, Object> properties = config.getProperties("webconfiguration");
+                    Map<String, Object> properties = config.getProperties("webconfiguration");
 
-                if (properties.containsKey(WCONF_OPTIONS) && (properties.get(WCONF_OPTIONS) != null)) {
-                    return (List<Map<String, String>>) properties.get(WCONF_OPTIONS);
+                    if (properties.containsKey(WCONF_OPTIONS) && (properties.get(WCONF_OPTIONS) != null)) {
+                        return (List<Map<String, String>>) properties.get(WCONF_OPTIONS);
+                    }
+
                 }
+            } else {
+                // Check at Root
+                configurations = session.query(baseQuery + " and ecm:ancestorId = '" + session.getRootDocument().getId() + "'");
 
+                if (CollectionUtils.isEmpty(configurations)) {
+                    log.error("No fragment enabled on repo with code: [" + code2 + "]");
+                }
             }
 
-
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             e.printStackTrace();
         }
 

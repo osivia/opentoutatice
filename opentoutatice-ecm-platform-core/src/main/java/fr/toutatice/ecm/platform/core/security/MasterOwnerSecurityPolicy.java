@@ -40,10 +40,10 @@ public class MasterOwnerSecurityPolicy extends AbstractSecurityPolicy {
         }
         else {
 	        
-	        // Check
+        // Check
 	        access = mergedAcp.getAccess(additionalPrincipals, new String[]{ToutaticeNuxeoStudioConst.CST_PERM_MASTER_OWNER});
-	        if (!Access.GRANT.equals(access)) {
-	            access = Access.UNKNOWN;
+        if (!Access.GRANT.equals(access)) {
+            access = Access.UNKNOWN;
 	        }
         }
 

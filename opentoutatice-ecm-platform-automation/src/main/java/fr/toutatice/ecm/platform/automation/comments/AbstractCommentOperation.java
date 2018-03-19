@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.core.util.BlobList;
 import org.nuxeo.ecm.automation.core.util.DocumentHelper;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
@@ -64,7 +64,7 @@ public abstract class AbstractCommentOperation {
         if (StringUtils.isEmpty(author)) {
             Principal principal = session.getPrincipal();
             if (principal == null) {
-                throw new ClientException("No author for comment.");
+                throw new NuxeoException("No author for comment.");
             } else {
                 author = principal.getName();
             }

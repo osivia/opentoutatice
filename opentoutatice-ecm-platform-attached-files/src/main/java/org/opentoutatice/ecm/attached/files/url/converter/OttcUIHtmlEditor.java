@@ -3,10 +3,6 @@
  */
 package org.opentoutatice.ecm.attached.files.url.converter;
 
-import javax.faces.application.Application;
-import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-
 import org.nuxeo.ecm.platform.ui.web.component.editor.UIHtmlEditor;
 
 
@@ -15,18 +11,15 @@ import org.nuxeo.ecm.platform.ui.web.component.editor.UIHtmlEditor;
  *
  */
 public class OttcUIHtmlEditor extends UIHtmlEditor {
-    
-    private Converter converter;
 
     /**
-     * 
+     * To associate converter for validation phase.
      */
     public OttcUIHtmlEditor() {
         super();
-        setRendererType(COMPONENT_TYPE);
-        
-        Application application = FacesContext.getCurrentInstance().getApplication();
-        this.converter = application.createConverter(DocumentContentConverter.class);
+
+        super.setConverter(new DocumentContentConverter());
     }
+
 
 }

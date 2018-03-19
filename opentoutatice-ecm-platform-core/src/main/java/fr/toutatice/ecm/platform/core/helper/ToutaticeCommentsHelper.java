@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.comment.api.CommentableDocument;
@@ -35,7 +35,7 @@ public class ToutaticeCommentsHelper {
     
     private ToutaticeCommentsHelper(){}
 
-    public static Map<DocumentModel, List<DocumentModel>> getProxyComments(DocumentModel proxy) throws ClientException {
+    public static Map<DocumentModel, List<DocumentModel>> getProxyComments(DocumentModel proxy) throws NuxeoException {
         Map<DocumentModel, List<DocumentModel>> comments = new HashMap<DocumentModel, List<DocumentModel>>();
         CommentableDocument commentableDoc = proxy.getAdapter(CommentableDocument.class);
         List<DocumentModel> rootComments = commentableDoc.getComments();
@@ -48,7 +48,7 @@ public class ToutaticeCommentsHelper {
         return comments;
     }
 
-    public static void setComments(CoreSession session, DocumentModel document, Map<DocumentModel, List<DocumentModel>> comments) throws ClientException {
+    public static void setComments(CoreSession session, DocumentModel document, Map<DocumentModel, List<DocumentModel>> comments) throws NuxeoException {
         CommentableDocument commentableDoc = document.getAdapter(CommentableDocument.class);
         for(DocumentModel rootComment : comments.keySet()){
             commentableDoc.addComment(rootComment);

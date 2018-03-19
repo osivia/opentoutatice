@@ -18,6 +18,7 @@
  */
 package fr.toutatice.ecm.platform.core.helper;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -26,22 +27,24 @@ import java.util.Date;
 import java.util.Map;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.naming.InitialContext;
 import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.platform.ec.notification.NotificationConstants;
 import org.nuxeo.ecm.platform.ec.notification.email.EmailHelper;
 import org.nuxeo.ecm.platform.ec.notification.email.NotificationsRenderingEngine;
 import org.nuxeo.ecm.platform.ec.notification.service.NotificationService;
 import org.nuxeo.ecm.platform.ec.notification.service.NotificationServiceHelper;
+import org.nuxeo.ecm.platform.rendering.RenderingException;
 import org.nuxeo.ecm.platform.rendering.RenderingResult;
 import org.nuxeo.ecm.platform.rendering.RenderingService;
 import org.nuxeo.ecm.platform.rendering.impl.DocumentRenderingContext;
@@ -50,6 +53,7 @@ import org.nuxeo.runtime.api.Framework;
 import fr.toutatice.ecm.platform.core.freemarker.ToutaticeFunctions;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 public class ToutaticeEmailHelper extends EmailHelper {
 
@@ -59,107 +63,118 @@ public class ToutaticeEmailHelper extends EmailHelper {
 	private final Configuration stringCfg = new Configuration();
 
 	@Override
-	public void sendmail(Map<String, Object> mail) throws Exception {
+	public void sendmail(Map<String, Object> mail) throws MessagingException {
 
-		Session session = getSession();
-		if (javaMailNotAvailable || session == null) {
-			log.warn("Not sending email since JavaMail is not configured");
-			return;
-		}
+		try {
 
-		// Construct a MimeMessage
-		MimeMessage msg = new MimeMessage(session);
-		msg.setFrom(new InternetAddress(session.getProperty("mail.from")));
-		Object to = mail.get("mail.to");
-		if (!(to instanceof String)) {
-			log.error("Invalid email recipient: " + to);
-			return;
-		}
-		msg.setRecipients(Message.RecipientType.TO,
-				InternetAddress.parse((String) to, false));
+			Session session = getSession();
+			if (javaMailNotAvailable || session == null) {
+				log.warn("Not sending email since JavaMail is not configured");
+				return;
+			}
 
-		RenderingService rs = Framework.getService(RenderingService.class);
+			// Construct a MimeMessage
+			MimeMessage msg = new MimeMessage(session);
+			msg.setFrom(new InternetAddress(session.getProperty("mail.from")));
+			Object to = mail.get("mail.to");
+			if (!(to instanceof String)) {
+				log.error("Invalid email recipient: " + to);
+				return;
+			}
+			msg.setRecipients(Message.RecipientType.TO,
+					InternetAddress.parse((String) to, false));
 
-		DocumentRenderingContext context = new DocumentRenderingContext();
-		context.remove("doc");
-		context.putAll(mail);
-		DocumentModel doc = (DocumentModel) mail.get("document");
-		context.setDocument(doc);
-		
-		ToutaticeFunctions fn = new ToutaticeFunctions();
-		
-		String lastContributor = fn.getUserFullName((String) doc.getPropertyValue("dc:lastContributor")); 
-		context.put("lastContributor", lastContributor);
-		
-		String portalHost = fn.getPortalHost(doc);
-		context.put("portalHost", portalHost);
-		context.put("shortPortalHost", fn.getShortPortalHost(portalHost));
+			RenderingService rs = Framework.getService(RenderingService.class);
 
-		String link = (fn.getPermalink(doc));
-		context.put("docPermalink", link);
-		
-		context.put("baseUrl", Framework.getProperty("nuxeo.url"));
+			DocumentRenderingContext context = new DocumentRenderingContext();
+			context.remove("doc");
+			context.putAll(mail);
+			DocumentModel doc = (DocumentModel) mail.get("document");
+			context.setDocument(doc);
 
-		context.put("creator", doc.getPropertyValue("dc:creator"));
+			ToutaticeFunctions fn = new ToutaticeFunctions();
 
-		String initiator = ToutaticeWorkflowHelper.getCurrentWorkflowInitiator(doc);
-		context.put("initiator", initiator);
+			String lastContributor = fn.getUserFullName((String) doc
+					.getPropertyValue("dc:lastContributor"));
+			context.put("lastContributor", lastContributor);
 
-		context.put("Runtime", Framework.getRuntime());
+			String portalHost = fn.getPortalHost(doc);
+			context.put("portalHost", portalHost);
+			context.put("shortPortalHost", fn.getShortPortalHost(portalHost));
 
-		String customSubjectTemplate = (String) mail.get(NotificationConstants.SUBJECT_TEMPLATE_KEY);
-		if (customSubjectTemplate == null) {
-			String subjTemplate = (String) mail
-					.get(NotificationConstants.SUBJECT_KEY);
-			Template templ = new Template("name",
-					new StringReader(subjTemplate), stringCfg);
+			String link = (fn.getPermalink(doc));
+			context.put("docPermalink", link);
 
-			Writer out = new StringWriter();
-			templ.process(mail, out);
-			out.flush();
+			context.put("baseUrl", Framework.getProperty("nuxeo.url"));
 
-			msg.setSubject(out.toString(), "UTF-8");
-		} else {
-			rs.registerEngine(new NotificationsRenderingEngine(
-					customSubjectTemplate));
+			context.put("creator", doc.getPropertyValue("dc:creator"));
+
+			String initiator = ToutaticeWorkflowHelper
+					.getCurrentWorkflowInitiator(doc);
+			context.put("initiator", initiator);
+
+			context.put("Runtime", Framework.getRuntime());
+
+			String customSubjectTemplate = (String) mail
+					.get(NotificationConstants.SUBJECT_TEMPLATE_KEY);
+			if (customSubjectTemplate == null) {
+				String subjTemplate = (String) mail
+						.get(NotificationConstants.SUBJECT_KEY);
+				Template templ = new Template("name", new StringReader(
+						subjTemplate), stringCfg);
+
+				Writer out = new StringWriter();
+				templ.process(mail, out);
+				out.flush();
+
+				msg.setSubject(out.toString(), "UTF-8");
+			} else {
+				rs.registerEngine(new NotificationsRenderingEngine(
+						customSubjectTemplate));
+
+				LoginContext lc = Framework.login();
+
+				Collection<RenderingResult> results = rs.process(context);
+				String subjectMail = "<HTML><P>No parsing Succeded !!!</P></HTML>";
+
+				for (RenderingResult result : results) {
+					subjectMail = (String) result.getOutcome();
+				}
+				subjectMail = NotificationServiceHelper
+						.getNotificationService().getEMailSubjectPrefix()
+						+ subjectMail;
+				msg.setSubject(subjectMail, "UTF-8");
+
+				lc.logout();
+			}
+
+			msg.setSentDate(new Date());
+
+			rs.registerEngine(new NotificationsRenderingEngine((String) mail
+					.get(NotificationConstants.TEMPLATE_KEY)));
 
 			LoginContext lc = Framework.login();
 
 			Collection<RenderingResult> results = rs.process(context);
-			String subjectMail = "<HTML><P>No parsing Succeded !!!</P></HTML>";
+			String bodyMail = "<HTML><P>No parsing Succedeed !!!</P></HTML>";
 
 			for (RenderingResult result : results) {
-				subjectMail = (String) result.getOutcome();
+				bodyMail = (String) result.getOutcome();
 			}
-			subjectMail = NotificationServiceHelper.getNotificationService()
-					.getEMailSubjectPrefix() + subjectMail;
-			msg.setSubject(subjectMail, "UTF-8");
 
 			lc.logout();
+
+			rs.unregisterEngine("ftl");
+
+			msg.setContent(bodyMail, "text/html; charset=utf-8");
+
+			// Send the message.
+			Transport.send(msg);
+
+		} catch (LoginException | IOException | TemplateException
+				| RenderingException e) {
+			throw new MessagingException(e.getMessage(), e);
 		}
-
-		msg.setSentDate(new Date());
-
-		rs.registerEngine(new NotificationsRenderingEngine((String) mail
-				.get(NotificationConstants.TEMPLATE_KEY)));
-
-		LoginContext lc = Framework.login();
-
-		Collection<RenderingResult> results = rs.process(context);
-		String bodyMail = "<HTML><P>No parsing Succedeed !!!</P></HTML>";
-
-		for (RenderingResult result : results) {
-			bodyMail = (String) result.getOutcome();
-		}
-
-		lc.logout();
-
-		rs.unregisterEngine("ftl");
-
-		msg.setContent(bodyMail, "text/html; charset=utf-8");
-
-		// Send the message.
-		Transport.send(msg);
 	}
 
 	/**

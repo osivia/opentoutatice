@@ -96,7 +96,7 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
     }
 
     @Override
-    public void activate(ComponentContext context) throws Exception {
+    public void activate(ComponentContext context) {
         super.activate(context);
         portalViewIds = new ArrayList<String>(0);
         fromUrlParam = StringUtils.EMPTY;
@@ -318,7 +318,7 @@ public class WidgetsAdapterServiceImpl extends DefaultComponent implements Widge
     }
 
     @Override
-    public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
+    public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) {
         if (ADAPTER_EXT_PT.equals(extensionPoint)) {
             if(contribution instanceof WidgetsAdapterDescriptor){
                 WidgetsAdapterDescriptor widgetsAdapterDesc = (WidgetsAdapterDescriptor) contribution;

@@ -33,7 +33,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -58,7 +58,7 @@ public class WebConfsConfigurationActions implements Serializable {
     @In(create = true, required = true)
     protected transient CoreSession documentManager;
 
-    public List<DocumentModel> getSelectedConfs(DocumentModel document) throws ClientException {
+    public List<DocumentModel> getSelectedConfs(DocumentModel document) throws NuxeoException {
         List<DocumentModel> selectedWebConfs = new ArrayList<DocumentModel>(0);
 
         WebConfsConfiguration webConfsConfiguration = document.getAdapter(WebConfsConfiguration.class);
@@ -69,7 +69,7 @@ public class WebConfsConfigurationActions implements Serializable {
         return selectedWebConfs;
     }
 
-    public List<DocumentModel> getNotSelectedConfs(DocumentModel document) throws ClientException {
+    public List<DocumentModel> getNotSelectedConfs(DocumentModel document) throws NuxeoException {
         List<DocumentModel> notSelectedWebConfs = new ArrayList<DocumentModel>(0);
 
         if (document.hasFacet(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_FACET)) {
@@ -103,7 +103,7 @@ public class WebConfsConfigurationActions implements Serializable {
         return notSelectedWebConfs;
     }
 
-    public List<String> getAllowedWebConfs(DocumentModel doc) throws ClientException {
+    public List<String> getAllowedWebConfs(DocumentModel doc) throws NuxeoException {
         List<String> allowedWebConfs = new ArrayList<String>(0);
         WebConfsConfiguration webConfsConfiguration = doc.getAdapter(WebConfsConfiguration.class);
         if (webConfsConfiguration == null) {

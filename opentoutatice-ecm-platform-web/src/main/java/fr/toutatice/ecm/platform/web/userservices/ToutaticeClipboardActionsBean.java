@@ -29,7 +29,7 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.international.StatusMessage;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -62,7 +62,7 @@ public class ToutaticeClipboardActionsBean extends ClipboardActionsBean {
 	 * @see org.nuxeo.ecm.webapp.clipboard.ClipboardActionsBean#getCanMoveInside(java.lang.String, org.nuxeo.ecm.core.api.DocumentModel)
 	 */
 	@Override
-    public boolean getCanMoveInside(String listName, DocumentModel document) throws ClientException {
+    public boolean getCanMoveInside(String listName, DocumentModel document) throws NuxeoException {
         if (documentsListsManager.isWorkingListEmpty(listName) || document == null) {
             return false;
         }
@@ -102,7 +102,7 @@ public class ToutaticeClipboardActionsBean extends ClipboardActionsBean {
 	@Override
     public List<DocumentModel> moveDocumentsToNewParent(
             DocumentModel destFolder, List<DocumentModel> docs)
-            throws ClientException {
+            throws NuxeoException {
         DocumentRef destFolderRef = destFolder.getRef();
         boolean destinationIsDeleted = LifeCycleConstants.DELETED_STATE.equals(destFolder.getCurrentLifeCycleState());
         List<DocumentModel> newDocs = new ArrayList<DocumentModel>();
@@ -156,7 +156,7 @@ public class ToutaticeClipboardActionsBean extends ClipboardActionsBean {
 	 * Fix mantis #3409: Mise en ligne: erreur sur l'opération de mise en ligne d'un document copié
 	 */
 	@Override
-	protected List<DocumentModel> recreateDocumentsWithNewParent(DocumentModel parent, List<DocumentModel> documents) throws ClientException {
+	protected List<DocumentModel> recreateDocumentsWithNewParent(DocumentModel parent, List<DocumentModel> documents) throws NuxeoException {
 		List<DocumentModel> copiedDocsList = new ArrayList<DocumentModel>();
 		
 		// copier les documents
@@ -186,7 +186,7 @@ public class ToutaticeClipboardActionsBean extends ClipboardActionsBean {
 		return copiedDocsList;
 	}
 	
-	protected void removeProxy(DocumentModel folder) throws ClientException {
+	protected void removeProxy(DocumentModel folder) throws NuxeoException {
 		innerRemoveDocumentProxy runner = new innerRemoveDocumentProxy(documentManager, folder);
 		runner.runUnrestricted();
 	}
@@ -200,7 +200,7 @@ public class ToutaticeClipboardActionsBean extends ClipboardActionsBean {
 		}
 		
 		@Override
-		public void run() throws ClientException {
+		public void run() throws NuxeoException {
 			DocumentModelList proxies = this.session.query("SELECT * FROM Document WHERE ecm:path STARTSWITH '" + this.folder.getPathAsString() + "' AND ecm:isProxy = 1");
 			for (DocumentModel proxy : proxies) {
 				this.session.removeDocument(proxy.getRef());

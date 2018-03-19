@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
@@ -31,7 +31,7 @@ public class ParentDocInfosProvider implements DocumentInformationsProvider {
      * {@inheritDoc}
      */
     @Override
-    public Map<String, Object> fetchInfos(CoreSession session, DocumentModel currentDocument) throws ClientException {
+    public Map<String, Object> fetchInfos(CoreSession session, DocumentModel currentDocument) throws NuxeoException {
         // Infos
         Map<String, Object> infos = new HashMap<String, Object>(1);
 
@@ -63,7 +63,7 @@ public class ParentDocInfosProvider implements DocumentInformationsProvider {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             DocumentModel parent = this.session.getParentDocument(this.document.getRef());
             if (parent != null && parent.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
                 try {

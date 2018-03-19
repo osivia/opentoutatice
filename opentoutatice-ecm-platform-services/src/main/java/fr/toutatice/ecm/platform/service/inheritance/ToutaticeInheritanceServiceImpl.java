@@ -9,7 +9,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -59,19 +59,24 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 	}
 
 	@Override
-	public void deactivate(ComponentContext context) throws Exception {
+	public void deactivate(ComponentContext context) {
 		this.settersDescriptors.clear();
 	}
 
 	@Override
-	public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
+	public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) {
 		if (EXTENSION_POINTS_SETTERS.equals(extensionPoint)) {
 			ToutaticeInheritanceSetterDescriptor setterContribution = (ToutaticeInheritanceSetterDescriptor) contribution;
 			Class<?> clazz = setterContribution.getClazz();
             if (null != clazz && ToutaticeInheritanceSetter.class.isAssignableFrom(clazz)) {
-            	ToutaticeInheritanceSetter setter = (ToutaticeInheritanceSetter) clazz.newInstance();
-            	setterContribution.setSetter(setter);
-				this.settersDescriptors.put(setterContribution.getName(), setterContribution);
+                try {
+                    ToutaticeInheritanceSetter setter = (ToutaticeInheritanceSetter) clazz.newInstance();
+                    setterContribution.setSetter(setter);
+                    this.settersDescriptors.put(setterContribution.getName(), setterContribution);
+                } catch (InstantiationException | IllegalAccessException e) {
+                    log.error("Failed to register the contribution " + contributor.getName(), e);
+                }
+            	
 			} else {
 				log.warn("Failed to register the contribution '" + contributor.getName() + "'. Either a null clazz is defined or it doesn't implement the interface 'ToutaticeInheritanceSetter'");
 			}
@@ -79,7 +84,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 	}
 	
 	@Override
-	public void unregisterContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
+	public void unregisterContribution(Object contribution, String extensionPoint, ComponentInstance contributor) {
 		if (EXTENSION_POINTS_SETTERS.equals(extensionPoint)) {
 			ToutaticeInheritanceSetterDescriptor setterContribution = (ToutaticeInheritanceSetterDescriptor) contribution;
 			this.settersDescriptors.remove(setterContribution.getName());
@@ -95,7 +100,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 		try {
 			ToutaticeSilentProcessRunnerHelper runner = new InheritanceSilentModeRunner(session, event, isSynchronousExecution);
 			runner.silentRun(true, FILTERED_SERVICES_LIST);
-		} catch (ClientException e) {
+		} catch (NuxeoException e) {
 			log.error("Failed to run the inheritance process, error: " + e.getMessage());
 		}
 	}
@@ -150,7 +155,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 		}
 
 		@Override
-		public void run() throws ClientException {
+		public void run() throws NuxeoException {
 			DocumentEventContext eventContext = (DocumentEventContext) this.event.getContext();
 			String eventName = this.event.getName();
 			DocumentModel document = eventContext.getSourceDocument();
@@ -261,7 +266,7 @@ public class ToutaticeInheritanceServiceImpl extends DefaultComponent implements
 									
 									try {
 										status = !docModel.isImmutable() && !LifeCycleConstants.DELETED_STATE.equals(docModel.getCurrentLifeCycleState());
-									} catch (ClientException e) {
+									} catch (NuxeoException e) {
 										log.error("Failed to evaluate children, error: " + e.getMessage());
 									}
 									

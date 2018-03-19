@@ -26,7 +26,7 @@ import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.user.center.profile.UserProfileService;
@@ -60,7 +60,7 @@ public class GetUserProfile {
             }
         } catch (Exception e) {
             log.error("Failed to get the user profil document for user '" + principal.getName() + "', error: " + e.getMessage());
-            throw new ClientException("Failed to get the user profil document");
+            throw new NuxeoException("Failed to get the user profil document");
         }
 
         return userProfile;

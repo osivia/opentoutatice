@@ -25,7 +25,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 
@@ -42,10 +42,10 @@ public class ToutaticeXPathPropertyHelper {
 	private int index;
 	private INDEX_TYPE indexType = INDEX_TYPE.UNDEFINED;
 
-	public ToutaticeXPathPropertyHelper(DocumentModel document, String xpath) throws PropertyException, ClientException {
+	public ToutaticeXPathPropertyHelper(DocumentModel document, String xpath) throws PropertyException, NuxeoException {
 		if (null == document || StringUtils.isBlank(xpath)) {
 			log.debug("Both parameters 'document' and 'xpath' cannot be null");
-			throw new ClientException("Both parameters 'document' and 'xpath' cannot be null");
+			throw new NuxeoException("Both parameters 'document' and 'xpath' cannot be null");
 		}
 		
 		// analyser la propriété

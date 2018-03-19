@@ -5,12 +5,8 @@
 	<require>org.nuxeo.ecm.core</require>
 	<require>org.nuxeo.ecm.platform.routing.core</require>
 	<require>org.nuxeo.ecm.platform.filemanager.core</require>
-
-	<extension target="faces-config#NAVIGATION">
-	</extension>
-
-	<extension target="pages#PAGES">
-	</extension>
+	<!-- To replace PlarformFunctions with ToutaticeFunction -->
+	<require>org.nuxeo.ecm.automation.features</require>
 
 	<extension target="application#MODULE">
 		<module>

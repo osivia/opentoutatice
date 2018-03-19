@@ -31,7 +31,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
@@ -62,12 +62,12 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
 
     private static final long serialVersionUID = 1L;
 
-    public boolean getCanPublish() throws ClientException {
+    public boolean getCanPublish() throws NuxeoException {
         DocumentModel doc = navigationContext.getCurrentDocument();
         return getCanPublish(doc);
     }
 
-    public boolean getCanPublish(DocumentModel document) throws ClientException {
+    public boolean getCanPublish(DocumentModel document) throws NuxeoException {
         boolean can = false;
 
         try {
@@ -104,12 +104,12 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
         return can;
     }
 
-    public boolean getCanUnpublish() throws ClientException {
+    public boolean getCanUnpublish() throws NuxeoException {
         DocumentModel doc = navigationContext.getCurrentDocument();
         return getCanUnpublish(doc);
     }
 
-    public boolean canUnpublishProxy(DocumentModel proxy) throws ClientException {
+    public boolean canUnpublishProxy(DocumentModel proxy) throws NuxeoException {
         boolean status = false;
 
         // For local proxies only
@@ -120,7 +120,7 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
         return status;
     }
 
-    public boolean getCanUnpublish(DocumentModel document) throws ClientException {
+    public boolean getCanUnpublish(DocumentModel document) throws NuxeoException {
         boolean status = false;
 
         try {
@@ -182,7 +182,7 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
     }
 
     @Override
-    protected void getPathFragments(DocumentModel document, List<String> pathFragments) throws ClientException {
+    protected void getPathFragments(DocumentModel document, List<String> pathFragments) throws NuxeoException {
         // ajouter le nom du document courant
         pathFragments.add(document.getTitle());
 
@@ -197,7 +197,7 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
         pathFragments.add(domain.getTitle());
     }
 
-    public String getIconPath(Object node) throws ClientException {
+    public String getIconPath(Object node) throws NuxeoException {
         String iconPath = "";
         if (node instanceof ProxyNode) {
             String path = ((ProxyNode) node).getPath();
@@ -222,11 +222,11 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
     }
 
     @Override
-    public boolean isPending() throws ClientException {
+    public boolean isPending() throws NuxeoException {
         return isPending(navigationContext.getCurrentDocument());
     }
 
-    public boolean isPending(DocumentModel document) throws ClientException {
+    public boolean isPending(DocumentModel document) throws NuxeoException {
         boolean isPending = false;
         if (ToutaticeDocumentHelper.isDocStillExists(documentManager, document) && document.isProxy()) {
             PublicationTree tree = publisherService.getPublicationTreeFor(document, documentManager);
@@ -236,7 +236,7 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
         return isPending;
     }
 
-    public boolean hasRemoteProxy() throws ClientException {
+    public boolean hasRemoteProxy() throws NuxeoException {
         boolean has = false;
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         DocumentModelList proxies = documentManager.getProxies(currentDocument.getRef(), null);
@@ -257,7 +257,7 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
      * to be coherent with publisher-task-contrib.xml.
      */
     @Override
-    protected List<String> filterEmptyTrees(Collection<String> trees) throws PublicationTreeNotAvailable, ClientException {
+    protected List<String> filterEmptyTrees(Collection<String> trees) throws PublicationTreeNotAvailable, NuxeoException {
         List<String> filteredTrees = new ArrayList<>();
 
         ToutaticeRootSectionsFinder finder = new ToutaticeRootSectionsFinder(documentManager);

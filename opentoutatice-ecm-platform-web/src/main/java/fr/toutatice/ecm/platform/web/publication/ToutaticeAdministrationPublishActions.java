@@ -30,7 +30,7 @@ import org.jboss.seam.annotations.Factory;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.Filter;
@@ -67,7 +67,7 @@ public class ToutaticeAdministrationPublishActions extends AdministrationPublish
      * @see org.nuxeo.ecm.platform.publisher.web.AdministrationPublishActions#getSectionRoots()
      */
     @Factory(value = "defaultPublishingRoots", scope = ScopeType.EVENT)
-    public DocumentModelList getSectionRoots() throws ClientException {
+    public DocumentModelList getSectionRoots() throws NuxeoException {
         ToutaticeRootSectionsFinder rootFinder = (ToutaticeRootSectionsFinder) getRootFinder();
         rootFinder.refreshRootSections();
         DocumentModelList sectionRoots = rootFinder.getDefaultSectionRoots(false, true);
@@ -79,11 +79,11 @@ public class ToutaticeAdministrationPublishActions extends AdministrationPublish
      * Fixes loops on parent.
      */
     @Override
-    public String getDomainNameFor(final DocumentModel sectionRoot) throws ClientException {
+    public String getDomainNameFor(final DocumentModel sectionRoot) throws NuxeoException {
         final List<String> domainName = new ArrayList<>();
         new UnrestrictedSessionRunner(documentManager) {
             @Override
-            public void run() throws ClientException {
+            public void run() throws NuxeoException {
                 DocumentModel parent = session.getParentDocument(sectionRoot.getRef());
                 SchemaManager schemaManager = Framework.getLocalService(SchemaManager.class);
                 while (parent != null && !"/".equals(parent.getPathAsString())) {
@@ -100,7 +100,7 @@ public class ToutaticeAdministrationPublishActions extends AdministrationPublish
     }
 
     @Override
-    protected void getPathFragments(DocumentModel document, List<String> pathFragments) throws ClientException {
+    protected void getPathFragments(DocumentModel document, List<String> pathFragments) throws NuxeoException {
         // ajouter le nom du document courant
         pathFragments.add(document.getTitle());
 
@@ -162,7 +162,7 @@ public class ToutaticeAdministrationPublishActions extends AdministrationPublish
         return dtn;
     }
 
-    public String getRootFormattedPath(DocumentModel document) throws ClientException {
+    public String getRootFormattedPath(DocumentModel document) throws NuxeoException {
         List<String> pathFragments = new ArrayList<String>();
         pathFragments.add(document.getTitle());
         DocumentModel sectionRoot = ((ToutaticeNavigationContext) navigationContext).getSectionPublicationArea(document);

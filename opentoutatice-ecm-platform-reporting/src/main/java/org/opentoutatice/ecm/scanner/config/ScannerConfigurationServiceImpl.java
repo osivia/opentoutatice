@@ -39,7 +39,7 @@ public class ScannerConfigurationServiceImpl extends DefaultComponent implements
      * {@inheritDoc}
      */
     @Override
-    public void activate(ComponentContext context) throws Exception{
+    public void activate(ComponentContext context) {
         // Scheduler Service initialization
         if(this.schedulerService == null){
             this.schedulerService = Framework.getService(SchedulerService.class);
@@ -58,7 +58,7 @@ public class ScannerConfigurationServiceImpl extends DefaultComponent implements
      * {@inheritDoc}
      */
     @Override
-    public void registerExtension(Extension extension) throws Exception {
+    public void registerExtension(Extension extension) {
         // Only one extension point
         Object[] contributions = extension.getContributions();
         for(Object contribution : contributions){
@@ -74,7 +74,7 @@ public class ScannerConfigurationServiceImpl extends DefaultComponent implements
      * @param configuration
      * @throws Exception 
      */
-    private void registerScannerConfiguration(ScannerConfiguration configuration) throws Exception {
+    private void registerScannerConfiguration(ScannerConfiguration configuration) {
         // Scheduler
         this.schedulerService.registerSchedule(configuration);
         // Directive

@@ -32,7 +32,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -87,7 +87,7 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
     private SchemaManager schemaManager;
 
 
-    public String getMediaSpaceName() throws ClientException {
+    public String getMediaSpaceName() throws NuxeoException {
 
         if (getMediaSpace() != null) {
             return getMediaSpace().getTitle();
@@ -97,7 +97,7 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
     }
 
 
-    private DocumentModel getMediaSpace() throws ClientException {
+    private DocumentModel getMediaSpace() throws NuxeoException {
         mediaSpace = null;
         DocumentModel currentDomain = navigationContext.getCurrentDomain();
         if (currentDomain != null) {
@@ -115,7 +115,7 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
         return mediaSpace;
     }
 
-    private String getSpaceName() throws ClientException {
+    private String getSpaceName() throws NuxeoException {
         String res = null;
         DocumentModel space;
         space = navigationContext.getCurrentSuperSpace();
@@ -125,7 +125,7 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
         return res;
     }
 
-    private String getDomaineName() throws ClientException {
+    private String getDomaineName() throws NuxeoException {
         DocumentModel domain;
         String res = null;
         domain = navigationContext.getCurrentDomain();
@@ -135,7 +135,7 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
         return res;
     }
 
-    public Map<String, String> getScopes() throws ClientException {
+    public Map<String, String> getScopes() throws NuxeoException {
         scopes = new HashMap<String, String>();
         if (getMediaSpace() != null) {
             scopes.put(getMediaSpaceName(), MEDIALIBRARY);
@@ -177,7 +177,7 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
 
     }
 
-    public Map<String, Object> getTypes() throws ClientException {
+    public Map<String, Object> getTypes() throws NuxeoException {
         types = new TreeMap<String, Object>();
         Collection<Type> collectTypes = typeManager.getTypes();
         
@@ -226,13 +226,13 @@ public class ToutaticeEditorLinkActionsBean extends EditorLinkActionsBean {
         return hasSearchResults;
     }
     
-    public String searchDocuments(String view) throws ClientException{
+    public String searchDocuments(String view) throws NuxeoException{
         searchDocuments();
         return view;
     }
 
     @Override
-    public String searchDocuments() throws ClientException {
+    public String searchDocuments() throws NuxeoException {
         resultDocuments = null;
         final List<String> constraints = new ArrayList<String>();
         

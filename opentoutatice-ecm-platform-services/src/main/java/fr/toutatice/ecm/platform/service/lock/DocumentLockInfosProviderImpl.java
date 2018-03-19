@@ -22,7 +22,7 @@ package fr.toutatice.ecm.platform.service.lock;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.Lock;
@@ -38,7 +38,7 @@ public class DocumentLockInfosProviderImpl implements DocumentLockInfosProvider 
 
 	@Override
 	public Map<String, Object> fetchInfos(CoreSession coreSession,
-			DocumentModel currentDocument) throws ClientException {
+			DocumentModel currentDocument) throws NuxeoException {
 
 		Map<String, Object> lockInfo = new HashMap<String, Object>();
 

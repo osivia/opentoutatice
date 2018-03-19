@@ -24,7 +24,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.publisher.task.CoreProxyWithWorkflowFactory;
 import org.nuxeo.ecm.platform.task.Task;
@@ -46,7 +46,7 @@ public class ToutaticeTaskActionsBean extends TaskActionsBean {
 
     private static final long serialVersionUID = 3730629195809387779L;
 
-    public boolean hasNuxeoPublishTaskPending() throws ClientException {
+    public boolean hasNuxeoPublishTaskPending() throws NuxeoException {
         boolean hasNuxeoPublicationTask = false;
         super.tasks = null;
         /* getCurrentDocumentTasks() returns tasks for current user and user of its groups*/
@@ -63,11 +63,11 @@ public class ToutaticeTaskActionsBean extends TaskActionsBean {
         return hasNuxeoPublicationTask;
     }
     
-    public boolean isValidateOnlineActionAuthorized() throws ClientException {
+    public boolean isValidateOnlineActionAuthorized() throws NuxeoException {
         return isTaskActionAuthorized(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE);
     }
 
-    protected boolean isTaskActionAuthorized(String taskName) throws ClientException {
+    protected boolean isTaskActionAuthorized(String taskName) throws NuxeoException {
         boolean isAuthorized = false;
         super.tasks = null;
         List<Task> currentDocumentTasks = getCurrentDocumentTasks();// get tasks for current users and users of its groups
@@ -89,19 +89,19 @@ public class ToutaticeTaskActionsBean extends TaskActionsBean {
         return ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE;
     }
 
-    public Task getValidateOnlineTask() throws ClientException {
+    public Task getValidateOnlineTask() throws NuxeoException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         return ToutaticeWorkflowHelper.getTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, documentManager, currentDocument);
     }
 
-    public boolean isValidateOnlineTask(Task task) throws ClientException {
+    public boolean isValidateOnlineTask(Task task) throws NuxeoException {
         if (task != null) {
             return ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE.equals(task.getName());
         }
         return false;
     }
     
-    public Task getTask(String nameTask) throws ClientException {
+    public Task getTask(String nameTask) throws NuxeoException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         return ToutaticeWorkflowHelper.getTaskByName(nameTask, documentManager, currentDocument);
     }

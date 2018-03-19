@@ -23,7 +23,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentLocation;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.model.PropertyException;
@@ -91,7 +91,7 @@ public class WebIdFunctions {
                     ret = true;
                 }
             }
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             log.error("Erreur génération webid " + e);
         }
         return ret;
@@ -115,7 +115,7 @@ public class WebIdFunctions {
                 url = DocumentModelFunctions.documentUrl(doc);
             }
 
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             log.error("Erreur génération webid " + e);
         }
         return url;
@@ -142,7 +142,7 @@ public class WebIdFunctions {
                 url = DocumentModelFunctions.fileUrl(patternName, doc, blobPropertyName, filename);
             }
 
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             log.error("Erreur génération webid " + e);
         }
         return url;
@@ -192,7 +192,7 @@ public class WebIdFunctions {
             DocumentView docView = new DocumentViewImpl(webIdDocLoc, null, parameters);
             url = getURLPolicyService().getUrlFromDocumentView(WEBID_PATTERN, docView, BaseURL.getBaseURL());
 
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             log.error("Erreur génération webid " + e);
         } catch (Exception e) {
             log.error("Erreur génération webid " + e);
@@ -228,7 +228,7 @@ public class WebIdFunctions {
     // DocumentView docView = new DocumentViewImpl(webIdDocLoc, null, params);
     // url = service.getUrlFromDocumentView(pattern, docView, BASE_URL);
     //
-    // } catch (ClientException e) {
+    // } catch (NuxeoException e) {
     // log.error("Erreur génération webid " + e);
     // } catch (Exception e) {
     // log.error("Erreur génération webid " + e);
@@ -237,7 +237,7 @@ public class WebIdFunctions {
     // return url;
     // }
 
-    protected static DocumentView getDownloadFileProperties(DocumentLocation docLoc, DocumentModel doc) throws PropertyException, ClientException {
+    protected static DocumentView getDownloadFileProperties(DocumentLocation docLoc, DocumentModel doc) throws PropertyException, NuxeoException {
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put(DocumentFileCodec.FILE_PROPERTY_PATH_KEY, "file:content");
         String fileName = (String) doc.getPropertyValue("file:filename");
@@ -247,7 +247,7 @@ public class WebIdFunctions {
     }
 
     protected static DocumentView getDownloadPictureProperties(DocumentLocation docLoc, DocumentModel doc, String blobPropertyName) throws PropertyException,
-            ClientException {
+            NuxeoException {
         Map<String, String> parameters = new HashMap<String, String>();
         if (StringUtils.isNotBlank(blobPropertyName)) {
             parameters.put(DocumentFileCodec.FILE_PROPERTY_PATH_KEY, blobPropertyName);

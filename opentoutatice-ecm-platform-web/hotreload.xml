@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<project name="Hot Reload" default="hotreload" basedir=".">
+	
+	<property name="nxserver.dir" value="" />
+
+	<target name="hotreload">
+		<condition property="file.matches">
+			<resourcecontains resource="${nxserver.dir}/dev.bundles" substring="${basedir}/target/classes" />
+		</condition>
+		<antcall target="update-dev-bundles" />
+		<antcall target="touch-dev-bundles" />
+	</target>
+
+	<target name="update-dev-bundles" unless="file.matches">
+		<echo message="Adding ${basedir}/target/classes to dev.bundles" />
+		<echo file="${nxserver.dir}/dev.bundles" append="true" message="${basedir}/target/classes" />
+	</target>
+
+	<target name="touch-dev-bundles">
+		<touch file="${nxserver.dir}/dev.bundles" />
+	</target>
+
+</project>

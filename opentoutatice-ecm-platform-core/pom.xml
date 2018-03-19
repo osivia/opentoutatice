@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>4.6.5.p2</version>
+		<version>5.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-core</artifactId>
@@ -53,9 +54,9 @@
 			<artifactId>nuxeo-platform-contentview-jsf</artifactId>
 		</dependency>
 		<dependency>
-            <groupId>org.nuxeo.ecm.platform</groupId>
-            <artifactId>nuxeo-platform-imaging-core</artifactId>
-        </dependency>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-platform-imaging-core</artifactId>
+		</dependency>
 		<!-- all for tasks TODO: reduce to effective used -->
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
@@ -105,12 +106,24 @@
 
 		<!-- For test purpose only -->
 		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.nuxeo.runtime</groupId>
 			<artifactId>nuxeo-runtime-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.ecm.core</groupId>
 			<artifactId>nuxeo-core-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.nuxeo.ecm.platform</groupId>
+			<artifactId>nuxeo-features-test</artifactId>
+			<version>${nuxeo.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>

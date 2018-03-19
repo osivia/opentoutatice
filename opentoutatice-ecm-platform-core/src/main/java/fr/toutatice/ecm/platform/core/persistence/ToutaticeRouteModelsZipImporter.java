@@ -8,7 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.common.utils.Path;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
@@ -32,7 +32,7 @@ public class ToutaticeRouteModelsZipImporter extends ExportedZipImporter {
     @Override
     public DocumentModel create(CoreSession session, Blob content, String path,
             boolean overwrite, String filename, TypeManager typeService)
-            throws ClientException, IOException {
+            throws NuxeoException, IOException {
 
         File tmp = File.createTempFile("xml-importer", null);
         content.transferTo(tmp);
@@ -76,21 +76,13 @@ public class ToutaticeRouteModelsZipImporter extends ExportedZipImporter {
             pipe.setReader(reader);
             pipe.setWriter(writer);
             pipe.run();
-        } catch (IllegalArgumentException e) {
-            log.error("Can not import route model", e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("interrupted", e);
-        } catch (RuntimeException e) {
-            log.error("Can not import route model", e);
-            throw e;
-        } catch (Exception e) {
-            log.error("Can not import route model", e);
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            log.warn(e, e);
         } finally {
             reader.close();
             writer.close();
         }
+        
         tmp.delete();
         DocumentModel newRouteModel = session.getDocument(resultingRef);
         if (currentRouteModelACP != null && overwrite && overWrite) {

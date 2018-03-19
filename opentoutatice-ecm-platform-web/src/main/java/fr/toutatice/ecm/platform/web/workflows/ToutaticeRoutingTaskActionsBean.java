@@ -29,7 +29,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.routing.web.RoutingTaskActionsBean;
 import org.nuxeo.ecm.platform.task.Task;
@@ -70,12 +70,12 @@ public class ToutaticeRoutingTaskActionsBean extends RoutingTaskActionsBean {
 		return super.button;
 	}
 
-	public String getWorkFlowInitiator() throws ClientException {
+	public String getWorkFlowInitiator() throws NuxeoException {
 		return routingActions.getCurrentWorkflowInitiator();
 	}
 
 	@Override
-    public String endTask(Task task) throws ClientException {
+    public String endTask(Task task) throws NuxeoException {
 		String view = MainTabsActions.DEFAULT_VIEW;
 		
 		if (TOUTATICE_WF_ONLINE_ACTIONS.contains(getClickedButton())) {

@@ -2,7 +2,7 @@ package fr.toutatice.ecm.platform.service.inheritance;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventBundle;
 import org.nuxeo.ecm.core.event.PostCommitEventListener;
@@ -16,7 +16,7 @@ public class ToutaticeInheritanceAsynchListener implements PostCommitEventListen
 	private ToutaticeInheritanceService service;
 
 	@Override
-	public void handleEvent(EventBundle events) throws ClientException {
+	public void handleEvent(EventBundle events) throws NuxeoException {
         for (Event event : events) {
         	if (event.getContext() instanceof DocumentEventContext) {
         		try {

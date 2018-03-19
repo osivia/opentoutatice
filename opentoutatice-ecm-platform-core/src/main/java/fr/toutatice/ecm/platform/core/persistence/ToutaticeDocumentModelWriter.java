@@ -9,7 +9,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.common.utils.Path;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.DocumentModelImpl;
@@ -63,7 +63,7 @@ public class ToutaticeDocumentModelWriter extends DocumentModelWriter {
                 DocumentModel docModel = new DocumentModelImpl(parentPath.toString(), name,
                         xdoc.getType());
                 super.loadSchemas(xdoc, docModel, xdoc.getDocument());
-            } catch (ClientException ce) {
+            } catch (NuxeoException ce) {
                 if(BooleanUtils.isNotTrue(compatibilityImport)){
                     if(log.isDebugEnabled()){
                         log.debug(ce.getMessage(), ce);

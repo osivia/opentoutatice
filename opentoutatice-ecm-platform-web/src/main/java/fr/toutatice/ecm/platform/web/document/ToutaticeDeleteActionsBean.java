@@ -31,7 +31,7 @@ import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
@@ -72,7 +72,7 @@ public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 	 * @see fr.gouv.education.acrennes.ged.document.additionalDeleteFilter()
 	 */
 	@Override
-	public boolean getCanPurge() throws ClientException {
+	public boolean getCanPurge() throws NuxeoException {
 		boolean status = super.getCanPurge();
 		
 		// check additional custom rules
@@ -89,7 +89,7 @@ public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 	 * @see org.nuxeo.ecm.webapp.action.DeleteActionsBean#deleteSelection()
 	 */
 	@Override
-	public String deleteSelection() throws ClientException {
+	public String deleteSelection() throws NuxeoException {
 		List<DocumentModel> proxiedDocsList = getSelectionProxiesList(CURRENT_DOCUMENT_SELECTION);
 		DocumentModel currentFolder = navigationContext.getCurrentDocument();
 
@@ -110,7 +110,7 @@ public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 	 * @see org.nuxeo.ecm.webapp.action.DeleteActionsBean#purgeSelection()
 	 */
 	@Override
-	public String purgeSelection() throws ClientException {
+	public String purgeSelection() throws NuxeoException {
 		List<DocumentModel> proxiedDocsList = getSelectionProxiesList(CURRENT_DOCUMENT_TRASH_SELECTION);
 		DocumentModel currentFolder = navigationContext.getCurrentDocument();
 
@@ -171,7 +171,7 @@ public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 						}
 					}
 				}
-			} catch (ClientException e) {
+			} catch (NuxeoException e) {
 	            log.error("Cannot check delete permission", e);
 	            status = false;
 			}
@@ -180,7 +180,7 @@ public class ToutaticeDeleteActionsBean extends DeleteActionsBean {
 		return status;
 	}
 	
-	private List<DocumentModel> getSelectionProxiesList(String selectionList) throws ClientException {
+	private List<DocumentModel> getSelectionProxiesList(String selectionList) throws NuxeoException {
 		List<DocumentModel> proxiedDocsList = new ArrayList<DocumentModel>();
 
 		List<DocumentModel> docsList = documentsListsManager.getWorkingList(selectionList);

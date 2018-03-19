@@ -3,6 +3,7 @@
  */
 package org.opentoutatice.ecm.reporter;
 
+import java.text.SimpleDateFormat;
 import java.util.Map;
 
 import javax.mail.MessagingException;
@@ -24,8 +25,8 @@ public abstract class AbstractMailer implements Reporter {
     /** Logger. */
     public static final Log log = LogFactory.getLog(AbstractMailer.class);
 
-    /** Date format. */
-    public static final String DATE_FORMAT = "dd/MM/yyyy";
+    /** Date formater. */
+    public static final SimpleDateFormat DATE_FORMATER = new SimpleDateFormat("dd/MM/yyyy");
 
     /** Mail key. */
     public static final String MAIL_TO = "mail.to";

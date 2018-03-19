@@ -62,7 +62,7 @@ public class ScannerConfigurationRegistryImpl extends ScheduleExtensionRegistry 
      * {@inheritDoc}
      */
     @Override
-    public void registerDirectiveParameterization (ScannerConfiguration configuration) throws DirectiveException {
+    public void registerDirectiveParameterization (ScannerConfiguration configuration) {
         this.directivesParamByEvent.put(configuration.getEventId(), configuration.getDirectiveParameterization());
     }
     
@@ -70,7 +70,7 @@ public class ScannerConfigurationRegistryImpl extends ScheduleExtensionRegistry 
      * {@inheritDoc}
      */
     @Override
-    public ScanUpdaterConfiguration getUpdaterParameterization(String eventId) throws Exception {
+    public ScanUpdaterConfiguration getUpdaterParameterization(String eventId) {
         return this.updaterCfgByEvent.get(eventId);
     }
     
@@ -78,7 +78,7 @@ public class ScannerConfigurationRegistryImpl extends ScheduleExtensionRegistry 
      * {@inheritDoc}
      */
     @Override
-    public void registerUpdaterParameterization(String eventId, ScanUpdaterConfiguration configuration) throws Exception {
+    public void registerUpdaterParameterization(String eventId, ScanUpdaterConfiguration configuration) {
         this.updaterCfgByEvent.put(eventId, configuration);
     }
 

@@ -1,17 +1,17 @@
 /*
  * (C) Copyright 2014 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
- * 
+ *
+ *
  * Contributors:
  * lbillon
  */
@@ -22,46 +22,43 @@ import static org.jboss.seam.ScopeType.EVENT;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
-import org.nuxeo.ecm.platform.picture.web.PictureManager;
+import org.nuxeo.ecm.core.api.NuxeoException;
+// import org.nuxeo.ecm.platform.picture.web.PictureManager;
 import org.nuxeo.ecm.platform.ui.web.rest.RestHelper;
 import org.nuxeo.ecm.platform.url.api.DocumentView;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
-import fr.toutatice.ecm.platform.service.url.ToutaticeDocumentLocation;
 import fr.toutatice.ecm.platform.service.url.WebIdCodec;
-import fr.toutatice.ecm.platform.service.url.WebIdRef;
 
 @Name("restHelper")
 @Scope(EVENT)
 @Install(precedence = ExtendedSeamPrecedence.TOUTATICE)
 public class ToutaticeRestHelper extends RestHelper {
-	
+
     private static final long serialVersionUID = 8463715204469011050L;
 
     private static final Log log = LogFactory.getLog(ToutaticeRestHelper.class);
-    
-    @In(create = true)
-    PictureManager pictureManager;
+
+    // @In(create = true)
+    // PictureManager pictureManager;
 
     /**
      * Switch action in case of type of the document associated by the url
-     * 
+     *
      * @param docView
      * @return a view
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public String switchBehaviour(DocumentView docView) throws ClientException {
-        
-        String content = docView.getParameter(WebIdCodec.CONTENT_PARAM);
+    public String switchBehaviour(DocumentView docView) throws NuxeoException {
+
+        final String content = docView.getParameter(WebIdCodec.CONTENT_PARAM);
 
         // for picture, download the picture
         if (StringUtils.isNotBlank(content)) {
-            pictureManager.download(docView);
+            // pictureManager.download(docView);
         }
         // by default, call a nuxeo view
         else {
@@ -69,5 +66,5 @@ public class ToutaticeRestHelper extends RestHelper {
         }
 
         return StringUtils.EMPTY;
-    }    
+    }
 }

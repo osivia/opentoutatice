@@ -6,7 +6,7 @@ package org.opentoutatice.ecm.scanner;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.runtime.api.Framework;
@@ -28,7 +28,7 @@ public class ScanningListener implements EventListener {
     private ScannerConfigurationService configurationService;
 
     @Override
-    public void handleEvent(Event event) throws ClientException {
+    public void handleEvent(Event event) throws NuxeoException {
         // Robustness
         if (StringUtils.equals(ScannerConfiguration.OTTC_SCAN_EVENT, event.getName())) {
             // Configuration service
@@ -53,7 +53,7 @@ public class ScanningListener implements EventListener {
                     if (log.isDebugEnabled()) {
                         e.printStackTrace();
                     }
-                    throw new ClientException(e);
+                    throw new NuxeoException(e);
                 }
 
                 long end = System.currentTimeMillis();

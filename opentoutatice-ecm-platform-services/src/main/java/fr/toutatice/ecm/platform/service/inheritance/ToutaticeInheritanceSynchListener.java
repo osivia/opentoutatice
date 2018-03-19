@@ -2,7 +2,7 @@ package fr.toutatice.ecm.platform.service.inheritance;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.EventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
@@ -15,7 +15,7 @@ public class ToutaticeInheritanceSynchListener implements EventListener {
 	private ToutaticeInheritanceService service;
 
 	@Override
-	public void handleEvent(Event event) throws ClientException {
+	public void handleEvent(Event event) throws NuxeoException {
 		if (event.getContext() instanceof DocumentEventContext) {
 			try {
 				getInheritanceService().run(event, true);

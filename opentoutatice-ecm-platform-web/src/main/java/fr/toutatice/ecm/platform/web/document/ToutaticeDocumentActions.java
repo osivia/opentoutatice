@@ -20,7 +20,7 @@ package fr.toutatice.ecm.platform.web.document;
 
 import java.util.List;
 
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.webapp.contentbrowser.DocumentActions;
@@ -28,15 +28,15 @@ import org.nuxeo.ecm.webapp.contentbrowser.DocumentActions;
 public interface ToutaticeDocumentActions extends DocumentActions {
 
 	 public List<String> getDocumentPathSegments(DocumentModel document, DocumentModel referenceDoc);
-	 public boolean hasProxy(DocumentModel document) throws ClientException;
-	 public DocumentModel getProxy(DocumentModel document) throws ClientException;
+	 public boolean hasProxy(DocumentModel document) throws NuxeoException;
+	 public DocumentModel getProxy(DocumentModel document) throws NuxeoException;
 	 public boolean belongToPublishSpace();
 	 public boolean belongToWorkSpace();
-	 public String getDocumentPermalink() throws ClientException;
-	 public String getPermalink(String codec) throws ClientException;
-	 public boolean hasChildrenWithType(String type) throws ClientException;
-	 public void updateDocWithMapSwitch(DocumentModel document) throws PropertyException, ClientException;
-	 public String updateNUpgradeCurrentDocument(String version) throws ClientException;
-	 public String updateDocument(DocumentModel doc) throws ClientException;
-	 public String getProxyVersion(DocumentModel document) throws ClientException;
+	 public String getDocumentPermalink() throws NuxeoException;
+	 public String getPermalink(String codec) throws NuxeoException;
+	 public boolean hasChildrenWithType(String type) throws NuxeoException;
+	 public void updateDocWithMapSwitch(DocumentModel document) throws PropertyException, NuxeoException;
+	 public String updateNUpgradeCurrentDocument(String version) throws NuxeoException;
+	 public String updateDocument(DocumentModel doc) throws NuxeoException;
+	 public String getProxyVersion(DocumentModel document) throws NuxeoException;
 }

@@ -37,7 +37,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Observer;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.faces.FacesMessages;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.ClientRuntimeException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentException;
@@ -89,17 +89,17 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
     private Map<String, DocumentModel> documentDomainMap = null;
     private List<PathElement> parents;
 
-    public String getCurrentLifeCycleState() throws ClientException {
+    public String getCurrentLifeCycleState() throws NuxeoException {
         try {
             DocumentModel currDoc = getCurrentDocument();
             return documentManager.getCurrentLifeCycleState(currDoc.getRef());
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             throw new ClientRuntimeException(e);
         }
     }
     
     @Override
-    public String navigateToRef(DocumentRef docRef) throws ClientException {
+    public String navigateToRef(DocumentRef docRef) throws NuxeoException {
         String goTo = "view";
 
         if (documentManager == null) {
@@ -111,9 +111,9 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
             try {
                 docs = ToutaticeDocumentResolver.resolveReference(documentManager, (WebIdRef) docRef);
             } catch (DocumentException e) {
-                throw new ClientException(e);
+                throw new NuxeoException(e);
             } catch (DocumentSecurityException dse) {
-                throw new ClientException(dse);
+                throw new NuxeoException(dse);
             }
         } else {
             doc = documentManager.getDocument(docRef);
@@ -188,7 +188,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             DocumentModelList currentParentsList = getCurrentDocumentParentsList(this.session, this.baseDoc);
             if ((null != currentParentsList) && (0 < currentParentsList.size())) {
                 for (DocumentModel parent : currentParentsList) {
@@ -308,7 +308,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             // initialiser le cache avec: recherche déjà effectuée mais pas de résultat
             sectionPublicationAreaMap.put(this.baseDoc.getId(), ToutaticeGlobalConst.NULL_DOCUMENT_MODEL);
 
@@ -360,7 +360,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
                 if (!currentDocumentParentsList.isEmpty()) {
                     currentDocumentParentsListMap.put(baseDoc.getId(), currentDocumentParentsList);
                 }
-            } catch (ClientException e) {
+            } catch (NuxeoException e) {
                 log.error("Failed to get the parent list for the current document, error: " + e.getMessage());
             }
         }
@@ -370,7 +370,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
 
     // Fait par OA
     @Override
-    protected void resetCurrentPath() throws ClientException {
+    protected void resetCurrentPath() throws NuxeoException {
         final String logPrefix = "<toutaticeResetCurrentPath> ";
 
         parents = new ArrayList<PathElement>();
@@ -414,7 +414,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             DocumentModel liveDoc = this.session.getWorkingCopy(this.baseDoc.getRef());
             int index = (parents.size() > 0) ? parents.size() - 1 : 0;
 
@@ -441,7 +441,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
     }
 
     @Override
-    public List<PathElement> getCurrentPathList() throws ClientException {
+    public List<PathElement> getCurrentPathList() throws NuxeoException {
         if (parents == null) {
             resetCurrentPath();
         }
@@ -450,7 +450,7 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
 
     @Observer(value = {EventNames.DOCUMENT_SELECTION_CHANGED, EventNames.DOMAIN_SELECTION_CHANGED, EventNames.CONTENT_ROOT_SELECTION_CHANGED,
             EventNames.DOCUMENT_CHANGED, EventNames.GO_HOME}, create = false)
-    public void resetNavigation() throws ClientException {
+    public void resetNavigation() throws NuxeoException {
         currentDocumentParentsListMap = null;
         sectionPublicationAreaMap = null;
         documentDomainMap = null;

@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.core.util.Properties;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
@@ -53,10 +53,10 @@ public abstract class AbstractDublinCoreDocumentUpdate {
      * @param properties
      * @param save
      * @return created or updated document
-     * @throws ClientException
+     * @throws NuxeoException
      * @throws IOException
      */
-    protected DocumentModel executeSplittingProperties(CoreSession session, DocumentModel document, Properties properties, boolean save) throws ClientException, IOException{
+    protected DocumentModel executeSplittingProperties(CoreSession session, DocumentModel document, Properties properties, boolean save) throws NuxeoException, IOException{
      // Get Dublincore properties to save them silently
         // (to disable DublinCoreListener)
         Properties dublinCoreProperties = getDublinCoreProperties(properties);
@@ -85,10 +85,10 @@ public abstract class AbstractDublinCoreDocumentUpdate {
      * @param properties
      * @param save
      * @return created or updated document
-     * @throws ClientException
+     * @throws NuxeoException
      * @throws IOException
      */
-    protected abstract DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, boolean save) throws ClientException, IOException;
+    protected abstract DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, boolean save) throws NuxeoException, IOException;
     
     /**
      * Creates or updates document
@@ -99,9 +99,9 @@ public abstract class AbstractDublinCoreDocumentUpdate {
      * @param dublinCoreProperties
      * @param save
      * @return created or updated document
-     * @throws ClientException
+     * @throws NuxeoException
      * @throws IOException
      */
-    protected abstract DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, Properties dublinCoreProperties, boolean save) throws ClientException, IOException;
+    protected abstract DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, Properties dublinCoreProperties, boolean save) throws NuxeoException, IOException;
 
 }

@@ -15,8 +15,9 @@ import org.apache.commons.lang.StringUtils;
 import org.jboss.seam.core.Manager;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
-import org.opentoutatice.ecm.attached.files.url.codec.OttcAttachedFileCodec;
-import org.opentoutatice.ecm.attached.images.bean.OttcDocumentActionsBean;
+import org.opentoutatice.core.io.download.OttcDownloadServiceImpl;
+
+import fr.toutatice.ecm.platform.web.document.ToutaticeDocumentActionsBean;
 
 
 /**
@@ -27,7 +28,7 @@ import org.opentoutatice.ecm.attached.images.bean.OttcDocumentActionsBean;
  * @author david
  *
  */
-@FacesConverter("org.opentoutatice.ecm.attached.files.url.converter.DocumentContentConverter")
+@FacesConverter("DocumentContentConverter")
 public class DocumentContentConverter implements Converter {
 
     private static final String ATTACHED_RESOURCE_INDICATOR = "attachedImages";
@@ -40,8 +41,8 @@ public class DocumentContentConverter implements Converter {
     static final Pattern PATTERN_COMPONENT_ATTACHED_RESOURCE_PARAM = Pattern.compile("([?]conversationId=[.[^\"]]+)");
 
     /** Model internal picture pattern. */
-    static final Pattern PATTERN_MODEL_ATTACHED_RESOURCE = Pattern.compile("(nxfile/default/)(".concat(ATTACHED_RESOURCE_INDICATOR).concat(")")
-            .concat("(/ttc:images/[.[^\"]]*\")"));
+    static final Pattern PATTERN_MODEL_ATTACHED_RESOURCE = Pattern
+            .compile("(nxfile/default/)(".concat(ATTACHED_RESOURCE_INDICATOR).concat(")").concat("(/ttc:images/[.[^\"]]*\")"));
 
     /**
      * Default constructor.
@@ -62,7 +63,7 @@ public class DocumentContentConverter implements Converter {
 
         if (value != null) {
             // Attached resource treatment
-            Matcher pictMatcher = PATTERN_COMPONENT_ATTACHED_RESOURCE.matcher((String) value);
+            Matcher pictMatcher = PATTERN_COMPONENT_ATTACHED_RESOURCE.matcher(value);
             StringBuffer pictReplacementStack = new StringBuffer();
 
             while (pictMatcher.find()) {
@@ -102,14 +103,14 @@ public class DocumentContentConverter implements Converter {
             Matcher matcher = PATTERN_MODEL_ATTACHED_RESOURCE.matcher((String) value);
 
             // Get current document
-            OttcDocumentActionsBean actionsBean = (OttcDocumentActionsBean) SeamComponentCallHelper.getSeamComponentByName("documentActions");
+            ToutaticeDocumentActionsBean actionsBean = (ToutaticeDocumentActionsBean) SeamComponentCallHelper.getSeamComponentByName("documentActions");
             DocumentModel currentDoc = actionsBean.getCurrentDocument();
 
             if (currentDoc != null) {
                 StringBuffer pictReplacementStack = new StringBuffer();
                 while (matcher.find()) {
                     // Document uuid
-                    String docId = OttcAttachedFileCodec.CREATING_DOC_INDICATOR;
+                    String docId = OttcDownloadServiceImpl.CREATING_DOC_INDICATOR;
                     if (currentDoc.getId() != null) {
                         docId = currentDoc.getId();
                     }
@@ -135,5 +136,5 @@ public class DocumentContentConverter implements Converter {
         }
         return replacement.toString();
     }
-    
+
 }

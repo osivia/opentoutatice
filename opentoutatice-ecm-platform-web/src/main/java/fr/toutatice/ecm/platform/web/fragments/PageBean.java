@@ -35,7 +35,7 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.web.RequestParameter;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
@@ -132,7 +132,7 @@ public class PageBean implements Serializable {
 				conversationId = getConversationId(this.liveEditLink);
 			}
 			return this.liveEditLink;
-		} catch (ClientException e) {
+		} catch (NuxeoException e) {
 			log.error(e);
 		}
 		return null;

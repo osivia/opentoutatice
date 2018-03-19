@@ -12,13 +12,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.io.FilenameUtils;
 import org.nuxeo.common.utils.Path;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.blobholder.BlobHolder;
 import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.convert.api.ConversionException;
 import org.nuxeo.ecm.core.convert.cache.SimpleCachableBlobHolder;
 import org.nuxeo.ecm.core.convert.extension.ConverterDescriptor;
 import org.nuxeo.ecm.platform.commandline.executor.api.CmdParameters;
+import org.nuxeo.ecm.platform.commandline.executor.api.CmdParameters.ParameterValue;
 import org.nuxeo.ecm.platform.commandline.executor.api.CommandException;
 import org.nuxeo.ecm.platform.commandline.executor.api.CommandLineExecutorService;
 import org.nuxeo.ecm.platform.commandline.executor.api.CommandNotAvailable;
@@ -28,25 +29,6 @@ import org.nuxeo.runtime.api.Framework;
 
 
 public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
-
-    private static final String POOL_SIZE_PARAMETER = "EnvironmentPoolSize";
-
-    private static final String TIMEOUT_DURATION_PARAMETER = "EnvironmentTimeoutDuration";
-
-    /** poolSize */
-    private static int poolSize;
-
-    /**
-     * timeoutDuration
-     * 
-     * the maximum time to wait, in seconds
-     * 
-     * @see man timeout
-     * 
-     * */
-    private static String timeoutDuration;
-
-    private static AtomicInteger instanceCounter;
 
     protected class TTCCmdReturn {
 
@@ -60,118 +42,34 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
         }
     }
 
-    protected TTCCmdReturn execOnBlobTTC(String commandName, Map<String, Blob> blobParameters, Map<String, String> parameters) throws ConversionException {
-        CommandLineExecutorService cles = Framework.getService(CommandLineExecutorService.class);
-        CmdParameters params = cles.getDefaultCmdParameters();
-        List<String> filesToDelete = new ArrayList<>();
-        try {
-            if (blobParameters != null) {
-                for (String blobParamName : blobParameters.keySet()) {
-                    Blob blob = blobParameters.get(blobParamName);
-                    File file = File.createTempFile("cmdLineBasedConverter", "." + FilenameUtils.getExtension(blob.getFilename()));
-                    blob.transferTo(file);
-                    params.addNamedParameter(blobParamName, file);
-                    filesToDelete.add(file.getAbsolutePath());
-                }
-            }
+    private static final String POOL_SIZE_PARAMETER = "EnvironmentPoolSize";
 
-            if (parameters != null) {
-                for (String paramName : parameters.keySet()) {
-                    params.addNamedParameter(paramName, parameters.get(paramName));
-                }
-            }
-            params.addNamedParameter("timeoutDuration", timeoutDuration);
+    private static final String TIMEOUT_DURATION_PARAMETER = "EnvironmentTimeoutDuration";
 
-            ExecResult result = cles.execCommand(commandName, params);
-            if (!result.isSuccessful()) {
-                throw result.getError();
-            }
-            return new TTCCmdReturn(params, result.getOutput());
-        } catch (CommandNotAvailable e) {
-            // XXX bubble installation instructions
-            throw new ConversionException("Unable to find targetCommand", e);
-        } catch (IOException | CommandException e) {
-            throw new ConversionException("Error while converting via CommandLineService", e);
-        } finally {
-            for (String fileToDelete : filesToDelete) {
-                new File(fileToDelete).delete();
-            }
-        }
-    }
+    /** poolSize */
+    private static int poolSize;
 
-    @Override
-    public BlobHolder convert(BlobHolder blobHolder, Map<String, Serializable> parameters) throws ConversionException {
+    /**
+     * timeoutDuration
+     *
+     * the maximum time to wait, in seconds
+     *
+     * @see man timeout
+     *
+     * */
+    private static String timeoutDuration;
 
-        String commandName = getCommandName(blobHolder, parameters);
-        if (commandName == null) {
-            throw new ConversionException("Unable to determine target CommandLine name");
-        }
-
-        TTCCmdReturn result;
-        BlobHolder blobResult;
-        instanceCounter.incrementAndGet();
-        try {
-            Map<String, Blob> blobParams = getCmdBlobParameters(blobHolder, parameters);
-            Map<String, String> strParams = getCmdStringParameters(blobHolder, parameters);
-            result = execOnBlobTTC(commandName, blobParams, strParams);
-            blobResult = buildResult(result.output, result.params);
-        } finally {
-            instanceCounter.decrementAndGet();
-        }
-
-        return blobResult;
-    }
-
-
-    @Override
-    protected Map<String, Blob> getCmdBlobParameters(BlobHolder blobHolder, Map<String, Serializable> parameters) throws ConversionException {
-        Map<String, Blob> cmdBlobParams = new HashMap<String, Blob>();
-        try {
-            cmdBlobParams.put("inFilePath", blobHolder.getBlob());
-        } catch (ClientException e) {
-            throw new ConversionException("Unable to get Blob for holder", e);
-        }
-        return cmdBlobParams;
-    }
-
-    @Override
-    protected Map<String, String> getCmdStringParameters(BlobHolder blobHolder, Map<String, Serializable> parameters) throws ConversionException {
-        Map<String, String> cmdStringParams = new HashMap<String, String>();
-
-        // tmp working directory
-        String baseDir = getTmpDirectory(parameters);
-        Path tmpPath = new Path(baseDir).append("soffice_" + System.currentTimeMillis());
-        File outDir = new File(tmpPath.toString());
-        if (!outDir.mkdir()) {
-            throw new ConversionException("Unable to create tmp dir for transformer output");
-        }
-        cmdStringParams.put("outDirPath", outDir.getAbsolutePath());
-
-        // tmp soffice user directory to manage multiple instances
-        int envIndex = instanceCounter.get();
-        if (envIndex < poolSize) {
-            Path envPath = new Path(baseDir).append("sofficeUserEnv_" + String.valueOf(envIndex));
-            File envDir = new File(envPath.toString());
-            if (!envDir.isDirectory() && !envDir.mkdir()) {
-                throw new ConversionException("Unable to create tmp soffice user directory for transformer output");
-            }
-            cmdStringParams.put("envDirPath", envDir.getAbsolutePath());
-        }else{
-            throw new ConversionException("LibreOffice user environment pool is full");
-        }
-        
-        return cmdStringParams;
-    }
+    private static AtomicInteger instanceCounter;
 
     @Override
     protected BlobHolder buildResult(List<String> cmdOutput, CmdParameters cmdParams) throws ConversionException {
-        String outputPath = cmdParams.getParameters().get("outDirPath");
-        File outputDir = new File(outputPath);
-        File[] files = outputDir.listFiles();
-        List<Blob> blobs = new ArrayList<Blob>();
+        final ParameterValue outputPath = cmdParams.getParameters().get("outDirPath");
+        final File outputDir = new File(outputPath.getValue());
+        final File[] files = outputDir.listFiles();
+        final List<Blob> blobs = new ArrayList<>();
 
-        for (File file : files) {
-            Blob blob = new FileBlob(file);
+        for (final File file : files) {
+            final Blob blob = new FileBlob(file);
             blob.setFilename(file.getName());
 
             if (file.getName().equalsIgnoreCase("index.html")) {
@@ -184,6 +82,109 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
     }
 
     @Override
+    public BlobHolder convert(BlobHolder blobHolder, Map<String, Serializable> parameters) throws ConversionException {
+
+        final String commandName = getCommandName(blobHolder, parameters);
+        if (commandName == null) {
+            throw new ConversionException("Unable to determine target CommandLine name");
+        }
+
+        TTCCmdReturn result;
+        BlobHolder blobResult;
+        instanceCounter.incrementAndGet();
+        try {
+            final Map<String, Blob> blobParams = getCmdBlobParameters(blobHolder, parameters);
+            final Map<String, String> strParams = getCmdStringParameters(blobHolder, parameters);
+            result = execOnBlobTTC(commandName, blobParams, strParams);
+            blobResult = buildResult(result.output, result.params);
+        } finally {
+            instanceCounter.decrementAndGet();
+        }
+
+        return blobResult;
+    }
+
+
+    protected TTCCmdReturn execOnBlobTTC(String commandName, Map<String, Blob> blobParameters, Map<String, String> parameters) throws ConversionException {
+        final CommandLineExecutorService cles = Framework.getService(CommandLineExecutorService.class);
+        final CmdParameters params = cles.getDefaultCmdParameters();
+        final List<String> filesToDelete = new ArrayList<>();
+        try {
+            if (blobParameters != null) {
+                for (final String blobParamName : blobParameters.keySet()) {
+                    final Blob blob = blobParameters.get(blobParamName);
+                    final File file = File.createTempFile("cmdLineBasedConverter", "." + FilenameUtils.getExtension(blob.getFilename()));
+                    blob.transferTo(file);
+                    params.addNamedParameter(blobParamName, file);
+                    filesToDelete.add(file.getAbsolutePath());
+                }
+            }
+
+            if (parameters != null) {
+                for (final String paramName : parameters.keySet()) {
+                    params.addNamedParameter(paramName, parameters.get(paramName));
+                }
+            }
+            params.addNamedParameter("timeoutDuration", timeoutDuration);
+
+            final ExecResult result = cles.execCommand(commandName, params);
+            if (!result.isSuccessful()) {
+                throw result.getError();
+            }
+            return new TTCCmdReturn(params, result.getOutput());
+        } catch (final CommandNotAvailable e) {
+            // XXX bubble installation instructions
+            throw new ConversionException("Unable to find targetCommand", e);
+        } catch (IOException | CommandException e) {
+            throw new ConversionException("Error while converting via CommandLineService", e);
+        } finally {
+            for (final String fileToDelete : filesToDelete) {
+                new File(fileToDelete).delete();
+            }
+        }
+    }
+
+    @Override
+    protected Map<String, Blob> getCmdBlobParameters(BlobHolder blobHolder, Map<String, Serializable> parameters) throws ConversionException {
+        final Map<String, Blob> cmdBlobParams = new HashMap<>();
+        try {
+            cmdBlobParams.put("inFilePath", blobHolder.getBlob());
+        } catch (final NuxeoException e) {
+            throw new ConversionException("Unable to get Blob for holder", e);
+        }
+        return cmdBlobParams;
+    }
+
+    @Override
+    protected Map<String, String> getCmdStringParameters(BlobHolder blobHolder, Map<String, Serializable> parameters) throws ConversionException {
+        final Map<String, String> cmdStringParams = new HashMap<>();
+
+        // tmp working directory
+        final String baseDir = getTmpDirectory(parameters);
+        final Path tmpPath = new Path(baseDir).append("soffice_" + System.currentTimeMillis());
+        final File outDir = new File(tmpPath.toString());
+        if (!outDir.mkdir()) {
+            throw new ConversionException("Unable to create tmp dir for transformer output");
+        }
+        cmdStringParams.put("outDirPath", outDir.getAbsolutePath());
+
+        // tmp soffice user directory to manage multiple instances
+        final int envIndex = instanceCounter.get();
+        if (envIndex < poolSize) {
+            final Path envPath = new Path(baseDir).append("sofficeUserEnv_" + String.valueOf(envIndex));
+            final File envDir = new File(envPath.toString());
+            if (!envDir.isDirectory() && !envDir.mkdir()) {
+                throw new ConversionException("Unable to create tmp soffice user directory for transformer output");
+            }
+            cmdStringParams.put("envDirPath", envDir.getAbsolutePath());
+        }else{
+            throw new ConversionException("LibreOffice user environment pool is full");
+        }
+
+        return cmdStringParams;
+    }
+
+    @Override
     public void init(ConverterDescriptor descriptor) {
         initParameters = descriptor.getParameters();
         if (initParameters == null) {
@@ -192,7 +193,6 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
         poolSize = Integer.valueOf(initParameters.get(POOL_SIZE_PARAMETER));
         timeoutDuration = initParameters.get(TIMEOUT_DURATION_PARAMETER);
         instanceCounter = new AtomicInteger();
-        getCommandLineService();
     }
 
 }

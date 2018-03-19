@@ -30,8 +30,8 @@ import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.automation.core.collectors.DocumentModelCollector;
 import org.nuxeo.ecm.automation.core.util.Properties;
 import org.nuxeo.ecm.core.api.CoreSession;
-import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.model.Property;
 
 /**
@@ -39,10 +39,7 @@ import org.nuxeo.ecm.core.api.model.Property;
  * 
  * @author lbillon
  */
-@Operation(
-        id = AddComplexProperty.ID,
-        category = Constants.CAT_DOCUMENT,
-        label = "Add Complex Property",
+@Operation(id = AddComplexProperty.ID, category = Constants.CAT_DOCUMENT, label = "Add Complex Property",
         description = "Create an entry in a complex property value on the input document. The property is specified using its xpath. The document is automatically saved if 'save' parameter is true. If you unset the 'save' you need to save it later using Save Document operation. Return the modified document.")
 public class AddComplexProperty {
 
@@ -75,11 +72,11 @@ public class AddComplexProperty {
 
                 doc.setPropertyValue(xpath, (Serializable) complexList);
             } else {
-                throw new DocumentException("the value is not a Serializable List " + value);
+                throw new NuxeoException("the value is not a Serializable List " + value);
             }
 
         } else {
-            throw new DocumentException("no property with name " + property);
+            throw new NuxeoException("no property with name " + property);
         }
 
 

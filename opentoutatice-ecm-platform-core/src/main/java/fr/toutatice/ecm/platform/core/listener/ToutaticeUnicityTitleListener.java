@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.event.DocumentEventTypes;
@@ -38,7 +38,7 @@ public class ToutaticeUnicityTitleListener implements EventListener {
      * if document is in Collaborative Space.
      */
     @Override
-    public void handleEvent(Event event) throws ClientException {
+    public void handleEvent(Event event) throws NuxeoException {
         
         if(event.getContext() instanceof DocumentEventContext) {
             DocumentEventContext docCtx = (DocumentEventContext) event.getContext();

@@ -13,8 +13,8 @@
  *
  *
  * Contributors:
- *   mberhaut1
- *    
+ * mberhaut1
+ * 
  */
 package fr.toutatice.ecm.platform.web.publication.tree;
 
@@ -23,10 +23,10 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
 import org.nuxeo.ecm.platform.publisher.api.PublicationNode;
@@ -49,7 +49,7 @@ public class ToutaticeRootSectionsPublicationTree extends RootSectionsPublicatio
 
     /* FIXME: Fork to use ToutaticeCoreFolderPublicationNode... and rootNode.getChildrenNodes() */
     @Override
-    public List<PublicationNode> getChildrenNodes() throws ClientException {
+    public List<PublicationNode> getChildrenNodes() throws NuxeoException {
         if (currentDocument != null && useRootSections) {
             // FIXME: In fact, rootFinder.getAccessibleSectionRoots returns Roots ans children
             // We work only with workspace configuration
@@ -68,7 +68,7 @@ public class ToutaticeRootSectionsPublicationTree extends RootSectionsPublicatio
 
     /* FIXME: Fork to use getToutaticeNodeByPath and getToutaticeFreeNodeByPath */
     @Override
-    public PublicationNode getNodeByPath(String path) throws ClientException {
+    public PublicationNode getNodeByPath(String path) throws NuxeoException {
         // if we ask for the root path of this tree, returns this because
         // of the custom implementations of some methods (getChildrenNodes)
         if (path.equals(rootPath)) {
@@ -87,7 +87,7 @@ public class ToutaticeRootSectionsPublicationTree extends RootSectionsPublicatio
     }
 
     /* FIXME: Fork of SectionPublicationTree method to use ToutaticeCoreFolderPublicationNode */
-    public PublicationNode getToutaticeNodeByPath(String path) throws ClientException {
+    public PublicationNode getToutaticeNodeByPath(String path) throws NuxeoException {
         DocumentRef docRef = new PathRef(path);
         if (coreSession.hasPermission(docRef, SecurityConstants.READ)) {
             return new ToutaticeCoreFolderPublicationNode(coreSession.getDocument(new PathRef(path)), getConfigName(), getSessionId(), factory);
@@ -95,10 +95,10 @@ public class ToutaticeRootSectionsPublicationTree extends RootSectionsPublicatio
             return new VirtualCoreFolderPublicationNode(coreSession.getSessionId(), path, getConfigName(), sid, factory);
         }
     }
-    
+
     /* FIXME: Fork to exclude SectionRoot publication */
     @Override
-    public boolean canPublishTo(PublicationNode publicationNode) throws ClientException {
+    public boolean canPublishTo(PublicationNode publicationNode) throws NuxeoException {
         if (publicationNode == null || publicationNode.getParent() == null) {
             // we can't publish in the root node
             return false;

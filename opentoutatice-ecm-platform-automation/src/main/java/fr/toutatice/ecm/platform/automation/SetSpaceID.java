@@ -25,7 +25,7 @@ import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -73,16 +73,16 @@ public class SetSpaceID {
 		}
 
 		@Override
-		public void run() throws ClientException {
+		public void run() throws NuxeoException {
 			String spaceID = ToutaticeDocumentHelper.getSpaceID(this.session, this.doc, true);
 			updateDoc(this.doc, spaceID);
 		}
 
-		public DocumentModel getDoc() throws ClientException {
+		public DocumentModel getDoc() throws NuxeoException {
 		    return this.doc;
 		}
 
-		private void updateDoc(DocumentModel doc, String spaceID) throws  ClientException, PropertyException {
+		private void updateDoc(DocumentModel doc, String spaceID) throws  NuxeoException, PropertyException {
 			if (!doc.isImmutable() && doc.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
 				// mise à jour du spaceID sur le document courant en mode silencieux
 				doc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_SPACEID, spaceID);

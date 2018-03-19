@@ -44,7 +44,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.contexts.Contexts;
 import org.jboss.seam.international.StatusMessage;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.platform.ui.web.tag.fn.DocumentModelFunctions;
 import org.nuxeo.ecm.platform.ui.web.util.files.FileUtils;
@@ -130,7 +130,7 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
 	}
 	
     @SuppressWarnings("unchecked")
-    public void validatAttachablesPicturesForDocument(DocumentModel current) throws ClientException, FileNotFoundException {
+    public void validatAttachablesPicturesForDocument(DocumentModel current) throws NuxeoException, FileNotFoundException {
     	List<String>  msg_params = new ArrayList<String>();
     	
         if (!current.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE)) {
@@ -243,7 +243,7 @@ public class ToutaticeImageManagerActionsBean extends FileManageActionsBean {
     	return toString;
     }
 
-    public void fetchCurrentDocument(DocumentModel document) throws ClientException {
+    public void fetchCurrentDocument(DocumentModel document) throws NuxeoException {
         navigationContext.invalidateCurrentDocument();
 //		EventManager.raiseEventsOnDocumentChange(currentDocument);    	
     }

@@ -40,166 +40,158 @@ import org.nuxeo.runtime.model.DefaultComponent;
  * @author david
  * 
  */
-public class CustomizeTypesServiceImpl extends DefaultComponent implements
-		CustomizeTypesService {
+public class CustomizeTypesServiceImpl extends DefaultComponent implements CustomizeTypesService {
 
-	private static final long serialVersionUID = -3335398967270359400L;
+    private static final long serialVersionUID = -3335398967270359400L;
 
-	private static final Log log = LogFactory
-			.getLog(CustomizeTypesService.class);
+    private static final Log log = LogFactory.getLog(CustomizeTypesService.class);
 
-	public static final String BASE_TYPE_EXT_POINT = "basettc";
-	public static final String EXCLUDED_RULES_EXT_POINT = "excludedrules";
-	public static final String DOC_TYPE_EXT_POINT = "doctype";
+    public static final String BASE_TYPE_EXT_POINT = "basettc";
+    public static final String EXCLUDED_RULES_EXT_POINT = "excludedrules";
+    public static final String DOC_TYPE_EXT_POINT = "doctype";
 
-	public static final String TYPES_RULE = "types";
-	public static final String FACETS_RULE = "facets";
+    public static final String TYPES_RULE = "types";
+    public static final String FACETS_RULE = "facets";
 
-	private Map<String, List<String>> excludedRules;
-	/* To log */
-	private List<String> allExcludedTypes = new ArrayList<String>();
+    private Map<String, List<String>> excludedRules;
+    /* To log */
+    private List<String> allExcludedTypes = new ArrayList<String>();
 
-	private SchemaManager schemaManager;
-	private DocumentTypeDescriptor baseDocTypeDescriptor;
+    private SchemaManager schemaManager;
+    private DocumentTypeDescriptor baseDocTypeDescriptor;
 
-	@Override
-	public void activate(ComponentContext context) throws Exception {
-		super.activate(context);
-		schemaManager = Framework.getLocalService(SchemaManager.class);
-		excludedRules = new HashMap<String, List<String>>(0);
-	}
-	
-	@Override
+    @Override
+    public void activate(ComponentContext context) {
+        super.activate(context);
+        schemaManager = Framework.getLocalService(SchemaManager.class);
+        excludedRules = new HashMap<String, List<String>>(0);
+    }
+
+    @Override
     public int getApplicationStartedOrder() {
-		/* Before RepositoryService wich initialize Model */
+        /* Before RepositoryService wich initialize Model */
         return 90;
     }
 
-	@Override
-	public void registerContribution(Object contribution,
-			String extensionPoint, ComponentInstance contributor)
-			throws Exception {
-		if (EXCLUDED_RULES_EXT_POINT.equals(extensionPoint)) {
-			RulesDescriptor rulesDescriptor = (RulesDescriptor) contribution;
-			/*
-			 * Dependencies induce the deployment of this contribution before
-			 * the basettc one
-			 */
-			setExcludedRules(rulesDescriptor);
-		}
-		if (BASE_TYPE_EXT_POINT.equals(extensionPoint)) {
-		    if(baseDocTypeDescriptor == null){
-		        baseDocTypeDescriptor = (DocumentTypeDescriptor) contribution;
-		    } else {
-		        baseDocTypeDescriptor.merge((DocumentTypeDescriptor) contribution);
-		    }
-		}
-	}
-	
-	@Override
-    public void applicationStarted(ComponentContext context) throws Exception {
-		addToutaticeDocType(baseDocTypeDescriptor);
+    @Override
+    public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) {
+        if (EXCLUDED_RULES_EXT_POINT.equals(extensionPoint)) {
+            RulesDescriptor rulesDescriptor = (RulesDescriptor) contribution;
+            /*
+             * Dependencies induce the deployment of this contribution before
+             * the basettc one
+             */
+            setExcludedRules(rulesDescriptor);
+        }
+        if (BASE_TYPE_EXT_POINT.equals(extensionPoint)) {
+            if (baseDocTypeDescriptor == null) {
+                baseDocTypeDescriptor = (DocumentTypeDescriptor) contribution;
+            } else {
+                baseDocTypeDescriptor.merge((DocumentTypeDescriptor) contribution);
+            }
+        }
     }
 
-	public void setExcludedRules(RulesDescriptor rules) {
-		String[] types = rules.getTypes();
-		if (ArrayUtils.isNotEmpty(types)) {
-			excludedRules.put(TYPES_RULE, Arrays.asList(types));
-		}
-		String[] facets = rules.getFacets();
-		if (ArrayUtils.isNotEmpty(facets)) {
-			excludedRules.put(FACETS_RULE, Arrays.asList(facets));
-		}
-	}
+    @Override
+    public void applicationStarted(ComponentContext context) {
+        addToutaticeDocType(baseDocTypeDescriptor);
+    }
 
-	private boolean verifyExcludedRule(DocumentType type) {
+    public void setExcludedRules(RulesDescriptor rules) {
+        String[] types = rules.getTypes();
+        if (ArrayUtils.isNotEmpty(types)) {
+            excludedRules.put(TYPES_RULE, Arrays.asList(types));
+        }
+        String[] facets = rules.getFacets();
+        if (ArrayUtils.isNotEmpty(facets)) {
+            excludedRules.put(FACETS_RULE, Arrays.asList(facets));
+        }
+    }
 
-		List<String> excludedTypes = excludedRules.get(TYPES_RULE);
-		boolean hasExcludedTypes = false;
-		if (excludedTypes != null) {
-			String typeName = type.getName();
-			hasExcludedTypes = excludedTypes.contains(typeName);
-		}
+    private boolean verifyExcludedRule(DocumentType type) {
 
-		List<String> excludedFacets = excludedRules.get(FACETS_RULE);
-		boolean hasExcludedFacet = false;
-		if (excludedFacets != null) {
-			Set<String> facets = type.getFacets();
-			Iterator<String> iterator = excludedFacets.iterator();
-			while (iterator.hasNext() && !hasExcludedFacet) {
-				hasExcludedFacet = facets.contains(iterator.next());
-			}
-		}
+        List<String> excludedTypes = excludedRules.get(TYPES_RULE);
+        boolean hasExcludedTypes = false;
+        if (excludedTypes != null) {
+            String typeName = type.getName();
+            hasExcludedTypes = excludedTypes.contains(typeName);
+        }
 
-		boolean isExcluded = hasExcludedTypes || hasExcludedFacet;
+        List<String> excludedFacets = excludedRules.get(FACETS_RULE);
+        boolean hasExcludedFacet = false;
+        if (excludedFacets != null) {
+            Set<String> facets = type.getFacets();
+            Iterator<String> iterator = excludedFacets.iterator();
+            while (iterator.hasNext() && !hasExcludedFacet) {
+                hasExcludedFacet = facets.contains(iterator.next());
+            }
+        }
 
-		if (isExcluded) {
-			allExcludedTypes.add(type.getName());
-		}
+        boolean isExcluded = hasExcludedTypes || hasExcludedFacet;
 
-		return isExcluded;
+        if (isExcluded) {
+            allExcludedTypes.add(type.getName());
+        }
 
-	}
+        return isExcluded;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService
-	 * #addToutaticeDocType(org.nuxeo.ecm.core.schema.DocumentTypeDescriptor)
-	 */
-	@Override
-	public void addToutaticeDocType(DocumentTypeDescriptor baseDocTypeDescriptor)
-			throws Exception {
+    }
 
-		/* getDocumentTypes() induces recomputing */
-		DocumentType[] types = schemaManager.getDocumentTypes();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * fr.toutatice.ecm.platform.service.customize.types.CustomizeTypesService
+     * #addToutaticeDocType(org.nuxeo.ecm.core.schema.DocumentTypeDescriptor)
+     */
+    @Override
+    public void addToutaticeDocType(DocumentTypeDescriptor baseDocTypeDescriptor) {
 
-		SchemaManagerImpl schemaManagerImpl = ((SchemaManagerImpl) schemaManager);
-		List<DocumentTypeDescriptor> excludedDocTypesDesc = new ArrayList<DocumentTypeDescriptor>();
-		Map<String, DocumentTypeImpl> excludedDocTypes = new HashMap<String, DocumentTypeImpl>();
-		Map<String, Set<String>> excludedDocTypesExtending = new HashMap<String, Set<String>>();
-		
-		for (DocumentType type : types) {
-			String name = type.getName();
-			if (!TypeConstants.DOCUMENT.equals(name)) {
-				if (!verifyExcludedRule(type)) {
-					DocumentTypeDescriptor baseDocTypeDesc = baseDocTypeDescriptor
-							.clone();
-					baseDocTypeDesc.name = name;
+        /* getDocumentTypes() induces recomputing */
+        DocumentType[] types = schemaManager.getDocumentTypes();
 
-					schemaManagerImpl.registerDocumentType(baseDocTypeDesc);
-				} else {
-					DocumentTypeDescriptor exDocTypeDesc = schemaManagerImpl
-							.getDocumentTypeDescriptor(name);
-					excludedDocTypesDesc.add(exDocTypeDesc);
-					excludedDocTypes.put(name, (DocumentTypeImpl) type);
-					excludedDocTypesExtending.put(name, schemaManagerImpl.getDocumentTypeNamesExtending(name));
-				}
-			}
-		}
+        SchemaManagerImpl schemaManagerImpl = ((SchemaManagerImpl) schemaManager);
+        List<DocumentTypeDescriptor> excludedDocTypesDesc = new ArrayList<DocumentTypeDescriptor>();
+        Map<String, DocumentTypeImpl> excludedDocTypes = new HashMap<String, DocumentTypeImpl>();
+        Map<String, Set<String>> excludedDocTypesExtending = new HashMap<String, Set<String>>();
 
-		restoreDataModel(schemaManagerImpl, excludedDocTypesDesc, excludedDocTypes, excludedDocTypesExtending);
-		/*
-		 * To avoid recomputing in flushPendingRegistration() method of
-		 * SchemaManagerImpl
-		 */
-		schemaManagerImpl.dirty = false;
+        for (DocumentType type : types) {
+            String name = type.getName();
+            if (!TypeConstants.DOCUMENT.equals(name)) {
+                if (!verifyExcludedRule(type)) {
+                    DocumentTypeDescriptor baseDocTypeDesc = baseDocTypeDescriptor.clone();
+                    baseDocTypeDesc.name = name;
 
-		log.warn("Excluded Types from toutatice's schema setting: "
-				+ allExcludedTypes.toString());
+                    schemaManagerImpl.registerDocumentType(baseDocTypeDesc);
+                } else {
+                    DocumentTypeDescriptor exDocTypeDesc = schemaManagerImpl.getDocumentTypeDescriptor(name);
+                    excludedDocTypesDesc.add(exDocTypeDesc);
+                    excludedDocTypes.put(name, (DocumentTypeImpl) type);
+                    excludedDocTypesExtending.put(name, schemaManagerImpl.getDocumentTypeNamesExtending(name));
+                }
+            }
+        }
 
-	}
+        restoreDataModel(schemaManagerImpl, excludedDocTypesDesc, excludedDocTypes, excludedDocTypesExtending);
+        /*
+         * To avoid recomputing in flushPendingRegistration() method of
+         * SchemaManagerImpl
+         */
+        schemaManagerImpl.dirty = false;
+
+        log.warn("Excluded Types from toutatice's schema setting: " + allExcludedTypes.toString());
+
+    }
 
     private void restoreDataModel(SchemaManagerImpl schemaManagerImpl, List<DocumentTypeDescriptor> excludedDocTypesDesc,
             Map<String, DocumentTypeImpl> excludedDocTypes, Map<String, Set<String>> excludedDocTypesExtending) {
         /* To del excluded types from recomputing */
-		schemaManagerImpl.allDocumentTypes.removeAll(excludedDocTypesDesc);
-		schemaManagerImpl.recompute();
-		schemaManagerImpl.allDocumentTypes.addAll(excludedDocTypesDesc);
-		schemaManagerImpl.documentTypesExtending.putAll(excludedDocTypesExtending);
-		restoreFacetsByTypes(schemaManagerImpl, excludedDocTypes);
-		schemaManagerImpl.documentTypes.putAll(excludedDocTypes);
+        schemaManagerImpl.allDocumentTypes.removeAll(excludedDocTypesDesc);
+        schemaManagerImpl.recompute();
+        schemaManagerImpl.allDocumentTypes.addAll(excludedDocTypesDesc);
+        schemaManagerImpl.documentTypesExtending.putAll(excludedDocTypesExtending);
+        restoreFacetsByTypes(schemaManagerImpl, excludedDocTypes);
+        schemaManagerImpl.documentTypes.putAll(excludedDocTypes);
     }
 
     private void restoreFacetsByTypes(SchemaManagerImpl schemaManagerImpl, Map<String, DocumentTypeImpl> excludedDocTypes) {
@@ -207,8 +199,7 @@ public class CustomizeTypesServiceImpl extends DefaultComponent implements
             for (String facet : docType.getFacets()) {
                 Set<String> set = schemaManagerImpl.documentTypesForFacet.get(facet);
                 if (set == null) {
-                    schemaManagerImpl.documentTypesForFacet.put(facet,
-                            set = new HashSet<String>());
+                    schemaManagerImpl.documentTypesForFacet.put(facet, set = new HashSet<String>());
                 }
                 set.add(docType.getName());
             }

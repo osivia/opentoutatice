@@ -26,7 +26,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
@@ -76,9 +76,9 @@ public class ToutaticeDomainActions implements Serializable {
     /**
      * Set the default portal site associated with a domain
      * 
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public void makeDefaultPortalSite() throws ClientException {
+    public void makeDefaultPortalSite() throws NuxeoException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         SilentUnrestrictedMakeDefaultPortal maker = new SilentUnrestrictedMakeDefaultPortal(documentManager, currentDocument);
         maker.silentRun(true, FILTERED_SERVICES_LIST);
@@ -88,9 +88,9 @@ public class ToutaticeDomainActions implements Serializable {
      * Let a button to be displayed if this portal can be made as default
      * 
      * @return
-     * @throws ClientException 
+     * @throws NuxeoException 
      */
-    public boolean canMakeDefaultPSite() throws ClientException {
+    public boolean canMakeDefaultPSite() throws NuxeoException {
 
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
 
@@ -104,9 +104,9 @@ public class ToutaticeDomainActions implements Serializable {
      * Let a label displayed if this portal is the default portal
      * 
      * @return
-     * @throws ClientException 
+     * @throws NuxeoException 
      */
-    public boolean showIsDefaultPSite() throws ClientException {
+    public boolean showIsDefaultPSite() throws NuxeoException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
 
         if (currentDocument.getType().equals(PORTAL_SITE) && isDefaultPortal(currentDocument)) {
@@ -115,7 +115,7 @@ public class ToutaticeDomainActions implements Serializable {
         return false;
     }
 
-    private boolean isDefaultPortal(DocumentModel currentDocument) throws ClientException {
+    private boolean isDefaultPortal(DocumentModel currentDocument) throws NuxeoException {
 
         UnrestrictedDefaultPortal runner = new UnrestrictedDefaultPortal(documentManager, currentDocument);
         runner.runUnrestricted();
@@ -137,7 +137,7 @@ public class ToutaticeDomainActions implements Serializable {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             DocumentModel domain = ToutaticeDocumentHelper.getDomain(this.session, this.document, false);
 
             Serializable property = domain.getPropertyValue(TTCD_DEFAULT_PORTAL_SITE_ID);
@@ -157,7 +157,7 @@ public class ToutaticeDomainActions implements Serializable {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             if (this.document.getType().equals(PORTAL_SITE) && !isDefaultPortal(this.document)) {
                 DocumentModel domain = ToutaticeDocumentHelper.getDomain(this.session, this.document, false);
                 domain.setPropertyValue(TTCD_DEFAULT_PORTAL_SITE_ID, this.document.getId());

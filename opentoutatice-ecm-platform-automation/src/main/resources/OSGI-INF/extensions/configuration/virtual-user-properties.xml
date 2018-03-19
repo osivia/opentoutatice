@@ -1,0 +1,11 @@
+<component name="fr.opentoutatice.automation.virtual.users.properties">
+
+	<require>org.nuxeo.runtime.ConfigurationService</require>
+
+	<extension target="org.nuxeo.runtime.ConfigurationService"
+		point="configuration">
+		<!-- <property name="nuxeo.pageprovider.default-max-page-size">1000</property> -->
+		<!-- <property name="nuxeo.automation.allowVirtualUser">true</property> -->
+	</extension>
+
+</component>

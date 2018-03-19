@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 import org.nuxeo.runtime.api.Framework;
 
@@ -69,7 +69,7 @@ public class ToutaticeUserMngtHelper {
 		return propertyValue;
 	}	
 
-	public List<String> getPublicUsers() throws ClientException {
+	public List<String> getPublicUsers() throws NuxeoException {
 			List<String> publicUsers = new ArrayList<String>();
 			
 			publicUsers = new ArrayList<String>();
@@ -89,21 +89,21 @@ public class ToutaticeUserMngtHelper {
 			return publicUsers;
 	}
 	
-	public List<String> getSuperAdministrators() throws ClientException {
+	public List<String> getSuperAdministrators() throws NuxeoException {
 		return getUserManager().getAdministratorsGroups();
 	}
 
 	/**
 	 * Initialize the service attribute
 	 */
-	 private static UserManager getUserManager() throws ClientException {
+	 private static UserManager getUserManager() throws NuxeoException {
 		 try {
 			 if (null == userManager) {
 				 userManager = (UserManager) Framework.getService(UserManager.class);
 			 }
 		 } catch (Exception e) {
 			 log.error("Failed to get the user manager service, exception message: " + e.getMessage());
-			 throw new ClientException("Failed to get the user manager service, exception message: " + e.getMessage());
+			 throw new NuxeoException("Failed to get the user manager service, exception message: " + e.getMessage());
 		 }
 		 
 		 return userManager;

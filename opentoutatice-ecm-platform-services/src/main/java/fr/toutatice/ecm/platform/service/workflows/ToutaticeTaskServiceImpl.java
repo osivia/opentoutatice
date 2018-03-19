@@ -26,10 +26,11 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentSecurityException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.platform.task.Task;
 import org.nuxeo.ecm.platform.task.core.helpers.TaskActorsHelper;
@@ -68,7 +69,7 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
     }
 
     @Override
-    public void activate(ComponentContext context) throws Exception {
+    public void activate(ComponentContext context) {
         super.activate(context);
         tasksContribs = new HashMap<String, String>(0);
     }
@@ -77,7 +78,7 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
      * {@inheritDoc}
      */
     @Override
-    public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
+    public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) {
         if (TASKS_EXT_POINT.equals(extensionPoint)) {
             TaskDescriptor taskDesc = (TaskDescriptor) contribution;
             String taskName = taskDesc.getTaskName();
@@ -92,7 +93,7 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
      * {@inheritDoc}
      */
     @Override
-    public void unregisterContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
+    public void unregisterContribution(Object contribution, String extensionPoint, ComponentInstance contributor) {
         if (TASKS_EXT_POINT.equals(extensionPoint)) {
             TaskDescriptor taskDesc = (TaskDescriptor) contribution;
             String taskName = taskDesc.getTaskName();
@@ -106,7 +107,7 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
      * {@inheritDoc}
      */
     @Override
-    public boolean isTaskPending(Task task) throws ClientException {
+    public boolean isTaskPending(Task task) throws NuxeoException {
         boolean isPending = false;
         if (task != null) {
             isPending = task.isOpened();
@@ -118,7 +119,7 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
      * {@inheritDoc}
      */
     @Override
-    public boolean isUserTaskInitiator(CoreSession coreSession, Task task) throws ClientException {
+    public boolean isUserTaskInitiator(CoreSession coreSession, Task task) throws NuxeoException {
         boolean isInitiator = false;
 
         if (task != null) {
@@ -138,7 +139,7 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
      * {@inheritDoc}
      */
     @Override
-    public boolean canUserManageTask(CoreSession coreSession, Task currentTask, DocumentModel currentDocument, String permission) throws ClientException {
+    public boolean canUserManageTask(CoreSession coreSession, Task currentTask, DocumentModel currentDocument, String permission) throws NuxeoException {
 
         boolean canValidate = false;
         boolean isActor = false;
@@ -165,7 +166,7 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
         return canValidate;
     }
 
-    private Boolean checkPermission(CoreSession coreSession, DocumentModel currentDocument, String permission) throws ClientException {
+    private Boolean checkPermission(CoreSession coreSession, DocumentModel currentDocument, String permission) throws NuxeoException {
         /* Case of no contributed permission. */
         if(StringUtils.isBlank(permission)){
             return Boolean.TRUE;
@@ -174,12 +175,12 @@ public class ToutaticeTaskServiceImpl extends DefaultComponent implements Toutat
         Boolean can = Boolean.FALSE;
         try {
             can = Boolean.valueOf(coreSession.hasPermission(currentDocument.getRef(), permission));
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             if (e instanceof DocumentSecurityException) {
                 return Boolean.FALSE;
             } else {
                 log.warn("Failed to fetch permissions for document '" + currentDocument.getPathAsString() + "', error:" + e.getMessage());
-                throw new ClientException(e);
+                throw new NuxeoException(e);
             }
         }
         return can;

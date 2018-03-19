@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.platform.uidgen.AbstractUIDGenerator;
+import org.nuxeo.ecm.core.uidgen.AbstractUIDGenerator;
 
 
 /**

@@ -26,8 +26,7 @@ import org.apache.commons.collections.MapUtils;
 import org.nuxeo.ecm.core.event.Event;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
 import org.nuxeo.ecm.platform.ec.notification.NotificationListenerVeto;
-
-import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
+import org.nuxeo.ecm.platform.task.TaskConstants;
 
 
 /**
@@ -37,10 +36,10 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 public class OnlineTaskVeto implements NotificationListenerVeto {
 
     /**
-     * Disable "workflowTaskAssigned" for Online Workflow cause workflowOnlineTaskAssigned is sent.
+     * Disable "workflowTaskAssigned" for Online Workflow.
      */
     @Override
-    public boolean accept(Event event) throws Exception {
+    public boolean accept(Event event) {
         boolean accepted = true;
 
         if ("workflowTaskAssigned".equals(event.getName())) {
@@ -50,7 +49,7 @@ public class OnlineTaskVeto implements NotificationListenerVeto {
             if (MapUtils.isNotEmpty(properties)) {
                 String taskId = (String) properties.get("nodeId");
 
-                if (ToutaticeGlobalConst.CST_WORKFLOW_ONLINE_TASK_ASSIGNED_ID.equals(taskId)) {
+                if ("Task4bf".equals(taskId)) {
                     accepted = false;
                 }
 

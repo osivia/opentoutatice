@@ -6,7 +6,7 @@ package fr.toutatice.ecm.platform.core.listener;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -61,7 +61,7 @@ public class ToutaticeBulkDocumentCopiedListener implements PostCommitFilteringE
      * Recurse change of creator when copied document is a Folder.
      */
     @Override
-    public void handleEvent(EventBundle events) throws ClientException {
+    public void handleEvent(EventBundle events) throws NuxeoException {
         // One event: documentCreatedByCopy
         Event event = events.peek();
 
@@ -106,7 +106,7 @@ public class ToutaticeBulkDocumentCopiedListener implements PostCommitFilteringE
      * 
      * @param documentManager
      * @param docs
-     * @throws ClientException
+     * @throws NuxeoException
      */
     // TODO: test in Publish Spaces, i.e. effect on local proxies
     protected void fireCreatedByCopy(DocumentEventContext docCtx, CoreSession session, Event event, DocumentModelList docs) {

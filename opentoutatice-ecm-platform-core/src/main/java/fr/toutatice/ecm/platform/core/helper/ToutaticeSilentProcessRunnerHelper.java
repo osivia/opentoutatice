@@ -26,7 +26,7 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
@@ -66,9 +66,9 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
      * or the for the system/administrator user session (unrestricted method is called).
      * 
      * @param runInUnrestrictedMode Indique si les traitements doivent être réalisés en mode unrestricted (avec l'utilisateur system/administrateur) 
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public void silentRun(boolean runInUnrestrictedMode) throws ClientException {
+    public void silentRun(boolean runInUnrestrictedMode) throws NuxeoException {
     	silentRun(runInUnrestrictedMode, DEFAULT_FILTERED_SERVICES_LIST);
     }
     
@@ -78,9 +78,9 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
      * 
      * @param runInUnrestrictedMode Indique si les traitements doivent être réalisés en mode unrestricted (avec l'utilisateur system/administrateur)
      * @param filteredServices the class name of services to filter (provided these one have a handler contributed onto the proxy factory service)
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    public void silentRun(boolean runInUnrestrictedMode, List<Class<?>> filteredServices) throws ClientException {
+    public void silentRun(boolean runInUnrestrictedMode, List<Class<?>> filteredServices) throws NuxeoException {
 
         log.debug("Démarrage de l'exécution d'un processus en mode silencieux");
         
@@ -105,7 +105,7 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
             try {
                 loginContext = Framework.loginAs(originatingUsername);
             } catch (LoginException e) {
-                throw new ClientException(e);
+                throw new NuxeoException(e);
             }
             try {
                 CoreSession baseSession = session;
@@ -127,10 +127,10 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
                             principal.setOriginatingUser(originatingUsername);
                         }
                     }
-                } catch (ClientException e) {
+                } catch (NuxeoException e) {
                     throw e;
                 } catch (Exception e) {
-                    throw new ClientException(e);
+                    throw new NuxeoException(e);
                 }
                 try {
                     run(filteredServices);
@@ -142,7 +142,7 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
                         }
                         session.close();
                     } catch (Exception e) {
-                        throw new ClientException(e);
+                        throw new NuxeoException(e);
                     } finally {
                         if (baseSession != null
                                 && !baseSession.isStateSharedByAllThreadSessions()) {
@@ -159,7 +159,7 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
                         loginContext.logout();
                     }
                 } catch (LoginException e) {
-                    throw new ClientException(e);
+                    throw new NuxeoException(e);
                 }
             }
         } finally {
@@ -170,7 +170,7 @@ public abstract class ToutaticeSilentProcessRunnerHelper extends UnrestrictedSes
         }
     }
 
-    private void run(List<Class<?>> filteredServices) throws ClientException {
+    private void run(List<Class<?>> filteredServices) throws NuxeoException {
         String sessionId = session.getSessionId();
         try {
             // installer le service de filtrage pour l'utilisateur

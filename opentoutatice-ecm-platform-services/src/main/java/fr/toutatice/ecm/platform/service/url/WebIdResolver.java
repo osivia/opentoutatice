@@ -23,7 +23,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -118,7 +118,7 @@ public class WebIdResolver {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             if (StringUtils.contains(this.webId, RPXY_WID_MARKER)) {
                 getRemoteProxy();
             } else {

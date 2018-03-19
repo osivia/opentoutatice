@@ -64,7 +64,7 @@ public class ToutaticeWorkflowServiceImpl extends DefaultComponent implements To
     }
 
     @Override
-    public void activate(ComponentContext context) throws Exception {
+    public void activate(ComponentContext context) {
         super.activate(context);
         wfContribs = new HashMap<String, List<String>>(0);
     }
@@ -73,7 +73,7 @@ public class ToutaticeWorkflowServiceImpl extends DefaultComponent implements To
      * {@inheritDoc}
      */
     @Override
-    public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
+    public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor) {
         if (WF_EXT_POINT.equals(extensionPoint)) {
 
             WorkflowDescriptor wfDesc = (WorkflowDescriptor) contribution;
@@ -103,7 +103,7 @@ public class ToutaticeWorkflowServiceImpl extends DefaultComponent implements To
      * {@inheritDoc}
      */
     @Override
-    public void unregisterContribution(Object contribution, String extensionPoint, ComponentInstance contributor) throws Exception {
+    public void unregisterContribution(Object contribution, String extensionPoint, ComponentInstance contributor) {
         if (WF_EXT_POINT.equals(extensionPoint)) {
 
             WorkflowDescriptor wfDesc = (WorkflowDescriptor) contribution;

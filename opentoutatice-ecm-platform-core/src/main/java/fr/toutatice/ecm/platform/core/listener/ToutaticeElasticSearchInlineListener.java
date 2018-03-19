@@ -20,7 +20,7 @@ package fr.toutatice.ecm.platform.core.listener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.event.Event;
@@ -47,7 +47,7 @@ public class ToutaticeElasticSearchInlineListener implements EventListener {
 	private EventService eventService;
 
 	@Override
-	public void handleEvent(Event event) throws ClientException {
+	public void handleEvent(Event event) throws NuxeoException {
 		if (event.getContext() instanceof DocumentEventContext) {
 			DocumentEventContext ctx = (DocumentEventContext) event.getContext();
 			DocumentModel document = ctx.getSourceDocument();
@@ -78,13 +78,13 @@ public class ToutaticeElasticSearchInlineListener implements EventListener {
 		}
 	}
 	
-	private EventService getEventService() throws ClientException {
+	private EventService getEventService() throws NuxeoException {
 		if (null == this.eventService) {
 			this.eventService = Framework.getService(EventService.class);
 		}
 		
 		if (null == this.eventService) {
-			throw new ClientException("failed to instanciate the 'EventService'");
+			throw new NuxeoException("failed to instanciate the 'EventService'");
 		}
 		
 		return this.eventService;

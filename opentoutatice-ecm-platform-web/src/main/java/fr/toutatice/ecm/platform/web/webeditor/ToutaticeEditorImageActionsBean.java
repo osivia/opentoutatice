@@ -39,7 +39,7 @@ import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.web.RequestParameter;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -195,7 +195,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 		return isImageUploadedAttr;
 	}
 
-	public String getMediaSpaceName() throws ClientException {
+	public String getMediaSpaceName() throws NuxeoException {
 		DocumentModel doc = navigationContext.getCurrentDocument();
 		if (ToutaticeDocumentHelper.getMediaSpace(doc, documentManager) != null) {
 			return ToutaticeDocumentHelper.getMediaSpace(doc, documentManager)
@@ -205,7 +205,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 
 	}
 
-	public String getSpaceName() throws ClientException {
+	public String getSpaceName() throws NuxeoException {
 		DocumentModel space = navigationContext.getCurrentSuperSpace();
 		if (null != space) {
 			return space.getTitle();
@@ -214,7 +214,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 		return null;
 	}
 
-	public int getSearchInSpace() throws ClientException {
+	public int getSearchInSpace() throws NuxeoException {
 
 		// Si pas de médiathèque, l'option n'est pas disponible
 		if (searchInSpace == 0) {
@@ -253,13 +253,13 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 		}
 	}
 
-	public String searchImages(String view) throws ClientException {
+	public String searchImages(String view) throws NuxeoException {
 		searchImages();
 		return view;
 	}
 
 	@Override
-	public String searchImages() throws ClientException {
+	public String searchImages() throws NuxeoException {
 		String searchKeywords = getSearchKeywords();
 
 		log.debug("Entering searchDocuments with keywords: " + searchKeywords);
@@ -358,7 +358,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public String uploadImage() throws ClientException {
+	public String uploadImage() throws NuxeoException {
 		Part uploadedImg = getUploadedImage();
 		String uploadedImgName = FileUtils.retrieveFilename(uploadedImg);
 		if (null == uploadedImg || StringUtils.isBlank(uploadedImgName)) {
@@ -401,12 +401,12 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 			return "editor_image_upload";
 		} catch (IOException e) {
 			log.error("Failed to upload the image, error: " + e.getMessage());
-            throw new ClientException(e);
+            throw new NuxeoException(e);
         }
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public String addImageFromNuxeo() throws ClientException {
+	public String addImageFromNuxeo() throws NuxeoException {
 		DocumentModel currentDoc = navigationContext.getCurrentDocument();
 
 		List<DocumentModel> selectedDocumentList = documentsListsManager.getWorkingList(CURRENT_DOCUMENT_SELECTION);
@@ -452,7 +452,7 @@ public class ToutaticeEditorImageActionsBean extends EditorImageActionsBean {
 		return "";
 	}
 
-	public String searchVideos(String view) throws ClientException {
+	public String searchVideos(String view) throws NuxeoException {
 		super.searchVideos();
 		return view;
 	}

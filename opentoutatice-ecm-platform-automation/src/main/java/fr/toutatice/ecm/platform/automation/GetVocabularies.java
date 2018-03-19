@@ -39,7 +39,7 @@ import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
@@ -145,7 +145,7 @@ public class GetVocabularies {
 		private Long ordering;
 		private Long obsolete;
 
-		public VocabularyEntry(String vocabulary, Locale locale, DocumentModel entry) throws ClientException {
+		public VocabularyEntry(String vocabulary, Locale locale, DocumentModel entry) throws NuxeoException {
 			try {
 				String schema = getDirectorySchema(entry);
 				this.ordering = (Long) entry.getProperty(schema, "ordering");
@@ -161,7 +161,7 @@ public class GetVocabularies {
 				}
 			} catch (Exception e) {
 				log.error("Failed to instanciate VocabularyEntry, vocabulary:'" + vocabulary + "', entry:'" + entry.getId() + "', error:" + e.getMessage());
-				throw new ClientException(e);
+				throw new NuxeoException(e);
 			}
 		}
 

@@ -17,7 +17,7 @@
       <pre>org.nuxeo.ecm.platform.uidgen.AbstractUIDGenerator</pre>.
     </documentation>
 
-    <object class="org.nuxeo.ecm.platform.uidgen.service.UIDGeneratorDescriptor" />
+    <object class="org.nuxeo.ecm.core.uidgen.UIDGeneratorDescriptor" />
   </extension-point>
 
   <extension target="fr.toutatice.ecm.platform.service.webid.TTCUIDGeneratorService" point="generators">

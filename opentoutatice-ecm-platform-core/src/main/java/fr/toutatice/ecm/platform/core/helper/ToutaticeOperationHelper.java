@@ -30,7 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.impl.InvokableMethod;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -73,20 +73,20 @@ public class ToutaticeOperationHelper {
         }
     }
 	
-	private static AutomationService getAutomationService() throws ClientException {
+	private static AutomationService getAutomationService() throws NuxeoException {
 		if (automationService == null) {
 			try {
 				automationService = Framework.getService(AutomationService.class);
 			} catch (Exception e) {
 				final String errMsg = "Error connecting to AutomationService. " + e.getMessage();
 				log.error(errMsg);
-				throw new ClientException(errMsg, e);
+				throw new NuxeoException(errMsg, e);
 			}
 			
 			if (automationService == null) {
 				String errMsg = "AutomationService service not bound";
 				log.error(errMsg);
-				throw new ClientException(errMsg);
+				throw new NuxeoException(errMsg);
 			}
 		}
 		return automationService;

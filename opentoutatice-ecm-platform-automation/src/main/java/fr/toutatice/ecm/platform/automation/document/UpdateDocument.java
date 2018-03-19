@@ -13,7 +13,7 @@ import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.automation.core.collectors.DocumentModelCollector;
 import org.nuxeo.ecm.automation.core.util.DocumentHelper;
 import org.nuxeo.ecm.automation.core.util.Properties;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
@@ -72,11 +72,11 @@ public class UpdateDocument extends AbstractDublinCoreDocumentUpdate {
      * @param properties
      * @param save
      * @return updated document
-     * @throws ClientException
+     * @throws NuxeoException
      * @throws IOException
      */
     @Override
-    protected DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, boolean save) throws ClientException, IOException {
+    protected DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, boolean save) throws NuxeoException, IOException {
         DocumentHelper.setProperties(session, document, properties);
         if(save){
             document = session.saveDocument(document); 
@@ -92,11 +92,11 @@ public class UpdateDocument extends AbstractDublinCoreDocumentUpdate {
      * @param properties
      * @param dublinCoreProperties
      * @return document
-     * @throws ClientException
+     * @throws NuxeoException
      * @throws IOException
      */
     @Override
-    protected DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, Properties dublinCoreProperties, boolean save) throws ClientException, IOException {
+    protected DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, Properties dublinCoreProperties, boolean save) throws NuxeoException, IOException {
         // Update document without given dublincore properties:
         // DublinCoreListener sets them
         DocumentHelper.setProperties(session, document, properties);

@@ -48,8 +48,7 @@ public class ProxyFactoryCfgServiceImpl<T> extends DefaultComponent implements P
 	}
 
 	@Override
-	public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor)
-			throws Exception {
+	public void registerContribution(Object contribution, String extensionPoint, ComponentInstance contributor)  {
 		if (EXTENSION_POINT.equals(extensionPoint)) {
 			ProxyFactoryCfgDescriptor desc = (ProxyFactoryCfgDescriptor) contribution;
 			if (desc.isEnabled()) {
@@ -60,8 +59,7 @@ public class ProxyFactoryCfgServiceImpl<T> extends DefaultComponent implements P
 	}
 
 	@Override
-	public void unregisterContribution(Object contribution, String extensionPoint, ComponentInstance contributor)
-			throws Exception {
+	public void unregisterContribution(Object contribution, String extensionPoint, ComponentInstance contributor)  {
 		if (EXTENSION_POINT.equals(extensionPoint)) {
 			ProxyFactoryCfgDescriptor desc = (ProxyFactoryCfgDescriptor) contribution;
 			this.descriptors.remove(desc.getServiceClass());
@@ -70,7 +68,7 @@ public class ProxyFactoryCfgServiceImpl<T> extends DefaultComponent implements P
 	}
 	
 	@Override
-	public void activate(ComponentContext context) throws Exception {
+	public void activate(ComponentContext context)  {
 		super.activate(context);
 		
 		// Install the service provider
@@ -78,7 +76,7 @@ public class ProxyFactoryCfgServiceImpl<T> extends DefaultComponent implements P
 	}
 	
 	@Override
-	public void deactivate(ComponentContext context) throws Exception {
+	public void deactivate(ComponentContext context)  {
 		super.deactivate(context);
 		descriptors.clear();
 		

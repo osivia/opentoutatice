@@ -30,15 +30,15 @@ import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.event.EventService;
+import org.nuxeo.ecm.core.uidgen.UIDGenerator;
 import org.nuxeo.ecm.core.versioning.VersioningService;
 import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
-import org.nuxeo.ecm.platform.uidgen.UIDGenerator;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
@@ -122,7 +122,7 @@ public class SetWebID {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             // Performances logs
             final long begin = System.currentTimeMillis();
 
@@ -171,7 +171,7 @@ public class SetWebID {
                 }
 
             } catch (DocumentException e) {
-                throw new ClientException(e);
+                throw new NuxeoException(e);
             }
 
             if (StringUtils.isNotBlank(webId)) {

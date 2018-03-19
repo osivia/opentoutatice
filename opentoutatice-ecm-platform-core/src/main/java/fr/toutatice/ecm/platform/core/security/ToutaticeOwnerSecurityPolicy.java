@@ -86,7 +86,7 @@ public class ToutaticeOwnerSecurityPolicy extends AbstractSecurityPolicy {
         if (!ArrayUtils.contains(additionalPrincipals, principal.getName())) {
             additionalPrincipals[additionalPrincipals.length] = principal.getName();
         }
-        
+
         // LBI methode Nullsafe #1782
         if(mergedAcp == null) {
         	return Boolean.FALSE;

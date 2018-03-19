@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
@@ -43,7 +43,7 @@ public class ToutaticeMaintenanceServiceImpl extends DefaultComponent implements
 	private DocumentModel maintenanceDocument;
 
     @Override
-    public void activate(ComponentContext context) throws Exception {
+    public void activate(ComponentContext context)  {
     	setModifiedNow();
         this.maintenanceDocument = null;
     }
@@ -92,7 +92,7 @@ public class ToutaticeMaintenanceServiceImpl extends DefaultComponent implements
 				MntDocumentGetter runner = new MntDocumentGetter(session);
 				runner.runUnrestricted();
 				this.maintenanceDocument = runner.getMntDocument(); 
-			} catch (ClientException e) {
+			} catch (NuxeoException e) {
 				log.error("Maintenance document cannot be obtained. cause: " + e.getMessage());
 			}
 		}
@@ -112,7 +112,7 @@ public class ToutaticeMaintenanceServiceImpl extends DefaultComponent implements
 		}
 
 		@Override
-		public void run() throws ClientException {
+		public void run() throws NuxeoException {
 
 			List<String> administrators = ToutaticeUserMngtHelper.instance().getSuperAdministrators();
 			if (0 < administrators.size()) {

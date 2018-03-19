@@ -8,7 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.common.utils.Path;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
@@ -34,7 +34,7 @@ public class ToutaticeExportedZipImporter extends ExportedZipImporter {
     @Override
     public DocumentModel create(CoreSession documentManager, Blob content,
             String path, boolean overwrite, String filename,
-            TypeManager typeService) throws ClientException, IOException {
+            TypeManager typeService) throws NuxeoException, IOException {
 
         File tmp = File.createTempFile("xml-importer", null);
 

@@ -7,7 +7,8 @@
   xmlns:rich="http://richfaces.org/rich"
   xmlns:nxh="http://nuxeo.org/nxweb/html"
   xmlns:nxp="http://nuxeo.org/nxweb/pdf"
-  xmlns:ui="http://java.sun.com/jsf/facelets">
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:nxr="http://nuxeo.org/nxweb/resources">
   
   <c:if test="#{empty widget.getFieldDefinitions()[0].getFieldName()}">
     <c:set var="field_0" value="#{value}" />
@@ -73,7 +74,7 @@
 		var width = #{width};
         var height = #{height};
     </script>
-	<script type="text/javascript" src="#{baseURL}#{widgetProperty_alternateTinyMCEjs}" />
+		<nxr:resource name="ottc_tinymce_includes.xhtml" />
     </c:if>
 
     <nxu:valueHolder id="#{widget.id}_disableHtmlInit"
@@ -86,6 +87,7 @@
             rows="#{rows}" editorSelector="#{editorSelector}"
             disableHtmlInit="#{disableBinding}" required="#{widgetProperty_required}">
                 <f:converter converterId="org.opentoutatice.ecm.attached.files.url.converter.DocumentContentConverter" />
+                <nxu:validateDocumentConstraint />
             </nxu:editor>
         </a4j:outputPanel>
       </nxu:set>

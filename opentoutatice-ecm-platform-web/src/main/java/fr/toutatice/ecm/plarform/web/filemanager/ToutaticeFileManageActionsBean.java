@@ -24,8 +24,9 @@ import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.platform.ui.web.util.files.FileUtils;
 import org.nuxeo.ecm.webapp.filemanager.FileManageActionsBean;
 import org.nuxeo.ecm.webapp.filemanager.NxUploadedFile;
@@ -79,7 +80,7 @@ public class ToutaticeFileManageActionsBean extends FileManageActionsBean {
      */
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public void validateMultipleUploadForDocument(DocumentModel current) throws ClientException, FileNotFoundException, IOException {
+    public void validateMultipleUploadForDocument(DocumentModel current) throws NuxeoException, FileNotFoundException, IOException {
         if (!current.hasSchema(FILES_SCHEMA)) {
             return;
         }
@@ -89,7 +90,9 @@ public class ToutaticeFileManageActionsBean extends FileManageActionsBean {
             if (nxuploadFiles != null) {
                 for (NxUploadedFile uploadItem : nxuploadFiles) {
                     String filename = FileUtils.getCleanFileName(uploadItem.getName());
-                    Blob blob = FileUtils.createTemporaryFileBlob(uploadItem.getFile(), filename, uploadItem.getContentType());
+                    
+                    Blob blob = FileUtils.createSerializableBlob(uploadItem.getBlob().getStream(), filename, uploadItem.getContentType());
+                    
                     HashMap<String, Object> fileMap = new HashMap<String, Object>(2);
                     fileMap.put("file", blob);
                     fileMap.put("filename", filename);

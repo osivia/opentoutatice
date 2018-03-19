@@ -23,7 +23,7 @@ import static org.jboss.seam.ScopeType.CONVERSATION;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.webapp.documenttemplates.DocumentTemplatesActionsBean;
@@ -37,7 +37,7 @@ public class ToutaticeDocumentTemplatesActionsBean extends DocumentTemplatesActi
 
 	private static final long serialVersionUID = 5605205971806068358L;
 	
-	public String createDocumentFromTemplate(String viewId) throws ClientException {
+	public String createDocumentFromTemplate(String viewId) throws NuxeoException {
 		if (null == this.changeableDocument) {
 			this.changeableDocument = this.navigationContext.getChangeableDocument();
 		}
@@ -51,7 +51,7 @@ public class ToutaticeDocumentTemplatesActionsBean extends DocumentTemplatesActi
 	 */
 	@Override
     public DocumentModelList getTemplates(String targetTypeName)
-            throws ClientException {
+            throws NuxeoException {
         DocumentModelList templates = super.getTemplates(targetTypeName);
         DocumentModel[] templatesArray = templates.toArray(new DocumentModel[0]);
         for(DocumentModel template : templatesArray){

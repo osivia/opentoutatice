@@ -31,9 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -47,12 +44,13 @@ import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
+import org.nuxeo.ecm.core.api.DocumentNotFoundException;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.DocumentSecurityException;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
@@ -78,6 +76,8 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.services.infos.provider.DocumentInformationsProviderService;
 import fr.toutatice.ecm.platform.service.url.WebIdResolver;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Operation(id = FetchPublicationInfos.ID, category = Constants.CAT_FETCH, label = "Fetch publish space informations",
         description = "Fetch informations about the publish space, worksapce, proxy status, ... of a given document.")
@@ -143,7 +143,7 @@ public class FetchPublicationInfos {
     public Object run() throws Exception {
         // For Trace logs
         long begin = System.currentTimeMillis();
-        if(log.isTraceEnabled()){
+        if (log.isTraceEnabled()) {
             String id = this.document == null ? this.webid : this.document.getPathAsString();
             log.trace(" ID: " + id);
         }
@@ -156,7 +156,7 @@ public class FetchPublicationInfos {
 
         // WebId given
         if (StringUtils.isNotBlank(webid)) {
-            
+
             Object documentByWebIdRes = getDocumentByWebId(webid);
             if (isError(documentByWebIdRes)) {
                 errorsCodes.add((Integer) documentByWebIdRes);
@@ -166,7 +166,7 @@ public class FetchPublicationInfos {
             } else {
                 document = (DocumentModel) documentByWebIdRes;
             }
-            
+
         }
 
         /*
@@ -187,7 +187,7 @@ public class FetchPublicationInfos {
             return createBlob(rowInfosPubli);
         }
         DocumentModel document = (DocumentModel) fetchDocumentRes;
-        
+
         // Version
         boolean isVersion = document.isVersion();
         infosPubli.element("isVersion", isVersion);
@@ -202,21 +202,21 @@ public class FetchPublicationInfos {
             infosPubli.element("liveId", StringUtils.EMPTY);
             infosPubli.element("editableByUser", Boolean.FALSE);
             infosPubli.element("isDeletableByUser", Boolean.FALSE);
-            
+
             // #1782 Cas de la dépublication sans avoir de live, contrôle des droits sur le proxy
             Boolean isEditable = isEditableByUser(infosPubli, document);
             Object canUnpublishRemoteProxy = canUnpublishRemoteProxy(isEditable);
             infosPubli.element("canUnpublishRemoteProxy", canUnpublishRemoteProxy);
-            
+
         } else {
             DocumentModel liveDoc = (DocumentModel) liveDocRes;
             infosPubli.element("liveId", liveDoc.getId());
-            
+
             // #1782 Cas de la dépublication avec un live en corbeille
-            if(ToutaticeGlobalConst.CST_DOC_STATE_DELETED.equals(liveDoc.getCurrentLifeCycleState())) {
+            if (ToutaticeGlobalConst.CST_DOC_STATE_DELETED.equals(liveDoc.getCurrentLifeCycleState())) {
                 infosPubli.element("isLiveDeleted", Boolean.TRUE);
             }
-            
+
             Boolean isEditable = isEditableByUser(infosPubli, liveDoc);
             infosPubli.element("editableByUser", isEditable);
             Object isManageable = isManageableByUser(infosPubli, liveDoc);
@@ -226,12 +226,12 @@ public class FetchPublicationInfos {
 
             Object canUserValidate = canUserValidate();
             infosPubli.element("canUserValidate", canUserValidate);
-            
+
             // LBI #1780 - droit à la dépublication
             Object canUnpublishRemoteProxy = canUnpublishRemoteProxy(isEditable);
             infosPubli.element("canUnpublishRemoteProxy", canUnpublishRemoteProxy);
-            
-            
+
+
             /*
              * Récupération du path du document - cas où un uuid ou un webId est donné en
              * entrée
@@ -272,18 +272,18 @@ public class FetchPublicationInfos {
         boolean docCommentable = document.hasFacet("Commentable");
         Principal user = coreSession.getPrincipal();
         if (user == null) {
-            throw new ClientException("Current user not found.");
+            throw new NuxeoException("Current user not found.");
         }
         boolean userNotAnonymous = !((NuxeoPrincipal) user).isAnonymous();
-        
+
         if (document.hasSchema(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE) && docCommentable) {
-	        // #1444 Un document peut être unitairement interdit de commentaire
-	        Serializable commentsForbidden = document.getPropertyValue(ToutaticeNuxeoStudioConst.TTC_COMMENTS_FORBIDDEN);
-	        if(commentsForbidden != null && ((Boolean)commentsForbidden == true)) {
-	        	docCommentable = false;
-	        }
+            // #1444 Un document peut être unitairement interdit de commentaire
+            Serializable commentsForbidden = document.getPropertyValue(ToutaticeNuxeoStudioConst.TTC_COMMENTS_FORBIDDEN);
+            if (commentsForbidden != null && ((Boolean) commentsForbidden == true)) {
+                docCommentable = false;
+            }
         }
-        
+
         infosPubli.put("isCommentableByUser", docCommentable && userNotAnonymous);
 
         if (log.isTraceEnabled()) {
@@ -298,8 +298,8 @@ public class FetchPublicationInfos {
         infosPubli = infosPubliRunner.getInfosPubli();
         infosPubli.element("errorCodes", errorsCodes);
         rowInfosPubli.add(infosPubli);
-        
-        if(log.isTraceEnabled()){
+
+        if (log.isTraceEnabled()) {
             long end = System.currentTimeMillis();
             log.trace(" Ended: " + String.valueOf(end - begin) + " ms ======= \r\n");
         }
@@ -307,9 +307,7 @@ public class FetchPublicationInfos {
         return createBlob(rowInfosPubli);
     }
 
-
-
-	/**
+    /**
      * Gets allowed subTypes for given folder.
      * 
      * @param infosPubli
@@ -369,7 +367,7 @@ public class FetchPublicationInfos {
         Boolean canModify = null;
         try {
             canModify = Boolean.valueOf(coreSession.hasPermission(liveDoc.getRef(), SecurityConstants.WRITE));
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             if (e instanceof DocumentSecurityException) {
                 return Boolean.FALSE;
             } else {
@@ -395,7 +393,7 @@ public class FetchPublicationInfos {
         Boolean canManage = null;
         try {
             canManage = Boolean.valueOf(coreSession.hasPermission(liveDoc.getRef(), SecurityConstants.EVERYTHING));
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             if (e instanceof DocumentSecurityException) {
                 return Boolean.FALSE;
             } else {
@@ -410,9 +408,9 @@ public class FetchPublicationInfos {
      * Get user validate rigth on document.
      * 
      * @throws ServeurException
-     * @throws ClientException
+     * @throws NuxeoException
      */
-    private Boolean canUserValidate() throws ServeurException, ClientException {
+    private Boolean canUserValidate() throws ServeurException, NuxeoException {
         // Direct on/off line
         return checkValidatePermission();
     }
@@ -421,7 +419,7 @@ public class FetchPublicationInfos {
         Boolean canValidate = Boolean.FALSE;
         try {
             canValidate = Boolean.valueOf(coreSession.hasPermission(document.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE));
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             if (e instanceof DocumentSecurityException) {
                 return Boolean.FALSE;
             } else {
@@ -431,27 +429,27 @@ public class FetchPublicationInfos {
         }
         return canValidate;
     }
-    
+
     private Boolean canUnpublishRemoteProxy(Boolean isEditable) throws ServeurException {
-    	Boolean canUnpublishRemoteProxy = Boolean.FALSE;
-    	
-		if(document.hasFacet("isRemoteProxy") && isEditable) {
-	        
-	        try {
-	        	canUnpublishRemoteProxy = Boolean.valueOf(coreSession.hasPermission(document.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_REMOTE_PUBLISH));
-	        } catch (ClientException e) {
-	            if (e instanceof DocumentSecurityException) {
-	                return Boolean.FALSE;
-	            } else {
-	                log.warn("Failed to fetch permissions for document '" + document.getPathAsString() + "', error:" + e.getMessage());
-	                throw new ServeurException(e);
-	            }
-	        }
+        Boolean canUnpublishRemoteProxy = Boolean.FALSE;
 
-		}
+        if (document.hasFacet("isRemoteProxy") && isEditable) {
 
-		return canUnpublishRemoteProxy;
-	}
+            try {
+                canUnpublishRemoteProxy = Boolean.valueOf(coreSession.hasPermission(document.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_REMOTE_PUBLISH));
+            } catch (NuxeoException e) {
+                if (e instanceof DocumentNotFoundException) {
+                    return Boolean.FALSE;
+                } else {
+                    log.warn("Failed to fetch permissions for document '" + document.getPathAsString() + "', error:" + e.getMessage());
+                    throw new ServeurException(e);
+                }
+            }
+
+        }
+
+        return canUnpublishRemoteProxy;
+    }
 
     /**
      * Méthode permettant de vérifier si un document (live) est supprimable par
@@ -480,13 +478,13 @@ public class FetchPublicationInfos {
             if (canBeDelete) {
                 DocumentModel proxy = ToutaticeDocumentHelper.getProxy(coreSession, liveDoc, null);
                 boolean hasProxy = (null != proxy);
-                /* 3.0 Report: boolean isApproved = ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(liveDoc.getCurrentLifeCycleState());*/
+                /* 3.0 Report: boolean isApproved = ToutaticeNuxeoStudioConst.CST_DOC_STATE_APPROVED.equals(liveDoc.getCurrentLifeCycleState()); */
                 if (/* isApproved || */hasProxy) {
                     boolean canValidate = coreSession.hasPermission(liveDoc.getRef(), ToutaticeNuxeoStudioConst.CST_PERM_VALIDATE);
                     canBeDelete = Boolean.valueOf(canValidate);
                 }
             }
-        } catch (ClientException e) {
+        } catch (NuxeoException e) {
             if (e instanceof DocumentSecurityException) {
                 return Boolean.FALSE;
             } else {
@@ -520,7 +518,7 @@ public class FetchPublicationInfos {
             if (session.hasPermission(srcDocument.getRef(), SecurityConstants.READ_VERSION)) {
                 liveDoc = session.getWorkingCopy(srcDocument.getRef());
             }
-        } catch (ClientException ce) {
+        } catch (NuxeoException ce) {
             if (ce instanceof DocumentSecurityException) {
                 infos.element("editableByUser", Boolean.FALSE);
                 return infos;
@@ -550,7 +548,7 @@ public class FetchPublicationInfos {
         DocumentModel doc = null;
         try {
             doc = coreSession.getDocument(refDoc);
-        } catch (ClientException ce) {
+        } catch (NuxeoException ce) {
             if (ce instanceof DocumentSecurityException) {
                 return ERROR_CONTENT_FORBIDDEN;
             } else {
@@ -567,7 +565,7 @@ public class FetchPublicationInfos {
         }
         return doc;
     }
-    
+
     /**
      * @param webid
      * @return document if found, error otherwise.
@@ -576,7 +574,7 @@ public class FetchPublicationInfos {
     private Object getDocumentByWebId(String webid) {
         // Trace logs
         long begin = System.currentTimeMillis();
-        
+
         DocumentModel doc = null;
         try {
             DocumentModelList documentsByWebId = WebIdResolver.getDocumentsByWebId(coreSession, webid);
@@ -586,12 +584,12 @@ public class FetchPublicationInfos {
         } catch (NoSuchDocumentException e) {
             return ERROR_CONTENT_NOT_FOUND;
         }
-        
+
         if (log.isTraceEnabled()) {
             long end = System.currentTimeMillis();
             log.trace("      [getDocumentByWebId]: " + String.valueOf(end - begin) + " ms");
         }
-        
+
         return doc;
     }
 
@@ -600,12 +598,12 @@ public class FetchPublicationInfos {
      * NoSuchDocumentException
      * 
      * @param ce
-     *            Exception à tester (de type ClientException)
+     *            Exception à tester (de type NuxeoException)
      * @return vrai si l'exception est a pour cause une NoSuchDocumentException
      */
-    private boolean isNoSuchDocumentException(ClientException ce) {
+    private boolean isNoSuchDocumentException(NuxeoException ce) {
         Throwable causeExc = ce.getCause();
-        return causeExc instanceof NoSuchDocumentException;
+        return causeExc instanceof DocumentNotFoundException;
     }
 
     private Blob createBlob(JSONArray json) {
@@ -656,8 +654,8 @@ public class FetchPublicationInfos {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     private static class UnrestrictedFecthPubliInfosRunner extends UnrestrictedSessionRunner {
 
         private DocumentModel document;
@@ -680,8 +678,8 @@ public class FetchPublicationInfos {
             return errorsCodes;
         }
 
-        public UnrestrictedFecthPubliInfosRunner(CoreSession session, DocumentModel document, Object liveDocRes, JSONObject infosPubli,
-                UserManager userManager, List<Integer> errorsCodes) {
+        public UnrestrictedFecthPubliInfosRunner(CoreSession session, DocumentModel document, Object liveDocRes, JSONObject infosPubli, UserManager userManager,
+                List<Integer> errorsCodes) {
             super(session);
             this.document = document;
             this.liveDocRes = liveDocRes;
@@ -691,7 +689,7 @@ public class FetchPublicationInfos {
         }
 
         @Override
-        public void run() throws ClientException {
+        public void run() throws NuxeoException {
             try {
                 if (!isError(liveDocRes)) {
                     DocumentModel liveDoc = (DocumentModel) this.liveDocRes;
@@ -739,7 +737,7 @@ public class FetchPublicationInfos {
                         this.infosPubli.element("publishSpaceDisplayName", URLEncoder.encode(publishSpaceDoc.getTitle(), "UTF-8"));
                         BooleanProperty property = getInContextualizationProperty(publishSpaceDoc);
                         this.infosPubli.element("publishSpaceInContextualization", property.getValue());
-                    } catch (ClientException e) {
+                    } catch (NuxeoException e) {
                         this.infosPubli.element("publishSpaceInContextualization", Boolean.FALSE);
                         this.errorsCodes = manageException(errorsCodes, publishSpaceDoc, e, ERROR_PUBLISH_SPACE_FORBIDDEN,
                                 "fetch publish space name or contextualization property for space ");
@@ -762,7 +760,7 @@ public class FetchPublicationInfos {
                     this.infosPubli.element("workspacePath", URLEncoder.encode(workspace.getPathAsString(), "UTF-8"));
                     try {
                         this.infosPubli.element("workspaceDisplayName", URLEncoder.encode(workspace.getTitle(), "UTF-8"));
-                    } catch (ClientException e) {
+                    } catch (NuxeoException e) {
                         this.errorsCodes = manageException(errorsCodes, workspace, e, ERROR_WORKSPACE_FORBIDDEN,
                                 "fetch workspace name or contextualization property for workspace");
                     }
@@ -777,18 +775,17 @@ public class FetchPublicationInfos {
 
                 /* TODO: valeur toujours mise à true pour l'instant */
                 this.infosPubli.element("workspaceInContextualization", Boolean.TRUE);
-                
+
                 if (!isError(liveDocRes)) {
                     DocumentModel liveDoc = (DocumentModel) this.liveDocRes;
                     Boolean isRemotePublishable = isRemotePublishable(liveDoc, workspaceRes);
                     infosPubli.put("isRemotePublishable", isRemotePublishable);
-					if(isRemotePublishable) {
-				    	Boolean isRemotePublished = isRemotePublished(liveDoc);
-				    	infosPubli.put("isRemotePublished", isRemotePublished);
-				    }
-				    else {
-				    	infosPubli.put("isRemotePublished", Boolean.FALSE);
-				    }
+                    if (isRemotePublishable) {
+                        Boolean isRemotePublished = isRemotePublished(liveDoc);
+                        infosPubli.put("isRemotePublished", isRemotePublished);
+                    } else {
+                        infosPubli.put("isRemotePublished", Boolean.FALSE);
+                    }
                 }
 
                 // Case of local publication
@@ -810,12 +807,12 @@ public class FetchPublicationInfos {
                         if (StringUtils.isNotEmpty(publishSpacePath)) {
                             isBeingModified = Boolean.TRUE;
                         }
-                        //} else {
-                            // Remote publishing
-                        	// #1446 - Désactivation de la vérification sur les proxy distants, code non threadsafe
-                        	
-                            //isBeingModified = Boolean.valueOf(isLiveModifiedFromProxies(document));
-                        //}
+                        // } else {
+                        // Remote publishing
+                        // #1446 - Désactivation de la vérification sur les proxy distants, code non threadsafe
+
+                        // isBeingModified = Boolean.valueOf(isLiveModifiedFromProxies(document));
+                        // }
                     }
 
                     this.infosPubli.element("isLiveModifiedFromProxy", isBeingModified);
@@ -835,11 +832,11 @@ public class FetchPublicationInfos {
                 }
 
             } catch (Exception e) {
-                throw new ClientException(e);
+                throw new NuxeoException(e);
             }
 
         }
-        
+
         /**
          * @param liveDoc given document
          * @return true if given document is remote publishable
@@ -855,18 +852,18 @@ public class FetchPublicationInfos {
             return is;
         }
 
-		/**
-		 * @param liveDoc given document
-		 * @return true if given document is remote published
-		 */
-		private boolean isRemotePublished(DocumentModel liveDoc) {
-			DocumentModelList remotePublishedDocuments = ToutaticeDocumentHelper.getRemotePublishedDocuments(this.session, liveDoc);
-			if(remotePublishedDocuments.size() > 0) {
-				return true;
-			} else {
+        /**
+         * @param liveDoc given document
+         * @return true if given document is remote published
+         */
+        private boolean isRemotePublished(DocumentModel liveDoc) {
+            DocumentModelList remotePublishedDocuments = ToutaticeDocumentHelper.getRemotePublishedDocuments(this.session, liveDoc);
+            if (remotePublishedDocuments.size() > 0) {
+                return true;
+            } else {
                 return false;
-			}
-		}
+            }
+        }
 
         /**
          * Use in remote publication case.
@@ -914,7 +911,7 @@ public class FetchPublicationInfos {
          *            pour stocker le résultat du test (booléen)
          * @return vrai si le document est accessible de façon anonyme
          * @throws ServeurException
-         * @throws ClientException
+         * @throws NuxeoException
          */
         private Object isAnonymous(CoreSession session, UserManager userManager, DocumentModel doc, JSONObject infos) throws ServeurException {
             boolean isAnonymous = false;
@@ -924,7 +921,7 @@ public class FetchPublicationInfos {
                 String anonymousId = userManager.getAnonymousUserId();
                 Access access = acp.getAccess(anonymousId, SecurityConstants.READ);
                 isAnonymous = access.toBoolean();
-            } catch (ClientException e) {
+            } catch (NuxeoException e) {
                 if (e instanceof DocumentSecurityException) {
                     infos.element("anonymouslyReadable", Boolean.FALSE);
                     return infos;
@@ -945,15 +942,15 @@ public class FetchPublicationInfos {
          *            document donné
          * @return la valeur de la propriété sous forme de BooleanProperty
          * @throws PropertyException
-         * @throws ClientException
+         * @throws NuxeoException
          */
-        private BooleanProperty getInContextualizationProperty(DocumentModel doc) throws PropertyException, ClientException {
+        private BooleanProperty getInContextualizationProperty(DocumentModel doc) throws PropertyException, NuxeoException {
             BooleanProperty property = (BooleanProperty) doc.getProperty(IN_CONTEXTUALIZATON_PROPERTY);
             return property;
         }
 
         /**
-         * Gère le traitement d'une ClientException
+         * Gère le traitement d'une NuxeoException
          * 
          * @param errorsCodes
          *            pour stocker une erreur
@@ -963,12 +960,12 @@ public class FetchPublicationInfos {
          *            exception à traiter
          * @param errorCode
          *            code d'erreur dans le cas d'une DocumentSecurityException
-         *            (sous-classe de ClientException)
+         *            (sous-classe de NuxeoException)
          * @param msg
          *            pour générer un message dans les logs du serveur
          * @throws ServeurException
          */
-        private List<Integer> manageException(List<Integer> errorsCodes, DocumentModel doc, ClientException ce, int errorCode, String msg)
+        private List<Integer> manageException(List<Integer> errorsCodes, DocumentModel doc, NuxeoException ce, int errorCode, String msg)
                 throws ServeurException {
             if (ce instanceof DocumentSecurityException) {
                 errorsCodes.add(errorCode);
@@ -989,7 +986,7 @@ public class FetchPublicationInfos {
                 } else {
                     spaceID = safeString((String) document.getProperty("toutatice", "spaceID"));
                 }
-            } catch (ClientException e) {
+            } catch (NuxeoException e) {
                 log.error("Failed to read the ttc:spaceID meta-data, error:" + e.getMessage());
             }
 
