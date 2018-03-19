@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>opentoutatice.ui</groupId>
 		<artifactId>opentoutatice-jsf-ui</artifactId>
-		<version>5.0-SNAPSHOT</version>
+		<version>4.8-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-jsf-tinymce</artifactId>
