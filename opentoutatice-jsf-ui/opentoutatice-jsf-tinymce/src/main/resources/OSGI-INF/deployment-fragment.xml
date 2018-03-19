@@ -11,8 +11,8 @@
 	</extension>
 
 	<install>
-		<unzip from="${bundle.fileName}" to="/" prefix="web">
-			<include>web/nuxeo.war/**</include>
+		<unzip from="${bundle.fileName}" to="/">
+			<include>nuxeo.war/**</include>
 		</unzip>
 
 		<!-- append l10n files -->

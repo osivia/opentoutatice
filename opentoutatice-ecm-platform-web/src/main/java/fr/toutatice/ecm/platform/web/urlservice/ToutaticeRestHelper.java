@@ -22,11 +22,12 @@ import static org.jboss.seam.ScopeType.EVENT;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.nuxeo.ecm.core.api.NuxeoException;
-// import org.nuxeo.ecm.platform.picture.web.PictureManager;
+import org.nuxeo.ecm.platform.picture.web.PictureManager;
 import org.nuxeo.ecm.platform.ui.web.rest.RestHelper;
 import org.nuxeo.ecm.platform.url.api.DocumentView;
 
@@ -42,8 +43,8 @@ public class ToutaticeRestHelper extends RestHelper {
 
     private static final Log log = LogFactory.getLog(ToutaticeRestHelper.class);
 
-    // @In(create = true)
-    // PictureManager pictureManager;
+    @In(create = true)
+    protected transient PictureManager pictureManager;
 
     /**
      * Switch action in case of type of the document associated by the url
@@ -58,7 +59,7 @@ public class ToutaticeRestHelper extends RestHelper {
 
         // for picture, download the picture
         if (StringUtils.isNotBlank(content)) {
-            // pictureManager.download(docView);
+            pictureManager.download(docView);
         }
         // by default, call a nuxeo view
         else {

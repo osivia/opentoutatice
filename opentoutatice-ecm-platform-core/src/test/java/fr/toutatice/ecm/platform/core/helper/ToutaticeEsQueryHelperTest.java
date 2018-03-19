@@ -17,7 +17,7 @@ import fr.toutatice.ecm.platform.core.query.helper.ToutaticeEsQueryHelper;
 import junit.framework.Assert;
 
 @RunWith(FeaturesRunner.class)
-@Features({CoreFeature.class, RepositoryElasticSearchFeature.class})
+@Features({CoreFeature.class /* , RepositoryElasticSearchFeature.class */})
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.CLASS)
 public class ToutaticeEsQueryHelperTest {
 
