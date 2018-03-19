@@ -428,19 +428,12 @@
 					<version>2.0.1</version>
 					<extensions>true</extensions>
 				</plugin>
-				<!-- <plugin> <groupId>net.alchim31.maven</groupId> <artifactId>yuicompressor-maven-plugin</artifactId> 
-					<configuration> <aggregations> <aggregation> <includes> <include>**/*.js</include> 
-					</includes> <insertNewLine>true</insertNewLine> <excludes> <exclude>jquery-integration.min.js</exclude> 
-					</excludes> <output>${project.build.directory}/${project.build.finalName}/js/socle.min.js</output> 
-					<removeIncluded>true</removeIncluded> </aggregation> </aggregations> <excludes> 
-					<exclude>**/*.min.css</exclude> <exclude>**/*.min.js</exclude> </excludes> 
-					<jswarn>false</jswarn> <suffix>.min</suffix> </configuration> </plugin> -->
 			</plugins>
 		</pluginManagement>
 	</build>
 
 	<scm>
-		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/branches/8.10-migration</developerConnection>
+		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/branches/4.8-maintenance</developerConnection>
 	</scm>
 
 	<distributionManagement>
