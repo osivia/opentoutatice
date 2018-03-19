@@ -1,0 +1,25 @@
+<ui:composition
+	template="/pages/portal-views/contribution/pv_mode_page.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
+	xmlns:nxr="http://nuxeo.org/nxweb/resources"
+	xmlns:nxd="http://nuxeo.org/nxweb/document">
+
+	<ui:param name="mode" value="create" />
+	<ui:param name="document"
+		value="#{documentActions.getOrCreateChangeableDocument()}" />
+		
+	<ui:param name="titlePrefix" value="#{not empty document ? messages['toutatice.views.create.title'] : ''}" />
+	<ui:param name="title" value="#{titlePrefix}#{not empty document ? messages[nxd:typeInfo(document).label] : messages['toutatice.label.portal.view.create.error']}" />
+
+	<ui:define name="actions">
+		<ui:fragment rendered="#{not empty document}">
+			<ui:include
+				src="/pages/portal-views/contribution/parts/create_actions.xhtml" />
+		</ui:fragment>
+	</ui:define>
+
+</ui:composition>
+

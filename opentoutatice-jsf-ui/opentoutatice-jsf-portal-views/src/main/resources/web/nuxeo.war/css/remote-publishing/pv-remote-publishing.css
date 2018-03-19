@@ -1,0 +1,58 @@
+/* Portal view adapter */
+
+div.menu {
+	margin-top: 17px !important;
+}
+
+.nxMainContainer {
+	font-size: 14px !important;
+
+}
+
+.rf-trn {
+	font-size: 14px !important;
+}
+
+.rf-tr-nd {
+ 	background: none !important;
+	min-height: 0 !important;
+}
+
+.rf-tr
+{
+margin-bottom: 20px !important;
+}
+
+.rf-trn-ico {
+    vertical-align: middle;
+    margin: 0;
+    cursor: pointer;
+    width: 0px !important;
+    height: 0px !important;
+    display: inline-block;
+}
+
+:link img {
+    border: none  !important;
+    display: none  !important;
+}
+
+#publishTreeForm > dl {
+	margin: 0 5em 2em 2em !important;
+}
+
+table.dataInput td {
+	padding-left: 2em !important;
+}
+
+table.dataList th {
+	padding-left: 2em !important;
+}
+
+table.dataList td {
+	padding-left: 2em !important;
+}
+
+table td {
+    vertical-align: middle !important;
+}

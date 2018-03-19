@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+<component name="org.osivia.ui.metadata.layouts">
+	
+	<require>org.nuxeo.ecm.platform.forms.layouts.webapp</require>
+	<require>fr.toutatice.ecm.platform.web.widgets</require>
+	<require>fr.toutatice.ecm.platform.web.thumbnail.widgets</require>
+	<require>fr.toutatice.ecm.platform.web.contextualization.widgets
+	</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+		<widget name="metadata_description" type="textarea">
+			<labels>
+				<label mode="any">description</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>dc:description</field>
+			</fields>
+			<widgetModes>
+				<mode value="view_summary">#{empty layoutValue.dc.description?'hidden':'view'}
+				</mode>
+			</widgetModes>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+			</properties>
+		</widget> 
+		
+		<widget name="metadata_toutatice_showInMenu_widget" type="template">
+			<labels>
+				<label mode="any">toutatice.label.edit.showInMenu</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:showInMenu</field>
+			</fields>
+			<properties widgetMode="any">
+				<property name="template">/widgets/toutatice_checkbox.xhtml</property>
+				<property name="title">toutatice.title.edit.showInMenu</property>
+			</properties>
+		</widget>
+		
+		<widget name="metadata_add_thumbnail" type="file">
+			<labels>
+				<label mode="any">toutatice.label.add.thumbnail</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:vignette</field>
+				<field>ttc:vignette/filename</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="required">false</property>
+				<property name="iconRendered">true</property>
+			</properties>
+		</widget>
+		
+		<widget name="metadata_toutatice_keywords_widget" type="template">
+			<labels>
+				<label mode="any">toutatice.label.keywords</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:keywords</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">
+					/widgets/toutatice_keyword_widget.xhtml
+				</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(currentDocument.type != 'BlogSite' and
+					currentUser.administrator ,
+					layout.mode,
+					'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+		
+		<!-- For case when addon web-mode is installed in Nx -->
+		<widget name="metadata_ottc_weburl" type="template">
+            <labels>
+                <label mode="any">webmode.label.weburl</label>
+            </labels>
+            <translated>true</translated>
+            <fields>
+                <field>ottcweb:segment</field>
+            </fields>
+            <widgetModes>
+                <mode value="any">#{nxu:test(config.isWebModeActive() and 
+                    webModeDocumentActionsBean.supportsWebUrls(currentDocument),
+                    layout.mode, 'hidden')}
+                </mode>
+            </widgetModes>
+            <properties mode="any">
+                <property name="template">
+                    /widgets/toutatice_weburl_widget.xhtml
+                </property>
+            </properties>
+
+        </widget>
+        
+		<widget name="metadata_publication_date" type="pv_ttc_date">
+			<labels>
+				<label mode="any">toutatice.label.publication.date</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:publicationDate</field>
+			</fields>
+	      <properties widgetMode="edit">
+	        <property name="required">false</property>
+	      </properties>
+		</widget>
+		
+		<widget name="metadata_expired_date" type="pv_ttc_date">
+			<labels>
+				<label mode="any">label.dublincore.expired</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>dc:expired</field>
+			</fields>
+			<widgetModes>
+				<mode value="view_summary">#{empty layoutValue.dc.expired?'hidden':'view'}
+				</mode>
+			</widgetModes>
+		</widget>
+		
+		<!-- ======= -->
+
+		<widget name="flow" type="layout">
+			<labels>
+				<label mode="any">ottc.metadata.flow.title</label>
+			</labels>
+			<translated>true</translated>
+			<properties widgetMode="any">
+				<property name="name">flow</property>
+			</properties>
+		</widget>
+
+		<widget name="ranking" type="layout">
+			<labels>
+				<label mode="any">ottc.metadata.ranking.title</label>
+			</labels>
+			<translated>true</translated>
+			<properties widgetMode="any">
+				<property name="name">ranking</property>
+			</properties>
+		</widget>
+
+		<widget name="share" type="layout">
+			<labels>
+				<label mode="any">ottc.metadata.share.title</label>
+			</labels>
+			<translated>true</translated>
+			<properties widgetMode="any">
+				<property name="name">share</property>
+			</properties>
+		</widget>
+
+		<widget name="navigation" type="layout">
+			<labels>
+				<label mode="any">ottc.metadata.navigation.title</label>
+			</labels>
+			<translated>true</translated>
+			<properties widgetMode="any">
+				<property name="name">navigation</property>
+			</properties>
+			<widgetModes>
+				<mode value="any"> #{documentActions.showShowInMenu()
+					? layout.mode :
+					'hidden'}
+				</mode>
+			</widgetModes>
+		</widget>
+		
+		<widget name="metadata_comments_forbidden" type="checkbox">
+			<labels>
+				<label mode="any">toutatice.label.comments.forbidden</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:commentsForbidden</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="immediate">true</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test((documentActions.isTypeCommentable() and (not currentDocument.getType().equals("Thread"))),
+					layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+			 
+		</widget>
+		
+		<widget name="metadata_metadatas_hidden" type="checkbox">
+			<labels>
+				<label mode="any">toutatice.label.metadatas.hidden</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:hideMetadatas</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="immediate">true</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(currentDocument.hasFacet('Folderish'),
+					'hidden', layout.mode)}
+				</mode>
+			</widgetModes>
+			 
+		</widget>
+
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="layouts">
+
+		<layout name="ottc_metadata">
+			<templates>
+				<template mode="any">
+					/pages/portal-views/parts/content_tab.xhtml
+				</template>
+			</templates>
+			<properties mode="any">
+					<property name="contentLabel">ottc.tab.content.title</property>
+					<property name="metadataLabel">ottc.tab.metadata.title</property>
+					<property name="enabledInCreation">false</property>
+					<property name="bootstrapRightCols">10</property>
+			</properties>
+			<rows>
+				<row>
+					<widget>flow</widget>
+				</row>
+				<row>
+					<widget>ranking</widget>
+				</row>
+				<row>
+					<widget>share</widget>
+				</row>
+				<row>
+					<widget>navigation</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<layout name="flow">
+			<templates>
+				<template mode="any">
+					/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>description</widget>
+				</row>
+				<row>
+					<widget>add_thumbnail</widget>
+				</row>
+				<row>
+					<widget>publication_date</widget>
+				</row>
+			    <row>
+			    	<widget>metadata_comments_forbidden</widget>
+			    </row>
+			    <row>
+			    	<widget>metadata_metadatas_hidden</widget>
+			    </row>
+			</rows>
+		</layout>
+
+		<layout name="ranking">
+			<templates>
+				<template mode="any">
+					/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>nature</widget>
+				</row>
+				<row>
+					<widget>subjects</widget>
+				</row>
+				<row>
+					<widget>coverage</widget>
+				</row>
+				<row>
+					<widget>toutatice_keywords_widget</widget>
+				</row>		
+			</rows>
+		</layout>
+
+		<layout name="share">
+			<templates>
+				<template mode="any">
+					/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+				<row>
+					<widget>toutatice_webId_widget</widget>
+				</row>
+			</rows>
+		</layout>
+
+		<layout name="navigation">
+			<templates>
+				<template mode="any">
+					/layouts/layout_default_template.xhtml
+				</template>
+			</templates>
+			<rows>
+			   <!--  <row>
+			    	<widget>metadata_ottc_weburl</widget>
+			    </row>    
+				<row>
+					<widget>metadata_toutatice_showInMenu_widget</widget>
+				</row> -->
+				<row>
+					<widget>toutatice_showInMenu_widget</widget>
+				</row>
+			</rows>
+		</layout>
+
+	</extension>
+</component>

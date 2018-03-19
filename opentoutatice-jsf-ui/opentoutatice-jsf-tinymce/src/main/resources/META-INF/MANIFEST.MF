@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 1
+Bundle-Name: Opentoutatice JSF UI - tinyMCE
+Bundle-SymbolicName: org.opentoutatice.jsf.ui.tinymce;singleton:=true
+Bundle-Version: 2.0.0
+Bundle-Localization: plugin
+Bundle-Vendor: Oisvia 
+Bundle-Category: web
+Nuxeo-Component: OSGI-INF/extensions/widgets-contrib.xml
+ 
+ 

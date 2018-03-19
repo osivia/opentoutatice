@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>opentoutatice-ecm.platform</groupId>
 	<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-	<version>4.6.5.p2</version>
+	<version>5.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>open toutatice plate-forme</name>
 
 	<modules>
 		<module>opentoutatice-ecm-platform-core</module>
 		<module>opentoutatice-ecm-platform-web</module>
+		<module>opentoutatice-jsf-ui</module>
 		<module>opentoutatice-ecm-platform-automation</module>
 		<module>opentoutatice-ecm-platform-services</module>
-		<module>opentoutatice-ecm-platform-custom</module>
 		<module>opentoutatice-ecm-platform-attached-files</module>
 		<module>opentoutatice-ecm-platform-reporting</module>
-		<module>opentoutatice-ecm-platform-marketplace</module>
-		<module>opentoutatice-ecm-platform-distribution</module>
+		<!-- <module>opentoutatice-ecm-platform-marketplace</module> <module>opentoutatice-ecm-platform-distribution</module> -->
 	</modules>
 
 	<properties>
-		<nuxeo.version>6.0-HF42</nuxeo.version>
-		<nuxeo.cap.version>6.0</nuxeo.cap.version>
-		<nuxeo.dam.version>6.0.0</nuxeo.dam.version>
+		<nuxeo.version>8.10-HF22</nuxeo.version>
+		<!-- <nuxeo.cap.version>8.10</nuxeo.cap.version> -->
+		<nuxeo.dam.version>6.2.3</nuxeo.dam.version>
+		<nuxeo.dam.mvn.version>8.10</nuxeo.dam.mvn.version>
+		<!-- Deprecated -->
 		<nuxeo.blogs.sites.version>1.2.0</nuxeo.blogs.sites.version>
 
 		<commons.lang.version>2.6</commons.lang.version>
@@ -33,24 +35,18 @@
 		<org.jsoup.version>1.6.3</org.jsoup.version>
 		<org.freemarker.version>2.3.11</org.freemarker.version>
 		<javax.mail.version>1.4</javax.mail.version>
-		<org.richfaces.version>4.5.0.Alpha3</org.richfaces.version>
+		<org.richfaces.version>4.5.12.Final</org.richfaces.version>
+		<!-- FIXME: find version in Nx -->
 		<javax.servlet.version>3.0.1</javax.servlet.version>
-		<!-- Nx jxl patch -->
-		<jxl.nx.patch.version>2.6.12-NX2</jxl.nx.patch.version>
-		<log4j.version>1.2.17</log4j.version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.nuxeo.ecm.distribution</groupId>
-				<artifactId>nuxeo-distribution-cap</artifactId>
-				<version>${nuxeo.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
+			<!-- <dependency> <groupId>org.nuxeo.ecm.distribution</groupId> <artifactId>nuxeo-distribution-cap</artifactId> 
+				<version>${nuxeo.version}</version> <type>pom</type> <scope>import</scope> 
+				</dependency> -->
 
 			<dependency>
 				<groupId>org.nuxeo.ecm.core</groupId>
@@ -60,6 +56,11 @@
 			<dependency>
 				<groupId>org.nuxeo.ecm.core</groupId>
 				<artifactId>nuxeo-core-api</artifactId>
+				<version>${nuxeo.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.nuxeo.ecm.core</groupId>
+				<artifactId>nuxeo-core-io</artifactId>
 				<version>${nuxeo.version}</version>
 			</dependency>
 			<dependency>
@@ -199,15 +200,13 @@
 			</dependency>
 			<dependency>
 				<groupId>org.nuxeo.ecm.platform</groupId>
-				<artifactId>nuxeo-platform-imaging-dm</artifactId>
+				<artifactId>nuxeo-platform-imaging-api</artifactId>
 				<version>${nuxeo.version}</version>
-				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.nuxeo.ecm.platform</groupId>
 				<artifactId>nuxeo-platform-imaging-core</artifactId>
 				<version>${nuxeo.version}</version>
-				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.nuxeo.ecm.platform</groupId>
@@ -239,6 +238,11 @@
 				<artifactId>nuxeo-rest-api-server</artifactId>
 				<version>${nuxeo.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.nuxeo.dam</groupId>
+				<artifactId>nuxeo-dam</artifactId>
+				<version>${nuxeo.dam.mvn.version}</version>
+			</dependency>
 
 			<!-- Opentoutatice dependencies -->
 			<dependency>
@@ -254,6 +258,11 @@
 			<dependency>
 				<groupId>opentoutatice-ecm.platform</groupId>
 				<artifactId>opentoutatice-ecm-platform-web</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>opentoutatice-ecm.platform</groupId>
+				<artifactId>opentoutatice-ecm-platform-jsf-ui</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -316,13 +325,14 @@
 				<artifactId>richfaces-a4j</artifactId>
 				<version>${org.richfaces.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>${log4j.version}</version>
-			</dependency>
 
 			<!-- Tests -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>3.8.1</version>
+				<scope>test</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.nuxeo.runtime</groupId>
 				<artifactId>nuxeo-runtime-test</artifactId>
@@ -360,6 +370,12 @@
 				<scope>test</scope>
 			</dependency>
 
+			<dependency>
+				<groupId>org.nuxeo.lib.runtime</groupId>
+				<artifactId>nuxeo-runtime-tomcat-adapter</artifactId>
+				<version>${nuxeo.version}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -372,8 +388,8 @@
 					<version>3.1</version>
 					<configuration>
 						<encoding>UTF-8</encoding>
-						<source>1.7</source>
-						<target>1.7</target>
+						<source>1.8</source>
+						<target>1.8</target>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -407,31 +423,6 @@
 					<version>2.0.1</version>
 					<extensions>true</extensions>
 				</plugin>
-				<plugin>
-					<groupId>org.lesscss</groupId>
-					<artifactId>lesscss-maven-plugin</artifactId>
-					<version>1.7.0.1.1</version>
-					<configuration>
-						<sourceDirectory>${project.basedir}/src/main/less</sourceDirectory>
-						<outputDirectory>${project.basedir}/src/main/resources/nuxeo.war/css</outputDirectory>
-						<compress>true</compress>
-						<includes>
-							<include>toutatice-popup.less</include>
-							<include>plugin-popup.less</include>
-							<include>custom-popup.less</include>
-							<include>fragments-popup.less</include>
-							<include>custom-remote-publishing.less</include>
-						</includes>
-						<outputFileFormat>{fileName}.min.css</outputFileFormat>
-					</configuration>
-					<executions>
-						<execution>
-							<goals>
-								<goal>compile</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
 				<!-- <plugin> <groupId>net.alchim31.maven</groupId> <artifactId>yuicompressor-maven-plugin</artifactId> 
 					<configuration> <aggregations> <aggregation> <includes> <include>**/*.js</include> 
 					</includes> <insertNewLine>true</insertNewLine> <excludes> <exclude>jquery-integration.min.js</exclude> 
@@ -444,7 +435,7 @@
 	</build>
 
 	<scm>
-		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags/4.6.5.p2</developerConnection>
+		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/branches/8.10-migration</developerConnection>
 	</scm>
 
 	<distributionManagement>

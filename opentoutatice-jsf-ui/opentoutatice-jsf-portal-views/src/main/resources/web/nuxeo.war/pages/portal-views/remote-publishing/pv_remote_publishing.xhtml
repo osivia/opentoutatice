@@ -1,0 +1,20 @@
+<ui:composition template="/pages/basic_page.xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:nxr="http://nuxeo.org/nxweb/resources">
+
+	<ui:param name="pageName" value="rp-portal-view" />
+
+	<ui:define name="header_script">
+		<!-- Resize of fancyBox -->
+		<h:outputScript target="#{pageJsTarget}">
+	    	parent.jQuery.fancybox.getInstance().update();
+	    </h:outputScript>
+	</ui:define>
+
+	<ui:define name="basic body">
+		<ui:include src="/incl/tabs/document_publish_template.xhtml" />
+	</ui:define>
+
+</ui:composition>
