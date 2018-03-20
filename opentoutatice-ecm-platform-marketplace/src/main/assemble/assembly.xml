@@ -34,7 +34,6 @@
 			<filterset>
 				<filter token="VERSION" value="${maven.project.version}" />
 				<filter token="DISTRIB_VERSION" value="${nuxeo.version}" />
-				<filter token="CAP_DISTRIB_VERSION" value="${nuxeo.cap.version}" />
 				<filter token="NUXEO_DAM_VERSION" value="${nuxeo.dam.version}" />
 				<filter token="NUXEO_BLOGS_SITES_VERSION" value="${nuxeo.blogs.sites.version}" />
 			</filterset>
@@ -47,7 +46,7 @@
 		<!-- Base distribution NXR -->
 		<copy todir="${outdir}">
 			<artifact:resolveFile
-				key="org.nuxeo.ecm.distribution:nuxeo-distribution-cap:${nuxeo.version}:zip" />
+				key="org.nuxeo.ecm.distribution:nuxeo-nxr-server:${nuxeo.version}:zip" />
 		</copy>
 
 		<!-- Get Nuxeo bundles but not Nuxeo libraries (which groupId starts with"org.nuxeo.lib"), 
@@ -59,6 +58,8 @@
 					<!-- Include your artifacts using their groupId for instance -->
 					<artifact groupId="opentoutatice-ecm.*" scope="!test"
 						type="!pom" />
+					<artifact groupId="opentoutatice.ui*" scope="!test"
+						type="!pom"/>
 				</includes>
 				<excludes>
 					<artifact groupId="org.nuxeo.lib*" />
@@ -79,6 +80,7 @@
 				<excludes>
 					<!-- Filter out your artifacts using their groupId for instance -->
 					<artifact groupId="opentoutatice-ecm.*" />
+					<artifact groupId="opentoutatice.ui*" />
 					<!-- Filter out not desired log4j lib (missing into distribution NXR?) -->
 					<artifact groupId="log4j*" />
 				</excludes>
@@ -95,28 +97,25 @@
 		<!-- Your MP only needs to include files not already provided by the base 
 			distribution -->
 		<nx:zipdiff file1="${outdir}/nxr-${maven.project.version}.zip"
-			file2="${outdir}/nuxeo-distribution-cap-${nuxeo.version}.zip"
+			file2="${outdir}/nuxeo-nxr-server-${nuxeo.version}.zip"
 			includesfile="${outdir}/includes" excludesfile="${outdir}/excludesfile"
-			patternsetid="opentoutatice.versus.cap" ignoreContent="true"
+			patternsetid="opentoutatice.versus.nxr" ignoreContent="true"
 			ignoreContentPattern=".*\.jar$" />
 
 		<unzip src="${outdir}/nxr-${maven.project.version}.zip" dest="${outdir}/marketplace/install">
-			<patternset refid="opentoutatice.versus.cap" />
+			<patternset refid="opentoutatice.versus.nxr" />
 		</unzip>
 
 		<!-- Update the install.xml file from properties -->
 		<copy file="src/main/resources/install.xml" todir="${outdir}/marketplace"
 			overwrite="true">
-			<filterset>
-				<filter token="PROFILE" value="${profileName}" />
-			</filterset>
 		</copy>
 
 		<zip
-			destfile="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip"
+			destfile="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}.zip"
 			basedir="${outdir}/marketplace" />
 		<artifact:attach
-			file="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}-${profileName}.zip"
+			file="${outdir}/opentoutatice-ecm-platform-marketplace-${maven.project.version}.zip"
 			type="zip" />
 	</target>
 

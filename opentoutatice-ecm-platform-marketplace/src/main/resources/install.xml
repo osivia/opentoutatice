@@ -10,7 +10,7 @@
 	<!--  TO STUDY: install.properties -->
 	
 	<!--  Templates -->
-    <copy dir="${package.root}/install/templates-@PROFILE@" todir="${env.templates}" overwrite="true" />
+    <copy dir="${package.root}/install/templates" todir="${env.templates}" overwrite="true" />
     <config addtemplate="opentoutatice" />
     
 </install>

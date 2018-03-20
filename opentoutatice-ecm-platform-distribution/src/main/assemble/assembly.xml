@@ -33,7 +33,7 @@
 
 		<unzip dest="${outdir}/nxdistrib">
 			<artifact:resolveFile
-				key="org.nuxeo.ecm.distribution:nuxeo-distribution-cap:${nuxeo.version}:zip" />
+				key="org.nuxeo.ecm.distribution:nuxeo-nxr-server:${nuxeo.distribution.version}:zip" />
 		</unzip>
 
 		<!-- Get Nuxeo bundles but not Nuxeo libraries (which groupId starts with 
@@ -45,6 +45,8 @@
 			<artifact:set>
 				<includes>
 					<artifact groupId="opentoutatice-ecm.*" scope="!test"
+						type="!pom" />
+					<artifact groupId="opentoutatice.ui*" scope="!test"
 						type="!pom" />
 				</includes>
 				<excludes>
@@ -71,6 +73,7 @@
 				<excludes>
 					<!-- Filter out your artifacts using their groupId for instance -->
 					<artifact groupId="opentoutatice-ecm.*" />
+					<artifact groupId="opentoutatice.ui*" />
 				</excludes>
 			</artifact:set>
 		</copy>
@@ -79,10 +82,10 @@
 		<nx:rmdups dir="${outdir}/nxr/lib" />
 
 		<zip
-			destfile="${outdir}/opentoutatice-ecm-platform-nxr-${maven.project.version}-${profileName}.zip"
+			destfile="${outdir}/opentoutatice-ecm-platform-nxr-${maven.project.version}.zip"
 			basedir="${outdir}/nxr" />
 		<artifact:attach
-			file="${outdir}/opentoutatice-ecm-platform-nxr-${maven.project.version}-${profileName}.zip"
+			file="${outdir}/opentoutatice-ecm-platform-nxr-${maven.project.version}.zip"
 			type="zip" />
 	</target>
 

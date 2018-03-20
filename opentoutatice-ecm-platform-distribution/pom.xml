@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-		<version>5.0-SNAPSHOT</version>
+		<version>4.8-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-distribution</artifactId>
@@ -37,6 +37,14 @@
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-reporting</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>opentoutatice.ui</groupId>
+			<artifactId>opentoutatice-jsf-tinymce</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>opentoutatice.ui</groupId>
+			<artifactId>opentoutatice-jsf-portal-views</artifactId>
 		</dependency>
 	</dependencies>
 

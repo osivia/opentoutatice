@@ -92,6 +92,10 @@
 			<artifactId>json-lib</artifactId>
 			<classifier>jdk15</classifier>
 		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
 
 		<!-- JUnit tests -->
 		<dependency>
@@ -100,12 +104,6 @@
 		</dependency>
 
 		<!-- For test purpose only -->
-		<dependency>
-			<groupId>org.nuxeo.ecm.automation</groupId>
-			<artifactId>nuxeo-automation-client</artifactId>
-			<version>6.0-HF42</version>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-comment</artifactId>

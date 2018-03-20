@@ -1,54 +1,6 @@
 <package type="addon" name="open-toutatice" version="@VERSION@">
 	<title>Open Toutatice</title>
 	<description>
-			This addon implements the opened platform called Open Toutatice
-			(which one is based on the Nuxeo DM distribution)
-			
-			_________________________________________________________________
-			
-		    Main new features:
-
-			* Generalization of opentoutatice's ids
-				- every document has a technical id (except remote proxies for
-				  the moment: they have only cms path)
-			    - only admins can change id's values
-			    - CRUD by id integrated in REST API
-			* Web mode moved in external addon
-			* Exclusive Contribute permission: only leaf document's creator can modify or delete it
-			* TiniyMCE:
-			    - possibility to insert download link when inserting link to File
-			      document
-			    - possibility to insert link to remote proxy
-			* By default, every Folderish is shown in Portal menu
-			* New EraseModifications operation allowing to come back to last
-
-		    Other features:
-		    
-			* New Multiple upload files widget
-			* Notifications:
-				- getUserFullName method
-				- specific documentLocallyPublished event
-				
-		    _________________________________________________________________
-		
-		    Main bug fixes:
-		    
-			* #873: Works of Asynchronous listeners done in silent mode
-			* #6933: References passed in createOp chain to be able to execute many chains on same event (event-handler)
-			* #1159: check of unicity of id on imports / possibility to shutdown recursion on ids setting
-		
-		    Other bug fixes:
-		    
-			* #1206: Access of documents in content view cv_ContentOrderedReadNWrite managed by Elasticsearch
-			* property tabOrder of Publish Spaces pre-filled to avoid ElasticSearch parsing Exception
-			* #1182: conditions on Portal Configuration tab
-			* Get allowed configurations
-			* #1152, #961: fix move and reorder of local proxies
-			* New definition of validationWorkflow_validation permission
-			* Visibility of toutatice_widget_tab_order
-			* Fixes possible nullPointer on Nx start up in ToutaticeDocumentHelper
-			* #1166: errors bindings on JSF components
-			* ttc_richtext_with_mimetype: fix of empty field definition or empty field for changeable document
 	</description>
 	<home-page>http://www.toutatice.fr/portail/cms/seria/seria/seria-t/projets/ss-services-de-socle/nuxeo/change-logs/marketplace
 	</home-page>
@@ -61,8 +13,8 @@
 	<production-state>production_ready</production-state>
 	<supported>false</supported>
 	<platforms>
-		<platform>cap-@CAP_DISTRIB_VERSION@</platform>
-		<platform>cap-@CAP_DISTRIB_VERSION@*</platform>
+		<platform>server-@DISTRIB_VERSION@</platform>
+		<platform>server-@DISTRIB_VERSION@-*</platform>
 	</platforms>
 	<dependencies>
 		<!-- Dependencies on Nuxeo's addon -->
