@@ -1,0 +1,15 @@
+<component name="fr.toutatice.ecm.core.contextContrib"
+	version="1.0">
+
+	<require>org.nuxeo.ecm.core.automation.contextContrib</require>
+
+	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+		point="contextHelpers">
+		<contextHelper id="Fn"
+			class="org.nuxeo.ecm.automation.features.PlatformFunctions" enabled="false" />
+
+		<contextHelper id="Fn"
+			class="fr.toutatice.ecm.platform.core.freemarker.ToutaticeFunctions" />
+	</extension>
+
+</component>
