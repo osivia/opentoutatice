@@ -44,10 +44,6 @@
 			<uri>/scripts/bootstrap/bootstrap-timepicker.js</uri>
 		</resource>
 
-		<resource name="bootstrap.nx.widgets.js">
-			<uri>/scripts/bootstrap/bootstrap-nx-widgets.js</uri>
-		</resource>
-
 		<resource name="bootstrap.tab.js">
 			<uri>/scripts/bootstrap/bootstrap-tab.js</uri>
 		</resource>
@@ -94,7 +90,6 @@
 				<resource>bootstrap.datepicker.js</resource>
 				<resource>bootstrap.datepicker.fr.js</resource>
 				<resource>bootstrap.timepicker.js</resource>
-				<resource>bootstrap.nx.widgets.js</resource>
 				<resource>bootstrap.tab.js</resource>
 				<resource>custom.tinymce.modals.js</resource>
 				<resource>forms.errors.manager.js</resource>

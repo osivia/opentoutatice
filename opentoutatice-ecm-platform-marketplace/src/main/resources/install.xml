@@ -1,7 +1,7 @@
 <!-- See documentation at http://doc.nuxeo.com/x/IgIz -->
 <install>
 	<!-- Plugins -->
-	<update file="${package.root}/install/bundles" todir="${env.server.home}/nxserver/plugins" />
+	<update file="${package.root}/install/plugins" todir="${env.server.home}/nxserver/plugins" />
 	
 	<!-- Libs -->
 	<update file="${package.root}/install/lib" todir="${env.lib}" />"

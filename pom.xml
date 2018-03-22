@@ -18,23 +18,22 @@
 		<module>opentoutatice-ecm-platform-services</module>
 		<module>opentoutatice-ecm-platform-attached-files</module>
 		<module>opentoutatice-ecm-platform-reporting</module>
-		<!-- <module>opentoutatice-ecm-platform-distribution</module> -->
 		<module>opentoutatice-ecm-platform-marketplace</module>
 	</modules>
 
 	<properties>
 		<nuxeo.version>8.10-HF22</nuxeo.version>
-		<nuxeo.distribution.version>8.10-HF22</nuxeo.distribution.version>
+		<nuxeo.distribution.version>8.10</nuxeo.distribution.version>
+		<nuxeo.jsf.ui.version>8.10.1</nuxeo.jsf.ui.version>
 		<nuxeo.dam.version>6.2.3</nuxeo.dam.version>
 		<nuxeo.dam.mvn.version>8.10</nuxeo.dam.mvn.version>
 		<!-- Deprecated -->
-		<nuxeo.blogs.sites.version>1.2.0</nuxeo.blogs.sites.version>
+		<nuxeo.blogs.sites.version>1.3.2</nuxeo.blogs.sites.version>
 
 		<commons.lang.version>2.6</commons.lang.version>
 		<org.apache.pdfbox.version>1.7.1</org.apache.pdfbox.version>
 		<net.sf.json.version>2.4</net.sf.json.version>
 		<org.jsoup.version>1.6.3</org.jsoup.version>
-		<org.freemarker.version>2.3.11</org.freemarker.version>
 		<javax.mail.version>1.4</javax.mail.version>
 		<org.richfaces.version>4.5.12.Final</org.richfaces.version>
 		<javax.servlet.version>3.0.1</javax.servlet.version>
@@ -320,29 +319,28 @@
 				<version>${org.jsoup.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.freemarker</groupId>
-				<artifactId>freemarker</artifactId>
-				<version>${org.freemarker.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.richfaces</groupId>
 				<artifactId>richfaces-core</artifactId>
 				<version>${org.richfaces.version}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.richfaces</groupId>
 				<artifactId>richfaces</artifactId>
 				<version>${org.richfaces.version}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.richfaces</groupId>
 				<artifactId>richfaces-a4j</artifactId>
 				<version>${org.richfaces.version}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>${javax.servlet.version}</version>
+				<scope>provided</scope>
 			</dependency>
 
 			<!-- Tests -->

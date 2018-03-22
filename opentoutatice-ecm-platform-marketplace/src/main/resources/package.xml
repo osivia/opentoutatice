@@ -17,12 +17,13 @@
 		<platform>server-@DISTRIB_VERSION@-*</platform>
 	</platforms>
 	<dependencies>
+		<package>nuxeo-jsf-ui:@NUXEO_JSF_UI_VERSION@</package>
 		<!-- Dependencies on Nuxeo's addon -->
 		<package>nuxeo-dam:@NUXEO_DAM_VERSION@:@NUXEO_DAM_VERSION@</package>
 		<!-- FIXME: just for schema webpage of PortalSite and PortalPage... -->
 		<package>nuxeo-sites-blogs:@NUXEO_BLOGS_SITES_VERSION@:@NUXEO_BLOGS_SITES_VERSION@</package>
 		<!-- HF dependencies -->
-		<package>nuxeo-@DISTRIB_VERSION@</package>
+		<package>nuxeo-@NUXEO_VERSION@</package>
 	</dependencies>
 	<license>LGPL 2.1</license>
 	<license-url>http://www.gnu.org/licenses/lgpl-2.1.html</license-url>
