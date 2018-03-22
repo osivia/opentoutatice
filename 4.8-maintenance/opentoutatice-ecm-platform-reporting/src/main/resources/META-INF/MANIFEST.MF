@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 1
+Bundle-Name: Opentoutatice reporting
+Bundle-SymbolicName: org.opentoutatice.ecm.feature.reporting;singleton:=true
+Bundle-Localization: plugin
+Bundle-Category: stateful
+Nuxeo-Component: OSGI-INF/extensions/configuration/ScannerConfigurationService.xml,
+ OSGI-INF/extensions/configuration/ReporterConfigurationService.xml,
+ OSGI-INF/extensions/scanner/listerner-contrib.xml,
+ OSGI-INF/extensions/runner/runner-queue-contrib.xml
+ 

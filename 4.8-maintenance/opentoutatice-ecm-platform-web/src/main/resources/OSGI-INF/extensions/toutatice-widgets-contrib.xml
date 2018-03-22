@@ -1,0 +1,562 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+		<!-- Domaind ID -->
+		<widget name="domainId" type="text">
+			<labels>
+				<label mode="any">toutatice.label.domain.id</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:domainID</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">false</property>
+				<property name="validator">#{toutaticeValidator.validateDomainIdUnicity}
+				</property>
+			</properties>
+		</widget>
+
+		<widget name="domainIdRequired" type="text">
+			<labels>
+				<label mode="any">toutatice.label.domain.id</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:domainID</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">true</property>
+				<property name="validator">#{toutaticeValidator.validateDomainIdUnicity}
+				</property>
+			</properties>
+		</widget>
+
+		<!-- PostalSite, PortalPage widgets -->
+		<widget name="ttc_title" type="text">
+			<labels>
+				<label mode="any">toutatice.label.title</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>dc:title</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">true</property>
+				<property name="disabled">false</property>
+			</properties>
+		</widget>
+
+		<widget name="description" type="textarea">
+			<labels>
+				<label mode="any">toutatice.label.description</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>dc:description</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="required">false</property>
+				<property name="disabled">false</property>
+			</properties>
+		</widget>
+
+		<widget name="picture" type="file">
+			<labels>
+				<label mode="any">Visuel</label>
+			</labels>
+			<translated>false</translated>
+			<fields>
+				<field>toutatice_navigation:picture</field>
+				<field>toutatice_navigation:picture/filename</field>
+			</fields>
+		</widget>
+
+		<widget name="summary_picture" type="summary_picture_type">
+			<labels>
+				<label mode="any">toutatice.label.visual</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>toutatice_navigation:picture</field>
+				<field>toutatice_navigation:picture/filename</field>
+			</fields>
+		</widget>
+
+		<widget name="ottc_content" type="htmltext">
+			<labels>
+				<label mode="any">toutatice.label.content</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>webp:content</field>
+			</fields>
+			<properties mode="any">
+				<property name="disableHtmlInit">true</property>
+				<property name="editorSelector">mceSimpleEditorResponsive</property>
+			</properties>
+		</widget>
+
+		<widget name="summary_content" type="summary_content_type">
+			<labels>
+				<label mode="any">toutatice.label.content</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>webp:content</field>
+			</fields>
+			<properties mode="view">
+				<property name="translatedHtml">
+					#{noteActions.translateImageLinks(field_0)}
+				</property>
+				<property name="cssClass">note_content_block</property>
+			</properties>
+		</widget>
+
+		<!-- KeyWords widget -->
+		<widget name="toutatice_keywords_widget" type="template">
+			<labels>
+				<label mode="any">toutatice.label.keywords</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:keywords</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">
+					/widgets/toutatice_keyword_widget.xhtml
+				</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(currentDocument.type != 'BlogSite' and
+					(currentUser.administrator or securityActions.hasAllRights()) ,
+					layout.mode,
+					'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<!-- Widget en vue Modifier (ou Créer) -->
+		<widget name="toutatice_webId_widget" type="text">
+			<labels>
+				<label mode="any">toutatice.label.title.webid.widget</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:webid</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="disabled">#{(!userSession.administrator)
+					or currentDocument.hasFacet('WebidDisabled')}
+				</property>
+				<property name="required">true</property>
+				<property name="validator">#{toutaticeValidator.validateWebId}
+				</property>
+			</properties>
+		</widget>
+
+		<widget name="toutatice_widget_use_es" type="template">
+			<labels>
+				<label mode="any">toutatice.label.use.es</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:useES</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="template">/widgets/toutatice_checkbox.xhtml</property>
+				<property name="title">toutatice.title.use.es</property>
+			</properties>
+			<widgetModes>
+				<mode value="view">hidden</mode>
+				<mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace'),
+					layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<widget name="toutatice_widget_space_comments" type="checkbox">
+			<labels>
+				<label mode="any">toutatice.label.space.comments</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttcs:spaceCommentable</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="immediate">true</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(currentDocument.hasFacet('TTCPublishSpace'),
+					layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<widget name="ottc_page_template_widget" type="template">
+			<labels>
+				<label mode="any">toutatice.document.pagetemplate</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">toutatice.document.pagetemplate.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:pageTemplate</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">/widgets/ottc_page_template_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<widget name="ottc_page_theme_widget" type="template">
+			<labels>
+				<label mode="any">toutatice.document.pagetheme</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">toutatice.document.pagetheme.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:theme</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">/widgets/ottc_page_theme_template.xhtml
+				</property>
+				<property name="currentDocument">value</property>
+			</properties>
+		</widget>
+
+		<!-- Attached file types -->
+		<widget name="file" type="template">
+			<labels>
+				<label mode="any">label.file.content</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>file:content</field>
+				<field>file:filename</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">/widgets/extended_file_widget.xhtml
+				</property>
+			</properties>
+			<properties widgetMode="edit">
+				<property name="validator">#{ottcFileValidator.validateMimeType}
+				</property>
+			</properties>
+		</widget>
+		
+		<widget name="publication_date" type="datetime">
+			<labels>
+				<label mode="any">toutatice.label.publication.date</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>ttc:publicationDate</field>
+			</fields>
+	      <properties widgetMode="edit">
+	        <property name="required">false</property>
+	      </properties>
+		</widget>
+
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgettypes">
+
+		<!-- Widget se basant sur le layout en mode view -->
+		<widgetType name="custom_summary_current_document_view">
+			<configuration>
+				<sinceVersion>5.3.1</sinceVersion>
+				<title>View layout</title>
+				<categories>
+					<category>summary</category>
+				</categories>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+				no configurable properties
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/summary/metadata_custom_widget_template.xhtml
+			</property>
+		</widgetType>
+
+		<widgetType name="summary_content_type">
+			<configuration>
+				<categories>
+					<category>summary</category>
+				</categories>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/summary/toutatice_summary_content_widget.xhtml
+			</property>
+		</widgetType>
+
+		<widgetType name="summary_picture_type">
+			<configuration>
+				<categories>
+					<category>summary</category>
+				</categories>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/summary/toutatice_summary_image_widget.xhtml
+			</property>
+		</widgetType>
+
+		<widgetType name="multipleUsersSuggestionWithPermission">
+			<aliases>
+				<alias>multipleUsersSuggestion</alias>
+			</aliases>
+			<configuration>
+				<title>Multiple users/groups suggestion with given permission
+					on current document.
+				</title>
+				<sinceVersion>6.0</sinceVersion>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>true</list>
+					<complex>false</complex>
+					<supportedTypes>
+						<type>string</type>
+					</supportedTypes>
+				</fields>
+				<categories>
+					<category>document</category>
+				</categories>
+				<properties>
+					<defaultValues mode="any">
+						<property name="width">100%</property>
+					</defaultValues>
+					<defaultValues mode="edit">
+						<property name="minChars">3</property>
+						<property name="operationId">UserGroup.SuggestUserEntriesWithPermission
+						</property>
+						<property name="documentId">#{currentDocument.id}</property>
+					</defaultValues>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/user_suggestion_widget_template.xhtml
+			</property>
+		</widgetType>
+
+		<widgetType name="singleUserSuggestionWithPermission">
+			<aliases>
+				<alias>singleUserSuggestion</alias>
+			</aliases>
+			<configuration>
+				<title>Single user/group suggestion with given permission
+					on current document.
+				</title>
+				<sinceVersion>6.0</sinceVersion>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>true</list>
+					<complex>false</complex>
+					<supportedTypes>
+						<type>string</type>
+					</supportedTypes>
+				</fields>
+				<categories>
+					<category>document</category>
+				</categories>
+				<properties>
+					<defaultValues mode="any">
+						<property name="width">100%</property>
+					</defaultValues>
+					<defaultValues mode="edit">
+						<property name="minChars">3</property>
+						<property name="operationId">UserGroup.SuggestUserEntriesWithPermission
+						</property>
+						<property name="documentId">#{currentDocument.id}</property>
+						<property name="multiple">false</property>
+					</defaultValues>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/single_user_suggestion_widget_template.xhtml
+			</property>
+		</widgetType>
+
+		<widgetType name="ottcUploadMultipleFiles">
+			<configuration>
+				<title>Custom version to upload multiple files.
+				</title>
+				<sinceVersion>6.0</sinceVersion>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<categories>
+					<category>document</category>
+				</categories>
+				<fields />
+				<properties />
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/toutatice_multiple_files_upload_template.xhtml
+			</property>
+		</widgetType>
+
+		<!-- display only a message -->
+		<widgetType name="message">
+			<configuration>
+				<title>Message</title>
+				<description>
+					The Message widget just displays a message.
+				</description>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>false</list>
+					<complex>false</complex>
+					<supportedTypes />
+					<defaultTypes />
+				</fields>
+				<handlingLabels>true</handlingLabels>
+				<categories>
+					<category>document</category>
+				</categories>
+				<properties />
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/message_widget.xhtml
+			</property>
+
+		</widgetType>
+
+		<widgetType name="date">
+			<configuration>
+				<title>Date</title>
+				<categories>
+					<category>document</category>
+				</categories>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>false</list>
+					<complex>false</complex>
+					<supportedTypes>
+						<type>date</type>
+					</supportedTypes>
+					<defaultTypes>
+						<type>date</type>
+					</defaultTypes>
+				</fields>
+				<properties>
+					<layouts mode="view">
+						<layout name="datetime_widget_type_properties_view">
+							<rows>
+								<row>
+									<widget category="widgetTypeConf">datetime_pattern</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">datetime_timeZone</widget>
+								</row>
+							</rows>
+						</layout>
+					</layouts>
+					<layouts mode="edit">
+						<layout name="datetime_widget_type_properties_edit">
+							<rows>
+								<row>
+									<widget category="widgetTypeConf">required</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">datetime_format</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">datetime_showsTime</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">datetime_locale</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">styleClass</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">datetime_timeZone</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">datetime_triggerImg</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">datetime_triggerLabel</widget>
+								</row>
+								<row>
+									<widget category="widgetTypeConf">datetime_triggerStyleClass</widget>
+								</row>
+							</rows>
+						</layout>
+					</layouts>
+					<defaultValues mode="view">
+						<property name="datetime_pattern">dd/MM/yyyy</property>
+					</defaultValues>
+					<defaultValues mode="edit">
+						<property name="datetime_format">dd/MM/yyyy</property>
+						<property name="datetime_showsTime">false
+						</property>
+						<property name="documentId">#{currentDocument.id}</property>
+						<property name="multiple">false</property>
+					</defaultValues>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.DateTimeWidgetTypeHandler
+			</handler-class>
+		</widgetType>
+
+
+
+	</extension>
+
+</component>

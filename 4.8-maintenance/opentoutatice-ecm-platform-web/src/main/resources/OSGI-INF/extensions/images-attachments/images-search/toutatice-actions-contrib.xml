@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.images.search.actions">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="actions">
+
+		<!-- Bouton d'ajout d'image dans la popup de recherche -->
+		<action id="TOUTATICE_ADD_IMAGE" enabled="true"
+			label="toutatice.action.add.picture" icon="">
+			<category>cv_actions@cv_image_search_popup</category>
+			<permission>Write</permission>
+		</action>
+
+	</extension>
+
+</component>

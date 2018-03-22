@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.core.webpage.schemas">
+
+	<require>org.nuxeo.ecm.core.schema.TypeService</require>
+
+	<extension target="org.nuxeo.ecm.core.schema.TypeService"
+		point="schema">
+
+		<schema name="webconfiguration" prefix="wconf"
+			src="schemas/webpage/webconfiguration.xsd" />
+		<schema name="webconfigurationfolder" prefix="webconfigurationfolder"
+			src="schemas/webpage/webconfigurationfolder.xsd" />
+		<schema name="web_configurations_configuration" prefix="webconfs"
+			src="schemas/webpage/web_configurations_config.xsd" />
+	</extension>
+
+</component>

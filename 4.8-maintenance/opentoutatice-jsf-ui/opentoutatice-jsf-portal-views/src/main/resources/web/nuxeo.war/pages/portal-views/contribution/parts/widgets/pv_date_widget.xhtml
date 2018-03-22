@@ -1,0 +1,42 @@
+<div xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:nxu="http://nuxeo.org/nxweb/util" 
+    xmlns:ui="http://java.sun.com/jsf/facelets" id="#{widget.id}">
+
+   <h:outputScript target="#{pageJsTarget}">
+    jQuery(document).ready(function () { 
+
+                jQuery(".pv-date-picker").datepicker({
+                    language: "fr",
+                    autoclose: true,
+                    todayHighlight: true,
+                    clearBtn: true
+                }).data('datepicker');
+
+            });
+
+   </h:outputScript>  
+
+    <div class="row">
+        
+        <div class="control-group">
+            <div class="controls">
+                <div class="col-sm-6"> 
+                    <div class="input-group">
+                        <h:outputLabel for="#{widget.id}_date-picker" class="input-group-addon"><i class="glyphicons calendar"></i>
+                        </h:outputLabel>
+                        <h:inputText id="#{widget.id}_date-picker"  class="pv-date-picker form-control" value="#{field_0}" required="#{widget.properties.required}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </h:inputText>
+                    </div>
+                    <h:message styleClass="errorMessage" for="#{widget.id}_date-picker" id="#{widget.id}_message" />
+                </div>
+            </div>
+        </div>
+    
+    </div>
+    <p/>
+
+</div>

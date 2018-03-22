@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxh="http://nuxeo.org/nxweb/html">
+
+	<nav class="navbar navbar-default navbar-fixed-bottom">
+		<div class="container-fluid">
+			<div class="col-sm-offset-2">
+				<nxu:set var="actions"
+					value="#{webActions.getActionsList('TOUTATICE_CREATE_DOCUMENT_FORM')}"
+					cache="true">
+					<input type="hidden" name="parentDocumentPath"
+						value="#{currentDocument.pathAsString}" />
+					<ui:repeat var="action" value="#{actions}">
+						<nxh:commandButton action="#{action.getLink()}"
+							immediate="#{action.immediate}" onclick="#{action.confirm}"
+							id="header_edit_doc_#{action.id}"
+							value="#{messages[action.label]}"
+							class="btn btn-primary navbar-btn" />
+					</ui:repeat>
+				</nxu:set>
+			</div>
+		</div>
+	</nav>
+
+</ui:composition>

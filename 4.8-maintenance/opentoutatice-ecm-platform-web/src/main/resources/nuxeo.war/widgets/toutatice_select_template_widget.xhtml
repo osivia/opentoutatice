@@ -1,0 +1,17 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	rendered="#{! empty documentTemplatesActions.getTemplates(changeableDocument.type)}">
+	<h4>
+		<h:outputText value="#{messages['label.templates.createFrom']}" />
+	</h4>
+	<h:selectOneMenu id="selectTemplate"
+		value="#{documentTemplatesActions.selectedTemplateId}">
+		<f:selectItem itemValue=""
+			itemLabel="#{messages['label.templates.none']}" />
+		<nxu:selectItems
+			value="#{documentTemplatesActions.getTemplates(changeableDocument.type)}"
+			var="template" itemValue="#{template.id}"
+			itemLabel="#{template.dublincore.title}" />
+	</h:selectOneMenu>
+</f:subview>

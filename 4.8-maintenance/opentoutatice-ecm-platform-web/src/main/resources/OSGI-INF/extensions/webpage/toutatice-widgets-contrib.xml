@@ -1,0 +1,260 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.webpage.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+		<widget name="web_conf_title" type="text">
+			<labels>
+				<label mode="any">osivia.webconfig.name</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.name.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>dc:title</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="styleClass">dataInputText</property>
+				<property name="required">true</property>
+			</properties>
+		</widget>
+		<widget name="code" type="text">
+			<labels>
+				<label mode="any">osivia.webconfig.code</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.code.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:code</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="required">false</property>
+				<property name="validator">#{toutaticeValidator.validateWebConfCode}
+				</property>
+			</properties>
+		</widget>
+		<widget name="code2" type="text">
+			<labels>
+				<label mode="any">osivia.webconfig.code2</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.code2.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:code2</field>
+			</fields>
+		</widget>
+		<widget name="type" type="selectOneDirectory">
+			<labels>
+				<label mode="any">osivia.webconfig.type</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.type.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:type</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="directoryName">webconfiguration-types</property>
+				<property name="required">true</property>
+			</properties>
+		</widget>
+		<widget name="glyphicon" type="text">
+			<labels>
+				<label mode="any">osivia.webconfig.glyphicon</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.glyphicon.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:glyphicon</field>
+			</fields>
+		</widget>
+		<widget name="web_conf_picture" type="file">
+			<labels>
+				<label mode="any">osivia.webconfig.picture</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.picture.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:picture</field>
+				<field>wconf:picture/filename</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="iconRendered">true</property>
+			</properties>
+		</widget>
+		<widget name="summary_web_conf_picture" type="summary_picture_type">
+			<labels>
+				<label mode="any">osivia.webconfig.picture</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.picture.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:picture</field>
+				<field>wconf:picture/filename</field>
+			</fields>
+			<properties widgetMode="any">
+				<property name="hideLabel">true</property>
+			</properties>
+		</widget>
+		<widget name="enabled" type="checkbox">
+			<labels>
+				<label mode="any">osivia.webconfig.enabled</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.enabled.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:enabled</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="required">true</property>
+			</properties>
+		</widget>
+		<!-- 
+		<widget name="order" type="int">
+			<labels>
+				<label mode="any">osivia.webconfig.order</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.order.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:order</field>
+			</fields>
+		</widget>
+		 -->
+		<widget name="options" type="list">
+			<labels>
+				<label mode="any">osivia.webconfig.options</label>
+			</labels>
+			<helpLabels>
+				<label mode="any">osivia.webconfig.options.help</label>
+			</helpLabels>
+			<translated>true</translated>
+			<fields>
+				<field>wconf:options</field>
+			</fields>
+			<properties widgetMode="edit">
+				<property name="orderable">true</property>
+				<property name="display">table</property>
+				<property name="hideSubLabels">false</property>
+			</properties>
+			<subWidgets>
+				<widget name="sub0" type="text">
+					<labels>
+						<label mode="any">osivia.webconfig.options.name</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.webconfig.options.name.help</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>propertyName</field>
+					</fields>
+				</widget>
+				<widget name="sub1" type="text">
+					<labels>
+						<label mode="any">osivia.webconfig.options.defaultvalue</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.webconfig.options.defaultvalue.help
+						</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>propertyDefaultValue</field>
+					</fields>
+				</widget>
+				<widget name="sub2" type="checkbox">
+					<labels>
+						<label mode="any">osivia.webconfig.options.editable</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.webconfig.options.editable.help
+						</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>propertyEditable</field>
+					</fields>
+				</widget>
+				<widget name="sub3" type="text">
+					<labels>
+						<label mode="any">osivia.webconfig.options.label</label>
+					</labels>
+					<helpLabels>
+						<label mode="any">osivia.webconfig.options.label.help
+						</label>
+					</helpLabels>
+					<translated>true</translated>
+					<fields>
+						<field>propertyLabel</field>
+					</fields>
+				</widget>
+			</subWidgets>
+		</widget>
+
+		<!-- Local configuration -->
+		<widget name="ui_web_confs_selection" type="shuttle">
+			<labels>
+				<label mode="any">osivia.label.local.configuration.ui.types.allowedConfsDocs
+				</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>webconfs:allowedConfsDocs</field>
+			</fields>
+			<properties mode="any">
+				<property name="availableElementsLabel">
+					osivia.label.local.configuration.selection.availableWebConfs
+				</property>
+				<property name="selectedElementsLabel">
+					osivia.label.local.configuration.selection.selectedWebConfs
+				</property>
+				<property name="sourceItems">
+					#{webConfsConfigurationActions.getNotSelectedConfs(layoutValue)}
+				</property>
+				<property name="sourceItemVar">docConf</property>
+				<property name="sourceItemValue">#{docConf.wconf.code}</property>
+				<property name="sourceItemLabel">#{docConf.title} [#{docConf.wconf.type}]</property>
+				<property name="sourceItemOrdering">#{docConf.wconf.type}</property>
+				<property name="sourceItemCaseSensitive">true</property>
+				<property name="targetItems">
+					#{webConfsConfigurationActions.getSelectedConfs(layoutValue)}
+				</property>
+				<property name="targetItemVar">docConf</property>
+				<property name="targetItemValue">#{docConf.wconf.code}</property>
+				<property name="targetItemLabel">#{docConf.title} [#{docConf.wconf.type}]</property>
+			</properties>
+		</widget>
+
+		<widget name="deny_all_confs" type="checkbox">
+			<labels>
+				<label mode="any">osivia.label.local.configuration.denyAllConfs
+				</label>
+			</labels>
+			<translated>true</translated>
+			<fields>
+				<field>webconfs:denyAllConfsDocs</field>
+			</fields>
+		</widget>
+	</extension>
+
+</component>

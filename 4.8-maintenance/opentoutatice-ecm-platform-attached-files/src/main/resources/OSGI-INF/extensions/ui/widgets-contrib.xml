@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<component name="org.opentoutatice.ecm.attached.files.ui.widgets">
+
+	<require>fr.toutatice.ecm.platform.web.widgets</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+		<widget name="attachedImages" type="template">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<fields>
+				<field schema="toutatice">images</field>
+			</fields>
+			<properties mode="any">
+				<property name="template">
+					/incl/editor_media_upload/attached_images_list.xhtml
+				</property>
+			</properties>
+			<properties widgetMode="edit">
+				<property name="diff">true</property>
+			</properties>
+			<subWidgets>
+				<widget name="attachedImage" type="template">
+					<labels>
+						<label mode="any" />
+					</labels>
+					<fields>
+						<field>file</field>
+						<field>filename</field>
+					</fields>
+					<properties mode="any">
+						<property name="template">
+							/incl/editor_media_upload/upload_attached_images.xhtml
+						</property>
+					</properties>
+					<properties widgetMode="edit">
+						<property name="required">true</property>
+					</properties>
+				</widget>
+			</subWidgets>
+		</widget>
+
+	</extension>
+
+</component>

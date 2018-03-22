@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<component name="org.opentoutatice.jsf.ui.portal.views.theme">
+
+	<require>fr.toutatice.ecm.platform.web.theme</require>
+	
+	<extension target="org.nuxeo.theme.styling.service" point="pages">
+	
+		<page name="portal-view" charset="utf-8">
+			<defaultFlavor>default</defaultFlavor>
+			<resources>
+				<bundle>nuxeo_includes</bundle>
+				<bundle>pv_includes</bundle>
+			</resources>
+		</page>
+		
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.WebResources"
+		point="resources">
+
+		<resource name="portal-view.min.css">
+			<uri>/css/portal-view.min.css</uri>
+		</resource>
+		<resource name="custom-popup.min.css">
+			<uri>/css/custom-popup.min.css</uri>
+		</resource>
+		<resource name="icons.css">
+			<uri>/css/icons.css</uri>
+		</resource>
+
+		<resource name="bootstrap.min.js" type="js">
+			<uri>/scripts/bootstrap/bootstrap.min.js</uri>
+		</resource>
+		<!-- <resource name="jquery.ui.js"> <path>scripts/jquery-ui.js</path> </resource> -->
+		<!-- <resource name="bootstrap.tooltip.js"> <path>scripts/bootstrap/bootstrap-tooltip.js</path> 
+			</resource> -->
+		<resource name="bootstrap.datepicker.js">
+			<uri>/scripts/bootstrap/bootstrap-datepicker.js</uri>
+		</resource>
+		<resource name="bootstrap.datepicker.fr.js">
+			<uri>/scripts/bootstrap/locales/bootstrap-datepicker.fr.js</uri>
+		</resource>
+		<resource name="bootstrap.timepicker.js">
+			<uri>/scripts/bootstrap/bootstrap-timepicker.js</uri>
+		</resource>
+
+		<resource name="bootstrap.tab.js">
+			<uri>/scripts/bootstrap/bootstrap-tab.js</uri>
+		</resource>
+
+		<resource name="custom.tinymce.modals.js">
+			<uri>/scripts/custom-tinymce-modals.js</uri>
+		</resource>
+
+		<resource name="forms.errors.manager.js">
+			<uri>/scripts/forms-errors-manager.js</uri>
+		</resource>
+
+		<resource name="icons.js">
+			<uri>/scripts/icons.js</uri>
+		</resource>
+
+		<!-- <resource name="tooltip.focus.js"> <path>scripts/tooltip-focus.js</path> 
+			</resource> -->
+			
+		<resource name="postmessage.js">
+			<uri>/scripts/postmessage.js</uri>
+		</resource>
+
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.WebResources"
+		point="bundles">
+		
+		<bundle name="pv_date_picker">
+			<resources>
+				<resource>bootstrap.datepicker.js</resource>
+				<resource>bootstrap.datepicker.fr.js</resource>
+				<resource>bootstrap.timepicker.js</resource>
+			</resources>
+		</bundle>
+		
+		<bundle name="pv_includes">
+			<resources>
+				<resource>portal-view.min.css</resource>
+				<resource>icons.css</resource>
+				<!-- <resource>jquery.ui.js</resource> -->
+				<!-- <resource>bootstrap.tooltip.js</resource> -->
+				<resource>bootstrap.min.js</resource>
+				<resource>bootstrap.datepicker.js</resource>
+				<resource>bootstrap.datepicker.fr.js</resource>
+				<resource>bootstrap.timepicker.js</resource>
+				<resource>bootstrap.tab.js</resource>
+				<resource>custom.tinymce.modals.js</resource>
+				<resource>forms.errors.manager.js</resource>
+				<resource>postmessage.js</resource>
+				<resource>icons.js</resource>
+				<!-- <resource>tooltip.focus.js</resource> -->
+			</resources>
+		</bundle>
+	</extension>
+
+</component>

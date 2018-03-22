@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 1
+Bundle-Name: Toutatice Automation
+Bundle-SymbolicName: fr.toutatice.ecm.platform.automation;singleton:=true
+Bundle-Vendor: Toutatice
+Nuxeo-Component: OSGI-INF/extensions/toutatice-operations-contrib.xml,
+ OSGI-INF/extensions/toutatice-chains-contrib.xml,
+ OSGI-INF/extensions/toutatice-event-handler-contrib.xml,
+ OSGI-INF/extensions/configuration/virtual-user-properties.xml
+ 

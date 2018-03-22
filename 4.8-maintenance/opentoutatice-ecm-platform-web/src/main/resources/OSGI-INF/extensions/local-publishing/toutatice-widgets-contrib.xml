@@ -1,0 +1,395 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.local.publishing.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+	<require>org.nuxeo.ecm.platform.forms.layouts.webapp.summary</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgettypes">
+
+		<widgetType name="toutatice_summary_current_document_cartridge_actions">
+			<configuration>
+				<categories>
+					<category>summary</category>
+				</categories>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/toutatice_widget_cartridge_actions_template.xhtml
+			</property>
+		</widgetType>
+
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgets">
+
+		<!-- Widget to display openToutatice buttons in summary view -->
+		<widget name="toutatice_summary_panel_top_widget" type="summary_current_document_custom_actions">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<properties widgetMode="any">
+				<property name="display">buttons</property>
+				<property name="category">TOUTATICE_SUMMARY_PANEL_TOP</property>
+			</properties>
+			<controls mode="any">
+				<control name="requireSurroundingForm">true</control>
+			</controls>
+		</widget>
+
+		<!-- Widget to display openToutatice buttons of accept/reject validate 
+			online task in summary and content view -->
+		<widget name="toutatice_validate_online_task_widget" type="custom_validate_task_actions">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<fields>
+				<field>#{taskActions.getValidateOnlineTask()}</field>
+				<field>#{taskActions.getValidateOnlineTaskName()}</field>
+			</fields>
+			<properties widgetMode="any">
+				<property name="display">buttons</property>
+			</properties>
+			<controls mode="any">
+				<control name="requireSurroundingForm">true</control>
+			</controls>
+			<widgetModes>
+				<mode value="view">#{nxu:test(taskActions.isValidateOnlineTask(taskActions.getValidateOnlineTask())
+					== true, layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<widget name="toutatice_summary_current_document_actions"
+			type="toutatice_summary_current_document_cartridge_actions">
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<translated>false</translated>
+		</widget>
+
+		<!-- Barre de titre: installation des actions toutatice -->
+		<widget name="toutatice_extended_title_widget" type="summary_current_document_custom_actions">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<fields />
+			<properties widgetMode="any">
+				<property name="display">buttons</property>
+				<property name="category">TOUTATICE_SUMMARY_PANEL_TOP</property>
+			</properties>
+		</widget>
+
+		<!-- Barre de titre: affichage du titre du document -->
+		<widget name="toutatice_extended_title_title_widget" type="template">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<fields />
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_widget_document_title.xhtml
+				</property>
+			</properties>
+		</widget>
+
+		<!-- Barre de titre: affichage de la version du document -->
+		<widget name="toutatice_extended_title_version_widget" type="template">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<fields />
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_widget_document_version.xhtml</property>
+			</properties>
+		</widget>
+
+		<!-- Barre de titre: affichage des vignettes de workflow en cours -->
+		<widget name="toutatice_extended_title_workflow_widget" type="template">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<fields />
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_widget_document_workflow.xhtml</property>
+			</properties>
+		</widget>
+
+		<!-- Barre de titre: affichage des vignettes de workflow en cours -->
+		<widget name="toutatice_extended_title_lock_widget" type="template">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<fields />
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_widget_document_lock.xhtml</property>
+			</properties>
+		</widget>
+
+		<!-- Affiche le status de publication dans une contentView -->
+		<widget name="publishing_status" type="template">
+			<labels>
+				<label mode="any">toutatice.label.local.publish.status </label>
+			</labels>
+			<translated>true</translated>
+			<fields />
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_widget_document_listing_icon.xhtml
+				</property>
+				<property name="iconPath">icons/yes.png</property>
+				<property name="label">En ligne</property>
+			</properties>
+			<widgetModes>
+				<mode value="any">#{nxu:test(documentActions.belongToPublishSpace(),
+					layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<!-- Sucharge pour ne pas apparaître pour la publication locale -->
+		<widget name="summary_current_document_single_tasks" type="summary_current_document_single_tasks">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<controls mode="any">
+				<control name="requireSurroundingForm">true</control>
+				<control name="handleLabels">true</control>
+			</controls>
+			<widgetModes>
+				<mode value="view">#{nxu:test(routingActions.isOnLineWorkflowRunning()
+					== false, layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<!-- Disable this widget in Local PublishingSpace -->
+		<widget name="summary_current_document_publications" type="summary_current_document_publications">
+			<labels>
+				<label mode="any" />
+			</labels>
+			<controls mode="any">
+				<control name="requireSurroundingForm">true</control>
+				<control name="handleLabels">true</control>
+			</controls>
+			<widgetModes>
+				<mode value="any">#{nxu:test((documentActions.isRemoteProxy() ||
+					publishActions.hasRemoteProxy()),
+					layout.mode, 'hidden')}
+				</mode>
+			</widgetModes>
+		</widget>
+
+		<!-- Barre de titre: affichage du portail par défaut -->
+		<widget name="toutatice_widget_document_default_portal" type="template">
+			<handlingLabels>true</handlingLabels>
+			<labels>
+				<label mode="any"></label>
+			</labels>
+			<fields />
+			<properties mode="any">
+				<property name="template">/widgets/toutatice_widget_document_default_portal.xhtml
+				</property>
+			</properties>
+		</widget>
+	</extension>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgettypes">
+
+		<!-- Widget type to display openToutatice buttons of accept/reject validate 
+			task in summary and content view -->
+		<widgetType name="custom_validate_task_actions">
+			<configuration>
+				<title>OpenToutatice validate task actions widget</title>
+				<categories>
+					<category>summary</category>
+					<category>listing</category>
+				</categories>
+				<handlingLabels>true</handlingLabels>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+				<properties>
+					<layouts mode="any">
+						<layout
+							name="summary_current_document_custom_actions_widget_type_properties_any">
+							<rows>
+								<row>
+									<widget>category</widget>
+								</row>
+								<row>
+									<widget>actionsDisplay</widget>
+								</row>
+							</rows>
+							<widget name="category" type="selectOneResource">
+								<labels>
+									<label mode="any">Category</label>
+								</labels>
+								<helpLabels>
+									<label mode="any">
+										The category of actions to use (defaults to
+										DOCUMENT_SUMMARY_CUSTOM_ACTIONS when not set)
+									</label>
+								</helpLabels>
+								<fields>
+									<field>category</field>
+								</fields>
+								<widgetModes>
+									<mode value="edit_demo_preview">hidden</mode>
+								</widgetModes>
+								<properties mode="any">
+									<property name="resourceName">actionCategories</property>
+								</properties>
+							</widget>
+							<widget name="actionsDisplay" type="selectOneListbox">
+								<categories>
+									<category>widgetTypeConf</category>
+								</categories>
+								<labels>
+									<label mode="any">Actions display</label>
+								</labels>
+								<helpLabels>
+									<label mode="any">
+										If set to 'buttons', actions will be
+										displayed as command buttons. If set to 'links', actions
+										will
+										be displayed as command links. If set to 'icons',
+										actions will
+										be displayed as icons.
+										Else (default behaviour),
+										actions will be
+										displayed as command links and display their
+										icons when
+										defined.
+									</label>
+								</helpLabels>
+								<fields>
+									<!-- still named display here, kept for BBB -->
+									<field>display</field>
+								</fields>
+								<selectOptions>
+									<option itemLabel="Icons and links (default)" itemValue="icons_links" />
+									<option itemLabel="Icons" itemValue="icons" />
+									<option itemLabel="Buttons" itemValue="buttons" />
+									<option itemLabel="Links" itemValue="links" />
+								</selectOptions>
+							</widget>
+						</layout>
+					</layouts>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/task/toutatice_custom_validate_task_actions_widget_template.xhtml
+			</property>
+		</widgetType>
+
+		<!-- Widget type to display layout and buttons of accept/reject validate 
+			task in summary and content view -->
+		<widgetType name="custom_validate_task_actions_layout">
+			<configuration>
+				<title>OpenToutatice validate task actions widget</title>
+				<categories>
+					<category>summary</category>
+					<category>listing</category>
+				</categories>
+				<handlingLabels>true</handlingLabels>
+				<supportedModes>
+					<mode>view</mode>
+				</supportedModes>
+				<properties>
+					<layouts mode="any">
+						<layout
+							name="summary_current_document_custom_actions_widget_type_properties_any">
+							<rows>
+								<row>
+									<widget>category</widget>
+								</row>
+								<row>
+									<widget>actionsDisplay</widget>
+								</row>
+							</rows>
+							<widget name="category" type="selectOneResource">
+								<labels>
+									<label mode="any">Category</label>
+								</labels>
+								<helpLabels>
+									<label mode="any">
+										The category of actions to use (defaults to
+										DOCUMENT_SUMMARY_CUSTOM_ACTIONS when not set)
+									</label>
+								</helpLabels>
+								<fields>
+									<field>category</field>
+								</fields>
+								<widgetModes>
+									<mode value="edit_demo_preview">hidden</mode>
+								</widgetModes>
+								<properties mode="any">
+									<property name="resourceName">actionCategories</property>
+								</properties>
+							</widget>
+							<widget name="actionsDisplay" type="selectOneListbox">
+								<categories>
+									<category>widgetTypeConf</category>
+								</categories>
+								<labels>
+									<label mode="any">Actions display</label>
+								</labels>
+								<helpLabels>
+									<label mode="any">
+										If set to 'buttons', actions will be
+										displayed as command buttons. If set to 'links', actions
+										will
+										be displayed as command links. If set to 'icons',
+										actions will
+										be displayed as icons.
+										Else (default behaviour),
+										actions will be
+										displayed as command links and display their
+										icons when
+										defined.
+									</label>
+								</helpLabels>
+								<fields>
+									<!-- still named display here, kept for BBB -->
+									<field>display</field>
+								</fields>
+								<selectOptions>
+									<option itemLabel="Icons and links (default)" itemValue="icons_links" />
+									<option itemLabel="Icons" itemValue="icons" />
+									<option itemLabel="Buttons" itemValue="buttons" />
+									<option itemLabel="Links" itemValue="links" />
+								</selectOptions>
+							</widget>
+						</layout>
+					</layouts>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/task/toutatice_custom_validate_task_actions_layout_widget_template.xhtml
+			</property>
+		</widgetType>
+
+
+
+	</extension>
+
+</component>

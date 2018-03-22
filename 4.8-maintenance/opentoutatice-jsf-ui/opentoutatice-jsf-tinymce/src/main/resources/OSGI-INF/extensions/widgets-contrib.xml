@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<component name="org.opentoutatice.jsf.ui.tinymce.widgets">
+
+	<require>org.nuxeo.ecm.platform.forms.layout.WebLayoutManager</require>
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgettypes">
+
+		<widgetType name="ottc_htmltext">
+			<aliases>
+				<alias>richtext_with_mimetype</alias>
+				<alias>htmltext</alias>
+				<!-- For 4.6 compatibility 
+				<alias>ttc_richtext_with_mimetype</alias>-->
+			</aliases>
+			<configuration>
+				<title>HTML text</title>
+				<description>
+					<p>Pre-configured Nx htmltext</p>
+				</description>
+				<categories>
+					<category>document</category>
+				</categories>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>false</list>
+					<complex>false</complex>
+					<supportedTypes>
+						<type>string</type>
+					</supportedTypes>
+				</fields>
+				<properties>
+					<defaultValues mode="any">
+						<property name="configuration">{"theme" : "modern","width": "100%","plugins" : "ottc_basiclink ottc_image code charmap fullscreen nuxeoimageupload nuxeolink","block_formats": "Paragraphe=p;Adresse=address;Pre=pre;Titre 1=h1;Titre 2=h2;Titre 3=h3;Titre 4=h4;Titre 5=h5; Titre 6=h6","content_css": "/nuxeo/css/portal-view.min.css? + new Date().getTime()","relative_urls" : false,"remove_script_host": true,"document_base_url" : "nuxeo", "toolbar1" : "formatselect | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist","toolbar2" : "fullscreen | undo redo | code | ottc_basiclink unlink nuxeolink | nuxeoimageupload ottc_image","toolbar3":"","menubar": false,"statusbar": false}</property>
+					</defaultValues>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.HtmlTextWidgetTypeHandler
+			</handler-class>
+		</widgetType>
+		
+		<widgetType name="ottc_minimal_htmltext">
+			<configuration>
+				<title>HTML minimal text</title>
+				<description>
+					<p>Only bold, italic and underline features.</p>
+				</description>
+				<categories>
+					<category>document</category>
+				</categories>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>false</list>
+					<complex>false</complex>
+					<supportedTypes>
+						<type>string</type>
+					</supportedTypes>
+				</fields>
+				<properties>
+					<defaultValues mode="any">
+						<property name="height">150</property>
+						<property name="configuration">{"theme" : "modern",width": "100%","plugins" : "","theme_advanced_resizing" : true,"inline_styles" : false,"content_css": "/nuxeo/css/portal-view.min.css? + new Date().getTime()","valid_elements" : "p,br,strong/b,em,u,span[style:text-decoration: underline;]","toolbar1" : "bold italic underline","toolbar2":"","toolbar3":"","menubar": false,"statusbar": false}</property>
+					</defaultValues>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.HtmlTextWidgetTypeHandler
+			</handler-class>
+		</widgetType>
+
+		<widgetType name="ottc_minimal_inline_htmltext">
+			<configuration>
+				<title>HTML minimal inline text</title>
+				<description>
+					<p>Only bold, italic and underline features on only one line.</p>
+				</description>
+				<categories>
+					<category>document</category>
+				</categories>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>false</list>
+					<complex>false</complex>
+					<supportedTypes>
+						<type>string</type>
+					</supportedTypes>
+				</fields>
+				<properties>
+					<defaultValues mode="any">
+						<property name="height">25</property>
+						<property name="configuration">{"theme" : "modern",width": "100%","plugins" : "","language" : lang,"theme_advanced_resizing" : "true","height" : "150","inline_styles" : "false","content_css": "/nuxeo/css/portal-view.min.css? + new Date().getTime()","force_p_newlines" : "false","forced_root_block" : "false","invalid_elements" : "br","valid_elements" : "strong/b,em,u,span[style:text-decoration: underline;]","relative_urls" : false,"remove_script_host": true,"document_base_url" : "nuxeo","toolbar1" : "bold italic underline","toolbar2":"","toolbar3":"","menubar": "false","statusbar": "false"}</property>
+					</defaultValues>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.HtmlTextWidgetTypeHandler
+			</handler-class>
+		</widgetType>
+
+		<widgetType name="ttc_richtext_with_mimetype">
+			<configuration>
+				<title>TTCRichtext</title>
+				<description>
+					<p>Configurable Nx richtext_with_mimetype</p>
+				</description>
+				<categories>
+					<!-- do not export with documents -->
+					<!-- <category>configuration_not_ready</category> -->
+					<category>document</category>
+				</categories>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>false</list>
+					<complex>false</complex>
+					<supportedTypes>
+						<type>string</type>
+					</supportedTypes>
+				</fields>
+				<properties>
+					<defaultValues mode="any">
+						<property name="showFormat">false</property>
+						<property name="editorSelector">mceSimpleEditorResponsive</property>
+						<property name="disableHTMLInit">true</property>
+						<property name="alternateTinyMCEjs">ottc_tinymce_includes.xhtml</property>
+					</defaultValues>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/ttc_richtext_with_mimetype_widget_template.xhtml
+			</property>
+		</widgetType>
+
+	</extension>
+
+</component>

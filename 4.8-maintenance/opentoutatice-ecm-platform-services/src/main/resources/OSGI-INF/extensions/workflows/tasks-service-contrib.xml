@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.services.tasks.service.contrib">
+
+	<require>fr.toutatice.ecm.platform.services.workflows.infos.service</require>
+
+	<documentation>
+		Tasks managed by Portal.
+	</documentation>
+
+	<extension target="fr.toutatice.ecm.platform.services.workflows.infos.service"
+		point="tasks">
+
+		<task name="validate-online" permission="validationWorkflow_validation" />
+		<task name="org.nuxeo.ecm.platform.publisher.task.CoreProxyWithWorkflowFactory" permission="RemotePublish" />
+
+	</extension>
+
+
+</component>

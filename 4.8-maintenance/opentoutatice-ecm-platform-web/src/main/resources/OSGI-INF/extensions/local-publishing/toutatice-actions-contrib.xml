@@ -1,0 +1,357 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.local.publishing.actions">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+	<require>fr.toutatice.ecm.platform.web.local.publishing.filters
+	</require>
+	<require>fr.toutatice.ecm.platform.web.local.publishing.widgets
+	</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="actions">
+
+		<!-- Creation and direct document set on line (no workflow) -->
+		<action id="CREATE_AND_SET_ONLINE_DOCUMENT" link="#{documentActions.saveNSetOnLineDocument}"
+			order="0" label="toutatice.command.create.and.setonline">
+			<category>CREATE_DOCUMENT_FORM</category>
+			<filter-id>is_not_creating_form_specific_document</filter-id>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>canCreateNSetDocumentOnline</filter-id>
+			<filter-id>canValidateOnParent</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<!-- Update and direct document set on line (no workflow) -->
+		<action id="EDIT_AND_SET_ONLINE_CURRENT_DOCUMENT" link="#{documentActions.updateNSetOnLineCurrentDocument}"
+			order="1" label="toutatice.command.save.and.setonline">
+			<category>EDIT_DOCUMENT_FORM</category>
+			<filter-id>is_not_thread_document</filter-id>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>canUpdateNSetDocumentOnline</filter-id>
+			<filter-id>canValidate</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<!-- Installation d'une catégorie d'actions toutatice à l'emplacement "SUMMARY_PANEL_TOP" 
+			de la vue résumé (voir les vues Nuxeo: http://doc.nuxeo.com/display/public/NXDOC/Actions+Display). 
+			Les actions toutatice ne peuvent pas référencer la catégorie "SUMMARY_PANEL_TOP" 
+			directement car l'affichage de type bouton n'est pas pris en compte nativement 
+			(voir le ticket jira #SUPNXP-9788). Donc les actions toutatice à placer dans 
+			cet emplacement doivent utiliser la catégorie "TOUTATICE_SUMMARY_PANEL_TOP". -->
+		<action id="toutatice_summary_panel_top_actions" type="widget"
+			label="" enabled="true" order="0">
+			<category>SUMMARY_PANEL_TOP</category>
+			<properties>
+				<property name="widgetName">toutatice_summary_panel_top_widget
+				</property>
+				<property name="displayWidgetLabel">false</property>
+			</properties>
+		</action>
+
+		<!-- Mise en ligne directe d'un document -->
+		<action id="setDocumentOnlineDirect" label="toutatice.command.direct.setonline"
+			enabled="true" order="10" immediate="false"
+			link="#{operationActionBean.doOperation('setOnLine')}">
+			<category>SUBVIEW_UPPER_LIST</category>
+			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>filter@setDocumentOnline</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<!-- mise hors ligne directe d'un document (version ou pas) -->
+		<action id="setDocumentOfflineDirect" label="toutatice.command.direct.setoffline"
+			enabled="true" order="10" immediate="false"
+			link="#{operationActionBean.doOperation('setOffLineOne')}">
+			<category>SUBVIEW_UPPER_LIST</category>
+			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_remote_proxy</filter-id>
+			<filter-id>filter@setDocumentOffline</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<!-- Mise en ligne directe d'un document version (archive) -->
+		<action id="setDocumentVersionOnlineDirect" label="toutatice.command.direct.setonline"
+			enabled="true" order="6" immediate="false"
+			link="#{operationActionBean.doOperation('setOnLine')}">
+			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
+			<properties>
+				<property name="confirmMessage">label.documents.confirm.setDocumentVersionOnline
+				</property>
+			</properties>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>is_version</filter-id>
+			<filter-id>filter@setDocumentOnline</filter-id>
+			<filter id="filter@setDocumentVersionOnlineDirect">
+				<rule grant="true">
+					<condition>document.currentLifeCycleState == "approved"</condition>
+				</rule>
+			</filter>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<action id="EDIT_AND_SET_ONLINE_CURRENT_DOCUMENT_REQUEST" link="#{documentActions.updateNSetOnLineCurrentDocument}"
+			order="1" label="toutatice.command.save.and.setonline.request">
+			<category>EDIT_DOCUMENT_FORM</category>
+			<filter-id>is_not_thread_document</filter-id>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>canUpdateNSetDocumentOnline</filter-id>
+			<filter-id>canNotValidate</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<action id="CREATE_AND_SET_ONLINE_DOCUMENT_REQUEST" link="#{documentActions.saveNSetOnLineDocument}"
+			order="0" label="toutatice.command.create.and.setonline.request">
+			<category>CREATE_DOCUMENT_FORM</category>
+			<filter-id>is_not_creating_form_specific_document</filter-id>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>canCreateNSetDocumentOnline</filter-id>
+			<filter-id>canNotValidateOnParent</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<!-- WORKFLOWS -->
+
+		<!-- Desactivate Workflow tab when online task -->
+		<action id="TAB_ROUTE_WORKFLOW" append="true">
+			<filter id="notShowWfTab">
+				<rule grant="false">
+					<permission>validationWorkflow_validation</permission>
+					<condition>#{taskActions.isValidateOnlineActionAuthorized()}
+					</condition>
+				</rule>
+			</filter>
+		</action>
+
+		<!-- To display OpenToutatice buttons in TOUTATICE_SUMMARY_PANEL_TOP_TASK 
+			category (Tasks actions) -->
+		<action id="toutatice_validate_online_task_actions" type="widget"
+			label="" enabled="true" order="0">
+			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
+			<category>SUBVIEW_UPPER_LIST</category>
+			<properties>
+				<property name="widgetName">toutatice_validate_online_task_widget
+				</property>
+				<property name="displayWidgetLabel">false</property>
+			</properties>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>canValidateOnLineWF</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<!-- Demander la mise en ligne d'un document non version -->
+		<action id="workflow_online_demand" label="toutatice.command.request.setonline"
+			enabled="true" order="0" immediate="false"
+			link="#{routingActions.startOnlineWorkflow()}">
+			<category>SUBVIEW_UPPER_LIST</category>
+			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>filter@requestDocumentOnline</filter-id>
+			<filter id="filter@workflow_online_demand">
+				<rule grant="true">
+					<condition>document.currentLifeCycleState == "project"</condition>
+					<condition>document.currentLifeCycleState == "approved"</condition>
+				</rule>
+			</filter>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<!-- Demander la mise en ligne d'un document version -->
+		<action id="workflow_online_demand_version" label="toutatice.command.request.setonline"
+			enabled="true" order="0" immediate="false"
+			link="#{routingActions.startOnlineWorkflow()}">
+			<category>SUBVIEW_UPPER_LIST</category>
+			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
+			<properties>
+				<property name="confirmMessage">label.documents.confirm.setDocumentVersionOnline
+				</property>
+			</properties>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>is_version</filter-id>
+			<filter-id>filter@requestDocumentOnline</filter-id>
+			<filter id="filter@workflow_online_demand_version">
+				<rule grant="true">
+					<condition>document.currentLifeCycleState == "approved"</condition>
+				</rule>
+			</filter>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<!-- Annuler la demande de mise en ligne -->
+		<action id="workflow_online_cancel" label="toutatice.command.request.cancelonline"
+			enabled="true" order="1" immediate="false"
+			link="#{routingActions.cancelOnlineWorkflow()}">
+			<category>SUBVIEW_UPPER_LIST</category>
+			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
+			<properties>
+				<property name="confirmMessage">label.documents.confirm.onlineWorkflow_cancel
+				</property>
+			</properties>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>canCancelOnLineWF</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<!-- consulter la version en ligne d'un document -->
+		<action id="seeOnlineDocumentVersion" label="toutatice.label.see.nuxeo.online.version"
+			enabled="true" order="128" immediate="false"
+			link="#{documentActions.viewOnlineVersion()}">
+			<category>SUBVIEW_UPPER_LIST</category>
+			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter id="filter@seeOnlineDocumentVersionFromResumeView">
+				<rule grant="true">
+					<condition>#{documentActions.isSeeOnlineDocumentVersionActionAuthorized()}
+					</condition>
+				</rule>
+			</filter>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<!-- consulter la version de travail d'un document -->
+		<action id="seeLiveDocumentVersion" label="toutatice.label.see.nuxeo.work.version"
+			enabled="true" order="129" immediate="false"
+			link="#{documentActions.viewLiveVersion()}">
+			<category>SUBVIEW_UPPER_LIST</category>
+			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
+			<filter id="filter@seeLiveDocumentVersion">
+				<rule grant="true">
+					<condition>#{documentActions.isSeeLiveDocumentVersionActionAuthorized()}
+					</condition>
+				</rule>
+			</filter>
+			<filter-id>is_either_version_or_proxy</filter-id>
+		</action>
+
+		<!-- Cette action appartient à une catégorie "virtuelle" car elle ne sera 
+			jamais présentée à l'IHM. Son rôle est de pouvoir présenter de façon conditionnelle 
+			les actions "PUBLISH/UNPUBLISH_DOCUMENTS_SELECTION" (mettre en ligne / hors 
+			ligne) en fonction du critère "appartient à un espace de publication". (voir 
+			implémentation dans ToutaticeWebActionBean::getUnfiltredActionsList()) -->
+		<action id="VIRTUAL_ACTION_VIEW_IN_PUBLISH_SPACE_ONLY" enabled="true"
+			icon="">
+			<category>VIRTUAL_CATEGORY</category>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<!-- Vue 'Contenu' (d'un Folderish): mise en ligne d'un élément sélectionné -->
+		<action
+			id="PUBLISH_DOCUMENTS_SELECTION@VIRTUAL_ACTION_VIEW_IN_PUBLISH_SPACE_ONLY"
+			link="#{documentActions.publishDocumentSelection}" enabled="true"
+			label="toutatice.command.direct.setonline" icon="">
+			<category>CURRENT_SELECTION_LIST</category>
+			<category>ORDERABLE_CURRENT_SELECTION_LIST</category>
+			<filter-id>canPublishSelection</filter-id>
+		</action>
+
+		<!-- Vue 'Contenu' (d'un Folderish): mise hors ligne d'un élément sélectionné -->
+		<action
+			id="UNPUBLISH_DOCUMENTS_SELECTION@VIRTUAL_ACTION_VIEW_IN_PUBLISH_SPACE_ONLY"
+			link="#{documentActions.unPublishDocumentSelection}" enabled="true"
+			label="toutatice.command.direct.setoffline" icon="">
+			<category>CURRENT_SELECTION_LIST</category>
+			<category>ORDERABLE_CURRENT_SELECTION_LIST</category>
+			<filter-id>canUnPublishSelection</filter-id>
+		</action>
+
+		<!-- Installation d'une action de type widget afin de construire la barre 
+			de titre sous forme d'une liste d'actions conditionnées par un filtre. (voir 
+			le ticket Jira #SUPNXP-9829) -->
+		<action id="TOUTATICE_EXTENDED_TITLE" enabled="true" type="widget">
+			<category>DOCUMENT_HEADER_ACTIONS_LIST</category>
+			<properties>
+				<property name="widgetName">toutatice_extended_title_widget</property>
+				<property name="displayWidgetLabel">false</property>
+			</properties>
+		</action>
+
+		<!-- Barre de titre: affichache du titre d'un document -->
+		<action id="toutatice_title" enabled="true" order="0" type="widget">
+			<category>TOUTATICE_DOCUMENT_HEADER_ACTIONS_LIST</category>
+			<properties>
+				<property name="widgetName">toutatice_extended_title_title_widget
+				</property>
+				<property name="displayWidgetLabel">false</property>
+			</properties>
+		</action>
+
+		<!-- Barre de titre: affichache de la version d'un document -->
+		<action id="toutatice_superscript_version" enabled="true"
+			order="1" type="widget">
+			<category>TOUTATICE_DOCUMENT_HEADER_ACTIONS_LIST</category>
+			<properties>
+				<property name="widgetName">toutatice_extended_title_version_widget
+				</property>
+				<property name="displayWidgetLabel">false</property>
+			</properties>
+			<filter-id>isVersionable</filter-id>
+		</action>
+
+		<!-- Barre de titre: affichache des vignettes de workflow en cours -->
+		<action id="toutatice_superscript_workflow" enabled="true"
+			order="2" type="widget">
+			<category>TOUTATICE_DOCUMENT_HEADER_ACTIONS_LIST</category>
+			<properties>
+				<property name="widgetName">toutatice_extended_title_workflow_widget
+				</property>
+				<property name="displayWidgetLabel">false</property>
+			</properties>
+		</action>
+
+		<!-- Barre de titre: affichache de la vignette de présence d'un verrou -->
+		<action id="toutatice_superscript_lock" enabled="true" order="3"
+			type="widget">
+			<category>TOUTATICE_DOCUMENT_HEADER_ACTIONS_LIST</category>
+			<properties>
+				<property name="widgetName">toutatice_extended_title_lock_widget
+				</property>
+				<property name="displayWidgetLabel">false</property>
+			</properties>
+		</action>
+
+
+		<!-- Portal site can be made default -->
+		<action id="TOUTATICE_MAKE_DEFAULT_PORTAL_SITE" link="#{domainActions.makeDefaultPortalSite('done')}"
+			order="3" label="toutatice.command.make.default">
+			<category>SUBVIEW_UPPER_LIST</category>
+			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
+			<filter-id>isGlobalAdministrator</filter-id>
+			<filter id="filter@TOUTATICE_MAKE_DEFAULT_PORTAL_SITE">
+				<rule grant="true">
+					<condition>#{domainActions.canMakeDefaultPSite()}</condition>
+				</rule>
+			</filter>
+		</action>
+		<action id="TOUTATICE_MAKE_DEFAULT_PORTAL_SITE_LABEL" order="1"
+			type="widget">
+			<category>TOUTATICE_DOCUMENT_HEADER_ACTIONS_LIST</category>
+			<properties>
+				<property name="widgetName">toutatice_widget_document_default_portal
+				</property>
+				<property name="displayWidgetLabel">false</property>
+			</properties>
+			<filter id="filter@TOUTATICE_MAKE_DEFAULT_PORTAL_SITE_LABEL">
+				<rule grant="true">
+					<condition>#{domainActions.showIsDefaultPSite()}</condition>
+				</rule>
+			</filter>
+		</action>
+
+	</extension>
+
+</component>

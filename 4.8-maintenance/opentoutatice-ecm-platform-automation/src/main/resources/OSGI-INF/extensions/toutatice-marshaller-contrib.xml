@@ -1,0 +1,36 @@
+<component name="fr.toutatice.ecm.platform.automation.server.marshallers">
+
+	<extension point="marshallers"
+		target="org.nuxeo.ecm.automation.server.AutomationServer">
+		<marshaller>
+			<reader>fr.toutatice.ecm.platform.automation.transaction.io.TransactionalJsonRequestReader
+			</reader>
+			<writer>org.nuxeo.ecm.automation.jaxrs.io.operations.JsonAutomationInfoWriter
+			</writer>
+			<writer>org.nuxeo.ecm.automation.jaxrs.io.documents.JsonDocumentWriter
+			</writer>
+			<writer>org.nuxeo.ecm.automation.jaxrs.io.documents.JsonDocumentListWriter
+			</writer>
+			<writer>org.nuxeo.ecm.automation.jaxrs.io.documents.BlobsWriter
+			</writer>
+			<writer>org.nuxeo.ecm.automation.jaxrs.io.JsonLoginInfoWriter
+			</writer>
+			<writer>org.nuxeo.ecm.automation.jaxrs.io.operations.JsonOperationWriter
+			</writer>
+			<writer>org.nuxeo.ecm.automation.jaxrs.io.operations.JsonHtmlOperationWriter
+			</writer>
+			<reader>org.nuxeo.ecm.automation.jaxrs.io.operations.UrlEncodedFormRequestReader
+			</reader>
+			<writer>org.nuxeo.ecm.automation.jaxrs.io.JsonTreeWriter</writer>
+			<writer>org.nuxeo.ecm.automation.jaxrs.io.JsonAdapterWriter</writer>
+			<writer>org.nuxeo.ecm.automation.jaxrs.io.JsonRecordSetWriter
+			</writer>
+			<reader>org.nuxeo.ecm.automation.jaxrs.io.documents.BusinessAdapterReader
+			</reader>
+			<writer>org.nuxeo.ecm.automation.jaxrs.io.audit.LogEntryWriter
+			</writer>
+			<writer>org.nuxeo.ecm.automation.jaxrs.io.audit.LogEntryListWriter
+			</writer>
+		</marshaller>
+	</extension>
+</component>
