@@ -26,8 +26,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.nuxeo.ecm.automation.features.PlatformFunctions;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 import org.nuxeo.ecm.core.api.model.impl.primitives.BlobProperty;
@@ -61,7 +61,7 @@ public class ToutaticeFunctions extends PlatformFunctions {
      * @throws PropertyException
      * @throws NuxeoException
      */
-    public String getDownloadFileUrl(DocumentModel doc, String xpath) throws PropertyException, NuxeoException {
+    public String getDownloadFileUrl(DocumentModel doc, String xpath) throws NuxeoException {
 
         BlobProperty blob = (BlobProperty) doc.getProperty(xpath);
         String filename = blob.getValue(Blob.class).getFilename();
@@ -76,7 +76,7 @@ public class ToutaticeFunctions extends PlatformFunctions {
      * @throws PropertyException
      * @throws NuxeoException
      */
-    public String getPermalink(DocumentModel doc) throws PropertyException, NuxeoException {
+    public String getPermalink(DocumentModel doc) throws NuxeoException {
         String url = StringUtils.EMPTY;
         // verification : le document doit pouvoir être visible dans toutatice
         if (ToutaticeDocumentHelper.isVisibleInPortal(doc, doc.getCoreSession())) {
@@ -291,7 +291,7 @@ public class ToutaticeFunctions extends PlatformFunctions {
         String fullName = StringUtils.EMPTY;
         NuxeoPrincipal principal;
         try {
-            principal = (NuxeoPrincipal) super.getUserManager().getPrincipal(username);
+            principal = super.getUserManager().getPrincipal(username);
             if (principal != null) {
                 fullName = principal.getFirstName().concat(" ").concat(principal.getLastName());
             }
@@ -300,9 +300,9 @@ public class ToutaticeFunctions extends PlatformFunctions {
         }
         return fullName;
     }
-    
+
     public String defaultIfBlank(String str, String defaultStr) {
         return StringUtils.defaultIfBlank(str, defaultStr);
     }
-    
+
 }
