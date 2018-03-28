@@ -77,7 +77,9 @@ public abstract class AbstractCommentOperation {
 
         if (CommentType.POST.equals(commentType)) {
             comment.setProperty(schema, "title", StringUtils.trimToEmpty(title));
-
+            // Necessary for notifications: cf CommentManagerImpl#updateAuthor
+            comment.setProperty("comment", "author", author);
+            
             if (StringUtils.isNotEmpty(fileName)) {
                 comment.setProperty(schema, "filename", fileName);
                 comment.setProperty(schema, "fileContent", blob);
