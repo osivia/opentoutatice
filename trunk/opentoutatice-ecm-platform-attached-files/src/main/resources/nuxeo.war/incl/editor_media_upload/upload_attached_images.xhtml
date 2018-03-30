@@ -1,0 +1,38 @@
+<f:subview xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:s="http://jboss.org/schema/seam/taglib"
+    xmlns:nxthemes="http://nuxeo.org/nxthemes"
+    xmlns:nxd="http://nuxeo.org/nxweb/document"
+    xmlns:nxu="http://nuxeo.org/nxweb/util"
+    xmlns:nxh="http://nuxeo.org/nxweb/html"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:a4j="http://richfaces.org/a4j">
+
+
+            <div class="col-xs-3 col-md-3">
+                <div class="picture">
+
+                <a href="#" class="dNd thumbnail text-center">
+                    <p class="indication fileinput-button text-middle"> 
+                        <i class="glyphicons halflings plus"></i> <span><em>#{messages['toutatice.label.media.plugin.add.image']}</em></span>
+                        <h:inputFile class="imgsFileUpload" value="#{editorImageActions.uploadedImage}" >
+                            <f:ajax execute="imgs_list_region" listener="#{editorImageActions.uploadImage()}" render="imgs_list_region_panel" />
+                        </h:inputFile>
+                    </p>
+                    </a>
+
+                </div>
+
+            </div>
+
+        <c:if test="#{!editorImageActions.isImage}">
+
+            <div class="alert alert-warning">
+                <i class="glyphicons halflings warning-sign"></i> <span
+                    class="text-warning">#{messages['label.imageUpload.isNotImage']}</span>
+            </div>
+        </c:if>
+
+</f:subview>

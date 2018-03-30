@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.portalviews.actions">
+
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+	<require>fr.toutatice.ecm.platform.web.filters</require>
+	<require>fr.toutatice.ecm.platform.web.widgets</require>
+	<require>fr.toutatice.ecm.platform.web.local.publishing.filters</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="actions">
+
+		<action id="TOUTATICE_CREATE_DOCUMENT" link="#{documentActions.saveDocument('done')}"
+			order="0" label="command.create">
+			<category>TOUTATICE_CREATE_DOCUMENT_FORM</category>
+			<filter-id>is_not_creating_form_specific_document</filter-id>
+		</action>
+
+		<action id="TOUTATICE_CREATE_AND_SET_ONLINE_DOCUMENT" link="#{documentActions.saveNSetOnLineDocument('done')}"
+			order="20" label="toutatice.command.create.and.setonline">
+			<category>TOUTATICE_CREATE_DOCUMENT_FORM</category>
+			<filter-id>is_not_creating_form_specific_document</filter-id>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>canCreateNSetDocumentOnline</filter-id>
+			<filter-id>canValidateOnParent</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<action id="TOUTATICE_CREATE_AND_SET_ONLINE_DOCUMENT_REQUEST"
+			link="#{documentActions.saveNSetOnLineDocument('done')}" order="20"
+			label="toutatice.command.create.and.setonline.request">
+			<category>TOUTATICE_CREATE_DOCUMENT_FORM</category>
+			<filter-id>is_not_creating_form_specific_document</filter-id>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>canCreateNSetDocumentOnline</filter-id>
+			<filter-id>canNotValidateOnParent</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<action id="TOUTATICE_EDIT_CURRENT_DOCUMENT" link="#{documentActions.updateCurrentDocument('done')}"
+			order="0" label="command.save">
+			<category>TOUTATICE_EDIT_DOCUMENT_FORM</category>
+			<filter-id>is_not_thread_document</filter-id>
+		</action>
+
+		<action id="TOUTATICE_EDIT_AND_SET_ONLINE_CURRENT_DOCUMENT"
+			link="#{documentActions.updateNSetOnLineCurrentDocument('done')}"
+			order="1" label="toutatice.command.save.and.setonline">
+			<category>TOUTATICE_EDIT_DOCUMENT_FORM</category>
+			<filter-id>is_not_thread_document</filter-id>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>canUpdateNSetDocumentOnline</filter-id>
+			<filter-id>canValidate</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<action id="TOUTATICE_EDIT_AND_SET_ONLINE_CURRENT_DOCUMENT_REQUEST"
+			link="#{documentActions.updateNSetOnLineCurrentDocument('done')}"
+			order="1" label="toutatice.command.save.and.setonline.request">
+			<category>TOUTATICE_EDIT_DOCUMENT_FORM</category>
+			<filter-id>is_not_thread_document</filter-id>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>canUpdateNSetDocumentOnline</filter-id>
+			<filter-id>canNotValidate</filter-id>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+
+		<!-- Docs spécifiques -->
+
+		<action id="TOUTATICE_CREATE_PICTUREBOOK_DOCUMENT" link="#{documentActions.createPictureBook('done')}"
+			order="1" label="command.create">
+			<category>TOUTATICE_CREATE_DOCUMENT_FORM</category>
+			<filter id="filter@CREATE_PICTUREBOOK_DOCUMENT">
+				<rule grant="true">
+					<condition>#{changeableDocument.type == 'PictureBook'}</condition>
+				</rule>
+			</filter>
+		</action>
+
+		<action id="TOUTATICE_CREATE_AND_SET_ONLINE_PICTUREBOOK_DOCUMENT"
+			link="#{documentActions.createNSetOnLinePictureBook('done')}" order="0"
+			label="toutatice.command.create.and.setonline">
+			<category>TOUTATICE_CREATE_DOCUMENT_FORM</category>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>canUpdateNSetDocumentOnline</filter-id>
+			<filter id="filter@CREATE_AND_SET_ONLINE_PICTUREBOOK_DOCUMENT">
+				<rule grant="true">
+					<condition>#{changeableDocument.type == 'PictureBook'}</condition>
+				</rule>
+			</filter>
+			<filter id="filter@CAN_CREATE_AND_SET_ONLINE_PICTUREBOOK_DOCUMENT">
+				<rule grant="true">
+					<permission>validationWorkflow_validation</permission>
+				</rule>
+			</filter>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<action id="TOUTATICE_CREATE_AND_SET_ONLINE_PICTUREBOOK_DOCUMENT_REQUEST"
+			link="#{documentActions.createNSetOnLinePictureBook('done')}" order="0"
+			label="toutatice.command.create.and.setonline.request">
+			<category>TOUTATICE_CREATE_DOCUMENT_FORM</category>
+			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>not_proxy</filter-id>
+			<filter-id>not_version</filter-id>
+			<filter-id>canUpdateNSetDocumentOnline</filter-id>
+			<filter id="filter@CREATE_AND_SET_ONLINE_PICTUREBOOK_DOCUMENT">
+				<rule grant="true">
+					<condition>#{changeableDocument.type == 'PictureBook'}</condition>
+				</rule>
+			</filter>
+			<filter id="filter@CAN_NOT_CREATE_AND_SET_ONLINE_PICTUREBOOK_DOCUMENT">
+				<rule grant="false">
+					<permission>validationWorkflow_validation</permission>
+				</rule>
+			</filter>
+			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
+		</action>
+
+		<!-- Vue portail : Création d'un Workspace (l'action de création solicité 
+			par la vue Nuxeo est définie par Nuxeo lui-même) -->
+		<action id="TOUTATICE_CREATE_WORKSPACE_DOCUMENT"
+			link="#{documentTemplatesActions.createDocumentFromTemplate('done')}"
+			order="1" label="command.create">
+			<category>TOUTATICE_CREATE_DOCUMENT_FORM</category>
+			<filter-id>is_creating_workspace</filter-id>
+		</action>
+
+	</extension>
+
+</component>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<component
+	name="fr.toutatice.ecm.platform.services.workflows.infos.provider"
+	version="1.0">
+
+	<require>fr.toutatice.ecm.platform.core.services.infos.provider</require>
+	<require>fr.toutatice.ecm.platform.services.workflows.infos.service</require>
+
+	<extension target="fr.toutatice.ecm.platform.core.services.infos.provider"
+		point="extended_fetch_infos">
+
+		<fetchInfos name="workflowInfosProvider"
+			class="fr.toutatice.ecm.platform.service.workflows.infos.WorkflowDocumentInfosProvider" />
+		<fetchInfos name="taskInfosProvider"
+			class="fr.toutatice.ecm.platform.service.workflows.infos.TaskDocumentInfosProvider" />
+
+	</extension>
+</component>

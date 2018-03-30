@@ -1,0 +1,46 @@
+<f:subview xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:nxl="http://nuxeo.org/nxforms/layout"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:nxu="http://nuxeo.org/nxweb/util"
+    xmlns:nxh="http://nuxeo.org/nxweb/html"
+    xmlns:nxd="http://nuxeo.org/nxweb/document">
+
+    <div class="row">
+
+        <div class="pictures-list">
+
+             <ui:repeat var="img" value="#{field}" varStatus="status">
+
+                <ui:fragment rendered="#{not empty img.filename}">
+                    <div class="col-xs-3 col-md-3"
+                        onclick="javascript:updateCaller(jQuery(this).find('img')[0], 
+								 jQuery('#img_style_value').attr('checked') == 'checked' ? jQuery('#img_style_value').val() : '');">
+                        <div class="picture">
+                            <a href="#" class="thumbnail"> <h:graphicImage
+                                    value="#{nxd:complexFileUrl('downloadFile', documentActions.currentDocument, 'ttc:images', status.index, 'file', img.filename)}" />
+                            </a>
+                        </div>
+                        <p class="text-center">#{img.filename}</p>
+
+                    </div>
+                </ui:fragment>
+
+                <c:set var="nextImageIndex" value="#{status.index}" scope="view"/>
+
+            </ui:repeat>
+
+            <div>
+                 <nxl:subWidget>
+                      <nxl:widget widget="#{widget}"
+                        value="#{field}/#{nextImageIndex}" />
+                    </nxl:subWidget>
+            </div>
+
+        </div>
+
+    </div>
+
+</f:subview>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<component
+	name="org.opentoutatice.ecm.attached.files.url.service.DocumentViewCodecService.contrib">
+	
+	<require>org.nuxeo.ecm.platform.url.service.DocumentViewCodecService.contrib</require>
+
+	<extension
+		target="org.nuxeo.ecm.platform.url.service.DocumentViewCodecService"
+		point="codecs">
+
+		<!-- Redefinition of Nx File codec -->
+		<documentViewCodec name="downloadFile" enabled="true"
+			prefix="nxfile"
+			class="org.opentoutatice.ecm.attached.files.url.codec.OttcAttachedFileCodec" />
+
+	</extension>
+
+
+</component>

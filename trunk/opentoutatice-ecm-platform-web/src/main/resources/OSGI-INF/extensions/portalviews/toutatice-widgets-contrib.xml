@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.portalviews.widgets">
+
+	<extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+		point="widgettypes">
+
+		<widgetType name="pv_ttc_date">
+            <configuration>
+                <title>Date picker</title>
+                <categories>
+                    <category>document</category>
+                </categories>
+                <supportedModes>
+                    <mode>view</mode>
+                    <mode>edit</mode>
+                </supportedModes>
+                <fields>
+                    <list>true</list>
+                    <complex>false</complex>
+                    <supportedTypes>
+                        <type>string</type>
+                    </supportedTypes>
+                </fields>
+                <!-- TODO: properties -->
+            </configuration>
+            <handler-class>
+                org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+            </handler-class>
+            <property name="template">
+                /widgets/portalViews/pv_date_widget.xhtml
+            </property>
+        </widgetType>
+
+	</extension>
+
+</component>

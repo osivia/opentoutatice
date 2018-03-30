@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.service.portalviews.adapter.contrib">
+
+	<require>fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterService</require>
+	<require>fr.toutatice.ecm.platform.web.portalviews.widgets</require>
+
+	<extension target="fr.toutatice.ecm.platform.service.portalviews.adapter.WidgetsAdapterService"
+		point="adapter">
+		
+		<mappings>
+			<!-- Date type widget -->
+			<!-- <mappingType nxType="date" pvType="pv_ttc_date" /> -->
+			
+		    <!-- By widget type -->
+		    <!-- <mappingType nxType="richtext_with_mimetype" pvType="ttc_richtext_with_mimetype"> 
+		      <properties>
+		          <property name="editorSelector" value="mceEditorResponsive" />
+		          <property name="disableHTMLInit" value="true" />
+		      </properties> 
+		    </mappingType> -->
+		    
+		    <!-- <mappingType nxType="htmltext" pvType="htmltext">
+              <properties>
+                  <property name="editorSelector" value="mceEditorResponsive" />
+                  <property name="disableHtmlInit" value="true" />
+              </properties>
+            </mappingType> -->
+		    
+		</mappings>
+		
+	</extension>
+
+</component> 

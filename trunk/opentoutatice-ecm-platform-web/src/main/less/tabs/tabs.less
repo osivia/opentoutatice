@@ -1,0 +1,142 @@
+// Variables
+@tab-radius: 6px;
+@tab-padding-vertical: 10px;
+@tab-padding-horizontal: 12px;
+@active-tab-indicator-width: 3px;
+@active-tab-fixed-min-width: 10%;
+@max-tabs: 4;
+
+// Make tab function
+.make-tab() {
+    position: relative;
+    display: block;
+    float: left;
+
+    text-align: center;
+    
+    .clearfix;
+    
+    .make-closable-tab();
+    
+    > div {
+        margin-top: @active-tab-indicator-width - 1px;
+        margin-right: -1px;
+        
+        border-style: solid;
+        border-width: 1px;
+        .border-top-radius(@radius: @tab-radius);
+    }
+    
+    a {
+        display: block;
+        padding: @tab-padding-vertical @tab-padding-horizontal;
+
+        text-decoration: none;
+        .text-overflow();
+    }
+    
+    &.active {
+        > div {
+            margin-top: 0;
+            margin-right: 0;
+            
+            border-top-width: @active-tab-indicator-width;
+        }
+        
+        + * > div {
+            border-left-style: none;
+        }
+        
+        a {
+            font-weight: bold;
+        }
+    } 
+}
+
+// Make closable tab function
+.make-closable-tab() {
+    a {
+        &:first-of-type {
+            padding-right: @tab-padding-horizontal + 14px;
+        }
+        
+        &:last-of-type {
+            padding-right: @tab-padding-horizontal;
+        }
+        
+        &.page-close {
+            position: absolute;
+            top: @active-tab-indicator-width + 1px;
+            right: 1px;
+            display: block;
+            
+            padding: @tab-padding-vertical floor(@tab-padding-horizontal / 2);
+        }
+    }
+}
+
+// Make fixed tabs function
+.make-fixed-tabs(@class) {
+    &.fixed-@{class} {
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+        
+        > li {
+            display: table-cell;
+            
+            .make-fixed-tab-width(@count: @max-tabs);
+            
+            a {
+                padding-right: @tab-padding-horizontal;
+                
+                &.page-close {
+                    display: none;
+                }
+            }
+            
+            &.active {
+                .make-closable-tab();
+            }
+            
+        }
+    }
+}
+
+// Make fixed tab width function
+.make-fixed-tab-width(@count) when (isnumber(@count)) and (@count > 0) {
+    &:first-child:nth-last-child(@{count}) {
+        &, & ~ * {
+            width: (100% - @active-tab-fixed-min-width) / @count;
+            
+            &.active {
+                width: ((100% - @active-tab-fixed-min-width) / @count) + @active-tab-fixed-min-width;
+            }
+        }
+    }
+    
+    // Loop
+    .make-fixed-tab-width(@count: @count - 1);
+}
+
+.tabs {
+
+	ul {
+        margin-bottom: 0;
+        padding-left: 0;
+        
+        .clearfix;
+        
+        @media screen and (min-width: @screen-sm-min) {
+            .make-fixed-tabs(@class: lg);    
+        }
+        
+        @media screen and (min-width: @screen-sm-min) and (max-width: @screen-md-max) {
+            .make-fixed-tabs(@class: md);
+        }
+        
+        @media screen and (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+            .make-fixed-tabs(@class: sm);
+        }
+	}
+}

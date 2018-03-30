@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.core.audit.events">
+
+	<require>org.nuxeo.ecm.platform.audit.service.NXAuditEventsService</require>
+
+	<extension target="org.nuxeo.ecm.platform.audit.service.NXAuditEventsService"
+		point="event">
+    
+        <event name="loginFailed" enabled="false"/>
+		<event name="logout" enabled="false" />
+
+	</extension>
+
+</component>

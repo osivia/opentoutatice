@@ -1,0 +1,70 @@
+@import "bootstrap/bootstrap.less";
+
+body {
+	background-color: transparent;
+}
+
+div.mce-tinymce.mce-container.mce-panel {
+     border-radius: 4px;
+     padding: 1px;
+     border-color: #ccc;
+}
+
+legend > .glyphicons, .list-group-item > .glyphicons, .list-group-item > img {
+	 padding-right: 10px;
+}
+
+.choosen-picture {
+     position: relative;
+        
+     .thumbnail {
+         left: 0;
+         right: 0;
+         margin: 0;
+            
+         img {
+             max-width: 100%;
+         }
+     }
+}
+
+div.fgt-html > .mce-tinymce {
+	width: 100% !important;
+}
+
+ul.fgts {
+	list-style-type: none;
+}
+
+.text-overflow {
+	.text-overflow();
+}
+
+.pv-footer {
+	/* FIXME: fixed height... */
+	height: 45px;
+}
+
+/* Criteria List */
+div.ctrl-fgt-keywords-list {
+	margin-top: 5px;
+	& > ul {
+		.list-unstyled;
+		.list-inline;
+	}
+}
+
+td > label {
+    font-weight: inherit;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+/* Icons component */
+.checkbox-inline.text-overflow.ttcInputcheckbox > img {
+     width: 25%;
+}
+
+.radio-inline.text-overflow.ttcInputradio > img {
+     width: 25%;
+}

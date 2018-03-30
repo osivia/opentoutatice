@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<component name="fr.toutatice.ecm.platform.web.permalink.actions">
+
+	<require>org.nuxeo.ecm.platform.actions</require>
+	<require>org.nuxeo.ecm.platform.actions.ActionService</require>
+	<require>fr.toutatice.ecm.platform.web.filters</require>
+	<require>fr.toutatice.ecm.platform.web.widgets</require>
+
+	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
+		point="actions">
+		<!-- permalink -->
+		<action id="permalinkAction" append="true">
+			<properties>
+				<property name="include">/incl/toutatice_permalink_box.xhtml</property>
+			</properties>
+		</action>
+
+		<action id="urlPortalBoxAction" label="url portail"
+			link="/incl/tabs/ttc_document_portail_url.xhtml" order="10">
+			<category>TAB_TOUTATICE_PERMALINK_CAT</category>
+
+		</action>
+
+		<action id="urlNuxeoBoxAction" label="url nuxeo"
+			link="/incl/tabs/ttc_document_nuxeo_url.xhtml" order="10">
+			<category>TAB_TOUTATICE_PERMALINK_CAT</category>
+		</action>
+
+		<action id="urlProxyBoxAction" label="url proxy"
+			link="/incl/tabs/ttc_document_proxy_url.xhtml" order="10">
+			<category>TAB_TOUTATICE_PERMALINK_CAT</category>
+
+		</action>
+	</extension>
+
+</component>

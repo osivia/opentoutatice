@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<component name="org.opentoutatice.ecm.runner.queue" version="1.0">
+
+    <require>org.opentoutatice.ecm.scanner.listener</require>
+
+	<extension target="org.nuxeo.ecm.core.work.service" point="queues">
+	
+		<queue id="ottcReporting">
+			<maxThreads>1</maxThreads>
+			<category>ottcScanningListener</category>
+			<clearCompletedAfterSeconds>900</clearCompletedAfterSeconds>
+		</queue>
+		
+	</extension>
+
+</component>

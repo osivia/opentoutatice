@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.local.publishing.notifications">
+
+	<require>org.nuxeo.ecm.platform.notification.document.routing.NotificationContrib
+	</require>
+
+	<extension
+		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
+		point="notifications">
+
+		<notification autoSubscribed="true" availableIn="PortalSite"
+			channel="email" enabled="true" name="OnLineWF" subjectTemplate="onlineWorkflowSubject"
+			template="onlineWorkflow">
+			<event name="workflowOnlineTaskAssigned" />
+			<event name="workflowOnlineCanceled" />
+			<event name="workflowOnlineTaskApproved" />
+			<event name="workflowOnlineTaskRejected" />
+		</notification>
+
+	</extension>
+
+	<extension
+		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
+		point="templates">
+
+		<template name="workflow" src="templates/workflow_fr.ftl" />
+		<template name="onlineWorkflow" src="templates/onlineWorkflow_fr.ftl" />
+		<template name="onlineWorkflowSubject" src="templates/onLineWFSubject_fr.ftl" />
+		<template name="automaticWorkflowTaskAssigned"
+			src="templates/automaticWorkflowTaskAssigned_fr.ftl" />
+
+	</extension>
+
+	<extension
+		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
+		point="notificationListenerVeto">
+
+		<veto name="onlineVeto"
+			class="fr.toutatice.ecm.platform.web.workflows.notification.OnlineTaskVeto" />
+
+	</extension> 
+
+</component>

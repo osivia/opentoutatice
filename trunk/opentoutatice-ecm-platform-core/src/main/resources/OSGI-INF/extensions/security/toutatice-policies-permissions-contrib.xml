@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.plateform.core.permissions">
+
+	<require>org.nuxeo.ecm.core.security.SecurityService</require>
+	<require>org.nuxeo.ecm.core.security.defaultPermissions</require>
+
+	<extension target="org.nuxeo.ecm.core.security.SecurityService"
+		point="permissions">
+		
+		<permission name="WriteModifyOwnOnly">
+		      <include>Read</include>
+		</permission>
+		
+        <permission name="MasterOwner">
+            <include>Read</include>
+        </permission>
+		
+		<!-- <permission name="MasterOwner">
+		      <include>Everything</include>
+		      <include>Write</include>
+		      <include>Read</include>
+		</permission> -->
+
+        <!-- FIXME: replace remove by exclude, no? -->
+		<permission name="Read">
+			<remove>CanAskForPublishing</remove>
+		</permission>
+
+		<permission name="Write">
+			<include>CanAskForPublishing</include>
+		</permission>
+
+		<permission name="validationWorkflow_validation" />
+
+		<permission name="RemotePublish">
+			<include>CanAskForPublishing</include>
+			<include>Write</include>
+		</permission>
+		
+	</extension>
+
+	<extension target="org.nuxeo.ecm.core.security.SecurityService"
+		point="permissionsVisibility">
+        
+		<visibility>
+			<item order="100" show="true">WriteModifyOwnOnly</item>
+		</visibility>
+		
+		<!-- FIXME: temporary fix cause global visibility doesn't work for Workspace -->
+		<visibility type="Workspace">
+            <item order="100" show="true">WriteModifyOwnOnly</item>
+            <item order="300" show="true">MasterOwner</item>
+        </visibility>
+		
+		<visibility type="PortalSite">
+			<item order="150" show="true">CanAskForPublishing</item>
+			<item order="1000" show="true">validationWorkflow_validation</item>
+		</visibility>
+
+		<visibility type="PortalPage">
+			<item order="150" show="true">CanAskForPublishing</item>
+			<item order="1000" show="true">validationWorkflow_validation</item>
+		</visibility>
+
+	</extension>
+
+	<extension point="policies"
+		target="org.nuxeo.ecm.core.security.SecurityService">
+
+		<policy
+			class="fr.toutatice.ecm.platform.core.security.ToutaticeOwnerSecurityPolicy"
+			name="ottcOwner" order="1" />
+			
+		<policy
+            class="fr.toutatice.ecm.platform.core.security.MasterOwnerSecurityPolicy"
+            name="ottcMasterOwner" order="10" />
+
+	</extension>
+
+</component>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<component name="fr.toutatice.ecm.platform.services.workflows.infos.service">
+
+	<documentation>
+		Service to get information on given workflows and/or
+		tasks.
+	</documentation>
+
+	<service>
+		<provide
+			interface="fr.toutatice.ecm.platform.service.workflows.ToutaticeWorkflowService" />
+		<provide
+			interface="fr.toutatice.ecm.platform.service.workflows.ToutaticeTaskService" />
+	</service>
+
+	<implementation
+		class="fr.toutatice.ecm.platform.service.workflows.ToutaticeWorkflowNTaskService" />
+
+	<extension-point name="workflows">
+		<object
+			class="fr.toutatice.ecm.platform.service.workflows.WorkflowDescriptor" />
+	</extension-point>
+
+	<extension-point name="tasks">
+		<object class="fr.toutatice.ecm.platform.service.workflows.TaskDescriptor" />
+	</extension-point>
+
+</component>

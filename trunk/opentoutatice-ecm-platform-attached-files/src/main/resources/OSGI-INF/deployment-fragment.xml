@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+
+<fragment version="1">
+
+	<require>fr.toutatice.ecm.platform.web</require>
+
+	<extension target="application#MODULE">
+		<module>
+			<java>${bundle.fileName}</java>
+		</module>
+	</extension>
+
+   <!--  <extension target="web#CONTEXT-PARAM">
+
+		<context-param>
+			<param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+			<param-value>
+				/WEB-INF/ottcweb-util.taglib.xml;
+			</param-value>
+		</context-param>
+
+	</extension> -->
+
+	<extension target="faces-config#RENDERER">
+
+		<!-- Desactivation of Nx Renderer -->
+		<renderer>
+			<component-family>javax.faces.Input</component-family>
+			<renderer-type>
+				org.nuxeo.ecm.platform.ui.web.component.editor.UIHtmlEditor
+			</renderer-type>
+			<renderer-class>
+				org.opentoutatice.ecm.attached.files.url.converter.OttcHTMLEditorRenderer
+			</renderer-class>
+		</renderer>
+
+		<!-- <renderer>
+			<component-family>javax.faces.Input</component-family>
+			<renderer-type>
+				org.nuxeo.ecm.platform.ui.web.component.editor.OttcUIHtmlEditor
+			</renderer-type>
+			<renderer-class>
+				org.opentoutatice.ecm.attached.files.url.converter.OttcHTMLEditorRenderer
+			</renderer-class>
+		</renderer> -->
+
+	</extension>
+
+	<extension target="faces-config#CONVERTER">
+		<converter>
+			<converter-id>org.opentoutatice.ecm.attached.files.url.converter.DocumentContentConverter
+			</converter-id>
+			<converter-class>org.opentoutatice.ecm.attached.files.url.converter.DocumentContentConverter
+			</converter-class>
+		</converter>
+	</extension>
+
+	<install>
+	   <unzip from="${bundle.fileName}" to="/">
+            <include>nuxeo.war/**</include>
+        </unzip>
+	
+	
+	   <!--  <mkdir path="ottcweb.tmp" />
+
+		<unzip from="${bundle.fileName}" to="ottcweb.tmp">
+			<include>taglibs/**</include> 
+		</unzip>
+
+		<copy from="ottcweb.tmp/taglibs/" to="nuxeo.war/WEB-INF/" /> 
+
+		<delete path="ottcweb.tmp" /> -->
+	</install>
+
+</fragment>

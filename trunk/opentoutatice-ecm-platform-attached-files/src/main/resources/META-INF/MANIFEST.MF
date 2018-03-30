@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 1
+Bundle-Name: Opentoutatice document attached files feature
+Bundle-SymbolicName: org.opentoutatice.ecm.attached.files.feature;singleton:=true
+Bundle-Vendor: Toutatice
+Nuxeo-Component: OSGI-INF/extensions/urls/htmlsanitizer-contrib.xml,
+ OSGI-INF/extensions/ui/widgets-contrib.xml,
+ OSGI-INF/extensions/urls/codec-contrib.xml

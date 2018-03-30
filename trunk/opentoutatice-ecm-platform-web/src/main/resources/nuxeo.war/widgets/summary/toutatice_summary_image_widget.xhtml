@@ -1,0 +1,16 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	id="#{widget.id}">
+
+	<c:if test="#{widget.mode != 'create' and widget.mode != 'edit' and field_0 != null}">
+	   <c:if test="#{not widget.properties.hideLabel}">
+		<h3>
+			<h:outputText value="#{messages[widget.label]}" />
+		</h3>
+	   </c:if>	
+		<h:graphicImage	value="#{nxd:fileUrl('downloadFile', value, widget.fieldDefinitions[0].propertyName, field_1)}" />
+	</c:if>
+
+</f:subview>

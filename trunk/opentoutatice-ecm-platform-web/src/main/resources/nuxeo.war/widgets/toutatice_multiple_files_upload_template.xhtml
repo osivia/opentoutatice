@@ -1,0 +1,85 @@
+<f:subview xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:nxu="http://nuxeo.org/nxweb/util"
+    xmlns:nxl="http://nuxeo.org/nxforms/layout"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:nxh="http://nuxeo.org/nxweb/html">
+    
+    <c:set var="document" value="#{documentActions.getCurrentDocument()}" />
+
+        <a4j:outputPanel id="document_files_edit"
+            disableDoubleClickShield="true">
+
+            <a4j:jsFunction name="clearUpload" render="document_files_edit">
+                <a4j:param name="param1"
+                    assignTo="#{FileManageActions.fileToRemove}" />
+                <nxu:actionListenerMethod
+                    value="#{FileManageActions.removeOneOrAllUploadedFiles  }" />
+            </a4j:jsFunction>
+            <a4j:jsFunction name="clearAllUpload" render="document_files_edit">
+                <nxu:actionListenerMethod
+                    value="#{FileManageActions.removeOneOrAllUploadedFiles}" />
+            </a4j:jsFunction>
+            <script>
+    function processClear(event) {
+      if (event.rf.data.length == 1) {
+        if (event.rf.data.length) {
+          clearUpload(event.rf.data[0].name);
+        }
+      } else {
+        clearAllUpload();
+      }
+    }
+  </script>
+
+            <div class="ottcMultipleFilesUpload">
+
+                <a4j:region id="files_region">
+                    <a4j:outputPanel id="files_panel" layout="block">
+                        <c:forEach id="files_input" items="#{document.files.files}"
+                            var="file" varStatus="counter">
+                            <div class="itemFile">
+                                <a4j:commandLink immediate="true"
+                                    onclick="if( !confirmRemoveFiles('#{nxu:javaScriptEscape(document.files.files[counter.index].filename)}')) return false;"
+                                    actionListener="#{toutaticeFileManageActions.performAction}"
+                                    id="files_delete" render="document_files_edit"
+                                    bypassUpdates="true">
+                                    <h:graphicImage value="/icons/delete.png"
+                                        alt="#{messages['command.remove.file']}" />
+                                    <f:param name="index" value="#{counter.index}" />
+                                </a4j:commandLink>
+
+                                    <nxh:outputText
+                                        value="#{document.files.files[counter.index].filename}" />
+                            </div>
+                        </c:forEach>
+                    </a4j:outputPanel>
+                </a4j:region>
+
+                <div>
+                    <rich:fileUpload
+                        fileUploadListener="#{FileManageActions.processUpload}"
+                        addLabel="#{messages['ottc.file.upload.add.label']}"
+                        clearLabel="#{messages['RICH_FILE_UPLOAD_CLEAR_LABEL']}"
+                        clearAllLabel="#{messages['RICH_FILE_UPLOAD_CLEAR_ALL_LABEL']}"
+                        doneLabel="#{messages['RICH_FILE_UPLOAD_DONE_LABEL']}"
+                        listHeight="150" maxFilesQuantity="5" id="upload"
+                        locale="#{localeSelector.localeString}" immediateUpload="true">
+                        <a4j:ajax event="clear" onbeforesubmit="processClear(event);"
+                            render="document_files_edit" />
+                        <a4j:ajax event="uploadcomplete" render="document_files_edit"
+                            listener="#{toutaticeFileManageActions.validateMultipleUploadForDocument(document)}" />
+                    </rich:fileUpload>
+                    <h:message styleClass="errorMessage" for="upload"
+                        id="files_message" />
+                </div>
+
+            </div>
+
+        </a4j:outputPanel>
+
+</f:subview>

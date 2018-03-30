@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+
+<component name="toutatice.ecm.plateform.automation.chains">
+
+	<extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
+		point="chains">
+
+		<!-- Called only in workflow from Nuxeo (not from Portal) -->
+		<chain id="setOnLineInWF">
+			<operation id="Fetch.DocumentInList">
+				<param type="integer" name="index">0</param>
+			</operation>
+			<operation id="Document.SetOnLineOperation" />
+			<operation id="Seam.AddInfoMessage">
+				<param type="string" name="message">expr:Le document en version
+					@{Document.versionLabel} est en ligne
+				</param>
+			</operation>
+		</chain>
+
+		<chain id="setOffLine">
+			<operation id="Context.FetchDocument" />
+			<operation id="Document.RemovePublishedVersions">
+				<param type="document" name="target">expr:Document.parent.doc</param>
+			</operation>
+			<operation id="Notification.SendEvent">
+			 <param type="string" name="name">documentLocallyUnPublished</param>
+			</operation>
+			<operation id="Audit.Log">
+				<param type="string" name="event">Mise hors ligne</param>
+				<param type="string" name="category">Automation</param>
+			</operation>
+		</chain>
+
+		<chain id="setOffLineOne">
+			<operation id="Context.FetchDocument" />
+			<operation id="Context.RunDocumentOperation">
+				<param type="string" name="id">setOffLine</param>
+				<param type="boolean" name="isolate">false</param>
+			</operation>
+			<operation id="Seam.Refresh" />
+			<operation id="Seam.NavigateTo">
+				<param type="string" name="view">view_documents</param>
+			</operation>
+			<operation id="Seam.AddInfoMessage">
+				<param type="string" name="message">Le document est hors ligne</param>
+			</operation>
+		</chain>
+
+		<chain id="setOffLineSelection">
+			<operation id="Context.FetchDocument" />
+			<operation id="Context.RunDocumentOperation">
+				<param type="string" name="id">setOffLine</param>
+				<param type="boolean" name="isolate">false</param>
+			</operation>
+			<operation id="Seam.AddInfoMessage">
+				<param type="string" name="message">La sélection de documents est hors
+					ligne
+				</param>
+			</operation>
+		</chain>
+
+		<chain id="SetAssignees">
+			<operation id="Fetch.DocumentInList">
+				<param type="integer" name="index">0</param>
+			</operation>
+			<operation id="Document.GetUsersAndGroups">
+				<param type="string" name="permission">validationWorkflow_validation
+				</param>
+				<param type="string" name="variable name">assignedTo</param>
+				<param type="boolean" name="ignore groups">false</param>
+				<param type="boolean" name="prefix identifiers">true</param>
+				<param type="boolean" name="resolve groups">false</param>
+			</operation>
+			<operation id="Context.SetWorkflowVar">
+				<param type="string" name="name">assignedTo</param>
+				<param type="object" name="value">expr:Context["assignedTo"]</param>
+			</operation>
+		</chain>
+
+		<chain id="createOp">
+			<operation id="Context.FetchDocument" />
+			<operation id="Document.SetSpaceID" />
+			<operation id="Document.SetDomainID" />
+			<operation id="Document.SetWebId" />
+		</chain>
+
+		<!-- Chaines pour les webid -->
+		<chain id="webIdUnicity">
+			<operation id="Document.SetWebId" />
+		</chain>
+
+		<chain id="moveOp">
+			<operation id="Document.SetSpaceID" />
+			<operation id="Document.SetDomainID" />
+		</chain>
+
+		<chain id="updateDomain">
+			<operation id="Document.SetDomainID" />
+		</chain>
+
+		<chain id="images-resizing">
+			<operation id="Context.FetchDocument" />
+			<operation id="ImageResize.Operation">
+				<param type="int" name="img_heidth">800</param>
+				<param type="int" name="img_width">688</param>
+				<param type="string" name="xpath_img_in">ttc:images/*</param>
+				<param type="string" name="xpath_img_out">ttc:images</param>
+				<param type="boolean" name="enlarge">false</param>
+			</operation>
+		</chain>
+
+		<chain id="vignette-resizing">
+			<operation id="Context.FetchDocument" />
+			<operation id="ImageResize.Operation">
+				<param type="int" name="img_heidth">100</param>
+				<param type="int" name="img_width">100</param>
+				<param type="string" name="xpath_img_in">ttc:vignette</param>
+				<param type="string" name="xpath_img_out">ttc:vignette</param>
+				<param type="boolean" name="enlarge">true</param>
+			</operation>
+		</chain>
+
+		<!-- Only called by Portal -->
+		<chain id="portal_onlineWorkflow_validate">
+			<operation id="Context.FetchDocument" />
+			<operation id="Workflow.OperateProcess">
+				<param type="string" name="task name">validate-online</param>
+				<param type="string" name="transition">workflow_online_accept</param>
+			</operation>
+		</chain>
+
+		<chain id="portal_onlineWorkflow_rejected">
+			<operation id="Context.FetchDocument" />
+			<operation id="Workflow.OperateProcess">
+				<param type="string" name="task name">validate-online</param>
+				<param type="string" name="transition">workflow_online_reject</param>
+			</operation>
+			<operation id="Audit.Log">
+				<param type="string" name="event">Rejet de la demande de mise en ligne
+				</param>
+				<param type="string" name="category">Automation</param>
+			</operation>
+		</chain>
+
+		<chain id="onlineWorkflow_start">
+			<operation id="Context.FetchDocument" />
+			<operation id="Context.StartWorkflow">
+				<param type="string" name="id">toutatice_online_approbation</param>
+			</operation>
+			<operation id="Notification.SendTaskNotification">
+				<param type="string" name="task name">validate-online</param>
+				<param type="string" name="event">workflowOnlineTaskAssigned</param>
+			</operation>
+		</chain>
+
+		<chain id="setOnLine">
+			<operation id="Context.FetchDocument" />
+			<operation id="Document.SetOnLineOperation" />
+			<operation id="Notification.SendEvent">
+             <param type="string" name="name">documentLocallyPublished</param>
+            </operation>
+		</chain>
+
+	</extension>
+
+</component>
