@@ -450,14 +450,14 @@
 	<distributionManagement>
 		<repository>
 			<id>toutatice-releases</id>
-			<url>https://projet.toutatice.fr/nexus3/repository/toutatice-releases/</url>
+			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>toutatice-snapshots</id>
-			<url>https://projet.toutatice.fr/nexus3/repository/toutatice-snapshots/</url>
+			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
-
+	
     <profiles>
     	<profile>
     		<id>ci</id>
