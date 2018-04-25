@@ -38,12 +38,14 @@ public class ToutaticeCommentsHelper {
     public static Map<DocumentModel, List<DocumentModel>> getProxyComments(DocumentModel proxy) throws ClientException {
         Map<DocumentModel, List<DocumentModel>> comments = new HashMap<DocumentModel, List<DocumentModel>>();
         CommentableDocument commentableDoc = proxy.getAdapter(CommentableDocument.class);
-        List<DocumentModel> rootComments = commentableDoc.getComments();
-        if (null != rootComments && 0 < rootComments.size()) {
-        	for(DocumentModel rootComment : rootComments){
-        		List<DocumentModel> commentsThread = commentableDoc.getComments(rootComment);
-        		comments.put(rootComment, commentsThread);
-        	}
+        if(commentableDoc != null) { // Nullsafe
+	        List<DocumentModel> rootComments = commentableDoc.getComments();
+	        if (null != rootComments && 0 < rootComments.size()) {
+	        	for(DocumentModel rootComment : rootComments){
+	        		List<DocumentModel> commentsThread = commentableDoc.getComments(rootComment);
+	        		comments.put(rootComment, commentsThread);
+	        	}
+	        }
         }
         return comments;
     }
