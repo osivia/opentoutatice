@@ -36,3 +36,6 @@ ottc.currentlyEditedCache.maxsize=1000
 ottc.recentlyEditedCache.ttl=5
 # maximum number of entries the cache may contain
 ottc.recentlyEditedCache.maxsize=1000
+
+# The maximum sizeaccepted for the file widget (Ko, Mo, Go) 
+ottc.widget.filemaxSize=500Mo

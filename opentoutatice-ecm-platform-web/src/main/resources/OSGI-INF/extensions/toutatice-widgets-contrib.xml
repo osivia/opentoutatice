@@ -248,12 +248,12 @@
 				<field>file:filename</field>
 			</fields>
 			<properties mode="any">
-				<property name="template">/widgets/extended_file_widget.xhtml
-				</property>
+				<property name="template">/widgets/ottc_extended_file_widget.xhtml</property>
 			</properties>
 			<properties widgetMode="edit">
-				<property name="validator">#{ottcFileValidator.validateMimeType}
-				</property>
+				<property name="validator">#{ottcFileValidator.validateMimeType}</property>
+				<property name="maxSize">${ottc.widget.filemaxSize}</property>
+				<property name="onchange">fileValidator();</property>
 			</properties>
 		</widget>
 
