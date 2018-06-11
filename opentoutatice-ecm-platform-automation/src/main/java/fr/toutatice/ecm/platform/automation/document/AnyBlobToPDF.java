@@ -5,6 +5,7 @@ package fr.toutatice.ecm.platform.automation.document;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +67,19 @@ public class AnyBlobToPDF {
         Map<String, Serializable> cacheKeyParams = new HashMap<String, Serializable>();
         cacheKeyParams.put("modifiedOn", modDate.getTimeInMillis());
 
+        long startConversionDate = new Date().getTime();
+        
         BlobHolder pdfBh = this.service.convert(this.converterName, bh, cacheKeyParams);
+        
+        // LBI #1852 - tracking conversion problems.
+        if(pdfBh.getBlob() == null) {
+        	long elapsed = new Date().getTime() - startConversionDate;
+        	
+        	log.warn("Unable to convert "+doc.getId() + " (elapsed time : "+elapsed+ " ms.) "+doc.getPath()+ " - "+doc.getTitle());
+        	
+        	return null;
+        }
+        
         result = pdfBh.getBlob();
 
         String fname = result.getFilename();
