@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.common.utils.Path;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -29,6 +31,9 @@ import org.nuxeo.runtime.api.Framework;
 
 public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
 
+    /** specific Logger */ 
+    private static final Log sofficelog = LogFactory.getLog("soffice");
+	
     private static final String POOL_SIZE_PARAMETER = "EnvironmentPoolSize";
 
     private static final String TIMEOUT_DURATION_PARAMETER = "EnvironmentTimeoutDuration";
@@ -110,6 +115,11 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
         TTCCmdReturn result;
         BlobHolder blobResult;
         instanceCounter.incrementAndGet();
+        
+        if(sofficelog.isDebugEnabled()) {
+        	sofficelog.debug("instanceCounter = "+instanceCounter);
+        }
+        
         try {
             Map<String, Blob> blobParams = getCmdBlobParameters(blobHolder, parameters);
             Map<String, String> strParams = getCmdStringParameters(blobHolder, parameters);
@@ -159,6 +169,8 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
         }else{
             throw new ConversionException("LibreOffice user environment pool is full");
         }
+        
+        cmdStringParams.put("logPath", Framework.getProperty("nuxeo.log.dir"));
 
         return cmdStringParams;
     }

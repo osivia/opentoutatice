@@ -7,7 +7,7 @@
 
     <command name="sofficeConvertToPdf" enabled="true">
       <commandLine>soffice</commandLine>
-      <parameterString> --headless --nocrashreport --nodefault --nofirststartwizard --nolockcheck --nologo --norestore -env:UserInstallation=file://#{envDirPath} --convert-to pdf --outdir #{outDirPath} #{inFilePath}</parameterString>
+      <parameterString> --headless --nocrashreport --nodefault --nofirststartwizard --nolockcheck --nologo --norestore -env:UserInstallation=file://#{envDirPath} --convert-to pdf --outdir #{outDirPath} #{inFilePath} &gt;&gt; #{logPath}/soffice.log 2&gt;&amp;1</parameterString>
       <winParameterString> --headless --nocrashreport --nodefault --nofirststartwizard --nolockcheck --nologo --norestore -env:UserInstallation=file://#{envDirPath} --convert-to pdf --outdir #{outDirPath} #{inFilePath}</winParameterString>
       <installationDirective>You need to install soffice</installationDirective>
     </command>

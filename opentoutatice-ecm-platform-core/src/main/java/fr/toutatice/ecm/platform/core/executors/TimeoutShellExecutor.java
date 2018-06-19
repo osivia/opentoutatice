@@ -31,7 +31,8 @@ import org.nuxeo.log4j.ThreadedStreamGobbler;
  */
 public class TimeoutShellExecutor extends ShellExecutor {
 
-    private static final Log log = LogFactory.getLog(ShellExecutor.class);
+	/** specific Logger */ 
+    private static final Log sofficelog = LogFactory.getLog("soffice");
 
     public static final String TIMEOUT_SHELL_EXECUTOR = "TimeoutShellExecutor";
 
@@ -64,8 +65,8 @@ public class TimeoutShellExecutor extends ShellExecutor {
 
         Process p1;
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("Running system command: " + commandLine);
+            if (sofficelog.isDebugEnabled()) {
+            	sofficelog.debug("Running system command: " + commandLine);
             }
             ProcessBuilder processBuilder = new ProcessBuilder(cmd).directory(new File(env.getWorkingDirectory()));
             processBuilder.environment().putAll(env.getParameters());
@@ -151,14 +152,24 @@ public class TimeoutShellExecutor extends ShellExecutor {
         do {
             try {
                 p1.exitValue();
+                
                 return true;
             } catch (IllegalThreadStateException ex) {
                 if (rem > 0) {
+                	
                     Thread.sleep(Math.min(TimeUnit.NANOSECONDS.toMillis(rem) + 1, 100));
                 }
             }
             rem = unit.toNanos(timeout) - (System.nanoTime() - startTime);
         } while (rem > 0);
+        
+        
+        // Try to kill the process if timeout has exceeded.
+        if(sofficelog.isDebugEnabled()) {
+    		sofficelog.debug(p1.toString() + "is still running ... Try to stop it. ");
+    	}
+        p1.destroy();
+        
         return false;
     }
 }

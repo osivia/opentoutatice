@@ -19,6 +19,7 @@ import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.blobholder.BlobHolder;
+import org.nuxeo.ecm.core.convert.api.ConversionException;
 import org.nuxeo.ecm.core.convert.api.ConversionService;
 
 
@@ -31,9 +32,13 @@ public class AnyBlobToPDF {
 
     /** Logger. */
     private static final Log log = LogFactory.getLog(AnyBlobToPDF.class);
-
+    /** specific Logger */ 
+    private static final Log sofficelog = LogFactory.getLog("soffice");
+    
     /** Operation's ID. */
     public static final String ID = "Blob.AnyToPDF";
+    
+    
 
     @Context
     protected ConversionService service;
@@ -69,15 +74,29 @@ public class AnyBlobToPDF {
 
         long startConversionDate = new Date().getTime();
         
-        BlobHolder pdfBh = this.service.convert(this.converterName, bh, cacheKeyParams);
+        if(sofficelog.isDebugEnabled()) {
+        	sofficelog.debug("Start conversion of "+doc.getTitle() + " " +doc.getPath());
+        }
+        BlobHolder pdfBh = null;
+        try {
+        	pdfBh = this.service.convert(this.converterName, bh, cacheKeyParams);
+        }
+        catch(ConversionException e) {
+        	sofficelog.error(e);
+        }
         
         // LBI #1852 - tracking conversion problems.
         if(pdfBh.getBlob() == null) {
         	long elapsed = new Date().getTime() - startConversionDate;
         	
-        	log.warn("Unable to convert "+doc.getId() + " (elapsed time : "+elapsed+ " ms.) "+doc.getPath()+ " - "+doc.getTitle());
+        	sofficelog.warn("Unable to convert "+doc.getTitle() + " "+doc.getPath()+" (elapsed time : "+elapsed+ " ms.) ");
         	
         	return null;
+        }
+        else if(sofficelog.isDebugEnabled()) {
+        	long elapsed = new Date().getTime() - startConversionDate;
+
+        	sofficelog.debug("End of conversion of "+doc.getTitle() + " " +doc.getPath() + " (elapsed time : "+elapsed+ " ms.) ");
         }
         
         result = pdfBh.getBlob();
