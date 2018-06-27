@@ -86,7 +86,7 @@ public class AnyBlobToPDF {
         }
         
         // LBI #1852 - tracking conversion problems.
-        if(pdfBh.getBlob() == null) {
+        if(pdfBh == null || pdfBh.getBlob() == null) {
         	long elapsed = new Date().getTime() - startConversionDate;
         	
         	sofficelog.warn("Unable to convert "+doc.getTitle() + " "+doc.getPath()+" (elapsed time : "+elapsed+ " ms.) ");
