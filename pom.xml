@@ -5,7 +5,7 @@
 
 	<groupId>opentoutatice-ecm.platform</groupId>
 	<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-	<version>4.7-SNAPSHOT</version>
+	<version>4.7.2</version>
 	<packaging>pom</packaging>
 	<name>open toutatice plate-forme</name>
 
@@ -455,7 +455,7 @@
 		<url>https://github.com/osivia/opentoutatice</url>
 		<connection>scm:git:ssh://git@github.com/osivia/opentoutatice.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/osivia/opentoutatice.git</developerConnection>     
-		<tag>HEAD</tag> 
+		<tag>4.7.2</tag> 
     </scm>
 
 	<distributionManagement>
