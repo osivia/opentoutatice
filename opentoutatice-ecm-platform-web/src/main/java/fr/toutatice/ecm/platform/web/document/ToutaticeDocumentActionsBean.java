@@ -1,17 +1,17 @@
 /*
  * (C) Copyright 2014 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- * 
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- * 
- * 
+ *
+ *
  * Contributors:
  * mberhaut1
  */
@@ -55,6 +55,7 @@ import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.annotations.web.RequestParameter;
 import org.jboss.seam.core.Events;
 import org.jboss.seam.international.StatusMessage;
+import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -62,6 +63,7 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentSecurityException;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.LifeCycleConstants;
+import org.nuxeo.ecm.core.api.ListDiff;
 import org.nuxeo.ecm.core.api.VersioningOption;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.api.model.PropertyException;
@@ -73,7 +75,9 @@ import org.nuxeo.ecm.platform.forms.layout.api.FieldDefinition;
 import org.nuxeo.ecm.platform.picture.web.PictureBookManager;
 import org.nuxeo.ecm.platform.types.SubType;
 import org.nuxeo.ecm.platform.types.Type;
+import org.nuxeo.ecm.platform.ui.web.api.NavigationContext;
 import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
+import org.nuxeo.ecm.platform.ui.web.util.files.FileUtils;
 import org.nuxeo.ecm.webapp.contentbrowser.DocumentActionsBean;
 import org.nuxeo.ecm.webapp.helpers.EventNames;
 import org.nuxeo.runtime.api.Framework;
@@ -83,7 +87,9 @@ import fr.toutatice.ecm.platform.core.constants.PortalConstants;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeImageCollectionHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeOperationHelper;
+import fr.toutatice.ecm.platform.core.utils.exception.ToutaticeException;
 import fr.toutatice.ecm.platform.services.permalink.PermaLinkService;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
 import fr.toutatice.ecm.platform.web.fragments.PageBean;
@@ -91,7 +97,7 @@ import fr.toutatice.ecm.platform.web.workflows.ToutaticeDocumentRoutingActionsBe
 
 /**
  * @author oadam
- * 
+ *
  */
 @Name("documentActions")
 @Scope(CONVERSATION)
@@ -101,6 +107,13 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     private static final long serialVersionUID = -2085111938280655851L;
 
     private static final Log log = LogFactory.getLog(ToutaticeDocumentActionsBean.class);
+
+    private InputStream uploadedImage;
+
+    private String uploadedImageName;
+
+    @In(create = true)
+    protected transient NavigationContext navigationContext;
 
     @In(create = true)
     protected PageBean pageBean;
@@ -117,7 +130,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     @RequestParameter("params")
     protected String reqParams;
-    
+
     /** Used by Portal Views (information send to Portal) */
     protected boolean live = true;
 
@@ -175,12 +188,12 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public DocumentModel getParent(DocumentModel document, boolean unrestricted){
         DocumentModel parent = null;
-        
+
         DocumentModelList parentList = ToutaticeDocumentHelper.getParentList(this.documentManager, document, null, unrestricted, true);
         if(CollectionUtils.isNotEmpty(parentList)){
             parent = parentList.get(0);
         }
-        
+
         return parent;
     }
 
@@ -188,7 +201,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         return currentDocument.isProxy() && !StringUtils.endsWith(currentDocument.getName(), ToutaticeGlobalConst.CST_PROXY_NAME_SUFFIX);
     }
-    
+
     /**
      * @param currentDocument
      * @return true if current document is remote proxy.
@@ -197,6 +210,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         return currentDocument.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_REMOTE_PROXY);
     }
 
+    @Override
     public String saveDocument() throws ClientException {
         DocumentModel changeableDocument = navigationContext.getChangeableDocument();
         updateDocWithMapSwitch(changeableDocument);
@@ -206,19 +220,20 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     public String saveDocument(String viewId) throws ClientException {
         saveDocument();
-        
+
         String msgSuccessKey;
         if(isInPublishSpace(getCurrentDocument())){
             msgSuccessKey = PortalConstants.Notifications.SUCCESS_MESSAGE_CREATE.name();;
         } else {
-            msgSuccessKey = PortalConstants.Notifications.SUCCESS_MESSAGE_CREATE_IN_WS.name(); 
+            msgSuccessKey = PortalConstants.Notifications.SUCCESS_MESSAGE_CREATE_IN_WS.name();
         }
-                
+
         pageBean.setNotificationKey(msgSuccessKey);
         live = true;
         return viewId;
     }
-    
+
+    @Override
     public String updateDocument(DocumentModel doc) throws ClientException{
     	return super.updateDocument(doc);
     }
@@ -251,6 +266,77 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     public String saveNSetOnLineDocument(String viewId) throws ClientException {
         saveNSetOnLineDocument();
         return viewId;
+    }
+
+    public String constraintImage(Integer imageIndex, String resConstraint)
+			throws ToutaticeException {
+
+        if (StringUtils.isBlank(resConstraint) || (StringUtils.split(resConstraint, 'x').length < 2)) {
+			throw new ClientException("resConstraint must be provided");
+		}
+
+		DocumentModel currentDocument = navigationContext.getCurrentDocument();
+
+		OperationContext ctx = new OperationContext(documentManager);
+
+        String imageXpath = "ttc:images/" + imageIndex;
+        String[] widthHeigth = StringUtils.split(resConstraint, 'x');
+        Integer width = new Integer(widthHeigth[0]);
+        Integer height = new Integer(widthHeigth[1]);
+
+		ctx.setInput(currentDocument);
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("xpath_img_in", imageXpath);
+		parameters.put("xpath_img_out", imageXpath);
+        parameters.put("img_width", width);
+        parameters.put("img_heidth", height);
+		parameters.put("enlarge", true);
+
+		ToutaticeOperationHelper.callOperation(ctx, "ImageResize.Operation",
+				parameters);
+
+        return updateCurrentDocument("osivia_edit_attachments");
+	}
+
+    public String deleteImage(Integer imageIndex) {
+
+		DocumentModel currentDocument = navigationContext.getCurrentDocument();
+
+        List<Map<String, Object>> files = (List<Map<String, Object>>) currentDocument.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES);
+        Object file = CollectionUtils.get(files, imageIndex);
+        ToutaticeImageCollectionHelper.instance().remove(files, file);
+        currentDocument.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_TOUTATICE_IMAGES, (Serializable) files);
+
+        return updateCurrentDocument("osivia_edit_attachments");
+	}
+
+    public String uploadImage() throws ClientException {
+        return uploadImage(null);
+    }
+
+    public String uploadImage(Integer imageIndex) throws ClientException {
+        if ((uploadedImage == null) || (uploadedImageName == null)) {
+            return "";
+        }
+        final DocumentModel doc = navigationContext.getCurrentDocument();
+
+        final Map<String, Object> props = new HashMap<String, Object>();
+        uploadedImageName = FileUtils.getCleanFileName(uploadedImageName);
+        props.put("filename", uploadedImageName);
+        props.put("file", FileUtils.createSerializableBlob(uploadedImage, uploadedImageName, null));
+        final ListDiff listDiff = new ListDiff();
+
+        if (imageIndex != null) {
+            final List<Map<String, Object>> filesList = (List<Map<String, Object>>) doc.getProperty("files", "files");
+            final int lastIndex = filesList == null ? 0 : filesList.size();
+            int fileIndex = imageIndex > lastIndex ? lastIndex : imageIndex;
+            listDiff.modify(fileIndex, props);
+        } else {
+            listDiff.add(props);
+        }
+        doc.setProperty("files", "files", listDiff);
+
+        return "osivia_edit_attachments";
     }
 
     public String createNSetOnLinePictureBook() throws Exception {
@@ -301,6 +387,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      * surcharge de la méthode updateCurrentDocument de DocumentActionsBean pour
      * faire la mise à jour en fonction de mapSwitchState
      */
+    @Override
     public String updateCurrentDocument() throws ClientException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         updateDocWithMapSwitch(currentDocument);
@@ -317,11 +404,12 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     /**
      * mise à jour et incrémentation de la version(MINOR ou MAJOR) du document courant
-     * 
+     *
      * @param version MINOR ou MAJOR
      * @return l'identifiant de la vue retour
      * @throws ClientException
      */
+    @Override
     public String updateNUpgradeCurrentDocument(String version) throws ClientException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         VersioningOption vo = null;
@@ -336,7 +424,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     /**
      * mise à jour et incrémentation de la version(MINOR ou MAJOR) du document courant
-     * 
+     *
      * @param version MINOR ou MAJOR
      * @param viewId vue de redirection
      * @return l'identifiant de la vue retour
@@ -344,7 +432,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      */
     public String updateNUpgradeCurrentDocument(String version, String viewId) throws ClientException {
         updateNUpgradeCurrentDocument(version);
-        pageBean.setNotificationKey(PortalConstants.Notifications.SUCCESS_MESSAGE_MODIFY.name());	
+        pageBean.setNotificationKey(PortalConstants.Notifications.SUCCESS_MESSAGE_MODIFY.name());
         live = true;
         return viewId;
     }
@@ -373,12 +461,13 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     /**
      * méthode permettant de prendre en compte les éléments de map
      * mapSwitchState
-     * 
+     *
      * @param document
      *            document à mettre à jour
      * @throws PropertyException
      * @throws ClientException
      */
+    @Override
     public void updateDocWithMapSwitch(DocumentModel document) throws PropertyException, ClientException {
         if (null == mapSwitchState) {
             return;
@@ -440,7 +529,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     /**
      * Return the current document being either edited or created
-     * 
+     *
      * @return the current document
      * @throws ClientException
      */
@@ -459,14 +548,14 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     }
 
     private boolean isNewlyCreatedChangeableDocument(DocumentModel changeableDocument) throws ClientException {
-        return (changeableDocument != null && changeableDocument.getId() == null && changeableDocument.getPath() == null && changeableDocument.getTitle() == null);
+        return ((changeableDocument != null) && (changeableDocument.getId() == null) && (changeableDocument.getPath() == null) && (changeableDocument.getTitle() == null));
     }
 
     public boolean isOnlineDocument() throws ClientException {
         DocumentModel currentDocument = navigationContext.getCurrentDocument();
         return isOnlineDocument(currentDocument);
     }
-    
+
     /**
      * @return true if given document is in Publish Space.
      */
@@ -476,7 +565,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     /**
      * Indique si le document courant possède une version en ligne
-     * 
+     *
      * @param document
      * @return true si le document courant possède une version en ligne. false
      *         sinon.
@@ -489,7 +578,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
                 res = hasProxy(document);
             }
     	}catch(DocumentSecurityException se){
-    		// dans le cadre de la publication profilée 
+    		// dans le cadre de la publication profilée
     		// re-visualisation d'un contentview contenant un document qui n'est plus visible par l'utilisateur courant
     		// le document live est encore dans le cache par contre son proxy est mis à jour est n'est plus visible par l'U
     		log.warn(se.getMessage());
@@ -501,6 +590,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      * @return true if the current document owns a proxy (is online)
      * @throws ClientException
      */
+    @Override
     public boolean hasProxy(DocumentModel document) throws ClientException {
         return (null != getProxy(document));
     }
@@ -510,24 +600,26 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         return isOnlineWithSameVersion(currentDocument);
     }
 
+    @Override
     public String getProxyVersion(DocumentModel document) throws ClientException {
         String proxyVersion = ToutaticeDocumentHelper.getProxyVersion(documentManager, document);
         return (StringUtils.isNotBlank(proxyVersion) ? proxyVersion : CST_DEFAULT_UNKNOWN_VERSION_LABEL);
     }
 
+    @Override
     public DocumentModel getProxy(DocumentModel document) throws ClientException {
         return ToutaticeDocumentHelper.getProxy(documentManager, document, SecurityConstants.READ);
     }
 
     /**
      * Determine si l'action "seeOnlineDocumentVersion" doit être présentée.
-     * 
+     *
      * <b>Conditions</b> <ul>
      * <li>le document doit posséder un proxy local (publication locale pour mise en ligne)</li>
      * <li>le document ne doit pas être la version
      * valide</li>
      * </ul>
-     * 
+     *
      * @return true si l'action doit être présentée. false sinon.
      * @throws ClientException
      */
@@ -552,12 +644,12 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     /**
      * Determine si l'action "seeLiveDocumentVersion" de la vue 'summary' doit être présentée.
-     * 
-     * <b>Conditions</b> 
+     *
+     * <b>Conditions</b>
      * <ul><li>le document visualisé ne doit pas être la version live</li> <li>l'usager connecté doit avoir au minima un droit de lecture sur le
      * doucment source</li>
      * </ul>
-     * 
+     *
      * @return true si l'action doit être présentée. false sinon.
      * @throws ClientException
      */
@@ -570,7 +662,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
             DocumentModel sourceVersionDoc = documentManager.getSourceDocument(currentDoc.getRef());
             DocumentModel workingCopy = documentManager.getWorkingCopy(sourceVersionDoc.getRef());
             boolean isDeleted = (workingCopy == null)
-                    || (workingCopy != null && LifeCycleConstants.DELETED_STATE.equals(workingCopy.getCurrentLifeCycleState()));
+                    || ((workingCopy != null) && LifeCycleConstants.DELETED_STATE.equals(workingCopy.getCurrentLifeCycleState()));
             if (!isDeleted && !sourceVersionDoc.getId().equals(currentDoc.getId())) {
                 if (documentManager.hasPermission(sourceVersionDoc.getRef(), SecurityConstants.READ)) {
                     status = true;
@@ -669,7 +761,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     /**
      * Mettre hors ligne une sélection de documents dans un content view (folder
      * ou document non folderish)
-     * 
+     *
      * @throws ClientException
      */
     public void unPublishDocumentSelection() throws ClientException {
@@ -698,7 +790,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     public String formatMessages(String message, Object... params) throws ClientException {
         String formattedString = "";
 
-        if (null != params && params.length > 0) {
+        if ((null != params) && (params.length > 0)) {
             FacesMessage faceMsg = facesMessages.createFacesMessage(FacesMessage.SEVERITY_INFO, resourcesAccessor.getMessages().get(message), params);
             formattedString = faceMsg.getDetail();
         }
@@ -709,10 +801,11 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     /**
      * <p>Détermine si le document courant appartient à un espace destiné à la
      * publication dans le portail Toutatice </p>
-     * 
+     *
      * @return 'true' si le document courant peut être publié dans le portail.
      *         'false' sinon.
      */
+    @Override
     public boolean belongToPublishSpace() {
         return (!ToutaticeGlobalConst.NULL_DOCUMENT_MODEL.getType().equals(
                 ((ToutaticeNavigationContext) navigationContext).getCurrentPublicationArea().getType()));
@@ -729,12 +822,13 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     /**
      * <p>Détermine si le document courant appartient à un espace de travail en
      * ligne directe.
-     * 
+     *
      * </p>
-     * 
+     *
      * @return 'true' si le document appartient à une espace de travail. 'false'
      *         sinon.
      */
+    @Override
     public boolean belongToWorkSpace() {
         return (!ToutaticeGlobalConst.NULL_DOCUMENT_MODEL.getType()
                 .equals(((ToutaticeNavigationContext) navigationContext).getCurrentWorkspaceArea().getType()));
@@ -753,11 +847,12 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      *         document courant
      */
     // TODO a déplacer dans le addon publication distante
+    @Override
     public List<String> getDocumentPathSegments(DocumentModel document, DocumentModel referenceDoc) {
         List<String> list = new ArrayList<String>();
 
         try {
-            if ((null != referenceDoc && document.getId().equals(referenceDoc.getId()))
+            if (((null != referenceDoc) && document.getId().equals(referenceDoc.getId()))
                     || (ToutaticeNuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(document.getType()))) {
                 return list;
             }
@@ -819,13 +914,13 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     /**
      * Récupèrer le document de création (ChangeableDocument) ou le créer s'il
      * n'existe pas.
-     * 
+     *
      * @return le document nouvellement créé
      */
     public DocumentModel getOrCreateChangeableDocument() throws ClientException {
         DocumentModel changeableDocument = navigationContext.getChangeableDocument();
 
-        if (changeableDocument == null && typeName != null) {
+        if ((changeableDocument == null) && (typeName != null)) {
             // vérifier que le document peut être créé dans le document courant
             // parent/containeur
             DocumentModel container = navigationContext.getCurrentDocument();
@@ -841,7 +936,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
                 return null;
             }
 
-            if (reqParams != null && !"null".equalsIgnoreCase(reqParams)) {
+            if ((reqParams != null) && !"null".equalsIgnoreCase(reqParams)) {
                 try {
 
                     Base64 b64 = new Base64();
@@ -871,7 +966,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     /**
      * Define whether all the fields of the list have an empty value
-     * 
+     *
      * @param doc
      *            the current document in context
      * @param fields
@@ -924,7 +1019,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     /**
      * Check whether one field has an empty value according to its type
-     * 
+     *
      * @param fieldValue
      *            the field value
      * @return true if the value is empty (null or empty string). false
@@ -957,7 +1052,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         return status;
     }
 
-    
+
 	public Map<String, Boolean> getMapSwitchState() {
 		if(mapSwitchState==null){
 			mapSwitchState = new HashMap<String, Boolean>();
@@ -1021,9 +1116,9 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         if (mapSwitchState.get(param) == null) {
 
             DocumentModel currentDoc = getCurrentDocument();
-            if (currentDoc != null && param != null) {
+            if ((currentDoc != null) && (param != null)) {
                 Object value = currentDoc.getPropertyValue(param);
-                if (value == null || (value instanceof String[] && ((String[]) value).length == 0)) {
+                if ((value == null) || ((value instanceof String[]) && (((String[]) value).length == 0))) {
                     mapSwitchState.put(param, true);
                 } else {
                     mapSwitchState.put(param, false);
@@ -1042,7 +1137,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public String addDocumentKeyword() throws ClientException {
-        if (newKeyword == null || "".equals(newKeyword)) {
+        if ((newKeyword == null) || "".equals(newKeyword)) {
             return null;
         }
 
@@ -1076,8 +1171,8 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
             String[] s = newKeyword.split(",");
 
             // Itération sur la liste des mots-clefs
-            for (int i = 0; i < s.length; i++) {
-                subjects.add(s[i]);
+            for (String element : s) {
+                subjects.add(element);
             }
 
             newKeyword = "";
@@ -1129,13 +1224,13 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         return getDocumentPermalink(currentDoc);
 
     }
-    
+
     @Override
     public String getPermalink(String codec){
     	DocumentModel currentDoc = navigationContext.getCurrentDocument();
     	return getPermaLinkService().getPermalink(currentDoc, codec);
     }
-    
+
     public String getPermalink(DocumentModel doc, String codec){
     	return getPermaLinkService().getPermalink(doc, codec);
     }
@@ -1144,15 +1239,16 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
         return getPermaLinkService().getPermalink(doc);
     }
 
+    @Override
     public boolean hasChildrenWithType(String type) throws ClientException {
         DocumentModelList docLst = documentManager.getChildren(navigationContext.getCurrentDocument().getRef(), type);
-        return (docLst != null && !docLst.isEmpty());
+        return ((docLst != null) && !docLst.isEmpty());
     }
 
     public boolean hasView(String viewId) {
         return ToutaticeDocumentHelper.hasView(navigationContext.getCurrentDocument(), viewId);
     }
-    
+
 	/**
 	 * Retourne vrai si le type de document est commentable (contrairement à l'instance de document qui peut ne plus l'avoir).
 	 * @return
@@ -1160,7 +1256,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
     public boolean isTypeCommentable() {
 		SchemaManager service = Framework.getService(SchemaManager.class);
 		DocumentType documentType = service.getDocumentType(navigationContext.getCurrentDocument().getType());
-		
+
 		return documentType.hasFacet(ToutaticeNuxeoStudioConst.CST_DOC_COMMENTABLE);
     }
 }
