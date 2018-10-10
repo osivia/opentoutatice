@@ -27,8 +27,10 @@ $JQry(window).load(function() {
 
 		$targetTitle[incr] = $JQry($inputTitles[incr]);
 	
+		console.log(incr + " > " + $JQry($targetPath[incr]).val());
+		
 		// It is not an external URL
-		if($JQry($targetPath[incr]).val().contains("/nuxeo/")){
+		if($JQry($targetPath[incr]).val().search("/nuxeo/") != -1){
 			$targetTitle[incr].attr("readonly","readonly");
 		}
 	}
