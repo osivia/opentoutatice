@@ -23,7 +23,7 @@
 	</modules>
 
 	<properties>
-		<nuxeo.version>6.0-HF42</nuxeo.version>
+		<nuxeo.version>6.0-HF44</nuxeo.version>
 		<nuxeo.cap.version>6.0</nuxeo.cap.version>
 		<nuxeo.dam.version>6.0.0</nuxeo.dam.version>
 		<nuxeo.blogs.sites.version>1.2.0</nuxeo.blogs.sites.version>
@@ -432,8 +432,8 @@
 				      <groupId>org.codehaus.mojo</groupId>
 				      <artifactId>versions-maven-plugin</artifactId>
 				      <version>2.0</version>
-				     
-				    </plugin>				
+			    </plugin>
+                				
 				<!-- <plugin> <groupId>net.alchim31.maven</groupId> <artifactId>yuicompressor-maven-plugin</artifactId> 
 					<configuration> <aggregations> <aggregation> <includes> <include>**/*.js</include> 
 					</includes> <insertNewLine>true</insertNewLine> <excludes> <exclude>jquery-integration.min.js</exclude> 
@@ -441,6 +441,16 @@
 					<removeIncluded>true</removeIncluded> </aggregation> </aggregations> <excludes> 
 					<exclude>**/*.min.css</exclude> <exclude>**/*.min.js</exclude> </excludes> 
 					<jswarn>false</jswarn> <suffix>.min</suffix> </configuration> </plugin> -->
+                    
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.1</version>
+                    <configuration>
+                        <useSystemClassLoader>false</useSystemClassLoader>
+                    </configuration>
+                </plugin>
+                    
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -451,7 +461,7 @@
 		<url>https://github.com/osivia/opentoutatice</url>
 		<connection>scm:git:ssh://git@github.com/osivia/opentoutatice.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/osivia/opentoutatice.git</developerConnection>     
-		<tag>HEAD</tag> 
+		<tag>4.7-maintenance</tag> 
     </scm>
 
 	<distributionManagement>
