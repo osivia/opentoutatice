@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -332,7 +333,7 @@ public class ConfigurationBeanHelper implements Serializable {
 
             DocumentModelList configurations = session.query(query);
 
-            if (configurations.get(0) != null) {
+            if (CollectionUtils.isNotEmpty(configurations) && (configurations.get(0) != null)) {
                 DocumentModel config = configurations.get(0);
 
                 Map<String, Object> properties = config.getProperties("webconfiguration");
