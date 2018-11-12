@@ -58,10 +58,10 @@ public class WebConfsConfigurationAdapter extends AbstractLocalConfiguration<Web
     protected List<String> allowedConfsDocs;
     protected boolean denyAllConfsDocs;
 
-    public WebConfsConfigurationAdapter(DocumentModel document) {
-        documentRef = document.getRef();
-        allowedConfsDocs = getWebConfsList(document, WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_ALLOWED_PROPERTY);
-        denyAllConfsDocs = getDenyAllWebConfsProperty(document);
+    public WebConfsConfigurationAdapter(DocumentModel domain) {
+        documentRef = domain.getRef();
+        allowedConfsDocs = getWebConfsList(domain, WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_ALLOWED_PROPERTY);
+        denyAllConfsDocs = getDenyAllWebConfsProperty(domain);
     }
 
     public List<DocumentModel> getAllConfsDocs() {
@@ -101,25 +101,25 @@ public class WebConfsConfigurationAdapter extends AbstractLocalConfiguration<Web
         return Collections.unmodifiableList(Arrays.asList(webConfs));
     }
 
-    protected boolean getDenyAllWebConfsProperty(DocumentModel doc) {
+    protected boolean getDenyAllWebConfsProperty(DocumentModel domain) {
         try {
-            Boolean value = (Boolean) doc.getPropertyValue(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_DENIED_ALL_PROPERTY);
+            Boolean value = (Boolean) domain.getPropertyValue(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_DENIED_ALL_PROPERTY);
             return Boolean.TRUE.equals(value);
         } catch (ClientException e) {
             return false;
         }
     }
 
-    public List<DocumentModel> getSelectedConfs(DocumentModel document) throws ClientException {
+    public List<DocumentModel> getSelectedConfs(DocumentModel domain) throws ClientException {
         List<DocumentModel> selectedWebConfs = new ArrayList<DocumentModel>(0);
 
-        if (document.hasFacet(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_FACET)) {
+        if (domain.hasFacet(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_FACET)) {
 
-            Boolean allDocsDenied = (Boolean) document.getPropertyValue(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_DENIED_ALL_PROPERTY);
+            Boolean allDocsDenied = (Boolean) domain.getPropertyValue(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_DENIED_ALL_PROPERTY);
             if (BooleanUtils.isNotTrue(allDocsDenied)) {
 
-                List<String> allowedWebConfs = getAllowedWebConfs(document);
-                List<DocumentModel> allglobalWebConfs = getAllGlobalWebConfs(document);
+                List<String> allowedWebConfs = getAllowedWebConfs(domain);
+                List<DocumentModel> allglobalWebConfs = getAllGlobalWebConfs(domain);
 
                 for (String webConfCode : allowedWebConfs) {
                     boolean found = false;

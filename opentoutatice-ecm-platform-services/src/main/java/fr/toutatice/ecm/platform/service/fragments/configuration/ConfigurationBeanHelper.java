@@ -1,17 +1,17 @@
 /*
  * (C) Copyright 2014 Académie de Rennes (http://www.ac-rennes.fr/), OSIVIA (http://www.osivia.com) and others.
- *
+ * 
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
  * (LGPL) version 2.1 which accompanies this distribution, and is available at
  * http://www.gnu.org/licenses/lgpl-2.1.html
- *
+ * 
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
- *
- *
+ * 
+ * 
  * Contributors:
  * lbillon
  * dchevrier
@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.seam.ScopeType;
@@ -49,6 +50,7 @@ import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.core.local.configuration.WebConfsConfiguration;
 import fr.toutatice.ecm.platform.core.local.configuration.WebConfsConfigurationAdapter;
 import fr.toutatice.ecm.platform.core.local.configuration.WebConfsConfigurationConstants;
+import fr.toutatice.ecm.platform.core.query.helper.ToutaticeQueryHelper;
 
 /**
  * Bean for getting configuration informations
@@ -62,10 +64,13 @@ public class ConfigurationBeanHelper implements Serializable {
 
     private static final String WCONF_OPTIONS = "wconf:options";
 
-	private static final Log log = LogFactory.getLog(ConfigurationBeanHelper.class);
+    private static final Log log = LogFactory.getLog(ConfigurationBeanHelper.class);
 
     private static final String WEB_CONFS_QUERY = "select * from WebConfiguration where ecm:ancestorId = '%s' and wconf:type = '%s' "
             + "AND wconf:enabled=1 AND ecm:mixinType != 'HiddenInNavigation'  AND ecm:currentLifeCycleState <> 'deleted' ORDER BY ecm:pos";
+
+    @In(create = true)
+    protected CoreSession documentManager;
 
     /** nagivation context for nuxeo queries */
     @In(create = true)
@@ -183,17 +188,15 @@ public class ConfigurationBeanHelper implements Serializable {
         @Override
         public void run() throws ClientException {
 
-         // Get overriden or new local confs
+            // Get overriden or new local confs
             String localQuery = String.format(WEB_CONFS_QUERY, domain.getId(), confType);
             DocumentModelList localConfs = session.query(localQuery);
             if (domain.hasFacet(WebConfsConfigurationConstants.WEB_CONFS_CONFIGURATION_FACET)) {
-
                 WebConfsConfiguration webConfsConfiguration = domain.getAdapter(WebConfsConfiguration.class);
                 if (webConfsConfiguration != null) {
-
                     // Get global selected confs
                     List<DocumentModel> selectedConfs = webConfsConfiguration.getSelectedConfs(domain);
-                    if (selectedConfs != null) {
+                    if (!selectedConfs.isEmpty()) {
                         webConfs = new ArrayList<DocumentModel>(mergeGlobalNLocalConfs(selectedConfs, localConfs, confType));
                     } else {
                         // TODO: To test!!
@@ -202,7 +205,6 @@ public class ConfigurationBeanHelper implements Serializable {
 
                 }
             } else {
-
                 WebConfsConfigurationAdapter.UnrestrictedGetGlobalWebConfs globalConfsGetter = new WebConfsConfigurationAdapter.UnrestrictedGetGlobalWebConfs(
                         session);
                 globalConfsGetter.runUnrestricted();
@@ -294,10 +296,52 @@ public class ConfigurationBeanHelper implements Serializable {
     }
 
     /**
+     * @param code
+     * @param code2
+     * @param type
+     * @return Configuration object (WebCOnfiguration) of given type identified by given codes.
+     */
+    public DocumentModel getConfigurationObjectBy(String code, String code2, String type) {
+        // Result
+        DocumentModel configObj = null;
+
+        // Check local configuration first, i.e. configuration objects created under current Domain.
+        DocumentModel currentDomain = ToutaticeDocumentHelper.getDomain(this.documentManager, this.navigationContext.getCurrentDocument(), true);
+        String code2Clause = code2 == null ? StringUtils.EMPTY : " AND wconf:code2 = '" + code2 + "'";
+
+        String nxqlReq = "select * from WebConfiguration where ecm:ancestorId = '" + currentDomain.getId() + "'"
+                + " AND wconf:type = 'fragmenttype' AND wconf:enabled=1 "
+                + " AND wconf:code = '" + code + "'" + code2Clause
+                + " AND ecm:mixinType != 'HiddenInNavigation' AND ecm:currentLifeCycleState <> 'deleted' ";
+        DocumentModelList configObjs = ToutaticeQueryHelper.queryUnrestricted(this.documentManager, nxqlReq, 1);
+
+        if(configObjs.size() == 1){
+            configObj = configObjs.get(0);
+        } else {
+            // Check global configuration objects 
+            WebConfsConfiguration webConfsConfiguration = currentDomain.getAdapter(WebConfsConfiguration.class);
+            // FIXME: create metho in WebConfsConfiguration to get configuration object by code, code2
+            Iterator<DocumentModel> iterator = webConfsConfiguration.getSelectedConfs(currentDomain).iterator();
+            while (iterator.hasNext() && configObj == null) {
+                DocumentModel webConf = iterator.next();
+                String wcCode = ConfigurationObject.getCode(webConf);
+                String wcCode2 = ConfigurationObject.getCode2(webConf);
+                
+                if (StringUtils.equals(wcCode, code) && StringUtils.equals(wcCode2, code2)) {
+                    configObj = webConf;
+                }
+            }
+            
+        }        
+        return configObj;
+    }
+
+    /**
      * List of configurations in nuxeo
      *
      * @return webconfig of portlet
      */
+    // FIXME: doesn't take into account Global confs
     public List<Map<String, String>> getFragmentOptionsByCode(DocumentModel doc, String code2) {
 
         try {
@@ -385,4 +429,5 @@ public class ConfigurationBeanHelper implements Serializable {
         String propertyValue = getPropertyValue(paramName);
         return propertyValue == null ? defaultValue : propertyValue;
     }
+
 }

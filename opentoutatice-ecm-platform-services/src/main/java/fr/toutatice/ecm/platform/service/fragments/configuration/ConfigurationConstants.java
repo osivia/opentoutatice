@@ -25,6 +25,10 @@ package fr.toutatice.ecm.platform.service.fragments.configuration;
  *
  */
 public interface ConfigurationConstants {
+
+    String WCONF_SCHEMA_PFX = "wconf:";
+    String WCONF_CODE_XPATH = WCONF_SCHEMA_PFX + "code";
+    String WCONF_CODE2_XPATH = WCONF_SCHEMA_PFX + "code2";
 	
 	String KEY_OPTION = "propertyName";
 	String VALUE_OPTION = "propertyDefaultValue";

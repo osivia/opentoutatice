@@ -1,0 +1,49 @@
+<f:subview xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:nxu="http://nuxeo.org/nxweb/util"
+	xmlns:nxdir="http://nuxeo.org/nxdirectory"
+	xmlns:nxl="http://nuxeo.org/nxforms/layout" id="#{widget.id}">
+
+	<c:choose>
+		<c:when test="#{widget.mode == 'edit'}">
+
+			<c:set var="alterable" value="#{not widgetProperty_disabled}" />
+			<c:set var="groupStyle"
+				value="#{not widgetProperty_disabled ? 'input-group' : ''}" />
+
+			<a4j:region renderRegionOnly="true">
+				<a4j:outputPanel id="webid_panel" ajaxRendered="true">
+					<div class="#{groupStyle}">
+						<c:choose>
+							<c:when test="#{alterable}">
+								<nxl:widget name="toutatice_webId_widget" mode="edit"
+									value="#{currentDocument}" class="form-control" />
+									<span class="input-group-btn remove-cross"> <a4j:commandLink
+											id="webid_delete"
+											action="#{documentActions.removeDocumentWebId()}"
+											render="webid_panel"
+											title="#{messages[toutatice.label.remove.webid]}"
+											styleClass="btn btn-default" limitRender="true">
+											<i class="glyphicons halflings remove"></i>
+										</a4j:commandLink>
+									</span>
+							</c:when>
+							<c:otherwise>
+								<nxl:widget name="toutatice_webId_widget" mode="view"
+								value="#{currentDocument}" class="form-control" />
+							</c:otherwise>
+						</c:choose>
+					</div>
+				</a4j:outputPanel>
+			</a4j:region>
+
+
+		</c:when>
+		<c:when test="#{widget.mode == 'view'}">
+			<h:outputText value="#{field_0}" />
+		</c:when>
+	</c:choose>
+
+</f:subview>

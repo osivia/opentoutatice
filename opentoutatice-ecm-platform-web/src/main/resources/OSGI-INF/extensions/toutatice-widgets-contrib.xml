@@ -154,7 +154,7 @@
 				<field>ttc:webid</field>
 			</fields>
 			<properties widgetMode="edit">
-				<property name="disabled">#{(!currentUser.administrator)
+				<property name="disabled">#{(!currentUser.administrator and !securityActions.hasAllRights())
 					or currentDocument.hasFacet('WebidDisabled')}
 				</property>
 				<property name="required">true</property>
