@@ -109,14 +109,4 @@
 		</profile>
 	</profiles>
 
-	<distributionManagement>
-		<repository>
-			<id>toutatice-releases</id>
-			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>toutatice-snapshots</id>
-			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>
