@@ -60,6 +60,7 @@ import org.nuxeo.ecm.core.api.DocumentException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentSecurityException;
+import org.nuxeo.ecm.core.api.Filter;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.LifeCycleConstants;
 import org.nuxeo.ecm.core.api.VersioningOption;
@@ -641,7 +642,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      * Mettre en ligne une sélection de documents dans un content view (folder
      * ou document non folderish)
      */
-    public void publishDocumentSelection() {
+    public void setOnLineDocumentSelection() {
         List<DocumentModel> currentDocumentSelection = documentsListsManager.getWorkingList(CURRENT_DOCUMENT_SELECTION);
 
         if (currentDocumentSelection.isEmpty()) {
@@ -667,7 +668,7 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
      * 
      * @throws ClientException
      */
-    public void unPublishDocumentSelection() throws ClientException {
+    public void setOffLineDocumentSelection() throws ClientException {
         DocumentModel currentFolder = navigationContext.getCurrentDocument();
         List<DocumentModel> currentDocumentSelection = documentsListsManager.getWorkingList(CURRENT_DOCUMENT_SELECTION);
 
@@ -1157,5 +1158,33 @@ public class ToutaticeDocumentActionsBean extends DocumentActionsBean implements
 		DocumentType documentType = service.getDocumentType(navigationContext.getCurrentDocument().getType());
 		
 		return documentType.hasFacet(ToutaticeNuxeoStudioConst.CST_DOC_COMMENTABLE);
+    }
+
+    /**
+     * Checks if current document belongs to template, i.e. descendant of TemplateRoot.
+     * 
+     * @return true if current document belongs to template.
+     */
+    public boolean isCreatingTemplate() {
+        boolean is = false; 
+
+        Filter tmplFilter = new Filter(){
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public boolean accept(DocumentModel docModel) {
+                return docModel != null && StringUtils.equals("TemplateRoot", docModel.getType());
+            }
+            
+        };
+
+        DocumentModelList tmplParents = ToutaticeDocumentHelper.getParentList(this.documentManager, this.navigationContext.getCurrentDocument(), tmplFilter,
+                true, true, false);
+        if (tmplParents != null && tmplParents.size() == 1) {
+            is = true;
+        }
+
+        return is;
     }
 }

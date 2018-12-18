@@ -10,6 +10,8 @@
 
 		<handler chainId="setOnLine">
 			<event>documentCreated</event>
+			<!-- Case of Portal Site created with template  -->
+			<!-- <event>documentCreatedByCopy</event> -->
 			<filters>
 				<doctype>PortalSite</doctype>
 				<condition>Document.isVersion() == false</condition>

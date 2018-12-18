@@ -97,6 +97,8 @@ public class PublishDocument {
             DocumentRef targetRef = target.getRef();
             DocumentRef baseDocRef = this.doc.getRef();
 
+            GregorianCalendar lastIssuedDate = null;
+
             /** gestion du cycle de vie du document à publier */
             if (!this.doc.isVersion()) {
                 // si le document est en projet: le valider
@@ -145,6 +147,12 @@ public class PublishDocument {
                     if (this.doc.isVersion() && override) {
                         this.session.removeDocument(proxy.getRef());
                     }
+
+                    // Get last dc:issued date
+                    GregorianCalendar issuedDate = (GregorianCalendar) proxy.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_NUXEO_DC_ISSUED);
+                    if (lastIssuedDate == null || issuedDate.after(lastIssuedDate)) {
+                        lastIssuedDate = issuedDate;
+                    }
                 }
 
                 /** publier */
@@ -172,18 +180,32 @@ public class PublishDocument {
                     this.session.orderBefore(targetRef, this.newProxy.getName(), baseDoc.getName());
                 }
 
+
                 /** positionner la date de publication */
                 // #652 - Si une date de publication fonctionnelle existe, elle est appliquée.
-                GregorianCalendar issued = new GregorianCalendar();
-                if(doc.getPropertyValue("ttc:publicationDate") != null) {
-                	issued = (GregorianCalendar) doc.getPropertyValue("ttc:publicationDate");
+                boolean yetPublished = lastIssuedDate != null;
+                GregorianCalendar issued = null;
+                if (this.doc.getPropertyValue("ttc:publicationDate") != null) {
+                    // Check on working copy (form submit)
+                    issued = (GregorianCalendar) doc.getPropertyValue("ttc:publicationDate");
+                } else {
+                    if (!yetPublished) {
+                        // Never published
+                        issued = new GregorianCalendar();
+                    } else {
+                        // New version is created: take precendent date
+                        issued = lastIssuedDate;
+                    }
                 }
                 
-                String srcDocId = this.newProxy.getSourceId();
-                DocumentModel srcDoc = this.session.getDocument(new IdRef(srcDocId));
-                
-				srcDoc.setPropertyValue("dc:issued", issued);
-                srcDoc = this.session.saveDocument(srcDoc);
+                if (issued != null) {
+                    // Get pointed version
+                    String srcDocId = this.newProxy.getSourceId();
+                    DocumentModel srcDoc = this.session.getDocument(new IdRef(srcDocId));
+
+                    srcDoc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_NUXEO_DC_ISSUED, issued);
+                    srcDoc = this.session.saveDocument(srcDoc);
+                }
                 
             } else {
                 throw new ClientException("Failed to get the target document reference");

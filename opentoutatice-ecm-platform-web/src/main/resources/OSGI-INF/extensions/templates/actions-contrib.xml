@@ -3,6 +3,7 @@
 
 	<require>fr.toutatice.ecm.platform.web.local.publishing.actions
 	</require>
+	<require>fr.toutatice.ecm.platform.web.local.publishing.filters</require>
 
 	<extension target="org.nuxeo.ecm.platform.actions.ActionService"
 		point="actions">
@@ -18,10 +19,6 @@
 			link="#{documentTemplatesActions.createDocumentFromTemplate}" order="0">
 			<category>CREATE_DOCUMENT_FORM</category>
 			<filter-id>is_creating_portalsite</filter-id>
-		</action>
-
-		<action id="CREATE_AND_SET_ONLINE_DOCUMENT">
-			<filter-id>portal_site_has_no_template</filter-id>
 		</action>
 
 
@@ -41,11 +38,10 @@
 				<condition>#{changeableDocument.type == 'PortalSite'}</condition>
 			</rule>
 		</filter>
-
-		<filter id="portal_site_has_no_template">
-			<rule grant="true">
-				<condition>#{empty
-					documentTemplatesActions.getTemplates('PortalSite')}</condition>
+		
+		<filter id="is_not_creating_template">
+			<rule grant="false">
+				<condition>#{documentActions.isCreatingTemplate() == true}</condition>
 			</rule>
 		</filter>
 

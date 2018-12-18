@@ -1,0 +1,82 @@
+@import "../bootstrap-tabs/tabs.less";
+
+body {
+	background-color: #f8f8f8;
+}
+
+.glyphicons {
+	 padding-right: 10px;
+}
+
+nav {
+	padding-bottom: 10px;
+}
+
+@picture-height: 100px;
+
+.up {
+    z-index: 1000;
+}
+
+div.tab-content {
+    height: 100%;
+}
+
+ul.nav.nav-tabs > li {
+    .up;
+}
+
+#img_style_value_checkbox label {
+    margin-bottom: 15px;
+}
+
+.picture {
+    position: relative;
+    height: @picture-height + 2 * @thumbnail-padding + 2px;
+    p.indication {
+        color: #31708f;
+        font-size: 12px;
+        white-space: normal;
+        position: relative;
+    }
+
+    .thumbnail {
+        .up;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 0;
+        img {
+            max-height: @picture-height;
+        }
+    }
+
+    a.dNd:active , a.DnD:hover {
+        text-decoration: none;
+    }
+    
+    .asDropZone {
+        position: fixed ! important;
+        top: 0 ! important;
+        bottom: 0 ! important;
+        left: 0 ! important;
+        right: 0 ! important;
+    }
+}
+
+p {
+    padding-top: @padding-small-vertical;
+    padding-bottom: @padding-large-vertical;
+    .text-overflow ();
+}
+
+.tabs ul li a {
+    display: block;
+    overflow: hidden;
+    padding: 10px 12px;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
