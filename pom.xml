@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -419,15 +418,11 @@
 					<artifactId>lesscss-maven-plugin</artifactId>
 					<version>1.7.0.1.1</version>
 					<configuration>
-						<sourceDirectory>${project.basedir}/src/main/less</sourceDirectory>
+						<sourceDirectory>${project.basedir}/src/main/less/opentoutatice</sourceDirectory>
 						<outputDirectory>${project.basedir}/src/main/resources/nuxeo.war/css</outputDirectory>
 						<compress>true</compress>
 						<includes>
-							<include>toutatice-popup.less</include>
-							<include>plugin-popup.less</include>
-							<include>custom-popup.less</include>
-							<include>fragments-popup.less</include>
-							<include>custom-remote-publishing.less</include>
+							<include>*.less</include>
 						</includes>
 						<outputFileFormat>{fileName}.min.css</outputFileFormat>
 					</configuration>
@@ -439,13 +434,6 @@
 						</execution>
 					</executions>
 				</plugin>
-				<!-- <plugin> <groupId>net.alchim31.maven</groupId> <artifactId>yuicompressor-maven-plugin</artifactId> 
-					<configuration> <aggregations> <aggregation> <includes> <include>**/*.js</include> 
-					</includes> <insertNewLine>true</insertNewLine> <excludes> <exclude>jquery-integration.min.js</exclude> 
-					</excludes> <output>${project.build.directory}/${project.build.finalName}/js/socle.min.js</output> 
-					<removeIncluded>true</removeIncluded> </aggregation> </aggregations> <excludes> 
-					<exclude>**/*.min.css</exclude> <exclude>**/*.min.js</exclude> </excludes> 
-					<jswarn>false</jswarn> <suffix>.min</suffix> </configuration> </plugin> -->
 			</plugins>
 		</pluginManagement>
 	</build>
