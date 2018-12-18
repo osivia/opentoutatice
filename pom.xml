@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -10,6 +11,7 @@
 	<name>open toutatice plate-forme</name>
 
 	<modules>
+		<module>opentoutatice-core</module>
 		<module>opentoutatice-ecm-platform-core</module>
 		<module>opentoutatice-ecm-platform-web</module>
 		<module>opentoutatice-ecm-platform-automation</module>
@@ -243,6 +245,11 @@
 			<!-- Opentoutatice dependencies -->
 			<dependency>
 				<groupId>opentoutatice-ecm.platform</groupId>
+				<artifactId>opentoutatice-core-type-enricher</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>opentoutatice-ecm.platform</groupId>
 				<artifactId>opentoutatice-ecm-platform-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -444,17 +451,20 @@
 	</build>
 
 	<scm>
-		<developerConnection>scm:svn:http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/branches/4.6-maintenance</developerConnection>
+		<url>https://github.com/osivia/opentoutatice</url>
+		<connection>scm:git:ssh://git@github.com/osivia/opentoutatice.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/osivia/opentoutatice.git</developerConnection>
+		<tag>4.6-maintenance</tag>
 	</scm>
 
 	<distributionManagement>
 		<repository>
-			<id>toutatice-releases</id>
-			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-releases</url>
+			<id>osivia-releases</id>
+			<url>http://www.osivia.org/nexus/content/repositories/osivia-releases</url>
 		</repository>
 		<snapshotRepository>
-			<id>toutatice-snapshots</id>
-			<url>http://projet.toutatice.fr/nexus/content/repositories/toutatice-snapshots</url>
+			<id>osivia-snapshots</id>
+			<url>http://www.osivia.org/nexus/content/repositories/osivia-snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 

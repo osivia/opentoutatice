@@ -22,6 +22,10 @@
 		<!-- Additional bundles to be deployed by the MP -->
 		<dependency>
 			<groupId>opentoutatice-ecm.platform</groupId>
+			<artifactId>opentoutatice-core-type-enricher</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>opentoutatice-ecm.platform</groupId>
 			<artifactId>opentoutatice-ecm-platform-core</artifactId>
 		</dependency>
 		<dependency>
