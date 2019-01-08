@@ -81,5 +81,6 @@
 	<xs:element name="commentsForbidden" type="xs:boolean" />
 	<!-- #1529 - Métadonnées non présentées  -->
 	<xs:element name="hideMetadatas" type="xs:boolean" />
-	
+	<!-- related software version -->
+	<xs:element name="modelVersion" type="xs:string" />		
 </xs:schema>
