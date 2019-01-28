@@ -17,6 +17,7 @@ import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.NuxeoGroup;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.api.security.ACE;
 import org.nuxeo.ecm.core.api.security.ACL;
@@ -81,9 +82,9 @@ public class GetDocumentACLs {
     protected void extractNSetACEs(JSONArray jsonACEs, ACL acl) {
         ACE[] acEs = acl.getACEs();
         if (ArrayUtils.isNotEmpty(acEs)) {
-            List<String> groupIds = userManager.getGroupIds();
+            //List<String> groupIds = userManager.getGroupIds();
             for (ACE ace : acEs) {
-                jsonACEs.add(convert(ace, groupIds));
+                jsonACEs.add(convert(ace));
             }
         }
     }
@@ -95,17 +96,21 @@ public class GetDocumentACLs {
      * @param groupIds
      * @return ACE as JSONObject
      */
-    protected JSONObject convert(ACE ace, List<String> groupIds){
+    protected JSONObject convert(ACE ace){
         JSONObject aceEntry = new JSONObject();
         aceEntry.element("username", ace.getUsername());
         aceEntry.element("permission", ace.getPermission());
         aceEntry.element("isGranted", ace.isGranted());
         
-        if(CollectionUtils.isNotEmpty(groupIds)){
-            aceEntry.element("isGroup", groupIds.contains(ace.getUsername()));
-        } else {
-            aceEntry.element("isGroup", false);
-        }
+//        if(CollectionUtils.isNotEmpty(groupIds)){
+        
+        // #1940 -read acl performance
+    	NuxeoGroup group = userManager.getGroup(ace.getUsername());
+        aceEntry.element("isGroup", group != null);
+            
+//        } else {
+//            aceEntry.element("isGroup", false);
+//        }
         
         return aceEntry;
     }
