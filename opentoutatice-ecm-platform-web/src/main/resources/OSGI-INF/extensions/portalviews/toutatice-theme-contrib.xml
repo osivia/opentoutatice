@@ -40,6 +40,14 @@
 
 	</extension>
 
+	<extension target="org.nuxeo.theme.styling.service" point="pages">
+		<themePage name="toutatice/popup">
+			<styles append="true">
+				<style>nuxeo-select2</style>
+			</styles>
+		</themePage>
+	</extension>
+
 	<extension target="org.nuxeo.theme.services.ThemeService"
 		point="resources">
 
@@ -53,15 +61,12 @@
 			<path>css/custom-popup.min.css</path>
 		</resource>
 		<resource name="icons.css">
-            <path>css/icons.css</path>
-        </resource>
-        
-         <!-- <resource name="jquery.ui.js">
-            <path>scripts/jquery-ui.js</path>
-        </resource> -->
-        <!-- <resource name="bootstrap.tooltip.js">
-            <path>scripts/bootstrap/bootstrap-tooltip.js</path>
-        </resource> -->
+			<path>css/icons.css</path>
+		</resource>
+
+		<!-- <resource name="jquery.ui.js"> <path>scripts/jquery-ui.js</path> </resource> -->
+		<!-- <resource name="bootstrap.tooltip.js"> <path>scripts/bootstrap/bootstrap-tooltip.js</path> 
+			</resource> -->
 		<resource name="bootstrap.datepicker.js">
 			<path>scripts/bootstrap/bootstrap-datepicker.js</path>
 		</resource>
@@ -91,10 +96,9 @@
 		<resource name="icons.js">
 			<path>scripts/icons.js</path>
 		</resource>
-		
-		<!-- <resource name="tooltip.focus.js">
-            <path>scripts/tooltip-focus.js</path>
-        </resource> -->
+
+		<!-- <resource name="tooltip.focus.js"> <path>scripts/tooltip-focus.js</path> 
+			</resource> -->
 
 	</extension>
 
