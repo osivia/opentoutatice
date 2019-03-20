@@ -387,7 +387,6 @@
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.2.1</version>
 					<configuration>
-						<tagBase>http://projet.toutatice.fr/repos/toutatice-ecm/opentoutatice/tags</tagBase>
 						<releaseProfiles>unpack,pack</releaseProfiles>
 						<preparationGoals>clean install</preparationGoals>
 						<goals>deploy</goals>
