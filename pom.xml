@@ -18,12 +18,12 @@
 		<module>opentoutatice-ecm-platform-attached-files</module>
 		<module>opentoutatice-ecm-platform-reporting</module>
 		<module>opentoutatice-ecm-platform-probes</module>
-		<module>opentoutatice-ecm-platform-marketplace</module>
-		<module>opentoutatice-ecm-platform-distribution</module>
+		<!-- <module>opentoutatice-ecm-platform-marketplace</module>
+		<module>opentoutatice-ecm-platform-distribution</module> -->
 	</modules>
 
 	<properties>
-		<nuxeo.version>6.0-HF44</nuxeo.version>
+		<nuxeo.version>6.0-HF45</nuxeo.version>
 		<nuxeo.cap.version>6.0</nuxeo.cap.version>
 		<nuxeo.dam.version>6.0.0</nuxeo.dam.version>
 		<nuxeo.blogs.sites.version>1.2.0</nuxeo.blogs.sites.version>

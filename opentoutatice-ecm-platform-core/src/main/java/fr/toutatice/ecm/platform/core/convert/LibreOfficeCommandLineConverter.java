@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.common.utils.Path;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -29,6 +31,9 @@ import org.nuxeo.runtime.api.Framework;
 
 public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
 
+    /** specific Logger */ 
+    private static final Log sofficelog = LogFactory.getLog("soffice");
+	
     private static final String POOL_SIZE_PARAMETER = "EnvironmentPoolSize";
 
     private static final String TIMEOUT_DURATION_PARAMETER = "EnvironmentTimeoutDuration";
@@ -38,12 +43,12 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
 
     /**
      * timeoutDuration
-     * 
+     *
      * the maximum time to wait, in seconds
-     * 
+     *
      * @see man timeout
-     * 
-     * */
+     *
+     */
     private static String timeoutDuration;
 
     private static AtomicInteger instanceCounter;
@@ -110,6 +115,11 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
         TTCCmdReturn result;
         BlobHolder blobResult;
         instanceCounter.incrementAndGet();
+        
+        if(sofficelog.isDebugEnabled()) {
+        	sofficelog.debug("instanceCounter = "+instanceCounter);
+        }
+        
         try {
             Map<String, Blob> blobParams = getCmdBlobParameters(blobHolder, parameters);
             Map<String, String> strParams = getCmdStringParameters(blobHolder, parameters);
@@ -125,7 +135,7 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
 
     @Override
     protected Map<String, Blob> getCmdBlobParameters(BlobHolder blobHolder, Map<String, Serializable> parameters) throws ConversionException {
-        Map<String, Blob> cmdBlobParams = new HashMap<String, Blob>();
+        Map<String, Blob> cmdBlobParams = new HashMap<>();
         try {
             cmdBlobParams.put("inFilePath", blobHolder.getBlob());
         } catch (ClientException e) {
@@ -136,7 +146,7 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
 
     @Override
     protected Map<String, String> getCmdStringParameters(BlobHolder blobHolder, Map<String, Serializable> parameters) throws ConversionException {
-        Map<String, String> cmdStringParams = new HashMap<String, String>();
+        Map<String, String> cmdStringParams = new HashMap<>();
 
         // tmp working directory
         String baseDir = getTmpDirectory(parameters);
@@ -160,6 +170,8 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
             throw new ConversionException("LibreOffice user environment pool is full");
         }
         
+        cmdStringParams.put("logPath", Framework.getProperty("nuxeo.log.dir"));
+
         return cmdStringParams;
     }
 
@@ -168,7 +180,7 @@ public class LibreOfficeCommandLineConverter extends CommandLineBasedConverter {
         String outputPath = cmdParams.getParameters().get("outDirPath");
         File outputDir = new File(outputPath);
         File[] files = outputDir.listFiles();
-        List<Blob> blobs = new ArrayList<Blob>();
+        List<Blob> blobs = new ArrayList<>();
 
         for (File file : files) {
             Blob blob = new FileBlob(file);

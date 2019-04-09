@@ -89,7 +89,10 @@
         </xs:sequence>
     </xs:complexType>
    <xs:element name="spaceMembers" type="nxs:lstSpaceMembersType" />
-   
+   <!-- 
    <xs:element name="headImage" type="nxs:content"/>
+    -->
+	<xs:element name="welcomeTitle" type="xs:string" />
+    
 	
 </xs:schema>

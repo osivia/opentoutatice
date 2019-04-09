@@ -50,6 +50,6 @@ Nuxeo-Component: OSGI-INF/extensions/toutatice-schemas-contrib.xml,
  OSGI-INF/extensions/userworkspace/toutatice-userworkspace-contrib.xml,
  OSGI-INF/extensions/edition/toutatice-edition-cache-contrib.xml,
  OSGI-INF/extensions/edition/toutatice-edition-infos-provider-contrib.xml,
- 
+ OSGI-INF/extensions/trash/toutatice-trash-service-contrib.xml
  
  

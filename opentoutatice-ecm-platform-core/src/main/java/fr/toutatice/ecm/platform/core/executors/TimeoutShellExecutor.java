@@ -26,12 +26,13 @@ import org.nuxeo.log4j.ThreadedStreamGobbler;
 
 /**
  * ShellExecutor with timeout support
- * 
+ *
  * @author Dorian Licois
  */
 public class TimeoutShellExecutor extends ShellExecutor {
 
-    private static final Log log = LogFactory.getLog(ShellExecutor.class);
+	/** specific Logger */ 
+    private static final Log sofficelog = LogFactory.getLog("soffice");
 
     public static final String TIMEOUT_SHELL_EXECUTOR = "TimeoutShellExecutor";
 
@@ -54,7 +55,7 @@ public class TimeoutShellExecutor extends ShellExecutor {
             return new ExecResult(cmdDesc.getCommand(), e);
         }
         String commandLine = StringUtils.join(cmd, " ");
-        
+
         HashMap<String, CmdParameter> paramsValues = params.getCmdParameters();
         CmdParameter timeoutDurationP = paramsValues.get("timeoutDuration");
         Long timeoutDuration = null;
@@ -64,8 +65,8 @@ public class TimeoutShellExecutor extends ShellExecutor {
 
         Process p1;
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("Running system command: " + commandLine);
+            if (sofficelog.isDebugEnabled()) {
+            	sofficelog.debug("Running system command: " + commandLine);
             }
             ProcessBuilder processBuilder = new ProcessBuilder(cmd).directory(new File(env.getWorkingDirectory()));
             processBuilder.environment().putAll(env.getParameters());
@@ -109,31 +110,31 @@ public class TimeoutShellExecutor extends ShellExecutor {
     }
 
     /**
-     * 
+     *
      * Causes the current thread to wait, if necessary, until the
      * subprocess represented by this {@code Process} object has
      * terminated, or the specified waiting time elapses.
-     * 
-     * 
+     *
+     *
      * <p>
      * If the subprocess has already terminated then this method returns
-     * 
+     *
      * immediately with the value {@code true}. If the process has not
-     * 
+     *
      * terminated and the timeout value is less than, or equal to, zero, then
-     * 
+     *
      * this method returns immediately with the value {@code false}.
-     * 
+     *
      * <p>
      * The default implementation of this methods polls the {@code exitValue}
-     * 
+     *
      * to check if the process has terminated. Concrete implementations of this
-     * 
+     *
      * class are strongly encouraged to override this method with a more
-     * 
+     *
      * efficient implementation.
-     * 
-     * 
+     *
+     *
      * @param timeout the maximum time to wait
      * @param unit the time unit of the {@code timeout} argument
      * @return {@code true} if the subprocess has exited and {@code false} if
@@ -141,7 +142,7 @@ public class TimeoutShellExecutor extends ShellExecutor {
      * @throws InterruptedException if the current thread is interrupted
      *             while waiting.
      * @throws NullPointerException if unit is null
-     * 
+     *
      * @since 1.8
      */
     private boolean waitFor(Process p1, long timeout, TimeUnit unit) throws InterruptedException {
@@ -151,13 +152,24 @@ public class TimeoutShellExecutor extends ShellExecutor {
         do {
             try {
                 p1.exitValue();
+                
                 return true;
             } catch (IllegalThreadStateException ex) {
-                if (rem > 0)
+                if (rem > 0) {
+                	
                     Thread.sleep(Math.min(TimeUnit.NANOSECONDS.toMillis(rem) + 1, 100));
+                }
             }
             rem = unit.toNanos(timeout) - (System.nanoTime() - startTime);
         } while (rem > 0);
+        
+        
+        // Try to kill the process if timeout has exceeded.
+        if(sofficelog.isDebugEnabled()) {
+    		sofficelog.debug(p1.toString() + "is still running ... Try to stop it. ");
+    	}
+        p1.destroy();
+        
         return false;
     }
 }
