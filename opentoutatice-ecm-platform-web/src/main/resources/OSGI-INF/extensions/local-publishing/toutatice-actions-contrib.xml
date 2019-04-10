@@ -16,6 +16,7 @@
 			<category>CREATE_DOCUMENT_FORM</category>
 			<filter-id>is_not_creating_form_specific_document</filter-id>
 			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>is_not_creating_template</filter-id>
 			<filter-id>canCreateNSetDocumentOnline</filter-id>
 			<filter-id>canValidateOnParent</filter-id>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
@@ -27,6 +28,7 @@
 			<category>EDIT_DOCUMENT_FORM</category>
 			<filter-id>is_not_thread_document</filter-id>
 			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>is_not_creating_template</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>not_version</filter-id>
 			<filter-id>canUpdateNSetDocumentOnline</filter-id>
@@ -57,6 +59,7 @@
 			<category>SUBVIEW_UPPER_LIST</category>
 			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
 			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>is_not_creating_template</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>not_version</filter-id>
 			<filter-id>filter@setDocumentOnline</filter-id>
@@ -70,6 +73,7 @@
 			<category>SUBVIEW_UPPER_LIST</category>
 			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
 			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>is_not_creating_template</filter-id>
 			<filter-id>not_remote_proxy</filter-id>
 			<filter-id>filter@setDocumentOffline</filter-id>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
@@ -85,6 +89,7 @@
 				</property>
 			</properties>
 			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>is_not_creating_template</filter-id>
 			<filter-id>is_version</filter-id>
 			<filter-id>filter@setDocumentOnline</filter-id>
 			<filter id="filter@setDocumentVersionOnlineDirect">
@@ -100,6 +105,7 @@
 			<category>EDIT_DOCUMENT_FORM</category>
 			<filter-id>is_not_thread_document</filter-id>
 			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>is_not_creating_template</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>not_version</filter-id>
 			<filter-id>canUpdateNSetDocumentOnline</filter-id>
@@ -112,6 +118,7 @@
 			<category>CREATE_DOCUMENT_FORM</category>
 			<filter-id>is_not_creating_form_specific_document</filter-id>
 			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>is_not_creating_template</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>not_version</filter-id>
 			<filter-id>canCreateNSetDocumentOnline</filter-id>
@@ -144,6 +151,7 @@
 				<property name="displayWidgetLabel">false</property>
 			</properties>
 			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>is_not_creating_template</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>canValidateOnLineWF</filter-id>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
@@ -156,6 +164,7 @@
 			<category>SUBVIEW_UPPER_LIST</category>
 			<category>TOUTATICE_SUMMARY_PANEL_TOP</category>
 			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>is_not_creating_template</filter-id>
 			<filter-id>not_version</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>filter@requestDocumentOnline</filter-id>
@@ -179,6 +188,7 @@
 				</property>
 			</properties>
 			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>is_not_creating_template</filter-id>
 			<filter-id>is_version</filter-id>
 			<filter-id>filter@requestDocumentOnline</filter-id>
 			<filter id="filter@workflow_online_demand_version">
@@ -200,6 +210,7 @@
 				</property>
 			</properties>
 			<filter-id>belong_to_publish_space</filter-id>
+			<filter-id>is_not_creating_template</filter-id>
 			<filter-id>not_proxy</filter-id>
 			<filter-id>canCancelOnLineWF</filter-id>
 			<filter-id>ABSTRACT_FILTER@INNER_PUBLICATION_FEATURE</filter-id>
@@ -252,7 +263,7 @@
 		<!-- Vue 'Contenu' (d'un Folderish): mise en ligne d'un élément sélectionné -->
 		<action
 			id="PUBLISH_DOCUMENTS_SELECTION@VIRTUAL_ACTION_VIEW_IN_PUBLISH_SPACE_ONLY"
-			link="#{documentActions.publishDocumentSelection}" enabled="true"
+			link="#{documentActions.setOnLineDocumentSelection}" enabled="true"
 			label="toutatice.command.direct.setonline" icon="">
 			<category>CURRENT_SELECTION_LIST</category>
 			<category>ORDERABLE_CURRENT_SELECTION_LIST</category>
@@ -262,7 +273,7 @@
 		<!-- Vue 'Contenu' (d'un Folderish): mise hors ligne d'un élément sélectionné -->
 		<action
 			id="UNPUBLISH_DOCUMENTS_SELECTION@VIRTUAL_ACTION_VIEW_IN_PUBLISH_SPACE_ONLY"
-			link="#{documentActions.unPublishDocumentSelection}" enabled="true"
+			link="#{documentActions.setOffLineDocumentSelection}" enabled="true"
 			label="toutatice.command.direct.setoffline" icon="">
 			<category>CURRENT_SELECTION_LIST</category>
 			<category>ORDERABLE_CURRENT_SELECTION_LIST</category>

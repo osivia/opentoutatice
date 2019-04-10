@@ -14,39 +14,31 @@
  *
  * Contributors:
  *   mberhaut1
- *   dchevrier
- *   lbillon
  *    
  */
-package org.nuxeo.ecm.core.schema;
+package org.opentoutatice.core.type.enricher;
 
 import java.io.Serializable;
 
-import org.nuxeo.common.xmap.annotation.XNodeList;
+import org.nuxeo.common.xmap.annotation.XNode;
 import org.nuxeo.common.xmap.annotation.XObject;
-
+import org.nuxeo.ecm.core.schema.DocumentTypeDescriptor;
 
 
 /**
- * @author David Chevrier
+ * @author david
+ *
  */
-@XObject("rules")
-public class RulesDescriptor implements Serializable {
+@XObject("basettc")
+public class BaseTypeDescriptor implements Serializable {
 
-    private static final long serialVersionUID = 1924936797682387528L;
+    private static final long serialVersionUID = -905795010892961319L;
     
-    @XNodeList(value = "facet@name", type = String[].class, componentType = String.class)
-    String[] facets = new String[0];
+    @XNode("doctype")
+    DocumentTypeDescriptor docTypeDescriptor;
     
-    public String[] getFacets(){
-        return facets;
-    }  
-    
-    @XNodeList(value = "types/type", type = String[].class, componentType = String.class)
-    String[] types = new String[0];
-    
-    public String[] getTypes(){
-        return types;
-    } 
-    
+    public DocumentTypeDescriptor getBaseDocTypeDescriptor(){
+        return docTypeDescriptor;
+    }
+
 }

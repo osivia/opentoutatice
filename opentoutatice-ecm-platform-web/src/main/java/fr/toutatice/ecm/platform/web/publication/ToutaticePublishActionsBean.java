@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,12 +38,15 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.security.SecurityConstants;
+import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.platform.publisher.api.PublicationTree;
 import org.nuxeo.ecm.platform.publisher.api.PublicationTreeNotAvailable;
 import org.nuxeo.ecm.platform.publisher.api.PublishedDocument;
 import org.nuxeo.ecm.platform.publisher.impl.service.ProxyNode;
 import org.nuxeo.ecm.platform.publisher.impl.service.ProxyTree;
 import org.nuxeo.ecm.platform.publisher.web.PublishActionsBean;
+import org.nuxeo.ecm.platform.ui.web.util.SeamComponentCallHelper;
+import org.nuxeo.ecm.webapp.action.DeleteActions;
 import org.richfaces.component.UITree;
 
 import fr.toutatice.ecm.platform.core.constants.ExtendedSeamPrecedence;
@@ -50,6 +54,7 @@ import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
 import fr.toutatice.ecm.platform.web.context.ToutaticeNavigationContext;
+import fr.toutatice.ecm.platform.web.document.ToutaticeDocumentActionsBean;
 import fr.toutatice.ecm.platform.web.publication.finder.ToutaticeRootSectionsFinder;
 
 
@@ -61,6 +66,23 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
     private static final Log log = LogFactory.getLog(ToutaticePublishActionsBean.class);
 
     private static final long serialVersionUID = 1L;
+
+    private ToutaticeDocumentActionsBean documentActions;
+    private DeleteActions deleteActions;
+
+    protected ToutaticeDocumentActionsBean getToutaticeDocumentActionBean() {
+        if (this.documentActions == null) {
+            this.documentActions = (ToutaticeDocumentActionsBean) SeamComponentCallHelper.getSeamComponentByName("documentActions");
+        }
+        return this.documentActions;
+    }
+
+    protected DeleteActions getDeleteActions() {
+        if (this.deleteActions == null) {
+            this.deleteActions = (DeleteActions) SeamComponentCallHelper.getSeamComponentByName("deleteActions");
+        }
+        return this.deleteActions;
+    }
 
     public boolean getCanPublish() throws ClientException {
         DocumentModel doc = navigationContext.getCurrentDocument();
@@ -140,7 +162,7 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
 
         return status;
     }
-
+    
     public boolean getCanPublishSelection() {
         boolean status = false;
 
@@ -160,21 +182,58 @@ public class ToutaticePublishActionsBean extends PublishActionsBean {
     }
 
     public boolean getCanUnPublishSelection() {
-        boolean status = false;
+        boolean can = false;
 
-        try {
-            List<DocumentModel> currentDocumentSelection = documentsListsManager.getWorkingList(CURRENT_DOCUMENT_SELECTION);
-            for (DocumentModel selectedDocument : currentDocumentSelection) {
-                status = getCanUnpublish(selectedDocument);
-                if (false == status) {
-                    break;
+        List<DocumentModel> currentDocumentSelection = this.documentsListsManager.getWorkingList(CURRENT_DOCUMENT_SELECTION);
+        if (CollectionUtils.isNotEmpty(currentDocumentSelection)) {
+            // Split lis in in Toutatice local proxies & Nx remote proxies lists
+            List<DocumentModel> lcPxs = new ArrayList<>();
+            List<DocumentModel> rmPxs = new ArrayList<>();
+
+            for (DocumentModel pxy : currentDocumentSelection) {
+                if (pxy.hasFacet(ToutaticeNuxeoStudioConst.CST_FACET_REMOTE_PROXY)) {
+                    rmPxs.add(pxy);
+                } else {
+                    lcPxs.add(pxy);
                 }
             }
-        } catch (Exception e) {
-            log.error("Faild to check permission to unpublish the selection, error: " + e.getMessage());
+
+            try {
+                // Toutatice local proxies treatment
+                boolean canLcPxs = true;
+                if (CollectionUtils.isNotEmpty(lcPxs)) {
+                    Iterator<DocumentModel> itLcPxy = lcPxs.iterator();
+
+                    while (itLcPxy.hasNext() && canLcPxs) {
+                        DocumentModel lcPxy = itLcPxy.next();
+                        canLcPxs = getCanUnpublish(lcPxy);
+                    }
+
+                    can = canLcPxs;
+                }
+
+                // Nx remote proxies
+                boolean canRmPxs = true;
+                if (canLcPxs && CollectionUtils.isNotEmpty(rmPxs)) {
+                    if (this.getDeleteActions().checkDeletePermOnParents(rmPxs)) {
+                        Iterator<DocumentModel> itRmPxs = rmPxs.iterator();
+
+                        while (itRmPxs.hasNext() && canRmPxs) {
+                            DocumentModel rmPxy = itRmPxs.next();
+                            canRmPxs = !(rmPxy.hasFacet(FacetNames.PUBLISH_SPACE) || rmPxy.hasFacet(FacetNames.MASTER_PUBLISH_SPACE));
+                        }
+                    } else {
+                        canRmPxs = false;
+                    }
+
+                    can = canRmPxs;
+                }
+            } catch (Exception e) {
+                log.error("Failed to check permission to publish the selection, error: " + e.getMessage());
+            }
         }
 
-        return status;
+        return can;
     }
 
     public boolean isRemoteProxy(DocumentModel proxy) {

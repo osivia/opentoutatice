@@ -10,6 +10,7 @@
 	<name>open toutatice plate-forme</name>
 
 	<modules>
+		<module>opentoutatice-core</module>
 		<module>opentoutatice-ecm-platform-core</module>
 		<module>opentoutatice-ecm-platform-web</module>
 		<module>opentoutatice-ecm-platform-automation</module>
@@ -244,6 +245,11 @@
 			<!-- Opentoutatice dependencies -->
 			<dependency>
 				<groupId>opentoutatice-ecm.platform</groupId>
+				<artifactId>opentoutatice-core-type-enricher</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>opentoutatice-ecm.platform</groupId>
 				<artifactId>opentoutatice-ecm-platform-core</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -322,6 +328,13 @@
 				<artifactId>richfaces-a4j</artifactId>
 				<version>${org.richfaces.version}</version>
 			</dependency>
+			<!-- 
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+			 -->
 
 			<!-- Tests -->
 			<dependency>
@@ -407,15 +420,11 @@
 					<artifactId>lesscss-maven-plugin</artifactId>
 					<version>1.7.0.1.1</version>
 					<configuration>
-						<sourceDirectory>${project.basedir}/src/main/less</sourceDirectory>
+						<sourceDirectory>${project.basedir}/src/main/less/opentoutatice</sourceDirectory>
 						<outputDirectory>${project.basedir}/src/main/resources/nuxeo.war/css</outputDirectory>
 						<compress>true</compress>
 						<includes>
-							<include>toutatice-popup.less</include>
-							<include>plugin-popup.less</include>
-							<include>custom-popup.less</include>
-							<include>fragments-popup.less</include>
-							<include>custom-remote-publishing.less</include>
+							<include>*.less</include>
 						</includes>
 						<outputFileFormat>{fileName}.min.css</outputFileFormat>
 					</configuration>

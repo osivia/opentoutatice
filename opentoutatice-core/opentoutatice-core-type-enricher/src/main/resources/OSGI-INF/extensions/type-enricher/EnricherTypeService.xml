@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<component name="org.opentoutatice.core.type.enricher.EnricherTypeService">
+
+	<alias>org.nuxeo.ecm.core.schema.TypeService</alias>
+
+	<service>
+		<provide interface="org.nuxeo.ecm.core.schema.SchemaManager" />
+	</service>
+
+	<implementation
+		class="org.opentoutatice.core.type.enricher.EnricherTypeService" />
+
+	<extension-point name="configuration">
+		<object class="org.nuxeo.ecm.core.schema.TypeConfiguration" />
+	</extension-point>
+
+	<extension-point name="doctype">
+		<object class="org.nuxeo.ecm.core.schema.DocumentTypeDescriptor" />
+		<object class="org.nuxeo.ecm.core.schema.FacetDescriptor" />
+		<object class="org.nuxeo.ecm.core.schema.ProxiesDescriptor" />
+	</extension-point>
+
+	<extension-point name="schema">
+		<object class="org.nuxeo.ecm.core.schema.SchemaBindingDescriptor" />
+	</extension-point>
+
+	<extension target="org.nuxeo.runtime.EventService" point="listeners">
+		<listener
+			class="org.nuxeo.ecm.core.schema.FlushPendingsRegistrationOnReloadListener">
+			<topic>org.nuxeo.runtime.reload</topic>
+		</listener>
+	</extension>
+
+	<extension-point name="basettc">
+		<object class="org.opentoutatice.core.type.enricher.BaseTypeDescriptor" />
+	</extension-point>
+
+	<extension-point name="excludedRules">
+		<object
+			class="org.opentoutatice.core.type.enricher.ExclusionRulesDescriptor" />
+	</extension-point>
+
+</component>
