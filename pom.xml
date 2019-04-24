@@ -19,8 +19,8 @@
 		<module>opentoutatice-ecm-platform-attached-files</module>
 		<module>opentoutatice-ecm-platform-reporting</module>
 		<module>opentoutatice-ecm-platform-probes</module>
-		<!-- <module>opentoutatice-ecm-platform-marketplace</module>
-		<module>opentoutatice-ecm-platform-distribution</module> -->
+		<module>opentoutatice-ecm-platform-marketplace</module>
+		<module>opentoutatice-ecm-platform-distribution</module>
 	</modules>
 
 	<properties>
