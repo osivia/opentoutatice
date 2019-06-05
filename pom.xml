@@ -235,6 +235,12 @@
 	            <artifactId>nuxeo-rest-api-server</artifactId>
 	            <version>${nuxeo.version}</version>
 	        </dependency>
+	        
+			<dependency>
+				<groupId>org.nuxeo.ecm.core</groupId>
+				<artifactId>nuxeo-core-convert-plugins</artifactId>	
+				<version>${nuxeo.version}</version>
+			</dependency>
 
 			<!-- Opentoutatice dependencies -->
 			<dependency>
