@@ -47,6 +47,7 @@ import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.DocumentSecurityException;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
+import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 import org.nuxeo.ecm.core.schema.FacetNames;
 import org.nuxeo.ecm.platform.ui.web.pathelements.ArchivedVersionsPathElement;
 import org.nuxeo.ecm.platform.ui.web.pathelements.DocumentPathElement;
@@ -126,7 +127,12 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
                 DocumentModel foundDoc = docs.get(0);
                 if(ToutaticeDocumentHelper.isLocaProxy(foundDoc)){
                     
-                    DocumentModel liveDoc = getLive((WebIdRef) docRef);
+                    DocumentModel liveDoc;
+					try {
+						liveDoc = getLive((WebIdRef) docRef);
+					} catch (NoSuchDocumentException e) {
+						throw new ClientException(e);
+					}
                     goTo = navigateToDocument(liveDoc);
                     
                 } else {
@@ -136,7 +142,12 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
             // Case of many remote proxies
             } else if(docs.size() > 1){
                 
-                DocumentModel liveDoc = getLive((WebIdRef) docRef);
+                DocumentModel liveDoc;
+				try {
+					liveDoc = getLive((WebIdRef) docRef);
+				} catch (NoSuchDocumentException e) {
+					throw new ClientException(e);
+				}
                 goTo = navigateToDocument(liveDoc);
                 
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, messages.get("toutatice.label.many.webid.proxies"), null);
@@ -151,8 +162,9 @@ public class ToutaticeNavigationContextBean extends NavigationContextBean implem
 
     /**
      * @return live document with given webId
+     * @throws NoSuchDocumentException 
      */
-    protected DocumentModel getLive(WebIdRef webIdRef) {
+    protected DocumentModel getLive(WebIdRef webIdRef) throws NoSuchDocumentException {
         String webId = (String) webIdRef.reference();
         DocumentModel liveDoc = WebIdResolver.getLiveDocumentByWebId(documentManager, webId);
         liveDoc.detach(true); // liveDoc is fetch with unrestricted session

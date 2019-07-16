@@ -4,6 +4,8 @@
 package fr.toutatice.ecm.platform.core.query.helper;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -20,6 +22,8 @@ import org.nuxeo.runtime.api.Framework;
  *
  */
 public class ToutaticeEsQueryHelper {
+	
+	private static final Log log = LogFactory.getLog(ToutaticeEsQueryHelper.class);
 
     /** Results limit. */
     public static final int DEFAULT_MAX_RESULT_SIZE = 10000;
@@ -310,7 +314,16 @@ public class ToutaticeEsQueryHelper {
 
         @Override
         public void run() throws ClientException {
+        	// For monitoring
+        	long b_ = System.currentTimeMillis();
+        	
             this.documents = ToutaticeEsQueryHelper.query(super.session, this.nxql, this.currentPageIndex, this.pageSize, this.fetchDocFromEs);
+            
+            if(log.isDebugEnabled()) {
+            	long e_ = System.currentTimeMillis();
+            	String query_ = this.nxql != null ? this.nxql : "null";
+            	log.debug("Query [".concat(query_).concat("] executed on ES in [".concat(String.valueOf(e_ - b_).concat(" ms]"))) );
+            }
         }
 
     }
