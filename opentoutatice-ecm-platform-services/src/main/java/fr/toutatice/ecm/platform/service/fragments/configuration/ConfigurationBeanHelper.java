@@ -305,33 +305,24 @@ public class ConfigurationBeanHelper implements Serializable {
         // Result
         DocumentModel configObj = null;
 
-        // Check local configuration first, i.e. configuration objects created under current Domain.
-        DocumentModel currentDomain = ToutaticeDocumentHelper.getDomain(this.documentManager, this.navigationContext.getCurrentDocument(), true);
-        String code2Clause = code2 == null ? StringUtils.EMPTY : " AND wconf:code2 = '" + code2 + "'";
-
-        String nxqlReq = "select * from WebConfiguration where ecm:ancestorId = '" + currentDomain.getId() + "'"
-                + " AND wconf:type = 'fragmenttype' AND wconf:enabled=1 "
-                + " AND wconf:code = '" + code + "'" + code2Clause
-                + " AND ecm:mixinType != 'HiddenInNavigation' AND ecm:currentLifeCycleState <> 'deleted' ";
-        DocumentModelList configObjs = ToutaticeQueryHelper.queryUnrestricted(this.documentManager, nxqlReq, 1);
-
-        if(configObjs.size() == 1){
-            configObj = configObjs.get(0);
-        } else {
-            // Check global configuration objects 
-            WebConfsConfiguration webConfsConfiguration = currentDomain.getAdapter(WebConfsConfiguration.class);
-            // FIXME: create metho in WebConfsConfiguration to get configuration object by code, code2
-            Iterator<DocumentModel> iterator = webConfsConfiguration.getSelectedConfs(currentDomain).iterator();
+        DocumentModelList configs = getConfigs(type);
+        if(configs != null) {
+            Iterator<DocumentModel> iterator = configs.iterator();
             while (iterator.hasNext() && configObj == null) {
                 DocumentModel webConf = iterator.next();
                 String wcCode = ConfigurationObject.getCode(webConf);
-                String wcCode2 = ConfigurationObject.getCode2(webConf);
                 
-                if (StringUtils.equals(wcCode, code) && StringUtils.equals(wcCode2, code2)) {
-                    configObj = webConf;
-                }
+                if(StringUtils.equals(code, wcCode)) {
+                	if(StringUtils.isBlank(code2)) {
+                		configObj = webConf;
+                	} else {
+                		String wcCode2 = ConfigurationObject.getCode2(webConf);
+                		if(StringUtils.equals(code2, wcCode2)) {
+                			configObj = webConf;
+                		}
+                	}
+                }	
             }
-            
         }        
         return configObj;
     }
@@ -366,9 +357,10 @@ public class ConfigurationBeanHelper implements Serializable {
             }
 
             // select conf objects that are enabled
+            String code2Clause = code2 == null ? StringUtils.EMPTY : " AND wconf:code2 = '" + code2 + "'";
             String query = "select * from Document " + "where ecm:primaryType = 'WebConfiguration'  " + " AND wconf:type =  'fragmenttype'"
                     + " AND wconf:enabled=1  " + " AND ecm:mixinType != 'HiddenInNavigation'  AND ecm:currentLifeCycleState <> 'deleted'  "
-                    + " AND wconf:code2 = '" + code2 + "'";
+                    + code2Clause;
 
             // if domain is found, query only conf who is belong to it
             if (confPath != null) {
