@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<component name="org.opentoutatice.core.recursive.copy.listener">
+
+    <require>org.nuxeo.ecm.core.event.EventServiceComponent</require>
+
+	<extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
+		point="listener">
+		
+		<!-- Recursive copies -->
+        <listener name="toutaticeRecursiveCopyListener" async="true" postCommit="true"
+		      class="org.opentoutatice.core.recursive.copy.listener.ToutaticeRecursiveDocumentCopyListener">
+		      <event>documentCreatedByCopy</event>
+		</listener>
+		
+		<!-- Partial copy -->
+		<listener name="toutaticePartialCopylistener" async="false"
+			postCommit="false" 
+			class="org.opentoutatice.core.recursive.copy.partial.listener.PartialDocumentCopyListener"
+			priority="150">
+			<event>documentCreatedByCopy</event>
+		</listener>
+
+	</extension>
+
+</component>
+
+

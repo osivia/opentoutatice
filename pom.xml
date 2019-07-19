@@ -10,6 +10,7 @@
 	<name>open toutatice plate-forme</name>
 
 	<modules>
+		<module>opentoutatice-core</module>
 		<module>opentoutatice-ecm-platform-core</module>
 		<module>opentoutatice-ecm-platform-web</module>
 		<module>opentoutatice-ecm-platform-automation</module>
@@ -18,12 +19,12 @@
 		<module>opentoutatice-ecm-document-attached-files</module>
 		<module>opentoutatice-ecm-platform-reporting</module>
 		<module>opentoutatice-ecm-platform-probes</module>		
-		<module>opentoutatice-ecm-platform-marketplace</module> 
-		<module>opentoutatice-ecm-platform-distribution</module> 
+		<!-- <module>opentoutatice-ecm-platform-marketplace</module> 
+		<module>opentoutatice-ecm-platform-distribution</module> --> 
 	</modules>
 
 	<properties>
-		<nuxeo.version>6.0-HF44</nuxeo.version>
+		<nuxeo.version>6.0-HF45</nuxeo.version>
 		<commons.lang.version>2.6</commons.lang.version>
 		<org.apache.pdfbox.version>1.7.1</org.apache.pdfbox.version>
 		<net.sf.json.version>2.4</net.sf.json.version>
@@ -40,13 +41,13 @@
 	<dependencyManagement>
 		<dependencies>
 			<!-- Nx dependencies -->
-			<dependency>
+			<!-- <dependency>
 				<groupId>org.nuxeo.ecm.distribution</groupId>
 				<artifactId>nuxeo-distribution</artifactId>
 				<version>${nuxeo.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency> 
+			</dependency> -->
 
 			<dependency>
 				<groupId>org.nuxeo.ecm.core</groupId>
@@ -309,6 +310,12 @@
 			</dependency>
 
 			<!-- Tests -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.12</version>
+				<scope>test</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.nuxeo.runtime</groupId>
 				<artifactId>nuxeo-runtime-test</artifactId>

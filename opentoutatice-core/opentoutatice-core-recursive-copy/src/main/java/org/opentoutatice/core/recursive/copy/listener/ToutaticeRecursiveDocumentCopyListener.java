@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.toutatice.ecm.platform.core.listener;
+package org.opentoutatice.core.recursive.copy.listener;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
@@ -22,19 +22,27 @@ import org.nuxeo.ecm.core.event.impl.EventImpl;
 import org.nuxeo.runtime.api.Framework;
 
 import fr.toutatice.ecm.platform.core.helper.ToutaticeDocumentHelper;
+import fr.toutatice.ecm.platform.core.listener.ToutaticeDocumentEventListenerHelper;
 
 
 /**
+ * Recurse copy is done at low level (raws of BDD) in Nuxeo and, at high level (CoreSession), 
+ * when the copied document is folderish, the 'documentCreatedByCopy' event is only fired for this folder
+ * and not its possible descendants.
+ * This listener has been created to avoid to implement two listeners when a hierarchy of documents is copied
+ * (one inline for the root and one asynchronous postcommit for its descendants) 
+ * firing a 'documentCreatedByCopy' event for each descendants of hierarchy.
+ * 
  * @author david
  *
  */
-public class ToutaticeBulkDocumentCopiedListener implements PostCommitFilteringEventListener {
+public class ToutaticeRecursiveDocumentCopyListener implements PostCommitFilteringEventListener {
 
     /** To block this listener. */
-    public static final String BLOCK = "block";
+    public static final String BLOCK_SELF_CALL = "block_self_call";
 
     /** Log. */
-    private static final Log log = LogFactory.getLog(ToutaticeBulkDocumentCopiedListener.class);
+    private static final Log log = LogFactory.getLog(ToutaticeRecursiveDocumentCopyListener.class);
 
     /** EventService. */
     private static EventService evtService;
@@ -58,7 +66,7 @@ public class ToutaticeBulkDocumentCopiedListener implements PostCommitFilteringE
     }
 
     /**
-     * Recurse change of creator when copied document is a Folder.
+     * Fire a 'documentCreatedByCopy' event on descendants of copied root document. 
      */
     @Override
     public void handleEvent(EventBundle events) throws ClientException {
@@ -70,66 +78,68 @@ public class ToutaticeBulkDocumentCopiedListener implements PostCommitFilteringE
         if (DocumentEventContext.class.isInstance(context)) {
             DocumentEventContext docCtx = (DocumentEventContext) context;
 
-            if (BooleanUtils.isNotTrue((Boolean) docCtx.getProperty(BLOCK))) {
+            if (BooleanUtils.isNotTrue((Boolean) docCtx.getProperty(BLOCK_SELF_CALL))) {
 
-                // Copied document
+                // Copied document and its session
                 DocumentModel srcDoc = docCtx.getSourceDocument();
+                CoreSession session = docCtx.getCoreSession();
+                
+                // Asynchronous listener so check existence
+				if (session.exists(srcDoc.getRef())) {
+					// Only Folders
+					if (srcDoc.isFolder() && ToutaticeDocumentEventListenerHelper.isAlterableDocument(srcDoc)) {
+						// Copied root document is yet treated by inline listener
+						// so skip it and treat its first children
+						DocumentModelList firstChildren = getChildren(session, srcDoc);
+						if (firstChildren != null) {
+							DocumentModelList docs = new DocumentModelListImpl();
+							docs.addAll(firstChildren);
+							// Call (inline) listeners on createdByCopy
+							try {
+								if (log.isDebugEnabled()) {
+									log.debug(String.format("About to fire 'createdByCopy' event for [%s] children",
+											srcDoc.getPathAsString()));
+								}
 
-                // Only Folders
-                if (srcDoc.isFolder() && ToutaticeDocumentEventListenerHelper.isAlterableDocument(srcDoc)) {
+								fireCreatedByCopy(docCtx, session, event, docs);
+							} catch (Exception e) {
+								// Do not block global tree copy
+								log.error(e);
+							}
 
-                    if (!ToutaticeChangeCreationPropertiesListener.block(docCtx)) {
-                        CoreSession session = docCtx.getCoreSession();
-
-                        DocumentModelList docs = new DocumentModelListImpl();
-                        docs.add(srcDoc);
-                        if (session.exists(srcDoc.getRef())) {
-                            // Call listeners on createdByCopy
-                            try {
-                                fireCreatedByCopy(docCtx, session, event, docs);
-                            } catch (Exception e) {
-                                log.error(e);
-                            }
-
-                            // Commit
-                            session.save();
-                        }
-                    }
-                }
+							// Commit
+							session.save();
+						}
+					}
+				}
             }
         }
 
     }
 
     /**
-     * Set user as creator of documents.
+     * Fire a 'documentCreatedByCopy' event recursively.
      * 
-     * @param documentManager
+     * @param docCtx
+     * @param session
+     * @param event
      * @param docs
-     * @throws ClientException
      */
     // TODO: test in Publish Spaces, i.e. effect on local proxies
     protected void fireCreatedByCopy(DocumentEventContext docCtx, CoreSession session, Event event, DocumentModelList docs) {
+    	
         for (DocumentModel docMod : docs) {
 
             try {
                 throwEvent(docCtx, DocumentEventTypes.DOCUMENT_CREATED_BY_COPY, session, docMod);
             } catch (Exception e) {
+            	// Do not block global tree copy
                 log.error(e);
             }
 
-            // Recurse
+            // Recursive
             if (docMod.isFolder()) {
-                DocumentModelList children = null;
-                try {
-                    children = session.query(String.format(
-                            "SELECT * FROM Document WHERE ecm:parentId = '%s' AND ecm:isVersion = 0 AND ecm:currentLifeCycleState <> 'deleted' ",
-                            docMod.getRef()));
-                } catch (Exception e) {
-                    // Possible error on getting children (?)
-                    log.error(e);
-                }
-
+                DocumentModelList children = getChildren(session, docMod);
                 if (children != null) {
                     fireCreatedByCopy(docCtx, session, event, children);
                 }
@@ -137,6 +147,12 @@ public class ToutaticeBulkDocumentCopiedListener implements PostCommitFilteringE
             }
         }
     }
+
+	private DocumentModelList getChildren(CoreSession session, DocumentModel docMod) {
+		return session.query(String.format(
+		            "SELECT * FROM Document WHERE ecm:parentId = '%s' AND ecm:isVersion = 0 AND ecm:currentLifeCycleState <> 'deleted' ",
+		            docMod.getRef()));
+	}
 
     /**
      * 
@@ -146,11 +162,15 @@ public class ToutaticeBulkDocumentCopiedListener implements PostCommitFilteringE
      * @param docMod
      */
     public static void throwEvent(DocumentEventContext docCtx, String eventName, CoreSession session, DocumentModel docMod) {
+    	if(log.isDebugEnabled()) {
+    		log.debug(String.format("Firing 'createdByCopy' event for [%s]", docMod.getPathAsString()));
+    	}
+    	
         // Event creation
         DocumentEventContext newDocCtx = new DocumentEventContext(session, docCtx.getPrincipal(), docMod);
         Event eventToThrow = new EventImpl(eventName, newDocCtx);
-        // To avoid loop
-        newDocCtx.setProperty(BLOCK, true);
+        // Block async call to itself (avoid loop)
+        newDocCtx.setProperty(BLOCK_SELF_CALL, true);
 
         // Fire
         getEventService().fireEvent(eventToThrow);

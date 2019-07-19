@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<component name="org.opentoutatice.core.recursive.copy.partial.ResetableSchemasRegisterService">
+
+	<service>
+		<provide interface="org.opentoutatice.core.recursive.copy.partial.ResetableSchemasRegister" />
+	</service>
+
+	<implementation
+		class="org.opentoutatice.core.recursive.copy.partial.ResetableSchemasRegisterService" />
+
+	<extension-point name="resetableSchemas">
+		<object class="org.opentoutatice.core.recursive.copy.partial.ResetableSchemasDescriptor" />
+	</extension-point>
+
+</component>

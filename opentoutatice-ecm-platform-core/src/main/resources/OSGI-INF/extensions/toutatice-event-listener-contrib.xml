@@ -44,10 +44,6 @@
             <event>documentCreatedByCopy</event>
         </listener>
         
-        <listener name="bulkChangeCreatorListener" async="true" postCommit="true"
-		      class="fr.toutatice.ecm.platform.core.listener.ToutaticeBulkDocumentCopiedListener">
-		      <event>documentCreatedByCopy</event>
-		</listener>
 
 		<!-- Faire en sorte que les documents modifiés en mode dit "silencieux" 
 			soient bien indexés par ElasticSearch. (http://redmine.toutatice.fr/issues/3802) -->

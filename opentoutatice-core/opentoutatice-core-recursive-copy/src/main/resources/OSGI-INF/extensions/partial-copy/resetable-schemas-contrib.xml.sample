@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<component name="org.opentoutatice.core.recursive.copy.partial.resetable.schemas.contrib">
+
+	<require>org.opentoutatice.core.recursive.copy.partial.ResetableSchemasRegisterService</require>
+
+	<extension
+		target="org.opentoutatice.core.recursive.copy.partial.ResetableSchemasRegisterService"
+		point="resetableSchemas">
+
+		<schemas>
+			<schema>toutatice</schema>
+			<schema>toutatice_navigation</schema>
+		</schemas>
+
+	</extension>
+
+</component>

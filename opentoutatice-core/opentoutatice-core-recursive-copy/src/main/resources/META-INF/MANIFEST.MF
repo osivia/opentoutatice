@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 1
+Bundle-Name: [Opentoutatice Core] Recursive copy 
+Bundle-SymbolicName: org.opentoutatice.core.recursive.copy;singleton:=true
+Bundle-Version: 2.0.0
+Bundle-Localization: plugin
+Bundle-Category: stateful
+Nuxeo-Component: OSGI-INF/extensions/partial-copy/ResetableSchemasRegisterService.xml,
+ OSGI-INF/extensions/recursive-copy-listener-contrib.xml
+ 
+ 
