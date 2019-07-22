@@ -62,7 +62,7 @@ public class ResetableSchemasRegisterService extends DefaultComponent implements
 			this.resetableSchemasNames.addAll(resetableSchemasDescriptor.getSchemasNames());
 			
 			if(log.isDebugEnabled()) {
-				StringBuffer schemsBuff = new StringBuffer("null");
+				StringBuffer schemsBuff = new StringBuffer();
 				
 				List<String> schemasNames = resetableSchemasDescriptor.getSchemasNames();
 				if(schemasNames != null) {
@@ -72,12 +72,12 @@ public class ResetableSchemasRegisterService extends DefaultComponent implements
 						schemsBuff.append(schem);
 						
 						if(iterator.hasNext()) {
-							schemsBuff.append(",");
+							schemsBuff.append(","); 
 						}
 					}
 				}
-				
-				log.debug(String.format("Shema(s) [%s] registered", schemsBuff.toString()));
+				String schemNamesStr = StringUtils.isEmpty(schemsBuff.toString()) ? "null" : schemsBuff.toString();
+				log.debug(String.format("Schema(s) [%s] registered", schemNamesStr));
 			}
 		}
 	}
