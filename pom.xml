@@ -21,7 +21,7 @@
 	</modules>
 
 	<properties>
-		<nuxeo.version>6.1.0</nuxeo.version>
+		<nuxeo.version>6.1.1</nuxeo.version>
 		<commons.lang.version>2.6</commons.lang.version>
 		<org.apache.pdfbox.version>1.7.1</org.apache.pdfbox.version>
 		<net.sf.json.version>2.4</net.sf.json.version>

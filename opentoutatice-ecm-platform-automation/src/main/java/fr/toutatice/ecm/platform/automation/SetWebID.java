@@ -136,7 +136,7 @@ public class SetWebID {
             // in creation or import, try to generate it.
             if (StringUtils.isBlank(getWebId())) {
                 // else new id is generated
-                webId = generateWebId(webId);
+                webId = generateBase62();
                 // for Files or Pictures : get the extension of the file if exists
                 extension = getBlobExtensionIfExists(webId);
                 webId = removeBlobExtensionIfExists(webId, extension);
@@ -155,14 +155,14 @@ public class SetWebID {
                     String techPart = StringUtils.substringBeforeLast(webId, "_");
                     webId = techPart.concat("_").concat(IdUtils.generateId(nonTechPart, "-", true, 512));
                 } else {
-                    webId = IdUtils.generateId(webId, "-", true, 512);
+                    webId = IdUtils.generateId(webId, "-", false, 512);
                 }
 
             }
 
             String originalWebid = webId;
             while (isNotUnique(this.session, this.document, webId)) {
-                webId = generateWebId(originalWebid);
+                webId = generateBase62();
                 hasToBeUpdated = true;
             }
 
@@ -189,24 +189,24 @@ public class SetWebID {
             return (String) this.document.getPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_SCHEMA_TOUTATICE_WEBID);
         }
 
-        /**
-         * @return new webId basedon path.
-         */
-        protected String generateWebId(String webId) {
-            if (StringUtils.isBlank(webId)) {
-                String[] arrayPath = this.document.getPathAsString().split("/");
-                webId = arrayPath[arrayPath.length - 1];
-                // DCH - TO TEST: webId = this.document.getName();
-
-                // for docs whose ecm:name may be identical, nuxeo add a .timestamp, remove it
-                if (webId.contains(".")) {
-                    webId = webId.substring(0, webId.indexOf("."));
-                }
-            } else {
-                webId = webId.concat("-".concat(generateBase62()));
-            }
-            return webId;
-        }
+//        /**
+//         * @return new webId basedon path.
+//         */
+//        protected String generateWebId(String webId) {
+//            if (StringUtils.isBlank(webId)) {
+//                String[] arrayPath = this.document.getPathAsString().split("/");
+//                webId = arrayPath[arrayPath.length - 1];
+//                // DCH - TO TEST: webId = this.document.getName();
+//
+//                // for docs whose ecm:name may be identical, nuxeo add a .timestamp, remove it
+//                if (webId.contains(".")) {
+//                    webId = webId.substring(0, webId.indexOf("."));
+//                }
+//            } else {
+//                webId = webId.concat("-".concat(generateBase62()));
+//            }
+//            return webId;
+//        }
 
 
         private String generateBase62() {
