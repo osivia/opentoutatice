@@ -60,7 +60,7 @@ public class GetUserProfile {
             }
         } catch (Exception e) {
             log.error("Failed to get the user profil document for user '" + principal.getName() + "', error: " + e.getMessage());
-            throw new ClientException("Failed to get the user profil document");
+            //throw new ClientException("Failed to get the user profil document");
         }
 
         return userProfile;

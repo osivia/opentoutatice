@@ -32,7 +32,7 @@ import org.nuxeo.ecm.core.api.impl.DocumentModelListImpl;
 import org.nuxeo.ecm.core.model.NoSuchDocumentException;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
-import fr.toutatice.ecm.platform.core.query.helper.ToutaticeQueryHelper;
+import fr.toutatice.ecm.platform.core.query.helper.ToutaticeEsQueryHelper;
 
 
 /**
@@ -57,14 +57,37 @@ public class WebIdResolver {
      * @param coreSession
      * @param webId
      * @return unique live document given its webid.
+     * @throws NoSuchDocumentException 
      */
-    public static DocumentModel getLiveDocumentByWebId(CoreSession coreSession, String webId) {
+    public static DocumentModel getLiveDocumentByWebId(CoreSession coreSession, String webId) throws NoSuchDocumentException {
         DocumentModel live = null;
-
-        String query = String.format(ToutaticeWebIdHelper.LIVE_WEB_ID_QUERY, webId);
-        DocumentModelList lives = ToutaticeQueryHelper.queryUnrestricted(coreSession, query);
-        if (CollectionUtils.isNotEmpty(lives) && lives.size() == 1) {
-            live = lives.get(0);
+        
+        if(StringUtils.isNotBlank(webId)) {
+        
+	        if(log.isDebugEnabled()) {
+	        	log.debug("Resolving live document by webid: [".concat(webId).concat("]..."));
+	        }
+	
+	        String query = String.format(ToutaticeWebIdHelper.LIVE_WEB_ID_QUERY, webId);
+	        DocumentModelList lives = ToutaticeEsQueryHelper.unrestrictedQuery(coreSession, query, 1);
+	        
+	        if (CollectionUtils.isNotEmpty(lives) && lives.size() == 1) {
+	            live = lives.get(0);
+	        } else  {
+	        	throw new NoSuchDocumentException(webId);
+	        }
+	        
+	        if(log.isDebugEnabled()) {
+	        	if(live != null) {
+	        		StringBuffer liveStr = new StringBuffer();
+	        		liveStr.append(live.getType()).append(" | ")
+	        			.append(live.getTitle() != null ? live.getTitle() : StringUtils.EMPTY).append(" | ")
+	        			.append(live.getPathAsString());
+	        		log.debug("Found live document with webId [".concat(webId).concat("]: ").concat("[").concat(liveStr.toString()).concat("]"));
+	        	} else {
+	        		log.debug("No live document found with webId: [".concat(webId).concat("]"));
+	        	}
+	        }
         }
 
         return live;
@@ -73,7 +96,7 @@ public class WebIdResolver {
     /**
      * @param coreSession
      * @param webId
-     * @return documents matching given webid (live or proxy, proxies).
+     * @return document as remote proxy or live matching given webid (live or proxy, proxies).
      * @throws NoSuchDocumentException
      */
     public static DocumentModelList getDocumentsByWebId(CoreSession coreSession, String webId) throws NoSuchDocumentException {
@@ -81,21 +104,31 @@ public class WebIdResolver {
         DocumentModelList documents = null;
 
         if (StringUtils.isNotBlank(webId)) {
-            // For Trace logs
-            long begin = System.currentTimeMillis();
+        	
+        	if(log.isDebugEnabled()) {
+	        	log.debug("Resolving document by webid: [".concat(webId).concat("]..."));
+	        }
 
             UnrestrictedFecthWebIdRunner fecthWebIdRunner = new UnrestrictedFecthWebIdRunner(coreSession, webId);
             fecthWebIdRunner.runUnrestricted();
             documents = fecthWebIdRunner.getDocuments();
 
-            if (log.isTraceEnabled()) {
-                long end = System.currentTimeMillis();
-                log.trace(": " + String.valueOf(end - begin) + " ms");
-            }
-
             if (CollectionUtils.isEmpty(documents) || (CollectionUtils.isNotEmpty(documents) && documents.size() > 1)) {
                 throw new NoSuchDocumentException(webId);
             }
+            
+            if(log.isDebugEnabled()) {
+            	DocumentModel doc_ = documents.get(0);
+	        	if(doc_ != null) {
+	        		StringBuffer liveStr = new StringBuffer();
+	        		liveStr.append(doc_.getType()).append(" | ")
+	        			.append(doc_.getTitle() != null ? doc_.getTitle() : StringUtils.EMPTY).append(" | ")
+	        			.append(doc_.getPathAsString());
+	        		log.debug("Found live document with webId [".concat(webId).concat("]: ").concat("[").concat(liveStr.toString()).concat("]"));
+	        	} else {
+	        		log.debug("No live document found with webId: [".concat(webId).concat("]"));
+	        	}
+	        }
 
         }
 
@@ -104,7 +137,7 @@ public class WebIdResolver {
     }
 
     /**
-     * Get doc by webid in unrestricted mode (admin)
+     * Get doc as remote proxy or live by webid in unrestricted mode (admin)
      */
     private static class UnrestrictedFecthWebIdRunner extends UnrestrictedSessionRunner {
 
@@ -139,7 +172,7 @@ public class WebIdResolver {
             String sectionWId = webIds[1];
 
             // Get proxy(ies) with live webId
-            DocumentModelList rProxies = this.session.query(String.format(ToutaticeWebIdHelper.RPXY_WEB_ID_QUERY, liveWId));
+            DocumentModelList rProxies = ToutaticeEsQueryHelper.unrestrictedQuery(this.session, String.format(ToutaticeWebIdHelper.RPXY_WEB_ID_QUERY, liveWId), 1);
 
             // Published in one place only only
             if (rProxies.size() == 1) {
@@ -164,7 +197,7 @@ public class WebIdResolver {
          * Get live with given webId.
          */
         private void getLive() {
-            DocumentModelList lives = this.session.query(String.format(ToutaticeWebIdHelper.LIVE_WEB_ID_QUERY, this.webId));
+            DocumentModelList lives = ToutaticeEsQueryHelper.unrestrictedQuery(this.session, String.format(ToutaticeWebIdHelper.LIVE_WEB_ID_QUERY, this.webId), 1);
             if (CollectionUtils.isNotEmpty(lives) && lives.size() == 1) {
                 this.documents.add(lives.get(0));
             }

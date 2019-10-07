@@ -86,6 +86,7 @@
 		<doctype name="Workspace" append="true">
 			<facet name="TTCPortalConfigurable" />
 			<facet name="Orderable" />
+			<facet name="Space" />			
 			<schema name="toutatice_navigation" />
 		</doctype>
 
