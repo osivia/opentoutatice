@@ -16,6 +16,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.OperationContext;
+import org.nuxeo.ecm.core.api.CoreInstance;
+import org.nuxeo.ecm.core.api.local.ClientLoginModule;
+import org.nuxeo.ecm.core.api.local.LoginStack.Entry;
 
 import fr.toutatice.ecm.platform.automation.transaction.operation.CommitOrRollbackTransaction;
 
@@ -61,7 +64,13 @@ public class TransactionalConversationManager {
         //TransactionalConversation must be executed in the same thread
         //To do this, we use Executors.newSingleThreadExecutor() and keep it in the TransactionalConversation to use the same thread to call TransactionalConversation.call
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        TransactionalConversation txConv = new TransactionalConversation(principal, repositoryName, executor);
+        
+        Entry loginStack = ClientLoginModule.getThreadLocalLogin().peek();
+        
+        
+        TransactionalConversation txConv = new TransactionalConversation(principal, repositoryName, executor, loginStack);
+        
+        
         
         Future<Object> future = txConv.getExecutor().submit(txConv);
         try {
