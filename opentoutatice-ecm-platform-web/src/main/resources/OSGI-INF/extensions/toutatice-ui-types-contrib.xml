@@ -92,6 +92,25 @@
 			</layouts>
 		</type>  
 		
+		<type id="Archive" coretype="Archive">
+			<label>Archives de l'espace collaboratif</label>
+			<category>Collaborative</category>
+			<icon>/icons/workspace_100.png</icon>
+			<bigIcon>/icons/workspace_100.png</bigIcon>
+			<description>Archives</description>
+			<default-view>view_documents</default-view>
+			<layouts mode="any">
+				<layout>heading</layout>
+			</layouts>
+			<layouts mode="create">
+				<layout>layout@Folder-create</layout>
+			</layouts>
+			<layouts mode="edit">
+				<layout>layout@Folder-edit</layout>
+				<layout>contextualizeInternalContents</layout>
+			</layouts>
+
+		</type>		
 		
     </extension>
 

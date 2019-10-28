@@ -109,6 +109,9 @@
 		<types>
 			<type name="PortalPage">default_toutatice</type>
 			<type name="PortalSite">default_toutatice</type>
+			
+			<type name="Archive">default_toutatice</type>
+			
 		</types>
 
 	</extension>

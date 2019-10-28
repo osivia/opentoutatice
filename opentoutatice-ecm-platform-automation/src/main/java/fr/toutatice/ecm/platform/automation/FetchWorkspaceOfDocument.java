@@ -65,10 +65,14 @@ public class FetchWorkspaceOfDocument {
 		public String WORKSPACE_TYPE = "Workspace";
 		public String USER_WORKSPACE_TYPE = "UserWorkspace";
 		public String ROOM = "Room";
+		public String ARCHIVE = "Archive";
 
 		@Override
 		public boolean accept(DocumentModel document) {
-			return WORKSPACE_TYPE.equals(document.getType()) || USER_WORKSPACE_TYPE.equals(document.getType()) || ROOM.equals(document.getType()) ;
+			return WORKSPACE_TYPE.equals(document.getType()) 
+					|| USER_WORKSPACE_TYPE.equals(document.getType()) 
+					|| ROOM.equals(document.getType())
+							|| ARCHIVE.equals(document.getType()) ;
 		}
 
 	}

@@ -94,6 +94,10 @@
 			<schema name="toutatice_navigation" />
 		</doctype>
 
+
+		<doctype name="Archive" extends="Folder">
+		</doctype>
+
 	</extension>
 
 	<extension target="org.nuxeo.ecm.platform.types.TypeService"
