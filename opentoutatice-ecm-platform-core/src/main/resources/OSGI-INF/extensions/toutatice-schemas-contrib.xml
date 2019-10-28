@@ -20,6 +20,9 @@
 		<schema name="toutatice_event" prefix="ttcevt"
 			src="schemas/toutatice-event.xsd" />
 
+		<!-- For LDAP searches -->
+		<schema name="opentoutatice_user" prefix="user" src="schemas/opentoutatice-ldap-user.xsd" />
+		<schema name="opentoutatice_group" prefix="group" src="schemas/opentoutatice-ldap-group.xsd" />
 	</extension>
 
 </component>

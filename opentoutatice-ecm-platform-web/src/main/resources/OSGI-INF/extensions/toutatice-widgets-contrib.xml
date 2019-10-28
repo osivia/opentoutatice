@@ -450,6 +450,7 @@
 				/widgets/ttc_richtext_with_mimetype_widget_template.xhtml
 			</property>
 		</widgetType>
+		
 
 		<widgetType name="multipleUsersSuggestionWithPermission">
 			<configuration>
@@ -478,6 +479,46 @@
 					<defaultValues mode="edit">
 						<property name="minChars">3</property>
 						<property name="operationId">UserGroup.SuggestUserEntriesWithPermission
+						</property>
+						<property name="documentId">#{currentDocument.id}</property>
+					</defaultValues>
+				</properties>
+			</configuration>
+			<handler-class>
+				org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+			</handler-class>
+			<property name="template">
+				/widgets/toutatice_user_suggestion_widget_template.xhtml
+			</property>
+		</widgetType>		
+
+		<widgetType name="multipleUsersSuggestionInWorkspace">
+			<configuration>
+				<title>Multiple users/groups suggestion with membership of a workspace
+					on current document.
+				</title>
+				<sinceVersion>6.0</sinceVersion>
+				<supportedModes>
+					<mode>edit</mode>
+					<mode>view</mode>
+				</supportedModes>
+				<fields>
+					<list>true</list>
+					<complex>false</complex>
+					<supportedTypes>
+						<type>string</type>
+					</supportedTypes>
+				</fields>
+				<categories>
+					<category>document</category>
+				</categories>
+				<properties>
+					<defaultValues mode="any">
+						<property name="width">100%</property>
+					</defaultValues>
+					<defaultValues mode="edit">
+						<property name="minChars">0</property>
+						<property name="operationId">UserGroup.SuggestUserEntriesInWorkspace
 						</property>
 						<property name="documentId">#{currentDocument.id}</property>
 					</defaultValues>

@@ -19,6 +19,10 @@
 		value="#{nxu:test(!empty widgetProperty_hideSecondLabel, widgetProperty_hideSecondLabel, false)}" />
 	<c:set var="hideThirdLabel"
 		value="#{nxu:test(!empty widgetProperty_hideThirdLabel, widgetProperty_hideThirdLabel, false)}" />
+		
+	<c:set var="hideHelpLabel"
+		value="#{nxu:test(!empty widgetProperty_hideHelpLabel, widgetProperty_hideHelpLabel, true)}" />		
+		
 	<c:set var="showEmail"
 		value="#{nxu:test(!empty widgetProperty_displayEmailInSuggestion, widgetProperty_displayEmailInSuggestion, false)}" />
 	<c:set var="firstNameField"
@@ -96,7 +100,7 @@
 
 
 			<c:if
-				test="#{widget.mode == 'edit' and !widgetProperty_hideHelpLabel}">
+				test="#{widget.mode == 'edit' and !hideHelpLabel}">
 				<p class="detail">
 					<h:outputFormat value="#{helpLabel}">
 						<f:param value="#{widgetProperty_minChars}" />
