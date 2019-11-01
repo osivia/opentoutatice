@@ -98,7 +98,25 @@
 			<event>documentModified</event>
 		</listener>	    
 
+
+            <listener name="indexBlobUnicity" async="false"
+                postCommit="true" 
+                enabled="true"
+                class="fr.toutatice.ecm.platform.core.listener.BlobSynchronisationListener"
+                priority="150">
+                <event>documentCreated</event>
+                <event>documentModified</event>
+                <event>documentCreatedByCopy</event>
+                <event>documentMoved</event>
+                <event>documentRestored</event>
+            </listener>        
+
+
 	</extension>
+
+
+
+
 
 </component>
 

@@ -38,7 +38,10 @@ public abstract class AbstractDublinCoreDocumentUpdate {
         if(properties != null){
             for(Entry<String, String> property : properties.entrySet()){
                 if(StringUtils.contains(property.getKey(), DUBLINCORE_SCHEMA_PREFIX)){
-                    dcProperties.put(property.getKey(), property.getValue());
+                    //Title modification must not block all events
+                    // unicity, synchronisation with blobs, ...
+                    if( ! PROP_TITLE.equals(property.getKey()))
+                        dcProperties.put(property.getKey(), property.getValue());
                 }
             }
         }
