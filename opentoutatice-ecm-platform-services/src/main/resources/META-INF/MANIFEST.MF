@@ -20,5 +20,5 @@ Nuxeo-Component: OSGI-INF/extensions/customize-types/customize-types-service.xml
  OSGI-INF/extensions/workflows/workflows-infos-provider-contrib.xml,
  OSGI-INF/extensions/workflows/workflows-service-framework.xml,
  OSGI-INF/extensions/workflows/tasks-service-contrib.xml,
- OSGI-INF/extensions/security/security-infos-provider-contrib.xml
- 
+ OSGI-INF/extensions/security/security-infos-provider-contrib.xml,
+ OSGI-INF/extensions/quota/quota-service.xml

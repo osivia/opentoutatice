@@ -252,7 +252,8 @@
 			</properties>
 			<properties widgetMode="edit">
 				<property name="validator">#{ottcFileValidator.validateMimeType}</property>
-				<property name="maxSize">${ottc.widget.filemaxSize}</property>
+				<!-- <property name="maxSize">${ottc.widget.filemaxSize}</property> -->
+				<property name="maxSize">#{ottcFileValidator.freeSpace}</property>
 				<property name="onchange">fileValidator();</property>
 			</properties>
 		</widget>

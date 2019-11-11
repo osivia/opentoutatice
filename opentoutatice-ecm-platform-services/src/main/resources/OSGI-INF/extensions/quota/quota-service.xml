@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<component
+	name="fr.toutatice.ecm.platform.service.quota.QuotaService">
+
+	<service>
+		<provide
+			interface="fr.toutatice.ecm.platform.service.quota.QuotaService" />
+	</service>
+
+	<implementation 
+		class="fr.toutatice.ecm.platform.service.quota.DummyQuotaServiceImpl" />
+</component>
