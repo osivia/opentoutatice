@@ -6,16 +6,6 @@
 
     <extension target="org.nuxeo.ecm.platform.types.TypeService"
         point="types">
-
-        <type id="Domain">
-            <layouts mode="create">
-                <layout>heading</layout>
-                <layout>domainIdLayout</layout>
-            </layouts>
-            <layouts mode="edit" append="true">
-                <layout>domainIdLayoutRequired</layout>
-            </layouts>
-        </type>
         
         <type id="PortalSite">
             <label>PortalSite</label>

@@ -69,8 +69,6 @@ public class ToutaticeValidatorBean implements Serializable {
 
     private static final Log log = LogFactory.getLog(ToutaticeValidatorBean.class);
 
-    private static final String DOMAIN_ID_UNICITY_QUERY = "select * from Domain where ecm:uuid <> '%s' and ttc:domainID = '%s' and ecm:currentLifeCycleState <> 'deleted'";
-
     @In(create = true, required = true)
     protected transient CoreSession documentManager;
 
@@ -83,49 +81,6 @@ public class ToutaticeValidatorBean implements Serializable {
 
     final Pattern patternId = Pattern.compile("([a-zA-Z_0-9\\-\\_]+)");
     final Pattern patternExplicit = Pattern.compile("([a-zA-Z_0-9\\-\\/]+)");
-
-    public void validateDomainIdUnicity(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-
-        String domainID = (String) value;
-        if (StringUtils.isNotBlank(domainID)) {
-            String msg = null;
-
-
-            // format control
-            Matcher m = patternId.matcher(domainID);
-            if (!m.matches()) {
-                msg = ComponentUtils.translate(context, "label.toutatice.validator.malformed.domainid");
-            } else {
-
-                DocumentModel currentDomain = null;
-                try {
-                    currentDomain = ((ToutaticeDocumentActionsBean) documentActions).getCurrentDocument();
-                } catch (ClientException ce) {
-                    msg = ce.getMessage();
-                }
-                if (currentDomain != null) {
-                    String domainUUID = currentDomain.getId();
-
-                    DocumentModelList domains = null;
-                    try {
-                        domains = documentManager.query(String.format(DOMAIN_ID_UNICITY_QUERY, domainUUID, domainID));
-                    } catch (ClientException e) {
-                        msg = e.getMessage();
-                    }
-                    if (domains.size() > 0) {
-                        msg = ComponentUtils.translate(context, "label.toutatice.validator.not.single.domainId");
-                    }
-                } else {
-                    msg = ComponentUtils.translate(context, "label.toutatice.validator.no.domain");
-                }
-            }
-            if (msg != null) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
-                throw new ValidatorException(message);
-            }
-        }
-    }
-
 
     /**
      * Validate webId value.
