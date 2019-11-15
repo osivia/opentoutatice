@@ -5,11 +5,7 @@
 	<parent>
 		<groupId>opentoutatice-ecm.platform</groupId>
 		<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-<<<<<<< HEAD
 		<version>4.7-SNAPSHOT</version>
-=======
-		<version>4.7.17.4-SNAPSHOT</version>
->>>>>>> branch '4.7-maintenance' of https://github.com/osivia/opentoutatice.git
 	</parent>
 
 	<artifactId>opentoutatice-ecm-platform-services</artifactId>
