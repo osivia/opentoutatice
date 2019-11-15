@@ -13,6 +13,11 @@
 				<type>Staple</type>
 			</subtypes>
 		</type>
+        <type id="PortalSite">
+            <subtypes>
+                <type>Staple</type>
+            </subtypes>
+        </type>
 
 		<type id="Staple">
 			<label>Agrafe</label>
