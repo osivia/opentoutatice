@@ -81,7 +81,6 @@
 		<chain id="createOp">
 			<operation id="Context.FetchDocument" />
 			<operation id="Document.SetSpaceID" />
-			<operation id="Document.SetDomainID" />
 			<operation id="Document.SetWebId" />
 		</chain>
 
@@ -92,11 +91,6 @@
 
 		<chain id="moveOp">
 			<operation id="Document.SetSpaceID" />
-			<operation id="Document.SetDomainID" />
-		</chain>
-
-		<chain id="updateDomain">
-			<operation id="Document.SetDomainID" />
 		</chain>
 
 		<chain id="images-resizing">

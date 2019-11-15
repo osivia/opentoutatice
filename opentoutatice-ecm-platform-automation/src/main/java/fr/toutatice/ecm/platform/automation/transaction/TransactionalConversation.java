@@ -15,9 +15,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.AutomationService;
+import org.nuxeo.ecm.core.api.local.LoginStack.Entry;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.local.ClientLoginModule;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.jtajca.NuxeoContainer;
 import org.nuxeo.runtime.transaction.TransactionHelper;
@@ -53,14 +55,18 @@ public class TransactionalConversation implements Callable<Object> {
 
     private String txcId;
 
+    private Entry loginStack;
+    
     private boolean start = true;
 
-    public TransactionalConversation(Principal principal, String repositoryName, ExecutorService executor) {
+    public TransactionalConversation(Principal principal, String repositoryName, ExecutorService executor, Entry loginStack) {
         super();
 
         this.principal = principal;
         this.repositoryName = repositoryName;
         this.executor = executor;
+        
+        this.loginStack = loginStack;
 
         // Initial value: null
         this.opSrv = Framework.getService(AutomationService.class);
@@ -72,6 +78,12 @@ public class TransactionalConversation implements Callable<Object> {
             if (start) 
             {
                 open(this.principal, this.repositoryName);
+                
+                ClientLoginModule.clearThreadLocalLogin();
+                
+                if( loginStack != null)
+                    ClientLoginModule.getThreadLocalLogin().push(loginStack.getPrincipal(), loginStack.getPrincipal(), loginStack.getSubject());
+                
                 this.start = false;
             } else
             {

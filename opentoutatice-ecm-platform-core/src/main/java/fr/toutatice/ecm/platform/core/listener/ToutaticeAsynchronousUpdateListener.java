@@ -29,22 +29,18 @@ import org.nuxeo.ecm.core.event.EventContext;
 import org.nuxeo.ecm.core.event.PostCommitEventListener;
 import org.nuxeo.ecm.core.event.impl.DocumentEventContext;
 
-import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeOperationHelper;
 import fr.toutatice.ecm.platform.core.utils.exception.ToutaticeException;
-
 
 /**
  * @author David Chevrier
  */
 public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListener {
 
-    private static final String UPDATE_DOMAIN_CHAIN = "updateDomain";
-    private static final String MOVE_OP_CHAIN = "moveOp";
+	private static final String MOVE_OP_CHAIN = "moveOp";
 
-	private static final String DOCUMENT_MODIFIED = "documentModified";
-
-	private static final String[] SELECTED_EVENTS = {"documentCreated", "documentCreatedByCopy", "documentMoved", "documentRestored"};
+	private static final String[] SELECTED_EVENTS = { "documentCreated", "documentCreatedByCopy", "documentMoved",
+			"documentRestored" };
 
 	@Override
 	public void handleEvent(EventBundle events) throws ClientException {
@@ -60,11 +56,9 @@ public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListe
 					// ignore immutable documents
 					return;
 				}
-				
-				try {     
-					if (DOCUMENT_MODIFIED.equals(event.getName()) && ToutaticeNuxeoStudioConst.CST_DOC_TYPE_DOMAIN.equals(document.getType())) {
-						ToutaticeOperationHelper.runOperationChain(session, UPDATE_DOMAIN_CHAIN, document);
-					} else if (ArrayUtils.contains(SELECTED_EVENTS, event.getName())) {
+
+				try {
+					if (ArrayUtils.contains(SELECTED_EVENTS, event.getName())) {
 						ToutaticeOperationHelper.runOperationChain(session, MOVE_OP_CHAIN, document);
 					}
 				} catch (ToutaticeException e) {
@@ -73,5 +67,5 @@ public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListe
 			}
 		}
 	}
-	
+
 }
