@@ -309,7 +309,7 @@ public class SuggestUserEntriesInWorkspace {
         	
             DocumentModel parent = ctx.getCoreSession().getDocument(new PathRef(documentPath.toString()));
 
-        	if(parent.hasSchema("webcontainer")) {
+        	if(parent.hasSchema("webcontainer") && parent.getType().equals("Workspace")) {
         		return parent.getPropertyValue("webc:url").toString();
         	}       	
         	documentPath = parent.getPath().removeLastSegments(1);
