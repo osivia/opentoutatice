@@ -72,8 +72,15 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
     PublishActionsBean publishActions;
 
     public String startOnlineWorkflow() throws ClientException {
+        String res = null;
+        
         DocumentModel onlineWf = getOnlineWorkflowModel();
-        return startWorkflow(onlineWf, "toutatice.label.online.wf.started");
+        res = startWorkflow(onlineWf, "toutatice.label.online.wf.started");
+        
+        // Notifications
+        notifyTaskActors(this.navigationContext.getCurrentDocument(), ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED_ASSIGNED);
+        
+        return res;
     }
 
     public String startWorkflow(DocumentModel workflow, String msgKey) {
@@ -86,14 +93,15 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
         // Seam Events
         Events.instance().raiseEvent(EventNames.DOCUMENT_CHILDREN_CHANGED, workflow);
         FacesMessages.instance().addFromResourceBundle(msgKey);
-
-        // Core Events for Notification
-        Task task = ToutaticeWorkflowHelper.getTaskByName(ToutaticeGlobalConst.CST_WORKFLOW_TASK_ONLINE_VALIDATE, documentManager, currentDoc);
-        ToutaticeWorkflowHelper.notifyRecipients(documentManager, task, currentDoc, task.getInitiator(),
-                ToutaticeGlobalConst.CST_EVENT_ONLINE_TASK_APPROVED_ASSIGNED);
-
+        
         webActions.resetTabList();
         return null;
+    }
+
+    protected void notifyTaskActors(DocumentModel currentDoc, String taskName, String workflowEvent) {
+        // Core Events for Notification
+        Task task = ToutaticeWorkflowHelper.getTaskByName(taskName, documentManager, currentDoc);
+        ToutaticeWorkflowHelper.notifyRecipients(documentManager, task, currentDoc, task.getInitiator(), workflowEvent);
     }
 
     public Task getValidateTask(String wfName) throws ClientException {
@@ -173,9 +181,12 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
      * Determine si l'action "workflow_online_cancel" de la vue 'summary' doit
      * être présentée.
      * 
-     * <b>Conditions</b> 
-     * <ul><li>Un process de demande de m doit exister</li> <li>
-     * l'utilisateur courant doit être l'initateur de ce processus</li></ul>
+     * <b>Conditions</b>
+     * <ul>
+     * <li>Un process de demande de m doit exister</li>
+     * <li>
+     * l'utilisateur courant doit être l'initateur de ce processus</li>
+     * </ul>
      * 
      * @return true si l'action doit être présentée. false sinon.
      * @throws ClientException
@@ -203,11 +214,11 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
      * Determine si l'action "direct_online" de la vue 'summary' doit être
      * présentée.
      * 
-     * <b>Conditions</b> 
+     * <b>Conditions</b>
      * <ul>
-     * 	<li>(l'utilisateur courant doit avoir la permission de validation (rôle de validateur) - cf filtre action)</li>
-     * 	<li>le document doit être dans l'état 'projet'</li>
-     * 	<li>le document ne doit pas déjà être dans un processus de validation/mise en ligne (quels que soient les utilisateurs en
+     * <li>(l'utilisateur courant doit avoir la permission de validation (rôle de validateur) - cf filtre action)</li>
+     * <li>le document doit être dans l'état 'projet'</li>
+     * <li>le document ne doit pas déjà être dans un processus de validation/mise en ligne (quels que soient les utilisateurs en
      * charge de faire la validation)</li>
      * </ul>
      * 
@@ -243,7 +254,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
 
 
     public String cancelOnlineWorkflow() throws ClientException {
-        return cancelWorkflow(ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE);
+        return cancelWorkflow(ToutaticeGlobalConst.CST_WORKFLOW_PROCESS_ONLINE, ToutaticeGlobalConst.CST_EVENT_ONLINE_WF_CANCELED);
     }
 
     /**
@@ -256,7 +267,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
     }
 
     /* FIXME: "Fork" of cancelRoute() */
-    public String cancelWorkflow(String wfName) throws ClientException {
+    public String cancelWorkflow(String wfName, String wfEvent) throws ClientException {
         List<DocumentRoute> routes = getRelatedRoutes();
         if (routes.size() == 0) {
             log.error("No workflow to cancel");
@@ -266,7 +277,7 @@ public class ToutaticeDocumentRoutingActionsBean extends DocumentRoutingActionsB
 
         Task validateTask = getValidateTask(wfName);
         DocumentModel currentDoc = navigationContext.getCurrentDocument();
-        ToutaticeWorkflowHelper.notifyRecipients(documentManager, validateTask, currentDoc, null, ToutaticeGlobalConst.CST_EVENT_ONLINE_WF_CANCELED);
+        ToutaticeWorkflowHelper.notifyRecipients(documentManager, validateTask, currentDoc, null, wfEvent);
 
         Framework.getLocalService(DocumentRoutingEngineService.class).cancel(route, documentManager);
         // force computing of tabs
