@@ -52,6 +52,11 @@ public class ToutaticeUnicityTitleListener implements EventListener {
 
                 if (!StringUtils.equals(initialTitle, newTitle)) {
                     document.setPropertyValue("dc:title", newTitle);
+                    
+                    // If not saved silently
+                    // A doc name XXXX (1) can be renamed in XXX even if its new name is XXXX (1)
+                    // (at the saving time, nuxeo considers the doc is unchanged)
+                    ToutaticeDocumentHelper.saveDocumentSilently(docCtx.getCoreSession(), document, true);
                 }
             }
         }
