@@ -109,8 +109,9 @@ public class CreateDocument extends AbstractDublinCoreDocumentUpdate {
 	
 	 @Override
 	    protected DocumentModel execute(CoreSession session, DocumentModel document, Properties properties, boolean save) throws ClientException, IOException {
+	     if( properties != null)
 	        DocumentHelper.setProperties(session, document, properties);
-	        return session.createDocument(document);
+	     return session.createDocument(document);
 	    }
 	
 	/**
