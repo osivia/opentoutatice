@@ -280,8 +280,16 @@ public class SuggestUserEntriesInWorkspace {
 					obj.put(Select2Common.ID, userId);
 					obj.put(Select2Common.TYPE_KEY_NAME, Select2Common.USER_TYPE);
 					obj.put(Select2Common.PREFIXED_ID_KEY_NAME, NuxeoPrincipal.PREFIX + userId);
-					obj.put(UserConfig.FIRSTNAME_COLUMN, next.getAttributes().get(fieldFirstName).get(0));
-					obj.put(UserConfig.LASTNAME_COLUMN, next.getAttributes().get(fieldLastName).get(0));
+					Attribute firstName = next.getAttributes().get(fieldFirstName);
+					if(firstName != null) {
+						obj.put(UserConfig.FIRSTNAME_COLUMN, firstName.get(0));
+					}
+					
+					Attribute lastName = next.getAttributes().get(fieldLastName);
+					if(lastName != null) {
+						obj.put(UserConfig.LASTNAME_COLUMN, lastName.get(0));
+					}
+					
 					obj.put(UserConfig.EMAIL_COLUMN, next.getAttributes().get(fieldMail).get(0));
 					
 					Select2Common.computeUserLabel(obj, firstLabelField, secondLabelField, thirdLabelField, hideFirstLabel,
