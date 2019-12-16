@@ -37,35 +37,35 @@ import fr.toutatice.ecm.platform.core.utils.exception.ToutaticeException;
  */
 public class ToutaticeAsynchronousUpdateListener implements PostCommitEventListener {
 
-	private static final String MOVE_OP_CHAIN = "moveOp";
+    private static final String MOVE_OP_CHAIN = "moveOp";
 
-	private static final String[] SELECTED_EVENTS = { "documentCreated", "documentCreatedByCopy", "documentMoved",
-			"documentRestored" };
+    private static final String[] SELECTED_EVENTS = {"documentCreated", "documentCreatedByCopy", "documentMoved", "documentRestored"};
 
-	@Override
-	public void handleEvent(EventBundle events) throws ClientException {
-		for (Event event : events) {
+    @Override
+    public void handleEvent(EventBundle events) throws ClientException {
+        for (Event event : events) {
 
-			if (event.getContext() instanceof DocumentEventContext) {
-				EventContext ctx = event.getContext();
-				DocumentEventContext docCtx = (DocumentEventContext) event.getContext();
-				DocumentModel document = docCtx.getSourceDocument();
-				CoreSession session = ctx.getCoreSession();
+            if (event.getContext() instanceof DocumentEventContext) {
+                DocumentEventContext docCtx = (DocumentEventContext) event.getContext();
+                DocumentModel document = docCtx.getSourceDocument();
+                CoreSession session = docCtx.getCoreSession();
 
-				if (document.isImmutable()) {
-					// ignore immutable documents
-					return;
-				}
+                if (session.exists(document.getRef())) {
+                    if (document.isImmutable()) {
+                        // ignore immutable documents
+                        return;
+                    }
 
-				try {
-					if (ArrayUtils.contains(SELECTED_EVENTS, event.getName())) {
-						ToutaticeOperationHelper.runOperationChain(session, MOVE_OP_CHAIN, document);
-					}
-				} catch (ToutaticeException e) {
-					throw new ClientException(e);
-				}
-			}
-		}
-	}
+                    try {
+                        if (ArrayUtils.contains(SELECTED_EVENTS, event.getName())) {
+                            ToutaticeOperationHelper.runOperationChain(session, MOVE_OP_CHAIN, document);
+                        }
+                    } catch (ToutaticeException e) {
+                        throw new ClientException(e);
+                    }
+                }
+            }
+        }
+    }
 
 }
