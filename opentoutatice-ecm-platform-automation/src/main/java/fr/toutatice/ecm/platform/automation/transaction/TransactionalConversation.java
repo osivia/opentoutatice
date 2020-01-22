@@ -19,6 +19,7 @@ import org.nuxeo.ecm.core.api.local.LoginStack.Entry;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.impl.DocumentModelImpl;
 import org.nuxeo.ecm.core.api.local.ClientLoginModule;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.jtajca.NuxeoContainer;
@@ -105,8 +106,19 @@ public class TransactionalConversation implements Callable<Object> {
                             if (!StringUtils.equals(MarkTransactionAsRollback.ID, opId))
                             {
                                 result = this.opSrv.run(ctx, opId, params);
+                                
+                                boolean prepareResult = true;
+                                
+                                if( result instanceof DocumentModelImpl)    {
+                                    // Detached object are not fetched (ie procedureInstance)
+                                    DocumentModelImpl model = (DocumentModelImpl) result;
+                                    if( model.getSessionId() == null)   {
+                                        prepareResult = false;
+                                    }
+                                }
 
-                                PreMessageBodyWriter.prepareResult(result);
+                                if( prepareResult)
+                                    PreMessageBodyWriter.prepareResult(result);
                             }
                             else
                             {
