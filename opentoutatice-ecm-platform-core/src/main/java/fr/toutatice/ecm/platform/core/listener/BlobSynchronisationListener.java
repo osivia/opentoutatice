@@ -65,6 +65,12 @@ public class BlobSynchronisationListener implements EventListener {
                             newBlob.setFilename(title);
                             p.setValue(newBlob);
                         }
+                        
+                        // Cannot modify version
+                        // FIXME : we should do this before the version has been created
+                        if (document.isVersion()) { 
+                            document = session.getWorkingCopy(document.getRef());   
+                        }   
 
                         ToutaticeDocumentHelper.saveDocumentSilently(session, document, true);
                     }

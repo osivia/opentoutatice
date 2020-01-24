@@ -100,6 +100,7 @@
 		<operation class="fr.toutatice.ecm.platform.automation.document.transaction.test.CreateDocumentInTransaction" />
 		<operation class="fr.toutatice.ecm.platform.automation.document.transaction.test.FetchPubInfosInTransaction" />
 		<operation class="fr.toutatice.ecm.platform.automation.document.transaction.test.FetchLiveDocumentInTransaction" />
+        <operation class="fr.toutatice.ecm.platform.automation.document.transaction.test.ExceptionTest" />
 		
 		<!-- Transactional conversations -->
 		<operation class="fr.toutatice.ecm.platform.automation.transaction.operation.StartTransaction" />

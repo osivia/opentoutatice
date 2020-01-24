@@ -41,7 +41,7 @@ public class TransactionalConversation implements Callable<Object> {
     public static final String NOT_FILLED = "Not_filled";
 
     private ExecutorService executor;
-    
+
     private Principal principal;
     private String repositoryName;
 
@@ -57,7 +57,7 @@ public class TransactionalConversation implements Callable<Object> {
     private String txcId;
 
     private Entry loginStack;
-    
+
     private boolean start = true;
 
     public TransactionalConversation(Principal principal, String repositoryName, ExecutorService executor, Entry loginStack) {
@@ -66,7 +66,7 @@ public class TransactionalConversation implements Callable<Object> {
         this.principal = principal;
         this.repositoryName = repositoryName;
         this.executor = executor;
-        
+
         this.loginStack = loginStack;
 
         // Initial value: null
@@ -76,25 +76,23 @@ public class TransactionalConversation implements Callable<Object> {
     @Override
     public Object call() throws Exception {
         Object result = null;
-            if (start) 
-            {
-                open(this.principal, this.repositoryName);
-                
-                ClientLoginModule.clearThreadLocalLogin();
-                
-                if( loginStack != null)
-                    ClientLoginModule.getThreadLocalLogin().push(loginStack.getPrincipal(), loginStack.getPrincipal(), loginStack.getSubject());
-                
-                this.start = false;
-            } else
-            {
-                if (StringUtils.equals(CommitOrRollbackTransaction.ID, opId)) 
-                {
-                    this.saveNClose(); 
-                } else
-                {
-                    try {
-                        if (StringUtils.isNotBlank(opId)) {
+        if (start) {
+            open(this.principal, this.repositoryName);
+
+            ClientLoginModule.clearThreadLocalLogin();
+
+            if (loginStack != null)
+                ClientLoginModule.getThreadLocalLogin().push(loginStack.getPrincipal(), loginStack.getPrincipal(), loginStack.getSubject());
+
+            this.start = false;
+        } else {
+            if (StringUtils.equals(CommitOrRollbackTransaction.ID, opId)) {
+                this.saveNClose();
+
+            } else {
+                try {
+                    if (StringUtils.isNotBlank(opId)) {
+                        if (!StringUtils.equals(MarkTransactionAsRollback.ID, opId)) {
 
                             OperationContext ctx = new OperationContext(this.session);
                             ctx.setInput(opCtx.getInput());
@@ -103,44 +101,41 @@ public class TransactionalConversation implements Callable<Object> {
                             if (log.isDebugEnabled()) {
                                 log.debug("Executing in transaction " + this.getTxcId());
                             }
-                            if (!StringUtils.equals(MarkTransactionAsRollback.ID, opId))
-                            {
-                                result = this.opSrv.run(ctx, opId, params);
-                                
-                                boolean prepareResult = true;
-                                
-                                if( result instanceof DocumentModelImpl)    {
-                                    // Detached object are not fetched (ie procedureInstance)
-                                    DocumentModelImpl model = (DocumentModelImpl) result;
-                                    if( model.getSessionId() == null)   {
-                                        prepareResult = false;
-                                    }
+                            result = this.opSrv.run(ctx, opId, params);
+
+                            boolean prepareResult = true;
+
+                            if (result instanceof DocumentModelImpl) {
+                                // Detached object are not fetched (ie procedureInstance)
+                                DocumentModelImpl model = (DocumentModelImpl) result;
+                                if (model.getSessionId() == null) {
+                                    prepareResult = false;
                                 }
+                            }
 
-                                if( prepareResult)
-                                    PreMessageBodyWriter.prepareResult(result);
-                            }
-                            else
-                            {
-                                TransactionHelper.setTransactionRollbackOnly();
-                            }
+                            if (prepareResult)
+                                PreMessageBodyWriter.prepareResult(result);
+                        } else {
+
+                            TransactionHelper.setTransactionRollbackOnly();
                         }
-
-                    } catch (Exception e) {
-                        log.error("Exception in transaction :" + e);
-                        e.printStackTrace();
-                        throw e;
                     }
+
+                } catch (Exception e) {
+                    log.error("Exception in transaction :" + e);
+                    e.printStackTrace();
+                    throw e;
                 }
             }
-            return result;
+        }
+        return result;
     }
 
-    public void open(Principal principal, String repositoryName) throws SystemException {
+    private void open(Principal principal, String repositoryName) throws SystemException {
         open(principal, repositoryName, -1);
     }
 
-    public void open(Principal principal, String repositoryName, int txTimeout) throws SystemException {
+    private void open(Principal principal, String repositoryName, int txTimeout) throws SystemException {
         // Tx
         if (txTimeout == -1) {
             TransactionHelper.startTransaction();
@@ -153,41 +148,43 @@ public class TransactionalConversation implements Callable<Object> {
         this.session = CoreInstance.openCoreSession(repositoryName, principal);
     }
 
-    public void saveNClose() {
-        if (this.session != null) {
-            // Persist
-            if (log.isDebugEnabled()) {
-                log.debug("Saving session");
-            }
-
-            this.session.save();
-
-            if (log.isDebugEnabled()) {
-                log.debug("Session saved");
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("Closing session");
-            }
-
-            this.session.close();
-
-            if (log.isDebugEnabled()) {
-                log.debug("Session closed");
-            }
-        }
+    private void saveNClose() {
+        
 
         if (this.tx != null) {
 
             if (log.isDebugEnabled()) {
                 log.debug("Commiting or rollbacking transaction");
             }
-
+            
             TransactionHelper.commitOrRollbackTransaction();
 
             if (log.isDebugEnabled()) {
                 log.debug("Transaction commit or rollback");
             }
+        }   else    {
+            if (this.session != null  ) {
+                // Persist
+                if (log.isDebugEnabled()) {
+                    log.debug("Saving session");
+                }
+
+                this.session.save();
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Session saved");
+                }
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Closing session");
+                }
+
+                this.session.close();
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Session closed");
+                }
+            }           
         }
     }
 
@@ -205,6 +202,7 @@ public class TransactionalConversation implements Callable<Object> {
 
     /**
      * Getter for txcId.
+     * 
      * @return the txcId
      */
     public String getTxcId() {
@@ -214,15 +212,17 @@ public class TransactionalConversation implements Callable<Object> {
 
     /**
      * Setter for txcId.
+     * 
      * @param txcId the txcId to set
      */
     public void setTxcId(String txcId) {
         this.txcId = txcId;
     }
 
-    
+
     /**
      * Getter for executor.
+     * 
      * @return the executor
      */
     public ExecutorService getExecutor() {

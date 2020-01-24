@@ -21,6 +21,7 @@ import org.nuxeo.ecm.core.api.local.ClientLoginModule;
 import org.nuxeo.ecm.core.api.local.LoginStack.Entry;
 
 import fr.toutatice.ecm.platform.automation.transaction.operation.CommitOrRollbackTransaction;
+import fr.toutatice.ecm.platform.automation.transaction.operation.MarkTransactionAsRollback;
 
 
 /**
@@ -37,11 +38,16 @@ public class TransactionalConversationManager {
 
     private TransactionalConversationPool txPool;
     
+    private ExecutorService supervisorExecutor;
+    
     private long txCounter = 0;
 
     private TransactionalConversationManager() {
         super();
         this.txPool = new TransactionalConversationPool();
+        
+        this.supervisorExecutor = Executors.newSingleThreadExecutor();
+        supervisorExecutor.submit(new TransactionsSupervisor(this));
     }
 
     public static synchronized TransactionalConversationManager getInstance() {
@@ -50,7 +56,8 @@ public class TransactionalConversationManager {
         }
         return instance;
     }
-
+    
+  
     /**
      * Start transaction
      * @param principal
@@ -69,8 +76,7 @@ public class TransactionalConversationManager {
         
         
         TransactionalConversation txConv = new TransactionalConversation(principal, repositoryName, executor, loginStack);
-        
-        
+
         
         Future<Object> future = txConv.getExecutor().submit(txConv);
         try {
@@ -79,6 +85,8 @@ public class TransactionalConversationManager {
             this.txCounter++;
             txConv.setTxcId(txcId);
             this.txPool.put(txcId, txConv);
+             
+            TransactionsSupervisor.addConversation(txcId);
         } catch (InterruptedException e) {
             e.printStackTrace();
             throw new SystemException();
@@ -111,12 +119,14 @@ public class TransactionalConversationManager {
                 Object resultat = future.get();
                 if (StringUtils.equals(CommitOrRollbackTransaction.ID, (String) opId)) 
                 {
-                    txConv.getExecutor().shutdown();
-                    txPool.remove(txConv);
+                    stopThread(txId);
                 }
                 return resultat;
             } catch (ExecutionException e) {
-                e.printStackTrace();
+                log.warn("Thread return exception :"+ e.getMessage()+ ". Force rollback");
+                // Avoid loop
+                if( !(StringUtils.equals(CommitOrRollbackTransaction.ID, (String) opId)) &&   !(StringUtils.equals(MarkTransactionAsRollback.ID, (String) opId)))
+                    forceRollback(txId);
             }
             
         } else {
@@ -129,6 +139,50 @@ public class TransactionalConversationManager {
         return this.txPool.get(txId);
     }
 
+    
+    
+    /**
+     * Auto commit the transaction by notifying the thread
+     *
+     * @param txId the tx id
+     */
+    protected void forceRollback(String txId) {
+        try {
+            notify(txId, null, MarkTransactionAsRollback.ID, null);
+            notify(txId, null, CommitOrRollbackTransaction.ID, null);
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+        }
+    }
+    
+      
+    
+    /**
+     * Auto commit the transaction by notifying the thread
+     *
+     * @param txId the tx id
+     */
+    protected void autoCommit(String txId) {
+
+        try {
+            notify(txId, null, CommitOrRollbackTransaction.ID, null);
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+        }
+
+    }
+
+    
+    private void stopThread(String txId) {
+        
+        TransactionalConversation txConv = getTxConv(txId);
+        if( txConv != null) {
+            txConv.getExecutor().shutdown();
+            txPool.remove(txId);
+            TransactionsSupervisor.removeConversation( txId);
+        }
+
+    }
 
     /**
      * @param txId
