@@ -5,7 +5,7 @@
 
 	<groupId>opentoutatice-ecm.platform</groupId>
 	<artifactId>opentoutatice-ecm-platform-parent</artifactId>
-	<version>4.2</version>
+	<version>4.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>open toutatice plate-forme</name>
 
@@ -15,12 +15,12 @@
 		<module>opentoutatice-ecm-platform-automation</module>
 		<module>opentoutatice-ecm-platform-services</module>
 		<module>opentoutatice-ecm-platform-custom</module>
-		<module>opentoutatice-ecm-platform-marketplace</module> 
-		<module>opentoutatice-ecm-platform-distribution</module> 
+		<!-- <module>opentoutatice-ecm-platform-marketplace</module> 
+		<module>opentoutatice-ecm-platform-distribution</module> --> 
 	</modules>
 
 	<properties>
-		<nuxeo.version>6.0-HF21</nuxeo.version>
+		<nuxeo.version>6.1.2</nuxeo.version>
 		<commons.lang.version>2.6</commons.lang.version>
 		<org.apache.pdfbox.version>1.7.1</org.apache.pdfbox.version>
 		<net.sf.json.version>2.4</net.sf.json.version>
@@ -36,7 +36,7 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- Nx dependencies -->
+			<!-- Nx dependencies
 			<dependency>
 				<groupId>org.nuxeo.ecm.distribution</groupId>
 				<artifactId>nuxeo-distribution</artifactId>
@@ -44,7 +44,7 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency> 
-
+ -->
 			<dependency>
 				<groupId>org.nuxeo.ecm.core</groupId>
 				<artifactId>nuxeo-core</artifactId>
@@ -200,7 +200,7 @@
 				<artifactId>nuxeo-platform-el</artifactId>
 				<version>${nuxeo.version}</version>
 			</dependency>
-			<dependency>
+			<dependency> 
 				<groupId>org.nuxeo.ecm.platform</groupId>
 				<artifactId>nuxeo-platform-forum</artifactId>
 				<version>${nuxeo.version}</version>

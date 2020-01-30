@@ -25,9 +25,12 @@ import org.nuxeo.common.utils.IdUtils;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.pathsegment.PathSegmentService;
+import org.nuxeo.runtime.api.Framework;
 
 public class ToutaticePathSegmentService implements PathSegmentService {
 
+    protected final int maxSize = Integer.parseInt(Framework.getProperty(PathSegmentService.NUXEO_MAX_SEGMENT_SIZE_PROPERTY, "24"));;
+	
 	public Pattern stupidRegexp = Pattern.compile("^[- .,;?!:/\\\\'\"]*$");
 	
 	@Override
@@ -42,7 +45,15 @@ public class ToutaticePathSegmentService implements PathSegmentService {
 
 	@Override
 	public String generatePathSegment(String s) throws ClientException {
-		return IdUtils.generateId(s, "-", true, 24);
+		return IdUtils.generateId(s, "-", true, maxSize);
 	}
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getMaxSize() {
+        return maxSize;
+    }
 
 }
