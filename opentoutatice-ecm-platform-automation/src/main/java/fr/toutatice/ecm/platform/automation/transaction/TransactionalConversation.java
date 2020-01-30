@@ -16,6 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.core.api.local.LoginStack.Entry;
+import org.nuxeo.elasticsearch.listener.ElasticSearchInlineListener;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -57,6 +58,7 @@ public class TransactionalConversation implements Callable<Object> {
     private String txcId;
 
     private Entry loginStack;
+    private boolean esSync;
 
     private boolean start = true;
 
@@ -94,13 +96,19 @@ public class TransactionalConversation implements Callable<Object> {
                     if (StringUtils.isNotBlank(opId)) {
                         if (!StringUtils.equals(MarkTransactionAsRollback.ID, opId)) {
 
-                            OperationContext ctx = new OperationContext(this.session);
+                            OperationContext ctx = new OperationContext(this.session, opCtx.getVars());
+
                             ctx.setInput(opCtx.getInput());
                             ctx.setCommit(false);
 
                             if (log.isDebugEnabled()) {
                                 log.debug("Executing in transaction " + this.getTxcId());
                             }
+                            
+                            
+                            ElasticSearchInlineListener.useSyncIndexing.set(esSync);
+                            
+                            
                             result = this.opSrv.run(ctx, opId, params);
 
                             boolean prepareResult = true;
@@ -198,6 +206,10 @@ public class TransactionalConversation implements Callable<Object> {
 
     public synchronized void setParams(Map<String, Object> params) {
         this.params = params;
+    }
+    
+    public synchronized void setESSync(boolean esSync) {
+        this.esSync = esSync;
     }
 
     /**
