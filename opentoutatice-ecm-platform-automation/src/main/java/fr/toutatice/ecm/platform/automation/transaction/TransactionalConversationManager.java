@@ -157,12 +157,15 @@ public class TransactionalConversationManager {
                     stopThread(txId);
                 }
                 return resultat;
-            } catch (ExecutionException e) {
-                log.warn("Thread return exception :" + e.getMessage() + ". Force rollback");
-                // Avoid loop
-                if (!(StringUtils.equals(CommitOrRollbackTransaction.ID, (String) opId)) && !(StringUtils.equals(MarkTransactionAsRollback.ID, (String) opId)))
-                    forceRollback(txId);
-            }
+//            } catch (ExecutionException e) {
+//                log.warn("Thread return exception :" + e.getMessage() + ". Force rollback");
+//                // Avoid loop
+//                if (!(StringUtils.equals(CommitOrRollbackTransaction.ID, (String) opId)) && !(StringUtils.equals(MarkTransactionAsRollback.ID, (String) opId)))
+//                    forceRollback(txId);
+//            }
+        } catch (ExecutionException e) {
+            throw new InterruptedException("Exception occured");
+        }            
 
         } else {
             log.error("No transaction found with this transaction id:" + txId);
