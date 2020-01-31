@@ -63,7 +63,7 @@ public class PreMessageBodyWriter {
      * @param doc
      */
     private static void refreshDocument(DocumentModel doc) {
-        doc.refresh();
+        doc.refresh(DocumentModel.REFRESH_ALL, doc.getSchemas());
         doc.getLockInfo();
     }
 

@@ -20,6 +20,7 @@ import org.nuxeo.elasticsearch.listener.ElasticSearchInlineListener;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.core.api.CoreInstance;
 import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.DocumentModelImpl;
 import org.nuxeo.ecm.core.api.local.ClientLoginModule;
 import org.nuxeo.runtime.api.Framework;
@@ -111,18 +112,8 @@ public class TransactionalConversation implements Callable<Object> {
                             
                             result = this.opSrv.run(ctx, opId, params);
 
-                            boolean prepareResult = true;
 
-                            if (result instanceof DocumentModelImpl) {
-                                // Detached object are not fetched (ie procedureInstance)
-                                DocumentModelImpl model = (DocumentModelImpl) result;
-                                if (model.getSessionId() == null) {
-                                    prepareResult = false;
-                                }
-                            }
-
-                            if (prepareResult)
-                                PreMessageBodyWriter.prepareResult(result);
+                            PreMessageBodyWriter.prepareResult(result);
                         } else {
 
                             TransactionHelper.setTransactionRollbackOnly();
