@@ -5,6 +5,10 @@ package fr.toutatice.ecm.platform.core.helper;
 
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.core.api.CoreSession;
+import org.nuxeo.ecm.core.api.DocumentModelList;
+import org.nuxeo.elasticsearch.api.ElasticSearchService;
+import org.nuxeo.elasticsearch.query.NxQueryBuilder;
+import org.nuxeo.runtime.api.Framework;
 
 
 /**
@@ -22,6 +26,8 @@ public class ToutaticeDocumentMetadataHelper {
      */
     public ToutaticeDocumentMetadataHelper() {
         super();
+        
+        
     }
     
     /**
@@ -31,12 +37,30 @@ public class ToutaticeDocumentMetadataHelper {
      * @return true if title unicity in current Folder
      */
     public static boolean isTileUnique(CoreSession session, String parentUUId, String currentUUId, String title) {
+    	
+    	
         title = StringUtils.replace(title, "'", "\\'");
         String query = String.format(UNICITY_TITLE_QUERY, parentUUId, title);
         if (currentUUId != null) {
             query = String.format(query.concat(UNICITY_TITLE_EXCLUDE_ITSELF_CLAUSE), currentUUId);
         }
-        return session.query(query).isEmpty();
+
+        
+		ElasticSearchService service = Framework.getService(ElasticSearchService.class);
+
+		if(service !=null) {
+			NxQueryBuilder queryBuilder = new NxQueryBuilder(session);
+			queryBuilder.nxql(query);
+			DocumentModelList results = service.query(queryBuilder);
+			
+			return results.isEmpty();
+			
+		}
+		else {
+	        return session.query(query).isEmpty();
+		}
+		
+
     }
 
 }
