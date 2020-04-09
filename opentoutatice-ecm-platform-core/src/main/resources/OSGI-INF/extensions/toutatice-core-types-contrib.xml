@@ -78,6 +78,10 @@
 				dc:lastContributor, dc:creator
 			</prefetch>
 		</doctype>
+		
+		<doctype name="Note" append="true">
+			<facet name="TTCAttachableImages" />
+		</doctype>
 
 		<doctype name="Domain" append="true">
 			<schema name="toutatice_domain" />
