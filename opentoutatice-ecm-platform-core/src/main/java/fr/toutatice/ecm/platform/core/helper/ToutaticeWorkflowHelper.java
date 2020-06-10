@@ -68,10 +68,9 @@ public final class ToutaticeWorkflowHelper {
      * @param currentDoc
      * @return workflows on document.
      */
-    public static List<DocumentRoute> getWorkflowsOnDocument(DocumentModel currentDoc){
+    public static List<DocumentRoute> getWorkflowsOnDocument(CoreSession session, DocumentModel currentDoc){
         List<DocumentRoute> routes = new ArrayList<DocumentRoute>(1);
         
-        CoreSession session = currentDoc.getCoreSession();
         String query = String.format(GET_WF_ON_DOCUMENT_QUERY, currentDoc.getId());
         
         ToutaticeQueryHelper.UnrestrictedQueryRunner queryRunner = new ToutaticeQueryHelper.UnrestrictedQueryRunner(session, query);
