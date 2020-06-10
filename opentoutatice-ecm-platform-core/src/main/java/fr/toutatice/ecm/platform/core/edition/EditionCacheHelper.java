@@ -11,6 +11,9 @@ import org.nuxeo.ecm.core.cache.CacheAttributesChecker;
 import org.nuxeo.ecm.core.cache.CacheService;
 import org.nuxeo.runtime.api.Framework;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -21,6 +24,8 @@ import net.sf.json.JSONObject;
  * @author dorian
  */
 public class EditionCacheHelper {
+	
+	private static CacheManager cacheManager;
 
     public static final String USERNAME_KEY = "username";
 
@@ -33,28 +38,36 @@ public class EditionCacheHelper {
     }
 
 
-    /**
-     * Store the name of the users currently editing and the current timestamp into the cache
-     *
-     * @param document
-     * @param userNames
-     * @param cacheName
-     */
-    public static void put(DocumentModel document, List<String> userNames, String cacheName) {
-        if (document != null) {
-            if (CollectionUtils.isNotEmpty(userNames)) {
-                JSONObject cacheEntry = buildCacheEntry(userNames);
-                try {
-                    CacheAttributesChecker cache = getCacheService().getCache(cacheName);
-                    if (cache != null) {
-                        cache.put(document.getId(), cacheEntry);
-                    }
-                } catch (IOException e) {
-                    // NOP
-                }
-            }
-        }
-    }
+	/**
+	 * Store the name of the users currently editing and the current timestamp into
+	 * the cache
+	 *
+	 * @param document
+	 * @param userNames
+	 * @param cacheName
+	 */
+	public static void put(DocumentModel document, List<String> userNames, String cacheName) {
+
+		if (document != null) {
+			if (CollectionUtils.isNotEmpty(userNames)) {
+				JSONObject cacheEntry = buildCacheEntry(userNames);
+
+				Cache ehcache = getEhCache(cacheName);
+				if (ehcache != null) {
+					ehcache.put(new Element(document.getId(), cacheEntry));
+				} else {
+					try {
+						CacheAttributesChecker memorycache = getInMemoryCacheService().getCache(cacheName);
+						if (memorycache != null) {
+							memorycache.put(document.getId(), cacheEntry);
+						}
+					} catch (IOException e) {
+						// NOP
+					}
+				}
+			}
+		}
+	}
 
     /**
      * Store the name of the user currently editing and the current timestamp into the cache
@@ -64,17 +77,27 @@ public class EditionCacheHelper {
      * @param cacheName
      */
     public static void put(DocumentModel document, String userName, String cacheName) {
+
+    	
         if (document != null) {
             if (StringUtils.isNotBlank(userName)) {
                 JSONObject cacheEntry = buildCacheEntry(userName);
-                try {
-                    CacheAttributesChecker cache = getCacheService().getCache(cacheName);
-                    if (cache != null) {
-                        cache.put(document.getId(), cacheEntry);
-                    }
-                } catch (IOException e) {
-                    // NOP
-                }
+
+
+				Cache ehcache = getEhCache(cacheName);
+				if (ehcache != null) {
+					ehcache.put(new Element(document.getId(), cacheEntry));
+				} else {
+					try {
+						CacheAttributesChecker memorycache = getInMemoryCacheService().getCache(cacheName);
+						if (memorycache != null) {
+							memorycache.put(document.getId(), cacheEntry);
+						}
+					} catch (IOException e) {
+						// NOP
+					}
+				}
+
             }
         }
     }
@@ -87,38 +110,58 @@ public class EditionCacheHelper {
      * @return
      */
     public static JSONObject get(DocumentModel document, String cacheName) {
+    	
         JSONObject cacheEntry = null;
         if (document != null) {
-            try {
-                CacheAttributesChecker cache = getCacheService().getCache(cacheName);
-                if (cache != null) {
-                    cacheEntry = (JSONObject) cache.get(document.getId());
-                }
-            } catch (IOException e) {
-                // NOP
-            }
+
+        	
+			Cache ehcache = getEhCache(cacheName);
+			if (ehcache != null) {
+				Element element = ehcache.get(document.getId());
+				if (element != null) {
+					cacheEntry = (JSONObject) element.getValue();
+				}
+			} else {
+				try {
+					CacheAttributesChecker cache = getInMemoryCacheService().getCache(cacheName);
+					if (cache != null) {
+						cacheEntry = (JSONObject) cache.get(document.getId());
+					}
+				} catch (IOException e) {
+					// NOP
+				}
+			}
+        	
         }
         return cacheEntry;
     }
 
-    /**
-     * Invalidate the cache for the given document
-     *
-     * @param document
-     * @param cacheName
-     */
-    public static void invalidate(DocumentModel document, String cacheName) {
-        if (document != null) {
-            try {
-                CacheAttributesChecker cache = getCacheService().getCache(cacheName);
-                if (cache != null) {
-                    cache.invalidate(document.getId());
-                }
-            } catch (IOException e) {
-                // NOP
-            }
-        }
-    }
+	/**
+	 * Invalidate the cache for the given document
+	 *
+	 * @param document
+	 * @param cacheName
+	 */
+	public static void invalidate(DocumentModel document, String cacheName) {
+
+		if (document != null) {
+
+			Cache ehcache = getEhCache(cacheName);
+			if (ehcache != null) {
+				ehcache.remove(document.getId());
+			} else {
+				try {
+					CacheAttributesChecker cache = getInMemoryCacheService().getCache(cacheName);
+					if (cache != null) {
+						cache.invalidate(document.getId());
+					}
+				} catch (IOException e) {
+					// NOP
+				}
+			}
+
+		}
+	}
 
     /**
      * format an entry to be stored in the cache
@@ -153,11 +196,30 @@ public class EditionCacheHelper {
     }
 
     /** Getter for Cache service. */
-    private static CacheService getCacheService() {
+    private static CacheService getInMemoryCacheService() {
         if (cacheService == null) {
             cacheService = Framework.getService(CacheService.class);
         }
         return cacheService;
     }
 
+    
+    private static Cache getEhCache(String cacheName) {
+    	
+		String configFile = Framework.getProperty("ottc.ehcache.configfile");
+		
+		if(configFile != null) {
+	    	if(cacheManager == null) {
+	    		cacheManager = CacheManager.create(configFile);
+	    	}
+
+	    	if(cacheManager.getCache(cacheName) == null) {
+	    		cacheManager.addCache(cacheName);
+	    	}
+	    	return cacheManager.getCache(cacheName);
+			
+		}
+
+		return null;
+    }
 }
