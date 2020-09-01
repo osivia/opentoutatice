@@ -95,7 +95,7 @@
 		</doctype>
 
 
-		<doctype name="Archive" extends="Folder">
+		<doctype name="Archive" extends="OrderedFolder">
 		</doctype>
 
 	</extension>
