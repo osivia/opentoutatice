@@ -16,6 +16,9 @@
 		<schema name="toutatice_domain" prefix="ttcd"
 			src="schemas/toutatice-domain.xsd" />
 
+		<!-- For LDAP searches -->
+		<schema name="opentoutatice_user" prefix="user" src="schemas/opentoutatice-ldap-user.xsd" />
+		<schema name="opentoutatice_group" prefix="group" src="schemas/opentoutatice-ldap-group.xsd" />
 	</extension>
 
 </component>
