@@ -138,7 +138,10 @@ public class SuggestUserEntriesInWorkspace {
     public Blob run() throws ClientException {
     	
     	boolean userOnly = false;
-    	boolean groupOnly = false;
+    	
+    	// if no search is typed, search only groups
+    	boolean groupOnly = StringUtils.isEmpty(prefix);
+    	
 		if (searchType != null && !searchType.isEmpty()) {
 			if (searchType.equals(Select2Common.USER_TYPE)) {
 				userOnly = true;
