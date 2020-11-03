@@ -50,6 +50,10 @@
 		<resource name="ottc.simple.tinymce.init.js">
 			<path>tinymce/ottc_simple_tinymce_responsive_init.js</path>
 		</resource>
+		
+		<resource name="ottc.collapsible.css">
+			<path>css/ottc_collapsible.css</path>
+		</resource>
 
 	</extension>
 
@@ -61,6 +65,7 @@
 			<resource>glyphicons.css</resource>
 			<resource>ottc.custom.tinymce.init.js</resource>
 			<resource>ottc.simple.tinymce.init.js</resource>
+			<resource>ottc.collapsible.css</resource>
 		</view>
 
 	</extension>

@@ -40,10 +40,12 @@ import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.ecm.core.api.DocumentRef;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.impl.VersionModelImpl;
+import org.nuxeo.ecm.platform.publisher.api.PublishingEvent;
 
 import fr.toutatice.ecm.platform.core.constants.ToutaticeGlobalConst;
 import fr.toutatice.ecm.platform.core.constants.ToutaticeNuxeoStudioConst;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeCommentsHelper;
+import fr.toutatice.ecm.platform.core.helper.ToutaticeNotifyEventHelper;
 import fr.toutatice.ecm.platform.core.helper.ToutaticeSilentProcessRunnerHelper;
 
 @Operation(
@@ -55,6 +57,8 @@ public class PublishDocument {
 
     public static final String ID = "Document.TTCPPublish";
     public static Log log = LogFactory.getLog(PublishDocument.class);
+    
+    public static final String DOCUMENT_SET_ON_LINE = "documentSetOnLine";
 
     @Context
     protected CoreSession session;
@@ -206,6 +210,10 @@ public class PublishDocument {
                     srcDoc.setPropertyValue(ToutaticeNuxeoStudioConst.CST_DOC_XPATH_NUXEO_DC_ISSUED, issued);
                     srcDoc = this.session.saveDocument(srcDoc);
                 }
+                
+                // Notify cause this.session.publishDocument raised DocumentEventTypes.DOCUMENT_PROXY_UPDATED, DocumentEventTypes.DOCUMENT_PROXY_PUBLISHED
+                // and DocumentEventTypes.SECTION_CONTENT_PUBLISHED but not "documentPublished"
+                ToutaticeNotifyEventHelper.notifyEvent(session, DOCUMENT_SET_ON_LINE, this.doc, null);
                 
             } else {
                 throw new ClientException("Failed to get the target document reference");

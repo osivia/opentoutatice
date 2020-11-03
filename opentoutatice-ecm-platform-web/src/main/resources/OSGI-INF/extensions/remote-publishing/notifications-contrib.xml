@@ -17,10 +17,12 @@
 		<!-- Notification Custom -->
 		<notification name="ToutaticePublication" channel="email"
 			enabled="true" availableIn="Section,PortalSite" autoSubscribed="false"
-			template="publish" subject="Publication du document ${docTitle}"
+			template="remotePublish" subjectTemplate="remotePublishSubject"
 			label="label.nuxeo.notifications.publish">
-			<event name="documentPublicationApproved" />
 			<event name="documentPublished" />
+			<event name="documentPublicationApproved" />
+			<event name="documentWaitingPublication" />
+			<event name="documentPublicationRejected" />
 		</notification>
 
 	</extension>
@@ -28,8 +30,9 @@
 	<extension
 		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
 		point="templates">
-
-		<template name="publish" src="templates/publish_fr.ftl" />
+	
+		<template name="remotePublishSubject" src="templates/remotePublishSubject_fr.ftl" />
+		<template name="remotePublish" src="templates/remotePublish_fr.ftl" />
 
 	</extension>
 

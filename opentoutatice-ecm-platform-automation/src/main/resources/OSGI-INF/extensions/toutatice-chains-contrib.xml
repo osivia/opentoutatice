@@ -151,9 +151,6 @@
 		<chain id="setOnLine">
 			<operation id="Context.FetchDocument" />
 			<operation id="Document.SetOnLineOperation" />
-			<operation id="Notification.SendEvent">
-             <param type="string" name="name">documentLocallyPublished</param>
-            </operation>
 		</chain>
 
 	</extension>

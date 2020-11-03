@@ -20,12 +20,12 @@
                       <td style="background-color:#fff;padding:8px 20px;">
                         
                         <p>
-                        <#if eventId == "documentPublished">
-                        Le document suivant a &eacute;t&eacute; <strong>publi&eacute</strong>:
-                        <#elseif eventId == "documentPublicationApproved">
-                        Le document suivant a &eacute;t&eacute; <strong>approuv&eacute;</strong>:
+                        <#if eventId == "documentPublished" || eventId == "documentPublicationApproved">
+                        Le document suivant a &eacute;t&eacute; <strong>publi&eacute</strong> par ${author} le ${dateTime?datetime?string("dd/MM/yyyy à HH:mm")}:
+                        <#elseif eventId =="documentWaitingPublication">
+						Une <strong>demande de publication</strong> du document suivant vous a &eacute;t&eacute; assign&eacute;e par ${initiator} le ${dateTime?datetime?string("dd/MM/yyyy à HH:mm")}:	
                         <#elseif eventId == "documentPublicationRejected">
-                        Le document suivant a &eacute;t&eacute; <strong>rejet&eacute;</strong>:
+                        La demande de publication du document suivant <strong>n'a pas &eacute;t&eacute; accept&eacute;</strong> par ${author} le ${dateTime?datetime?string("dd/MM/yyyy à HH:mm")}:
                         </#if>
                         </p>
 
@@ -40,7 +40,7 @@
                                   <#elseif eventId == "documentPublicationApproved">
                                   <a href="${docPermalink}" style="color:#22aee8;text-decoration:underline;word-wrap:break-word!important;">
                                   ${htmlEscape(docTitle)}</a>
-                                  <#elseif eventId == "documentPublicationRejected">
+                                  <#elseif eventId == "documentPublicationRejected" || eventId =="documentWaitingPublication">
                                   <a href="${docPermalink}?displayContext=proxy_preview" style="color:#22aee8;text-decoration:underline;word-wrap:break-word!important;">
                                    ${htmlEscape(docTitle)}</a>
                                   </#if>
@@ -63,8 +63,8 @@
                               </td>
                             </tr>
                             <tr>
-                              <td style="border:1px solid #eee;color:#888;font-size:13px;white-space:nowrap;">Créé le </td>
-                              <td style="border:1px solid #eee;color:#000;font-size:13px;">${docCreated?datetime?string("dd/MM/yyyy - HH:mm")}
+                              <td style="border:1px solid #eee;color:#888;font-size:13px;white-space:nowrap;">Mise à jour le </td>
+                              <td style="border:1px solid #eee;color:#000;font-size:13px;">${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}
                               </td>
                             </tr>
                             <tr>
@@ -78,8 +78,7 @@
                     <tr>
                       <td style="background-color:#f7f7f7;border-top:1px dashed #e9ecef;text-align:center;padding:8px 20px;">
                         <div style="font-size:12px;color:#bbb;">
-                        Vous avez re&ccedil;u cette notification car vous avez souscrit à ${notification.name?lower_case} sur ce document ou l'un de ses parents.
-                        </div>
+			            Vous recevez cette notification car vous avez indiqué vouloir suivre ce document ou un de ses parents. Vous pouvez vous connecter sur le portail pour retirer cette notification.</div>
                       </td>
                     </tr>
                   </tbody>

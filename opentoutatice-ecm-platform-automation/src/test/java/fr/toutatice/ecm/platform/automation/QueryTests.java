@@ -12,16 +12,22 @@ import org.nuxeo.ecm.automation.client.model.RecordSet;
 
 public class QueryTests {
 
-    private static final String URL = "http://vm-dch-dev:8081/nuxeo/site/automation";
-    private static final String USER = "admin";
-    private static final String PWD = "osivia44";
+    private static final String URL = "https://beta.toutatice.local/nuxeo/site/automation";
+    private static final String USER = "Administrator";
+    private static final String PWD = "osivia";
 
     private static final String QUERY_N_FETCH = "ResultSet.PaginatedQuery";
 
     private static final String TEST_QUERY_1 = "select distinct ecm:uuid, dc:title, ttcs:spaceMembers/*1/login, ttcs:spaceMembers/*1/joinedDate, ttcs:spaceMembers/*1/newsPeriod, ttcs:spaceMembers/*1/nextNewsDate, ttcs:spaceMembers/*1/lastNewsDate from Workspace"
             + "where  ttcs:spaceMembers/*1/login is not null and ttcs:spaceMembers/*1/newsPeriod != 'none'  and ecm:mixinType != 'HiddenInNavigation' and ecm:currentLifeCycleState != 'deleted' and ecm:isVersion = 0 order by ecm:uuid ";
     private static final String TEST_QUERY_2 = "select count(ttcs:spaceMembers/*1/login) from Workspace where  ttcs:spaceMembers/*1/login is not null and ttcs:spaceMembers/*1/newsPeriod != 'none' and ecm:mixinType != 'HiddenInNavigation' and ecm:currentLifeCycleState != 'deleted' and ecm:isVersion = 0";
-
+    
+    private static final String TEST_QUERY_3 = "SELECT ecm:uuid, ecm:primaryType FROM Document WHERE ecm:isProxy = 0 AND ecm:currentLifeCycleState <> 'deleted'";
+    
+    private static final String TEST_QUERY_4 = "select ecm:uuid from Document where ecm:fulltext = 'voiture'";
+    
+    private static String R = "SELECT ecm:uuid FROM PortalSite WHERE ecm:isProxy = 0 AND ecm:isVersion = 0 AND ecm:currentLifeCycleState <> 'deleted' and ttcn:picture/data is not NULL and ttc:vignette/data is not null";
+    
     private static final String[] TEST_QUERIES = {TEST_QUERY_1, TEST_QUERY_2};
 
     public static void main(String[] args) {
@@ -35,7 +41,7 @@ public class QueryTests {
             // queryNFetch(session, qry);
             // }
 
-            queryNFetch(session, TEST_QUERY_2);
+            queryNFetch(session, TEST_QUERY_4);
 
         } catch (Exception e) {
             System.out.println(e);

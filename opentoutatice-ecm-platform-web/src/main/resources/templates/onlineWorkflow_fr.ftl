@@ -19,15 +19,17 @@
                     <tr>
                       <td style="background-color:#fff;padding:8px 20px;">
                         
-                        <p><#if eventId == "workflowOnlineTaskAssigned">
-                        Une <strong>demande de mise en ligne</strong> du document suivant a &eacute;t&eacute; &eacute;mise par ${initiator} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}:
-                        <#elseif eventId == "workflowOnlineTaskApproved">
-                        Le document suivant a &eacute;t&eacute; <strong>mis en ligne</strong> par ${author} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}:
+                        <p>
+                        <#if eventId == "workflowOnlineTaskApproved" || eventId == "documentSetOnLine">
+                        Le document suivant a &eacute;t&eacute; <strong>publi&eacute</strong> par ${author} le ${dateTime?datetime?string("dd/MM/yyyy à HH:mm")}:
+                        <#elseif eventId == "workflowOnlineTaskAssigned">
+                        Une <strong>demande de publication</strong> du document suivant vous a &eacute;t&eacute; assign&eacute;e par ${initiator} le ${dateTime?datetime?string("dd/MM/yyyy à HH:mm")}:	
                         <#elseif eventId == "workflowOnlineTaskRejected">
-                        La demande de mise en ligne du document suivant a &eacute;t&eacute; <strong>rejet&eacute;e</strong> par ${author} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}:
+                        La demande de publication du document suivant <strong>n'a pas &eacute;t&eacute; accept&eacute;</strong> par ${author} le ${dateTime?datetime?string("dd/MM/yyyy à HH:mm")}:
                         <#elseif eventId == "workflowOnlineCanceled">
-                        La demande de mise en ligne du document suivant a &eacute;t&eacute; <strong>annul&eacute;e</strong> par ${author} le ${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}:
-                        </#if></p>
+                        La demande de publication du document suivant a &eacute;t&eacute; <strong>annul&eacute;e</strong> par ${author} le ${dateTime?datetime?string("dd/MM/yyyy à HH:mm")}:
+                        </#if>
+                        </p>
 
                         <table cellpadding="6" cellspacing="0" style="border:none;border-collapse:collapse;font-size:13px;">
                           <tbody>
@@ -37,7 +39,7 @@
                                   <#if eventId == "workflowOnlineTaskAssigned">
                                   <a href="${docPermalink}?displayContext=proxy_preview" style="color:#22aee8;text-decoration:underline;word-wrap:break-word!important;">
                                   ${htmlEscape(docTitle)}</a>
-                                  <#elseif eventId == "workflowOnlineTaskApproved">
+                                  <#elseif eventId == "workflowOnlineTaskApproved" | eventId == "documentSetOnLine">
                                   <a href="${docPermalink}" style="color:#22aee8;text-decoration:underline;word-wrap:break-word!important;">
                                   ${htmlEscape(docTitle)}</a>
                                   <#elseif eventId == "workflowOnlineTaskRejected">
@@ -66,8 +68,8 @@
                               </td>
                             </tr>
                             <tr>
-                              <td style="border:1px solid #eee;color:#888;font-size:13px;white-space:nowrap;">Créé le </td>
-                              <td style="border:1px solid #eee;color:#000;font-size:13px;">${docCreated?datetime?string("dd/MM/yyyy - HH:mm")}
+                              <td style="border:1px solid #eee;color:#888;font-size:13px;white-space:nowrap;">Mise à jour le </td>
+                              <td style="border:1px solid #eee;color:#000;font-size:13px;">${dateTime?datetime?string("dd/MM/yyyy - HH:mm")}
                               </td>
                             </tr>
                             <tr>
@@ -81,7 +83,7 @@
                     <tr>
                       <td style="background-color:#f7f7f7;border-top:1px dashed #e9ecef;text-align:center;padding:8px 20px;">
                         <div style="font-size:12px;color:#bbb;">
-                        <a href="${docUrl}">Cliquez-ici</a> pour consulter le document dans Nuxeo.</div>
+			Vous recevez cette notification car vous avez indiqué vouloir suivre ce document ou un de ses parents. Vous pouvez vous connecter sur le portail pour retirer cette notification.</div>
                       </td>
                     </tr>
                   </tbody>

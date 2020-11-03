@@ -9,11 +9,12 @@
 		target="org.nuxeo.ecm.platform.ec.notification.service.NotificationService"
 		point="notifications">
 
-		<notification autoSubscribed="true" availableIn="PortalSite"
+		<notification autoSubscribed="false" availableIn="PortalSite"
 			channel="email" enabled="true" name="OnLineWF" subjectTemplate="onlineWorkflowSubject"
-			template="onlineWorkflow">
+			template="onlineWorkflow" label="Document mis en ligne">
+			<event name="documentSetOnLine" />
 			<event name="workflowOnlineTaskAssigned" />
-			<event name="workflowOnlineCanceled" />
+			<event name="workflowOnlineCanceled" /> 
 			<event name="workflowOnlineTaskApproved" />
 			<event name="workflowOnlineTaskRejected" />
 		</notification>
@@ -27,8 +28,7 @@
 		<template name="workflow" src="templates/workflow_fr.ftl" />
 		<template name="onlineWorkflow" src="templates/onlineWorkflow_fr.ftl" />
 		<template name="onlineWorkflowSubject" src="templates/onLineWFSubject_fr.ftl" />
-		<template name="automaticWorkflowTaskAssigned"
-			src="templates/automaticWorkflowTaskAssigned_fr.ftl" />
+		<template name="automaticWorkflowTaskAssigned" src="templates/automaticWorkflowTaskAssigned_fr.ftl" />
 
 	</extension>
 

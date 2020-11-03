@@ -126,6 +126,44 @@ public class ToutaticeDocumentHelper {
 		}
 	}
 	
+	public static DocumentModel getUnrestrictedWorkingCopy(CoreSession session, String proxyId) throws ClientException {
+        final GetUnrestrictedWorkingCopy getter = new GetUnrestrictedWorkingCopy(session, proxyId);
+        getter.runUnrestricted();
+        return getter.getWorkingCopy();
+    }
+	
+	/**
+     * Allows to get a working copy of proxy in an unrestricted way.
+     */
+    public static class GetUnrestrictedWorkingCopy extends UnrestrictedSessionRunner {
+
+        private String proxyId;
+        private DocumentModel workingCopy;
+
+        public DocumentModel getWorkingCopy() {
+            return workingCopy;
+        }
+
+        public GetUnrestrictedWorkingCopy(CoreSession session, String id) {
+            super(session);
+            this.proxyId = id;
+        }
+
+        @Override
+        public void run() throws ClientException {
+            if (StringUtils.isNotBlank(proxyId)) {
+                DocumentRef ref = null;
+                if (!StringUtils.contains(proxyId, "/")) {
+                    ref = new IdRef(proxyId);
+                } else {
+                    ref = new PathRef(proxyId);
+                }
+                workingCopy = session.getWorkingCopy(ref);
+            }
+
+        }
+    }
+	
 	/**
 	 * Gets parent's document without checking permissions.
 	 *
