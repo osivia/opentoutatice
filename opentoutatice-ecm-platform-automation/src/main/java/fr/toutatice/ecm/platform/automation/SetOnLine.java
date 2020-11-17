@@ -34,12 +34,16 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.runtime.api.Framework;
 
+import fr.toutatice.ecm.platform.core.helper.ToutaticeNotifyEventHelper;
+
 @Operation(id = SetOnLine.ID, category = Constants.CAT_DOCUMENT, label = "Set on line a document", description = "Set on line a document (publish locally, acl copy).")
 public class SetOnLine {
 	
 	public static final String ID = "Document.SetOnLineOperation";
 	public static final String CHAIN_ID = "Document.SetOnLineChain";
 	public static final String CHAIN_LOG_ID = "Log";
+	
+	public static final String DOCUMENT_SET_ON_LINE_EVENT = "documentSetOnLine";
 	
 	@Context
 	protected CoreSession session;
@@ -48,6 +52,7 @@ public class SetOnLine {
 	public DocumentModel run(DocumentModel doc) throws Exception {
 		UnrestrictedSetOnLineRunner setOnLineRunner = new UnrestrictedSetOnLineRunner(session, doc);
 		setOnLineRunner.runUnrestricted();	
+		ToutaticeNotifyEventHelper.notifyEvent(session, DOCUMENT_SET_ON_LINE_EVENT, doc, null);
 		
 		logAudit(doc);
 		
