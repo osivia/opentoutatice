@@ -71,38 +71,44 @@ public class ToutaticeUnicityTitleListener implements EventListener {
         String docUUId = document.getId();
         String title = (String) document.getPropertyValue("dc:title");
 
-        boolean isUniqueTitle = ToutaticeDocumentMetadataHelper.isTileUnique(session, parentUUId, docUUId, title);
-        while (!isUniqueTitle) {
-            Matcher matcher = TITLE_SUFFIX_PATTERN.matcher(title);
-
-            if (matcher.find()) {
-                StringBuffer sb = new StringBuffer();
-                String number = matcher.group(3);
-                if (number != null) {
-                    int num = Integer.valueOf(number).intValue() + 1;
-                    number = String.valueOf(num);
-                } else {
-                    number = " " + String.valueOf(1);
-                }
-                matcher.appendReplacement(sb, "$1" + "(" + "$2" + number + ")" + "$4");
-                title = matcher.appendTail(sb).toString();
-            } else {
-                
-                String fileExtension = StringUtils.substringAfterLast(title, ".");
-                if (StringUtils.isNotEmpty(fileExtension)) {
-                    fileExtension = ".".concat(fileExtension);
-                }
-                
-                String marker = DEFAULT_TITLE_SUFFIX;
-                if (DocumentEventTypes.DOCUMENT_CREATED_BY_COPY.equals(eventName)) {
-                    marker = DEFAULT_COPIED_TITLE_SUFFIX;
-                } 
-                
-                title = StringUtils.removeEnd(title, fileExtension).concat(marker)
-                        .concat(fileExtension);
-            }
-
-            isUniqueTitle = ToutaticeDocumentMetadataHelper.isTileUnique(session, parentUUId, docUUId, title);
+        DocumentModel parentDocument = session.getParentDocument(document.getRef());
+        boolean sameTitleAllowed = ToutaticeDocumentMetadataHelper.isSameTitleAllowed(parentDocument.getType());
+        
+        if(!sameTitleAllowed) {
+        
+	        boolean isUniqueTitle = ToutaticeDocumentMetadataHelper.isTileUnique(session, parentUUId, docUUId, title);
+	        while (!isUniqueTitle) {
+	            Matcher matcher = TITLE_SUFFIX_PATTERN.matcher(title);
+	
+	            if (matcher.find()) {
+	                StringBuffer sb = new StringBuffer();
+	                String number = matcher.group(3);
+	                if (number != null) {
+	                    int num = Integer.valueOf(number).intValue() + 1;
+	                    number = String.valueOf(num);
+	                } else {
+	                    number = " " + String.valueOf(1);
+	                }
+	                matcher.appendReplacement(sb, "$1" + "(" + "$2" + number + ")" + "$4");
+	                title = matcher.appendTail(sb).toString();
+	            } else {
+	                
+	                String fileExtension = StringUtils.substringAfterLast(title, ".");
+	                if (StringUtils.isNotEmpty(fileExtension)) {
+	                    fileExtension = ".".concat(fileExtension);
+	                }
+	                
+	                String marker = DEFAULT_TITLE_SUFFIX;
+	                if (DocumentEventTypes.DOCUMENT_CREATED_BY_COPY.equals(eventName)) {
+	                    marker = DEFAULT_COPIED_TITLE_SUFFIX;
+	                } 
+	                
+	                title = StringUtils.removeEnd(title, fileExtension).concat(marker)
+	                        .concat(fileExtension);
+	            }
+	
+	            isUniqueTitle = ToutaticeDocumentMetadataHelper.isTileUnique(session, parentUUId, docUUId, title);
+	        }
         }
 
         return title;

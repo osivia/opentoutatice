@@ -3,12 +3,16 @@
  */
 package fr.toutatice.ecm.platform.core.helper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModelList;
 import org.nuxeo.elasticsearch.api.ElasticSearchService;
 import org.nuxeo.elasticsearch.query.NxQueryBuilder;
 import org.nuxeo.runtime.api.Framework;
+
 
 
 /**
@@ -21,6 +25,10 @@ public class ToutaticeDocumentMetadataHelper {
             .concat("dc:title = '%s' and ecm:isProxy = 0 and ecm:currentLifeCycleState <> 'deleted' and ecm:isVersion = 0");
     protected static final String UNICITY_TITLE_EXCLUDE_ITSELF_CLAUSE = " and ecm:uuid <> '%s'";
 
+    
+    private static String[] allowedTypesWithSameTitle = {"Agenda"};
+    
+    
     /**
      * Utility class.
      */
@@ -61,6 +69,21 @@ public class ToutaticeDocumentMetadataHelper {
 		}
 		
 
+    }
+    
+    /**
+     * Some types like agenda events can share the same title and be distingued by their dates 
+     * 
+     * @param type
+     * @return
+     */
+    public static boolean isSameTitleAllowed(String type) {
+    	for(String allowedType : allowedTypesWithSameTitle) {
+    		if(type.equalsIgnoreCase(allowedType)) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
 
 }

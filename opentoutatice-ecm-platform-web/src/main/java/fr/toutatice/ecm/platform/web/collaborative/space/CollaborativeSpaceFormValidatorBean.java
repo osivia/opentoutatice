@@ -76,23 +76,33 @@ public class CollaborativeSpaceFormValidatorBean implements Serializable {
      */
     public boolean isTileUnique(String title) {
         DocumentModel currentDocument = this.navigationContext.getCurrentDocument();
-        
+                
         if (currentDocument != null) {
             String currentUUId = null;
             String parentUUId = null;
             
+            DocumentModel parentDocument;
             DocumentModel changeableDocument = this.navigationContext.getChangeableDocument();
             if (changeableDocument != null) {
                 // Creation case
+            	parentDocument = currentDocument;
                 parentUUId = currentDocument.getId();
             } else {
                 // Update case
-                DocumentModel parentDocument = this.documentManager.getParentDocument(currentDocument.getRef());
+            	parentDocument = this.documentManager.getParentDocument(currentDocument.getRef());
                 parentUUId = parentDocument.getId();
                 currentUUId = currentDocument.getId();
             }
             
-            return ToutaticeDocumentMetadataHelper.isTileUnique(this.documentManager, parentUUId, currentUUId, title);
+            boolean sameTitleAllowed = ToutaticeDocumentMetadataHelper.isSameTitleAllowed(parentDocument.getType());
+            
+            if (sameTitleAllowed) {
+            	return true;
+            }
+            else {
+            	return ToutaticeDocumentMetadataHelper.isTileUnique(this.documentManager, parentUUId, currentUUId, title);	
+            }
+            
         }
         
         return false;
