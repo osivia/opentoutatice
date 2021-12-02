@@ -11,8 +11,12 @@
   <xs:element name="firstName" type="xs:string" />
   <xs:element name="lastName" type="xs:string" />
   <xs:element name="company" type="xs:string" />
+  
   <xs:element name="email" type="xs:string" />
-
+  <xs:element name="emailaca" type="xs:string" />
+  
+  <xs:element name="displayName" type="xs:string" />
+  
   <!-- inverse reference -->
   <xs:element name="groups" type="nxs:stringList" />
 
