@@ -60,7 +60,7 @@ public class FileInfosProvider implements DocumentInformationsProvider {
         boolean convertible = false;
 
         // Must be File
-        if (currentDocument != null && "File".equals(currentDocument.getType())) {
+        if (currentDocument != null && currentDocument.hasSchema("file")) {
             // Can be convert to pdf
             BlobHolder bh = currentDocument.getAdapter(BlobHolder.class);
             Blob blob = bh.getBlob();
