@@ -9,11 +9,21 @@
 
 		<permalink name="permalinkByPath"
 			classpath="fr.toutatice.ecm.platform.services.permalink.PermalinkByPathDoc"
-			default="true" enabled="true">
+			default="false" enabled="true">
 			<host>www.toutatice.fr</host>
 			<parameters>
 				<param name="param1">portail</param>
 				<param name="param2">cms</param>
+			</parameters>
+		</permalink>
+
+		<permalink name="permalinkByWebid"
+				   classpath="fr.toutatice.ecm.platform.services.permalink.PermalinkByWebid"
+				   default="true" enabled="true">
+			<host>www.toutatice.fr</host>
+			<parameters>
+				<param name="param1">portal</param>
+				<param name="param2">share</param>
 			</parameters>
 		</permalink>
 	</extension>
