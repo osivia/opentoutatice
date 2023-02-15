@@ -90,8 +90,17 @@ public class WebIdResolver {
                 log.trace(": " + String.valueOf(end - begin) + " ms");
             }
 
-            if (CollectionUtils.isEmpty(documents) || (CollectionUtils.isNotEmpty(documents) && documents.size() > 1)) {
+            if (CollectionUtils.isEmpty(documents)) {
                 throw new NoSuchDocumentException(webId);
+            }
+            else if (documents.size() > 1) {
+
+                String paths = "";
+                for(DocumentModel document : documents) {
+                    paths = paths.concat(document.getPathAsString()).concat(", ");
+                }
+
+                log.warn("Multiple documents found for webid "+webId+" "+paths);
             }
 
         }
@@ -124,8 +133,8 @@ public class WebIdResolver {
          */
         private void getLive() {
             DocumentModelList lives = this.session.query(String.format(ToutaticeWebIdHelper.LIVE_WEB_ID_QUERY, this.webId));
-            if (CollectionUtils.isNotEmpty(lives) && lives.size() == 1) {
-                this.documents.add(lives.get(0));
+            if (CollectionUtils.isNotEmpty(lives)) {
+                this.documents = lives;
             }
         }
 

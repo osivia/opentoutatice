@@ -164,8 +164,20 @@ public class FetchPublicationInfos {
             
         	// LBI #1804 - change input from documentModel to String to avoid long stacktraces 
         	try {
-        		path = getDocumentPathByWebId(webid);
-        	}
+                DocumentModelList documentsByWebId = WebIdResolver.getDocumentsByWebId(coreSession, webid);
+                path = documentsByWebId.get(0).getPathAsString();
+
+                // Mantis 17585 - if multiple documents share the same webid, notify the user and print in log.
+                if(documentsByWebId.size() > 1) {
+                    infosPubli.element("duplicate", Boolean.TRUE);
+
+                    String paths = "";
+                    for(DocumentModel document : documentsByWebId) {
+                        paths = paths.concat(document.getPathAsString()).concat(",");
+                    }
+                    infosPubli.element("duplicatedPaths", paths);
+                }
+            }
         	catch(NoSuchDocumentException e) {
         		errorsCodes.add(ERROR_CONTENT_NOT_FOUND);
                 infosPubli.element("errorCodes", errorsCodes);
@@ -533,32 +545,6 @@ public class FetchPublicationInfos {
             return ERROR_CONTENT_NOT_FOUND;
         }
         return doc;
-    }
-    
-    /**
-     * @param webid
-     * @param infosPubli 
-     * @return document if found, error otherwise.
-     * @throws NoSuchDocumentException 
-     * @throws ServeurException
-     */
-    private String getDocumentPathByWebId(String webid) throws NoSuchDocumentException {
-        // Trace logs
-        long begin = System.currentTimeMillis();
-        
-        DocumentModel doc = null;
-
-        DocumentModelList documentsByWebId = WebIdResolver.getDocumentsByWebId(coreSession, webid);
-        if (CollectionUtils.isNotEmpty(documentsByWebId) && (documentsByWebId.size() == 1)) {
-            doc = documentsByWebId.get(0);
-        }
-    
-        if (log.isTraceEnabled()) {
-            long end = System.currentTimeMillis();
-            log.trace("      [getDocumentByWebId]: " + String.valueOf(end - begin) + " ms");
-        }
-        
-        return doc.getPathAsString();
     }
 
     /**
