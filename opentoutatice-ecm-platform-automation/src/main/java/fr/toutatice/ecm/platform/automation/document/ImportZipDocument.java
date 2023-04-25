@@ -3,9 +3,9 @@ package fr.toutatice.ecm.platform.automation.document;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.lang.StringUtils;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationContext;
@@ -56,9 +56,9 @@ public class ImportZipDocument {
 
         	ZipFile zipFile = new ZipFile(tmp);
         	
-            Enumeration<?> enu = zipFile.entries();
+            Enumeration<?> enu = zipFile.getEntries();
             while (enu.hasMoreElements()) {
-                ZipEntry zipEntry = (ZipEntry) enu.nextElement();
+                ZipArchiveEntry zipEntry = (ZipArchiveEntry) enu.nextElement();
 
                 String name = zipEntry.getName();
                 
