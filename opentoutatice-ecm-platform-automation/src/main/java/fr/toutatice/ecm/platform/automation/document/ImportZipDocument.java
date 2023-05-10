@@ -2,8 +2,11 @@ package fr.toutatice.ecm.platform.automation.document;
 
 import java.io.File;
 import java.io.InputStream;
+
 import java.util.Enumeration;
 
+import com.ibm.icu.text.CharsetDetector;
+import com.ibm.icu.text.CharsetMatch;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.lang.StringUtils;
@@ -50,18 +53,20 @@ public class ImportZipDocument {
         
         File tmp = null;
         try {
+            CharsetDetector detector = new CharsetDetector();
+            detector.setText(blob.getStream());
+            CharsetMatch charsetMatch = detector.detect();
+
         	tmp = File.createTempFile("importer", null);
-        
         	blob.transferTo(tmp);
 
-        	ZipFile zipFile = new ZipFile(tmp);
+        	ZipFile zipFile = new ZipFile(tmp, charsetMatch.getName());
         	
             Enumeration<?> enu = zipFile.getEntries();
             while (enu.hasMoreElements()) {
                 ZipArchiveEntry zipEntry = (ZipArchiveEntry) enu.nextElement();
 
                 String name = zipEntry.getName();
-                
                 DocumentModel documentFolder = zipRootFolder;
                 String entryFileName = name;
                 if(name.contains("/") ) {
