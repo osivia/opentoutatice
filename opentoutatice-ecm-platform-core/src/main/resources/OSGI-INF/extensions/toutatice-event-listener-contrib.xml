@@ -93,6 +93,15 @@
 			<event>documentModified</event>
 		</listener>
 
+		<listener name="toutaticeSyncBinaryName" async="false"
+				  postCommit="false"
+				  enabled="true"
+				  class="fr.toutatice.ecm.platform.core.listener.ToutaticeSyncBinaryNameListener"
+				  priority="140">
+			<event>documentCreatedByCopy</event>
+			<event>beforeDocumentModification</event>
+		</listener>
+
 	</extension>
 
 </component>
