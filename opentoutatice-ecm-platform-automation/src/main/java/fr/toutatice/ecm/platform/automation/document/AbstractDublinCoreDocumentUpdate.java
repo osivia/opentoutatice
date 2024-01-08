@@ -38,13 +38,7 @@ public abstract class AbstractDublinCoreDocumentUpdate {
         if(properties != null){
             for(Entry<String, String> property : properties.entrySet()){
                 if(StringUtils.contains(property.getKey(), DUBLINCORE_SCHEMA_PREFIX)){
-
-                    // dc properties are updated silently, except the title who is seen as a major modification
-                    if(!StringUtils.equalsIgnoreCase(property.getKey(), "dc:title")) {
-                        dcProperties.put(property.getKey(), property.getValue());
-                    }
-
-
+                    dcProperties.put(property.getKey(), property.getValue());
                 }
             }
         }
