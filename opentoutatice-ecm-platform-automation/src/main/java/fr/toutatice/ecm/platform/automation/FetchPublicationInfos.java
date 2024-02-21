@@ -250,6 +250,7 @@ public class FetchPublicationInfos {
             liveDoc = (DocumentModel) liveDocRes;
             infosPubli.element("liveVersion", liveDoc.getVersionLabel());
 
+            infosPubli.element("currentLifecycleState", liveDoc.getCurrentLifeCycleState());
 
             /*
              * Extended informations
