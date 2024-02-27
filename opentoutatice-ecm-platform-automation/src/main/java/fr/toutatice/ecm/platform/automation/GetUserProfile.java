@@ -59,8 +59,8 @@ public class GetUserProfile {
                 userProfile = userProfileService.getUserProfileDocument(ctx.getCoreSession());
             }
         } catch (Exception e) {
-            log.error("Failed to get the user profil document for user '" + principal.getName() + "', error: " + e.getMessage());
-            throw new ClientException("Failed to get the user profil document");
+//            log.error("Failed to get the user profil document for user '" + principal.getName() + "', error: " + e.getMessage());
+//            throw new ClientException("Failed to get the user profil document");
         }
 
         return userProfile;
