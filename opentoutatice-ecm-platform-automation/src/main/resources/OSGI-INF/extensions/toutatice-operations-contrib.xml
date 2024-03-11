@@ -49,7 +49,10 @@
 		<operation class="fr.toutatice.ecm.platform.automation.GetPermalink" />
         <operation class="fr.toutatice.ecm.platform.automation.OrderDocument" />
         <operation class="fr.toutatice.ecm.platform.automation.EraseModifications" />
-        
+
+		<!-- Blobs -->
+		<operation class="fr.toutatice.ecm.platform.automation.blob.AttachBlobs" />
+
         <!-- Trash -->
         <operation class="fr.toutatice.ecm.platform.automation.trash.PutDocumentInTrash" />
         <operation class="fr.toutatice.ecm.platform.automation.trash.RestoreDocuments" />
